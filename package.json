@@ -14,7 +14,8 @@
     "wadl2json": "^0.1.0",
     "grunt": "^0.4.4",
     "grunt-contrib-concat": "^0.4.0",
-    "grunt-bower-concat": "^0.2.4"
+    "grunt-bower-concat": "^0.2.4",
+    "node-static": "^0.7.3"
   },
   "dependencies": {
     "wadl-client": "^0.1.0"

@@ -8,12 +8,14 @@ function CleverAPI(settings) {
     "Content-Type": "application/json"
   };
 
-  var client = WadlClient.buildClient(methods, {
+  var cleverAPI = {};
+
+  var client = cleverAPI.client = WadlClient.buildClient(methods, {
     host: settings.API_HOST,
     headers: headers
   });
 
-  client.session = initializeSession(client, settings);
+  cleverAPI.session = initializeSession(client, settings);
 
-  return client;
+  return cleverAPI;
 }

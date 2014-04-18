@@ -1,20 +1,20 @@
 function initializeSession(client, settings) {
-  var oauth_params = function(config, token_secret) {
+  var Session = {};
+
+  Session.getOAuthParams = function(params, token_secret) {
     return _.extend({
       oauth_consumer_key: settings.API_CONSUMER_KEY,
       oauth_signature_method: 'PLAINTEXT',
       oauth_signature: settings.API_CONSUMER_SECRET + '&' + (token_secret || ''),
       oauth_timestamp: Math.floor(Date.now()/1000),
       oauth_nonce: Math.floor(Math.random()*1000000)
-    }, config);
+    }, params);
   };
-
-  var Session = {};
 
   Session.login = function() {
     var res = client.oauth.request_token.post()({
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      data: querystring.encode(oauth_params({
+      data: querystring.encode(Session.getOAuthParams({
         oauth_callback: window.location.protocol + '//' + window.location.host + window.location.pathname
       }))
     });
@@ -29,10 +29,15 @@ function initializeSession(client, settings) {
     });
   };
 
+  Session.getAccessTokenFromQueryString = function() {
+    var params = querystring.decode(window.location.search.slice(1));
+    return Session.getAccessToken(params);
+  };
+
   Session.getAccessToken = function(params) {
     var res = client.oauth.access_token.post()({
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      data: querystring.encode(oauth_params(params, localStorage.consumer_oauth_token_secret))
+      data: querystring.encode(Session.getOAuthParams(params, localStorage.consumer_oauth_token_secret))
     });
 
     return res.map(function(text) {
@@ -47,7 +52,7 @@ function initializeSession(client, settings) {
 
   Session.getAuthorization = function() {
     if(localStorage.user_oauth_token && localStorage.user_oauth_token_secret) {
-      var params = oauth_params({oauth_token: localStorage.user_oauth_token}, localStorage.user_oauth_token_secret);
+      var params = Session.getOAuthParams({oauth_token: localStorage.user_oauth_token}, localStorage.user_oauth_token_secret);
       return  ['OAuth realm="http://ccapi.cleverapps.io/v2/oauth"',
               'oauth_consumer_key="' + params.oauth_consumer_key + '"',
               'oauth_token="' + params.oauth_token + '"',
