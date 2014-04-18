@@ -1617,6 +1617,12 @@ var methods = {
     }, {
       "name": "pass",
       "style": "query"
+    }, {
+      "name": "invitationKey",
+      "style": "query"
+    }, {
+      "name": "url_next",
+      "style": "query"
     }]
   }],
   "/session/signup": [{

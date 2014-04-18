@@ -4,18 +4,24 @@ module.exports = function(grunt) {
   var wadl2json = require("wadl2json");
 
   grunt.initConfig({
+    bower_concat: {
+      all: {
+        dest: "src/dependencies.js"
+      }
+    },
     concat: {
       options: {
         separator: "\n\n"
       },
       dist: {
-        src: ["src/data/methods.js", "src/client.js"],
+        src: ["src/data/methods.js", "src/models/**/*.js", "src/client.js"],
         dest: "clever-client.js"
       }
     }
   });
 
   grunt.loadNpmTasks("grunt-contrib-concat");
+  grunt.loadNpmTasks("grunt-bower-concat");
 
   grunt.registerTask("wadl2json", "Fetch Clever-Cloud API description", function() {
     var done = this.async();
@@ -48,5 +54,5 @@ module.exports = function(grunt) {
     }, options);
   });
 
-  grunt.registerTask("default", ["wadl2json", "concat"]);
+  grunt.registerTask("default", ["bower_concat", "wadl2json", "concat"]);
 };

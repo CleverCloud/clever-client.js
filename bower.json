@@ -1,0 +1,29 @@
+{
+  "name": "clever-client",
+  "main": "clever-client.js",
+  "version": "0.0.0",
+  "authors": [
+    "rbelouin <rodolphe.belouin@gmail.com>"
+  ],
+  "description": "Javascript models for Clever-Cloud API",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "clever-cloud",
+    "api",
+    "client"
+  ],
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "pacta": "~0.5.0",
+    "wadl-client": "~0.1.0",
+    "querystring": "~3.24.10",
+    "lodash": "~2.4.1"
+  }
+}

@@ -13,7 +13,8 @@
   "devDependencies": {
     "wadl2json": "^0.1.0",
     "grunt": "^0.4.4",
-    "grunt-contrib-concat": "^0.4.0"
+    "grunt-contrib-concat": "^0.4.0",
+    "grunt-bower-concat": "^0.2.4"
   },
   "dependencies": {
     "wadl-client": "^0.1.0"
