@@ -1122,11 +1122,25 @@ var methods = {
     }]
   }],
   "/password_forgotten": [{
+    "verb": "GET",
+    "name": "getPasswordForgottenForm",
+    "params": []
+  }, {
     "verb": "POST",
     "name": "askForPasswordReset",
     "params": [{
       "name": "TesterPass",
       "style": "header"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "askForPasswordResetViaForm",
+    "params": [{
+      "name": "TesterPass",
+      "style": "header"
+    }, {
+      "name": "login",
+      "style": "query"
     }]
   }],
   "/password_forgotten/{key}": [{
@@ -1157,6 +1171,14 @@ var methods = {
     "verb": "GET",
     "name": "getPaymillPublicKey",
     "params": []
+  }],
+  "/payments/webhooks/paymill": [{
+    "verb": "POST",
+    "name": "handlePaymillWebHook",
+    "params": [{
+      "name": "verif",
+      "style": "query"
+    }]
   }],
   "/payments/{bid}/cancel/paymill": [{
     "verb": "POST",
@@ -1467,6 +1489,11 @@ var methods = {
     "name": "changeUserPassword",
     "params": []
   }],
+  "/self/confirmation_email": [{
+    "verb": "GET",
+    "name": "getConfirmationEmail",
+    "params": []
+  }],
   "/self/credits": [{
     "verb": "GET",
     "name": "getAmount",
@@ -1568,6 +1595,14 @@ var methods = {
     "name": "getUserCards",
     "params": []
   }],
+  "/self/payments/cards/{cardId}": [{
+    "verb": "DELETE",
+    "name": "deleteUserCard",
+    "params": [{
+      "name": "cardId",
+      "style": "template"
+    }]
+  }],
   "/self/payments/periodic": [{
     "verb": "POST",
     "name": "createRecurrentPayment",
@@ -1586,13 +1621,18 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/self/validate_email": [{
+    "verb": "GET",
+    "name": "validateEmail",
+    "params": [{
+      "name": "validationKey",
+      "style": "query"
+    }]
+  }],
   "/session/login": [{
     "verb": "GET",
     "name": "getLoginForm",
     "params": [{
-      "name": "creationKey",
-      "style": "query"
-    }, {
       "name": "invitationKey",
       "style": "query"
     }, {
@@ -1629,16 +1669,7 @@ var methods = {
     "verb": "GET",
     "name": "getSignupForm",
     "params": [{
-      "name": "creationKey",
-      "style": "query"
-    }, {
       "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "validationKey",
-      "style": "query"
-    }, {
-      "name": "secondaryEmailKey",
       "style": "query"
     }, {
       "name": "email",
@@ -1654,11 +1685,15 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
+    "name": "createUser",
+    "params": [{
+      "name": "invitationKey",
+      "style": "query"
+    }]
+  }, {
+    "verb": "POST",
     "name": "createUserFromForm",
     "params": [{
-      "name": "TesterPass",
-      "style": "header"
-    }, {
       "name": "invitationKey",
       "style": "query"
     }, {
@@ -1673,16 +1708,6 @@ var methods = {
     }, {
       "name": "terms",
       "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "createUser",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "TesterPass",
-      "style": "header"
     }]
   }],
   "/users/{id}": [{
