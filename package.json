@@ -17,9 +17,15 @@
     "grunt-bower-concat": "^0.2.4",
     "node-static": "^0.7.3",
     "grunt-contrib-jasmine": "^0.6.3",
-    "lodash": "^2.4.1"
+    "lodash": "^2.4.1",
+    "grunt-cli": "^0.1.13",
+    "bower": "^1.3.3"
   },
   "dependencies": {
     "wadl-client": "^0.1.0"
+  },
+  "scripts": {
+    "install": "./node_modules/bower/bin/bower install && ./node_modules/grunt-cli/bin/grunt build",
+    "test": "./node_modules/grunt-cli/bin/grunt test"
   }
 }

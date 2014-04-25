@@ -72,6 +72,7 @@ module.exports = function(grunt) {
     }, options);
   });
 
+  grunt.registerTask("build", ["bower_concat", "wadl2json", "concat"]);
   grunt.registerTask("test", ["start-server", "jasmine", "stop-server"]);
-  grunt.registerTask("default", ["bower_concat", "wadl2json", "concat", "test"]);
+  grunt.registerTask("default", ["build", "test"]);
 };
