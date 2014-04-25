@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
   var http = require("http");
   var fs = require("fs");
+  var server = require("./tests/server.js");
   var wadl2json = require("wadl2json");
 
   grunt.initConfig({
@@ -17,11 +18,28 @@ module.exports = function(grunt) {
         src: ["src/data/methods.js", "src/models/**/*.js", "src/client.js"],
         dest: "clever-client.js"
       }
+    },
+    jasmine: {
+      src: ["src/dependencies.js", "clever-client.js"],
+      options: {
+        host: "http://127.0.0.1:8080/",
+        outfile: "index.html",
+        specs: "tests/**/*.spec.js"
+      }
     }
   });
 
   grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks("grunt-bower-concat");
+  grunt.loadNpmTasks("grunt-contrib-jasmine");
+
+  grunt.registerTask("start-server", "Start test server", function() {
+    server.start();
+  });
+
+  grunt.registerTask("stop-server", "Stop test server", function() {
+    server.stop();
+  });
 
   grunt.registerTask("wadl2json", "Fetch Clever-Cloud API description", function() {
     var done = this.async();
@@ -54,5 +72,6 @@ module.exports = function(grunt) {
     }, options);
   });
 
-  grunt.registerTask("default", ["bower_concat", "wadl2json", "concat"]);
+  grunt.registerTask("test", ["start-server", "jasmine", "stop-server"]);
+  grunt.registerTask("default", ["bower_concat", "wadl2json", "concat", "test"]);
 };

@@ -15,7 +15,9 @@
     "grunt": "^0.4.4",
     "grunt-contrib-concat": "^0.4.0",
     "grunt-bower-concat": "^0.2.4",
-    "node-static": "^0.7.3"
+    "node-static": "^0.7.3",
+    "grunt-contrib-jasmine": "^0.6.3",
+    "lodash": "^2.4.1"
   },
   "dependencies": {
     "wadl-client": "^0.1.0"

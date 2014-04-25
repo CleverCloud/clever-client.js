@@ -1,10 +1,10 @@
 function CleverAPI(settings) {
-  settings = _.extend(settings || {}, {
+  settings = _.extend({
     API_HOST: "https://api.clever-cloud.com/v2"
-  });
+  }, settings);
 
-  var headers = !settings.authorization ? {} : {
-    "Authorization": settings.authorization,
+  var headers = !settings.API_AUTHORIZATION ? {} : {
+    "Authorization": settings.API_AUTHORIZATION,
     "Content-Type": "application/json"
   };
 
@@ -16,6 +16,7 @@ function CleverAPI(settings) {
   });
 
   cleverAPI.session = initializeSession(client, settings);
+  cleverAPI.user = initializeUser(client, settings);
 
   return cleverAPI;
 }

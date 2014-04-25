@@ -1122,11 +1122,25 @@ var methods = {
     }]
   }],
   "/password_forgotten": [{
+    "verb": "GET",
+    "name": "getPasswordForgottenForm",
+    "params": []
+  }, {
     "verb": "POST",
     "name": "askForPasswordReset",
     "params": [{
       "name": "TesterPass",
       "style": "header"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "askForPasswordResetViaForm",
+    "params": [{
+      "name": "TesterPass",
+      "style": "header"
+    }, {
+      "name": "login",
+      "style": "query"
     }]
   }],
   "/password_forgotten/{key}": [{
@@ -1157,6 +1171,14 @@ var methods = {
     "verb": "GET",
     "name": "getPaymillPublicKey",
     "params": []
+  }],
+  "/payments/webhooks/paymill": [{
+    "verb": "POST",
+    "name": "handlePaymillWebHook",
+    "params": [{
+      "name": "verif",
+      "style": "query"
+    }]
   }],
   "/payments/{bid}/cancel/paymill": [{
     "verb": "POST",
@@ -1467,6 +1489,11 @@ var methods = {
     "name": "changeUserPassword",
     "params": []
   }],
+  "/self/confirmation_email": [{
+    "verb": "GET",
+    "name": "getConfirmationEmail",
+    "params": []
+  }],
   "/self/credits": [{
     "verb": "GET",
     "name": "getAmount",
@@ -1568,6 +1595,14 @@ var methods = {
     "name": "getUserCards",
     "params": []
   }],
+  "/self/payments/cards/{cardId}": [{
+    "verb": "DELETE",
+    "name": "deleteUserCard",
+    "params": [{
+      "name": "cardId",
+      "style": "template"
+    }]
+  }],
   "/self/payments/periodic": [{
     "verb": "POST",
     "name": "createRecurrentPayment",
@@ -1586,13 +1621,18 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/self/validate_email": [{
+    "verb": "GET",
+    "name": "validateEmail",
+    "params": [{
+      "name": "validationKey",
+      "style": "query"
+    }]
+  }],
   "/session/login": [{
     "verb": "GET",
     "name": "getLoginForm",
     "params": [{
-      "name": "creationKey",
-      "style": "query"
-    }, {
       "name": "invitationKey",
       "style": "query"
     }, {
@@ -1629,16 +1669,7 @@ var methods = {
     "verb": "GET",
     "name": "getSignupForm",
     "params": [{
-      "name": "creationKey",
-      "style": "query"
-    }, {
       "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "validationKey",
-      "style": "query"
-    }, {
-      "name": "secondaryEmailKey",
       "style": "query"
     }, {
       "name": "email",
@@ -1654,11 +1685,15 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
+    "name": "createUser",
+    "params": [{
+      "name": "invitationKey",
+      "style": "query"
+    }]
+  }, {
+    "verb": "POST",
     "name": "createUserFromForm",
     "params": [{
-      "name": "TesterPass",
-      "style": "header"
-    }, {
       "name": "invitationKey",
       "style": "query"
     }, {
@@ -1673,16 +1708,6 @@ var methods = {
     }, {
       "name": "terms",
       "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "createUser",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "TesterPass",
-      "style": "header"
     }]
   }],
   "/users/{id}": [{
@@ -1816,13 +1841,59 @@ function initializeSession(client, settings) {
 }
 
 
-function CleverAPI(settings) {
-  settings = _.extend(settings || {}, {
-    API_HOST: "https://api.clever-cloud.com/v2"
-  });
+function initializeUser(client, settings) {
+  var User = {};
 
-  var headers = !settings.authorization ? {} : {
-    "Authorization": settings.authorization,
+  User.get = function() {
+    return client.self.get()().map(JSON.parse).mapError(JSON.parse);
+  };
+
+  User.update = function(information) {
+    return client.self.put()(JSON.stringify(information)).map(JSON.parse).mapError(JSON.parse);
+  };
+
+  User.changePassword = function(oldPassword, newPassword) {
+    return client.self.change_password.put()(JSON.stringify({
+      oldPassword: oldPassword,
+      newPassword: newPassword
+    })).map(JSON.parse).mapError(JSON.parse);
+  };
+
+  User.getEmailAddresses = function() {
+    return client.self.emails.get()().map(JSON.parse).mapError(JSON.parse);
+  };
+
+  User.addEmailAddress = function(address) {
+    return client.self.emails._.put(address)().map(JSON.parse).mapError(JSON.parse);
+  };
+
+  User.removeEmailAddress = function(address) {
+    return client.self.emails._.remove(address)().map(JSON.parse).mapError(JSON.parse);
+  };
+
+  User.getSSHKeys = function() {
+    return client.self.keys.get()().map(JSON.parse).mapError(JSON.parse);
+  };
+
+  User.addSSHKey = function(name, key) {
+    return client.self.keys._.put(encodeURIComponent(name))(JSON.stringify(key)).map(JSON.parse).mapError(JSON.parse);
+  };
+
+  User.removeSSHKey = function(name) {
+    return client.self.keys._.remove(encodeURIComponent(name))().map(JSON.parse).mapError(JSON.parse);
+  };
+
+  return User;
+}
+
+
+function CleverAPI(settings) {
+  settings = _.extend({
+    API_HOST: "https://api.clever-cloud.com/v2"
+  }, settings);
+
+  var headers = !settings.API_AUTHORIZATION ? {} : {
+    "Authorization": settings.API_AUTHORIZATION,
     "Content-Type": "application/json"
   };
 
@@ -1834,6 +1905,7 @@ function CleverAPI(settings) {
   });
 
   cleverAPI.session = initializeSession(client, settings);
+  cleverAPI.user = initializeUser(client, settings);
 
   return cleverAPI;
 }
