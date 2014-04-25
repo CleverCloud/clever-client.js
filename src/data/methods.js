@@ -1127,13 +1127,6 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
-    "name": "askForPasswordReset",
-    "params": [{
-      "name": "TesterPass",
-      "style": "header"
-    }]
-  }, {
-    "verb": "POST",
     "name": "askForPasswordResetViaForm",
     "params": [{
       "name": "TesterPass",
@@ -1141,6 +1134,13 @@ var methods = {
     }, {
       "name": "login",
       "style": "query"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "askForPasswordReset",
+    "params": [{
+      "name": "TesterPass",
+      "style": "header"
     }]
   }],
   "/password_forgotten/{key}": [{
@@ -1685,13 +1685,6 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
-    "name": "createUser",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
     "name": "createUserFromForm",
     "params": [{
       "name": "invitationKey",
@@ -1707,6 +1700,13 @@ var methods = {
       "style": "query"
     }, {
       "name": "terms",
+      "style": "query"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "createUser",
+    "params": [{
+      "name": "invitationKey",
       "style": "query"
     }]
   }],

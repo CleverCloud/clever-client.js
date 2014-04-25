@@ -1127,13 +1127,6 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
-    "name": "askForPasswordReset",
-    "params": [{
-      "name": "TesterPass",
-      "style": "header"
-    }]
-  }, {
-    "verb": "POST",
     "name": "askForPasswordResetViaForm",
     "params": [{
       "name": "TesterPass",
@@ -1141,6 +1134,13 @@ var methods = {
     }, {
       "name": "login",
       "style": "query"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "askForPasswordReset",
+    "params": [{
+      "name": "TesterPass",
+      "style": "header"
     }]
   }],
   "/password_forgotten/{key}": [{
@@ -1685,13 +1685,6 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
-    "name": "createUser",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
     "name": "createUserFromForm",
     "params": [{
       "name": "invitationKey",
@@ -1707,6 +1700,13 @@ var methods = {
       "style": "query"
     }, {
       "name": "terms",
+      "style": "query"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "createUser",
+    "params": [{
+      "name": "invitationKey",
       "style": "query"
     }]
   }],
@@ -1761,6 +1761,54 @@ var methods = {
     }]
   }]
 };
+
+function initializeOrganisation(client, settings) {
+  var Organisation = {};
+
+  Organisation.getAll = function(userId) {
+    return client.organisations.get()({
+      query: {
+        user: userId
+      }
+    }).map(JSON.parse).mapError(JSON.parse);
+  };
+
+  Organisation.get = function(orgaId) {
+    return client.organisations._.get(orgaId)().map(JSON.parse).mapError(JSON.parse);
+  };
+
+  Organisation.update = function(orga) {
+    return client.organisations._.put(orga.id)(JSON.stringify(orga)).mapError(function(x) {
+      console.log(x);
+      return x;
+    }).map(JSON.parse).mapError(JSON.parse);
+  };
+
+  Organisation.create = function(orga) {
+    return client.organisations.post()(JSON.stringify(orga)).map(JSON.parse).mapError(JSON.parse);
+  };
+
+  Organisation.remove = function(orgaId) {
+    return client.organisations._.remove(orgaId)().map(JSON.parse).mapError(JSON.parse);
+  };
+
+  Organisation.addMember = function(member, orgaId) {
+    return client.organisations._.members.post(orgaId)(JSON.stringify(member)).map(JSON.parse).mapError(JSON.parse);
+  };
+
+  Organisation.confirmMembership = function(params, orgaId) {
+    return client.organisations._.members.post(orgaId)({
+      query: params,
+    }).map(JSON.parse).mapError(JSON.parse);
+  };
+
+  Organisation.removeMember = function(memberId, orgaId) {
+    return client.organisations._.members._.remove(orgaId, memberId)().map(JSON.parse).mapError(JSON.parse);
+  };
+
+  return Organisation;
+}
+
 
 function initializeSession(client, settings) {
   var Session = {};
@@ -1906,6 +1954,7 @@ function CleverAPI(settings) {
 
   cleverAPI.session = initializeSession(client, settings);
   cleverAPI.user = initializeUser(client, settings);
+  cleverAPI.organisation = initializeOrganisation(client, settings);
 
   return cleverAPI;
 }
