@@ -20,6 +20,8 @@ function CleverAPI(settings) {
   cleverAPI.organisation = initializeOrganisation(client, settings);
   cleverAPI.application = initializeApplication(client, settings);
   cleverAPI.products = initializeProducts(client, settings);
+  cleverAPI.addon = initializeAddon(client, settings);
+  cleverAPI.addonprovider = initializeAddonProvider(client, settings);
 
   return cleverAPI;
 }
