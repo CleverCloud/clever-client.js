@@ -23,6 +23,7 @@ module.exports = function(grunt) {
       src: ["tests/log-dump.js", "src/dependencies.js", "clever-client.js"],
       options: {
         host: "http://127.0.0.1:8080/",
+        //keepRunner: true, // Uncomment this line for manual tests
         outfile: "index.html",
         specs: "tests/**/*.spec.js"
       }
