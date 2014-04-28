@@ -18,6 +18,7 @@ function CleverAPI(settings) {
   cleverAPI.session = initializeSession(client, settings);
   cleverAPI.user = initializeUser(client, settings);
   cleverAPI.organisation = initializeOrganisation(client, settings);
+  cleverAPI.application = initializeApplication(client, settings);
 
   return cleverAPI;
 }

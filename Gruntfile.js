@@ -20,7 +20,7 @@ module.exports = function(grunt) {
       }
     },
     jasmine: {
-      src: ["src/dependencies.js", "clever-client.js"],
+      src: ["tests/log-dump.js", "src/dependencies.js", "clever-client.js"],
       options: {
         host: "http://127.0.0.1:8080/",
         outfile: "index.html",
