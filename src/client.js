@@ -12,7 +12,8 @@ function CleverAPI(settings) {
 
   var client = cleverAPI.client = WadlClient.buildClient(methods, {
     host: settings.API_HOST,
-    headers: headers
+    headers: headers,
+    parseXML: true
   });
 
   cleverAPI.session = initializeSession(client, settings);
@@ -23,6 +24,7 @@ function CleverAPI(settings) {
   cleverAPI.addon = initializeAddon(client, settings);
   cleverAPI.addonprovider = initializeAddonProvider(client, settings);
   cleverAPI.invoice = initializeInvoice(client, settings);
+  cleverAPI.news = initializeNews(client, settings);
 
   return cleverAPI;
 }
