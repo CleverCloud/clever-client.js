@@ -1685,13 +1685,6 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
-    "name": "createUser",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
     "name": "createUserFromForm",
     "params": [{
       "name": "invitationKey",
@@ -1707,6 +1700,13 @@ var methods = {
       "style": "query"
     }, {
       "name": "terms",
+      "style": "query"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "createUser",
+    "params": [{
+      "name": "invitationKey",
       "style": "query"
     }]
   }],

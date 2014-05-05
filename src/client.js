@@ -13,6 +13,7 @@ function CleverAPI(settings) {
   var client = cleverAPI.client = WadlClient.buildClient(methods, {
     host: settings.API_HOST,
     headers: headers,
+    parseJSON: true,
     parseXML: true
   });
 

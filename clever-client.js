@@ -1685,13 +1685,6 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
-    "name": "createUser",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
     "name": "createUserFromForm",
     "params": [{
       "name": "invitationKey",
@@ -1707,6 +1700,13 @@ var methods = {
       "style": "query"
     }, {
       "name": "terms",
+      "style": "query"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "createUser",
+    "params": [{
+      "name": "invitationKey",
       "style": "query"
     }]
   }],
@@ -1766,72 +1766,70 @@ function initializeAddonProvider(client, settings) {
   var AddonProvider = {};
 
   AddonProvider.getAll = function() {
-    return client.addons.providers.get()().mapError(JSON.parse).map(JSON.parse);
+    return client.addons.providers.get()();
   };
 
   AddonProvider.get = function(providerId, orgaId) {
     var params = orgaId ? [orgaId, providerId] : [providerId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addonproviders._.get.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.addonproviders._.get.apply(client, params)();
   };
 
   AddonProvider.update = function(provider, orgaId) {
     var params = orgaId ? [orgaId, provider.id] : [provider.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addonproviders._.put.apply(client, params)(JSON.stringify(provider)).mapError(JSON.parse).map(JSON.parse);
+    return owner.addonproviders._.put.apply(client, params)(JSON.stringify(provider));
   };
 
   AddonProvider.getPlans = function(providerId, orgaId) {
     var params = orgaId ? [orgaId, providerId] : [providerId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addonproviders._.plans.get.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.addonproviders._.plans.get.apply(client, params)();
   };
 
   AddonProvider.editPlan = function(plan, providerId, orgaId) {
     var params = orgaId ? [orgaId, providerId, plan.id] : [providerId, plan.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addonproviders._.plans._.put.apply(client, params)(JSON.stringify(plan)).mapError(JSON.parse).map(JSON.parse);
+    return owner.addonproviders._.plans._.put.apply(client, params)(JSON.stringify(plan));
   };
 
   AddonProvider.addPlan = function(plan, providerId, orgaId) {
     var params = orgaId ? [orgaId, providerId] : [providerId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addonproviders._.plans.post.apply(client, params)(JSON.stringify(plan)).mapError(JSON.parse).map(JSON.parse);
+    return owner.addonproviders._.plans.post.apply(client, params)(JSON.stringify(plan));
   };
 
   AddonProvider.removePlan = function(planId, providerId, orgaId) {
     var params = orgaId ? [orgaId, providerId, planId] : [providerId, planId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addonproviders._.plans._.remove.apply(client, params)().mapError(JSON.parse).map(function(data) {
-      return data && JSON.parse(data);
-    });
+    return owner.addonproviders._.plans._.remove.apply(client, params)();
   };
 
   AddonProvider.getFeatures = function(providerId, orgaId) {
     var params = orgaId ? [orgaId, providerId] : [providerId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addonproviders._.features.get.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.addonproviders._.features.get.apply(client, params)();
   };
 
   AddonProvider.addFeature = function(feature, providerId, orgaId) {
     var params = orgaId ? [orgaId, providerId] : [providerId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addonproviders._.features.post.apply(client, params)(JSON.stringify(feature)).mapError(JSON.parse).map(JSON.parse);
+    return owner.addonproviders._.features.post.apply(client, params)(JSON.stringify(feature));
   };
 
   AddonProvider.removeFeature = function(featureId, providerId, orgaId) {
     var params = orgaId ? [orgaId, providerId, encodeURIComponent(btoa(featureId))] : [providerId, encodeURIComponent(btoa(featureId))];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addonproviders._.features._.remove.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.addonproviders._.features._.remove.apply(client, params)();
   };
 
   return AddonProvider;
@@ -1851,7 +1849,7 @@ function initializeAddon(client, settings) {
     var params = orgaId ? [orgaId] : [];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addons.get.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.addons.get.apply(client, params)();
   };
 
   Addon.provision = function(information, providerId, planId, paymentToken, orgaId) {
@@ -1863,35 +1861,35 @@ function initializeAddon(client, settings) {
       providerId: providerId,
       plan: planId,
       payment: paymentToken
-    })).mapError(JSON.parse).map(JSON.parse);
+    }));
   };
 
   Addon.get = function(addonId, orgaId) {
     var params = orgaId ? [orgaId, addonId] : [addonId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addons._.get.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.addons._.get.apply(client, params)();
   };
 
   Addon.changePlan = function(addon, orgaId) {
     var params = orgaId ? [orgaId, addon.id] : [addon.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addons._.put.apply(client, params)(JSON.stringify(addon)).mapError(JSON.parse).map(JSON.parse);
+    return owner.addons._.put.apply(client, params)(JSON.stringify(addon));
   };
 
   Addon.remove = function(addonId, orgaId) {
     var params = orgaId ? [orgaId, addonId] : [addonId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addons._.remove.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.addons._.remove.apply(client, params)();
   };
 
   Addon.getSSOData = function(addonId, orgaId) {
     var params = orgaId ? [orgaId, addonId] : [addonId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addons._.sso.get.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.addons._.sso.get.apply(client, params)();
   };
 
   return Addon;
@@ -1905,77 +1903,77 @@ function initializeApplication(client, settings) {
     var params = orgaId ? [orgaId, application.id] : [application.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.applications.post.apply(client, params)(JSON.stringify(application)).mapError(JSON.parse).map(JSON.parse);
+    return owner.applications.post.apply(client, params)(JSON.stringify(application));
   };
 
   Application.get = function(appId, orgaId) {
     var params = orgaId ? [orgaId, appId] : [appId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.applications._.get.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.applications._.get.apply(client, params)();
   };
 
   Application.edit = function(app, orgaId) {
     var params = orgaId ? [orgaId, app.id] : [app.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.applications._.put.apply(client, params)(JSON.stringify(app)).mapError(JSON.parse).map(JSON.parse);
+    return owner.applications._.put.apply(client, params)(JSON.stringify(app));
   };
 
   Application.remove = function(appId, orgaId) {
     var params = orgaId ? [orgaId, appId] : [appId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.applications._.remove.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.applications._.remove.apply(client, params)();
   };
 
   Application.getVhosts = function(appId, orgaId) {
     var params = orgaId ? [orgaId, appId] : [appId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.applications._.vhosts.get.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.applications._.vhosts.get.apply(client, params)();
   };
 
   Application.addVhost = function(vhost, appId, orgaId) {
     var params = orgaId ? [orgaId, appId, vhost] : [appId, vhost];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.applications._.vhosts._.put.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.applications._.vhosts._.put.apply(client, params)();
   };
 
   Application.removeVhost = function(vhost, appId, orgaId) {
     var params = orgaId ? [orgaId, appId, vhost.fqdn] : [appId, vhost.fqdn];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.applications._.vhosts._.remove.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.applications._.vhosts._.remove.apply(client, params)();
   };
 
   Application.getInstances = function(appId, orgaId) {
     var params = orgaId ? [orgaId, appId] : [appId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.applications._.instances.get.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.applications._.instances.get.apply(client, params)();
   };
 
   Application.redeploy = function(appId, orgaId) {
     var params = orgaId ? [orgaId, appId] : [appId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.applications._.instances.post.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.applications._.instances.post.apply(client, params)();
   };
 
   Application.undeploy = function(appId, orgaId) {
     var params = orgaId ? [orgaId, appId] : [appId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.applications._.instances.remove.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.applications._.instances.remove.apply(client, params)();
   };
 
   Application.getLogs = function(appId, orgaId, timestamp) {
     var params = orgaId ? [orgaId, appId] : [appId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.applications._.logs.get.apply(client, params)(timestamp ? {query: {since: timestamp}} : null).mapError(JSON.parse).map(JSON.parse);
+    return owner.applications._.logs.get.apply(client, params)(timestamp ? {query: {since: timestamp}} : null);
   };
 
   Application.getInstanceIdsFromLogs = function(logs) {
@@ -1995,36 +1993,36 @@ function initializeInvoice(client, settings) {
     var params = orgaId ? [orgaId] : [];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.payments.billings.post.apply(client, params)(JSON.stringify(pack)).mapError(JSON.parse).map(JSON.parse);
+    return owner.payments.billings.post.apply(client, params)(JSON.stringify(pack));
   };
 
   Invoice.getPaymentMethods = function() {
-    return client.payments.methods.get()().mapError(JSON.parse).map(JSON.parse);
+    return client.payments.methods.get()();
   };
 
   Invoice.choosePaymentMethod = function(method, invoice, orgaId) {
     var params = orgaId ? [orgaId, invoice.id] : [invoice.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.payments.billings._.put.apply(client, params)(JSON.stringify(method)).mapError(JSON.parse).map(JSON.parse);
+    return owner.payments.billings._.put.apply(client, params)(JSON.stringify(method));
   };
 
   Invoice.getPaymillKey = function() {
-    return client.payments.publickeys.paymill.get()().mapError(JSON.parse).map(JSON.parse);
+    return client.payments.publickeys.paymill.get()();
   };
 
   Invoice.get = function(invoiceId, orgaId) {
     var params = orgaId ? [orgaId, invoiceId] : [invoiceId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.payments.billings._.get.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.payments.billings._.get.apply(client, params)();
   };
 
   Invoice.getAll = function(orgaId) {
     var params = orgaId ? [orgaId] : [];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.payments.billings.get.apply(client, params)().mapError(JSON.parse).map(JSON.parse);
+    return owner.payments.billings.get.apply(client, params)();
   };
 
   return Invoice;
@@ -2098,40 +2096,37 @@ function initializeOrganisation(client, settings) {
       query: {
         user: userId
       }
-    }).map(JSON.parse).mapError(JSON.parse);
+    });
   };
 
   Organisation.get = function(orgaId) {
-    return client.organisations._.get(orgaId)().map(JSON.parse).mapError(JSON.parse);
+    return client.organisations._.get(orgaId)();
   };
 
   Organisation.update = function(orga) {
-    return client.organisations._.put(orga.id)(JSON.stringify(orga)).mapError(function(x) {
-      console.log(x);
-      return x;
-    }).map(JSON.parse).mapError(JSON.parse);
+    return client.organisations._.put(orga.id)(JSON.stringify(orga));
   };
 
   Organisation.create = function(orga) {
-    return client.organisations.post()(JSON.stringify(orga)).map(JSON.parse).mapError(JSON.parse);
+    return client.organisations.post()(JSON.stringify(orga));
   };
 
   Organisation.remove = function(orgaId) {
-    return client.organisations._.remove(orgaId)().map(JSON.parse).mapError(JSON.parse);
+    return client.organisations._.remove(orgaId)();
   };
 
   Organisation.addMember = function(member, orgaId) {
-    return client.organisations._.members.post(orgaId)(JSON.stringify(member)).map(JSON.parse).mapError(JSON.parse);
+    return client.organisations._.members.post(orgaId)(JSON.stringify(member));
   };
 
   Organisation.confirmMembership = function(params, orgaId) {
     return client.organisations._.members.post(orgaId)({
       query: params,
-    }).map(JSON.parse).mapError(JSON.parse);
+    });
   };
 
   Organisation.removeMember = function(memberId, orgaId) {
-    return client.organisations._.members._.remove(orgaId, memberId)().map(JSON.parse).mapError(JSON.parse);
+    return client.organisations._.members._.remove(orgaId, memberId)();
   };
 
   return Organisation;
@@ -2144,21 +2139,21 @@ function initializeProducts(client, settings) {
   Products.getInstances = function(orgaId) {
     return client.products.instances.get()({
       query: orgaId ? {"for": orgaId} : {}
-    }).mapError(JSON.parse).map(JSON.parse);
+    });
   };
 
   Products.getPackages = function(couponName, orgaId) {
     var query = _.extend({}, couponName && {coupon: couponName}, orgaId && {orgaId: orgaId});
 
-    return client.products.packages.get()({query: query}).mapError(JSON.parse).map(JSON.parse);
+    return client.products.packages.get()({query: query});
   };
 
   Products.getPrices = function() {
-    return client.products.prices.get()().mapError(JSON.parse).map(JSON.parse);
+    return client.products.prices.get()();
   };
 
   Products.getCoupon = function(coupon) {
-    return client.payments.coupons._.get(coupon)().mapError(JSON.parse).map(JSON.parse);
+    return client.payments.coupons._.get(coupon)();
   };
 
   return Products;
@@ -2248,42 +2243,42 @@ function initializeUser(client, settings) {
   var User = {};
 
   User.get = function() {
-    return client.self.get()().map(JSON.parse).mapError(JSON.parse);
+    return client.self.get()();
   };
 
   User.update = function(information) {
-    return client.self.put()(JSON.stringify(information)).map(JSON.parse).mapError(JSON.parse);
+    return client.self.put()(JSON.stringify(information));
   };
 
   User.changePassword = function(oldPassword, newPassword) {
     return client.self.change_password.put()(JSON.stringify({
       oldPassword: oldPassword,
       newPassword: newPassword
-    })).map(JSON.parse).mapError(JSON.parse);
+    }));
   };
 
   User.getEmailAddresses = function() {
-    return client.self.emails.get()().map(JSON.parse).mapError(JSON.parse);
+    return client.self.emails.get()();
   };
 
   User.addEmailAddress = function(address) {
-    return client.self.emails._.put(address)().map(JSON.parse).mapError(JSON.parse);
+    return client.self.emails._.put(address)();
   };
 
   User.removeEmailAddress = function(address) {
-    return client.self.emails._.remove(address)().map(JSON.parse).mapError(JSON.parse);
+    return client.self.emails._.remove(address)();
   };
 
   User.getSSHKeys = function() {
-    return client.self.keys.get()().map(JSON.parse).mapError(JSON.parse);
+    return client.self.keys.get()();
   };
 
   User.addSSHKey = function(name, key) {
-    return client.self.keys._.put(encodeURIComponent(name))(JSON.stringify(key)).map(JSON.parse).mapError(JSON.parse);
+    return client.self.keys._.put(encodeURIComponent(name))(JSON.stringify(key));
   };
 
   User.removeSSHKey = function(name) {
-    return client.self.keys._.remove(encodeURIComponent(name))().map(JSON.parse).mapError(JSON.parse);
+    return client.self.keys._.remove(encodeURIComponent(name))();
   };
 
   return User;
@@ -2305,6 +2300,7 @@ function CleverAPI(settings) {
   var client = cleverAPI.client = WadlClient.buildClient(methods, {
     host: settings.API_HOST,
     headers: headers,
+    parseJSON: true,
     parseXML: true
   });
 
