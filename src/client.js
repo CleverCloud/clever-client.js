@@ -26,6 +26,7 @@ function CleverAPI(settings) {
   cleverAPI.addonprovider = initializeAddonProvider(client, settings);
   cleverAPI.invoice = initializeInvoice(client, settings);
   cleverAPI.news = initializeNews(client, settings);
+  cleverAPI.statistics = initializeStatistics(client, settings);
 
   return cleverAPI;
 }
