@@ -30,3 +30,7 @@ function CleverAPI(settings) {
 
   return cleverAPI;
 }
+
+if(typeof module != "undefined" && module.exports) {
+  module.exports = CleverAPI;
+}

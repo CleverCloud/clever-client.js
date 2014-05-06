@@ -1,5 +1,10 @@
-//Consumer key: X2tBhWFUc9GQKUujBTd11SHYPEqwF5
-//Consumer secret: 3qBrT7K1DKzll7MnRHLDiAxMEqhwqu
+if(typeof CleverAPI == "undefined") {
+  CleverAPI = require("../clever-client.js");
+}
+
+if(typeof Promise == "undefined") {
+  Promise = require("pacta");
+}
 
 var api = CleverAPI({
   API_AUTHORIZATION: 'OAuth realm="http://ccapi.cleverapps.io/v2/oauth", oauth_consumer_key="X2tBhWFUc9GQKUujBTd11SHYPEqwF5", oauth_token="0e052c7539724f249ad7204adc085857", oauth_signature_method="PLAINTEXT", oauth_signature="3qBrT7K1DKzll7MnRHLDiAxMEqhwqu&88b19258e86b42809eaafaf9b1d2ee46", oauth_timestamp="1398409072", oauth_nonce="830970"',

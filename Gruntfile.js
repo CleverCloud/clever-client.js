@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         separator: "\n\n"
       },
       dist: {
-        src: ["src/data/methods.js", "src/models/**/*.js", "src/client.js"],
+        src: ["src/data/methods.js", "src/require.js", "src/models/**/*.js", "src/client.js"],
         dest: "clever-client.js"
       }
     },
@@ -27,12 +27,16 @@ module.exports = function(grunt) {
         outfile: "index.html",
         specs: "tests/**/*.spec.js"
       }
+    },
+    jasmine_node: {
+      all: "tests"
     }
   });
 
   grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks("grunt-bower-concat");
   grunt.loadNpmTasks("grunt-contrib-jasmine");
+  grunt.loadNpmTasks("grunt-jasmine-node");
 
   grunt.registerTask("start-server", "Start test server", function() {
     server.start();
@@ -74,6 +78,6 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask("build", ["bower_concat", "wadl2json", "concat"]);
-  grunt.registerTask("test", ["start-server", "jasmine", "stop-server"]);
+  grunt.registerTask("test", ["start-server", "jasmine", "jasmine_node", "stop-server"]);
   grunt.registerTask("default", ["build", "test"]);
 };

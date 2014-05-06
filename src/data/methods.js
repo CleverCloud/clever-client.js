@@ -711,6 +711,20 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/addonproviders/{providerId}/testers": [{
+    "verb": "POST",
+    "name": "addBetaTester",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "providerId",
+      "style": "template"
+    }, {
+      "name": "addonBetaInvitationKey",
+      "style": "query"
+    }]
+  }],
   "/organisations/{id}/addons": [{
     "verb": "GET",
     "name": "getAddons",
@@ -1127,6 +1141,13 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
+    "name": "askForPasswordReset",
+    "params": [{
+      "name": "TesterPass",
+      "style": "header"
+    }]
+  }, {
+    "verb": "POST",
     "name": "askForPasswordResetViaForm",
     "params": [{
       "name": "TesterPass",
@@ -1134,13 +1155,6 @@ var methods = {
     }, {
       "name": "login",
       "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "askForPasswordReset",
-    "params": [{
-      "name": "TesterPass",
-      "style": "header"
     }]
   }],
   "/password_forgotten/{key}": [{
@@ -1685,9 +1699,22 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
+    "name": "createUser",
+    "params": [{
+      "name": "invitationKey",
+      "style": "query"
+    }, {
+      "name": "addonBetaInvitationKey",
+      "style": "query"
+    }]
+  }, {
+    "verb": "POST",
     "name": "createUserFromForm",
     "params": [{
       "name": "invitationKey",
+      "style": "query"
+    }, {
+      "name": "addonBetaInvitationKey",
       "style": "query"
     }, {
       "name": "email",
@@ -1700,13 +1727,6 @@ var methods = {
       "style": "query"
     }, {
       "name": "terms",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "createUser",
-    "params": [{
-      "name": "invitationKey",
       "style": "query"
     }]
   }],
