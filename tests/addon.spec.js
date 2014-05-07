@@ -41,3 +41,10 @@ describe("Addon.getSSOData", function() {
     done();
   });
 });
+
+describe("Addon.getLinkedApplications", function() {
+  it("should be able to get the applications linked to the given addon", function(done) {
+    console.log("TODO: addon aren't stable on the test API atm");
+    done();
+  });
+});

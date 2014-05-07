@@ -54,5 +54,12 @@ function initializeAddon(client, settings) {
     return owner.addons._.sso.get.apply(client, params)();
   };
 
+  Addon.getLinkedApplications = function(addonId, orgaId) {
+    var params = orgaId ? [orgaId, addonId] : [addonId];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.addons._.applications.get.apply(client, params)();
+  };
+
   return Addon;
 }
