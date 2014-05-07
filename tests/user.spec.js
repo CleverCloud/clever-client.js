@@ -169,3 +169,42 @@ describe("User - SSH keys", function() {
     });
   });
 });
+
+describe("User.getCreditCards", function() {
+  it("should be able to get user credit cards", function(done) {
+    var result = api.user.getCreditCards();
+
+    var oncomplete = function() {
+      expect(result.resolved).toBe(true);
+      done();
+    };
+
+    result.then(oncomplete, function(error) {
+      console.log(JSON.stringify(error));
+      oncomplete();
+    });
+  });
+});
+
+describe("User.getTokens", function() {
+  it("should be able to get user connection tokens", function(done) {
+    var result = api.user.getTokens();
+
+    var oncomplete = function() {
+      expect(result.resolved).toBe(true);
+      done();
+    };
+
+    result.then(oncomplete, function(error) {
+      console.log(JSON.stringify(error));
+      oncomplete();
+    });
+  });
+});
+
+describe("User.removeToken", function() {
+  it("should be able to remove user connection tokens", function(done) {
+    console.log("TODO: no test token is available atm");
+    done();
+  });
+});

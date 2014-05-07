@@ -2364,6 +2364,18 @@ function initializeUser(client, settings) {
     return client.self.keys._.remove(encodeURIComponent(name))();
   };
 
+  User.getCreditCards = function() {
+    return client.self.payments.cards.get()();
+  };
+
+  User.getTokens = function() {
+    return client.self.tokens.get()();
+  };
+
+  User.removeToken = function(token) {
+    return client.self.tokens._.remove(token)();
+  };
+
   return User;
 }
 
