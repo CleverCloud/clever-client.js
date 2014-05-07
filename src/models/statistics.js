@@ -15,46 +15,21 @@ function initializeStatistics(client, settings) {
     return owner.credits.history.get.apply(client, params)({query: options});
   };
 
-  Statistics.getTwoWeeksAppConsumptions = function(prices, consumptions) {
-    var euros = _.find(prices, function(price) {
-      return price.currency == 'EUR';
-    });
-
-    var days = _.chain(14).range()
-    .map(function(n) {
-      return moment().subtract(1+n, "days").startOf("day");
-    })
-    .sortBy(function(m) {
-      return m.toDate();
-    })
-    .value();
-
-    var consumptionsByDate = function(appConsumptions, appId) {
-      var defaultConsumptions = _.foldl(days, function(consumptions, day) {
-        consumptions[day.unix()*1000] = 0;
-        return consumptions;
-      }, {});
-
-      return {
-        key: appId,
-        values: _.chain(appConsumptions)
-        .foldl(function(appConsumptionsByDate, consumption) {
-          var time = moment(consumption.date).startOf("day").unix()*1000;
-          defaultConsumptions[time] += euros.value * (-consumption.delta);
-
-          return appConsumptionsByDate;
-        }, defaultConsumptions)
-        .map(function(consumption, datetime) {
-          return [parseInt(datetime), consumption];
-        })
-        .value()
-      };
+  Statistics.getConsumptionsByAppAndByDate = function(price, consumptions) {
+    var startOfDay = function(timestamp) {
+      var day = new Date(timestamp);
+      return new Date(day.getFullYear(), day.getMonth(), day.getDate()).getTime();
     };
 
-    return _.chain(consumptions)
-      .groupBy("appId")
-      .map(consumptionsByDate)
-      .value();
+    return _.foldl(consumptions, function(consumptionsByAppAndByDate, consumption) {
+      var cc = consumptionsByAppAndByDate;
+      var date = startOfDay(consumption.date);
+
+      cc[consumption.appId] = cc[consumption.appId] || {};
+      cc[consumption.appId][date] = (cc[consumption.appId][date] || 0) - consumption.delta * price.value;
+
+      return cc;
+    }, {});
   };
 
   return Statistics;
