@@ -2018,6 +2018,20 @@ function initializeApplication(client, settings) {
     }).unique().value();
   };
 
+  Application.getAddons = function(appId, orgaId) {
+    var params = orgaId ? [orgaId, appId] : [appId];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.applications._.addons.get.apply(client, params)();
+  };
+
+  Application.linkAddon = function(appId, addonId, orgaId) {
+    var params = orgaId ? [orgaId, appId] : [appId];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.applications._.addons.post.apply(client, params)(JSON.stringify(addonId));
+  };
+
   return Application;
 }
 

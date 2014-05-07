@@ -185,3 +185,26 @@ describe("Application.getInstanceIdsFromLogs", function() {
     expect(_.difference(result, expectedResult).length).toBe(0);
   });
 });
+
+describe("Application.getAddons", function() {
+  it("should be able to addons linked to the given application", function(done) {
+    var result = api.application.getAddons("app_be09992d-992a-4571-a3d0-62a11becb899");
+
+    var oncomplete = function() {
+      expect(result.resolved).toBe(true);
+      done();
+    };
+
+    result.then(oncomplete, function(error) {
+      console.log(JSON.stringify(error));
+      oncomplete();
+    });
+  });
+});
+
+describe("Application.linkAddon", function() {
+  it("should be able to link an addon to the given application", function(done) {
+    console.log("TODO: addon aren't stable on the test API atm");
+    done();
+  });
+});
