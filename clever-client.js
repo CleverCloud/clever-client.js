@@ -2107,16 +2107,16 @@ function initializeApplication(client, settings) {
   };
 
   Application.setEnvVariable = function(key, value, appId, orgaId) {
-    var base64Key = encodeURIComponent(btoa(key.toUpperCase()));
-    var params = orgaId ? [orgaId, appId, base64Key] : [appId, base64Key];
+    var encodedKey = encodeURIComponent(key.toUpperCase());
+    var params = orgaId ? [orgaId, appId, encodedKey] : [appId, encodedKey];
     var owner = orgaId ? client.organisations._ : client.self;
 
     return owner.applications._.env._.put.apply(client, params)(JSON.stringify(value));
   };
 
   Application.removeEnvVariable = function(key, appId, orgaId) {
-    var base64Key = encodeURIComponent(btoa(key.toUpperCase()));
-    var params = orgaId ? [orgaId, appId, base64Key] : [appId, base64Key];
+    var encodedKey = encodeURIComponent(key.toUpperCase());
+    var params = orgaId ? [orgaId, appId, encodedKey] : [appId, encodedKey];
     var owner = orgaId ? client.organisations._ : client.self;
 
     return owner.applications._.env._.remove.apply(client, params)();
