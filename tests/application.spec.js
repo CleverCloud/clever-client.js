@@ -208,3 +208,37 @@ describe("Application.linkAddon", function() {
     done();
   });
 });
+
+describe("Application.getEnvVariables", function() {
+  it("should be able to get the environment variables of a given application", function(done) {
+    var result = api.application.getEnvVariables("app_be09992d-992a-4571-a3d0-62a11becb899");
+
+    var oncomplete = function() {
+      expect(result.resolved).toBe(true);
+      done();
+    };
+
+    result.then(oncomplete, function(error) {
+      console.log(JSON.stringify(error));
+      oncomplete();
+    });
+  });
+});
+
+describe("Application environment variables - create and remove", function() {
+  it("should be able to addons linked to the given application", function(done) {
+    var result = api.application.setEnvVariable("ENV_KEY", "ENV_VALUE", "app_be09992d-992a-4571-a3d0-62a11becb899").chain(function() {
+      return api.application.removeEnvVariable("ENV_KEY", "app_be09992d-992a-4571-a3d0-62a11becb899");
+    });
+
+    var oncomplete = function() {
+      expect(result.resolved).toBe(true);
+      done();
+    };
+
+    result.then(oncomplete, function(error) {
+      console.log(JSON.stringify(error));
+      oncomplete();
+    });
+  });
+});

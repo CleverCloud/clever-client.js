@@ -898,6 +898,44 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/applications/{appId}/env": [{
+    "verb": "GET",
+    "name": "getApplicationEnv",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }]
+  }],
+  "/organisations/{id}/applications/{appId}/env/{envName}": [{
+    "verb": "DELETE",
+    "name": "removeApplicationEnv",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "envName",
+      "style": "template"
+    }]
+  }, {
+    "verb": "PUT",
+    "name": "editApplicationEnv",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "envName",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/applications/{appId}/instance": [{
     "verb": "PUT",
     "name": "changeApplicationType",
@@ -1141,13 +1179,6 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
-    "name": "askForPasswordReset",
-    "params": [{
-      "name": "TesterPass",
-      "style": "header"
-    }]
-  }, {
-    "verb": "POST",
     "name": "askForPasswordResetViaForm",
     "params": [{
       "name": "TesterPass",
@@ -1155,6 +1186,13 @@ var methods = {
     }, {
       "name": "login",
       "style": "query"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "askForPasswordReset",
+    "params": [{
+      "name": "TesterPass",
+      "style": "header"
     }]
   }],
   "/password_forgotten/{key}": [{
@@ -1387,6 +1425,35 @@ var methods = {
     "name": "linkAddonToApplication",
     "params": [{
       "name": "appId",
+      "style": "template"
+    }]
+  }],
+  "/self/applications/{appId}/env": [{
+    "verb": "GET",
+    "name": "editApplicationEnv",
+    "params": [{
+      "name": "appId",
+      "style": "template"
+    }]
+  }],
+  "/self/applications/{appId}/env/{envName}": [{
+    "verb": "DELETE",
+    "name": "removeApplicationEnv",
+    "params": [{
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "envName",
+      "style": "template"
+    }]
+  }, {
+    "verb": "PUT",
+    "name": "editApplicationEnv",
+    "params": [{
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "envName",
       "style": "template"
     }]
   }],
@@ -1699,16 +1766,6 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
-    "name": "createUser",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "addonBetaInvitationKey",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
     "name": "createUserFromForm",
     "params": [{
       "name": "invitationKey",
@@ -1727,6 +1784,16 @@ var methods = {
       "style": "query"
     }, {
       "name": "terms",
+      "style": "query"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "createUser",
+    "params": [{
+      "name": "invitationKey",
+      "style": "query"
+    }, {
+      "name": "addonBetaInvitationKey",
       "style": "query"
     }]
   }],

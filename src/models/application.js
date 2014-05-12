@@ -98,5 +98,28 @@ function initializeApplication(client, settings) {
     return owner.applications._.addons.post.apply(client, params)(JSON.stringify(addonId));
   };
 
+  Application.getEnvVariables = function(appId, orgaId) {
+    var params = orgaId ? [orgaId, appId] : [appId];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.applications._.env.get.apply(client, params)();
+  };
+
+  Application.setEnvVariable = function(key, value, appId, orgaId) {
+    var base64Key = encodeURIComponent(btoa(key.toUpperCase()));
+    var params = orgaId ? [orgaId, appId, base64Key] : [appId, base64Key];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.applications._.env._.put.apply(client, params)(JSON.stringify(value));
+  };
+
+  Application.removeEnvVariable = function(key, appId, orgaId) {
+    var base64Key = encodeURIComponent(btoa(key.toUpperCase()));
+    var params = orgaId ? [orgaId, appId, base64Key] : [appId, base64Key];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.applications._.env._.remove.apply(client, params)();
+  };
+
   return Application;
 }
