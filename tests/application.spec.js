@@ -49,21 +49,31 @@ describe("Application.edit", function() {
 
 describe("Application - create and remove", function() {
   it("should be able to create and remove an application", function(done) {
-    var data = {
-      "name":"test2",
-      "description":"test2",
-      "instanceType":"sbt",
-      "instanceVersion":1,
-      "deploy":"git",
-      "minInstances":1,
-      "maxInstances":4,
-      "minFlavor":"S",
-      "maxFlavor":"S"
-    };
-
-    var result = api.application.create(data).chain(function(app) {
-      return api.application.remove(app.id);
+    var p_instance = api.products.getInstances().map(function(instances) {
+      return _.first(instances);
     });
+
+    var p_data = p_instance.map(function(instance) {
+      return {
+        "name": "test2",
+        "description": "test2",
+        "instanceType": instance.type,
+        "instanceVersion": instance.version,
+        "deploy": _.first(instance.deployments),
+        "minInstances": 1,
+        "maxInstances": 4,
+        "minFlavor": _.first(instance.flavors).name,
+        "maxFlavor": _.first(instance.flavors).name
+      };
+    });
+
+    var result = p_data
+      .chain(function(data) {
+        return api.application.create(data)
+      })
+      .chain(function(app) {
+        return api.application.remove(app.id);
+      });
 
     var oncomplete = function() {
       expect(result.resolved).toBe(true);
