@@ -7,6 +7,11 @@ var methods = {
       "style": "template"
     }]
   }],
+  "//payments/webhooks/paymill": [{
+    "verb": "POST",
+    "name": "subscriptionEvent",
+    "params": []
+  }],
   "/addons/providers": [{
     "verb": "GET",
     "name": "getAddonProviders",
@@ -121,6 +126,9 @@ var methods = {
       "style": "query"
     }, {
       "name": "commit",
+      "style": "query"
+    }, {
+      "name": "cause",
       "style": "query"
     }]
   }],
@@ -720,9 +728,6 @@ var methods = {
     }, {
       "name": "providerId",
       "style": "template"
-    }, {
-      "name": "addonBetaInvitationKey",
-      "style": "query"
     }]
   }],
   "/organisations/{id}/addons": [{
@@ -1105,15 +1110,20 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/organisations/{id}/instances": [{
+    "verb": "GET",
+    "name": "getInstancesForAllApps",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/members": [{
     "verb": "POST",
     "name": "addOrganisationMember",
     "params": [{
       "name": "id",
       "style": "template"
-    }, {
-      "name": "invitationKey",
-      "style": "query"
     }]
   }],
   "/organisations/{id}/members/{userId}": [{
@@ -1170,6 +1180,14 @@ var methods = {
       "style": "template"
     }, {
       "name": "bid",
+      "style": "template"
+    }]
+  }],
+  "/organisations/{id}/payments/recurring": [{
+    "verb": "POST",
+    "name": "createRecurrentPayment",
+    "params": [{
+      "name": "id",
       "style": "template"
     }]
   }],
@@ -1270,6 +1288,11 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/ping": [{
+    "verb": "GET",
+    "name": "ping",
+    "params": []
+  }],
   "/products/instances": [{
     "verb": "GET",
     "name": "getAvailableInstances",
@@ -1298,6 +1321,10 @@ var methods = {
     "params": []
   }],
   "/self": [{
+    "verb": "DELETE",
+    "name": "deleteUser",
+    "params": []
+  }, {
     "verb": "GET",
     "name": "getUser",
     "params": []
@@ -1622,6 +1649,11 @@ var methods = {
     "name": "report",
     "params": []
   }],
+  "/self/instances": [{
+    "verb": "GET",
+    "name": "getInstancesForAllApps",
+    "params": []
+  }],
   "/self/intercomhash": [{
     "verb": "GET",
     "name": "getIntercomeSecureModeHash",
@@ -1684,11 +1716,6 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/self/payments/periodic": [{
-    "verb": "POST",
-    "name": "createRecurrentPayment",
-    "params": []
-  }],
   "/self/tokens": [{
     "verb": "GET",
     "name": "getSelfTokens",
@@ -1721,6 +1748,9 @@ var methods = {
       "style": "query"
     }, {
       "name": "secondaryEmailKey",
+      "style": "query"
+    }, {
+      "name": "deletionKey",
       "style": "query"
     }, {
       "name": "email",
@@ -1821,6 +1851,17 @@ var methods = {
       "style": "template"
     }, {
       "name": "action",
+      "style": "query"
+    }]
+  }],
+  "/vat_check": [{
+    "verb": "GET",
+    "name": "checkVat",
+    "params": [{
+      "name": "country",
+      "style": "query"
+    }, {
+      "name": "vat",
       "style": "query"
     }]
   }],
