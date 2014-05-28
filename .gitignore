@@ -1,4 +1,6 @@
 *.swp
+/.grunt
 /bower_components
+/index.html
 /node_modules
 /src/dependencies.js
