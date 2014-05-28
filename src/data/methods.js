@@ -207,6 +207,11 @@ var methods = {
     "name": "consumeDrops",
     "params": []
   }],
+  "/internal/heroku/createoffers": [{
+    "verb": "POST",
+    "name": "createOffers",
+    "params": []
+  }],
   "/internal/heroku/{ownerId}/providers": [{
     "verb": "POST",
     "name": "uploadManifest",
@@ -1124,6 +1129,9 @@ var methods = {
     "params": [{
       "name": "id",
       "style": "template"
+    }, {
+      "name": "invitationKey",
+      "style": "query"
     }]
   }],
   "/organisations/{id}/members/{userId}": [{
@@ -1796,6 +1804,16 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
+    "name": "createUser",
+    "params": [{
+      "name": "invitationKey",
+      "style": "query"
+    }, {
+      "name": "addonBetaInvitationKey",
+      "style": "query"
+    }]
+  }, {
+    "verb": "POST",
     "name": "createUserFromForm",
     "params": [{
       "name": "invitationKey",
@@ -1814,16 +1832,6 @@ var methods = {
       "style": "query"
     }, {
       "name": "terms",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "createUser",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "addonBetaInvitationKey",
       "style": "query"
     }]
   }],
