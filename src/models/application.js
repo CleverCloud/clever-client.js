@@ -98,6 +98,13 @@ function initializeApplication(client, settings) {
     return owner.applications._.addons.post.apply(client, params)(JSON.stringify(addonId));
   };
 
+  Application.unlinkAddon = function(appId, addonId, orgaId) {
+    var params = orgaId ? [orgaId, appId, addonId] : [appId, addonId];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.applications._.addons._.remove.apply(client, params)();
+  };
+
   Application.getEnvVariables = function(appId, orgaId) {
     var params = orgaId ? [orgaId, appId] : [appId];
     var owner = orgaId ? client.organisations._ : client.self;

@@ -908,6 +908,20 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/applications/{appId}/addons/{addonId}": [{
+    "verb": "DELETE",
+    "name": "unlinkAddonFromApplication",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "addonId",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/applications/{appId}/env": [{
     "verb": "GET",
     "name": "getApplicationEnv",
@@ -1460,6 +1474,17 @@ var methods = {
     "name": "linkAddonToApplication",
     "params": [{
       "name": "appId",
+      "style": "template"
+    }]
+  }],
+  "/self/applications/{appId}/addons/{addonId}": [{
+    "verb": "DELETE",
+    "name": "unlinkAddonFromApplication",
+    "params": [{
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "addonId",
       "style": "template"
     }]
   }],
@@ -2146,6 +2171,13 @@ function initializeApplication(client, settings) {
     var owner = orgaId ? client.organisations._ : client.self;
 
     return owner.applications._.addons.post.apply(client, params)(JSON.stringify(addonId));
+  };
+
+  Application.unlinkAddon = function(appId, addonId, orgaId) {
+    var params = orgaId ? [orgaId, appId, addonId] : [appId, addonId];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.applications._.addons._.remove.apply(client, params)();
   };
 
   Application.getEnvVariables = function(appId, orgaId) {

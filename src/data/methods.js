@@ -908,6 +908,20 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/applications/{appId}/addons/{addonId}": [{
+    "verb": "DELETE",
+    "name": "unlinkAddonFromApplication",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "addonId",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/applications/{appId}/env": [{
     "verb": "GET",
     "name": "getApplicationEnv",
@@ -1460,6 +1474,17 @@ var methods = {
     "name": "linkAddonToApplication",
     "params": [{
       "name": "appId",
+      "style": "template"
+    }]
+  }],
+  "/self/applications/{appId}/addons/{addonId}": [{
+    "verb": "DELETE",
+    "name": "unlinkAddonFromApplication",
+    "params": [{
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "addonId",
       "style": "template"
     }]
   }],

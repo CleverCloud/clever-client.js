@@ -219,6 +219,13 @@ describe("Application.linkAddon", function() {
   });
 });
 
+describe("Application.unlinkAddon", function() {
+  it("should be able to unlink an addon from the given application", function(done) {
+    console.log("TODO: addon aren't stable on the test API atm");
+    done();
+  });
+});
+
 describe("Application.getEnvVariables", function() {
   it("should be able to get the environment variables of a given application", function(done) {
     var result = api.application.getEnvVariables("app_be09992d-992a-4571-a3d0-62a11becb899");
