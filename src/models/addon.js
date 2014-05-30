@@ -33,11 +33,11 @@ function initializeAddon(client, settings) {
     return owner.addons._.get.apply(client, params)();
   };
 
-  Addon.changePlan = function(addon, orgaId) {
-    var params = orgaId ? [orgaId, addon.id] : [addon.id];
+  Addon.changePlan = function(planId, addonId, orgaId) {
+    var params = orgaId ? [orgaId, addonId] : [addonId];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.addons._.put.apply(client, params)(JSON.stringify(addon));
+    return owner.addons._.put.apply(client, params)(JSON.stringify(planId));
   };
 
   Addon.remove = function(addonId, orgaId) {
@@ -59,6 +59,27 @@ function initializeAddon(client, settings) {
     var owner = orgaId ? client.organisations._ : client.self;
 
     return owner.addons._.applications.get.apply(client, params)();
+  };
+
+  Addon.getTags = function(addonId, orgaId) {
+    var params = orgaId ? [orgaId, addonId] : [addonId];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.addons._.tags.get.apply(client, params)();
+  };
+
+  Addon.addTag = function(tag, addonId, orgaId) {
+    var params = orgaId ? [orgaId, addonId, encodeURIComponent(tag)] : [addonId, encodeURIComponent(tag)];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.addons._.tags._.put.apply(client, params)();
+  };
+
+  Addon.removeTag = function(tag, addonId, orgaId) {
+    var params = orgaId ? [orgaId, addonId, encodeURIComponent(tag)] : [addonId, encodeURIComponent(tag)];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.addons._.tags._.remove.apply(client, params)();
   };
 
   return Addon;
