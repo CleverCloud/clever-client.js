@@ -1,5 +1,5 @@
 if(typeof CleverAPI == "undefined") {
-  CleverAPI = require("../clever-client.js");
+  CleverAPI = require("../dist/clever-client.js");
 }
 
 var api = CleverAPI({

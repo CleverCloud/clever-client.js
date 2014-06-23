@@ -1,6 +1,6 @@
 {
   "name": "clever-client",
-  "main": "clever-client.js",
+  "main": "dist/clever-client.js",
   "version": "0.1.5",
   "authors": [
     "rbelouin <rodolphe.belouin@gmail.com>"

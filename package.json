@@ -2,7 +2,7 @@
   "name": "clever-client",
   "version": "0.1.5",
   "description": "Javascript models for Clever-Cloud API",
-  "main": "clever-client.js",
+  "main": "dist/clever-client.js",
   "keywords": [
     "clever-cloud",
     "api",
@@ -11,15 +11,16 @@
   "author": "rbelouin <rodolphe.belouin@gmail.com>",
   "license": "BSD",
   "devDependencies": {
-    "wadl2json": "^0.1.0",
-    "grunt": "^0.4.4",
-    "grunt-contrib-concat": "^0.4.0",
-    "grunt-bower-concat": "^0.2.4",
-    "node-static": "^0.7.3",
-    "grunt-contrib-jasmine": "^0.6.3",
-    "grunt-cli": "^0.1.13",
     "bower": "^1.3.3",
-    "grunt-jasmine-node": "^0.2.1"
+    "grunt": "^0.4.5",
+    "grunt-bower-concat": "^0.2.4",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-concat": "^0.4.0",
+    "grunt-contrib-jasmine": "^0.6.3",
+    "grunt-contrib-uglify": "^0.5.0",
+    "grunt-jasmine-node": "^0.2.1",
+    "node-static": "^0.7.3",
+    "wadl2json": "^0.1.0"
   },
   "dependencies": {
     "lodash": "^2.4.1",
@@ -27,8 +28,7 @@
     "wadl-client": "^0.1.2"
   },
   "scripts": {
-    "install": "./node_modules/bower/bin/bower install && ./node_modules/grunt-cli/bin/grunt build",
-    "test": "./node_modules/grunt-cli/bin/grunt test",
-    "start": "./node_modules/grunt-cli/bin/grunt test --force && node ./tests/server.js start"
+    "test": "./node_modules/.bin/bower install && ./node_modules/.bin/grunt test",
+    "start": "./node_modules/.bin/bower install && ./node_modules/.bin/grunt test --force && node ./tests/server.js start"
   }
 }
