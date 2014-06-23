@@ -1,6 +1,6 @@
 {
   "name": "clever-client",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Javascript models for Clever-Cloud API",
   "main": "dist/clever-client.js",
   "keywords": [
@@ -28,7 +28,8 @@
     "wadl-client": "^0.1.2"
   },
   "scripts": {
-    "test": "./node_modules/.bin/bower install && ./node_modules/.bin/grunt test",
-    "start": "./node_modules/.bin/bower install && ./node_modules/.bin/grunt test --force && node ./tests/server.js start"
+    "install": "./node_modules/.bin/bower install",
+    "test": "./node_modules/.bin/grunt test",
+    "start": "./node_modules/.bin/grunt test --force && node ./tests/server.js start"
   }
 }
