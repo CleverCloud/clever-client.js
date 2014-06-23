@@ -1,7 +1,6 @@
 *.swp
 .grunt
 bower_components
-dist/
 index.html
 node_modules
 src/methods.js
