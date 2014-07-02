@@ -363,6 +363,14 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/internal/invoices/pdf": [{
+    "verb": "GET",
+    "name": "getPdfInvoices",
+    "params": [{
+      "name": "from",
+      "style": "query"
+    }]
+  }],
   "/internal/invoices/{invId}": [{
     "verb": "GET",
     "name": "getHtmlInvoice",
@@ -1429,6 +1437,11 @@ var methods = {
     "name": "getExcahngeRates",
     "params": []
   }],
+  "/products/zones": [{
+    "verb": "GET",
+    "name": "getZones",
+    "params": []
+  }],
   "/self": [{
     "verb": "DELETE",
     "name": "deleteUser",
@@ -1878,9 +1891,6 @@ var methods = {
       "name": "deletionKey",
       "style": "query"
     }, {
-      "name": "email",
-      "style": "query"
-    }, {
       "name": "url_next",
       "style": "query"
     }, {
@@ -1912,9 +1922,6 @@ var methods = {
     "name": "getSignupForm",
     "params": [{
       "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "email",
       "style": "query"
     }, {
       "name": "url_next",
@@ -2489,6 +2496,10 @@ function initializeProducts(client, settings) {
 
   Products.getCoupon = function(coupon) {
     return client.payments.coupons._.get(coupon)();
+  };
+
+  Products.getZones = function() {
+    return client.products.zones.get()();
   };
 
   return Products;

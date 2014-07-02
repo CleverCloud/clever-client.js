@@ -70,3 +70,19 @@ describe("Products.getCoupon", function() {
     });
   });
 });
+
+describe("Products.getZones", function() {
+  it("should be able to get available zones", function(done) {
+    var result = api.products.getZones();
+
+    var oncomplete = function() {
+      expect(result.resolved).toBe(true);
+      done();
+    };
+
+    result.then(oncomplete, function(error) {
+      console.log(JSON.stringify(error));
+      oncomplete();
+    });
+  });
+});

@@ -21,5 +21,9 @@ function initializeProducts(client, settings) {
     return client.payments.coupons._.get(coupon)();
   };
 
+  Products.getZones = function() {
+    return client.products.zones.get()();
+  };
+
   return Products;
 }
