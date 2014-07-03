@@ -286,11 +286,6 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/internal/heroku/createoffers": [{
-    "verb": "POST",
-    "name": "createOffers",
-    "params": []
-  }],
   "/internal/heroku/{ownerId}/providers": [{
     "verb": "POST",
     "name": "uploadManifest",
@@ -354,6 +349,10 @@ var methods = {
       "name": "owner",
       "style": "query"
     }]
+  }, {
+    "verb": "POST",
+    "name": "createPendingInvoice",
+    "params": []
   }],
   "/internal/invoices/links": [{
     "verb": "GET",
@@ -1301,7 +1300,14 @@ var methods = {
     }]
   }],
   "/organisations/{id}/payments/recurring": [{
-    "verb": "POST",
+    "verb": "DELETE",
+    "name": "deleteRecurrentPayment",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }]
+  }, {
+    "verb": "PUT",
     "name": "createRecurrentPayment",
     "params": [{
       "name": "id",
@@ -1854,6 +1860,15 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/self/payments/recurring": [{
+    "verb": "DELETE",
+    "name": "deleteRecurrentPayment",
+    "params": []
+  }, {
+    "verb": "PUT",
+    "name": "createRecurrentPayment",
+    "params": []
+  }],
   "/self/tokens": [{
     "verb": "GET",
     "name": "getSelfTokens",
@@ -1934,16 +1949,6 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
-    "name": "createUser",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "addonBetaInvitationKey",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
     "name": "createUserFromForm",
     "params": [{
       "name": "invitationKey",
@@ -1962,6 +1967,16 @@ var methods = {
       "style": "query"
     }, {
       "name": "terms",
+      "style": "query"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "createUser",
+    "params": [{
+      "name": "invitationKey",
+      "style": "query"
+    }, {
+      "name": "addonBetaInvitationKey",
       "style": "query"
     }]
   }],

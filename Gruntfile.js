@@ -64,7 +64,7 @@ module.exports = function(grunt) {
       prettify: true
     };
 
-    wadl2json.fromURL("https://api.clever-cloud.com/v2/application.wadl", function(err, methods) {
+    wadl2json.fromURL("http://api.par0.clvrcld.net/v2/application.wadl", function(err, methods) {
       if(err) {
         grunt.log.error(err);
         done(false);
