@@ -1307,6 +1307,13 @@ var methods = {
       "style": "template"
     }]
   }, {
+    "verb": "GET",
+    "name": "getRecurrentPayment",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }]
+  }, {
     "verb": "PUT",
     "name": "createRecurrentPayment",
     "params": [{
@@ -1320,13 +1327,6 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
-    "name": "askForPasswordReset",
-    "params": [{
-      "name": "TesterPass",
-      "style": "header"
-    }]
-  }, {
-    "verb": "POST",
     "name": "askForPasswordResetViaForm",
     "params": [{
       "name": "TesterPass",
@@ -1334,6 +1334,13 @@ var methods = {
     }, {
       "name": "login",
       "style": "query"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "askForPasswordReset",
+    "params": [{
+      "name": "TesterPass",
+      "style": "header"
     }]
   }],
   "/password_forgotten/{key}": [{
@@ -1414,6 +1421,11 @@ var methods = {
   "/ping": [{
     "verb": "GET",
     "name": "ping",
+    "params": []
+  }],
+  "/ping/stats": [{
+    "verb": "GET",
+    "name": "stats",
     "params": []
   }],
   "/products/instances": [{
@@ -1863,6 +1875,10 @@ var methods = {
   "/self/payments/recurring": [{
     "verb": "DELETE",
     "name": "deleteRecurrentPayment",
+    "params": []
+  }, {
+    "verb": "GET",
+    "name": "getRecurrentPayment",
     "params": []
   }, {
     "verb": "PUT",
