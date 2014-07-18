@@ -20,7 +20,7 @@ function initializeAddon(client, settings) {
 
     return owner.addons.post.apply(client, params)(JSON.stringify({
       name: information.name,
-      zone: information.zone,
+      region: information.region,
       providerId: providerId,
       plan: planId,
       payment: paymentToken
