@@ -2406,9 +2406,10 @@ function initializeInvoice(client, settings) {
 
 function initializeNews(client, settings) {
   var News = {};
+  var P = typeof require == "function" && require("pacta") ? require("pacta") : Promise;
 
   var browser_xml2entries = function(xml) {
-    var result = new Promise();
+    var result = new P();
     var $feed = xml.getElementsByTagName("feed")[0];
 
     if(!$feed) {
@@ -2441,7 +2442,7 @@ function initializeNews(client, settings) {
       };
     });
 
-    return Promise.of(entries);
+    return P.of(entries);
   };
 
   var xml2entries = (typeof XMLDocument == "undefined") ? node_xml2entries : browser_xml2entries;
