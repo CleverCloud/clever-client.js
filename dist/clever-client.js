@@ -1327,19 +1327,15 @@ var methods = {
     "params": []
   }, {
     "verb": "POST",
-    "name": "askForPasswordReset",
-    "params": [{
-      "name": "TesterPass",
-      "style": "header"
-    }]
-  }, {
-    "verb": "POST",
     "name": "askForPasswordResetViaForm",
     "params": [{
       "name": "TesterPass",
       "style": "header"
     }, {
       "name": "login",
+      "style": "query"
+    }, {
+      "name": "drop_tokens",
       "style": "query"
     }]
   }],

@@ -1,12 +1,3 @@
-if(typeof CleverAPI == "undefined") {
-  CleverAPI = require("../dist/clever-client.js");
-}
-
-var api = CleverAPI({
-  API_AUTHORIZATION: 'OAuth realm="http://ccapi.cleverapps.io/v2/oauth", oauth_consumer_key="X2tBhWFUc9GQKUujBTd11SHYPEqwF5", oauth_token="0e052c7539724f249ad7204adc085857", oauth_signature_method="PLAINTEXT", oauth_signature="3qBrT7K1DKzll7MnRHLDiAxMEqhwqu&88b19258e86b42809eaafaf9b1d2ee46", oauth_timestamp="1398409072", oauth_nonce="830970"',
-  API_HOST: "http://127.0.0.1:8080/v2"
-});
-
 describe("Organisation.getAll", function() {
   it("should be able to get user organisations", function(done) {
     var result = api.organisation.getAll("user_24b87a84-361c-4657-93b0-ca97048e82a7");

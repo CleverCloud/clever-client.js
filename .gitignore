@@ -5,3 +5,5 @@ index.html
 node_modules
 src/methods.js
 tests/dependencies.js
+tests/bundle.js
+tests/require.js

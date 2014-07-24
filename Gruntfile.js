@@ -10,6 +10,16 @@ module.exports = function(grunt) {
         dest: "tests/dependencies.js"
       }
     },
+    browserify: {
+      tests: {
+        files: {
+          "tests/bundle.js": "tests/specs.js"
+        },
+        options: {
+          ignore: ["request", "xml2json"]
+        }
+      }
+    },
     concat: {
       options: {
         separator: "\n\n"
@@ -17,19 +27,33 @@ module.exports = function(grunt) {
       dist: {
         src: ["src/methods.js", "src/require.js", "src/models/**/*.js", "src/client.js"],
         dest: "dist/clever-client.js"
+      },
+      tests: {
+        src: ["tests/require.js", "tests/**/*.spec.js"],
+        dest: "tests/specs.js"
       }
     },
     jasmine: {
-      src: ["tests/*-dump.js", "tests/dependencies.js", "dist/clever-client.js"],
-      options: {
-        host: "http://127.0.0.1:8080/",
-        keepRunner: true,
-        outfile: "index.html",
-        specs: "tests/**/*.spec.js"
+      browserify: {
+        options: {
+          host: "http://127.0.0.1:8080/",
+          keepRunner: true,
+          outfile: "index.html",
+          specs: "tests/bundle.js"
+        }
+      },
+      default: {
+        src: ["tests/*-dump.js", "tests/dependencies.js", "dist/clever-client.js"],
+        options: {
+          host: "http://127.0.0.1:8080/",
+          keepRunner: true,
+          outfile: "index.html",
+          specs: "tests/specs.js"
+        }
       }
     },
     jasmine_node: {
-      all: "tests"
+      all: "tests/specs.js"
     },
     uglify: {
       all: {
@@ -45,6 +69,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-jasmine");
   grunt.loadNpmTasks("grunt-jasmine-node");
   grunt.loadNpmTasks("grunt-contrib-uglify");
+  grunt.loadNpmTasks("grunt-browserify");
 
   grunt.registerTask("start-server", "Start test server", function() {
     server.start();
@@ -85,7 +110,7 @@ module.exports = function(grunt) {
     }, options);
   });
 
-  grunt.registerTask("build", ["bower_concat", "wadl2json", "concat", "uglify"]);
+  grunt.registerTask("build", ["bower_concat", "wadl2json", "concat", "browserify", "uglify"]);
   grunt.registerTask("test", ["build", "start-server", "jasmine", "jasmine_node", "stop-server"]);
   grunt.registerTask("default", ["build"]);
 };
