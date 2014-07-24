@@ -2444,7 +2444,7 @@ function initializeNews(client, settings) {
     return Promise.of(entries);
   };
 
-  var xml2entries = (typeof module != "undefined" && module.exports && typeof require == "function") ? node_xml2entries : browser_xml2entries;
+  var xml2entries = (typeof XMLDocument == "undefined") ? node_xml2entries : browser_xml2entries;
 
   News.getBlogPosts = function() {
     return client.newsfeeds.blog.get()().chain(xml2entries);
