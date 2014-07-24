@@ -1,6 +1,8 @@
 function initializeSession(client, settings) {
   var Session = {};
 
+  Session.querystring = typeof require == "function" && require("querystring") ? require("querystring") : querystring;
+
   Session.getOAuthParams = function(params, token_secret) {
     return _.extend({
       oauth_consumer_key: settings.API_CONSUMER_KEY,
@@ -14,13 +16,13 @@ function initializeSession(client, settings) {
   Session.login = function() {
     var res = client.oauth.request_token.post()({
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      data: querystring.encode(Session.getOAuthParams({
+      data: Session.querystring.encode(Session.getOAuthParams({
         oauth_callback: window.location.protocol + '//' + window.location.host + window.location.pathname + window.location.search
       }))
     });
 
     return res.map(function(text) {
-      var parsed = querystring.decode(text);
+      var parsed = Session.querystring.decode(text);
 
       localStorage.consumer_oauth_token = parsed.oauth_token;
       localStorage.consumer_oauth_token_secret = parsed.oauth_token_secret;
@@ -30,18 +32,18 @@ function initializeSession(client, settings) {
   };
 
   Session.getAccessTokenFromQueryString = function() {
-    var params = querystring.decode(window.location.search.slice(1));
+    var params = Session.querystring.decode(window.location.search.slice(1));
     return Session.getAccessToken(params);
   };
 
   Session.getAccessToken = function(params) {
     var res = client.oauth.access_token.post()({
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      data: querystring.encode(Session.getOAuthParams(params, localStorage.consumer_oauth_token_secret))
+      data: Session.querystring.encode(Session.getOAuthParams(params, localStorage.consumer_oauth_token_secret))
     });
 
     return res.map(function(text) {
-      var parsed = querystring.decode(text);
+      var parsed = Session.querystring.decode(text);
 
       localStorage.user_oauth_token = parsed.oauth_token;
       localStorage.user_oauth_token_secret = parsed.oauth_token_secret;
