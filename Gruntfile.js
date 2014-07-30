@@ -1,22 +1,16 @@
 module.exports = function(grunt) {
   var http = require("http");
   var fs = require("fs");
-  var server = require("./tests/server.js");
   var wadl2json = require("wadl2json");
 
   grunt.initConfig({
-    bower_concat: {
-      all: {
-        dest: "tests/dependencies.js"
-      }
-    },
-    browserify: {
-      tests: {
-        files: {
-          "tests/bundle.js": "tests/specs.js"
-        },
+    casper: {
+      test: {
         options: {
-          ignore: ["request", "xml2json"]
+          test: true
+        },
+        files: {
+          "xunit/session.xml": ["tests/session/spec.js"]
         }
       }
     },
@@ -25,35 +19,16 @@ module.exports = function(grunt) {
         separator: "\n\n"
       },
       dist: {
-        src: ["src/methods.js", "src/require.js", "src/models/**/*.js", "src/client.js"],
+        src: ["src/methods.js", "src/session.js", "src/clever-client.js"],
         dest: "dist/clever-client.js"
-      },
-      tests: {
-        src: ["tests/require.js", "tests/**/*.spec.js"],
-        dest: "tests/specs.js"
       }
     },
-    jasmine: {
-      browserify: {
+    express: {
+      test: {
         options: {
-          host: "http://127.0.0.1:8080/",
-          keepRunner: true,
-          outfile: "index.html",
-          specs: "tests/bundle.js"
-        }
-      },
-      default: {
-        src: ["tests/*-dump.js", "tests/dependencies.js", "dist/clever-client.js"],
-        options: {
-          host: "http://127.0.0.1:8080/",
-          keepRunner: true,
-          outfile: "index.html",
-          specs: "tests/specs.js"
+          script: "tests/server/app.js"
         }
       }
-    },
-    jasmine_node: {
-      all: "tests/specs.js"
     },
     uglify: {
       all: {
@@ -64,20 +39,10 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.loadNpmTasks("grunt-casper");
   grunt.loadNpmTasks("grunt-contrib-concat");
-  grunt.loadNpmTasks("grunt-bower-concat");
-  grunt.loadNpmTasks("grunt-contrib-jasmine");
-  grunt.loadNpmTasks("grunt-jasmine-node");
   grunt.loadNpmTasks("grunt-contrib-uglify");
-  grunt.loadNpmTasks("grunt-browserify");
-
-  grunt.registerTask("start-server", "Start test server", function() {
-    server.start();
-  });
-
-  grunt.registerTask("stop-server", "Stop test server", function() {
-    server.stop();
-  });
+  grunt.loadNpmTasks("grunt-express-server");
 
   grunt.registerTask("wadl2json", "Fetch Clever-Cloud API description", function() {
     var done = this.async();
@@ -112,7 +77,7 @@ module.exports = function(grunt) {
     }, options);
   });
 
-  grunt.registerTask("build", ["bower_concat", "wadl2json", "concat", "browserify", "uglify"]);
-  grunt.registerTask("test", ["build", "start-server", "jasmine", "jasmine_node", "stop-server"]);
+  grunt.registerTask("build", ["wadl2json", "concat", "uglify"]);
+  grunt.registerTask("test", ["build", "express", "casper"]);
   grunt.registerTask("default", ["build"]);
 };

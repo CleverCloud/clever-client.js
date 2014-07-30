@@ -1,10 +1,6 @@
 *.swp
-.grunt
 bower_components
-index.html
+dist/
 node_modules
 src/methods.js
-tests/dependencies.js
-tests/bundle.js
-tests/require.js
-tests/specs.js
+xunit/
