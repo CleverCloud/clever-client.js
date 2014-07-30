@@ -13,9 +13,9 @@ var Session = (function(_, querystring) {
     };
 
     session.login = typeof window == "undefined" ? function(){} : function() {
-      var res = client.oauth.request_token.post.withHeaders({
+      var res = client.oauth.request_token.post().withHeaders({
         "Content-Type": "application/x-www-form-urlencoded"
-      })(querystring.encode(session.getOAuthParams({
+      }).send(querystring.encode(session.getOAuthParams({
         oauth_callback: window.location.href
       })));
 
@@ -37,9 +37,9 @@ var Session = (function(_, querystring) {
     };
 
     session.getAccessToken = function(params) {
-      var res = client.oauth.access_token.post.withHeaders({
+      var res = client.oauth.access_token.post().withHeaders({
         "Content-Type": "application/x-www-form-urlencoded"
-      })(querystring.encode(session.getOAuthParams(params, typeof localStorage == "undefined" ? "" : localStorage.consumer_oauth_token_secret)));
+      }).send(querystring.encode(session.getOAuthParams(params, typeof localStorage == "undefined" ? "" : localStorage.consumer_oauth_token_secret)));
 
       var s_accessTokens = res.map(function(data) {
         return querystring.decode(data);
