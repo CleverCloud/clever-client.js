@@ -3,4 +3,5 @@ bower_components
 dist/
 node_modules
 src/methods.js
+tests/bundle.js
 xunit/

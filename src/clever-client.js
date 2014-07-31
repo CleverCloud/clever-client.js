@@ -17,6 +17,13 @@ var CleverAPI = (function(_, WadlClient) {
 
     client.session = Session(client, settings);
 
+    if(typeof Self == "function") {
+      Self(client, settings);
+    }
+    else {
+      console.log(typeof Self);
+    }
+
     return client;
   };
 

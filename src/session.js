@@ -33,13 +33,17 @@ var Session = (function(_, querystring) {
 
     session.getAccessTokenFromQueryString = typeof window == "undefined" ? function(){} : function() {
       var params = querystring.decode(window.location.search.slice(1));
+
+      params.consumer_oauth_token = typeof localStorage != "undefined" ? localStorage.consumer_oauth_token : "";
+      params.consumer_oauth_token_secret = typeof localStorage != "undefined" ? localStorage.consumer_oauth_token_secret : "";
+
       return session.getAccessToken(params);
     };
 
     session.getAccessToken = function(params) {
       var res = client.oauth.access_token.post().withHeaders({
         "Content-Type": "application/x-www-form-urlencoded"
-      }).send(querystring.encode(session.getOAuthParams(params, typeof localStorage == "undefined" ? "" : localStorage.consumer_oauth_token_secret)));
+      }).send(querystring.encode(session.getOAuthParams(params, params.consumer_oauth_token_secret)));
 
       var s_accessTokens = res.map(function(data) {
         return querystring.decode(data);
@@ -55,21 +59,19 @@ var Session = (function(_, querystring) {
       return s_accessTokens;
     };
 
-    session.getAuthorization = function() {
-      if(typeof localStorage != "undefined") {
-        if(localStorage.user_oauth_token && localStorage.user_oauth_token_secret) {
-          var params = Session.getOAuthParams({oauth_token: localStorage.user_oauth_token}, localStorage.user_oauth_token_secret);
-          return  ["OAuth realm=\"http://ccapi.cleverapps.io/v2/oauth\"",
-                  "oauth_consumer_key=\"" + params.oauth_consumer_key + "\"",
-                  "oauth_token=\"" + params.oauth_token + "\"",
-                  "oauth_signature_method=\"" + params.oauth_signature_method + "\"",
-                  "oauth_signature=\"" + params.oauth_signature + "\"",
-                  "oauth_timestamp=\"" + params.oauth_timestamp + "\"",
-                  "oauth_nonce=\"" + params.oauth_nonce + "\""].join(", ");
-        }
-        else {
-          return "";
-        }
+    session.getAuthorization = function(tokens) {
+      if(tokens.user_oauth_token && tokens.user_oauth_token_secret) {
+        var params = session.getOAuthParams({oauth_token: tokens.user_oauth_token}, tokens.user_oauth_token_secret);
+        return  ["OAuth realm=\"http://ccapi.cleverapps.io/v2/oauth\"",
+                "oauth_consumer_key=\"" + params.oauth_consumer_key + "\"",
+                "oauth_token=\"" + params.oauth_token + "\"",
+                "oauth_signature_method=\"" + params.oauth_signature_method + "\"",
+                "oauth_signature=\"" + params.oauth_signature + "\"",
+                "oauth_timestamp=\"" + params.oauth_timestamp + "\"",
+                "oauth_nonce=\"" + params.oauth_nonce + "\""].join(", ");
+      }
+      else {
+        return "";
       }
     };
 
