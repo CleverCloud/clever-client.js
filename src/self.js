@@ -19,6 +19,22 @@ var Self = (function(Bacon) {
       return req;
     };
 
+    var putSelf = client.self.put;
+    client.self.put = function() {
+      var req = putSelf();
+      var send = req.send;
+
+      req.send = function(body) {
+        var res = send(body);
+
+        s_self.plug(res);
+
+        return res;
+      };
+
+      return req;
+    };
+
     client.self.asProperty = function() {
       return p_self.map(function(user) {
         return user;
