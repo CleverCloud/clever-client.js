@@ -38,6 +38,12 @@ module.exports = function(grunt) {
         options: {
           script: "tests/server/app.js"
         }
+      },
+      manual: {
+        options: {
+          background: false,
+          script: "tests/server/app.js"
+        }
       }
     },
     jasmine: {
