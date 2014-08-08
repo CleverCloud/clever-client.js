@@ -49,10 +49,7 @@ var methods = {
   "/github/applications": [{
     "verb": "GET",
     "name": "getGithubApplications",
-    "params": [{
-      "name": "redirectUrl",
-      "style": "query"
-    }]
+    "params": []
   }],
   "/github/callback": [{
     "verb": "GET",
@@ -80,12 +77,13 @@ var methods = {
   "/github/keys": [{
     "verb": "GET",
     "name": "getGithubKeys",
-    "params": [{
-      "name": "redirectUrl",
-      "style": "query"
-    }]
+    "params": []
   }],
   "/github/link": [{
+    "verb": "DELETE",
+    "name": "unlinkGithub",
+    "params": []
+  }, {
     "verb": "GET",
     "name": "linkGithub",
     "params": [{
