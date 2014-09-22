@@ -105,7 +105,10 @@ var methods = {
   "/github/signup": [{
     "verb": "GET",
     "name": "githubSignup",
-    "params": []
+    "params": [{
+      "name": "redirectUrl",
+      "style": "query"
+    }]
   }, {
     "verb": "POST",
     "name": "finsihGithubSignup",
@@ -113,10 +116,19 @@ var methods = {
       "name": "transactionId",
       "style": "query"
     }, {
-      "name": "firstName",
+      "name": "name",
       "style": "query"
     }, {
-      "name": "lastName",
+      "name": "otherId",
+      "style": "query"
+    }, {
+      "name": "otherEmail",
+      "style": "query"
+    }, {
+      "name": "password",
+      "style": "query"
+    }, {
+      "name": "autoLink",
       "style": "query"
     }, {
       "name": "terms",
