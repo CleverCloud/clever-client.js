@@ -1289,6 +1289,16 @@ var methods = {
     }]
   }],
   "/organisations/{id}/payments/billings/{bid}": [{
+    "verb": "DELETE",
+    "name": "deletePurchaseOrder",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "bid",
+      "style": "template"
+    }]
+  }, {
     "verb": "GET",
     "name": "getInvoice",
     "params": [{
@@ -1373,9 +1383,9 @@ var methods = {
     "name": "getAvailablePaymentMethods",
     "params": []
   }],
-  "/payments/publickeys/paymill": [{
+  "/payments/tokens/bt": [{
     "verb": "GET",
-    "name": "getPaymillPublicKey",
+    "name": "getBraintreeToken",
     "params": []
   }],
   "/payments/webhooks/paymill": [{
@@ -1386,14 +1396,6 @@ var methods = {
       "style": "query"
     }]
   }],
-  "/payments/{bid}/cancel/paymill": [{
-    "verb": "POST",
-    "name": "cancelPaymillPayment",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }],
   "/payments/{bid}/cancel/paypal": [{
     "verb": "GET",
     "name": "cancelPaypalPayment",
@@ -1402,7 +1404,7 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/payments/{bid}/end/paymill": [{
+  "/payments/{bid}/end/bt": [{
     "verb": "POST",
     "name": "endPaymillPayment",
     "params": [{
@@ -1851,6 +1853,13 @@ var methods = {
     "params": []
   }],
   "/self/payments/billings/{bid}": [{
+    "verb": "DELETE",
+    "name": "deletePurchaseOrder",
+    "params": [{
+      "name": "bid",
+      "style": "template"
+    }]
+  }, {
     "verb": "GET",
     "name": "getInvoice",
     "params": [{
@@ -1865,16 +1874,16 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/self/payments/cards": [{
+  "/self/payments/methods": [{
     "verb": "GET",
-    "name": "getUserCards",
+    "name": "getUserPaymentMethods",
     "params": []
   }],
-  "/self/payments/cards/{cardId}": [{
+  "/self/payments/methods/{mId}": [{
     "verb": "DELETE",
     "name": "deleteUserCard",
     "params": [{
-      "name": "cardId",
+      "name": "mId",
       "style": "template"
     }]
   }],
