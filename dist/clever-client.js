@@ -1310,7 +1310,7 @@ var methods = {
     }]
   }, {
     "verb": "PUT",
-    "name": "choosePaymentMethod",
+    "name": "choosePaymentProvider",
     "params": [{
       "name": "id",
       "style": "template"
@@ -1378,9 +1378,9 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/payments/methods": [{
+  "/payments/providers": [{
     "verb": "GET",
-    "name": "getAvailablePaymentMethods",
+    "name": "getAvailablePaymentProviders",
     "params": []
   }],
   "/payments/tokens/bt": [{
@@ -1868,7 +1868,7 @@ var methods = {
     }]
   }, {
     "verb": "PUT",
-    "name": "choosePaymentMethod",
+    "name": "choosePaymentProvider",
     "params": [{
       "name": "bid",
       "style": "template"
@@ -2390,11 +2390,11 @@ function initializeInvoice(client, settings) {
     return owner.payments.billings.post.apply(client, params)(JSON.stringify(pack));
   };
 
-  Invoice.getPaymentMethods = function() {
-    return client.payments.methods.get()();
+  Invoice.getPaymentProviders = function() {
+    return client.payments.providers.get()();
   };
 
-  Invoice.choosePaymentMethod = function(method, invoice, orgaId) {
+  Invoice.choosePaymentProvider = function(method, invoice, orgaId) {
     var params = orgaId ? [orgaId, invoice.id] : [invoice.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
@@ -2715,8 +2715,8 @@ function initializeUser(client, settings) {
     return client.self.keys._.remove(encodeURIComponent(name))();
   };
 
-  User.getCreditCards = function() {
-    return client.self.payments.cards.get()();
+  User.getPaymentMethods = function() {
+    return client.self.payments.methods.get()();
   };
 
   User.getTokens = function() {
