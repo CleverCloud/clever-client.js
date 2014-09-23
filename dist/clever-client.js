@@ -2394,14 +2394,14 @@ function initializeInvoice(client, settings) {
     return client.payments.providers.get()();
   };
 
-  Invoice.choosePaymentProvider = function(method, invoice, orgaId) {
+  Invoice.choosePaymentProvider = function(provider, invoice, orgaId) {
     var params = orgaId ? [orgaId, invoice.id] : [invoice.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.payments.billings._.put.apply(client, params)(JSON.stringify(method));
+    return owner.payments.billings._.put.apply(client, params)(JSON.stringify(provider));
   };
 
-  Invoice.getPaymillKey = function() {
+  Invoice.getBraintreeToken = function() {
     return client.payments.publickeys.paymill.get()();
   };
 
