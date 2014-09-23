@@ -39,7 +39,7 @@ describe("Addon.changePlan", function() {
 
 describe("Addon - provision and remove", function() {
   it("should be able to provision an addon, then remove it", function(done) {
-    console.log("TODO: handle paymill token in tests");
+    console.log("TODO: handle braintree token in tests");
     done();
   });
 });

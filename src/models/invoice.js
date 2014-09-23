@@ -19,8 +19,8 @@ function initializeInvoice(client, settings) {
     return owner.payments.billings._.put.apply(client, params)(JSON.stringify(method));
   };
 
-  Invoice.getPaymillKey = function() {
-    return client.payments.publickeys.paymill.get()();
+  Invoice.getBraintreeToken = function() {
+    return client.payments.tokens.bt.get()();
   };
 
   Invoice.get = function(invoiceId, orgaId) {

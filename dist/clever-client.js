@@ -1406,7 +1406,7 @@ var methods = {
   }],
   "/payments/{bid}/end/bt": [{
     "verb": "POST",
-    "name": "endPaymillPayment",
+    "name": "endBraintreePayment",
     "params": [{
       "name": "bid",
       "style": "template"
@@ -2394,15 +2394,15 @@ function initializeInvoice(client, settings) {
     return client.payments.providers.get()();
   };
 
-  Invoice.choosePaymentProvider = function(provider, invoice, orgaId) {
+  Invoice.choosePaymentProvider = function(method, invoice, orgaId) {
     var params = orgaId ? [orgaId, invoice.id] : [invoice.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
-    return owner.payments.billings._.put.apply(client, params)(JSON.stringify(provider));
+    return owner.payments.billings._.put.apply(client, params)(JSON.stringify(method));
   };
 
   Invoice.getBraintreeToken = function() {
-    return client.payments.publickeys.paymill.get()();
+    return client.payments.tokens.bt.get()();
   };
 
   Invoice.get = function(invoiceId, orgaId) {
