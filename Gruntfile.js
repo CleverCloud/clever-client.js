@@ -89,7 +89,9 @@ module.exports = function(grunt) {
       prettify: true
     };
 
-    wadl2json.fromURL("http://api.par0.clvrcld.net/v2/application.wadl", function(err, methods) {
+	 var url = (process.env['API_BASE_URL'] || "https://api.par0.clvrcld.net/v2") + "/application.wadl";
+	 console.log("Using url", url);
+    wadl2json.fromURL(url, function(err, methods) {
       if(err) {
         grunt.log.error(err);
         done(false);
