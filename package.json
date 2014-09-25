@@ -1,6 +1,6 @@
 {
   "name": "clever-client",
-  "version": "0.1.20",
+  "version": "0.1.20.1",
   "description": "Javascript models for Clever-Cloud API",
   "main": "dist/clever-client.js",
   "keywords": [
@@ -26,7 +26,7 @@
   "dependencies": {
     "lodash": "^2.4.1",
     "pacta": "^0.5.0",
-    "querystring": "git+ssh://git@github.com:anodynos/node2web_querystring.git#3.24.10",
+    "querystring": "git://github.com/anodynos/node2web_querystring.git#3.24.10",
     "wadl-client": "^0.1.5"
   },
   "scripts": {
