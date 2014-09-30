@@ -1319,6 +1319,17 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/payments/billings/{bid}.pdf": [{
+    "verb": "GET",
+    "name": "getPdfInvoice",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "bid",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/payments/recurring": [{
     "verb": "DELETE",
     "name": "deleteRecurrentPayment",
@@ -1406,7 +1417,7 @@ var methods = {
   }],
   "/payments/{bid}/end/bt": [{
     "verb": "POST",
-    "name": "endBraintreePayment",
+    "name": "endPaymentWithBraintree",
     "params": [{
       "name": "bid",
       "style": "template"
@@ -1869,6 +1880,14 @@ var methods = {
   }, {
     "verb": "PUT",
     "name": "choosePaymentProvider",
+    "params": [{
+      "name": "bid",
+      "style": "template"
+    }]
+  }],
+  "/self/payments/billings/{bid}.pdf": [{
+    "verb": "GET",
+    "name": "getPdfInvoice",
     "params": [{
       "name": "bid",
       "style": "template"
