@@ -8,19 +8,19 @@ function initializeInvoice(client, settings) {
     return owner.payments.billings.post.apply(client, params)(JSON.stringify(pack));
   };
 
-  Invoice.getPaymentMethods = function() {
-    return client.payments.methods.get()();
+  Invoice.getPaymentProviders = function() {
+    return client.payments.providers.get()();
   };
 
-  Invoice.choosePaymentMethod = function(method, invoice, orgaId) {
+  Invoice.choosePaymentProvider = function(method, invoice, orgaId) {
     var params = orgaId ? [orgaId, invoice.id] : [invoice.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
     return owner.payments.billings._.put.apply(client, params)(JSON.stringify(method));
   };
 
-  Invoice.getPaymillKey = function() {
-    return client.payments.publickeys.paymill.get()();
+  Invoice.getBraintreeToken = function() {
+    return client.payments.tokens.bt.get()();
   };
 
   Invoice.get = function(invoiceId, orgaId) {

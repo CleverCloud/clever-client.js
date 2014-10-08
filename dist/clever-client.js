@@ -105,7 +105,10 @@ var methods = {
   "/github/signup": [{
     "verb": "GET",
     "name": "githubSignup",
-    "params": []
+    "params": [{
+      "name": "redirectUrl",
+      "style": "query"
+    }]
   }, {
     "verb": "POST",
     "name": "finsihGithubSignup",
@@ -113,10 +116,19 @@ var methods = {
       "name": "transactionId",
       "style": "query"
     }, {
-      "name": "firstName",
+      "name": "name",
       "style": "query"
     }, {
-      "name": "lastName",
+      "name": "otherId",
+      "style": "query"
+    }, {
+      "name": "otherEmail",
+      "style": "query"
+    }, {
+      "name": "password",
+      "style": "query"
+    }, {
+      "name": "autoLink",
       "style": "query"
     }, {
       "name": "terms",
@@ -1277,6 +1289,16 @@ var methods = {
     }]
   }],
   "/organisations/{id}/payments/billings/{bid}": [{
+    "verb": "DELETE",
+    "name": "deletePurchaseOrder",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "bid",
+      "style": "template"
+    }]
+  }, {
     "verb": "GET",
     "name": "getInvoice",
     "params": [{
@@ -1288,7 +1310,18 @@ var methods = {
     }]
   }, {
     "verb": "PUT",
-    "name": "choosePaymentMethod",
+    "name": "choosePaymentProvider",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "bid",
+      "style": "template"
+    }]
+  }],
+  "/organisations/{id}/payments/billings/{bid}.pdf": [{
+    "verb": "GET",
+    "name": "getPdfInvoice",
     "params": [{
       "name": "id",
       "style": "template"
@@ -1356,14 +1389,14 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/payments/methods": [{
+  "/payments/providers": [{
     "verb": "GET",
-    "name": "getAvailablePaymentMethods",
+    "name": "getAvailablePaymentProviders",
     "params": []
   }],
-  "/payments/publickeys/paymill": [{
+  "/payments/tokens/bt": [{
     "verb": "GET",
-    "name": "getPaymillPublicKey",
+    "name": "getBraintreeToken",
     "params": []
   }],
   "/payments/webhooks/paymill": [{
@@ -1374,14 +1407,6 @@ var methods = {
       "style": "query"
     }]
   }],
-  "/payments/{bid}/cancel/paymill": [{
-    "verb": "POST",
-    "name": "cancelPaymillPayment",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }],
   "/payments/{bid}/cancel/paypal": [{
     "verb": "GET",
     "name": "cancelPaypalPayment",
@@ -1390,9 +1415,9 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/payments/{bid}/end/paymill": [{
+  "/payments/{bid}/end/bt": [{
     "verb": "POST",
-    "name": "endPaymillPayment",
+    "name": "endPaymentWithBraintree",
     "params": [{
       "name": "bid",
       "style": "template"
@@ -1839,6 +1864,13 @@ var methods = {
     "params": []
   }],
   "/self/payments/billings/{bid}": [{
+    "verb": "DELETE",
+    "name": "deletePurchaseOrder",
+    "params": [{
+      "name": "bid",
+      "style": "template"
+    }]
+  }, {
     "verb": "GET",
     "name": "getInvoice",
     "params": [{
@@ -1847,22 +1879,30 @@ var methods = {
     }]
   }, {
     "verb": "PUT",
-    "name": "choosePaymentMethod",
+    "name": "choosePaymentProvider",
     "params": [{
       "name": "bid",
       "style": "template"
     }]
   }],
-  "/self/payments/cards": [{
+  "/self/payments/billings/{bid}.pdf": [{
     "verb": "GET",
-    "name": "getUserCards",
+    "name": "getPdfInvoice",
+    "params": [{
+      "name": "bid",
+      "style": "template"
+    }]
+  }],
+  "/self/payments/methods": [{
+    "verb": "GET",
+    "name": "getUserPaymentMethods",
     "params": []
   }],
-  "/self/payments/cards/{cardId}": [{
+  "/self/payments/methods/{mId}": [{
     "verb": "DELETE",
     "name": "deleteUserCard",
     "params": [{
-      "name": "cardId",
+      "name": "mId",
       "style": "template"
     }]
   }],
@@ -2369,19 +2409,19 @@ function initializeInvoice(client, settings) {
     return owner.payments.billings.post.apply(client, params)(JSON.stringify(pack));
   };
 
-  Invoice.getPaymentMethods = function() {
-    return client.payments.methods.get()();
+  Invoice.getPaymentProviders = function() {
+    return client.payments.providers.get()();
   };
 
-  Invoice.choosePaymentMethod = function(method, invoice, orgaId) {
+  Invoice.choosePaymentProvider = function(method, invoice, orgaId) {
     var params = orgaId ? [orgaId, invoice.id] : [invoice.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
     return owner.payments.billings._.put.apply(client, params)(JSON.stringify(method));
   };
 
-  Invoice.getPaymillKey = function() {
-    return client.payments.publickeys.paymill.get()();
+  Invoice.getBraintreeToken = function() {
+    return client.payments.tokens.bt.get()();
   };
 
   Invoice.get = function(invoiceId, orgaId) {
@@ -2694,8 +2734,8 @@ function initializeUser(client, settings) {
     return client.self.keys._.remove(encodeURIComponent(name))();
   };
 
-  User.getCreditCards = function() {
-    return client.self.payments.cards.get()();
+  User.getPaymentMethods = function() {
+    return client.self.payments.methods.get()();
   };
 
   User.getTokens = function() {

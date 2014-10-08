@@ -40,11 +40,11 @@ describe("Invoice - buy credits", function() {
       return api.invoice.choosePaymentMethod(paymentMethod, invoice);
     });
 
-    var p_paymillKey = api.invoice.getPaymillKey();
+    var p_braintreeToken = api.invoice.getBraintreeToken();
 
-    console.log("TODO: add paymill client to clever-client.js in order to fully test the payment flow");
+    console.log("TODO: add braintree client to clever-client.js in order to fully test the payment flow");
     var result = p_invoiceWithMethod.chain(function(invoice) {
-      return p_paymillKey;
+      return p_braintreeToken;
     });
 
     var oncomplete = function() {
