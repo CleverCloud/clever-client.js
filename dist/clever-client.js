@@ -7,10 +7,24 @@ var methods = {
       "style": "template"
     }]
   }],
-  "//payments/webhooks/paymill": [{
+  "//payments/webhooks/bt": [{
     "verb": "POST",
     "name": "subscriptionEvent",
-    "params": []
+    "params": [{
+      "name": "bt_signature",
+      "style": "query"
+    }, {
+      "name": "bt_payload",
+      "style": "query"
+    }]
+  }],
+  "//payments/webhooks/paymill": [{
+    "verb": "POST",
+    "name": "handlePaymillWebHook",
+    "params": [{
+      "name": "verif",
+      "style": "query"
+    }]
   }],
   "/addons/providers": [{
     "verb": "GET",
@@ -1399,14 +1413,6 @@ var methods = {
     "name": "getBraintreeToken",
     "params": []
   }],
-  "/payments/webhooks/paymill": [{
-    "verb": "POST",
-    "name": "handlePaymillWebHook",
-    "params": [{
-      "name": "verif",
-      "style": "query"
-    }]
-  }],
   "/payments/{bid}/cancel/paypal": [{
     "verb": "GET",
     "name": "cancelPaypalPayment",
@@ -1896,6 +1902,10 @@ var methods = {
   "/self/payments/methods": [{
     "verb": "GET",
     "name": "getUserPaymentMethods",
+    "params": []
+  }, {
+    "verb": "POST",
+    "name": "addUserMethod",
     "params": []
   }],
   "/self/payments/methods/{mId}": [{
