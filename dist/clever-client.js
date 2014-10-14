@@ -116,6 +116,14 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/github/redeploy": [{
+    "verb": "POST",
+    "name": "redeployApp",
+    "params": [{
+      "name": "token",
+      "style": "query"
+    }]
+  }],
   "/github/signup": [{
     "verb": "GET",
     "name": "githubSignup",
@@ -148,6 +156,11 @@ var methods = {
       "name": "terms",
       "style": "query"
     }]
+  }],
+  "/github/username": [{
+    "verb": "GET",
+    "name": "getGithubUsername",
+    "params": []
   }],
   "/internal/activeMails": [{
     "verb": "GET",
@@ -1032,6 +1045,17 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/applications/{appId}/deployments": [{
+    "verb": "GET",
+    "name": "getApplicationDeploymentsForOrga",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/applications/{appId}/env": [{
     "verb": "GET",
     "name": "getApplicationEnv",
@@ -1413,6 +1437,14 @@ var methods = {
     "name": "getBraintreeToken",
     "params": []
   }],
+  "/payments/webhooks/paymill": [{
+    "verb": "POST",
+    "name": "handlePaymillWebHook",
+    "params": [{
+      "name": "verif",
+      "style": "query"
+    }]
+  }],
   "/payments/{bid}/cancel/paypal": [{
     "verb": "GET",
     "name": "cancelPaypalPayment",
@@ -1628,6 +1660,14 @@ var methods = {
       "style": "template"
     }, {
       "name": "addonId",
+      "style": "template"
+    }]
+  }],
+  "/self/applications/{appId}/deployments": [{
+    "verb": "GET",
+    "name": "getApplication",
+    "params": [{
+      "name": "appId",
       "style": "template"
     }]
   }],
@@ -2405,6 +2445,13 @@ function initializeApplication(client, settings) {
     return owner.applications._.env._.remove.apply(client, params)();
   };
 
+  Application.getDeployments = function(appId, orgaId) {
+    var params = orgaId ? [orgaId, appId] : [appId];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.applications._.deployments.get.apply(client, params)();
+  };
+
   return Application;
 }
 
@@ -2419,15 +2466,23 @@ function initializeInvoice(client, settings) {
     return owner.payments.billings.post.apply(client, params)(JSON.stringify(pack));
   };
 
+  Invoice.getPaymentMethods = function() {
+    return client.payments.methods.get()();
+  };
+
   Invoice.getPaymentProviders = function() {
     return client.payments.providers.get()();
   };
 
-  Invoice.choosePaymentProvider = function(method, invoice, orgaId) {
+  Invoice.choosePaymentMethod = Invoice.choosePaymentProvider = function(method, invoice, orgaId) {
     var params = orgaId ? [orgaId, invoice.id] : [invoice.id];
     var owner = orgaId ? client.organisations._ : client.self;
 
     return owner.payments.billings._.put.apply(client, params)(JSON.stringify(method));
+  };
+
+  Invoice.getPaymillKey = function() {
+    return client.payments.publickeys.paymill.get()();
   };
 
   Invoice.getBraintreeToken = function() {
@@ -2742,6 +2797,10 @@ function initializeUser(client, settings) {
 
   User.removeSSHKey = function(name) {
     return client.self.keys._.remove(encodeURIComponent(name))();
+  };
+
+  User.getCreditCards = function() {
+    return client.self.payments.cards.get()();
   };
 
   User.getPaymentMethods = function() {
