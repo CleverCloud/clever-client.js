@@ -7,24 +7,10 @@ var methods = {
       "style": "template"
     }]
   }],
-  "//payments/webhooks/bt": [{
-    "verb": "POST",
-    "name": "subscriptionEvent",
-    "params": [{
-      "name": "bt_signature",
-      "style": "query"
-    }, {
-      "name": "bt_payload",
-      "style": "query"
-    }]
-  }],
   "//payments/webhooks/paymill": [{
     "verb": "POST",
-    "name": "handlePaymillWebHook",
-    "params": [{
-      "name": "verif",
-      "style": "query"
-    }]
+    "name": "subscriptionEvent",
+    "params": []
   }],
   "/addons/providers": [{
     "verb": "GET",
@@ -1327,16 +1313,6 @@ var methods = {
     }]
   }],
   "/organisations/{id}/payments/billings/{bid}": [{
-    "verb": "DELETE",
-    "name": "deletePurchaseOrder",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "bid",
-      "style": "template"
-    }]
-  }, {
     "verb": "GET",
     "name": "getInvoice",
     "params": [{
@@ -1348,7 +1324,7 @@ var methods = {
     }]
   }, {
     "verb": "PUT",
-    "name": "choosePaymentProvider",
+    "name": "choosePaymentMethod",
     "params": [{
       "name": "id",
       "style": "template"
@@ -1427,14 +1403,14 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/payments/providers": [{
+  "/payments/methods": [{
     "verb": "GET",
-    "name": "getAvailablePaymentProviders",
+    "name": "getAvailablePaymentMethods",
     "params": []
   }],
-  "/payments/tokens/bt": [{
+  "/payments/publickeys/paymill": [{
     "verb": "GET",
-    "name": "getBraintreeToken",
+    "name": "getPaymillPublicKey",
     "params": []
   }],
   "/payments/webhooks/paymill": [{
@@ -1445,6 +1421,14 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/payments/{bid}/cancel/paymill": [{
+    "verb": "POST",
+    "name": "cancelPaymillPayment",
+    "params": [{
+      "name": "bid",
+      "style": "template"
+    }]
+  }],
   "/payments/{bid}/cancel/paypal": [{
     "verb": "GET",
     "name": "cancelPaypalPayment",
@@ -1453,9 +1437,9 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/payments/{bid}/end/bt": [{
+  "/payments/{bid}/end/paymill": [{
     "verb": "POST",
-    "name": "endPaymentWithBraintree",
+    "name": "endPaymillPayment",
     "params": [{
       "name": "bid",
       "style": "template"
@@ -1900,6 +1884,14 @@ var methods = {
     "name": "getPaymentInfo",
     "params": []
   }],
+  "/self/payments/billangs/{bid}.pdf": [{
+    "verb": "GET",
+    "name": "getPdfInvoice",
+    "params": [{
+      "name": "bid",
+      "style": "template"
+    }]
+  }],
   "/self/payments/billings": [{
     "verb": "GET",
     "name": "getInvoices",
@@ -1910,13 +1902,6 @@ var methods = {
     "params": []
   }],
   "/self/payments/billings/{bid}": [{
-    "verb": "DELETE",
-    "name": "deletePurchaseOrder",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }, {
     "verb": "GET",
     "name": "getInvoice",
     "params": [{
@@ -1925,34 +1910,22 @@ var methods = {
     }]
   }, {
     "verb": "PUT",
-    "name": "choosePaymentProvider",
+    "name": "choosePaymentMethod",
     "params": [{
       "name": "bid",
       "style": "template"
     }]
   }],
-  "/self/payments/billings/{bid}.pdf": [{
+  "/self/payments/cards": [{
     "verb": "GET",
-    "name": "getPdfInvoice",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }],
-  "/self/payments/methods": [{
-    "verb": "GET",
-    "name": "getUserPaymentMethods",
-    "params": []
-  }, {
-    "verb": "POST",
-    "name": "addUserMethod",
+    "name": "getUserCards",
     "params": []
   }],
-  "/self/payments/methods/{mId}": [{
+  "/self/payments/cards/{cardId}": [{
     "verb": "DELETE",
     "name": "deleteUserCard",
     "params": [{
-      "name": "mId",
+      "name": "cardId",
       "style": "template"
     }]
   }],
