@@ -40,6 +40,10 @@ function initializeUser(client, settings) {
     return client.self.keys._.remove(encodeURIComponent(name))();
   };
 
+  User.getCreditCards = function() {
+    return client.self.payments.cards.get()();
+  };
+
   User.getPaymentMethods = function() {
     return client.self.payments.methods.get()();
   };

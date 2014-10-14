@@ -128,5 +128,12 @@ function initializeApplication(client, settings) {
     return owner.applications._.env._.remove.apply(client, params)();
   };
 
+  Application.getDeployments = function(appId, orgaId) {
+    var params = orgaId ? [orgaId, appId] : [appId];
+    var owner = orgaId ? client.organisations._ : client.self;
+
+    return owner.applications._.deployments.get.apply(client, params)();
+  };
+
   return Application;
 }
