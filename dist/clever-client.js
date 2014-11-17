@@ -28,6 +28,11 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/authorize": [{
+    "verb": "POST",
+    "name": "authorize",
+    "params": []
+  }],
   "/cleverapps/{name}": [{
     "verb": "GET",
     "name": "checkDomainAvailability",
@@ -74,6 +79,11 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/github/emails": [{
+    "verb": "GET",
+    "name": "getGithubEmails",
+    "params": []
+  }],
   "/github/keys": [{
     "verb": "GET",
     "name": "getGithubKeys",
@@ -106,8 +116,14 @@ var methods = {
     "verb": "POST",
     "name": "redeployApp",
     "params": [{
-      "name": "token",
-      "style": "query"
+      "name": "User-Agent",
+      "style": "header"
+    }, {
+      "name": "X-Github-Event",
+      "style": "header"
+    }, {
+      "name": "X-Hub-Signature",
+      "style": "header"
     }]
   }],
   "/github/signup": [{
@@ -409,6 +425,14 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/internal/invoices/{invoice}/refund": [{
+    "verb": "PUT",
+    "name": "refundInvoice",
+    "params": [{
+      "name": "invoice",
+      "style": "template"
+    }]
+  }],
   "/internal/oauth1consumers": [{
     "verb": "POST",
     "name": "createOAuth1Consumer",
@@ -506,14 +530,6 @@ var methods = {
       "name": "name",
       "style": "template"
     }, {
-      "name": "userId",
-      "style": "template"
-    }]
-  }],
-  "/internal/users/{userId}/validate": [{
-    "verb": "POST",
-    "name": "validateUser",
-    "params": [{
       "name": "userId",
       "style": "template"
     }]
@@ -638,9 +654,6 @@ var methods = {
       "style": "query"
     }, {
       "name": "access_consumption_statistics",
-      "style": "query"
-    }, {
-      "name": "report_feedback",
       "style": "query"
     }]
   }],
@@ -1040,11 +1053,27 @@ var methods = {
     }, {
       "name": "appId",
       "style": "template"
+    }, {
+      "name": "limit",
+      "style": "query"
+    }, {
+      "name": "offset",
+      "style": "query"
     }]
   }],
   "/organisations/{id}/applications/{appId}/env": [{
     "verb": "GET",
     "name": "getApplicationEnv",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }]
+  }, {
+    "verb": "PUT",
+    "name": "editApplicationEnvironment",
     "params": [{
       "name": "id",
       "style": "template"
@@ -1221,6 +1250,21 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/avatar": [{
+    "verb": "PUT",
+    "name": "setOrgaAvatar",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }]
+  }, {
+    "verb": "PUT",
+    "name": "setOrgaAvatarFromSource",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/credits": [{
     "verb": "GET",
     "name": "getAmount",
@@ -1390,9 +1434,19 @@ var methods = {
     "params": [{
       "name": "key",
       "style": "template"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "resetPasswordForgotten",
+    "params": [{
+      "name": "key",
+      "style": "template"
     }, {
-      "name": "TesterPass",
-      "style": "header"
+      "name": "pass",
+      "style": "query"
+    }, {
+      "name": "pass2",
+      "style": "query"
     }]
   }],
   "/payments/coupons/{name}": [{
@@ -1653,11 +1707,24 @@ var methods = {
     "params": [{
       "name": "appId",
       "style": "template"
+    }, {
+      "name": "limit",
+      "style": "query"
+    }, {
+      "name": "offset",
+      "style": "query"
     }]
   }],
   "/self/applications/{appId}/env": [{
     "verb": "GET",
     "name": "editApplicationEnv",
+    "params": [{
+      "name": "appId",
+      "style": "template"
+    }]
+  }, {
+    "verb": "PUT",
+    "name": "editApplicationEnvironment",
     "params": [{
       "name": "appId",
       "style": "template"
@@ -1792,6 +1859,15 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/self/avatar": [{
+    "verb": "PUT",
+    "name": "setUserAvatar",
+    "params": []
+  }, {
+    "verb": "PUT",
+    "name": "setUserAvatarFromSource",
+    "params": []
+  }],
   "/self/change_password": [{
     "verb": "PUT",
     "name": "changeUserPassword",
@@ -1843,11 +1919,6 @@ var methods = {
       "name": "email",
       "style": "template"
     }]
-  }],
-  "/self/feedbacks": [{
-    "verb": "POST",
-    "name": "report",
-    "params": []
   }],
   "/self/instances": [{
     "verb": "GET",
@@ -1967,22 +2038,10 @@ var methods = {
     "verb": "GET",
     "name": "getLoginForm",
     "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "validationKey",
-      "style": "query"
-    }, {
       "name": "secondaryEmailKey",
       "style": "query"
     }, {
       "name": "deletionKey",
-      "style": "query"
-    }, {
-      "name": "url_next",
-      "style": "query"
-    }, {
-      "name": "fromAuthorize",
       "style": "query"
     }]
   }, {
@@ -1993,12 +2052,6 @@ var methods = {
       "style": "query"
     }, {
       "name": "pass",
-      "style": "query"
-    }, {
-      "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "url_next",
       "style": "query"
     }, {
       "name": "from_authorize",
