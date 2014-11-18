@@ -1265,6 +1265,23 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/consumptions": [{
+    "verb": "GET",
+    "name": "getAmount",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "query"
+    }, {
+      "name": "from",
+      "style": "query"
+    }, {
+      "name": "to",
+      "style": "query"
+    }]
+  }],
   "/organisations/{id}/credits": [{
     "verb": "GET",
     "name": "getAmount",
@@ -1302,6 +1319,13 @@ var methods = {
     }]
   }],
   "/organisations/{id}/members": [{
+    "verb": "GET",
+    "name": "getOrganisationMembers",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }]
+  }, {
     "verb": "POST",
     "name": "addOrganisationMember",
     "params": [{
@@ -1877,6 +1901,20 @@ var methods = {
     "verb": "GET",
     "name": "getConfirmationEmail",
     "params": []
+  }],
+  "/self/consumptions": [{
+    "verb": "GET",
+    "name": "getConsumptions",
+    "params": [{
+      "name": "appId",
+      "style": "query"
+    }, {
+      "name": "from",
+      "style": "query"
+    }, {
+      "name": "to",
+      "style": "query"
+    }]
   }],
   "/self/credits": [{
     "verb": "GET",
