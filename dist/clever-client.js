@@ -409,9 +409,9 @@ var methods = {
       "style": "query"
     }]
   }],
-  "/internal/invoices/{invId}": [{
+  "/internal/invoices/{invId}.pdf": [{
     "verb": "GET",
-    "name": "getHtmlInvoice",
+    "name": "getPdfInvoice",
     "params": [{
       "name": "invId",
       "style": "template"
@@ -2080,6 +2080,9 @@ var methods = {
       "style": "query"
     }, {
       "name": "deletionKey",
+      "style": "query"
+    }, {
+      "name": "fromAuthorize",
       "style": "query"
     }]
   }, {
