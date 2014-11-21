@@ -27,7 +27,7 @@
     "lodash": "^2.4.1",
     "pacta": "^0.5.0",
     "querystring": "git://github.com/anodynos/node2web_querystring.git#3.24.10",
-    "wadl-client": "^0.1.5"
+    "wadl-client": "0.1.6"
   },
   "scripts": {
     "install": "./node_modules/.bin/bower install",
