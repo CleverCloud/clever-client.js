@@ -1061,6 +1061,20 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/organisations/{id}/applications/{appId}/deployments/{deploymentId}/instances": [{
+    "verb": "DELETE",
+    "name": "getApplicationDeploymentsForOrga",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "deploymentId",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/applications/{appId}/env": [{
     "verb": "GET",
     "name": "getApplicationEnv",
@@ -1555,6 +1569,23 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/products/instances/{type}-{version}": [{
+    "verb": "GET",
+    "name": "getAvailableInstance",
+    "params": [{
+      "name": "type",
+      "style": "template"
+    }, {
+      "name": "version",
+      "style": "template"
+    }, {
+      "name": "for",
+      "style": "query"
+    }, {
+      "name": "app",
+      "style": "query"
+    }]
+  }],
   "/products/packages": [{
     "verb": "GET",
     "name": "getAvailablePackages",
@@ -1737,6 +1768,20 @@ var methods = {
     }, {
       "name": "offset",
       "style": "query"
+    }]
+  }],
+  "/self/applications/{appId}/deployments/{deploymentId}/instances": [{
+    "verb": "DELETE",
+    "name": "getApplicationDeploymentsForOrga",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "deploymentId",
+      "style": "template"
     }]
   }],
   "/self/applications/{appId}/env": [{
