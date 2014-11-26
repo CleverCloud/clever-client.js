@@ -1090,6 +1090,20 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/organisations/{id}/applications/{appId}/deployments/{deploymentId}/instances": [{
+    "verb": "DELETE",
+    "name": "getApplicationDeploymentsForOrga",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "deploymentId",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/applications/{appId}/env": [{
     "verb": "GET",
     "name": "getApplicationEnv",
@@ -1317,26 +1331,6 @@ var methods = {
     "params": [{
       "name": "id",
       "style": "template"
-    }]
-  }],
-  "/organisations/{id}/credits/history": [{
-    "verb": "GET",
-    "name": "getStats",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "type",
-      "style": "query"
-    }, {
-      "name": "appId",
-      "style": "query"
-    }, {
-      "name": "from",
-      "style": "query"
-    }, {
-      "name": "to",
-      "style": "query"
     }]
   }],
   "/organisations/{id}/instances": [{
@@ -1586,6 +1580,23 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/products/instances/{type}-{version}": [{
+    "verb": "GET",
+    "name": "getAvailableInstance",
+    "params": [{
+      "name": "type",
+      "style": "template"
+    }, {
+      "name": "version",
+      "style": "template"
+    }, {
+      "name": "for",
+      "style": "query"
+    }, {
+      "name": "app",
+      "style": "query"
+    }]
+  }],
   "/products/packages": [{
     "verb": "GET",
     "name": "getAvailablePackages",
@@ -1770,6 +1781,20 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/self/applications/{appId}/deployments/{deploymentId}/instances": [{
+    "verb": "DELETE",
+    "name": "getApplicationDeploymentsForOrga",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }, {
+      "name": "deploymentId",
+      "style": "template"
+    }]
+  }],
   "/self/applications/{appId}/env": [{
     "verb": "GET",
     "name": "editApplicationEnv",
@@ -1951,23 +1976,6 @@ var methods = {
     "verb": "GET",
     "name": "getAmount",
     "params": []
-  }],
-  "/self/credits/history": [{
-    "verb": "GET",
-    "name": "getStats",
-    "params": [{
-      "name": "type",
-      "style": "query"
-    }, {
-      "name": "appId",
-      "style": "query"
-    }, {
-      "name": "from",
-      "style": "query"
-    }, {
-      "name": "to",
-      "style": "query"
-    }]
   }],
   "/self/emails": [{
     "verb": "GET",
