@@ -359,28 +359,6 @@ var methods = {
     "name": "getInstances",
     "params": []
   }],
-  "/internal/instances/dec": [{
-    "verb": "POST",
-    "name": "dec",
-    "params": [{
-      "name": "type",
-      "style": "query"
-    }, {
-      "name": "version",
-      "style": "query"
-    }]
-  }],
-  "/internal/instances/inc": [{
-    "verb": "POST",
-    "name": "inc",
-    "params": [{
-      "name": "type",
-      "style": "query"
-    }, {
-      "name": "version",
-      "style": "query"
-    }]
-  }],
   "/internal/instances/{type}-{version}": [{
     "verb": "GET",
     "name": "getInstance",
