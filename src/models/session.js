@@ -15,7 +15,10 @@ function initializeSession(client, settings) {
 
   Session.login = function() {
     var res = client.oauth.request_token.post()({
-      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": ""
+      },
       data: Session.querystring.encode(Session.getOAuthParams({
         oauth_callback: window.location.protocol + '//' + window.location.host + window.location.pathname + window.location.search
       }))

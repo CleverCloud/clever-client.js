@@ -7,10 +7,31 @@ var methods = {
       "style": "template"
     }]
   }],
-  "//payments/webhooks/paymill": [{
+  "//payments/webhooks/bt": [{
+    "verb": "GET",
+    "name": "subscriptionEventPing",
+    "params": [{
+      "name": "bt_challenge",
+      "style": "query"
+    }]
+  }, {
     "verb": "POST",
     "name": "subscriptionEvent",
-    "params": []
+    "params": [{
+      "name": "bt_signature",
+      "style": "query"
+    }, {
+      "name": "bt_payload",
+      "style": "query"
+    }]
+  }],
+  "//payments/webhooks/paymill": [{
+    "verb": "POST",
+    "name": "handlePaymillWebHook",
+    "params": [{
+      "name": "verif",
+      "style": "query"
+    }]
   }],
   "/addons/providers": [{
     "verb": "GET",
@@ -338,28 +359,6 @@ var methods = {
     "name": "getInstances",
     "params": []
   }],
-  "/internal/instances/dec": [{
-    "verb": "POST",
-    "name": "dec",
-    "params": [{
-      "name": "type",
-      "style": "query"
-    }, {
-      "name": "version",
-      "style": "query"
-    }]
-  }],
-  "/internal/instances/inc": [{
-    "verb": "POST",
-    "name": "inc",
-    "params": [{
-      "name": "type",
-      "style": "query"
-    }, {
-      "name": "version",
-      "style": "query"
-    }]
-  }],
   "/internal/instances/{type}-{version}": [{
     "verb": "GET",
     "name": "getInstance",
@@ -407,6 +406,14 @@ var methods = {
     "params": [{
       "name": "from",
       "style": "query"
+    }]
+  }],
+  "/internal/invoices/{invId}": [{
+    "verb": "GET",
+    "name": "getHtmlInvoice",
+    "params": [{
+      "name": "invId",
+      "style": "template"
     }]
   }],
   "/internal/invoices/{invId}.pdf": [{
@@ -1304,26 +1311,6 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/organisations/{id}/credits/history": [{
-    "verb": "GET",
-    "name": "getStats",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "type",
-      "style": "query"
-    }, {
-      "name": "appId",
-      "style": "query"
-    }, {
-      "name": "from",
-      "style": "query"
-    }, {
-      "name": "to",
-      "style": "query"
-    }]
-  }],
   "/organisations/{id}/instances": [{
     "verb": "GET",
     "name": "getInstancesForAllApps",
@@ -1395,6 +1382,16 @@ var methods = {
     }]
   }],
   "/organisations/{id}/payments/billings/{bid}": [{
+    "verb": "DELETE",
+    "name": "deletePurchaseOrder",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "bid",
+      "style": "template"
+    }]
+  }, {
     "verb": "GET",
     "name": "getInvoice",
     "params": [{
@@ -1406,7 +1403,7 @@ var methods = {
     }]
   }, {
     "verb": "PUT",
-    "name": "choosePaymentMethod",
+    "name": "choosePaymentProvider",
     "params": [{
       "name": "id",
       "style": "template"
@@ -1495,14 +1492,14 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/payments/methods": [{
+  "/payments/providers": [{
     "verb": "GET",
-    "name": "getAvailablePaymentMethods",
+    "name": "getAvailablePaymentProviders",
     "params": []
   }],
-  "/payments/publickeys/paymill": [{
+  "/payments/tokens/bt": [{
     "verb": "GET",
-    "name": "getPaymillPublicKey",
+    "name": "getBraintreeToken",
     "params": []
   }],
   "/payments/webhooks/paymill": [{
@@ -1513,14 +1510,6 @@ var methods = {
       "style": "query"
     }]
   }],
-  "/payments/{bid}/cancel/paymill": [{
-    "verb": "POST",
-    "name": "cancelPaymillPayment",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }],
   "/payments/{bid}/cancel/paypal": [{
     "verb": "GET",
     "name": "cancelPaypalPayment",
@@ -1529,9 +1518,9 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/payments/{bid}/end/paymill": [{
+  "/payments/{bid}/end/bt": [{
     "verb": "POST",
-    "name": "endPaymillPayment",
+    "name": "endPaymentWithBraintree",
     "params": [{
       "name": "bid",
       "style": "template"
@@ -1966,23 +1955,6 @@ var methods = {
     "name": "getAmount",
     "params": []
   }],
-  "/self/credits/history": [{
-    "verb": "GET",
-    "name": "getStats",
-    "params": [{
-      "name": "type",
-      "style": "query"
-    }, {
-      "name": "appId",
-      "style": "query"
-    }, {
-      "name": "from",
-      "style": "query"
-    }, {
-      "name": "to",
-      "style": "query"
-    }]
-  }],
   "/self/emails": [{
     "verb": "GET",
     "name": "getEmailAddresses",
@@ -2038,14 +2010,6 @@ var methods = {
     "name": "getPaymentInfo",
     "params": []
   }],
-  "/self/payments/billangs/{bid}.pdf": [{
-    "verb": "GET",
-    "name": "getPdfInvoice",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }],
   "/self/payments/billings": [{
     "verb": "GET",
     "name": "getInvoices",
@@ -2056,6 +2020,13 @@ var methods = {
     "params": []
   }],
   "/self/payments/billings/{bid}": [{
+    "verb": "DELETE",
+    "name": "deletePurchaseOrder",
+    "params": [{
+      "name": "bid",
+      "style": "template"
+    }]
+  }, {
     "verb": "GET",
     "name": "getInvoice",
     "params": [{
@@ -2064,22 +2035,34 @@ var methods = {
     }]
   }, {
     "verb": "PUT",
-    "name": "choosePaymentMethod",
+    "name": "choosePaymentProvider",
     "params": [{
       "name": "bid",
       "style": "template"
     }]
   }],
-  "/self/payments/cards": [{
+  "/self/payments/billings/{bid}.pdf": [{
     "verb": "GET",
-    "name": "getUserCards",
+    "name": "getPdfInvoice",
+    "params": [{
+      "name": "bid",
+      "style": "template"
+    }]
+  }],
+  "/self/payments/methods": [{
+    "verb": "GET",
+    "name": "getUserPaymentMethods",
+    "params": []
+  }, {
+    "verb": "POST",
+    "name": "addUserMethod",
     "params": []
   }],
-  "/self/payments/cards/{cardId}": [{
+  "/self/payments/methods/{mId}": [{
     "verb": "DELETE",
     "name": "deleteUserCard",
     "params": [{
-      "name": "cardId",
+      "name": "mId",
       "style": "template"
     }]
   }],
@@ -2767,7 +2750,10 @@ function initializeSession(client, settings) {
 
   Session.login = function() {
     var res = client.oauth.request_token.post()({
-      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": ""
+      },
       data: Session.querystring.encode(Session.getOAuthParams({
         oauth_callback: window.location.protocol + '//' + window.location.host + window.location.pathname + window.location.search
       }))
