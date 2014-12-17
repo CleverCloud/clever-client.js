@@ -2080,6 +2080,10 @@ var methods = {
     "params": []
   }],
   "/self/tokens": [{
+    "verb": "DELETE",
+    "name": "revokeAllTokens",
+    "params": []
+  }, {
     "verb": "GET",
     "name": "getSelfTokens",
     "params": []
