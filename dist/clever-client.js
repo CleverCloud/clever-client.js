@@ -466,14 +466,6 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/internal/owners/{ownerId}/keys": [{
-    "verb": "GET",
-    "name": "getUserSshKeys",
-    "params": [{
-      "name": "ownerId",
-      "style": "template"
-    }]
-  }],
   "/internal/packages": [{
     "verb": "GET",
     "name": "getAvailablePackages",
@@ -736,9 +728,17 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/addonproviders": [{
+    "verb": "GET",
+    "name": "getProvidersInfo",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/addonproviders/{providerId}": [{
     "verb": "GET",
-    "name": "getProviderInfos",
+    "name": "getProviderInfo",
     "params": [{
       "name": "id",
       "style": "template"
@@ -850,6 +850,31 @@ var methods = {
       "style": "template"
     }, {
       "name": "planId",
+      "style": "template"
+    }]
+  }],
+  "/organisations/{id}/addonproviders/{providerId}/plans/{planId}/features": [{
+    "verb": "GET",
+    "name": "getProviderPlanFeatures",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "providerId",
+      "style": "template"
+    }, {
+      "name": "planId",
+      "style": "template"
+    }]
+  }],
+  "/organisations/{id}/addonproviders/{providerId}/tags": [{
+    "verb": "GET",
+    "name": "getProviderTags",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "providerId",
       "style": "template"
     }]
   }],
