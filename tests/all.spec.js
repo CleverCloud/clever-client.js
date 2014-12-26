@@ -20,5 +20,6 @@ require("./spec/owner.js")(client);
 require("./spec/self.js")(client);
 require("./spec/organisations.js")(client);
 require("./spec/applications.js")(client);
+require("./spec/addons.js")(client);
 
 module.exports = {};
