@@ -1,20 +1,21 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var _ = require("lodash");
-var checkAuthorization = require("./authorization.js").checkAuthorization;
 
 var router = module.exports = express.Router();
 
 router.use(bodyParser.json());
 
-router.get("/self", checkAuthorization(function(req, res, next) {
-  var user = require("./data/user.js");
+router.use("/self", require("./authorization.js"));
+
+router.get("/self", function(req, res, next) {
+  var user = require("./data/users.js")[req.userId];
 
   res.json(user);
-}));
+});
 
-router.put("/self", checkAuthorization(function(req, res, next) {
-  var user = require("./data/user.js");
+router.put("/self", function(req, res, next) {
+  var user = require("./data/users.js")[req.userId];
 
   var updatedUser = _.chain(req.body)
     .pick(function(value, field) {
@@ -24,4 +25,4 @@ router.put("/self", checkAuthorization(function(req, res, next) {
     .value();
 
   res.json(updatedUser);
-}));
+});

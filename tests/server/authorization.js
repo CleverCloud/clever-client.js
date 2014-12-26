@@ -1,25 +1,26 @@
 var express = require("express");
 var _ = require("lodash");
 
-exports.checkAuthorization = function(handler) {
-  return function(req, res, next) {
-    var authorization = req.headers.authorization;
-    var sanitizedAuthorization = authorization && req.headers.authorization.replace(/^OAuth /, "").replace(/,\s+/g, ",");
-    var tokens = sanitizedAuthorization && _.foldl(sanitizedAuthorization.split(","), function(tokens, pair) {
-      var splitted = pair.split("=");
-      tokens[splitted[0]] = splitted[1].replace(/^"(.*)"$/, "$1");
-      return tokens;
-    }, {});
+var connections = require("./data/connections.js");
 
-    if(tokens.oauth_consumer_key == "aaaa"
-    && tokens.oauth_token == "ffff"
-    && tokens.oauth_signature_method == "PLAINTEXT"
-    && tokens.oauth_signature == "bbbb&gggg"
-    ) {
-      handler(req, res, next);
-    }
-    else {
-      res.status(401).json({"id":2001,"message":"Not connected","type":"error"});
-    }
-  };
+module.exports = function(req, res, next) {
+  var authorization = req.headers.authorization;
+  var sanitizedAuthorization = authorization && req.headers.authorization.replace(/^OAuth /, "").replace(/,\s+/g, ",");
+  var tokens = _.foldl(sanitizedAuthorization ? sanitizedAuthorization.split(",") : [], function(tokens, pair) {
+    var splitted = pair.split("=");
+    tokens[splitted[0]] = splitted[1].replace(/^"(.*)"$/, "$1");
+    return tokens;
+  }, {});
+
+  var consumer = connections[tokens.oauth_consumer_key];
+  var connection = consumer && consumer.tokens[tokens.oauth_token];
+  var signature = connection && consumer.oauth_consumer_secret + "&" + connection.oauth_token_secret;
+
+  if(connection && tokens.oauth_signature == signature) {
+    req.userId = connection.userId;
+    next();
+  }
+  else {
+    res.status(401).json({"id":2001,"message":"Not connected","type":"error"});
+  }
 };
