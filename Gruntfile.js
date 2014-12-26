@@ -29,7 +29,7 @@ module.exports = function(grunt) {
         separator: "\n\n"
       },
       dist: {
-        src: ["src/methods.js", "src/session.js", "src/self.js", "src/clever-client.js"],
+        src: ["src/methods.js", "src/owner.js", "src/session.js", "src/self.js", "src/clever-client.js"],
         dest: "dist/clever-client.js"
       }
     },

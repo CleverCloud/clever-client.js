@@ -15,6 +15,7 @@ var CleverAPI = (function(_, WadlClient) {
       parse: true
     });
 
+    client.owner = Owner(client, settings);
     client.session = Session(client, settings);
 
     return client;

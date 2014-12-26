@@ -16,6 +16,7 @@ var client = require("../dist/clever-client.js")({
   API_AUTHORIZATION: anonymousClient.session.getAuthorization(tokens)
 });
 
+require("./spec/owner.js")(client);
 require("./spec/self.js")(client);
 
 module.exports = {};
