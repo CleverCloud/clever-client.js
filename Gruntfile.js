@@ -84,7 +84,7 @@ module.exports = function(grunt) {
       prettify: true
     };
 
-	 var url = (process.env['API_BASE_URL'] || "https://api.par0.clvrcld.net/v2") + "/application.wadl";
+	 var url = (process.env['API_BASE_URL'] || "https://api.clever-cloud.com/v2") + "/application.wadl";
 	 console.log("Using url", url);
     wadl2json.fromURL(url, function(err, methods) {
       if(err) {
