@@ -1,53 +1,8 @@
 var methods = {
-  "//invoice/external/{bid}": [{
-    "verb": "POST",
-    "name": "updateInvoice",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }],
-  "//payments/webhooks/bt": [{
-    "verb": "GET",
-    "name": "subscriptionEventPing",
-    "params": [{
-      "name": "bt_challenge",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "subscriptionEvent",
-    "params": [{
-      "name": "bt_signature",
-      "style": "query"
-    }, {
-      "name": "bt_payload",
-      "style": "query"
-    }]
-  }],
-  "//payments/webhooks/paymill": [{
-    "verb": "POST",
-    "name": "handlePaymillWebHook",
-    "params": [{
-      "name": "verif",
-      "style": "query"
-    }]
-  }],
   "/addons/providers": [{
     "verb": "GET",
     "name": "getAddonProviders",
     "params": []
-  }],
-  "/admin/owners/{id}/applications/{appId}": [{
-    "verb": "DELETE",
-    "name": "deleteApplicationForOwner",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
   }],
   "/authorize": [{
     "verb": "POST",
@@ -131,6 +86,9 @@ var methods = {
     "params": [{
       "name": "redirectUrl",
       "style": "query"
+    }, {
+      "name": "fromAuthorize",
+      "style": "query"
     }]
   }],
   "/github/redeploy": [{
@@ -152,6 +110,9 @@ var methods = {
     "name": "githubSignup",
     "params": [{
       "name": "redirectUrl",
+      "style": "query"
+    }, {
+      "name": "fromAuthorize",
       "style": "query"
     }]
   }, {
@@ -227,9 +188,6 @@ var methods = {
     }, {
       "name": "down",
       "style": "query"
-    }, {
-      "name": "commit",
-      "style": "query"
     }]
   }],
   "/internal/applications/{appId}/instances": [{
@@ -267,9 +225,6 @@ var methods = {
       "style": "template"
     }, {
       "name": "down",
-      "style": "query"
-    }, {
-      "name": "commit",
       "style": "query"
     }, {
       "name": "cause",
@@ -406,6 +361,9 @@ var methods = {
     "params": [{
       "name": "from",
       "style": "query"
+    }, {
+      "name": "status",
+      "style": "query"
     }]
   }],
   "/internal/invoices/{invId}": [{
@@ -501,6 +459,11 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/internal/paymentplans": [{
+    "verb": "POST",
+    "name": "createInternalPaymentPlan",
+    "params": []
+  }],
   "/internal/pending": [{
     "verb": "GET",
     "name": "getPendingUsers",
@@ -538,6 +501,14 @@ var methods = {
       "style": "template"
     }, {
       "name": "userId",
+      "style": "template"
+    }]
+  }],
+  "/invoice/external/{bid}": [{
+    "verb": "POST",
+    "name": "updateInvoice",
+    "params": [{
+      "name": "bid",
       "style": "template"
     }]
   }],
@@ -921,6 +892,17 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/addons/{addonId}/payment-method": [{
+    "verb": "PUT",
+    "name": "changePaymentMethod",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "addonId",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/addons/{addonId}/sso": [{
     "verb": "GET",
     "name": "getSSOData",
@@ -1244,6 +1226,37 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/applications/{appId}/vhosts/favourite": [{
+    "verb": "DELETE",
+    "name": "unmarkFavouriteVhost",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }]
+  }, {
+    "verb": "GET",
+    "name": "getFavouriteVhost",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }]
+  }, {
+    "verb": "PUT",
+    "name": "markFavouriteVhost",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "appId",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/applications/{appId}/vhosts/{domain}": [{
     "verb": "DELETE",
     "name": "removeVhost",
@@ -1421,6 +1434,9 @@ var methods = {
     }, {
       "name": "bid",
       "style": "template"
+    }, {
+      "name": "token",
+      "style": "query"
     }]
   }],
   "/organisations/{id}/payments/recurring": [{
@@ -1502,20 +1518,22 @@ var methods = {
     "name": "getBraintreeToken",
     "params": []
   }],
-  "/payments/webhooks/paymill": [{
-    "verb": "POST",
-    "name": "handlePaymillWebHook",
+  "/payments/webhooks/bt": [{
+    "verb": "GET",
+    "name": "subscriptionEventPing",
     "params": [{
-      "name": "verif",
+      "name": "bt_challenge",
       "style": "query"
     }]
-  }],
-  "/payments/{bid}/cancel/paypal": [{
-    "verb": "GET",
-    "name": "cancelPaypalPayment",
+  }, {
+    "verb": "POST",
+    "name": "subscriptionEvent",
     "params": [{
-      "name": "bid",
-      "style": "template"
+      "name": "bt_signature",
+      "style": "query"
+    }, {
+      "name": "bt_payload",
+      "style": "query"
     }]
   }],
   "/payments/{bid}/end/bt": [{
@@ -1526,20 +1544,6 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/payments/{bid}/end/paypal": [{
-    "verb": "GET",
-    "name": "endPaypalPayment",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }, {
-      "name": "token",
-      "style": "query"
-    }, {
-      "name": "PayerID",
-      "style": "query"
-    }]
-  }],
   "/ping": [{
     "verb": "GET",
     "name": "ping",
@@ -1548,6 +1552,16 @@ var methods = {
   "/ping/stats": [{
     "verb": "GET",
     "name": "stats",
+    "params": []
+  }],
+  "/products/countries": [{
+    "verb": "GET",
+    "name": "getCountries",
+    "params": []
+  }],
+  "/products/countrycodes": [{
+    "verb": "GET",
+    "name": "getCountryCodes",
     "params": []
   }],
   "/products/instances": [{
@@ -1646,6 +1660,14 @@ var methods = {
   "/self/addons/{addonId}/applications": [{
     "verb": "GET",
     "name": "getApplicationsLinkedToAddon",
+    "params": [{
+      "name": "addonId",
+      "style": "template"
+    }]
+  }],
+  "/self/addons/{addonId}/payment-method": [{
+    "verb": "PUT",
+    "name": "changePaymentMethod",
     "params": [{
       "name": "addonId",
       "style": "template"
@@ -1896,6 +1918,28 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/self/applications/{appId}/vhosts/favourite": [{
+    "verb": "DELETE",
+    "name": "unmarkFavouriteVhost",
+    "params": [{
+      "name": "appId",
+      "style": "template"
+    }]
+  }, {
+    "verb": "GET",
+    "name": "getFavouriteVhost",
+    "params": [{
+      "name": "appId",
+      "style": "template"
+    }]
+  }, {
+    "verb": "PUT",
+    "name": "markFavouriteVhost",
+    "params": [{
+      "name": "appId",
+      "style": "template"
+    }]
+  }],
   "/self/applications/{appId}/vhosts/{domain}": [{
     "verb": "DELETE",
     "name": "removeVhost",
@@ -1975,6 +2019,11 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/self/id": [{
+    "verb": "GET",
+    "name": "getId",
+    "params": []
+  }],
   "/self/instances": [{
     "verb": "GET",
     "name": "getInstancesForAllApps",
@@ -2047,6 +2096,9 @@ var methods = {
     "params": [{
       "name": "bid",
       "style": "template"
+    }, {
+      "name": "token",
+      "style": "query"
     }]
   }],
   "/self/payments/methods": [{
