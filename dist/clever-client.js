@@ -281,6 +281,11 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/internal/credentials": [{
+    "verb": "POST",
+    "name": "createCredentials",
+    "params": []
+  }],
   "/internal/dropcounts": [{
     "verb": "GET",
     "name": "getAllDropCount",
