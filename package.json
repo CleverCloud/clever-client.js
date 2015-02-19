@@ -33,8 +33,8 @@
     "wadl-client": "0.2.0-beta.5"
   },
   "scripts": {
-    "install": "./node_modules/.bin/bower install",
-    "test": "./node_modules/.bin/grunt test",
-    "start": "./node_modules/.bin/grunt test --force && node ./tests/server.js start"
+    "install": "bower install",
+    "test": "grunt test",
+    "start": "grunt test --force && node ./tests/server.js start"
   }
 }
