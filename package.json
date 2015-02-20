@@ -34,7 +34,7 @@
   },
   "scripts": {
     "bower-install": "bower install",
-    "test": "grunt test",
-    "start": "grunt test --force && node ./tests/server.js start"
+    "test": "bower install && grunt test",
+    "start": "bower install && grunt test --force && node ./tests/server.js start"
   }
 }
