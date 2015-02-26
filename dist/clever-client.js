@@ -2422,6 +2422,7 @@ var CleverAPI = (function(_, WadlClient) {
     var client = WadlClient.buildClient(methods, {
       host: settings.API_HOST,
       headers: headers,
+      logger: settings.logger,
       parse: true
     });
 
