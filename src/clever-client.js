@@ -13,6 +13,7 @@ var CleverAPI = (function(_, WadlClient) {
       host: settings.API_HOST,
       headers: headers,
       logger: settings.logger,
+      hooks: settings.hooks,
       parse: true
     });
 

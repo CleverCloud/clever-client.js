@@ -2281,7 +2281,7 @@ var Owner = (function() {
 })();
 
 
-var Session = (function(_, querystring) {
+var Session = (function(_, querystring, oauthSignature) {
   var Session = function(client, settings) {
     var session = {};
 
@@ -2368,6 +2368,28 @@ var Session = (function(_, querystring) {
       }
     };
 
+    session.getHMACAuthorization = function(httpMethod, url, queryparams, tokens) {
+      if(tokens.user_oauth_token && tokens.user_oauth_token_secret) {
+        var params = _.extend({}, queryparams, session.getOAuthParams(tokens.user_oauth_token_secret), {
+          oauth_signature_method: "HMAC-SHA1",
+          oauth_token: tokens.user_oauth_token
+        });
+
+        var signature = oauthSignature.generate(httpMethod, url, _.omit(params, "oauth_signature"), settings.API_CONSUMER_SECRET, tokens.user_oauth_token_secret, {encodeSignature: false});
+
+        return  ["OAuth realm=\"" + settings.API_HOST + "/oauth\"",
+                "oauth_consumer_key=\"" + params.oauth_consumer_key + "\"",
+                "oauth_token=\"" + params.oauth_token + "\"",
+                "oauth_signature_method=\"" + params.oauth_signature_method + "\"",
+                "oauth_signature=\"" + signature + "\"",
+                "oauth_timestamp=\"" + params.oauth_timestamp + "\"",
+                "oauth_nonce=\"" + params.oauth_nonce + "\""].join(", ");
+      }
+      else {
+        return "";
+      }
+    };
+
     session.remove = function() {
       if(typeof localStorage != "undefined") {
         localStorage.removeItem("consumer_oauth_token");
@@ -2383,7 +2405,8 @@ var Session = (function(_, querystring) {
   return Session;
 })(
   typeof require == "function" && require("lodash") ? require("lodash") : _,
-  typeof require == "function" && require("querystring") ? require("querystring") : querystring
+  typeof require == "function" && require("querystring") ? require("querystring") : querystring,
+  typeof require == "function" && require("oauth-signature") ? require("oauth-signature") : oauthSignature
 );
 
 
@@ -2402,6 +2425,7 @@ var CleverAPI = (function(_, WadlClient) {
       host: settings.API_HOST,
       headers: headers,
       logger: settings.logger,
+      hooks: settings.hooks,
       parse: true
     });
 

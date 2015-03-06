@@ -20,13 +20,23 @@ if(!search.oauth_token) {
 }
 else {
   var s_authClient = client.session.getAccessTokenFromQueryString().flatMapLatest(function(tokens) {
-    return CleverAPI({
+    var client = CleverAPI({
+      API_CONSUMER_KEY: "MR2SL4MbJwq7KzV9l3nb3Rjf4zfxV4",
+      API_CONSUMER_SECRET: "T3edg2H69hWK0DXUy7gyzlX5NlyFe6",
       API_HOST: "https://ccapi-preprod.cleverapps.io/v2",
-      API_AUTHORIZATION: client.session.getAuthorization({
-        user_oauth_token: tokens.oauth_token,
-        user_oauth_token_secret: tokens.oauth_token_secret
-      })
+      hooks: {
+        beforeSend: function(requestSettings) {
+          requestSettings.headers.Authorization = client.session.getHMACAuthorization(requestSettings.method, requestSettings.uri, requestSettings.qs, {
+            user_oauth_token: tokens.oauth_token,
+            user_oauth_token_secret: tokens.oauth_token_secret
+          });
+
+          return requestSettings;
+        }
+      }
     });
+
+    return client;
   });
 
   var s_id = s_authClient.flatMapLatest(function(client) {
