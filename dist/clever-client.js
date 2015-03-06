@@ -2285,22 +2285,24 @@ var Session = (function(_, querystring) {
   var Session = function(client, settings) {
     var session = {};
 
-    session.getOAuthParams = function(params, token_secret) {
-      return _.extend({
+    session.getOAuthParams = function(token_secret) {
+      return {
         oauth_consumer_key: settings.API_CONSUMER_KEY,
         oauth_signature_method: "PLAINTEXT",
         oauth_signature: settings.API_CONSUMER_SECRET + "&" + (token_secret || ""),
         oauth_timestamp: Math.floor(Date.now()/1000),
         oauth_nonce: Math.floor(Math.random()*1000000)
-      }, params);
+      };
     };
 
     session.login = typeof window == "undefined" ? function(){} : function() {
+      var params = _.extend(session.getOAuthParams(), {
+        oauth_callback: window.location.href
+      });
+
       var res = client.oauth.request_token.post().withHeaders({
         "Content-Type": "application/x-www-form-urlencoded"
-      }).send(querystring.encode(session.getOAuthParams({
-        oauth_callback: window.location.href
-      })));
+      }).send(querystring.encode(params));
 
       res.onValue(function(data) {
         var parsed = querystring.decode(data);
@@ -2324,9 +2326,14 @@ var Session = (function(_, querystring) {
     };
 
     session.getAccessToken = function(params) {
+      var oauthParams = _.extend(session.getOAuthParams(params.consumer_oauth_token_secret), {
+        oauth_token: params.oauth_token,
+        oauth_verifier: params.oauth_verifier
+      });
+
       var res = client.oauth.access_token.post().withHeaders({
         "Content-Type": "application/x-www-form-urlencoded"
-      }).send(querystring.encode(session.getOAuthParams(params, params.consumer_oauth_token_secret)));
+      }).send(querystring.encode(oauthParams));
 
       var s_accessTokens = res.map(function(data) {
         return querystring.decode(data);
@@ -2344,8 +2351,11 @@ var Session = (function(_, querystring) {
 
     session.getAuthorization = function(tokens) {
       if(tokens.user_oauth_token && tokens.user_oauth_token_secret) {
-        var params = session.getOAuthParams({oauth_token: tokens.user_oauth_token}, tokens.user_oauth_token_secret);
-        return  ["OAuth realm=\"http://ccapi.cleverapps.io/v2/oauth\"",
+        var params = _.extend(session.getOAuthParams(tokens.user_oauth_token_secret), {
+          oauth_token: tokens.user_oauth_token
+        });
+
+        return  ["OAuth realm=\"" + settings.API_HOST + "/oauth\"",
                 "oauth_consumer_key=\"" + params.oauth_consumer_key + "\"",
                 "oauth_token=\"" + params.oauth_token + "\"",
                 "oauth_signature_method=\"" + params.oauth_signature_method + "\"",
