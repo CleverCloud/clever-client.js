@@ -36,12 +36,14 @@ module.exports = function(grunt) {
     express: {
       test: {
         options: {
+          port: 8080,
           script: "tests/server/app.js"
         }
       },
       manual: {
         options: {
           background: false,
+          port: 8080,
           script: "tests/server/app.js"
         }
       }
@@ -49,7 +51,7 @@ module.exports = function(grunt) {
     jasmine: {
       test: {
         options: {
-          host: "http://127.0.0.1:1234/",
+          host: "http://localhost:8080/",
           specs: "tests/bundle.js"
         }
       }
@@ -84,7 +86,7 @@ module.exports = function(grunt) {
       prettify: true
     };
 
-	 var url = (process.env['API_BASE_URL'] || "https://api.clever-cloud.com/v2") + "/application.wadl";
+	 var url = (process.env['API_BASE_URL'] || "https://ccapi-preprod.cleverapps.io/v2") + "/application.wadl";
 	 console.log("Using url", url);
     wadl2json.fromURL(url, function(err, methods) {
       if(err) {

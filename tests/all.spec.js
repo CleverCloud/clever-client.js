@@ -8,11 +8,11 @@ var tokens = {
 var anonymousClient = require("../dist/clever-client.js")({
   API_CONSUMER_KEY: tokens.consumer_oauth_token,
   API_CONSUMER_SECRET: tokens.consumer_oauth_token_secret,
-  API_HOST: "http://127.0.0.1:1234"
+  API_HOST: "http://localhost:8080"
 });
 
 var client = require("../dist/clever-client.js")({
-  API_HOST: "http://127.0.0.1:1234",
+  API_HOST: "http://localhost:8080",
   API_AUTHORIZATION: anonymousClient.session.getAuthorization(tokens)
 });
 

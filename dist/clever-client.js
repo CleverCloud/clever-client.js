@@ -1165,23 +1165,6 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/organisations/{id}/applications/{appId}/logs": [{
-    "verb": "GET",
-    "name": "getApplicationLogss",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "order",
-      "style": "query"
-    }, {
-      "name": "since",
-      "style": "query"
-    }]
-  }],
   "/organisations/{id}/applications/{appId}/tags": [{
     "verb": "GET",
     "name": "getApplicationTags",
@@ -1872,20 +1855,6 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/self/applications/{appId}/logs": [{
-    "verb": "GET",
-    "name": "getApplicationLogs",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "orger",
-      "style": "query"
-    }, {
-      "name": "since",
-      "style": "query"
-    }]
-  }],
   "/self/applications/{appId}/tags": [{
     "verb": "GET",
     "name": "getApplicationTags",
@@ -2411,7 +2380,7 @@ var Session = (function(_, querystring) {
 var CleverAPI = (function(_, WadlClient) {
   var CleverAPI = function(settings) {
     _.defaults(settings, {
-      API_HOST: "https://api.clever-cloud.com/v2"
+      API_HOST: "https://ccapi-preprod.cleverapps.io/v2"
     });
 
     var headers = !settings.API_AUTHORIZATION ? {} : {
