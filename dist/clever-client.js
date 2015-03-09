@@ -2413,7 +2413,8 @@ var Session = (function(_, querystring, oauthSignature) {
 var CleverAPI = (function(_, WadlClient) {
   var CleverAPI = function(settings) {
     _.defaults(settings, {
-      API_HOST: "https://ccapi-preprod.cleverapps.io/v2"
+      API_HOST: "https://ccapi-preprod.cleverapps.io/v2",
+      hooks: {}
     });
 
     var headers = !settings.API_AUTHORIZATION ? {} : {
@@ -2421,11 +2422,22 @@ var CleverAPI = (function(_, WadlClient) {
       "Content-Type": "application/json"
     };
 
+    var addAuthorizationHeader = (settings.API_OAUTH_TOKEN && settings.API_OAUTH_TOKEN_SECRET) && function(requestSettings) {
+      requestSettings.headers.Authorization = client.session.getHMACAuthorization(requestSettings.method, requestSettings.uri, requestSettings.qs, {
+        user_oauth_token: settings.API_OAUTH_TOKEN,
+        user_oauth_token_secret: settings.API_OAUTH_TOKEN_SECRET
+      });
+
+      return requestSettings;
+    };
+
     var client = WadlClient.buildClient(methods, {
       host: settings.API_HOST,
       headers: headers,
       logger: settings.logger,
-      hooks: settings.hooks,
+      hooks: _.defaults(settings.hooks, {
+        beforeSend: addAuthorizationHeader
+      }),
       parse: true
     });
 
