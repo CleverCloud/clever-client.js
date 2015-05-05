@@ -1,9 +1,4 @@
 var methods = {
-  "/addons/providers": [{
-    "verb": "GET",
-    "name": "getAddonProviders",
-    "params": []
-  }],
   "/authorize": [{
     "verb": "POST",
     "name": "authorize",
@@ -151,154 +146,17 @@ var methods = {
     "name": "getActiveMails",
     "params": []
   }],
-  "/internal/applications": [{
-    "verb": "GET",
-    "name": "getApplications",
-    "params": []
-  }],
-  "/internal/applications/{appId}": [{
-    "verb": "DELETE",
-    "name": "deleteApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/internal/applications/{appId}/downscale": [{
-    "verb": "POST",
-    "name": "downscaleApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/internal/applications/{appId}/forceRedeploy": [{
-    "verb": "POST",
-    "name": "forceRedeployApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "down",
-      "style": "query"
-    }]
-  }],
-  "/internal/applications/{appId}/instances": [{
-    "verb": "POST",
-    "name": "changeApplicationInstances",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/internal/applications/{appId}/instances/{instanceId}": [{
-    "verb": "PUT",
-    "name": "replaceApplicationInstance",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "instanceId",
-      "style": "template"
-    }]
-  }],
-  "/internal/applications/{appId}/ownerId": [{
-    "verb": "GET",
-    "name": "getApplicationOwnerId",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/internal/applications/{appId}/redeploy": [{
-    "verb": "POST",
-    "name": "redeployApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "down",
-      "style": "query"
-    }, {
-      "name": "cause",
-      "style": "query"
-    }]
-  }],
-  "/internal/applications/{appId}/undeploy": [{
-    "verb": "POST",
-    "name": "undeployApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/internal/applications/{appId}/upscale": [{
-    "verb": "POST",
-    "name": "upscaleApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/internal/applications/{appId}/vhosts/{domain}": [{
-    "verb": "DELETE",
-    "name": "removeDomain",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "domain",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "addDomain",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "domain",
-      "style": "template"
-    }]
-  }],
   "/internal/coupons": [{
     "verb": "POST",
     "name": "createCoupon",
     "params": []
-  }],
-  "/internal/coupons/{name}": [{
-    "verb": "GET",
-    "name": "getCoupon",
-    "params": [{
-      "name": "name",
-      "style": "template"
-    }]
   }],
   "/internal/credentials": [{
     "verb": "POST",
     "name": "createCredentials",
     "params": []
   }],
-  "/internal/dropcounts": [{
-    "verb": "GET",
-    "name": "getAllDropCount",
-    "params": []
-  }],
   "/internal/dropcounts/{ownerId}": [{
-    "verb": "GET",
-    "name": "getDropAccount",
-    "params": [{
-      "name": "ownerId",
-      "style": "template"
-    }]
-  }, {
     "verb": "POST",
     "name": "addDrops",
     "params": [{
@@ -306,30 +164,7 @@ var methods = {
       "style": "template"
     }]
   }],
-  "/internal/heroku/{ownerId}/providers": [{
-    "verb": "POST",
-    "name": "uploadManifest",
-    "params": [{
-      "name": "ownerId",
-      "style": "template"
-    }]
-  }],
-  "/internal/instances": [{
-    "verb": "GET",
-    "name": "getInstances",
-    "params": []
-  }],
   "/internal/instances/{type}-{version}": [{
-    "verb": "GET",
-    "name": "getInstance",
-    "params": [{
-      "name": "type",
-      "style": "template"
-    }, {
-      "name": "version",
-      "style": "template"
-    }]
-  }, {
     "verb": "PUT",
     "name": "createInstance",
     "params": [{
@@ -351,6 +186,14 @@ var methods = {
     "verb": "POST",
     "name": "createPendingInvoice",
     "params": []
+  }],
+  "/internal/invoices/fortransactions/{transId}": [{
+    "verb": "POST",
+    "name": "createInvoiceForTransaction",
+    "params": [{
+      "name": "transId",
+      "style": "template"
+    }]
   }],
   "/internal/invoices/links": [{
     "verb": "GET",
@@ -408,43 +251,23 @@ var methods = {
     "name": "createOAuth1Consumer",
     "params": []
   }],
-  "/internal/organisations": [{
-    "verb": "GET",
-    "name": "getOrganisations",
-    "params": []
-  }],
-  "/internal/owners/{ownerId}": [{
-    "verb": "GET",
-    "name": "getOwner",
+  "/internal/organisations/{id}/addonproviders": [{
+    "verb": "POST",
+    "name": "uploadManifest",
     "params": [{
-      "name": "ownerId",
+      "name": "id",
       "style": "template"
     }]
   }],
-  "/internal/owners/{ownerId}/applications": [{
-    "verb": "GET",
-    "name": "getOwnerApplications",
+  "/internal/organisations/{id}/discount": [{
+    "verb": "PUT",
+    "name": "setDiscount",
     "params": [{
-      "name": "ownerId",
-      "style": "template"
-    }]
-  }],
-  "/internal/owners/{ownerId}/keys": [{
-    "verb": "GET",
-    "name": "getUserSshKeys",
-    "params": [{
-      "name": "ownerId",
+      "name": "id",
       "style": "template"
     }]
   }],
   "/internal/packages": [{
-    "verb": "GET",
-    "name": "getAvailablePackages",
-    "params": [{
-      "name": "currency",
-      "style": "query"
-    }]
-  }, {
     "verb": "POST",
     "name": "createPackage",
     "params": []
@@ -467,11 +290,6 @@ var methods = {
   "/internal/paymentplans": [{
     "verb": "POST",
     "name": "createInternalPaymentPlan",
-    "params": []
-  }],
-  "/internal/pending": [{
-    "verb": "GET",
-    "name": "getPendingUsers",
     "params": []
   }],
   "/internal/prices/{currency}": [{
@@ -678,6 +496,11 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/oauth/rights": [{
+    "verb": "GET",
+    "name": "getAvailableRights",
+    "params": []
+  }],
   "/organisations": [{
     "verb": "GET",
     "name": "getUserOrganisationss",
@@ -712,9 +535,17 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/addonproviders": [{
+    "verb": "GET",
+    "name": "getProvidersInfo",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/addonproviders/{providerId}": [{
     "verb": "GET",
-    "name": "getProviderInfos",
+    "name": "getProviderInfo",
     "params": [{
       "name": "id",
       "style": "template"
@@ -826,6 +657,50 @@ var methods = {
       "style": "template"
     }, {
       "name": "planId",
+      "style": "template"
+    }]
+  }],
+  "/organisations/{id}/addonproviders/{providerId}/plans/{planId}/features/{featureName}": [{
+    "verb": "DELETE",
+    "name": "deleteProviderPlanFeature",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "featureName",
+      "style": "template"
+    }, {
+      "name": "providerId",
+      "style": "template"
+    }, {
+      "name": "planId",
+      "style": "template"
+    }]
+  }, {
+    "verb": "PUT",
+    "name": "editProviderPlanFeature",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "featureName",
+      "style": "template"
+    }, {
+      "name": "providerId",
+      "style": "template"
+    }, {
+      "name": "planId",
+      "style": "template"
+    }]
+  }],
+  "/organisations/{id}/addonproviders/{providerId}/tags": [{
+    "verb": "GET",
+    "name": "getProviderTags",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "providerId",
       "style": "template"
     }]
   }],
@@ -1052,6 +927,9 @@ var methods = {
       "style": "query"
     }, {
       "name": "offset",
+      "style": "query"
+    }, {
+      "name": "action",
       "style": "query"
     }]
   }],
@@ -1284,6 +1162,32 @@ var methods = {
     "name": "setOrgaAvatarFromSource",
     "params": [{
       "name": "id",
+      "style": "template"
+    }]
+  }],
+  "/organisations/{id}/consumers": [{
+    "verb": "GET",
+    "name": "getConsumers",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }]
+  }, {
+    "verb": "POST",
+    "name": "createConsumer",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }]
+  }],
+  "/organisations/{id}/consumers/{key}/secret": [{
+    "verb": "GET",
+    "name": "getConsumerSecret",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "key",
       "style": "template"
     }]
   }],
@@ -1542,6 +1446,11 @@ var methods = {
     "name": "stats",
     "params": []
   }],
+  "/products/addonproviders": [{
+    "verb": "GET",
+    "name": "getAddonProviders",
+    "params": []
+  }],
   "/products/countries": [{
     "verb": "GET",
     "name": "getCountries",
@@ -1757,7 +1666,7 @@ var methods = {
   }],
   "/self/applications/{appId}/deployments": [{
     "verb": "GET",
-    "name": "getApplication",
+    "name": "getApplicationDeployments",
     "params": [{
       "name": "appId",
       "style": "template"
@@ -1767,11 +1676,14 @@ var methods = {
     }, {
       "name": "offset",
       "style": "query"
+    }, {
+      "name": "action",
+      "style": "query"
     }]
   }],
   "/self/applications/{appId}/deployments/{deploymentId}/instances": [{
     "verb": "DELETE",
-    "name": "getApplicationDeploymentsForOrga",
+    "name": "cancelDeploy",
     "params": [{
       "name": "id",
       "style": "template"
@@ -2168,6 +2080,11 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/summary": [{
+    "verb": "GET",
+    "name": "getSummary",
+    "params": []
+  }],
   "/users": [{
     "verb": "GET",
     "name": "getUsers",
@@ -2218,6 +2135,14 @@ var methods = {
     "name": "getApplications",
     "params": [{
       "name": "id",
+      "style": "template"
+    }]
+  }],
+  "/users/{userId}/git-info": [{
+    "verb": "GET",
+    "name": "getGitInfo",
+    "params": [{
+      "name": "userId",
       "style": "template"
     }]
   }],
