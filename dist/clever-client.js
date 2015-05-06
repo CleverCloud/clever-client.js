@@ -2226,7 +2226,8 @@ var Session = (function(_, querystring, oauthSignature) {
       });
 
       var res = client.oauth.request_token.post().withHeaders({
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": ""
       }).send(querystring.encode(params));
 
       res.onValue(function(data) {
