@@ -1180,6 +1180,17 @@ var methods = {
       "style": "template"
     }]
   }],
+  "/organisations/{id}/consumers/{key}": [{
+    "verb": "DELETE",
+    "name": "deleteConsumer",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "key",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/consumers/{key}/secret": [{
     "verb": "GET",
     "name": "getConsumerSecret",
