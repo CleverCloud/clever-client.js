@@ -1342,6 +1342,17 @@ var methods = {
       "style": "query"
     }]
   }],
+  "/organisations/{id}/payments/fullprice/{price}": [{
+    "verb": "GET",
+    "name": "priceWithTax",
+    "params": [{
+      "name": "id",
+      "style": "template"
+    }, {
+      "name": "price",
+      "style": "template"
+    }]
+  }],
   "/organisations/{id}/payments/recurring": [{
     "verb": "DELETE",
     "name": "deleteRecurrentPayment",
@@ -1996,6 +2007,14 @@ var methods = {
     }, {
       "name": "token",
       "style": "query"
+    }]
+  }],
+  "/self/payments/fullprice/{price}": [{
+    "verb": "GET",
+    "name": "priceWithTax",
+    "params": [{
+      "name": "price",
+      "style": "template"
     }]
   }],
   "/self/payments/methods": [{
