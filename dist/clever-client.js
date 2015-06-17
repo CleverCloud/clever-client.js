@@ -1937,11 +1937,6 @@ var methods = {
     "name": "getInstancesForAllApps",
     "params": []
   }],
-  "/self/intercomhash": [{
-    "verb": "GET",
-    "name": "getIntercomeSecureModeHash",
-    "params": []
-  }],
   "/self/keys": [{
     "verb": "GET",
     "name": "getSshKeys",
