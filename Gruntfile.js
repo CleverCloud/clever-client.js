@@ -74,7 +74,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-jasmine");
   grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-express-server");
-  grunt.loadNpmTasks("grunt-jasmine-node");
+  grunt.loadNpmTasks("grunt-jasmine-node-new");
 
   grunt.registerTask("wadl2json", "Fetch Clever-Cloud API description", function() {
     var done = this.async();
