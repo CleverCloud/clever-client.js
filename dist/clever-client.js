@@ -1,2221 +1,4083 @@
 var methods = {
-  "/authorize": [{
-    "verb": "POST",
-    "name": "authorize",
-    "params": []
-  }],
-  "/cleverapps/{name}": [{
-    "verb": "GET",
-    "name": "checkDomainAvailability",
-    "params": [{
-      "name": "name",
-      "style": "template"
-    }]
-  }],
-  "/coldstart": [{
-    "verb": "GET",
-    "name": "coldStart",
-    "params": []
-  }],
-  "/github": [{
-    "verb": "GET",
-    "name": "startGithub",
-    "params": []
-  }],
-  "/github/applications": [{
-    "verb": "GET",
-    "name": "getGithubApplications",
-    "params": []
-  }],
-  "/github/callback": [{
-    "verb": "GET",
-    "name": "githubCallback",
-    "params": [{
-      "name": "Cookie",
-      "style": "header"
-    }, {
-      "name": "code",
-      "style": "query"
-    }, {
-      "name": "state",
-      "style": "query"
-    }, {
-      "name": "error",
-      "style": "query"
-    }, {
-      "name": "error_description",
-      "style": "query"
-    }, {
-      "name": "error_uri",
-      "style": "query"
-    }]
-  }],
-  "/github/emails": [{
-    "verb": "GET",
-    "name": "getGithubEmails",
-    "params": []
-  }],
-  "/github/keys": [{
-    "verb": "GET",
-    "name": "getGithubKeys",
-    "params": []
-  }],
-  "/github/link": [{
-    "verb": "DELETE",
-    "name": "unlinkGithub",
-    "params": []
-  }, {
-    "verb": "GET",
-    "name": "linkGithub",
-    "params": [{
-      "name": "transactionId",
-      "style": "query"
-    }, {
-      "name": "redirectUrl",
-      "style": "query"
-    }]
-  }],
-  "/github/login": [{
-    "verb": "GET",
-    "name": "githubLogin",
-    "params": [{
-      "name": "redirectUrl",
-      "style": "query"
-    }, {
-      "name": "fromAuthorize",
-      "style": "query"
-    }]
-  }],
-  "/github/redeploy": [{
-    "verb": "POST",
-    "name": "redeployApp",
-    "params": [{
-      "name": "User-Agent",
-      "style": "header"
-    }, {
-      "name": "X-Github-Event",
-      "style": "header"
-    }, {
-      "name": "X-Hub-Signature",
-      "style": "header"
-    }]
-  }],
-  "/github/signup": [{
-    "verb": "GET",
-    "name": "githubSignup",
-    "params": [{
-      "name": "redirectUrl",
-      "style": "query"
-    }, {
-      "name": "fromAuthorize",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "finsihGithubSignup",
-    "params": [{
-      "name": "transactionId",
-      "style": "query"
-    }, {
-      "name": "name",
-      "style": "query"
-    }, {
-      "name": "otherId",
-      "style": "query"
-    }, {
-      "name": "otherEmail",
-      "style": "query"
-    }, {
-      "name": "password",
-      "style": "query"
-    }, {
-      "name": "autoLink",
-      "style": "query"
-    }, {
-      "name": "terms",
-      "style": "query"
-    }]
-  }],
-  "/github/username": [{
-    "verb": "GET",
-    "name": "getGithubUsername",
-    "params": []
-  }],
-  "/internal/activeMails": [{
-    "verb": "GET",
-    "name": "getActiveMails",
-    "params": []
-  }],
-  "/internal/coupons": [{
-    "verb": "POST",
-    "name": "createCoupon",
-    "params": []
-  }],
-  "/internal/credentials": [{
-    "verb": "POST",
-    "name": "createCredentials",
-    "params": []
-  }],
-  "/internal/dropcounts/{ownerId}": [{
-    "verb": "POST",
-    "name": "addDrops",
-    "params": [{
-      "name": "ownerId",
-      "style": "template"
-    }]
-  }],
-  "/internal/instances/{type}-{version}": [{
-    "verb": "PUT",
-    "name": "createInstance",
-    "params": [{
-      "name": "type",
-      "style": "template"
-    }, {
-      "name": "version",
-      "style": "template"
-    }]
-  }],
-  "/internal/invoices": [{
-    "verb": "GET",
-    "name": "getInvoices",
-    "params": [{
-      "name": "owner",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "createPendingInvoice",
-    "params": []
-  }],
-  "/internal/invoices/fortransactions/{transId}": [{
-    "verb": "POST",
-    "name": "createInvoiceForTransaction",
-    "params": [{
-      "name": "transId",
-      "style": "template"
-    }]
-  }],
-  "/internal/invoices/links": [{
-    "verb": "GET",
-    "name": "getLinks",
-    "params": [{
-      "name": "before",
-      "style": "query"
-    }]
-  }],
-  "/internal/invoices/pdf": [{
-    "verb": "GET",
-    "name": "getPdfInvoices",
-    "params": [{
-      "name": "from",
-      "style": "query"
-    }, {
-      "name": "status",
-      "style": "query"
-    }]
-  }],
-  "/internal/invoices/{invId}": [{
-    "verb": "GET",
-    "name": "getHtmlInvoice",
-    "params": [{
-      "name": "invId",
-      "style": "template"
-    }]
-  }],
-  "/internal/invoices/{invId}.pdf": [{
-    "verb": "GET",
-    "name": "getPdfInvoice",
-    "params": [{
-      "name": "invId",
-      "style": "template"
-    }]
-  }],
-  "/internal/invoices/{invoice}/credit": [{
-    "verb": "PUT",
-    "name": "generateCreditNote",
-    "params": [{
-      "name": "invoice",
-      "style": "template"
-    }]
-  }],
-  "/internal/invoices/{invoice}/refund": [{
-    "verb": "PUT",
-    "name": "refundInvoice",
-    "params": [{
-      "name": "invoice",
-      "style": "template"
-    }]
-  }],
-  "/internal/oauth1consumers": [{
-    "verb": "POST",
-    "name": "createOAuth1Consumer",
-    "params": []
-  }],
-  "/internal/organisations/{id}/addonproviders": [{
-    "verb": "POST",
-    "name": "uploadManifest",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/internal/organisations/{id}/discount": [{
-    "verb": "PUT",
-    "name": "setDiscount",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/internal/packages": [{
-    "verb": "POST",
-    "name": "createPackage",
-    "params": []
-  }],
-  "/internal/packages/{packageId}": [{
-    "verb": "DELETE",
-    "name": "deletePackage",
-    "params": [{
-      "name": "packageId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editPackage",
-    "params": [{
-      "name": "packageId",
-      "style": "template"
-    }]
-  }],
-  "/internal/paymentplans": [{
-    "verb": "POST",
-    "name": "createInternalPaymentPlan",
-    "params": []
-  }],
-  "/internal/prices/{currency}": [{
-    "verb": "PUT",
-    "name": "setExchangeRate",
-    "params": [{
-      "name": "currency",
-      "style": "template"
-    }]
-  }],
-  "/internal/users": [{
-    "verb": "GET",
-    "name": "getUsers",
-    "params": [{
-      "name": "email",
-      "style": "query"
-    }]
-  }],
-  "/internal/users/{userId}/email": [{
-    "verb": "GET",
-    "name": "getEmail",
-    "params": [{
-      "name": "userId",
-      "style": "template"
-    }]
-  }],
-  "/internal/users/{userId}/keys/{name}": [{
-    "verb": "DELETE",
-    "name": "deleteSshKey",
-    "params": [{
-      "name": "name",
-      "style": "template"
-    }, {
-      "name": "userId",
-      "style": "template"
-    }]
-  }],
-  "/invoice/external/{bid}": [{
-    "verb": "POST",
-    "name": "updateInvoice",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }],
-  "/newsfeeds/blog": [{
-    "verb": "GET",
-    "name": "getBlogFeed",
-    "params": []
-  }],
-  "/newsfeeds/engineering": [{
-    "verb": "GET",
-    "name": "getEngineeringFeed",
-    "params": []
-  }],
-  "/oauth/access_token": [{
-    "verb": "POST",
-    "name": "postAccessTokenRequest",
-    "params": [{
-      "name": "oauth_consumer_key",
-      "style": "query"
-    }, {
-      "name": "oauth_token",
-      "style": "query"
-    }, {
-      "name": "oauth_signature_method",
-      "style": "query"
-    }, {
-      "name": "oauth_signature",
-      "style": "query"
-    }, {
-      "name": "oauth_timestamp",
-      "style": "query"
-    }, {
-      "name": "oauth_nonce",
-      "style": "query"
-    }, {
-      "name": "oauth_version",
-      "style": "query"
-    }, {
-      "name": "oauth_verifier",
-      "style": "query"
-    }, {
-      "name": "oauth_callback",
-      "style": "query"
-    }, {
-      "name": "oauth_token_secret",
-      "style": "query"
-    }, {
-      "name": "oauth_callback_confirmed",
-      "style": "query"
-    }]
-  }],
-  "/oauth/authorize": [{
-    "verb": "GET",
-    "name": "authorizeForm",
-    "params": [{
-      "name": "Cookie",
-      "style": "header"
-    }, {
-      "name": "Cookie",
-      "style": "header"
-    }, {
-      "name": "oauth_token",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "authorizeToken",
-    "params": [{
-      "name": "Cookie",
-      "style": "header"
-    }, {
-      "name": "Cookie",
-      "style": "header"
-    }, {
-      "name": "almighty",
-      "style": "query"
-    }, {
-      "name": "access_organisations",
-      "style": "query"
-    }, {
-      "name": "manage_organisations",
-      "style": "query"
-    }, {
-      "name": "manage_organisations_services",
-      "style": "query"
-    }, {
-      "name": "manage_organisations_applications",
-      "style": "query"
-    }, {
-      "name": "manage_organisations_members",
-      "style": "query"
-    }, {
-      "name": "access_organisations_bills",
-      "style": "query"
-    }, {
-      "name": "access_organisations_credit_count",
-      "style": "query"
-    }, {
-      "name": "access_organisations_consumption_statistics",
-      "style": "query"
-    }, {
-      "name": "access_personal_information",
-      "style": "query"
-    }, {
-      "name": "manage_personal_information",
-      "style": "query"
-    }, {
-      "name": "manage_ssh_keys",
-      "style": "query"
-    }, {
-      "name": "manage_services",
-      "style": "query"
-    }, {
-      "name": "manage_applications",
-      "style": "query"
-    }, {
-      "name": "access_bills",
-      "style": "query"
-    }, {
-      "name": "access_credit_count",
-      "style": "query"
-    }, {
-      "name": "access_consumption_statistics",
-      "style": "query"
-    }]
-  }],
-  "/oauth/request_token": [{
-    "verb": "POST",
-    "name": "postReqTokenRequest",
-    "params": [{
-      "name": "oauth_consumer_key",
-      "style": "query"
-    }, {
-      "name": "oauth_token",
-      "style": "query"
-    }, {
-      "name": "oauth_signature_method",
-      "style": "query"
-    }, {
-      "name": "oauth_signature",
-      "style": "query"
-    }, {
-      "name": "oauth_timestamp",
-      "style": "query"
-    }, {
-      "name": "oauth_nonce",
-      "style": "query"
-    }, {
-      "name": "oauth_version",
-      "style": "query"
-    }, {
-      "name": "oauth_verifier",
-      "style": "query"
-    }, {
-      "name": "oauth_callback",
-      "style": "query"
-    }, {
-      "name": "oauth_token_secret",
-      "style": "query"
-    }, {
-      "name": "oauth_callback_confirmed",
-      "style": "query"
-    }]
-  }],
-  "/oauth/rights": [{
-    "verb": "GET",
-    "name": "getAvailableRights",
-    "params": []
-  }],
-  "/organisations": [{
-    "verb": "GET",
-    "name": "getUserOrganisationss",
-    "params": [{
-      "name": "user",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "createOrganisation",
-    "params": []
-  }],
-  "/organisations/{id}": [{
-    "verb": "DELETE",
-    "name": "deleteOrganisation",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getOrganisation",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editOrganisation",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addonproviders": [{
-    "verb": "GET",
-    "name": "getProvidersInfo",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addonproviders/{providerId}": [{
-    "verb": "GET",
-    "name": "getProviderInfo",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "updateProviderInfos",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addonproviders/{providerId}/features": [{
-    "verb": "GET",
-    "name": "getProviderFeatures",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "addProviderFeature",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addonproviders/{providerId}/features/{featureId}": [{
-    "verb": "DELETE",
-    "name": "deleteProviderFeature",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "featureId",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addonproviders/{providerId}/plans": [{
-    "verb": "GET",
-    "name": "getProviderPlans",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "addProviderPlan",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addonproviders/{providerId}/plans/{planId}": [{
-    "verb": "DELETE",
-    "name": "deleteProviderPlan",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }, {
-      "name": "planId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getProviderPlan",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }, {
-      "name": "planId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editProviderPlan",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }, {
-      "name": "planId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addonproviders/{providerId}/plans/{planId}/features/{featureName}": [{
-    "verb": "DELETE",
-    "name": "deleteProviderPlanFeature",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "featureName",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }, {
-      "name": "planId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editProviderPlanFeature",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "featureName",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }, {
-      "name": "planId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addonproviders/{providerId}/tags": [{
-    "verb": "GET",
-    "name": "getProviderTags",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addonproviders/{providerId}/testers": [{
-    "verb": "POST",
-    "name": "addBetaTester",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "providerId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addons": [{
-    "verb": "GET",
-    "name": "getAddons",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "provisionAddon",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addons/{addonId}": [{
-    "verb": "DELETE",
-    "name": "deprovisionAddon",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getAddon",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "changePlan",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addons/{addonId}/applications": [{
-    "verb": "GET",
-    "name": "getApplicationsLinkedToAddon",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addons/{addonId}/payment-method": [{
-    "verb": "PUT",
-    "name": "changePaymentMethod",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addons/{addonId}/sso": [{
-    "verb": "GET",
-    "name": "getSSOData",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addons/{addonId}/tags": [{
-    "verb": "GET",
-    "name": "getAddonTags",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/addons/{addonId}/tags/{tag}": [{
-    "verb": "DELETE",
-    "name": "deleteAddonTag",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "tag",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "addAddonTag",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "tag",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications": [{
-    "verb": "GET",
-    "name": "getAllApplications",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "addApplication",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}": [{
-    "verb": "DELETE",
-    "name": "deleteApplication",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getApplication",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editApplication",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/addons": [{
-    "verb": "GET",
-    "name": "getAddonsLinkedToApplication",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "linkAddonToApplication",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/addons/{addonId}": [{
-    "verb": "DELETE",
-    "name": "unlinkAddonFromApplication",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/deployments": [{
-    "verb": "GET",
-    "name": "getApplicationDeploymentsForOrga",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "limit",
-      "style": "query"
-    }, {
-      "name": "offset",
-      "style": "query"
-    }, {
-      "name": "action",
-      "style": "query"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/deployments/{deploymentId}/instances": [{
-    "verb": "DELETE",
-    "name": "getApplicationDeploymentsForOrga",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "deploymentId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/env": [{
-    "verb": "GET",
-    "name": "getApplicationEnv",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editApplicationEnvironment",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/env/{envName}": [{
-    "verb": "DELETE",
-    "name": "removeApplicationEnv",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "envName",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editApplicationEnv",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "envName",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/instance": [{
-    "verb": "PUT",
-    "name": "changeApplicationType",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "type",
-      "style": "query"
-    }, {
-      "name": "version",
-      "style": "query"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/instances": [{
-    "verb": "DELETE",
-    "name": "undeployApplication",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getApplicationInstances",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "redeployApplication",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/tags": [{
-    "verb": "GET",
-    "name": "getApplicationTags",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/tags/{tag}": [{
-    "verb": "DELETE",
-    "name": "deleteApplicationTag",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "tag",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "addApplicationTag",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "tag",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/vhosts": [{
-    "verb": "GET",
-    "name": "getVhosts",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/vhosts/favourite": [{
-    "verb": "DELETE",
-    "name": "unmarkFavouriteVhost",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getFavouriteVhost",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "markFavouriteVhost",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/applications/{appId}/vhosts/{domain}": [{
-    "verb": "DELETE",
-    "name": "removeVhost",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "domain",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "addVhost",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "domain",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/avatar": [{
-    "verb": "PUT",
-    "name": "setOrgaAvatar",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "setOrgaAvatarFromSource",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/consumers": [{
-    "verb": "GET",
-    "name": "getConsumers",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "createConsumer",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/consumers/{key}": [{
-    "verb": "DELETE",
-    "name": "deleteConsumer",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "key",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/consumers/{key}/secret": [{
-    "verb": "GET",
-    "name": "getConsumerSecret",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "key",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/consumptions": [{
-    "verb": "GET",
-    "name": "getAmount",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "query"
-    }, {
-      "name": "from",
-      "style": "query"
-    }, {
-      "name": "to",
-      "style": "query"
-    }]
-  }],
-  "/organisations/{id}/credits": [{
-    "verb": "GET",
-    "name": "getAmount",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/instances": [{
-    "verb": "GET",
-    "name": "getInstancesForAllApps",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/members": [{
-    "verb": "GET",
-    "name": "getOrganisationMembers",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "addOrganisationMember",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "invitationKey",
-      "style": "query"
-    }]
-  }],
-  "/organisations/{id}/members/{userId}": [{
-    "verb": "DELETE",
-    "name": "removeOrganisationMember",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "userId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editOrganisationMember",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "userId",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/payment-info": [{
-    "verb": "GET",
-    "name": "getPaymentInfo",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/payments/billings": [{
-    "verb": "GET",
-    "name": "getInvoices",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "buyDrops",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/payments/billings/{bid}": [{
-    "verb": "DELETE",
-    "name": "deletePurchaseOrder",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "bid",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getInvoice",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "bid",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "choosePaymentProvider",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "bid",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/payments/billings/{bid}.pdf": [{
-    "verb": "GET",
-    "name": "getPdfInvoice",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "bid",
-      "style": "template"
-    }, {
-      "name": "token",
-      "style": "query"
-    }]
-  }],
-  "/organisations/{id}/payments/fullprice/{price}": [{
-    "verb": "GET",
-    "name": "priceWithTax",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "price",
-      "style": "template"
-    }]
-  }],
-  "/organisations/{id}/payments/recurring": [{
-    "verb": "DELETE",
-    "name": "deleteRecurrentPayment",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getRecurrentPayment",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "createRecurrentPayment",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/password_forgotten": [{
-    "verb": "GET",
-    "name": "getPasswordForgottenForm",
-    "params": []
-  }, {
-    "verb": "POST",
-    "name": "askForPasswordResetViaForm",
-    "params": [{
-      "name": "TesterPass",
-      "style": "header"
-    }, {
-      "name": "login",
-      "style": "query"
-    }, {
-      "name": "drop_tokens",
-      "style": "query"
-    }]
-  }],
-  "/password_forgotten/{key}": [{
-    "verb": "GET",
-    "name": "confirmPasswordResetRequest",
-    "params": [{
-      "name": "key",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "resetPasswordForgotten",
-    "params": [{
-      "name": "key",
-      "style": "template"
-    }, {
-      "name": "pass",
-      "style": "query"
-    }, {
-      "name": "pass2",
-      "style": "query"
-    }]
-  }],
-  "/payments/coupons/{name}": [{
-    "verb": "GET",
-    "name": "getCoupon",
-    "params": [{
-      "name": "name",
-      "style": "template"
-    }]
-  }],
-  "/payments/providers": [{
-    "verb": "GET",
-    "name": "getAvailablePaymentProviders",
-    "params": []
-  }],
-  "/payments/tokens/bt": [{
-    "verb": "GET",
-    "name": "getBraintreeToken",
-    "params": []
-  }],
-  "/payments/webhooks/bt": [{
-    "verb": "GET",
-    "name": "subscriptionEventPing",
-    "params": [{
-      "name": "bt_challenge",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "subscriptionEvent",
-    "params": [{
-      "name": "bt_signature",
-      "style": "query"
-    }, {
-      "name": "bt_payload",
-      "style": "query"
-    }]
-  }],
-  "/payments/{bid}/end/bt": [{
-    "verb": "POST",
-    "name": "endPaymentWithBraintree",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }],
-  "/ping": [{
-    "verb": "GET",
-    "name": "ping",
-    "params": []
-  }],
-  "/ping/stats": [{
-    "verb": "GET",
-    "name": "stats",
-    "params": []
-  }],
-  "/products/addonproviders": [{
-    "verb": "GET",
-    "name": "getAddonProviders",
-    "params": []
-  }],
-  "/products/countries": [{
-    "verb": "GET",
-    "name": "getCountries",
-    "params": []
-  }],
-  "/products/countrycodes": [{
-    "verb": "GET",
-    "name": "getCountryCodes",
-    "params": []
-  }],
-  "/products/instances": [{
-    "verb": "GET",
-    "name": "getAvailableInstances",
-    "params": [{
-      "name": "for",
-      "style": "query"
-    }]
-  }],
-  "/products/instances/{type}-{version}": [{
-    "verb": "GET",
-    "name": "getAvailableInstance",
-    "params": [{
-      "name": "type",
-      "style": "template"
-    }, {
-      "name": "version",
-      "style": "template"
-    }, {
-      "name": "for",
-      "style": "query"
-    }, {
-      "name": "app",
-      "style": "query"
-    }]
-  }],
-  "/products/packages": [{
-    "verb": "GET",
-    "name": "getAvailablePackages",
-    "params": [{
-      "name": "coupon",
-      "style": "query"
-    }, {
-      "name": "orgaId",
-      "style": "query"
-    }, {
-      "name": "currency",
-      "style": "query"
-    }]
-  }],
-  "/products/prices": [{
-    "verb": "GET",
-    "name": "getExcahngeRates",
-    "params": []
-  }],
-  "/products/zones": [{
-    "verb": "GET",
-    "name": "getZones",
-    "params": []
-  }],
-  "/self": [{
-    "verb": "DELETE",
-    "name": "deleteUser",
-    "params": []
-  }, {
-    "verb": "GET",
-    "name": "getUser",
-    "params": []
-  }, {
-    "verb": "PUT",
-    "name": "editUser",
-    "params": []
-  }],
-  "/self/addons": [{
-    "verb": "GET",
-    "name": "getAddons",
-    "params": []
-  }, {
-    "verb": "POST",
-    "name": "provisionAddon",
-    "params": []
-  }],
-  "/self/addons/{addonId}": [{
-    "verb": "DELETE",
-    "name": "deprovisionAddon",
-    "params": [{
-      "name": "addonId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getAddon",
-    "params": [{
-      "name": "addonId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "changePlan",
-    "params": [{
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/self/addons/{addonId}/applications": [{
-    "verb": "GET",
-    "name": "getApplicationsLinkedToAddon",
-    "params": [{
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/self/addons/{addonId}/payment-method": [{
-    "verb": "PUT",
-    "name": "changePaymentMethod",
-    "params": [{
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/self/addons/{addonId}/sso": [{
-    "verb": "GET",
-    "name": "getSSOData",
-    "params": [{
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/self/addons/{addonId}/tags": [{
-    "verb": "GET",
-    "name": "getAddonTags",
-    "params": [{
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/self/addons/{addonId}/tags/{tag}": [{
-    "verb": "DELETE",
-    "name": "deleteAddonTag",
-    "params": [{
-      "name": "tag",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "addAddonTag",
-    "params": [{
-      "name": "tag",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/self/applications": [{
-    "verb": "GET",
-    "name": "getApplications",
-    "params": []
-  }, {
-    "verb": "POST",
-    "name": "addApplication",
-    "params": []
-  }],
-  "/self/applications/{appId}": [{
-    "verb": "DELETE",
-    "name": "deleteApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/self/applications/{appId}/addons": [{
-    "verb": "GET",
-    "name": "getAddonsLinkedToApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "linkAddonToApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/self/applications/{appId}/addons/{addonId}": [{
-    "verb": "DELETE",
-    "name": "unlinkAddonFromApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "addonId",
-      "style": "template"
-    }]
-  }],
-  "/self/applications/{appId}/deployments": [{
-    "verb": "GET",
-    "name": "getApplicationDeployments",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "limit",
-      "style": "query"
-    }, {
-      "name": "offset",
-      "style": "query"
-    }, {
-      "name": "action",
-      "style": "query"
-    }]
-  }],
-  "/self/applications/{appId}/deployments/{deploymentId}/instances": [{
-    "verb": "DELETE",
-    "name": "cancelDeploy",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }, {
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "deploymentId",
-      "style": "template"
-    }]
-  }],
-  "/self/applications/{appId}/env": [{
-    "verb": "GET",
-    "name": "editApplicationEnv",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editApplicationEnvironment",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/self/applications/{appId}/env/{envName}": [{
-    "verb": "DELETE",
-    "name": "removeApplicationEnv",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "envName",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editApplicationEnv",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "envName",
-      "style": "template"
-    }]
-  }],
-  "/self/applications/{appId}/instance": [{
-    "verb": "PUT",
-    "name": "changeApplicationType",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "type",
-      "style": "query"
-    }, {
-      "name": "version",
-      "style": "query"
-    }]
-  }],
-  "/self/applications/{appId}/instances": [{
-    "verb": "DELETE",
-    "name": "undeployApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getApplicationInstances",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "redeployApplication",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/self/applications/{appId}/tags": [{
-    "verb": "GET",
-    "name": "getApplicationTags",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/self/applications/{appId}/tags/{tag}": [{
-    "verb": "DELETE",
-    "name": "deleteApplicationTag",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "tag",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "addApplicationTag",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "tag",
-      "style": "template"
-    }]
-  }],
-  "/self/applications/{appId}/vhosts": [{
-    "verb": "GET",
-    "name": "getVhosts",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/self/applications/{appId}/vhosts/favourite": [{
-    "verb": "DELETE",
-    "name": "unmarkFavouriteVhost",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getFavouriteVhost",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "markFavouriteVhost",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }]
-  }],
-  "/self/applications/{appId}/vhosts/{domain}": [{
-    "verb": "DELETE",
-    "name": "removeVhost",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "domain",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "addVhost",
-    "params": [{
-      "name": "appId",
-      "style": "template"
-    }, {
-      "name": "domain",
-      "style": "template"
-    }]
-  }],
-  "/self/avatar": [{
-    "verb": "PUT",
-    "name": "setUserAvatar",
-    "params": []
-  }, {
-    "verb": "PUT",
-    "name": "setUserAvatarFromSource",
-    "params": []
-  }],
-  "/self/change_password": [{
-    "verb": "PUT",
-    "name": "changeUserPassword",
-    "params": []
-  }],
-  "/self/confirmation_email": [{
-    "verb": "GET",
-    "name": "getConfirmationEmail",
-    "params": []
-  }],
-  "/self/consumptions": [{
-    "verb": "GET",
-    "name": "getConsumptions",
-    "params": [{
-      "name": "appId",
-      "style": "query"
-    }, {
-      "name": "from",
-      "style": "query"
-    }, {
-      "name": "to",
-      "style": "query"
-    }]
-  }],
-  "/self/credits": [{
-    "verb": "GET",
-    "name": "getAmount",
-    "params": []
-  }],
-  "/self/emails": [{
-    "verb": "GET",
-    "name": "getEmailAddresses",
-    "params": []
-  }],
-  "/self/emails/{email}": [{
-    "verb": "DELETE",
-    "name": "removeEmailAddress",
-    "params": [{
-      "name": "email",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "addEmailAddress",
-    "params": [{
-      "name": "email",
-      "style": "template"
-    }]
-  }],
-  "/self/id": [{
-    "verb": "GET",
-    "name": "getId",
-    "params": []
-  }],
-  "/self/instances": [{
-    "verb": "GET",
-    "name": "getInstancesForAllApps",
-    "params": []
-  }],
-  "/self/keys": [{
-    "verb": "GET",
-    "name": "getSshKeys",
-    "params": []
-  }],
-  "/self/keys/{key}": [{
-    "verb": "DELETE",
-    "name": "removeSshKey",
-    "params": [{
-      "name": "key",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "addSshKey",
-    "params": [{
-      "name": "key",
-      "style": "template"
-    }]
-  }],
-  "/self/payment-info": [{
-    "verb": "GET",
-    "name": "getPaymentInfo",
-    "params": []
-  }],
-  "/self/payments/billings": [{
-    "verb": "GET",
-    "name": "getInvoices",
-    "params": []
-  }, {
-    "verb": "POST",
-    "name": "buyDrops",
-    "params": []
-  }],
-  "/self/payments/billings/{bid}": [{
-    "verb": "DELETE",
-    "name": "deletePurchaseOrder",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }, {
-    "verb": "GET",
-    "name": "getInvoice",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "choosePaymentProvider",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }]
-  }],
-  "/self/payments/billings/{bid}.pdf": [{
-    "verb": "GET",
-    "name": "getPdfInvoice",
-    "params": [{
-      "name": "bid",
-      "style": "template"
-    }, {
-      "name": "token",
-      "style": "query"
-    }]
-  }],
-  "/self/payments/fullprice/{price}": [{
-    "verb": "GET",
-    "name": "priceWithTax",
-    "params": [{
-      "name": "price",
-      "style": "template"
-    }]
-  }],
-  "/self/payments/methods": [{
-    "verb": "GET",
-    "name": "getUserPaymentMethods",
-    "params": []
-  }, {
-    "verb": "POST",
-    "name": "addUserMethod",
-    "params": []
-  }],
-  "/self/payments/methods/{mId}": [{
-    "verb": "DELETE",
-    "name": "deleteUserCard",
-    "params": [{
-      "name": "mId",
-      "style": "template"
-    }]
-  }],
-  "/self/payments/recurring": [{
-    "verb": "DELETE",
-    "name": "deleteRecurrentPayment",
-    "params": []
-  }, {
-    "verb": "GET",
-    "name": "getRecurrentPayment",
-    "params": []
-  }, {
-    "verb": "PUT",
-    "name": "createRecurrentPayment",
-    "params": []
-  }],
-  "/self/tokens": [{
-    "verb": "DELETE",
-    "name": "revokeAllTokens",
-    "params": []
-  }, {
-    "verb": "GET",
-    "name": "getSelfTokens",
-    "params": []
-  }],
-  "/self/tokens/{token}": [{
-    "verb": "DELETE",
-    "name": "revokeToken",
-    "params": [{
-      "name": "token",
-      "style": "template"
-    }]
-  }],
-  "/self/validate_email": [{
-    "verb": "GET",
-    "name": "validateEmail",
-    "params": [{
-      "name": "validationKey",
-      "style": "query"
-    }]
-  }],
-  "/session/login": [{
-    "verb": "GET",
-    "name": "getLoginForm",
-    "params": [{
-      "name": "secondaryEmailKey",
-      "style": "query"
-    }, {
-      "name": "deletionKey",
-      "style": "query"
-    }, {
-      "name": "fromAuthorize",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "login",
-    "params": [{
-      "name": "email",
-      "style": "query"
-    }, {
-      "name": "pass",
-      "style": "query"
-    }, {
-      "name": "from_authorize",
-      "style": "query"
-    }]
-  }],
-  "/session/signup": [{
-    "verb": "GET",
-    "name": "getSignupForm",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "url_next",
-      "style": "query"
-    }]
-  }],
-  "/summary": [{
-    "verb": "GET",
-    "name": "getSummary",
-    "params": []
-  }],
-  "/users": [{
-    "verb": "GET",
-    "name": "getUsers",
-    "params": []
-  }, {
-    "verb": "POST",
-    "name": "createUser",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "addonBetaInvitationKey",
-      "style": "query"
-    }]
-  }, {
-    "verb": "POST",
-    "name": "createUserFromForm",
-    "params": [{
-      "name": "invitationKey",
-      "style": "query"
-    }, {
-      "name": "addonBetaInvitationKey",
-      "style": "query"
-    }, {
-      "name": "email",
-      "style": "query"
-    }, {
-      "name": "pass",
-      "style": "query"
-    }, {
-      "name": "url_next",
-      "style": "query"
-    }, {
-      "name": "terms",
-      "style": "query"
-    }]
-  }],
-  "/users/{id}": [{
-    "verb": "GET",
-    "name": "getUser",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/users/{id}/applications": [{
-    "verb": "GET",
-    "name": "getApplications",
-    "params": [{
-      "name": "id",
-      "style": "template"
-    }]
-  }],
-  "/users/{userId}/git-info": [{
-    "verb": "GET",
-    "name": "getGitInfo",
-    "params": [{
-      "name": "userId",
-      "style": "template"
-    }]
-  }],
-  "/validation/vat/{key}": [{
-    "verb": "GET",
-    "name": "validate",
-    "params": [{
-      "name": "key",
-      "style": "template"
-    }, {
-      "name": "action",
-      "style": "query"
-    }]
-  }],
-  "/vat_check": [{
-    "verb": "GET",
-    "name": "checkVat",
-    "params": [{
-      "name": "country",
-      "style": "query"
-    }, {
-      "name": "vat",
-      "style": "query"
-    }]
-  }],
-  "/vendor/apps": [{
-    "verb": "GET",
-    "name": "listApps",
-    "params": [{
-      "name": "offset",
-      "style": "query"
-    }]
-  }],
-  "/vendor/apps/{addonId}": [{
-    "verb": "GET",
-    "name": "getApplicationInfo",
-    "params": [{
-      "name": "addonId",
-      "style": "template"
-    }]
-  }, {
-    "verb": "PUT",
-    "name": "editApplicationConfiguration",
-    "params": [{
-      "name": "addonId",
-      "style": "template"
-    }]
-  }]
+  "swagger": "2.0",
+  "schemes": ["http"],
+  "host": "ccapi-preprod.cleverapps.io",
+  "basePath": "/v2",
+  "paths": {
+    "/authorize": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "authorize"
+          }
+        }
+      }
+    },
+    "/cleverapps/{name}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "checkDomainAvailability"
+          }
+        },
+        "parameters": [{
+          "name": "name",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/coldstart": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "coldStart"
+          }
+        }
+      }
+    },
+    "/github": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "startGithub"
+          }
+        }
+      }
+    },
+    "/github/applications": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getGithubApplications"
+          }
+        }
+      }
+    },
+    "/github/callback": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "githubCallback"
+          }
+        },
+        "parameters": [{
+          "name": "Cookie",
+          "required": false,
+          "in": "header",
+          "type": "string"
+        }, {
+          "name": "code",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "state",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "error",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "error_description",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "error_uri",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/github/emails": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getGithubEmails"
+          }
+        }
+      }
+    },
+    "/github/keys": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getGithubKeys"
+          }
+        }
+      }
+    },
+    "/github/link": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "unlinkGithub"
+          }
+        }
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "linkGithub"
+          }
+        },
+        "parameters": [{
+          "name": "transactionId",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "redirectUrl",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/github/login": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "githubLogin"
+          }
+        },
+        "parameters": [{
+          "name": "redirectUrl",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "fromAuthorize",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/github/redeploy": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "redeployApp"
+          }
+        },
+        "parameters": [{
+          "name": "User-Agent",
+          "required": false,
+          "in": "header",
+          "type": "string"
+        }, {
+          "name": "X-Github-Event",
+          "required": false,
+          "in": "header",
+          "type": "string"
+        }, {
+          "name": "X-Hub-Signature",
+          "required": false,
+          "in": "header",
+          "type": "string"
+        }]
+      }
+    },
+    "/github/signup": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "githubSignup"
+          }
+        },
+        "parameters": [{
+          "name": "redirectUrl",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "fromAuthorize",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "finsihGithubSignup"
+          }
+        },
+        "parameters": [{
+          "name": "transactionId",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "name",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "otherId",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "otherEmail",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "password",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "autoLink",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "terms",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/github/username": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getGithubUsername"
+          }
+        }
+      }
+    },
+    "/internal/activeMails": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getActiveMails"
+          }
+        }
+      }
+    },
+    "/internal/coupons": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createCoupon"
+          }
+        }
+      }
+    },
+    "/internal/credentials": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createCredentials"
+          }
+        }
+      }
+    },
+    "/internal/dropcounts/{ownerId}": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "addDrops"
+          }
+        },
+        "parameters": [{
+          "name": "ownerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/instances/{type}-{version}": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "createInstance"
+          }
+        },
+        "parameters": [{
+          "name": "type",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "version",
+          "required": true,
+          "in": "path",
+          "type": "int"
+        }]
+      }
+    },
+    "/internal/invoices": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getInvoices"
+          }
+        },
+        "parameters": [{
+          "name": "owner",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createPendingInvoice"
+          }
+        }
+      }
+    },
+    "/internal/invoices/fortransactions/{transId}": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createInvoiceForTransaction"
+          }
+        },
+        "parameters": [{
+          "name": "transId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/invoices/links": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getLinks"
+          }
+        },
+        "parameters": [{
+          "name": "before",
+          "required": false,
+          "in": "query",
+          "type": "long"
+        }]
+      }
+    },
+    "/internal/invoices/pdf": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getPdfInvoices"
+          }
+        },
+        "parameters": [{
+          "name": "from",
+          "required": false,
+          "in": "query",
+          "type": "long"
+        }, {
+          "name": "status",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/invoices/{invId}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getHtmlInvoice"
+          }
+        },
+        "parameters": [{
+          "name": "invId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/invoices/{invId}.pdf": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getPdfInvoice"
+          }
+        },
+        "parameters": [{
+          "name": "invId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/invoices/{invoice}/credit": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "generateCreditNote"
+          }
+        },
+        "parameters": [{
+          "name": "invoice",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/invoices/{invoice}/refund": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "refundInvoice"
+          }
+        },
+        "parameters": [{
+          "name": "invoice",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/organisations/{id}/addonproviders": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "uploadManifest"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/organisations/{id}/discount": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "setDiscount"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/packages": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createPackage"
+          }
+        }
+      }
+    },
+    "/internal/packages/{packageId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deletePackage"
+          }
+        },
+        "parameters": [{
+          "name": "packageId",
+          "required": true,
+          "in": "path",
+          "type": "long"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editPackage"
+          }
+        },
+        "parameters": [{
+          "name": "packageId",
+          "required": true,
+          "in": "path",
+          "type": "long"
+        }]
+      }
+    },
+    "/internal/paymentplans": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createInternalPaymentPlan"
+          }
+        }
+      }
+    },
+    "/internal/prices/{currency}": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "setExchangeRate"
+          }
+        },
+        "parameters": [{
+          "name": "currency",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/tokenforuser/{userId}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "createTokenAsUser"
+          }
+        },
+        "parameters": [{
+          "name": "userId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/users": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getUsers"
+          }
+        },
+        "parameters": [{
+          "name": "email",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/users/{userId}/email": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getEmail"
+          }
+        },
+        "parameters": [{
+          "name": "userId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/users/{userId}/keys/{name}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteSshKey"
+          }
+        },
+        "parameters": [{
+          "name": "name",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "userId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/invoice/external/{bid}": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "updateInvoice"
+          }
+        },
+        "parameters": [{
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/newsfeeds/blog": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getBlogFeed"
+          }
+        }
+      }
+    },
+    "/newsfeeds/engineering": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getEngineeringFeed"
+          }
+        }
+      }
+    },
+    "/oauth/access_token": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "postAccessTokenRequest"
+          }
+        },
+        "parameters": [{
+          "name": "oauth_consumer_key",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_token",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_signature_method",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_signature",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_timestamp",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_nonce",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_version",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_verifier",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_callback",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_token_secret",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_callback_confirmed",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/oauth/authorize": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "authorizeForm"
+          }
+        },
+        "parameters": [{
+          "name": "Cookie",
+          "required": false,
+          "in": "header",
+          "type": "string"
+        }, {
+          "name": "oauth_token",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "authorizeToken"
+          }
+        },
+        "parameters": [{
+          "name": "Cookie",
+          "required": false,
+          "in": "header",
+          "type": "string"
+        }, {
+          "name": "almighty",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "access_organisations",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "manage_organisations",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "manage_organisations_services",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "manage_organisations_applications",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "manage_organisations_members",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "access_organisations_bills",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "access_organisations_credit_count",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "access_organisations_consumption_statistics",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "access_personal_information",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "manage_personal_information",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "manage_ssh_keys",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "manage_services",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "manage_applications",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "access_bills",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "access_credit_count",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "access_consumption_statistics",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/oauth/request_token": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "postReqTokenRequest"
+          }
+        },
+        "parameters": [{
+          "name": "oauth_consumer_key",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_token",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_signature_method",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_signature",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_timestamp",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_nonce",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_version",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_verifier",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_callback",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_token_secret",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_callback_confirmed",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/oauth/rights": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAvailableRights"
+          }
+        }
+      }
+    },
+    "/organisations": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getUserOrganisationss"
+          }
+        },
+        "parameters": [{
+          "name": "user",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createOrganisation"
+          }
+        }
+      }
+    },
+    "/organisations/{id}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteOrganisation"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getOrganisation"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editOrganisation"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addonproviders": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getProvidersInfo"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createProvider"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addonproviders/{providerId}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getProviderInfo"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "updateProviderInfos"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addonproviders/{providerId}/features": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getProviderFeatures"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "addProviderFeature"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addonproviders/{providerId}/features/{featureId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteProviderFeature"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "featureId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addonproviders/{providerId}/plans": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getProviderPlans"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "addProviderPlan"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addonproviders/{providerId}/plans/{planId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteProviderPlan"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "planId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getProviderPlan"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "planId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editProviderPlan"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "planId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addonproviders/{providerId}/plans/{planId}/features/{featureName}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteProviderPlanFeature"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "featureName",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "planId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editProviderPlanFeature"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "featureName",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "planId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addonproviders/{providerId}/tags": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getProviderTags"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addonproviders/{providerId}/testers": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "addBetaTester"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addons": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddons"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "provisionAddon"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addons/{addonId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deprovisionAddon"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddon"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "changePlan"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addons/{addonId}/applications": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationsLinkedToAddon"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addons/{addonId}/payment-method": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "changePaymentMethod"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addons/{addonId}/sso": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getSSOData"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addons/{addonId}/tags": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddonTags"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addons/{addonId}/tags/{tag}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteAddonTag"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "tag",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "addAddonTag"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "tag",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAllApplications"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "addApplication"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteApplication"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplication"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editApplication"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/addons": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddonsLinkedToApplication"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "linkAddonToApplication"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/addons/{addonId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "unlinkAddonFromApplication"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/deployments": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationDeploymentsForOrga"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "limit",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "offset",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "action",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/deployments/{deploymentId}/instances": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "getApplicationDeploymentsForOrga"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "deploymentId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/env": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationEnv"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editApplicationEnvironment"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/env/{envName}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "removeApplicationEnv"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "envName",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editApplicationEnv"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "envName",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/instance": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "changeApplicationType"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "type",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "version",
+          "required": false,
+          "in": "query",
+          "type": "int"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/instances": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "undeployApplication"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationInstances"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "redeployApplication"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "commit",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/tags": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationTags"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/tags/{tag}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteApplicationTag"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "tag",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "addApplicationTag"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "tag",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/vhosts": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getVhosts"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/vhosts/favourite": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "unmarkFavouriteVhost"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getFavouriteVhost"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "markFavouriteVhost"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/vhosts/{domain}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "removeVhost"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "domain",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "addVhost"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "domain",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/avatar": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "setOrgaAvatar\nsetOrgaAvatarFromSource"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/consumers": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getConsumers"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createConsumer"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/consumers/{key}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteConsumer"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getConsumer"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/consumers/{key}/secret": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getConsumerSecret"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/consumptions": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAmount"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "from",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "to",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/credits": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAmount"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/instances": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getInstancesForAllApps"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/members": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getOrganisationMembers"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "addOrganisationMember"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "invitationKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/members/{userId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "removeOrganisationMember"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "userId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editOrganisationMember"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "userId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/payment-info": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getPaymentInfo"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/payments/billings": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getInvoices"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "buyDrops"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/payments/billings/{bid}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deletePurchaseOrder"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getInvoice"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "choosePaymentProvider"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/payments/billings/{bid}.pdf": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getPdfInvoice"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "token",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/payments/fullprice/{price}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "priceWithTax"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "price",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/payments/recurring": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteRecurrentPayment"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getRecurrentPayment"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "createRecurrentPayment"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/password_forgotten": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getPasswordForgottenForm"
+          }
+        }
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "askForPasswordResetViaForm"
+          }
+        },
+        "parameters": [{
+          "name": "TesterPass",
+          "required": false,
+          "in": "header",
+          "type": "string"
+        }, {
+          "name": "login",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "drop_tokens",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/password_forgotten/{key}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "confirmPasswordResetRequest"
+          }
+        },
+        "parameters": [{
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "resetPasswordForgotten"
+          }
+        },
+        "parameters": [{
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "pass",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "pass2",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/payments/coupons/{name}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getCoupon"
+          }
+        },
+        "parameters": [{
+          "name": "name",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/payments/providers": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAvailablePaymentProviders"
+          }
+        }
+      }
+    },
+    "/payments/tokens/bt": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getBraintreeToken"
+          }
+        }
+      }
+    },
+    "/payments/webhooks/bt": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "subscriptionEventPing"
+          }
+        },
+        "parameters": [{
+          "name": "bt_challenge",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "subscriptionEvent"
+          }
+        },
+        "parameters": [{
+          "name": "bt_signature",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "bt_payload",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/payments/{bid}/end/bt": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "endPaymentWithBraintree"
+          }
+        },
+        "parameters": [{
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/ping": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "ping"
+          }
+        }
+      }
+    },
+    "/ping/stats": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "stats"
+          }
+        }
+      }
+    },
+    "/products/addonproviders": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddonProviders"
+          }
+        }
+      }
+    },
+    "/products/countries": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getCountries"
+          }
+        }
+      }
+    },
+    "/products/countrycodes": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getCountryCodes"
+          }
+        }
+      }
+    },
+    "/products/instances": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAvailableInstances"
+          }
+        },
+        "parameters": [{
+          "name": "for",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/products/instances/{type}-{version}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAvailableInstance"
+          }
+        },
+        "parameters": [{
+          "name": "type",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "version",
+          "required": true,
+          "in": "path",
+          "type": "int"
+        }, {
+          "name": "for",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "app",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/products/packages": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAvailablePackages"
+          }
+        },
+        "parameters": [{
+          "name": "coupon",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "orgaId",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "currency",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/products/prices": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getExcahngeRates"
+          }
+        }
+      }
+    },
+    "/products/zones": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getZones"
+          }
+        }
+      }
+    },
+    "/self": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteUser"
+          }
+        }
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getUser"
+          }
+        }
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editUser"
+          }
+        }
+      }
+    },
+    "/self/addons": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddons"
+          }
+        }
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "provisionAddon"
+          }
+        }
+      }
+    },
+    "/self/addons/{addonId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deprovisionAddon"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddon"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "changePlan"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/addons/{addonId}/applications": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationsLinkedToAddon"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/addons/{addonId}/payment-method": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "changePaymentMethod"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/addons/{addonId}/sso": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getSSOData"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/addons/{addonId}/tags": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddonTags"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/addons/{addonId}/tags/{tag}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteAddonTag"
+          }
+        },
+        "parameters": [{
+          "name": "tag",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "addAddonTag"
+          }
+        },
+        "parameters": [{
+          "name": "tag",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplications"
+          }
+        }
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "addApplication"
+          }
+        }
+      }
+    },
+    "/self/applications/{appId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteApplication"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplication"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editApplication"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/addons": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddonsLinkedToApplication"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "linkAddonToApplication"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/addons/{addonId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "unlinkAddonFromApplication"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/deployments": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationDeployments"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "limit",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "offset",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "action",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/deployments/{deploymentId}/instances": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "cancelDeploy"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "deploymentId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/env": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "editApplicationEnv"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editApplicationEnvironment"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/env/{envName}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "removeApplicationEnv"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "envName",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editApplicationEnv"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "envName",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/instance": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "changeApplicationType"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "type",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "version",
+          "required": false,
+          "in": "query",
+          "type": "int"
+        }]
+      }
+    },
+    "/self/applications/{appId}/instances": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "undeployApplication"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationInstances"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "redeployApplication"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "commit",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/tags": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationTags"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/tags/{tag}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteApplicationTag"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "tag",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "addApplicationTag"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "tag",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/vhosts": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getVhosts"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/vhosts/favourite": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "unmarkFavouriteVhost"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getFavouriteVhost"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "markFavouriteVhost"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/vhosts/{domain}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "removeVhost"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "domain",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "addVhost"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "domain",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/avatar": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "setUserAvatar\nsetUserAvatarFromSource"
+          }
+        }
+      }
+    },
+    "/self/change_password": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "changeUserPassword"
+          }
+        }
+      }
+    },
+    "/self/confirmation_email": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getConfirmationEmail"
+          }
+        }
+      }
+    },
+    "/self/consumers": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getConsumers"
+          }
+        }
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createConsumer"
+          }
+        }
+      }
+    },
+    "/self/consumers/{key}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteConsumer"
+          }
+        },
+        "parameters": [{
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getConsumer"
+          }
+        },
+        "parameters": [{
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/consumers/{key}/secret": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getConsumerSecret"
+          }
+        },
+        "parameters": [{
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/consumptions": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getConsumptions"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "from",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "to",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/credits": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAmount"
+          }
+        }
+      }
+    },
+    "/self/emails": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getEmailAddresses"
+          }
+        }
+      }
+    },
+    "/self/emails/{email}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "removeEmailAddress"
+          }
+        },
+        "parameters": [{
+          "name": "email",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "addEmailAddress"
+          }
+        },
+        "parameters": [{
+          "name": "email",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/id": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getId"
+          }
+        }
+      }
+    },
+    "/self/instances": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getInstancesForAllApps"
+          }
+        }
+      }
+    },
+    "/self/keys": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getSshKeys"
+          }
+        }
+      }
+    },
+    "/self/keys/{key}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "removeSshKey"
+          }
+        },
+        "parameters": [{
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "addSshKey"
+          }
+        },
+        "parameters": [{
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/payment-info": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getPaymentInfo"
+          }
+        }
+      }
+    },
+    "/self/payments/billings": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getInvoices"
+          }
+        }
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "buyDrops"
+          }
+        }
+      }
+    },
+    "/self/payments/billings/{bid}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deletePurchaseOrder"
+          }
+        },
+        "parameters": [{
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getInvoice"
+          }
+        },
+        "parameters": [{
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "choosePaymentProvider"
+          }
+        },
+        "parameters": [{
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/payments/billings/{bid}.pdf": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getPdfInvoice"
+          }
+        },
+        "parameters": [{
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "token",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/payments/fullprice/{price}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "priceWithTax"
+          }
+        },
+        "parameters": [{
+          "name": "price",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/payments/methods": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getUserPaymentMethods"
+          }
+        }
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "addUserMethod"
+          }
+        }
+      }
+    },
+    "/self/payments/methods/{mId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteUserCard"
+          }
+        },
+        "parameters": [{
+          "name": "mId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/payments/recurring": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteRecurrentPayment"
+          }
+        }
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getRecurrentPayment"
+          }
+        }
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "createRecurrentPayment"
+          }
+        }
+      }
+    },
+    "/self/tokens": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "revokeAllTokens"
+          }
+        }
+      },
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getSelfTokens"
+          }
+        }
+      }
+    },
+    "/self/tokens/{token}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "revokeToken"
+          }
+        },
+        "parameters": [{
+          "name": "token",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/validate_email": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "validateEmail"
+          }
+        },
+        "parameters": [{
+          "name": "validationKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/session/login": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getLoginForm"
+          }
+        },
+        "parameters": [{
+          "name": "secondaryEmailKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "deletionKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "fromAuthorize",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "login"
+          }
+        },
+        "parameters": [{
+          "name": "email",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "pass",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "from_authorize",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/session/signup": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getSignupForm"
+          }
+        },
+        "parameters": [{
+          "name": "invitationKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "url_next",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/summary": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getSummary"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getUsers"
+          }
+        }
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createUser\ncreateUserFromForm"
+          }
+        },
+        "parameters": [{
+          "name": "invitationKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "addonBetaInvitationKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "email",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "pass",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "url_next",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "terms",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getUser"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/users/{id}/applications": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplications"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/users/{userId}/git-info": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getGitInfo"
+          }
+        },
+        "parameters": [{
+          "name": "userId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/validation/vat/{key}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "validate"
+          }
+        },
+        "parameters": [{
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "action",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/vat_check": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "checkVat"
+          }
+        },
+        "parameters": [{
+          "name": "country",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "vat",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/vendor/apps": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "listApps"
+          }
+        },
+        "parameters": [{
+          "name": "offset",
+          "required": false,
+          "in": "query",
+          "type": "int"
+        }]
+      }
+    },
+    "/vendor/apps/{addonId}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationInfo"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "editApplicationConfiguration"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    }
+  },
+  "info": {
+    "title": "",
+    "version": "",
+    "description": ""
+  }
 };
 
 var Owner = (function() {
