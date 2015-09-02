@@ -93,7 +93,7 @@ var Session = (function(_, querystring, oauthSignature) {
           oauth_token: tokens.user_oauth_token
         });
 
-        var signature = oauthSignature.generate(httpMethod, url, _.omit(params, "oauth_signature"), settings.API_CONSUMER_SECRET, tokens.user_oauth_token_secret, {encodeSignature: false});
+        var signature = oauthSignature.sign('HMAC-SHA1', httpMethod, url, _.omit(params, "oauth_signature"), settings.API_CONSUMER_SECRET, tokens.user_oauth_token_secret);
 
         return  ["OAuth realm=\"" + settings.API_HOST + "/oauth\"",
                 "oauth_consumer_key=\"" + params.oauth_consumer_key + "\"",
@@ -124,5 +124,5 @@ var Session = (function(_, querystring, oauthSignature) {
 })(
   typeof require == "function" && require("lodash") ? require("lodash") : _,
   typeof require == "function" && require("querystring") ? require("querystring") : querystring,
-  typeof require == "function" && require("oauth-signature") ? require("oauth-signature") : oauthSignature
+  typeof require == "function" && require("oauth-sign") ? require("oauth-sign") : oauthSignature
 );
