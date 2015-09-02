@@ -1,7 +1,7 @@
 var methods = {
   "swagger": "2.0",
   "schemes": ["http"],
-  "host": "ccapi-preprod.cleverapps.io",
+  "host": "api.clever-cloud.com",
   "basePath": "/v2",
   "paths": {
     "/authorize": {
@@ -315,7 +315,7 @@ var methods = {
           "name": "version",
           "required": true,
           "in": "path",
-          "type": "int"
+          "type": "integer"
         }]
       }
     },
@@ -1827,7 +1827,7 @@ var methods = {
           "name": "version",
           "required": false,
           "in": "query",
-          "type": "int"
+          "type": "integer"
         }]
       }
     },
@@ -2728,7 +2728,7 @@ var methods = {
           "name": "version",
           "required": true,
           "in": "path",
-          "type": "int"
+          "type": "integer"
         }, {
           "name": "for",
           "required": false,
@@ -3210,7 +3210,7 @@ var methods = {
           "name": "version",
           "required": false,
           "in": "query",
-          "type": "int"
+          "type": "integer"
         }]
       }
     },
@@ -3898,13 +3898,6 @@ var methods = {
       }
     },
     "/users": {
-      "get": {
-        "responses": {
-          "default": {
-            "description": "getUsers"
-          }
-        }
-      },
       "post": {
         "responses": {
           "default": {
@@ -4040,7 +4033,7 @@ var methods = {
           "name": "offset",
           "required": false,
           "in": "query",
-          "type": "int"
+          "type": "integer"
         }]
       }
     },
@@ -4188,7 +4181,7 @@ var Session = (function(_, querystring, oauthSignature) {
           oauth_token: tokens.user_oauth_token
         });
 
-        var signature = oauthSignature.generate(httpMethod, url, _.omit(params, "oauth_signature"), settings.API_CONSUMER_SECRET, tokens.user_oauth_token_secret, {encodeSignature: false});
+        var signature = oauthSignature.sign('HMAC-SHA1', httpMethod, url, _.omit(params, "oauth_signature"), settings.API_CONSUMER_SECRET, tokens.user_oauth_token_secret);
 
         return  ["OAuth realm=\"" + settings.API_HOST + "/oauth\"",
                 "oauth_consumer_key=\"" + params.oauth_consumer_key + "\"",
@@ -4219,7 +4212,7 @@ var Session = (function(_, querystring, oauthSignature) {
 })(
   typeof require == "function" && require("lodash") ? require("lodash") : _,
   typeof require == "function" && require("querystring") ? require("querystring") : querystring,
-  typeof require == "function" && require("oauth-signature") ? require("oauth-signature") : oauthSignature
+  typeof require == "function" && require("oauth-sign") ? require("oauth-sign") : oauthSignature
 );
 
 
