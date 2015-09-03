@@ -6,8 +6,7 @@ var CleverAPI = (function(_, WadlClient) {
     });
 
     var headers = !settings.API_AUTHORIZATION ? {} : {
-      "Authorization": settings.API_AUTHORIZATION,
-      "Content-Type": "application/json"
+      "Authorization": settings.API_AUTHORIZATION
     };
 
     var addAuthorizationHeader = (settings.API_OAUTH_TOKEN && settings.API_OAUTH_TOKEN_SECRET) && function(requestSettings) {
@@ -21,7 +20,9 @@ var CleverAPI = (function(_, WadlClient) {
 
     var client = WadlClient.buildClient(methods, {
       host: settings.API_HOST,
-      headers: headers,
+      headers: _.extend({}, headers, {
+        "Content-Type": "application/json"
+      }),
       logger: settings.logger,
       hooks: _.defaults(settings.hooks, {
         beforeSend: addAuthorizationHeader
