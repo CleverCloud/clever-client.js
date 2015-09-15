@@ -1364,7 +1364,7 @@ var methods = {
       "put": {
         "responses": {
           "default": {
-            "description": "changePlan"
+            "description": "updateAddonInfo"
           }
         },
         "parameters": [{
@@ -1400,11 +1400,51 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/addons/{addonId}/env": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddonEnv"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/addons/{addonId}/payment-method": {
       "put": {
         "responses": {
           "default": {
             "description": "changePaymentMethod"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addons/{addonId}/plan": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "changePlan"
           }
         },
         "parameters": [{
@@ -1615,6 +1655,26 @@ var methods = {
         "responses": {
           "default": {
             "description": "linkAddonToApplication"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/addons/env": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getEnvOfAddonsLinkedToApplication"
           }
         },
         "parameters": [{
@@ -2854,7 +2914,7 @@ var methods = {
       "put": {
         "responses": {
           "default": {
-            "description": "changePlan"
+            "description": "renameAddon"
           }
         },
         "parameters": [{
@@ -2880,11 +2940,41 @@ var methods = {
         }]
       }
     },
+    "/self/addons/{addonId}/env": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddonEnv"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/self/addons/{addonId}/payment-method": {
       "put": {
         "responses": {
           "default": {
             "description": "changePaymentMethod"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/addons/{addonId}/plan": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "changePlan"
           }
         },
         "parameters": [{
@@ -3041,6 +3131,26 @@ var methods = {
           }
         },
         "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/addons/env": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getEnvOfAddonsLinkedToApplication"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
           "name": "appId",
           "required": true,
           "in": "path",
