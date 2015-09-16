@@ -2739,6 +2739,21 @@ var methods = {
         }
       }
     },
+    "/products/addonproviders/{provider_id}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddonProvider"
+          }
+        },
+        "parameters": [{
+          "name": "provider_id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/products/countries": {
       "get": {
         "responses": {
