@@ -2223,6 +2223,24 @@ var methods = {
           "in": "path",
           "type": "string"
         }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "updateConsumer"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
       }
     },
     "/organisations/{id}/consumers/{key}/secret": {
@@ -3593,6 +3611,19 @@ var methods = {
         "responses": {
           "default": {
             "description": "getConsumer"
+          }
+        },
+        "parameters": [{
+          "name": "key",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "updateConsumer"
           }
         },
         "parameters": [{
