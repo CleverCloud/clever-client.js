@@ -4384,10 +4384,13 @@ var CleverAPI = (function(_, WadlClient) {
     };
 
     var addAuthorizationHeader = (settings.API_OAUTH_TOKEN && settings.API_OAUTH_TOKEN_SECRET) && function(requestSettings) {
-      requestSettings.headers.Authorization = client.session.getHMACAuthorization(requestSettings.method, requestSettings.uri, requestSettings.qs, {
-        user_oauth_token: settings.API_OAUTH_TOKEN,
-        user_oauth_token_secret: settings.API_OAUTH_TOKEN_SECRET
-      });
+      // if the Authorization header is not yet defined
+      if(!_.has(requestSettings.headers, 'Authorization')){
+        requestSettings.headers.Authorization = client.session.getHMACAuthorization(requestSettings.method, requestSettings.uri, requestSettings.qs, {
+          user_oauth_token: settings.API_OAUTH_TOKEN,
+          user_oauth_token_secret: settings.API_OAUTH_TOKEN_SECRET
+        });
+      }
 
       return requestSettings;
     };
