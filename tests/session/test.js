@@ -4,7 +4,7 @@ var client = CleverAPI({
  API_HOST: "https://ccapi-preprod.cleverapps.io/v2"
 });
 
-var search = _.foldl(window.location.search.slice(1).split("&"), function(search, pair) {
+var search = _.reduce(window.location.search.slice(1).split("&"), function(search, pair) {
   var key = pair.split("=")[0];
   var value = pair.split("=")[1];
 

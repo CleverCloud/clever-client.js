@@ -6,7 +6,7 @@ var connections = require("./data/connections.js");
 module.exports = function(req, res, next) {
   var authorization = req.headers.authorization;
   var sanitizedAuthorization = authorization && req.headers.authorization.replace(/^OAuth /, "").replace(/,\s+/g, ",");
-  var tokens = _.foldl(sanitizedAuthorization ? sanitizedAuthorization.split(",") : [], function(tokens, pair) {
+  var tokens = _.reduce(sanitizedAuthorization ? sanitizedAuthorization.split(",") : [], function(tokens, pair) {
     var splitted = pair.split("=");
     tokens[splitted[0]] = splitted[1].replace(/^"(.*)"$/, "$1");
     return tokens;

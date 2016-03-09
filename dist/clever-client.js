@@ -257,15 +257,6 @@ var methods = {
         }
       }
     },
-    "/internal/activeMails": {
-      "get": {
-        "responses": {
-          "default": {
-            "description": "getActiveMails"
-          }
-        }
-      }
-    },
     "/internal/coupons": {
       "post": {
         "responses": {
@@ -827,7 +818,7 @@ var methods = {
       "post": {
         "responses": {
           "default": {
-            "description": "postReqTokenRequest"
+            "description": "postReqTokenRequest\npostReqTokenRequestQueryString"
           }
         },
         "parameters": [{
@@ -1888,6 +1879,11 @@ var methods = {
           "required": false,
           "in": "query",
           "type": "integer"
+        }, {
+          "name": "variant",
+          "required": false,
+          "in": "query",
+          "type": "string"
         }]
       }
     },
@@ -3354,6 +3350,11 @@ var methods = {
           "required": false,
           "in": "query",
           "type": "integer"
+        }, {
+          "name": "variant",
+          "required": false,
+          "in": "query",
+          "type": "string"
         }]
       }
     },
@@ -4215,6 +4216,21 @@ var methods = {
         },
         "parameters": [{
           "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/vendor/billing/{ownerId}": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "billOwner"
+          }
+        },
+        "parameters": [{
+          "name": "ownerId",
           "required": true,
           "in": "path",
           "type": "string"
