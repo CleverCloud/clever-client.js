@@ -4,6 +4,21 @@ var methods = {
   "host": "api.clever-cloud.com",
   "basePath": "/v2",
   "paths": {
+    "/application/environment": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "updateEnv"
+          }
+        },
+        "parameters": [{
+          "name": "token",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
     "/authorize": {
       "post": {
         "responses": {
@@ -255,6 +270,26 @@ var methods = {
             "description": "getGithubUsername"
           }
         }
+      }
+    },
+    "/internal/applications/{appId}/env/{envName}": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "addEnvToApp"
+          }
+        },
+        "parameters": [{
+          "name": "envName",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
       }
     },
     "/internal/coupons": {
@@ -987,12 +1022,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "providerId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1005,12 +1040,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "providerId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1025,12 +1060,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "providerId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1043,12 +1078,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "providerId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1063,17 +1098,17 @@ var methods = {
           }
         },
         "parameters": [{
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
           "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
           "name": "featureId",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
-          "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1088,12 +1123,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "providerId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1106,12 +1141,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "providerId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1126,17 +1161,17 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
           "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
           "name": "planId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1149,17 +1184,17 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
           "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
           "name": "planId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1172,17 +1207,17 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
           "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
           "name": "planId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1197,11 +1232,6 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
           "name": "featureName",
           "required": true,
           "in": "path",
@@ -1213,6 +1243,11 @@ var methods = {
           "type": "string"
         }, {
           "name": "planId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1225,11 +1260,6 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
           "name": "featureName",
           "required": true,
           "in": "path",
@@ -1241,6 +1271,11 @@ var methods = {
           "type": "string"
         }, {
           "name": "planId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1255,12 +1290,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "providerId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1275,12 +1310,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "providerId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "providerId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1575,12 +1610,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1593,12 +1628,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1611,12 +1646,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1631,12 +1666,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1649,12 +1684,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1669,12 +1704,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1689,7 +1724,52 @@ var methods = {
           }
         },
         "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
           "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/dependencies": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationDependencies"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/dependencies/{dependencyId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteApplicationDependency"
+          }
+        },
+        "parameters": [{
+          "name": "dependencyId",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1699,7 +1779,50 @@ var methods = {
           "in": "path",
           "type": "string"
         }, {
-          "name": "addonId",
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "addApplicationDependency"
+          }
+        },
+        "parameters": [{
+          "name": "dependencyId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/dependents": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationDependents"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1714,12 +1837,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1749,17 +1872,17 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
           "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
           "name": "deploymentId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1774,12 +1897,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1792,12 +1915,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1812,7 +1935,7 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "envName",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1822,7 +1945,7 @@ var methods = {
           "in": "path",
           "type": "string"
         }, {
-          "name": "envName",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1835,7 +1958,7 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "envName",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1845,7 +1968,7 @@ var methods = {
           "in": "path",
           "type": "string"
         }, {
-          "name": "envName",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1860,12 +1983,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1895,12 +2018,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1913,12 +2036,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1931,12 +2054,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1956,12 +2079,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1976,12 +2099,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -1999,12 +2122,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -2024,12 +2147,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -2044,12 +2167,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -2062,12 +2185,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -2080,12 +2203,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -2100,17 +2223,17 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
           "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
           "name": "domain",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -2123,17 +2246,17 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
           "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
           "name": "domain",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -2522,12 +2645,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "price",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "price",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -3175,12 +3298,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "appId",
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -3201,6 +3324,74 @@ var methods = {
           "type": "string"
         }, {
           "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/dependencies": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationDependencies"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/dependencies/{dependencyId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteApplicationDependency"
+          }
+        },
+        "parameters": [{
+          "name": "dependencyId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "addApplicationDependency"
+          }
+        },
+        "parameters": [{
+          "name": "dependencyId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/dependents": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationDependents"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
@@ -3245,17 +3436,17 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
           "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
           "name": "deploymentId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -3298,12 +3489,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "appId",
+          "name": "envName",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "envName",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
@@ -3316,12 +3507,12 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "appId",
+          "name": "envName",
           "required": true,
           "in": "path",
           "type": "string"
         }, {
-          "name": "envName",
+          "name": "appId",
           "required": true,
           "in": "path",
           "type": "string"
