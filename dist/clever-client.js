@@ -4,14 +4,37 @@ var methods = {
   "host": "api.clever-cloud.com",
   "basePath": "/v2",
   "paths": {
-    "/application/environment": {
-      "post": {
+    "/application/{appId}/environment": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getEnv"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "token",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      },
+      "put": {
         "responses": {
           "default": {
             "description": "updateEnv"
           }
         },
         "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
           "name": "token",
           "required": false,
           "in": "query",
@@ -1975,6 +1998,44 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/applications/{appId}/exposed_env": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getExposedEnv"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "updateExposedEnv"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/applications/{appId}/instance": {
       "put": {
         "responses": {
@@ -3512,6 +3573,34 @@ var methods = {
           "in": "path",
           "type": "string"
         }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/exposed_env": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getExposedEnv"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "updateExposedEnv"
+          }
+        },
+        "parameters": [{
           "name": "appId",
           "required": true,
           "in": "path",
