@@ -333,21 +333,6 @@ var methods = {
         }
       }
     },
-    "/internal/dropcounts/{ownerId}": {
-      "post": {
-        "responses": {
-          "default": {
-            "description": "addDrops"
-          }
-        },
-        "parameters": [{
-          "name": "ownerId",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }]
-      }
-    },
     "/internal/instances/{type}-{version}": {
       "put": {
         "responses": {
@@ -438,6 +423,15 @@ var methods = {
           "in": "query",
           "type": "string"
         }]
+      }
+    },
+    "/internal/invoices/reminders": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "remindInvoices"
+          }
+        }
       }
     },
     "/internal/invoices/{invId}": {
@@ -576,21 +570,6 @@ var methods = {
         }
       }
     },
-    "/internal/prices/{currency}": {
-      "put": {
-        "responses": {
-          "default": {
-            "description": "setExchangeRate"
-          }
-        },
-        "parameters": [{
-          "name": "currency",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }]
-      }
-    },
     "/internal/tokenforuser/{userId}": {
       "get": {
         "responses": {
@@ -599,56 +578,6 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "userId",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }]
-      }
-    },
-    "/internal/users": {
-      "get": {
-        "responses": {
-          "default": {
-            "description": "getUsers"
-          }
-        },
-        "parameters": [{
-          "name": "email",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }]
-      }
-    },
-    "/internal/users/{userId}/email": {
-      "get": {
-        "responses": {
-          "default": {
-            "description": "getEmail"
-          }
-        },
-        "parameters": [{
-          "name": "userId",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }]
-      }
-    },
-    "/internal/users/{userId}/keys/{name}": {
-      "delete": {
-        "responses": {
-          "default": {
-            "description": "deleteSshKey"
-          }
-        },
-        "parameters": [{
-          "name": "name",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
           "name": "userId",
           "required": true,
           "in": "path",
@@ -1764,6 +1693,46 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/applications/{appId}/branch": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "setApplicationBranch"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/applications/{appId}/branches": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationBranches"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/applications/{appId}/dependencies": {
       "get": {
         "responses": {
@@ -2036,41 +2005,6 @@ var methods = {
         }]
       }
     },
-    "/organisations/{id}/applications/{appId}/instance": {
-      "put": {
-        "responses": {
-          "default": {
-            "description": "changeApplicationType"
-          }
-        },
-        "parameters": [{
-          "name": "appId",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
-          "name": "type",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }, {
-          "name": "version",
-          "required": false,
-          "in": "query",
-          "type": "integer"
-        }, {
-          "name": "variant",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }]
-      }
-    },
     "/organisations/{id}/applications/{appId}/instances": {
       "delete": {
         "responses": {
@@ -2126,6 +2060,11 @@ var methods = {
           "type": "string"
         }, {
           "name": "commit",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "useCache",
           "required": false,
           "in": "query",
           "type": "string"
@@ -2989,7 +2928,7 @@ var methods = {
       "get": {
         "responses": {
           "default": {
-            "description": "getAvailableInstance"
+            "description": "getInstance"
           }
         },
         "parameters": [{
@@ -3391,6 +3330,36 @@ var methods = {
         }]
       }
     },
+    "/self/applications/{appId}/branch": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "setApplicationBranch"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/branches": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationBranches"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/self/applications/{appId}/dependencies": {
       "get": {
         "responses": {
@@ -3608,36 +3577,6 @@ var methods = {
         }]
       }
     },
-    "/self/applications/{appId}/instance": {
-      "put": {
-        "responses": {
-          "default": {
-            "description": "changeApplicationType"
-          }
-        },
-        "parameters": [{
-          "name": "appId",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
-          "name": "type",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }, {
-          "name": "version",
-          "required": false,
-          "in": "query",
-          "type": "integer"
-        }, {
-          "name": "variant",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }]
-      }
-    },
     "/self/applications/{appId}/instances": {
       "delete": {
         "responses": {
@@ -3678,6 +3617,11 @@ var methods = {
           "type": "string"
         }, {
           "name": "commit",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "useCache",
           "required": false,
           "in": "query",
           "type": "string"
