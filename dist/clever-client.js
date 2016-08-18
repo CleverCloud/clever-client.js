@@ -479,21 +479,6 @@ var methods = {
         }]
       }
     },
-    "/internal/invoices/{invoice}/refund": {
-      "put": {
-        "responses": {
-          "default": {
-            "description": "refundInvoice"
-          }
-        },
-        "parameters": [{
-          "name": "invoice",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }]
-      }
-    },
     "/internal/organisations/{id}/addonproviders": {
       "post": {
         "responses": {
@@ -568,6 +553,21 @@ var methods = {
             "description": "createInternalPaymentPlan"
           }
         }
+      }
+    },
+    "/internal/ssh-jail/orgas": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "createTokenAsUser"
+          }
+        },
+        "parameters": [{
+          "name": "for",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
       }
     },
     "/internal/tokenforuser/{userId}": {
@@ -2713,11 +2713,6 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "TesterPass",
-          "required": false,
-          "in": "header",
-          "type": "string"
-        }, {
           "name": "login",
           "required": false,
           "in": "query",
@@ -2952,6 +2947,15 @@ var methods = {
           "in": "query",
           "type": "string"
         }]
+      }
+    },
+    "/products/mfa_kinds": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getMFAKinds"
+          }
+        }
       }
     },
     "/products/packages": {
@@ -4000,6 +4004,77 @@ var methods = {
         }]
       }
     },
+    "/self/mfa/{kind}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteMFA"
+          }
+        },
+        "parameters": [{
+          "name": "kind",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "createMFA"
+          }
+        },
+        "parameters": [{
+          "name": "kind",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "favMFA"
+          }
+        },
+        "parameters": [{
+          "name": "kind",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/mfa/{kind}/backupcodes": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getBackupCodes"
+          }
+        },
+        "parameters": [{
+          "name": "kind",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/mfa/{kind}/confirmation": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "validateMFA"
+          }
+        },
+        "parameters": [{
+          "name": "kind",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/self/payment-info": {
       "get": {
         "responses": {
@@ -4238,6 +4313,41 @@ var methods = {
           "type": "string"
         }, {
           "name": "pass",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "from_authorize",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/session/mfa_login": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "mfaLogin"
+          }
+        },
+        "parameters": [{
+          "name": "mfa_kind",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "mfa_attempt",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "email",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "auth_id",
           "required": false,
           "in": "query",
           "type": "string"
