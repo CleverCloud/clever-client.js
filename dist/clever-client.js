@@ -4712,7 +4712,7 @@ var Owner = (function() {
 })();
 
 
-var Session = (function(_, querystring, oauthSignature) {
+var Session = (function(_, querystring, oauthSignature, crypto) {
   var Session = function(client, settings) {
     var session = {};
 
@@ -4803,11 +4803,11 @@ var Session = (function(_, querystring, oauthSignature) {
     session.getHMACAuthorization = function(httpMethod, url, queryparams, tokens) {
       if(tokens.user_oauth_token && tokens.user_oauth_token_secret) {
         var params = _.extend({}, queryparams, session.getOAuthParams(tokens.user_oauth_token_secret), {
-          oauth_signature_method: "HMAC-SHA1",
+          oauth_signature_method: "HMAC-SHA512",
           oauth_token: tokens.user_oauth_token
         });
 
-        var signature = oauthSignature.sign('HMAC-SHA1', httpMethod, url, _.omit(params, "oauth_signature"), settings.API_CONSUMER_SECRET, tokens.user_oauth_token_secret);
+        var signature = session.signHmacSHA512(httpMethod, url, _.omit(params, "oauth_signature"), tokens);
 
         return  ["OAuth realm=\"" + settings.API_HOST + "/oauth\"",
                 "oauth_consumer_key=\"" + params.oauth_consumer_key + "\"",
@@ -4820,6 +4820,16 @@ var Session = (function(_, querystring, oauthSignature) {
       else {
         return "";
       }
+    };
+
+    session.signHmacSHA512 = function(httpMethod, url, params, tokens){
+      var key = [
+        settings.API_CONSUMER_SECRET,
+        tokens.user_oauth_token_secret
+      ].map(oauthSignature.rfc3986).join('&');
+      var base = oauthSignature.generateBase(httpMethod, url, params);
+
+      return crypto.createHmac("sha512", key).update(base).digest('base64');
     };
 
     session.remove = function() {
@@ -4838,7 +4848,8 @@ var Session = (function(_, querystring, oauthSignature) {
 })(
   typeof require == "function" && require("lodash") ? require("lodash") : _,
   typeof require == "function" && require("querystring") ? require("querystring") : querystring,
-  typeof require == "function" && require("oauth-sign") ? require("oauth-sign") : oauthSignature
+  typeof require == "function" && require("oauth-sign") ? require("oauth-sign") : oauthSignature,
+  typeof require == "function" && require("crypto") ? require("crypto") : crypto
 );
 
 
