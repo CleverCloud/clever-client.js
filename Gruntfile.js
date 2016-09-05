@@ -83,7 +83,8 @@ module.exports = function(grunt) {
     var options = {
       sort: true,
       stringify: true,
-      prettify: true
+      prettify: true,
+      blacklist: ["/internal"]
     };
 
 	 var url = (process.env['API_BASE_URL'] || "https://ccapi-preprod.cleverapps.io/v2") + "/application.wadl";
