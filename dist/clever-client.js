@@ -315,6 +315,66 @@ var methods = {
         }]
       }
     },
+    "/internal/ars/access": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAccess"
+          }
+        },
+        "parameters": [{
+          "name": "user",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "app",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/ars/authorisation": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAuthorisation"
+          }
+        },
+        "parameters": [{
+          "name": "email",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "password",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/ars/git-info": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getGitInfo"
+          }
+        },
+        "parameters": [{
+          "name": "for",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
     "/internal/coupons": {
       "post": {
         "responses": {
@@ -555,11 +615,71 @@ var methods = {
         }
       }
     },
+    "/internal/ssh-jail/apps": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAppsForUser"
+          }
+        },
+        "parameters": [{
+          "name": "orga",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "user",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/ssh-jail/instance": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getInstance"
+          }
+        },
+        "parameters": [{
+          "name": "instance",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "user",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/internal/ssh-jail/instances": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getInstancesForApp"
+          }
+        },
+        "parameters": [{
+          "name": "app",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "user",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
     "/internal/ssh-jail/orgas": {
       "get": {
         "responses": {
           "default": {
-            "description": "createTokenAsUser"
+            "description": "getOrgasForUser"
           }
         },
         "parameters": [{
