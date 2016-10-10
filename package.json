@@ -23,14 +23,15 @@
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-express-server": "^0.5.1",
     "grunt-jasmine-node-new": "^0.3.2",
-    "wadl2json": "^1.0.2"
+    "wadl2json": "^1.0.2",
+    "xml2json": "^0.7.1"
   },
   "dependencies": {
     "baconjs": "^0.7.70",
     "lodash": "^4.0.0",
     "oauth-sign": "^0.8.2",
     "querystring": "git://github.com/anodynos/node2web_querystring.git#3.46.1",
-    "wadl-client": "^1.0.0"
+    "wadl-client": "^2.0.0"
   },
   "scripts": {
     "bower-install": "bower install",
