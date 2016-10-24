@@ -1,6 +1,6 @@
 {
   "name": "clever-client",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Javascript models for Clever-Cloud API",
   "main": "dist/clever-client.js",
   "keywords": [
