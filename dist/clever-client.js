@@ -2775,7 +2775,7 @@ var methods = {
           "name": "version",
           "required": true,
           "in": "path",
-          "type": "integer"
+          "type": "string"
         }, {
           "name": "for",
           "required": false,
