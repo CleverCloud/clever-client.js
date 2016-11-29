@@ -1074,6 +1074,26 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/addonproviders/{providerId}/sso": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getSSOData"
+          }
+        },
+        "parameters": [{
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/addonproviders/{providerId}/tags": {
       "get": {
         "responses": {
