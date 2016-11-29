@@ -393,6 +393,71 @@ var methods = {
         }]
       }
     },
+    "/oauth/access_token_query": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "postAccessTokenRequestQuery"
+          }
+        },
+        "parameters": [{
+          "name": "oauth_consumer_key",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_token",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_signature_method",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_signature",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_timestamp",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_nonce",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_version",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_verifier",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_callback",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_token_secret",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_callback_confirmed",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
     "/oauth/authorize": {
       "get": {
         "responses": {
@@ -515,7 +580,72 @@ var methods = {
       "post": {
         "responses": {
           "default": {
-            "description": "postReqTokenRequest\npostReqTokenRequestQueryString"
+            "description": "postReqTokenRequest"
+          }
+        },
+        "parameters": [{
+          "name": "oauth_consumer_key",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_token",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_signature_method",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_signature",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_timestamp",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_nonce",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_version",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_verifier",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_callback",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_token_secret",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "oauth_callback_confirmed",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/oauth/request_token_query": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "postReqTokenRequestQueryString"
           }
         },
         "parameters": [{
