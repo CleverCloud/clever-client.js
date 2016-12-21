@@ -195,6 +195,11 @@ var methods = {
           "required": false,
           "in": "query",
           "type": "string"
+        }, {
+          "name": "invitationKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
         }]
       }
     },
@@ -240,6 +245,11 @@ var methods = {
           "required": false,
           "in": "query",
           "type": "string"
+        }, {
+          "name": "invitationKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
         }]
       },
       "post": {
@@ -280,6 +290,11 @@ var methods = {
           "type": "string"
         }, {
           "name": "terms",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "invitationKey",
           "required": false,
           "in": "query",
           "type": "string"
@@ -1931,6 +1946,31 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/applications/{appId}/instances/{instanceId}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationInstance"
+          }
+        },
+        "parameters": [{
+          "name": "instanceId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/applications/{appId}/tags": {
       "get": {
         "responses": {
@@ -3488,6 +3528,26 @@ var methods = {
           "name": "useCache",
           "required": false,
           "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/self/applications/{appId}/instances/{instanceId}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationInstance"
+          }
+        },
+        "parameters": [{
+          "name": "instanceId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "appId",
+          "required": true,
+          "in": "path",
           "type": "string"
         }]
       }
