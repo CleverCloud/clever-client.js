@@ -1177,6 +1177,21 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/addons/preorders": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "preorderAddon"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/addons/{addonId}": {
       "delete": {
         "responses": {
@@ -1258,26 +1273,6 @@ var methods = {
         "responses": {
           "default": {
             "description": "getAddonEnv"
-          }
-        },
-        "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
-          "name": "addonId",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }]
-      }
-    },
-    "/organisations/{id}/addons/{addonId}/payment-method": {
-      "put": {
-        "responses": {
-          "default": {
-            "description": "changePaymentMethod"
           }
         },
         "parameters": [{
@@ -2557,6 +2552,82 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/payments/methods": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getPaymentMethods"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "addPaymentMethod"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/payments/methods/default": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getDefaultMethod"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "setDefaultMethod"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/payments/methods/{mId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deletePaymentMethod"
+          }
+        },
+        "parameters": [{
+          "name": "mId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/payments/recurring": {
       "delete": {
         "responses": {
@@ -2588,6 +2659,21 @@ var methods = {
         "responses": {
           "default": {
             "description": "createRecurrentPayment"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/payments/tokens/bt": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getBraintreeToken"
           }
         },
         "parameters": [{
@@ -2819,7 +2905,7 @@ var methods = {
         }]
       }
     },
-    "/products/instances/{type}-{version}": {
+    "/products/instances/{type: [^-]+}-{version}": {
       "get": {
         "responses": {
           "default": {
@@ -2940,6 +3026,15 @@ var methods = {
         }
       }
     },
+    "/self/addons/preorders": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "preorderAddon"
+          }
+        }
+      }
+    },
     "/self/addons/{addonId}": {
       "delete": {
         "responses": {
@@ -3001,21 +3096,6 @@ var methods = {
         "responses": {
           "default": {
             "description": "getAddonEnv"
-          }
-        },
-        "parameters": [{
-          "name": "addonId",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }]
-      }
-    },
-    "/self/addons/{addonId}/payment-method": {
-      "put": {
-        "responses": {
-          "default": {
-            "description": "changePaymentMethod"
           }
         },
         "parameters": [{
@@ -4107,7 +4187,23 @@ var methods = {
       "post": {
         "responses": {
           "default": {
-            "description": "addUserMethod"
+            "description": "addPaymentMethod"
+          }
+        }
+      }
+    },
+    "/self/payments/methods/default": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getDefaultMethod"
+          }
+        }
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "setDefaultMethod"
           }
         }
       }
@@ -4146,6 +4242,15 @@ var methods = {
         "responses": {
           "default": {
             "description": "createRecurrentPayment"
+          }
+        }
+      }
+    },
+    "/self/payments/tokens/bt": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getBraintreeToken"
           }
         }
       }
@@ -4476,7 +4581,7 @@ var methods = {
         }]
       }
     },
-    "/vendor/billing/{ownerId}": {
+    "/vendor/apps/{addonId}/consumptions": {
       "post": {
         "responses": {
           "default": {
@@ -4484,7 +4589,7 @@ var methods = {
           }
         },
         "parameters": [{
-          "name": "ownerId",
+          "name": "addonId",
           "required": true,
           "in": "path",
           "type": "string"
