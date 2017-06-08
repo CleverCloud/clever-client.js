@@ -14,16 +14,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    casper: {
-      test: {
-        options: {
-          test: true
-        },
-        files: {
-          "xunit/session.xml": ["tests/session/spec.js"]
-        }
-      }
-    },
     concat: {
       options: {
         separator: "\n\n"
@@ -69,7 +59,6 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks("grunt-browserify");
-  grunt.loadNpmTasks("grunt-casper");
   grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks("grunt-contrib-jasmine");
   grunt.loadNpmTasks("grunt-contrib-uglify");
@@ -111,6 +100,6 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask("build", ["wadl2json", "concat", "uglify"]);
-  grunt.registerTask("test", ["build", "browserify", "express:test", "casper", "jasmine", "jasmine_node"]);
+  grunt.registerTask("test", ["build", "browserify", "express:test", "jasmine", "jasmine_node"]);
   grunt.registerTask("default", ["build"]);
 };
