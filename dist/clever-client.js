@@ -310,6 +310,34 @@ var methods = {
         }
       }
     },
+    "/invoice/external/paypal/{bid}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "cancelPaypalTransaction"
+          }
+        },
+        "parameters": [{
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "authorizePaypalTransaction"
+          }
+        },
+        "parameters": [{
+          "name": "bid",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/invoice/external/{bid}": {
       "post": {
         "responses": {
@@ -560,31 +588,6 @@ var methods = {
           "type": "string"
         }, {
           "name": "manage_ssh_keys",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }, {
-          "name": "manage_services",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }, {
-          "name": "manage_applications",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }, {
-          "name": "access_bills",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }, {
-          "name": "access_credit_count",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }, {
-          "name": "access_consumption_statistics",
           "required": false,
           "in": "query",
           "type": "string"
@@ -2304,6 +2307,11 @@ var methods = {
           "required": false,
           "in": "query",
           "type": "string"
+        }, {
+          "name": "for",
+          "required": false,
+          "in": "query",
+          "type": "string"
         }]
       }
     },
@@ -2654,34 +2662,6 @@ var methods = {
           "in": "path",
           "type": "string"
         }]
-      },
-      "put": {
-        "responses": {
-          "default": {
-            "description": "createRecurrentPayment"
-          }
-        },
-        "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }]
-      }
-    },
-    "/organisations/{id}/payments/tokens/bt": {
-      "get": {
-        "responses": {
-          "default": {
-            "description": "getBraintreeToken"
-          }
-        },
-        "parameters": [{
-          "name": "id",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }]
       }
     },
     "/password_forgotten": {
@@ -2773,53 +2753,20 @@ var methods = {
         }
       }
     },
-    "/payments/tokens/bt": {
+    "/payments/tokens/stripe": {
       "get": {
         "responses": {
           "default": {
-            "description": "getBraintreeToken"
+            "description": "getStripeToken"
           }
         }
       }
     },
-    "/payments/webhooks/bt": {
-      "get": {
-        "responses": {
-          "default": {
-            "description": "subscriptionEventPing"
-          }
-        },
-        "parameters": [{
-          "name": "bt_challenge",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }]
-      },
+    "/payments/{bid}/end/stripe": {
       "post": {
         "responses": {
           "default": {
-            "description": "subscriptionEvent"
-          }
-        },
-        "parameters": [{
-          "name": "bt_signature",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }, {
-          "name": "bt_payload",
-          "required": false,
-          "in": "query",
-          "type": "string"
-        }]
-      }
-    },
-    "/payments/{bid}/end/bt": {
-      "post": {
-        "responses": {
-          "default": {
-            "description": "endPaymentWithBraintree"
+            "description": "endPaymentWithStripe"
           }
         },
         "parameters": [{
@@ -3900,6 +3847,11 @@ var methods = {
           "required": false,
           "in": "query",
           "type": "string"
+        }, {
+          "name": "for",
+          "required": false,
+          "in": "query",
+          "type": "string"
         }]
       }
     },
@@ -4237,20 +4189,13 @@ var methods = {
             "description": "getRecurrentPayment"
           }
         }
-      },
-      "put": {
-        "responses": {
-          "default": {
-            "description": "createRecurrentPayment"
-          }
-        }
       }
     },
-    "/self/payments/tokens/bt": {
+    "/self/payments/tokens/stripe": {
       "get": {
         "responses": {
           "default": {
-            "description": "getBraintreeToken"
+            "description": "getStripeToken"
           }
         }
       }
