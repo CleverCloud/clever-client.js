@@ -2636,6 +2636,36 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/payments/monthlyinvoice": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getMonthlyInvoice"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/payments/monthlyinvoice/maxcredit": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "setMaxCreditsPerMonth"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/payments/recurring": {
       "delete": {
         "responses": {
@@ -4173,6 +4203,24 @@ var methods = {
           "in": "path",
           "type": "string"
         }]
+      }
+    },
+    "/self/payments/monthlyinvoice": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getMonthlyInvoice"
+          }
+        }
+      }
+    },
+    "/self/payments/monthlyinvoice/maxcredit": {
+      "put": {
+        "responses": {
+          "default": {
+            "description": "setMaxCreditsPerMonth"
+          }
+        }
       }
     },
     "/self/payments/recurring": {
