@@ -4624,9 +4624,9 @@ var Session = (function(_, querystring, oauthSignature, crypto) {
       };
     };
 
-    session.login = typeof window == "undefined" ? function(){} : function() {
+    session.login = typeof window == "undefined" ? function(){} : function(oauth_callback) {
       var params = _.extend(session.getOAuthParams(), {
-        oauth_callback: window.location.href
+        oauth_callback: oauth_callback || window.location.href
       });
 
       var res = client.oauth.request_token.post().withHeaders({
