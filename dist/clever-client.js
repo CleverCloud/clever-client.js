@@ -4638,8 +4638,8 @@ var Session = (function(_, querystring, oauthSignature, crypto) {
         var parsed = querystring.decode(data);
 
         if(typeof localStorage != "undefined") {
-          localStorage.consumer_oauth_token = parsed.oauth_token;
-          localStorage.consumer_oauth_token_secret = parsed.oauth_token_secret;
+          localStorage.setItem("consumer_oauth_token", parsed.oauth_token);
+          localStorage.setItem("consumer_oauth_token_secret", parsed.oauth_token_secret);
         }
 
         window.location = settings.API_HOST + "/oauth/authorize?oauth_token=" + encodeURIComponent(parsed.oauth_token);
@@ -4649,8 +4649,8 @@ var Session = (function(_, querystring, oauthSignature, crypto) {
     session.getAccessTokenFromQueryString = typeof window == "undefined" ? function(){} : function() {
       var params = querystring.decode(window.location.search.slice(1));
 
-      params.consumer_oauth_token = typeof localStorage != "undefined" ? localStorage.consumer_oauth_token : "";
-      params.consumer_oauth_token_secret = typeof localStorage != "undefined" ? localStorage.consumer_oauth_token_secret : "";
+      params.consumer_oauth_token = typeof localStorage != "undefined" ? localStorage.getItem("consumer_oauth_token") : "";
+      params.consumer_oauth_token_secret = typeof localStorage != "undefined" ? localStorage.getItem("consumer_oauth_token_secret") : "";
 
       return session.getAccessToken(params);
     };
@@ -4671,8 +4671,8 @@ var Session = (function(_, querystring, oauthSignature, crypto) {
 
       s_accessTokens.onValue(function(tokens) {
         if(typeof localStorage != "undefined") {
-          localStorage.user_oauth_token = tokens.oauth_token;
-          localStorage.user_oauth_token_secret = tokens.oauth_token_secret;
+          localStorage.setItem("user_oauth_token", tokens.oauth_token);
+          localStorage.setItem("user_oauth_token_secret", tokens.oauth_token_secret);
         }
       });
 
