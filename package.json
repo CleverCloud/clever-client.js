@@ -26,7 +26,7 @@
     "xml2json": "^0.7.1"
   },
   "dependencies": {
-    "baconjs": "^0.7.70",
+    "baconjs": "^0.7.95",
     "lodash": "^4.0.0",
     "oauth-sign": "^0.8.2",
     "querystring": "git://github.com/anodynos/node2web_querystring.git#3.46.1",
