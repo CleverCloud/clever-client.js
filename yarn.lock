@@ -194,13 +194,13 @@ aws4@^1.2.1:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.6.0.tgz#83ef5ca860b2b32e4a0deedee8c771b9db57471e"
 
+baconjs@0.7.94:
+  version "0.7.94"
+  resolved "https://registry.yarnpkg.com/baconjs/-/baconjs-0.7.94.tgz#bdba8c4ab92aac5c8096d22f273eb0674b1afdb2"
+
 baconjs@^0.7.70:
   version "0.7.93"
   resolved "https://registry.yarnpkg.com/baconjs/-/baconjs-0.7.93.tgz#9b056a1689e09eabb3d907a5ac30bb6b47861765"
-
-baconjs@^0.7.95:
-  version "0.7.95"
-  resolved "https://registry.yarnpkg.com/baconjs/-/baconjs-0.7.95.tgz#96869a814c730e62e5991944eb2fcb8c97171615"
 
 balanced-match@^0.4.1:
   version "0.4.2"
