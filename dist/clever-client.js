@@ -2459,6 +2459,21 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/payments/billings/unpaid": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getUnpaidInvoices"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/payments/billings/{bid}": {
       "delete": {
         "responses": {
