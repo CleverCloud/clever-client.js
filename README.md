@@ -3,8 +3,8 @@ clever-client
 
 Javascript client for Clever-Cloud API.
 
-How to install
---------------
+How to build & update
+---------------------
 
 Please install [npm](https://www.npmjs.org/), then:
 
