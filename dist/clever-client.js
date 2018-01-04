@@ -1626,6 +1626,26 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/applications/{appId}/dependencies/env": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationDependenciesEnv"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/applications/{appId}/dependencies/{dependencyId}": {
       "delete": {
         "responses": {
@@ -3351,6 +3371,26 @@ var methods = {
         }]
       }
     },
+    "/self/applications/{appId}/dependencies/env": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationDependenciesEnv"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/self/applications/{appId}/dependencies/{dependencyId}": {
       "delete": {
         "responses": {
@@ -4393,6 +4433,109 @@ var methods = {
       }
     },
     "/session/signup": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getSignupForm"
+          }
+        },
+        "parameters": [{
+          "name": "invitationKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "url_next",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/sessions/login": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getLoginForm"
+          }
+        },
+        "parameters": [{
+          "name": "secondaryEmailKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "deletionKey",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "fromAuthorize",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "login"
+          }
+        },
+        "parameters": [{
+          "name": "email",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "pass",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "from_authorize",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/sessions/mfa_login": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "mfaLogin"
+          }
+        },
+        "parameters": [{
+          "name": "mfa_kind",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "mfa_attempt",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "email",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "auth_id",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "from_authorize",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/sessions/signup": {
       "get": {
         "responses": {
           "default": {
