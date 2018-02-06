@@ -2350,6 +2350,21 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/deployments": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getDeploymentsForAllApps"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/instances": {
       "get": {
         "responses": {
