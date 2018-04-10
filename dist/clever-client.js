@@ -825,6 +825,24 @@ var methods = {
       }
     },
     "/organisations/{id}/addonproviders/{providerId}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "deleteProvider"
+          }
+        },
+        "parameters": [{
+          "name": "providerId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      },
       "get": {
         "responses": {
           "default": {
@@ -1749,6 +1767,31 @@ var methods = {
         }]
       }
     },
+    "/organisations/{id}/applications/{appId}/deployments/{deploymentId}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationDeploymentForOrga"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "deploymentId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/organisations/{id}/applications/{appId}/deployments/{deploymentId}/instances": {
       "delete": {
         "responses": {
@@ -1932,6 +1975,16 @@ var methods = {
           "name": "id",
           "required": true,
           "in": "path",
+          "type": "string"
+        }, {
+          "name": "deploymentId",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "withDeleted",
+          "required": false,
+          "in": "query",
           "type": "string"
         }]
       },
@@ -2362,6 +2415,11 @@ var methods = {
           "required": true,
           "in": "path",
           "type": "string"
+        }, {
+          "name": "limit",
+          "required": false,
+          "in": "query",
+          "type": "integer"
         }]
       }
     },
@@ -3489,6 +3547,26 @@ var methods = {
         }]
       }
     },
+    "/self/applications/{appId}/deployments/{deploymentId}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getApplicationDeployment"
+          }
+        },
+        "parameters": [{
+          "name": "appId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "deploymentId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/self/applications/{appId}/deployments/{deploymentId}/instances": {
       "delete": {
         "responses": {
@@ -3503,11 +3581,6 @@ var methods = {
           "type": "string"
         }, {
           "name": "deploymentId",
-          "required": true,
-          "in": "path",
-          "type": "string"
-        }, {
-          "name": "id",
           "required": true,
           "in": "path",
           "type": "string"
@@ -3632,6 +3705,16 @@ var methods = {
           "name": "appId",
           "required": true,
           "in": "path",
+          "type": "string"
+        }, {
+          "name": "deploymentId",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "withDeleted",
+          "required": false,
+          "in": "query",
           "type": "string"
         }]
       },
@@ -4576,7 +4659,13 @@ var methods = {
           "default": {
             "description": "getSummary"
           }
-        }
+        },
+        "parameters": [{
+          "name": "full",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
       }
     },
     "/users": {
