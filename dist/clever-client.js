@@ -4,6 +4,30 @@ var methods = {
   "host": "api.clever-cloud.com",
   "basePath": "/v2",
   "paths": {
+    "//openapi": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getOpenApiJson\ngetOpenApiYaml"
+          }
+        }
+      }
+    },
+    "//openapi.{type:json|yaml}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getOpenApi"
+          }
+        },
+        "parameters": [{
+          "name": "type",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
     "/application/{appId}/environment": {
       "get": {
         "responses": {
@@ -1297,6 +1321,61 @@ var methods = {
           }
         },
         "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addons/{addonId}/instances": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddonInstances"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "addonId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
+          "name": "deploymentId",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }, {
+          "name": "withDeleted",
+          "required": false,
+          "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/organisations/{id}/addons/{addonId}/instances/{instanceId}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getAddonInstance"
+          }
+        },
+        "parameters": [{
+          "name": "instanceId",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }, {
           "name": "id",
           "required": true,
           "in": "path",
@@ -2863,6 +2942,21 @@ var methods = {
           "name": "pass2",
           "required": false,
           "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/payments/assets/pay_button/{token}/button.png": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "getInvoiceStatusButton"
+          }
+        },
+        "parameters": [{
+          "name": "token",
+          "required": true,
+          "in": "path",
           "type": "string"
         }]
       }
@@ -4789,6 +4883,30 @@ var methods = {
           "name": "vat",
           "required": false,
           "in": "query",
+          "type": "string"
+        }]
+      }
+    },
+    "/vendor//addons": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "provisionOtherAddon"
+          }
+        }
+      }
+    },
+    "/vendor//apps/{addonId}/logscollector": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "logscollector"
+          }
+        },
+        "parameters": [{
+          "name": "addonId",
+          "required": true,
+          "in": "path",
           "type": "string"
         }]
       }
