@@ -1,5 +1,4 @@
 *.swp
-bower_components
 node_modules
 src/methods.js
 tests/bundle.js

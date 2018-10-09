@@ -12,7 +12,6 @@
   "license": "BSD",
   "devDependencies": {
     "body-parser": "^1.13.2",
-    "bower": "^1.4.1",
     "express": "^4.15.4",
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.8.0",
@@ -33,8 +32,7 @@
     "wadl-client": "^2.0.0"
   },
   "scripts": {
-    "bower-install": "bower install",
-    "test": "bower install && grunt test",
-    "start": "bower install && grunt test --force && node ./tests/server.js start"
+    "test": "grunt test",
+    "start": "grunt test --force && node ./tests/server.js start"
   }
 }
