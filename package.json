@@ -35,6 +35,7 @@
     "wadl-client": "^2.0.0"
   },
   "scripts": {
+    "build": "grunt",
     "test": "grunt test",
     "start": "grunt test --force && node ./tests/server.js start"
   }
