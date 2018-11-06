@@ -22,14 +22,21 @@ var Session = (function(_, querystring, oauthSignature, crypto) {
         "Authorization": ""
       }).send(querystring.encode(params));
 
-      res.onValue(function(data) {
-        var parsed = querystring.decode(data);
+      // A delay(1000) has been added here because for some reason, firefox doesn't have the time to
+      // store the localStorage elements if the redirection happens right after
+      // which means that our web clients will have a login loop.
+      res
+        .map(function(data) {
+          var parsed = querystring.decode(data);
 
-        window.localStorage.setItem("consumer_oauth_token", parsed.oauth_token);
-        window.localStorage.setItem("consumer_oauth_token_secret", parsed.oauth_token_secret);
-
-        window.location = settings.API_HOST + "/oauth/authorize?oauth_token=" + encodeURIComponent(parsed.oauth_token);
-      });
+          window.localStorage.setItem("consumer_oauth_token", parsed.oauth_token);
+          window.localStorage.setItem("consumer_oauth_token_secret", parsed.oauth_token_secret);
+          return parsed;
+        })
+        .delay(1000)
+        .onValue(function(parsed) {
+          window.location = settings.API_HOST + "/oauth/authorize?oauth_token=" + encodeURIComponent(parsed.oauth_token);
+        });
     };
 
     session.getAccessTokenFromQueryString = typeof window == "undefined" ? function(){} : function() {
