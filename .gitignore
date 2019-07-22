@@ -1,6 +1,5 @@
 *.swp
-dist
+.cache
+cjs
+esm/api
 node_modules
-src/methods.js
-tests/bundle.js
-xunit/
