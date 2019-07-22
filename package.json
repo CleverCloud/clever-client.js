@@ -9,15 +9,20 @@
     "client"
   ],
   "files": [
+    "/cjs/",
     "/esm/"
   ],
   "scripts": {
     "clean-cache": "node tasks/clean-cache.js",
-    "generate-client-from-openapi": "node tasks/generate-client.js"
+    "generate-client-from-openapi": "node tasks/generate-client.js",
+    "generate-cjs-modules": "babel esm --out-dir cjs"
   },
   "dependencies": {},
   "peerDependencies": {},
   "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.5.0",
     "del": "^5.0.0",
     "fs-extra": "^8.1.0",
     "lodash": "^4.17.15",

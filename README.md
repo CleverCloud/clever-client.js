@@ -31,3 +31,13 @@ npm run clean-cache
 ```
 
 If you want to generate a client for the preprod, you can change the config of `OPEN_API_URL` in `tasks/config.js`.
+
+## How can I generate a REST client for node (CommonJS modules) from the API?
+
+To generate a REST client for node (CommonJS modules) from the API, run this command:
+
+```sh
+npm run generate-cjs-modules
+```
+
+NOTE: This is based on the ECMAScript modules in `esm`. Be sure to generate the ESM client before running this.
