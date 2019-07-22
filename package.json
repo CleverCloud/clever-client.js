@@ -16,7 +16,9 @@
     "clean-cache": "node tasks/clean-cache.js",
     "generate-client": "npm run clean-cache && npm run generate-client-from-openapi && npm run generate-cjs-modules",
     "generate-client-from-openapi": "node tasks/generate-client.js",
-    "generate-cjs-modules": "babel esm --out-dir cjs"
+    "generate-cjs-modules": "babel esm --out-dir cjs",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "oauth-1.0a": "^2.2.6"
@@ -31,6 +33,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.5.0",
     "del": "^5.0.0",
     "fs-extra": "^8.1.0",
+    "jest": "^24.8.0",
     "lodash": "^4.17.15",
     "prettier": "^1.18.2",
     "request": "^2.88.0"
