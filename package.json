@@ -14,6 +14,7 @@
   ],
   "scripts": {
     "clean-cache": "node tasks/clean-cache.js",
+    "generate-client": "npm run clean-cache && npm run generate-client-from-openapi && npm run generate-cjs-modules",
     "generate-client-from-openapi": "node tasks/generate-client.js",
     "generate-cjs-modules": "babel esm --out-dir cjs"
   },

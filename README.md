@@ -4,6 +4,20 @@
 
 This project contains a REST client for Clever Cloud's API and some utils.
 
+## How can I generate a REST client from the API?
+
+To generate a REST client from the API, run this command:
+
+```sh
+npm run generate-client
+```
+
+This command will:
+
+1. Clean the cache and make sure that the generated code comes from the latest Open API document
+1. Generate the ESM version of the client
+1. Generate the CJS version of the client for node (based on ESM code)
+
 ## How can I generate a REST client (ECMAScript modules) from the API?
 
 To generate a REST client (ECMAScript modules) from the API, run this command:
