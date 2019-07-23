@@ -1,4 +1,4 @@
-# ADR 0001: Why did we built this new client?
+# ADR 0001: Why did we build this new client?
 
 This ADR tries to put more context on why we decided to build our own REST client generator.
 
