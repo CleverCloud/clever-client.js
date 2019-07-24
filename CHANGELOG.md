@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 1.0.1 (2019-07-25)
+
+- Fix JSON handling for node (request.request.js)
+
 ## 1.0.0 (2019-07-25)
 
 - utils/env-vars: utils/env-var: sort variables by name (`parseRaw` and `toNameEqualsValueString`) 
