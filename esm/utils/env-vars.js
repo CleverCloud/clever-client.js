@@ -126,6 +126,9 @@ export function parseRaw (rawInput = '') {
     }
   }
 
+  // WARN: Array.prototype.sort edits in place
+  parsedVariables.sort((a, b) => a.name.localeCompare(b.name));
+
   return { variables: parsedVariables, errors: parsingErrors };
 }
 
@@ -135,6 +138,7 @@ export function parseRaw (rawInput = '') {
 export function toNameEqualsValueString (variables, options = {}) {
   const { addExports = false } = options;
   return variables
+    .sort((a, b) => a.name.localeCompare(b.name))
     .map(({ name, value }) => {
       const escapedValue = JSON.stringify(value)
         .replace(NEW_LINE_ESCAPED, NEW_LINE);

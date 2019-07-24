@@ -236,6 +236,24 @@ describe('parseRaw()', () => {
         errors: [],
       });
     });
+
+    test('sort vars by name', () => {
+      const rawInput = [
+        'NAME_A="AAA"',
+        'NAME_B="BBBB"',
+        'NAME_C="CCCCC"',
+        'NAME_D="DDDDDD"',
+      ].join('\n');
+      expect(parseRaw(rawInput)).toEqual({
+        variables: [
+          { name: 'NAME_C', value: `CCCCC` },
+          { name: 'NAME_B', value: `BBBB` },
+          { name: 'NAME_D', value: `DDDDDD` },
+          { name: 'NAME_A', value: `AAA` },
+        ],
+        errors: [],
+      });
+    });
   });
 
   describe('return errors', () => {
@@ -249,8 +267,8 @@ describe('parseRaw()', () => {
       expect(parseRaw(rawInput)).toEqual({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
-          { name: 'NAME@BBBB', value: 'BBBB' },
           { name: 'NAME_C', value: 'CCCCC' },
+          { name: 'NAME@BBBB', value: 'BBBB' },
         ],
         errors: [{
           type: ERROR_TYPES.INVALID_NAME,
@@ -501,6 +519,21 @@ describe('toNameEqualsValueString()', () => {
       'NAME_A="AAA"',
       `NAME_B="BBBB \\" BBBB"`,
       `NAME_C="CCCCC \\"CCCCC\\" CCCCC"`,
+    ].join('\n'));
+  });
+
+  test('sort vars by name', () => {
+    const variables = [
+      { name: 'NAME_C', value: `CCCCC` },
+      { name: 'NAME_B', value: `BBBB` },
+      { name: 'NAME_D', value: `DDDDDD` },
+      { name: 'NAME_A', value: `AAA` },
+    ];
+    expect(toNameEqualsValueString(variables)).toBe([
+      'NAME_A="AAA"',
+      'NAME_B="BBBB"',
+      'NAME_C="CCCCC"',
+      'NAME_D="DDDDDD"',
     ].join('\n'));
   });
 });
