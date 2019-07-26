@@ -8,6 +8,7 @@ function formatBody (requestParams) {
     return JSON.stringify(requestParams.body);
   }
 
+  // for now we support the fact that users sometimes already stringified the body
   if (requestParams.headers['Content-Type'] === FORM_TYPE && typeof requestParams.body !== 'string') {
     const qs = new URLSearchParams();
     Object
@@ -19,20 +20,23 @@ function formatBody (requestParams) {
   return requestParams.body;
 }
 
-function formatResponse (requestParams, response) {
+function parseResponseBody (response) {
 
-  if (requestParams.headers['Accept'] === JSON_TYPE && response.headers.get('Content-Type') === JSON_TYPE) {
+  // We should rely on the request 'Accept' header but it's not always well defined
+  if (response.headers.get('Content-Type') === JSON_TYPE) {
     return response.json();
   }
 
-  if (requestParams.headers['Accept'] === FORM_TYPE && response.headers.get('Content-Type') === FORM_TYPE) {
+  // We should rely on the request 'Accept' header but it's not always well defined
+  if (response.headers.get('Content-Type') === FORM_TYPE) {
     return response.text()
       .then((text) => {
-        const objectResponse = {};
+        const responseObject = {};
         Array
           .from(new URLSearchParams(text).entries())
-          .forEach(([name, value]) => (objectResponse[name] = value));
-        return objectResponse;
+          .forEach(([name, value]) => (responseObject[name] = value));
+        return responseObject;
+        // TODO: return Object.fromEntries(new URLSearchParams(text).entries())
       });
   }
 
@@ -42,10 +46,10 @@ function formatResponse (requestParams, response) {
 export async function request (requestParams) {
 
   const url = new URL(requestParams.url);
-  Object.entries(requestParams.queryParams || {})
+  Object
+    .entries(requestParams.queryParams || {})
     .forEach(([k, v]) => url.searchParams.set(k, v));
 
-  // for now we support the fact that users sometimes already stringified the body
   const body = formatBody(requestParams);
 
   const response = await window.fetch(url.toString(), {
@@ -55,13 +59,18 @@ export async function request (requestParams) {
   });
 
   if (response.status >= 400) {
-    const responseError = await response.json();
-    throw new Error(responseError.message);
+    const responseBody = await parseResponseBody(response);
+    const errorMessage = (responseBody.message != null)
+      ? responseBody.message
+      : responseBody;
+    const error = new Error(errorMessage);
+    error.response = response;
+    throw error;
   }
 
   if (response.status === 204) {
     return;
   }
 
-  return formatResponse(requestParams, response);
+  return parseResponseBody(response);
 }
