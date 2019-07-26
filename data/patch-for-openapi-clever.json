@@ -1042,8 +1042,8 @@
         "path": "/products/addonproviders/{provider_id}",
         "method": "get",
         "operationId": "getAddonProvider",
-        "x-service": "",
-        "x-function": ""
+        "x-service": "product",
+        "x-function": "getAddonProvider"
     },
     {
         "path": "/products/addonproviders/{provider_id}/versions",
@@ -1070,8 +1070,8 @@
         "path": "/products/instances",
         "method": "get",
         "operationId": "getAvailableInstances",
-        "x-service": "",
-        "x-function": ""
+        "x-service": "product",
+        "x-function": "getAvailableInstances"
     },
     {
         "path": "/products/instances/{type}-{version}",
