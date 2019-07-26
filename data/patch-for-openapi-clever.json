@@ -1834,13 +1834,6 @@
         "x-function": ""
     },
     {
-        "path": "/users",
-        "method": "post",
-        "operationId": "createUser",
-        "x-service": "",
-        "x-function": ""
-    },
-    {
         "path": "/users/{id}",
         "method": "get",
         "operationId": "getUser",

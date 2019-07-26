@@ -35,6 +35,23 @@ function orValue (value, valueIfEmptyString) {
     : value;
 }
 
+async function mergeOpenapi (openapi, otherApiLocalPath) {
+
+  const otherApi = await fs.readJson(otherApiLocalPath);
+
+  openapi.paths = {
+    ...openapi.paths,
+    ...otherApi.paths,
+  };
+
+  openapi.components.schemas = {
+    ...openapi.components.schemas,
+    ...otherApi.components.schemas,
+  };
+
+  return openapi;
+}
+
 async function patchOpenapi (openapi, patchLocalPath) {
 
   const patch = await fs.readJson(patchLocalPath);
@@ -323,10 +340,15 @@ async function generateClient () {
   const apiRemoteUrl = OPEN_API_URL;
   const openapi = await getOpenapi(apiLocalCachePath, apiRemoteUrl);
 
+  // Merge with hand defined APIs (temporary lol)
+  // TODO: generate those from projects
+  const otherApiLocalPath = './data/other-apis.json';
+  const mergedApi = await mergeOpenapi(openapi, otherApiLocalPath);
+
   // patch openapi with custom properties
   // TODO: directly add those properties in the source code (Java & Scala APIs)
   const patchLocalPath = './data/patch-for-openapi-clever.json';
-  const patchedApi = await patchOpenapi(openapi, patchLocalPath);
+  const patchedApi = await patchOpenapi(mergedApi, patchLocalPath);
   const patchedApiLocalCachePath = pathJoin(CACHE_PATH, 'openapi-clever.patched.json');
   await fs.outputJson(patchedApiLocalCachePath, patchedApi, { spaces: 2 });
 
