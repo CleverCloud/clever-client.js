@@ -64,6 +64,10 @@ export async function request (requestParams) {
       ? responseBody.message
       : responseBody;
     const error = new Error(errorMessage);
+    // NOTE: This is only for legacy
+    if (responseBody.id != null) {
+      error.id = responseBody.id;
+    }
     error.response = response;
     throw error;
   }
