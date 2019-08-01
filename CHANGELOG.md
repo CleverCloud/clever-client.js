@@ -1,5 +1,18 @@
 # Clever Client changelog
 
+## 2.0.0-beta.0 (2019-08-01)
+
+- (HEAD -> 200) Expose user.getSummary()
+- Remove legacy getAuthorization()
+- Replace request with superagent
+- Provide error id on response.id (lecagy reasons)
+- Make sure /cjs is cleared when invoking task "generate-cjs-modules"
+- Expose helpers for WebSockets and ServerSentEvents endpoints
+- Move some function in "product" service
+- Add possibility to merge live OpenAPI doc with custom definitions (temporary lol)
+- Use 'oauth-1.0a' for timestamps and nonce for anonymous requests
+- Improve request support and error handling (browser & node)
+
 ## 1.0.1 (2019-07-25)
 
 - Fix JSON handling for node (request.request.js)
