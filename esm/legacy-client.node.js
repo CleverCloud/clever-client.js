@@ -3,7 +3,7 @@ import { addOauthHeader } from './oauth.node.js';
 import { sendLegacyRequest } from './send-legacy-request.js';
 import { initLegacyClient } from './api/legacy-client.js';
 import { prefixUrl } from './prefix-url.js';
-import { request } from './request.request.js';
+import { request } from './request.superagent.js';
 
 export function initCleverClient (config) {
 

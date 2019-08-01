@@ -5,7 +5,7 @@ const del = require('del');
 const fs = require('fs-extra');
 const pathJoin = require('path').join;
 const prettier = require('prettier');
-const request = require('request');
+const superagent = require('superagent');
 
 const { CACHE_PATH, OPEN_API_URL } = require('./config.js');
 
@@ -19,11 +19,7 @@ async function getOpenapi (localCachePath, remoteUrl) {
   }
 
   console.log(`Generating client from ${remoteUrl}`);
-  const openapi = await new Promise((resolve, reject) => {
-    request.get(remoteUrl, (error, res, resBody) => {
-      return (error != null) ? reject(error) : resolve(JSON.parse(resBody));
-    });
-  });
+  const openapi = superagent.get(remoteUrl).then(({ body }) => body);
   await fs.outputJson(localCachePath, openapi, { spaces: 2 });
 
   return openapi;
