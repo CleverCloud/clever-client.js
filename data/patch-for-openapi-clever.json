@@ -1831,7 +1831,7 @@
         "method": "get",
         "operationId": "getSummary",
         "x-service": "user",
-        "x-function": ""
+        "x-function": "getSummary"
     },
     {
         "path": "/users/{id}",
