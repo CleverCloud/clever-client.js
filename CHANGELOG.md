@@ -1,8 +1,12 @@
 # Clever Client changelog
 
+## 2.0.0-beta.0 (2019-08-02)
+
+- Fix logs query param deployment_id naming
+
 ## 2.0.0-beta.0 (2019-08-01)
 
-- (HEAD -> 200) Expose user.getSummary()
+- Expose user.getSummary()
 - Remove legacy getAuthorization()
 - Replace request with superagent
 - Provide error id on response.id (lecagy reasons)
