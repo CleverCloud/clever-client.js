@@ -14,7 +14,7 @@ export function prepareLogsSse ({ apiHost, tokens, appId, filter, deploymentId }
     .resolve({
       method: 'get',
       url: `/logs/${appId}/sse`,
-      queryParams: pickNonNull({ filter, deploymentId }, ['filter', 'deploymentId']),
+      queryParams: pickNonNull({ filter, 'deployment_id': deploymentId }, ['filter', 'deployment_id']),
     })
     .then(prefixUrl(apiHost))
     .then(addOauthHeader(tokens))
