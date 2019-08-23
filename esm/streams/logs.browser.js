@@ -1,8 +1,6 @@
 import { AbstractLogsStream } from './logs.abstract.js';
 import { addOauthHeader } from '../oauth.browser.js';
 
-const btoa = (str) => window.btoa(str);
-
 export class LogsStream extends AbstractLogsStream {
 
   btoa (str) {
