@@ -1,6 +1,10 @@
 # Clever Client changelog
 
-## 2.0.0-beta.0 (2019-08-02)
+## 2.0.0-beta.2 (2019-08-23)
+
+- Expose better helpers for streams (events and logs) for (browsers and node)
+
+## 2.0.0-beta.1 (2019-08-02)
 
 - Fix logs query param deployment_id naming
 
