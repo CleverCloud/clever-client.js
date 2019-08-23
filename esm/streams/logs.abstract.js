@@ -76,7 +76,6 @@ export class AbstractLogsStream extends AbstractStream {
     const sse = this.createEventSource(url);
 
     function doClose (reason) {
-      console.log('doClose sse');
       sse.close();
       onClose(reason);
     }
@@ -89,7 +88,6 @@ export class AbstractLogsStream extends AbstractStream {
     });
 
     sse.addEventListener('error', (err) => {
-      console.log('error sse');
       this.isAuthErrorMessage(err)
         ? doClose(AUTHENTICATION_REASON)
         : doClose();
