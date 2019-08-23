@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 2.0.0-beta.3 (2019-08-23)
+
+- Remove some console.log
+
 ## 2.0.0-beta.2 (2019-08-23)
 
 - Expose better helpers for streams (events and logs) for (browsers and node)
