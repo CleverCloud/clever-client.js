@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 2.0.0-beta.4 (2019-08-28)
+
+- Fix SSE (add a timeout when opening a stream)
+
 ## 2.0.0-beta.3 (2019-08-23)
 
 - Remove some console.log
