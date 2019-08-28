@@ -2,6 +2,8 @@ import { AbstractStream, AUTHENTICATION_REASON } from './stream.abstract.js';
 import { pickNonNull } from '../pick-non-null.js';
 import { prefixUrl } from '../prefix-url.js';
 
+const OPEN_TIMEOUT = 3000;
+
 export class AbstractLogsStream extends AbstractStream {
 
   constructor ({ apiHost, tokens, appId, filter, deploymentId }) {
@@ -75,12 +77,18 @@ export class AbstractLogsStream extends AbstractStream {
     const { url } = await this.prepareLogsSse();
     const sse = this.createEventSource(url);
 
+    // Sometimes, the EventSource is open but no messages are returned and no errors thrown
+    // We wait for OPEN_TIMEOUT before considering the EventSource
+    // if no message or error is received by then, we close the stream
+    const openTimeoutId = setTimeout(doClose, OPEN_TIMEOUT);
+
     function doClose (reason) {
       sse.close();
       onClose(reason);
     }
 
     sse.addEventListener('message', (message) => {
+      clearTimeout(openTimeoutId);
       const parsedMessage = this.parseLogMessage(message);
       this.isPingMessage(parsedMessage)
         ? onPing(parsedMessage.heartbeat_delay_ms)
@@ -88,6 +96,7 @@ export class AbstractLogsStream extends AbstractStream {
     });
 
     sse.addEventListener('error', (err) => {
+      clearTimeout(openTimeoutId);
       this.isAuthErrorMessage(err)
         ? doClose(AUTHENTICATION_REASON)
         : doClose();
