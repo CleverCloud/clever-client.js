@@ -39,21 +39,5 @@ export function initCleverClient (config) {
     return ownerId != null && ownerId.includes('orga_') ? legacyClient.organisations._ : legacyClient.self;
   };
 
-  // add session.getHMACAuthorization(httpMethod, url, params, tokens)
-  // and so console can use that to sign calls to WS (events, logs, notifs...)
-  legacyClient.session = {
-    async getHMACAuthorization (method, url, queryParams, tokens) {
-
-      if (!tokens.user_oauth_token || !tokens.user_oauth_token_secret) {
-        return '';
-      }
-
-      const requestParams = { method, url, queryParams };
-      const { headers } = await addOauthHeader(config)(requestParams);
-
-      return headers.Authorization;
-    },
-  };
-
   return legacyClient;
 }
