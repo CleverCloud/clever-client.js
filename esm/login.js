@@ -1,8 +1,9 @@
 import OAuth from 'oauth-1.0a';
 import { fetchAccessToken as doFetchAccessToken, fetchRequestToken as doFetchRequestToken } from './api/oauth.js';
 
-// TODO expose this?
 export function getOauthParams ({ consumerKey, consumerSecret, tokenSecret = '' }) {
+  // We need this for getNonce()
+  OAuth.prototype.nonce_length = 32;
   return {
     oauth_consumer_key: consumerKey,
     oauth_signature_method: 'PLAINTEXT',
