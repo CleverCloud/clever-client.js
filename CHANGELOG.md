@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 2.0.0-beta.5 (2019-08-30)
+
+- Fix nonce manual usage
+
 ## 2.0.0-beta.4 (2019-08-28)
 
 - Fix SSE (add a timeout when opening a stream)
