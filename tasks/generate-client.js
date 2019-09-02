@@ -19,7 +19,7 @@ async function getOpenapi (localCachePath, remoteUrl) {
   }
 
   console.log(`Generating client from ${remoteUrl}`);
-  const openapi = superagent.get(remoteUrl).then(({ body }) => body);
+  const openapi = await superagent.get(remoteUrl).then(({ body }) => body);
   await fs.outputJson(localCachePath, openapi, { spaces: 2 });
 
   return openapi;
@@ -134,7 +134,7 @@ function getContentTypeHeader (requestBody) {
     const bodyContentTypes = Object.keys(requestBody.content);
     if (bodyContentTypes.length > 1) {
       // TODO
-      console.error('error');
+      console.warn('route has many content types');
     }
     return { 'Content-Type': bodyContentTypes[0] };
   }
