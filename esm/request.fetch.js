@@ -22,8 +22,7 @@ function formatBody (requestParams) {
 
 function parseResponseBody (response) {
 
-  // We should rely on the request 'Accept' header but it's not always well defined
-  if (response.headers.get('Content-Type') === JSON_TYPE) {
+  if (response.headers.get('Content-Type').split(';')[0] === JSON_TYPE) {
     return response.json();
   }
 
