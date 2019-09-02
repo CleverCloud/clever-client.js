@@ -461,6 +461,118 @@
           }
         }
       }
+    },
+    "/self/avatar": {
+      "put": {
+        "operationId": "setUserAvatar_1",
+        "requestBody": {
+          "content": {
+            "image/bmp": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/gif": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/jpeg": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/tiff": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UrlView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organisations/{id}/avatar": {
+      "put": {
+        "operationId": "setOrgaAvatar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "image/bmp": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/gif": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/jpeg": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/tiff": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UrlView"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
