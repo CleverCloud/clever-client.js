@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 2.0.0-beta.7 (2019-09-02)
+
+- Fix JSON parsing with response Content-Type: application/json; charset=utf8
+
 ## 2.0.0-beta.6 (2019-09-02)
 
 - Fix PUT /self/keys
