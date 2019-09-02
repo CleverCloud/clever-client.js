@@ -1,5 +1,10 @@
 # Clever Client changelog
 
+## 2.0.0-beta.6 (2019-09-02)
+
+- Fix PUT /self/keys
+- Fix PUT .../avatar
+
 ## 2.0.0-beta.5 (2019-08-30)
 
 - Fix nonce manual usage
