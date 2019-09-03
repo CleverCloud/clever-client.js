@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 2.0.1 (2019-09-23)
+
+- Expose full responseBody on errors
+
 ## 2.0.0 (2019-09-20)
 
 - Add app-status utils
