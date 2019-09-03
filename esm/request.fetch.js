@@ -76,6 +76,7 @@ export async function request (requestParams) {
       error.id = responseBody.id;
     }
     error.response = response;
+    error.responseBody = responseBody;
     throw error;
   }
 
