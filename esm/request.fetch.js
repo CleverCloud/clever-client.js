@@ -20,14 +20,22 @@ function formatBody (requestParams) {
   return requestParams.body;
 }
 
+function getContentType (headers) {
+  const contentType = headers.get('Content-Type');
+  return (contentType != null)
+    ? contentType.split(';')[0]
+    : contentType;
+}
+
 function parseResponseBody (response) {
 
-  if (response.headers.get('Content-Type').split(';')[0] === JSON_TYPE) {
+  const contentType = getContentType(response.headers);
+
+  if (contentType === JSON_TYPE) {
     return response.json();
   }
 
-  // We should rely on the request 'Accept' header but it's not always well defined
-  if (response.headers.get('Content-Type') === FORM_TYPE) {
+  if (contentType === FORM_TYPE) {
     return response.text()
       .then((text) => {
         const responseObject = {};
