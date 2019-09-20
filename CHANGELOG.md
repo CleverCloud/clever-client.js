@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 2.0.0 (2019-09-20)
+
+- Add app-status utils
+
 ## 2.0.0-beta.8 (2019-09-03)
 
 - Fix JSON parsing with response Content-Type: application/json; charset=utf8 for real
