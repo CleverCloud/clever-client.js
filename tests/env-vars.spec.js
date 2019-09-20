@@ -239,17 +239,17 @@ describe('parseRaw()', () => {
 
     test('sort vars by name', () => {
       const rawInput = [
-        'NAME_A="AAA"',
-        'NAME_B="BBBB"',
         'NAME_C="CCCCC"',
+        'NAME_B="BBBB"',
         'NAME_D="DDDDDD"',
+        'NAME_A="AAA"',
       ].join('\n');
       expect(parseRaw(rawInput)).toEqual({
         variables: [
-          { name: 'NAME_C', value: `CCCCC` },
-          { name: 'NAME_B', value: `BBBB` },
-          { name: 'NAME_D', value: `DDDDDD` },
           { name: 'NAME_A', value: `AAA` },
+          { name: 'NAME_B', value: `BBBB` },
+          { name: 'NAME_C', value: `CCCCC` },
+          { name: 'NAME_D', value: `DDDDDD` },
         ],
         errors: [],
       });
