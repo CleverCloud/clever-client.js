@@ -20,7 +20,7 @@
     "generate-cjs-modules": "rm -rf cjs && babel esm --out-dir cjs",
     "lint": "eslint esm tasks tests",
     "lint:fix": "eslint --fix esm tasks tests",
-    "prepack": "npm run lint && npm run generate-client",
+    "prepack": "npm run lint && npm run test && npm run generate-client",
     "test": "jest",
     "test:watch": "jest --watch"
   },
