@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 2.1.0 (2019-12-13)
+
+- API endpoints update
+
 ## 2.0.1 (2019-09-23)
 
 - Expose full responseBody on errors
