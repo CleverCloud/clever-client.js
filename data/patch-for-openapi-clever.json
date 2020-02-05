@@ -441,6 +441,13 @@
         "x-function": "getAllTags"
     },
     {
+        "path": "/organisations/{id}/addons/{addonId}/tags",
+        "method": "put",
+        "operationId": "replaceAddonTags",
+        "x-service": "addon",
+        "x-function": "replaceAddonTags"
+    },
+    {
         "path": "/organisations/{id}/addons/{addonId}/tags/{tag}",
         "method": "put",
         "operationId": "addAddonTag",

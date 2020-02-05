@@ -1,5 +1,7 @@
 import req from 'superagent';
 
+const JSON_TYPE = 'application/json';
+
 function getErrorMessage (error) {
   if (error.code === 'EAI_AGAIN') {
     return `Cannot reach the Clever Cloud API, please check your internet connection.`;
@@ -28,7 +30,11 @@ export async function request (requestParams) {
     .set(requestParams.headers)
     .query(requestParams.queryParams)
     .send(requestParams.body)
-    .then(({ body }) => body)
+    .then((response) => {
+      return (response.headers['content-type'] === JSON_TYPE)
+        ? response.body
+        : response.text;
+    })
     .catch((error) => {
       error.message = getErrorMessage(error);
       // NOTE: This is only for legacy

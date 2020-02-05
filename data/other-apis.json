@@ -1,5 +1,38 @@
 {
   "paths": {
+    "/backups/{ownerId}/{ref}": {
+      "get": {
+        "operationId": "getBackupsForRef",
+        "x-service": "backups",
+        "x-function": "getBackups",
+        "parameters": [
+          {
+            "name": "ownerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json" : {
+              }
+            }
+          }
+        }
+      }
+    },
     "/metrics/read/{orgaId}": {
       "get": {
         "operationId": "getMetricsToken",
@@ -390,6 +423,59 @@
         "operationId": "getWebhookFormats",
         "x-service": "notification",
         "x-function": "getWebhookFormats",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": { }
+            }
+          }
+        }
+      }
+    },
+    "/providers/{providerId}/{addonId}": {
+      "get": {
+        "operationId": "getAddon",
+        "x-service": "providers",
+        "x-function": "getAddon",
+        "parameters": [
+          { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": { }
+            }
+          }
+        }
+      }
+    },
+    "/providers/es-addon/snapshots-repository": {
+      "get": {
+        "operationId": "getElasticsearchAddonSnapshotsRepository",
+        "x-service": "providers",
+        "x-function": "getElasticsearchAddonSnapshotsRepository",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": { }
+            }
+          }
+        }
+      }
+    },
+    "/providers/es-addon/{addonId}/snapshots": {
+      "get": {
+        "operationId": "getElasticsearchAddonSnapshots",
+        "x-service": "providers",
+        "x-function": "getElasticsearchAddonSnapshots",
+        "parameters": [
+          { "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
         "responses": {
           "default": {
             "description": "default response",
