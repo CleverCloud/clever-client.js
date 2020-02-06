@@ -1,5 +1,11 @@
 # Clever Client changelog
 
+## 2.2.0 (2020-02-06)
+
+- API endpoints update
+- Add manual endpoints (backups and provider)
+- fix: request.superagent can now return raw text if it's not `content-type: application/json`.
+
 ## 2.1.0 (2019-12-13)
 
 - API endpoints update
