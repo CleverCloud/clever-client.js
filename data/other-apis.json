@@ -452,40 +452,6 @@
         }
       }
     },
-    "/providers/es-addon/snapshots-repository": {
-      "get": {
-        "operationId": "getElasticsearchAddonSnapshotsRepository",
-        "x-service": "providers",
-        "x-function": "getElasticsearchAddonSnapshotsRepository",
-        "parameters": [],
-        "responses": {
-          "default": {
-            "description": "default response",
-            "content": {
-              "application/json": { }
-            }
-          }
-        }
-      }
-    },
-    "/providers/es-addon/{addonId}/snapshots": {
-      "get": {
-        "operationId": "getElasticsearchAddonSnapshots",
-        "x-service": "providers",
-        "x-function": "getElasticsearchAddonSnapshots",
-        "parameters": [
-          { "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
-        "responses": {
-          "default": {
-            "description": "default response",
-            "content": {
-              "application/json": { }
-            }
-          }
-        }
-      }
-    },
     "/self/keys/{key}": {
       "put": {
         "operationId": "addSshKey",
