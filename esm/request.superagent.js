@@ -30,11 +30,14 @@ function getErrorMessage (error) {
   return `Unknown error from API: ${error.message}`;
 }
 
-export async function request (requestParams) {
+export async function request (requestParams, options = {}) {
+
+  const { retry = 0 } = options;
 
   return req(requestParams.method, requestParams.url)
     .set(requestParams.headers)
     .query(requestParams.queryParams)
+    .retry(retry)
     .send(requestParams.body)
     .then((response) => {
       return (response.headers['content-type'] === JSON_TYPE)
