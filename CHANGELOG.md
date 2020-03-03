@@ -1,5 +1,14 @@
 # Clever Client changelog
 
+## 2.3.1 (2020-03-02)
+
+- request.superagent: expose an option to retry
+- request.superagent: handle ECONNRESET errors
+
+## 2.3.0 (2020-02-11)
+
+- Remove es-addon specific routes
+
 ## 2.2.0 (2020-02-06)
 
 - API endpoints update
