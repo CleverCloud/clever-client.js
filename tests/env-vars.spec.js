@@ -450,7 +450,7 @@ describe('toNameEqualsValueString()', () => {
     ].join('\n'));
   });
 
-  test('accept double quotes in values', () => {
+  test('accept double quotes in values (and escape them)', () => {
     const variables = [
       { name: 'NAME_A', value: 'AAA' },
       { name: 'NAME_B', value: `BBBB"BBBB` },
@@ -476,7 +476,7 @@ describe('toNameEqualsValueString()', () => {
     ].join('\n'));
   });
 
-  test('escape line breaks', () => {
+  test('accept line breaks', () => {
     const variables = [
       { name: 'NAME_A', value: `A\na\nA` },
       { name: 'NAME_B', value: 'BBBB' },
@@ -487,7 +487,7 @@ describe('toNameEqualsValueString()', () => {
     ].join('\n'));
   });
 
-  test('escape line breaks (with exports)', () => {
+  test('accept line breaks (with exports)', () => {
     const variables = [
       { name: 'NAME_A', value: `A\na\nA` },
       { name: 'NAME_B', value: 'BBBB' },
@@ -498,7 +498,7 @@ describe('toNameEqualsValueString()', () => {
     ].join('\n'));
   });
 
-  test('escape line breaks and escape double quotes', () => {
+  test('accept line breaks and escape double quotes', () => {
     const variables = [
       { name: 'NAME_A', value: `A\n"a"\nA` },
       { name: 'NAME_B', value: 'BBBB' },
