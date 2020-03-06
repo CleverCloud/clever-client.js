@@ -31,12 +31,12 @@ export const ERROR_TYPES = {
 };
 
 const NEW_LINE = '\n';
-const NEW_LINE_ESCAPED = /\\n/g;
 const SIMPLE_QUOTE = `'`;
 const EQUAL = `=`;
-const SIMPLE_QUOTE_ESCAPED = /\\'/g;
+const SLASH = '\\';
+const SIMPLE_QUOTE_REPLACE = /([\\]*)'/g;
 const DOUBLE_QUOTE = `"`;
-const DOUBLE_QUOTE_ESCAPED = /\\"/g;
+const DOUBLE_QUOTE_REPLACE = /([\\]*)"/g;
 
 function nextIndex (text, char, start = 0) {
   let i = start;
@@ -64,6 +64,34 @@ function getPosition (text, index) {
   const line = lines.length;
   const column = lines.slice(-1)[0].length;
   return { line, column };
+}
+
+// Here we surround a string with double quotes,
+// it means we need to escape existing double quotes,
+// we need to do so in a way that is compatible with shells and environment variables,
+// this is why we have (slashes * 2 + 1).
+function doubleQuoteString (str) {
+  const escapedString = str.replace(DOUBLE_QUOTE_REPLACE, (m, slashes) => {
+    return SLASH.repeat(slashes.length * 2 + 1) + DOUBLE_QUOTE;
+  });
+  return DOUBLE_QUOTE + escapedString + DOUBLE_QUOTE;
+}
+
+// Here we must be able to reverse what doubleQuoteString() does,
+// with the same logic,
+// we also want it to work with simple quotes.
+function unquoteString (firstChar, str) {
+  if (firstChar === SIMPLE_QUOTE) {
+    return str.replace(SIMPLE_QUOTE_REPLACE, (match, slashes) => {
+      return SLASH.repeat((slashes.length - 1) / 2) + SIMPLE_QUOTE;
+    });
+  }
+  if (firstChar === DOUBLE_QUOTE) {
+    return str.replace(DOUBLE_QUOTE_REPLACE, (match, slashes) => {
+      return SLASH.repeat((slashes.length - 1) / 2) + DOUBLE_QUOTE;
+    });
+  }
+  return str;
 }
 
 export function parseRaw (rawInput = '') {
@@ -106,10 +134,8 @@ export function parseRaw (rawInput = '') {
     const valueFirstChar = rawInput[nextEqualIdx + 1];
     if (valueFirstChar === SIMPLE_QUOTE || valueFirstChar === DOUBLE_QUOTE) {
       const nextQuoteIdx = nextIndex(rawInput, valueFirstChar, nextEqualIdx + 2);
-      const valueWithEscapes = rawInput.substring(nextEqualIdx + 2, nextQuoteIdx);
-      const value = (valueFirstChar === SIMPLE_QUOTE)
-        ? valueWithEscapes.replace(SIMPLE_QUOTE_ESCAPED, SIMPLE_QUOTE)
-        : valueWithEscapes.replace(DOUBLE_QUOTE_ESCAPED, DOUBLE_QUOTE);
+      const rawValue = rawInput.substring(nextEqualIdx + 2, nextQuoteIdx);
+      const value = unquoteString(valueFirstChar, rawValue);
       parsedVariables.push({ name, value });
       if (nextNewLineIdx > nextQuoteIdx + 1 || nextQuoteIdx + 1 > rawInput.length) {
         parsingErrors.push({ type: ERROR_TYPES.INVALID_VALUE, name, pos: getPosition(rawInput, nextQuoteIdx + 1) });
@@ -134,15 +160,14 @@ export function parseRaw (rawInput = '') {
 
 // automatically merges duplicated named (keeps last value)
 // automatically removes variables with invalid names
-// always escape with double quotes
+// always double quote values (with proper escaping)
 export function toNameEqualsValueString (variables, options = {}) {
   const { addExports = false } = options;
   return variables
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(({ name, value }) => {
-      const escapedValue = JSON.stringify(value)
-        .replace(NEW_LINE_ESCAPED, NEW_LINE);
-      const nameValue = `${name}=${escapedValue}`;
+      const quotedValue = doubleQuoteString(value);
+      const nameValue = `${name}=${quotedValue}`;
       return addExports
         ? `export ${nameValue};`
         : nameValue;
