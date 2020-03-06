@@ -1,5 +1,13 @@
 # Clever Client changelog
 
+## 3.0.0 (2020-03-06)
+
+### ⚠️ BREAKING CHANGES
+
+* Fix the serialization/parsing of env-vars
+
+Please read [PR 18](https://github.com/CleverCloud/clever-client.js/pull/18) for more details.
+
 ## 2.3.1 (2020-03-02)
 
 - request.superagent: expose an option to retry
