@@ -237,6 +237,51 @@ describe('parseRaw()', () => {
       });
     });
 
+    test('understand multiple escaping', () => {
+      // \" => "
+      // \\\" => \"
+      // \\\\\\" => \\"
+      // \\\\\\\\" => \\\"
+      // ...
+      const rawInput = [
+        // AAA \\\" AAA
+        `NAME_A="AAA \\\\\\" AAA"`,
+        // BBBB \\\\\"BBBB\\\\\" BBBB
+        `NAME_B="BBBB \\\\\\\\\\"BBBB\\\\\\\\\\" BBBB"`,
+        // CCCCC \\\\\\\"CCCCC\\\\\\\" CCCCC
+        `NAME_C="CCCCC \\\\\\\\\\\\\\"CCCCC\\\\\\\\\\\\\\" CCCCC"`,
+      ].join('\n');
+      expect(parseRaw(rawInput)).toEqual({
+        variables: [
+          // AAA \" AAA
+          { name: 'NAME_A', value: `AAA \\\" AAA` }, // eslint-disable-line no-useless-escape
+          // BBBB \\"BBBB\\" BBBB
+          { name: 'NAME_B', value: `BBBB \\\\"BBBB\\\\" BBBB` },
+          // CCCCC \\\"CCCCC\\\" CCCCC
+          { name: 'NAME_C', value: `CCCCC \\\\\\"CCCCC\\\\\\" CCCCC` },
+        ],
+        errors: [],
+      });
+    });
+
+    test('understand quoted slash+n as 2 different characters', () => {
+      const rawInput = [
+        'NAME_A="AAA\nAAA"',
+        // BBBB\nBBBB
+        `NAME_B="BBBB\\nBBBB"`,
+      ].join('\n');
+      expect(parseRaw(rawInput)).toEqual({
+        variables: [
+          // AAA
+          // AAA
+          { name: 'NAME_A', value: `AAA\nAAA` },
+          // BBBB\nBBBB
+          { name: 'NAME_B', value: `BBBB\\nBBBB` },
+        ],
+        errors: [],
+      });
+    });
+
     test('sort vars by name', () => {
       const rawInput = [
         'NAME_C="CCCCC"',
@@ -510,6 +555,7 @@ describe('toNameEqualsValueString()', () => {
   });
 
   test('escape double quotes', () => {
+    // " => \"
     const variables = [
       { name: 'NAME_A', value: `AAA` },
       { name: 'NAME_B', value: `BBBB " BBBB` },
@@ -519,6 +565,44 @@ describe('toNameEqualsValueString()', () => {
       'NAME_A="AAA"',
       `NAME_B="BBBB \\" BBBB"`,
       `NAME_C="CCCCC \\"CCCCC\\" CCCCC"`,
+    ].join('\n'));
+  });
+
+  test('escape already escaped double quotes', () => {
+    // \" => \\\"
+    // \\" => \\\\\\"
+    // \\\" => \\\\\\\\"
+    // ...
+    const variables = [
+      // AAA \" AAA
+      { name: 'NAME_A', value: `AAA \\\" AAA` }, // eslint-disable-line no-useless-escape
+      // BBBB \\"BBBB\\" BBBB
+      { name: 'NAME_B', value: `BBBB \\\\"BBBB\\\\" BBBB` },
+      // CCCCC \\\"CCCCC\\\" CCCCC
+      { name: 'NAME_C', value: `CCCCC \\\\\\"CCCCC\\\\\\" CCCCC` },
+    ];
+    expect(toNameEqualsValueString(variables)).toBe([
+      // AAA \\\" AAA
+      `NAME_A="AAA \\\\\\" AAA"`,
+      // BBBB \\\\\"BBBB\\\\\" BBBB
+      `NAME_B="BBBB \\\\\\\\\\"BBBB\\\\\\\\\\" BBBB"`,
+      // CCCCC \\\\\\\"CCCCC\\\\\\\" CCCCC
+      `NAME_C="CCCCC \\\\\\\\\\\\\\"CCCCC\\\\\\\\\\\\\\" CCCCC"`,
+    ].join('\n'));
+  });
+
+  test('not escape slash+n', () => {
+    const variables = [
+      // AAA
+      // AAA
+      { name: 'NAME_A', value: `AAA\nAAA` },
+      // BBBB\nBBBB
+      { name: 'NAME_B', value: `BBBB\\nBBBB` },
+    ];
+    expect(toNameEqualsValueString(variables)).toBe([
+      'NAME_A="AAA\nAAA"',
+      // BBBB\nBBBB
+      `NAME_B="BBBB\\nBBBB"`,
     ].join('\n'));
   });
 
