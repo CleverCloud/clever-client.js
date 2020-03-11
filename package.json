@@ -3,6 +3,7 @@
   "version": "3.0.0",
   "description": "JavaScript REST client and utils for Clever Cloud's API",
   "homepage": "https://github.com/CleverCloud/clever-client.js",
+  "license": "Apache-2.0",
   "keywords": [
     "clever-cloud",
     "api",
