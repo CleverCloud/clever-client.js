@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 3.1.2 (2020-03-18)
+
+* Fix access logs continuous mechanism in `getContinuousAccessLogsFromWarp10()` use microseconds precision
+
 ## 3.1.1 (2020-03-18)
 
 * Fix access logs continuous mechanism in `getContinuousAccessLogsFromWarp10()`
