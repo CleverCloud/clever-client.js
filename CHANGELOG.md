@@ -1,5 +1,15 @@
 # Clever Client changelog
 
+## 3.1.0 (2020-03-18)
+
+* Add `GET /w10tokens/accessLogs/read/{orgaId}` in `api/warp-10.js` with `getWarp10AccessLogsToken()`
+* Add access-logs requests (via Warp10) in `access-logs.js`
+  * `getAccessLogsFromWarp10InBatches()` to fetch history access logs in batches (1h windows)
+  * `getContinuousAccessLogsFromWarp10()` to fetch contiuous access logs in small batches
+* Add `execWarpscript()` function for node with superagent
+* Update `prefixUrl()`, when `url` is `undefined` it defaults to `''`
+* Update dev and peer deps
+
 ## 3.0.0 (2020-03-06)
 
 ### ⚠️ BREAKING CHANGES
