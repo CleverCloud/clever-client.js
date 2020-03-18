@@ -44,7 +44,7 @@ export function getAccessLogsFromWarp10InBatches ({ appId, realAddonId, from, to
   return emitter;
 }
 
-export function getContinousAccessLogsFromWarp10 ({ appId, realAddonId, warpToken }, sendToWarp10) {
+export function getContinuousAccessLogsFromWarp10 ({ appId, realAddonId, warpToken }, sendToWarp10) {
 
   const emitter = new Emitter();
 
