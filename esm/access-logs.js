@@ -1,5 +1,5 @@
 import Emitter from 'component-emitter';
-import { asWarp10Timespan, ONE_HOUR, toTimestamp } from './utils/date.js';
+import { asWarp10Timespan, ONE_HOUR } from './utils/date.js';
 
 function getAccessLogsFromWarp10 ({ appId, realAddonId, timespan, warpToken }) {
 
@@ -44,35 +44,32 @@ export function getAccessLogsFromWarp10InBatches ({ appId, realAddonId, from, to
   return emitter;
 }
 
+// Here's how it works
+// 1. Start loop with fetch from="10 seconds ago" to="now"
+// 2. Wait for data...
+// 3. Data arrives
+// 4. Schedule next loop in 1000ms later with fetch from="last to + 1ms" to="now"
+// The from/to timeframe will be around (fetch roundtrip) + 1000ms
 export function getContinuousAccessLogsFromWarp10 ({ appId, realAddonId, warpToken }, sendToWarp10) {
 
   const emitter = new Emitter();
 
-  function doCall (from) {
+  function doCall (from, to) {
 
-    const to = Date.now();
     const timespan = asWarp10Timespan(from, to);
-    // Used to compute batch running time
-    const beforeCall = Date.now();
-
     getAccessLogsFromWarp10({ appId, realAddonId, timespan, warpToken })
       .then(sendToWarp10)
       .then((data) => {
         emitter.emit('data', data);
-        const lastLog = data.slice(-1)[0];
-        const last = (lastLog != null) ? toTimestamp(lastLog.t) : from;
-
-        const diff = Date.now() - beforeCall;
-        const timeout = (diff < 1000) ? 1000 - diff : 0;
-
         // Prevent huge recursive call stack
-        setTimeout(() => doCall(last), timeout);
+        setTimeout(() => doCall(to + 1, Date.now()), 1000);
       })
       .catch((e) => emitter.emit('error', e));
   }
 
   // Trigger batch "loop" mechanism
-  doCall(Date.now() - 10 * 1000);
+  const now = Date.now();
+  doCall(now - 10 * 1000, now);
 
   return emitter;
 }
