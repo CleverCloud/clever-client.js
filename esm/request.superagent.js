@@ -4,10 +4,10 @@ const JSON_TYPE = 'application/json';
 
 function getErrorMessage (error) {
   if (error.code === 'EAI_AGAIN') {
-    return `Cannot reach the Clever Cloud API, please check your internet connection.`;
+    return 'Cannot reach the Clever Cloud API, please check your internet connection.';
   }
   if (error.code === 'ECONNRESET') {
-    return `The connection to the Clever Cloud API was closed abruptly, please try again.`;
+    return 'The connection to the Clever Cloud API was closed abruptly, please try again.';
   }
   if (error.response && error.response.body && error.response.body.message) {
     return error.response.body.message;

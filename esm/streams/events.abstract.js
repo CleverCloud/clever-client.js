@@ -37,7 +37,7 @@ export class AbstractEventsStream extends AbstractStream {
     return Promise
       .resolve({
         method: 'get',
-        url: `/events/`,
+        url: '/events/',
       })
       .then(prefixUrl(this.apiHost))
       .then(this.addOauthHeader(this.tokens))
@@ -49,7 +49,7 @@ export class AbstractEventsStream extends AbstractStream {
         const url = urlObj.toString();
         // prepare message to auth WebSocket
         const authMessage = JSON.stringify({
-          'message_type': 'oauth',
+          message_type: 'oauth',
           authorization: requestParams.headers.Authorization,
         });
         return { url, authMessage };

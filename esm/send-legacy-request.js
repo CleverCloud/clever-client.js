@@ -18,7 +18,7 @@ export function sendLegacyRequest (sendCallback) {
   };
 
   req.withHeaders = function (headers) {
-    for (let name in headers) {
+    for (const name in headers) {
       req.headers[name] = headers[name];
     }
     return req;

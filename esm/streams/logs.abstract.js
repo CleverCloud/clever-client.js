@@ -40,7 +40,7 @@ export class AbstractLogsStream extends AbstractStream {
         url: `/logs/${this.appId}/sse`,
         queryParams: pickNonNull({
           filter: this.filter,
-          'deployment_id': this.deploymentId,
+          deployment_id: this.deploymentId,
         }, ['filter', 'deployment_id']),
       })
       .then(prefixUrl(this.apiHost))

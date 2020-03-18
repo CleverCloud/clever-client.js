@@ -1,3 +1,6 @@
+// Disable this so we can use single and double quotes inside strings the way we want ;-)
+/* eslint quotes: "off" */
+
 import {
   ERROR_TYPES,
   parseRaw,
