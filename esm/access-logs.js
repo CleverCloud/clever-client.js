@@ -48,7 +48,7 @@ export function getAccessLogsFromWarp10InBatches ({ appId, realAddonId, from, to
 // 1. Start loop with fetch from="10 seconds ago" to="now"
 // 2. Wait for data...
 // 3. Data arrives
-// 4. Schedule next loop in 1000ms later with fetch from="last to + 1ms" to="now"
+// 4. Schedule next loop in 1000ms later with fetch from="last" to="now"
 // The from/to timeframe will be around (fetch roundtrip) + 1000ms
 export function getContinuousAccessLogsFromWarp10 ({ appId, realAddonId, warpToken }, sendToWarp10) {
 
@@ -62,7 +62,7 @@ export function getContinuousAccessLogsFromWarp10 ({ appId, realAddonId, warpTok
       .then((data) => {
         emitter.emit('data', data);
         // Prevent huge recursive call stack
-        setTimeout(() => doCall(to + 1, Date.now()), 1000);
+        setTimeout(() => doCall(to, Date.now()), 1000);
       })
       .catch((e) => emitter.emit('error', e));
   }
