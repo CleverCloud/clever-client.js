@@ -37,7 +37,7 @@
     "baconjs": "^0.7.83",
     "eventsource": "^1.0.7",
     "superagent": "^5.1.0",
-    "ws": "^7.1.2"
+    "ws": "^7.2.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -54,6 +54,6 @@
     "jest": "^25.1.0",
     "lodash": "^4.17.15",
     "prettier": "^1.19.1",
-    "superagent": "^5.1.0"
+    "superagent": "^5.2.2"
   }
 }
