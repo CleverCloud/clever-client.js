@@ -60,7 +60,7 @@ async function patchOpenapi (openapi, patchLocalPath) {
       openapi.paths[path][method]['x-function'] = functionName;
     }
     if (responses != null) {
-      openapi.paths[path][method]['responses'] = responses;
+      openapi.paths[path][method].responses = responses;
     }
   });
 
@@ -121,12 +121,12 @@ function mergeSimilarRoutes (allRoutes) {
 }
 
 function getAcceptHeader (responses) {
-  const res = responses['200'] || responses['default'];
+  const res = responses['200'] || responses.default;
   if (res == null || res.content == null) {
     return {};
   }
   const acceptValues = Object.keys(res.content);
-  return { 'Accept': acceptValues.join(', ') };
+  return { Accept: acceptValues.join(', ') };
 }
 
 function getContentTypeHeader (requestBody) {
@@ -154,7 +154,7 @@ function getQueryParams (parameters) {
 
 function buildClientCode (route) {
 
-  let { method, path, parameters = [], responses, requestBody, functionName } = route;
+  const { method, path, parameters = [], responses, requestBody, functionName } = route;
 
   const isMultipath = Array.isArray(path);
 
@@ -304,7 +304,7 @@ function buildLegacyClientCode (allRoutes, codeByService) {
 
   const legacyClientCode = [];
 
-  for (let service in codeByService) {
+  for (const service in codeByService) {
     legacyClientCode.push(`import * as ${service} from './${_.kebabCase(service)}.js'`);
   }
   legacyClientCode.push('');
@@ -366,7 +366,7 @@ async function generateClient () {
   const codeByService = mergeCodesByService(allRoutesWithCode);
 
   // write code in appropriate dir/files
-  for (let service in codeByService) {
+  for (const service in codeByService) {
     const filepath = pathJoin(generatedClientPath, `${_.kebabCase(service)}.js`);
     const rawContents = codeByService[service];
     const rawContentsWithImports = `import { pickNonNull } from '../pick-non-null.js';
@@ -378,7 +378,7 @@ async function generateClient () {
 
   // generate and write code for legacy client
   const legacyClientCode = buildLegacyClientCode(allRoutes, codeByService);
-  const legacyClientFilepath = pathJoin(generatedClientPath, `legacy-client.js`);
+  const legacyClientFilepath = pathJoin(generatedClientPath, 'legacy-client.js');
   const legacyClientFormattedCode = formatCode(legacyClientCode);
   await fs.appendFile(legacyClientFilepath, legacyClientFormattedCode, 'utf8');
 }

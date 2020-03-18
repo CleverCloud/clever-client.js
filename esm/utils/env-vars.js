@@ -31,11 +31,11 @@ export const ERROR_TYPES = {
 };
 
 const NEW_LINE = '\n';
-const SIMPLE_QUOTE = `'`;
-const EQUAL = `=`;
+const SIMPLE_QUOTE = '\'';
+const EQUAL = '=';
 const SLASH = '\\';
 const SIMPLE_QUOTE_REPLACE = /([\\]*)'/g;
-const DOUBLE_QUOTE = `"`;
+const DOUBLE_QUOTE = '"';
 const DOUBLE_QUOTE_REPLACE = /([\\]*)"/g;
 
 function nextIndex (text, char, start = 0) {

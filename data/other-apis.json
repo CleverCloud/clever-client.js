@@ -58,6 +58,31 @@
         }
       }
     },
+    "/w10tokens/accessLogs/read/{orgaId}": {
+      "get": {
+        "operationId": "getWarp10AccessLogsToken",
+        "x-service": "warp10",
+        "x-function": "getWarp10AccessLogsToken",
+        "parameters": [
+          {
+            "name": "orgaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "post": {
         "operationId": "createUserFromForm",
