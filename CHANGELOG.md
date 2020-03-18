@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 3.1.1 (2020-03-18)
+
+* Fix access logs continuous mechanism in `getContinuousAccessLogsFromWarp10()`
+
 ## 3.1.0 (2020-03-18)
 
 * Add `GET /w10tokens/accessLogs/read/{orgaId}` in `api/warp-10.js` with `getWarp10AccessLogsToken()`
