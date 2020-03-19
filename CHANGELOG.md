@@ -1,5 +1,21 @@
 # Clever Client changelog
 
+## 4.0.0 (2020-03-19)
+
+### ⚠️ BREAKING CHANGES
+
+Seems like a milliseconds API for access logs on Warp10 was not a good idea.
+We changed it to be in microseconds and update the date util.
+
+* Make inner `getAccessLogsFromWarp10()` accept `from` and `to` in microseconds.
+* Make `getAccessLogsFromWarp10InBatches()` accept `from` and `to` in microseconds.
+* Rename date util `toISOStringWithMicrosecondPrecision()` into `toMicroIsoString()`.
+* Remove date util `asWarp10Timespan()`.
+* Remove date util `ONE_HOUR`.
+* Introduce date util `toMicroTimestamp()`.
+* Introduce date util `ONE_HOUR_MICROS`.
+* Introduce date util `ONE_SECOND_MICROS`.
+
 ## 3.1.2 (2020-03-18)
 
 * Fix access logs continuous mechanism in `getContinuousAccessLogsFromWarp10()` use microseconds precision
