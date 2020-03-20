@@ -53,7 +53,7 @@ export function getAccessLogsFromWarp10InBatches ({ appId, realAddonId, from, to
 // 2. Wait for data...
 // 3. Data arrives
 // 4. Schedule next loop 1 second later with fetch from="last log ts or first ts" to="now"
-export function getContinuousAccessLogsFromWarp10 ({ appId, realAddonId, warpToken }, sendToWarp10) {
+export function getContinuousAccessLogsFromWarp10 ({ appId, realAddonId, warpToken, delay = 0 }, sendToWarp10) {
 
   const emitter = new Emitter();
 
@@ -72,7 +72,7 @@ export function getContinuousAccessLogsFromWarp10 ({ appId, realAddonId, warpTok
 
         // From "last log TS + 1µs" to NOW
         const batchFrom = (lastLog != null) ? toMicroTimestamp(lastLog.t) + 1 : from;
-        const batchTo = toMicroTimestamp();
+        const batchTo = toMicroTimestamp() - delay;
 
         // Prevent huge recursive call stack
         setTimeout(() => doCall(batchFrom, batchTo), 1000);
@@ -81,7 +81,7 @@ export function getContinuousAccessLogsFromWarp10 ({ appId, realAddonId, warpTok
   }
 
   // Trigger batch "loop" mechanism
-  const now = toMicroTimestamp();
+  const now = toMicroTimestamp() - delay;
   doCall(now - 10 * ONE_SECOND_MICROS, now);
 
   return emitter;
