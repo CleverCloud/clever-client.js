@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 4.1.0 (2020-03-20)
+
+* Add `delay` param to `getContinuousAccessLogsFromWarp10()`
+
 ## 4.0.0 (2020-03-19)
 
 ### ⚠️ BREAKING CHANGES
