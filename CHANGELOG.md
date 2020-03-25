@@ -1,5 +1,12 @@
 # Clever Client changelog
 
+## 4.2.0 (2020-03-26)
+
+* Add `GET /organisations/{id}/namespaces` in `api/organisation.js` with `getNamespaces()`
+* Add `GET /organisations/{id}/applications/{appId}/tcpRedirs` in `api/application.js` with `getTcpRedirs()`
+* Add `POST /organisations/{id}/applications/{appId}/tcpRedirs` in `api/application.js` with `addTcpRedir()`
+* Add `DELETE /organisations/{id}/applications/{appId}/tcpRedirs/{sourcePort}` in `api/application.js` with `removeTcpRedir()`
+
 ## 4.1.0 (2020-03-20)
 
 * Add `delay` param to `getContinuousAccessLogsFromWarp10()`
