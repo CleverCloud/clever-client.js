@@ -704,6 +704,20 @@
         "x-function": "updateTag"
     },
     {
+        "path": "/organisations/{id}/applications/{appId}/tcpRedirs",
+        "method": "post",
+        "operationId": "addTcpRedir",
+        "x-service": "application",
+        "x-function": "addTcpRedir"
+    },
+    {
+        "path": "/organisations/{id}/applications/{appId}/tcpRedirs/{sourcePort}",
+        "method": "delete",
+        "operationId": "removeTcpRedir",
+        "x-service": "application",
+        "x-function": "removeTcpRedir"
+    },
+    {
         "path": "/organisations/{id}/applications/{appId}/vhosts",
         "method": "get",
         "operationId": "getVhosts",
@@ -974,6 +988,13 @@
         "operationId": "getRecurrentPayment",
         "x-service": "organisation",
         "x-function": ""
+    },
+    {
+        "path": "/organisations/{id}/namespaces",
+        "method": "get",
+        "operationId": "getNamespaces",
+        "x-service": "organisation",
+        "x-function": "getNamespaces"
     },
     {
         "path": "/password_forgotten",
