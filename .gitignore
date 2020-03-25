@@ -3,3 +3,4 @@
 cjs
 esm/api
 node_modules
+/*.tgz
