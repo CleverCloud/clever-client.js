@@ -705,6 +705,13 @@
     },
     {
         "path": "/organisations/{id}/applications/{appId}/tcpRedirs",
+        "method": "get",
+        "operationId": "getTcpRedirs",
+        "x-service": "application",
+        "x-function": "getTcpRedirs"
+    },
+    {
+        "path": "/organisations/{id}/applications/{appId}/tcpRedirs",
         "method": "post",
         "operationId": "addTcpRedir",
         "x-service": "application",
