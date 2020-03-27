@@ -606,7 +606,7 @@
         "method": "delete",
         "operationId": "getApplicationDeploymentsForOrga",
         "x-service": "application",
-        "x-function": "getAllDeploymentInstances"
+        "x-function": "cancelDeployment"
     },
     {
         "path": "/organisations/{id}/applications/{appId}/env",
@@ -1253,7 +1253,7 @@
         "method": "post",
         "operationId": "preorderAddon_1",
         "x-service": "addon",
-        "x-function": ""
+        "x-function": "preorder"
     },
     {
         "path": "/self/applications",
