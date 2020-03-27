@@ -466,7 +466,7 @@
         "method": "post",
         "operationId": "preorderAddon",
         "x-service": "addon",
-        "x-function": ""
+        "x-function": "preorder"
     },
     {
         "path": "/organisations/{id}/applications",
@@ -1070,8 +1070,8 @@
         "path": "/products/addonproviders",
         "method": "get",
         "operationId": "getAddonProviders",
-        "x-service": "",
-        "x-function": ""
+        "x-service": "product",
+        "x-function": "getAllAddonProviders"
     },
     {
         "path": "/products/addonproviders/{provider_id}",
@@ -1133,8 +1133,8 @@
         "path": "/products/prices",
         "method": "get",
         "operationId": "getExcahngeRates",
-        "x-service": "",
-        "x-function": ""
+        "x-service": "product",
+        "x-function": "getCreditPrice"
     },
     {
         "path": "/products/zones",
@@ -1393,7 +1393,7 @@
         "method": "delete",
         "operationId": "cancelDeploy",
         "x-service": "application",
-        "x-function": "getAllDeploymentInstances"
+        "x-function": "cancelDeployment"
     },
     {
         "path": "/self/applications/{appId}/env",
