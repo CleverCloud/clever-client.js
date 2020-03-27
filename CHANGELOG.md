@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 5.1.0 (2020-03-27)
+
+* Add `payment` param to `addTcpRedir()` in `api/application`
+
 ## 5.0.1 (2020-03-27)
 
 Fix missing `/self` vs `/organisations/{id}`:
