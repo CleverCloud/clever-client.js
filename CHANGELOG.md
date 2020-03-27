@@ -1,5 +1,14 @@
 # Clever Client changelog
 
+## 5.0.1 (2020-03-27)
+
+Fix missing `/self` vs `/organisations/{id}`:
+
+* Rename `POST /self/addons/preorders` to `api/addon` with `preorder()`
+  * Used to be `api/addon` with `todo_preorderSelfAddon()`
+* Rename `GET /organisations/{id}/applications/{appId}/deployments/{deploymentId}/instances` to `api/application` with `cancelDeployment()`
+  * Used to be `api/application` with `getAllDeploymentInstances()`
+
 ## 5.0.0 (2020-03-27)
 
 ### ⚠️ BREAKING CHANGES
