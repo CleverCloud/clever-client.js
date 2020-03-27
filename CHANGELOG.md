@@ -1,5 +1,18 @@
 # Clever Client changelog
 
+## 5.0.0 (2020-03-27)
+
+### ⚠️ BREAKING CHANGES
+
+* Rename `POST /organisations/{id}/addons/preorders` to `api/addon` with `preorder()`
+  * Used to be `api/addon` with `todo_preorderAddonByOrgaId()`
+* Move `GET /products/addonproviders` to `api/product` with `getAllAddonProviders()`
+  * Used to be `api/unknown` with `todo_getAddonProviders()`
+* Move `GET /products/prices` to `api/product` with `getCreditPrice()`
+  * Used to be `api/unknown` with `todo_getExcahngeRates()`
+* Rename `GET /self/applications/{appId}/deployments/{deploymentId}/instances` to `api/application` with `cancelDeployment()`
+  * Used to be `api/application` with `getAllDeploymentInstances()`
+
 ## 4.2.0 (2020-03-26)
 
 * Add `GET /organisations/{id}/namespaces` in `api/organisation.js` with `getNamespaces()`
