@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 5.2.0 (2020-03-30)
+
+* Add `GET /self/applications/{appId}` in `api/application.js` with `getFromSelf()`
+
 ## 5.1.0 (2020-03-27)
 
 * Add `payment` param to `addTcpRedir()` in `api/application`
