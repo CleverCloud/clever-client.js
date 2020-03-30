@@ -1274,7 +1274,7 @@
         "method": "get",
         "operationId": "getApplication_1",
         "x-service": "application",
-        "x-function": "get"
+        "x-function": "getFromSelf"
     },
     {
         "path": "/self/applications/{appId}",
