@@ -1,5 +1,5 @@
-import { AbstractStream, AUTHENTICATION_REASON } from './stream.abstract.js';
-import { prefixUrl } from '../prefix-url';
+import { AbstractStream, AuthenticationError } from './stream.abstract.js';
+import { prefixUrl } from '../prefix-url.js';
 
 const PONG_MESSAGE = JSON.stringify({
   type: 'heartbeat',
@@ -13,20 +13,6 @@ export class AbstractEventsStream extends AbstractStream {
     this.apiHost = apiHost;
     this.tokens = tokens;
     this.appId = appId;
-  }
-
-  // addOauthHeader, createWebSocket and closeWebSocket don't have the same implementation (browsers/node)
-
-  addOauthHeader () {
-    throw new Error('Not implemented');
-  }
-
-  createWebSocket () {
-    throw new Error('Not implemented');
-  }
-
-  closeWebSocket () {
-    throw new Error('Not implemented');
   }
 
   // To authenticate to the WebSocket endpoint, we use the oAuth v1 "Authorization" header,
@@ -54,6 +40,64 @@ export class AbstractEventsStream extends AbstractStream {
         });
         return { url, authMessage };
       });
+  }
+
+  addOauthHeader () {
+    // It's up to the class extending AbstractEventsStream to implement how to sign and add an oAuthHeader
+    throw new Error('Not implemented');
+  }
+
+  // Prepare WS auth => open connection =>
+  // Then, wire source stream events to the system:
+  // * tech events wired to _on*():
+  //   * "message(ping)" => _onPing()
+  //   * "message(authError)" => _onError()
+  //   * "error" => _onError()
+  //   * "close" => _onError()
+  // * user events wired to event emitter: "message(event)" => "event"
+  async _openSource () {
+
+    const { url, authMessage } = await this.prepareEventsWs();
+    this._ws = this.createWebSocket(url);
+
+    this._ws.addEventListener('open', () => this._ws.send(authMessage));
+
+    this._ws.addEventListener('message', (message) => {
+
+      const parsedMessage = this.parseEventMessage(message);
+
+      // Ignore socket_ready message
+      if (this.isSocketReadyMessage(parsedMessage)) {
+        return;
+      }
+
+      if (this.isPingMessage(parsedMessage)) {
+        this._ws.send(PONG_MESSAGE);
+        return this._onPing(parsedMessage.heartbeat_delay_ms);
+      }
+
+      if (this.isAuthErrorMessage(parsedMessage)) {
+        return this._onError(new AuthenticationError('Authentication for the events stream (WS) failed'));
+      }
+
+      if (this.appId == null || this.matchesAppId(this.appId, parsedMessage)) {
+        return this.emit('event', parsedMessage);
+      }
+    });
+
+    this._ws.addEventListener('error', (error) => this._onError(error));
+
+    // Save this listener so we can remove it easily in _close
+    this._wsCloseListener = (reason) => {
+      this._onError(new Error(`Events stream (WS) was closed reason:${JSON.stringify(reason)}`));
+    };
+
+    this._ws.addEventListener('close', this._wsCloseListener);
+  }
+
+  createWebSocket () {
+    // It's up to the class extending AbstractEventsStream to implement how to create a WS connection
+    throw new Error('Not implemented');
   }
 
   parseEventMessage (message) {
@@ -84,50 +128,17 @@ export class AbstractEventsStream extends AbstractStream {
     return (event.data.id === appId || event.data.appId === appId);
   }
 
-  async openStream ({ onMessage, onPing, onClose }) {
+  _close () {
+    if (this._ws != null) {
+      // When _close() is called, we already know this._ws is about to be forced closed
+      // so we need to remove the listner before calling closeWebSocket()
+      this._ws.removeEventListener('close', this._wsCloseListener);
+      this.closeWebSocket(this._ws);
+    }
+  }
 
-    const { url, authMessage } = await this.prepareEventsWs();
-
-    const ws = this.createWebSocket(url);
-
-    const doClose = (reason) => {
-      // prevent the ws.close() to trigger an onClose without reason
-      ws.removeEventListener('close', onClose);
-      this.closeWebSocket(ws);
-      onClose(reason);
-    };
-
-    ws.addEventListener('open', () => ws.send(authMessage));
-
-    ws.addEventListener('message', (message) => {
-
-      const parsedMessage = this.parseEventMessage(message);
-
-      // Ignore socket_ready message
-      if (this.isSocketReadyMessage(parsedMessage)) {
-        return;
-      }
-
-      if (this.isPingMessage(parsedMessage)) {
-        ws.send(PONG_MESSAGE);
-        return onPing(parsedMessage.heartbeat_delay_ms);
-      }
-
-      if (this.isAuthErrorMessage(parsedMessage)) {
-        return doClose(AUTHENTICATION_REASON);
-      }
-
-      if (this.appId == null || this.matchesAppId(this.appId, parsedMessage)) {
-        return onMessage(parsedMessage);
-      }
-    });
-
-    // We need to listen to errors for node
-    ws.addEventListener('error', () => {
-    });
-
-    ws.addEventListener('close', onClose);
-
-    return doClose;
-  };
+  closeWebSocket () {
+    // It's up to the class extending AbstractEventsStream to implement how to close a WS connection
+    throw new Error('Not implemented');
+  }
 }
