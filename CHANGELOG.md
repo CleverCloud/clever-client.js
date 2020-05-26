@@ -1,5 +1,15 @@
 # Clever Client changelog
 
+## 6.0.0 (2020-05-26)
+
+* Add exponential backoff to the newly refactored `LogsStream` and `EventsStream`.
+* Add docs about how to use those streams.
+
+### ⚠️ BREAKING CHANGES
+
+* Expose logs with a new `EventEmitter`/`EventTarget` compatible API
+* Expose events with a new `EventEmitter`/`EventTarget` compatible API
+
 ## 5.1.0 (2020-03-27)
 
 * Add `payment` param to `addTcpRedir()` in `api/application`
