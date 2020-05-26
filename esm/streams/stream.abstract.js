@@ -1,6 +1,9 @@
-const RETRY_DELAY = 1500;
-const RETRY_TIMEOUT = 8000;
-const PING_TIMOUT_FACTOR = 1.25;
+import EventEmitter from 'component-emitter';
+
+const BACKOFF_FACTOR = 1.25;
+const INIT_RETRY_TIMEOUT = 1500;
+const MAX_RETRY_COUNT = Infinity;
+const PING_TIMEOUT_FACTOR = 1.25;
 
 export const AUTHENTICATION_REASON = {
   type: 'close',
@@ -16,66 +19,123 @@ export const FORCE_CLOSE_REASON = {
   code: 4002,
 };
 
-export class AbstractStream {
+export const ERROR_REASON = {
+  type: 'close',
+  wasClean: true,
+  reason: 'Close because of error',
+  code: 4003,
+};
 
-  openStream () {
+export class AuthenticationError extends Error {
+};
+
+export class PingError extends Error {
+};
+
+export class AbstractStream extends EventEmitter {
+
+  constructor () {
+    super();
+    this._autoRetry = {
+      enabled: false,
+      counter: 0,
+    };
+  }
+
+  /**
+   * Opens the source stream with this._openSource() it can be SSE, WS...
+   * If `options.autoRetry` is enabled, source stream is automatically closed and reopened if no ping is received within the expected timeframe or any unknown error
+   *
+   * @param {Object} options
+   * @param {Boolean} options.autoRetry - Enables auto retry behaviour (network resilient stream)
+   * @param {Number} [options.backoffFactor=BACKOFF_FACTOR] - Factor used to compute exponential backoff delays
+   * @param {Number} [options.initRetryTimeout=INIT_RETRY_TIMEOUT] - First iteration timeout, also used to compute exponential backoff delays
+   * @param {Number} [options.pingTimeoutFactor=PING_TIMEOUT_FACTOR] - Factor used to wait a bit longer than the ping delay promised by the the API
+   * @param {Number} [options.maxRetryCount=MAX_RETRY_COUNT] - Maximum number of consecutive iterations the auto retry behaviour can do
+   */
+  open (options = {}) {
+
+    const { autoRetry = false } = options;
+
+    // Make sure the source is closed before opening it
+    this._close();
+
+    this._autoRetry.enabled = autoRetry;
+    if (this._autoRetry.enabled) {
+      this._autoRetry.counter = 0;
+      this._autoRetry.backoffFactor = options.backoffFactor || BACKOFF_FACTOR;
+      this._autoRetry.initRetryTimeout = options.initRetryTimeout || INIT_RETRY_TIMEOUT;
+      this._autoRetry.pingTimeoutFactor = options.pingTimeoutFactor || PING_TIMEOUT_FACTOR;
+      this._autoRetry.maxRetryCount = options.maxRetryCount || MAX_RETRY_COUNT;
+    }
+
+    this.emit('open');
+    this._openSource().catch((error) => this._onError('error', error));
+  }
+
+  async _openSource () {
+    // It's up to the class extending AbstractStream to implement how to open a source of data (SSE, WebSocket...)
     throw new Error('Not implemented');
   }
 
+  // Our ping/pong system is common to all our implementations
   isPingMessage (data) {
     return (data != null) && (data.type === 'heartbeat') && (data.heartbeat_msg === 'ping');
   }
 
-  // Opens a stream that emits pings with this.openStream({ onMessage, onPing, onClose })
-  // Automatically re-opens the stream if it gets closed for unknown reason
-  // Automatically re-opens the stream if no ping is received within the expected timeframe
-  // You can set { infinite: false } with some retry params { retryTimeout, retryDelay }
-  // returns a function to close the stream
-  openResilientStream ({ onMessage, onError, infinite = true, retryTimeout = RETRY_TIMEOUT, retryDelay = RETRY_DELAY }) {
+  _onPing (delay) {
+    this.emit('ping', delay);
+    if (this._autoRetry.enabled) {
+      // Receiving a ping means the stream works fine and we can reset the auto retry counter
+      this._autoRetry.counter = 0;
+    }
+    clearTimeout(this._pingTimeoutId);
+    this._pingTimeoutId = setTimeout(() => {
+      this._onError(new Error('Stream failed to send ping within timeframe'));
+    }, delay * PING_TIMEOUT_FACTOR);
+  }
 
-    let retryCounter = 0;
-    const maxRetryCount = Math.round(retryTimeout / retryDelay);
-    let doCloseStream;
-    let pingTimeoutId;
+  _onError (error) {
 
-    const closeStream = (reason) => {
-      if (doCloseStream != null) {
-        doCloseStream(reason);
+    if (error instanceof AuthenticationError) {
+      this.close(AUTHENTICATION_REASON);
+      this.emit('error', error);
+    }
+
+    // any other kind of error => we force close
+    this.close({ ...ERROR_REASON, reason: error.message });
+
+    if (!this._autoRetry.enabled) {
+      this.emit('error', error);
+    }
+    else {
+      this._autoRetry.counter += 1;
+
+      if (this._autoRetry.counter > this._autoRetry.maxRetryCount) {
+        return this.emit('error', new Error(`Stream connection failed ${this._autoRetry.maxRetryCount} times!`));
       }
-    };
 
-    const onPing = (delay) => {
-      retryCounter = 0;
-      clearTimeout(pingTimeoutId);
-      pingTimeoutId = setTimeout(closeStream, delay * PING_TIMOUT_FACTOR);
-    };
+      const exponentialBackoffDelay = this._autoRetry.initRetryTimeout * (this._autoRetry.backoffFactor ** this._autoRetry.counter);
+      this._autoRetry.timeoutId = setTimeout(() => {
+        this.emit('open');
+        this._openSource().catch((error) => this._onError('error', error));
+      }, exponentialBackoffDelay);
+    }
+  }
 
-    const onClose = (reason) => {
-      if (reason != null && reason.code === AUTHENTICATION_REASON.code) {
-        return onError(new Error(AUTHENTICATION_REASON.reason));
-      }
-      if (reason != null && reason.code === FORCE_CLOSE_REASON.code) {
-        clearTimeout(pingTimeoutId);
-        // should we trigger some callback ?
-        return;
-      }
-      setTimeout(tryToOpenStream, RETRY_DELAY);
-    };
+  close (reason = FORCE_CLOSE_REASON) {
+    // Close source stream
+    this._close();
+    if (reason === FORCE_CLOSE_REASON) {
+      // If the user of the stream called close(), we stop everything
+      clearTimeout(this._pingTimeoutId);
+      clearTimeout(this._autoRetry.timeoutId);
+    }
+    this.emit('close', reason);
+  }
 
-    const tryToOpenStream = () => {
-      retryCounter += 1;
-      if (!infinite && retryCounter > maxRetryCount) {
-        return onError(new Error(`Stream connection failed ${maxRetryCount} times!`));
-      }
-      this.openStream({ onMessage, onPing, onClose })
-        .then((newCloseStreamFn) => {
-          doCloseStream = newCloseStreamFn;
-        })
-        .catch(onError);
-    };
-
-    tryToOpenStream();
-
-    return () => closeStream(FORCE_CLOSE_REASON);
+  _closeSource () {
+    // It's up to the class extending AbstractStream to implement how to close a source of data (SSE, WebSocket...)
+    throw new Error('Not implemented');
   }
 }
