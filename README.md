@@ -112,6 +112,20 @@ const envVars = await application.getAllEnvVars({ id: oid, appId }).then(sendToA
 
 NOTE: It returns a promise, you may want to use `await` with it.
 
+## How can I get the OAuth configuration ?
+
+A general documentation is proposed on [our Website](https://www.clever-cloud.com/doc/clever-cloud-apis/cc-api/). As stated in the documentation :
+
+> You need to create an oauth consumer token in the Clever Cloud console. A link "Create an oauth consumer" is available under your organization's addons list. All created consumers will appear below that link, like your applications and addons.
+
+Once you got the consumer, you still need to generate the OAuth tokens. You may do the whole OAuth dance in the browser.
+
+If you use the [clever-tools](https://github.com/CleverCloud/clever-tools) CLI, you can also generate tokens using the following command :
+
+    clever login
+
+Once successfully logged in, you’ll be provided with a token / secret couple.
+
 ## How can I generate a REST client from the API?
 
 To generate a REST client from the API, run this command:
