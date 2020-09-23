@@ -7,7 +7,7 @@ const pathJoin = require('path').join;
 const prettier = require('prettier');
 const superagent = require('superagent');
 
-const { CACHE_PATH, OPEN_API_URL } = require('./config.js');
+const { CACHE_PATH, OPEN_API_URL_V2 } = require('./config.js');
 
 async function getOpenapi (localCachePath, remoteUrl) {
 
@@ -67,7 +67,7 @@ async function patchOpenapi (openapi, patchLocalPath) {
   return openapi;
 }
 
-function getRoutes (openapi) {
+function getRoutes (openapi, version) {
 
   return _.chain(openapi.paths)
     .entries()
@@ -75,7 +75,7 @@ function getRoutes (openapi) {
       return _.chain(methodsAndConfig)
         .entries()
         .flatMap(([method, config]) => {
-          return ({ path, method, ...config });
+          return ({ version, path, method, ...config });
         })
         .value();
     })
@@ -154,7 +154,7 @@ function getQueryParams (parameters) {
 
 function buildClientCode (route) {
 
-  const { method, path, parameters = [], responses, requestBody, functionName } = route;
+  const { method, version, path, parameters = [], responses, requestBody, functionName } = route;
 
   const isMultipath = Array.isArray(path);
 
@@ -183,8 +183,8 @@ function buildClientCode (route) {
       : '';
 
   const rawPath = isMultipath
-    ? '${urlBase}' + path[0].replace('/organisations/{id}', '').replace(/\{(.*?)\}/g, '${params.$1}')
-    : path.replace(/\{(.*?)\}/g, '${params.$1}');
+    ? '/' + version + '${urlBase}' + path[0].replace('/organisations/{id}', '').replace(/\{(.*?)\}/g, '${params.$1}')
+    : '/' + version + path.replace(/\{(.*?)\}/g, '${params.$1}');
 
   if (responses == null) {
     console.log(rawPath);
@@ -332,55 +332,62 @@ function buildLegacyClientCode (allRoutes, codeByService) {
 async function generateClient () {
 
   // fetch and load openapi JSON document
-  const apiLocalCachePath = pathJoin(CACHE_PATH, 'openapi-clever.json');
-  const apiRemoteUrl = OPEN_API_URL;
-  const openapi = await getOpenapi(apiLocalCachePath, apiRemoteUrl);
+  const apiLocalCachePathV2 = pathJoin(CACHE_PATH, 'openapi-clever-v2.json');
+  const openapi = await getOpenapi(apiLocalCachePathV2, OPEN_API_URL_V2);
 
-  // Merge with hand defined APIs (temporary lol)
+  // merge with hand defined APIs (temporary lol)
   // TODO: generate those from projects
-  const otherApiLocalPath = './data/other-apis.json';
-  const mergedApi = await mergeOpenapi(openapi, otherApiLocalPath);
+  const otherApiLocalPathV2 = './data/other-apis-v2.json';
+  const mergedApiV2 = await mergeOpenapi(openapi, otherApiLocalPathV2);
 
   // patch openapi with custom properties
   // TODO: directly add those properties in the source code (Java & Scala APIs)
-  const patchLocalPath = './data/patch-for-openapi-clever.json';
-  const patchedApi = await patchOpenapi(mergedApi, patchLocalPath);
-  const patchedApiLocalCachePath = pathJoin(CACHE_PATH, 'openapi-clever.patched.json');
-  await fs.outputJson(patchedApiLocalCachePath, patchedApi, { spaces: 2 });
+  const patchLocalPathV2 = './data/patch-for-openapi-clever-v2.json';
+  const patchedApiV2 = await patchOpenapi(mergedApiV2, patchLocalPathV2);
+  const patchedApiLocalCachePathV2 = pathJoin(CACHE_PATH, 'openapi-clever-v2.patched.json');
+  await fs.outputJson(patchedApiLocalCachePathV2, patchedApiV2, { spaces: 2 });
 
   // extract all routes
-  const allRoutes = getRoutes(patchedApi);
+  const allRoutes = getRoutes(patchedApiV2, 'v2');
 
   // group "/self" with "/organisations/{id}"
   const mergedRoutes = mergeSimilarRoutes(allRoutes);
-
-  // generate code for all routes
-  const allRoutesWithCode = mergedRoutes.map((route) => buildClientCode(route));
+  const routesByVersion = _.groupBy(mergedRoutes, 'version');
 
   // clear generated client dir
-  const generatedClientPath = './esm/api';
-  await fs.ensureDir(generatedClientPath);
-  await del(pathJoin(generatedClientPath, '**', '*'));
+  const generatedClientBasePath = './esm/api';
+  await del(pathJoin(generatedClientBasePath, '**', '*'));
 
-  // group and merge all codes by service
-  const codeByService = mergeCodesByService(allRoutesWithCode);
+  for (const [version, routes] of Object.entries(routesByVersion)) {
 
-  // write code in appropriate dir/files
-  for (const service in codeByService) {
-    const filepath = pathJoin(generatedClientPath, `${_.kebabCase(service)}.js`);
-    const rawContents = codeByService[service];
-    const rawContentsWithImports = `import { pickNonNull } from '../pick-non-null.js';
+    const generatedClientPath = pathJoin(generatedClientBasePath, version);
+    await fs.ensureDir(generatedClientPath);
+
+    // generate code for all routes
+    const allRoutesWithCode = routes.map((route) => buildClientCode(route));
+
+    // group and merge all codes by service
+    const codeByService = mergeCodesByService(allRoutesWithCode);
+
+    // write code in appropriate dir/files
+    for (const service in codeByService) {
+      const filepath = pathJoin(generatedClientPath, `${_.kebabCase(service)}.js`);
+      const rawContents = codeByService[service];
+      const rawContentsWithImports = `import { pickNonNull } from '../../pick-non-null.js';
     
     ${rawContents}`;
-    const contents = formatCode(rawContentsWithImports);
-    await fs.appendFile(filepath, contents, 'utf8');
-  }
+      const contents = formatCode(rawContentsWithImports);
+      await fs.appendFile(filepath, contents, 'utf8');
+    }
 
-  // generate and write code for legacy client
-  const legacyClientCode = buildLegacyClientCode(allRoutes, codeByService);
-  const legacyClientFilepath = pathJoin(generatedClientPath, 'legacy-client.js');
-  const legacyClientFormattedCode = formatCode(legacyClientCode);
-  await fs.appendFile(legacyClientFilepath, legacyClientFormattedCode, 'utf8');
+    if (version === 'v2') {
+      // generate and write code for legacy client
+      const legacyClientCode = buildLegacyClientCode(allRoutes, codeByService);
+      const legacyClientFilepath = pathJoin(generatedClientPath, 'legacy-client.js');
+      const legacyClientFormattedCode = formatCode(legacyClientCode);
+      await fs.appendFile(legacyClientFilepath, legacyClientFormattedCode, 'utf8');
+    }
+  }
 }
 
 generateClient()

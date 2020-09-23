@@ -1,5 +1,15 @@
 # Clever Client changelog
 
+## Unreleased (????-??-??)
+
+### ⚠️ BREAKING CHANGES
+
+In order to support both v2 *and* v4 endpoints we changed the way we handle the version prefix.
+
+* You no longer need to configure it as part of the `API_HOST` when you call `prefixUrl(API_HOST)` in your `sendToApi()`.
+* You only need to defined the origin with no trailing slash. Example for production: `'https://api.clever-cloud.com'`.
+* All v2 service modules that you imported from `esm/api` or `cjs/api` were moved to `esm/api/v2` or `cjs/api/v2`.
+
 ## 6.0.0 (2020-05-26)
 
 * Add exponential backoff to the newly refactored `LogsStream` and `EventsStream`.

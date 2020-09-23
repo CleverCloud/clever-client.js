@@ -40,7 +40,7 @@ import { request } from '@clevercloud/client/esm/request.fetch.js';
 export function sendToApi (requestParams) {
 
   // load and cache config and tokens
-  const API_HOST = 'https://api.clever-cloud.com/v2'
+  const API_HOST = 'https://api.clever-cloud.com'
   const tokens = {
     OAUTH_CONSUMER_KEY: 'your OAUTH_CONSUMER_KEY',
     OAUTH_CONSUMER_SECRET: 'your OAUTH_CONSUMER_SECRET',
@@ -61,7 +61,7 @@ NOTE: If your project relies on a specific REST library (axios, jQuery...), you'
 Then, in any file of your app, import the API function you need directly (it helps with tree shaking), call it and add a `.then(sendToApi)` like this:
 
 ```js
-import { getAllEnvVars } from '@clevercloud/client/esm/api/application.js';
+import { getAllEnvVars } from '@clevercloud/client/esm/api/v2/application.js';
 import { sendToApi } from '../send-to-api.js';
 
 const envVars = await getAllEnvVars({ id: oid, appId }).then(sendToApi);
@@ -83,7 +83,7 @@ const { request } = require('@clevercloud/client/cjs/request.superagent.js');
 module.exports.sendToApi = function sendToApi (requestParams) {
 
   // load and cache config and tokens
-  const API_HOST = 'https://api.clever-cloud.com/v2'
+  const API_HOST = 'https://api.clever-cloud.com'
   const tokens = {
     OAUTH_CONSUMER_KEY: 'your OAUTH_CONSUMER_KEY',
     OAUTH_CONSUMER_SECRET: 'your OAUTH_CONSUMER_SECRET',
@@ -104,7 +104,7 @@ NOTE: If your project relies on a specific REST library (axios, request...), you
 Then, in any file of your app, require the service, call the function on it and add a `.then(sendToApi)` like this:
 
 ```js
-const application = require('@clevercloud/client/cjs/api/application.js');
+const application = require('@clevercloud/client/cjs/api/v2/application.js');
 const { sendToApi } = require('../send-to-api.js');
 
 const envVars = await application.getAllEnvVars({ id: oid, appId }).then(sendToApi);
@@ -153,15 +153,16 @@ npm run generate-client-from-openapi
 
 This command will do the following steps:
 
-1. Fetch the Clever Cloud Open API document (prod, see below for preprod)
-1. Patch the document with `.cache/openapi-clever.patched.json` (this step should disappear one day)
+1. Fetch the Clever Cloud Open API document for v2 (prod, see below for preprod)
+1. Patch the document with `./data/patch-for-openapi-clever-v2.json` (this step should disappear one day)
 1. Extract all routes from patched document
-1. Merge similar routes (`/self` and `/organisatio/{id}`)
-1. Generate  client code (ES6 modules, tree-shakabled, annotated with JSDoc...)
+1. Read local Open API document for v4 (waiting for a published one)
+1. Merge similar routes (`/self` and `/organisation/{id}`)
+1. Generate client code (ES6 modules, tree-shakabled, annotated with JSDoc...)
 1. Clear destination path `esm/api`
-1. Write code in appropriate files (grouped by service) 
+1. Write code in appropriate files (grouped by service and with a subdir by version) 
 1. Generate legacy client (which uses new generated client)
-1. Write code for legacy client in `esm/api/legacy-client.js` 
+1. Write code for legacy client in `esm/api/v2/legacy-client.js` 
 
 NOTE: The first step caches the Open API document locally for next calls, be sure to run this command to clear the content of `.cache` if you want a clean build:
 
@@ -200,7 +201,7 @@ import { LogsStream } from '@clevercloud/client/esm/streams/logs.browser.js';
 // import { LogsStream } from '@clevercloud/client/esm/streams/logs.node.js';
 
 // Load and cache config and tokens
-const API_HOST = 'https://api.clever-cloud.com/v2';
+const API_HOST = 'https://api.clever-cloud.com';
 const tokens = {
   OAUTH_CONSUMER_KEY: 'your OAUTH_CONSUMER_KEY',
   OAUTH_CONSUMER_SECRET: 'your OAUTH_CONSUMER_SECRET',
@@ -228,7 +229,7 @@ import { EventsStream } from '@clevercloud/client/esm/streams/events.browser.js'
 // import { EventsStream } from '@clevercloud/client/esm/streams/events.node.js';
 
 // Load and cache config and tokens
-const API_HOST = 'https://api.clever-cloud.com/v2';
+const API_HOST = 'https://api.clever-cloud.com';
 const tokens = {
   OAUTH_CONSUMER_KEY: 'your OAUTH_CONSUMER_KEY',
   OAUTH_CONSUMER_SECRET: 'your OAUTH_CONSUMER_SECRET',
