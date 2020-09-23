@@ -1,1 +1,1 @@
-esm/api/*.js
+esm/api/**/*.js
