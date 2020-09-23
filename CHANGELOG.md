@@ -2,6 +2,8 @@
 
 ## Unreleased (????-??-??)
 
+* Add new zones API `GET /v4/product/zones` in `api/v4/product.js` with `getAllZones()`. 
+
 ### ⚠️ BREAKING CHANGES
 
 * Move `GET /products/zones` to `api/product` with `getAllZones()`

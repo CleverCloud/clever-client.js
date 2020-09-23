@@ -347,8 +347,14 @@ async function generateClient () {
   const patchedApiLocalCachePathV2 = pathJoin(CACHE_PATH, 'openapi-clever-v2.patched.json');
   await fs.outputJson(patchedApiLocalCachePathV2, patchedApiV2, { spaces: 2 });
 
+  // Read openapi v4 from local (waiting for a published one)
+  const openapiV4 = await fs.readJson('./data/openapi-clever-v4.json');
+
   // extract all routes
-  const allRoutes = getRoutes(patchedApiV2, 'v2');
+  const allRoutes = [
+    ...getRoutes(patchedApiV2, 'v2'),
+    ...getRoutes(openapiV4, 'v4'),
+  ];
 
   // group "/self" with "/organisations/{id}"
   const mergedRoutes = mergeSimilarRoutes(allRoutes);
