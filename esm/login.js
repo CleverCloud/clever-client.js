@@ -1,5 +1,5 @@
 import OAuth from 'oauth-1.0a';
-import { fetchAccessToken as doFetchAccessToken, fetchRequestToken as doFetchRequestToken } from './api/oauth.js';
+import { fetchAccessToken as doFetchAccessToken, fetchRequestToken as doFetchRequestToken } from './api/v2/oauth.js';
 
 export function getOauthParams ({ consumerKey, consumerSecret, tokenSecret = '' }) {
   // We need this for getNonce()
