@@ -4,6 +4,9 @@
 
 ### ⚠️ BREAKING CHANGES
 
+* Move `GET /products/zones` to `api/product` with `getAllZones()`
+  * Used to be `api/unknown` with `todo_getZones()`
+
 In order to support both v2 *and* v4 endpoints we changed the way we handle the version prefix.
 
 * You no longer need to configure it as part of the `API_HOST` when you call `prefixUrl(API_HOST)` in your `sendToApi()`.

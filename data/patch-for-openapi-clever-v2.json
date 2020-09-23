@@ -1140,8 +1140,8 @@
         "path": "/products/zones",
         "method": "get",
         "operationId": "getZones",
-        "x-service": "",
-        "x-function": ""
+        "x-service": "product",
+        "x-function": "getAllZones"
     },
     {
         "path": "/self",
