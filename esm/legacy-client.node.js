@@ -1,7 +1,7 @@
 import Bacon from 'baconjs';
 import { addOauthHeader } from './oauth.node.js';
 import { sendLegacyRequest } from './send-legacy-request.js';
-import { initLegacyClient } from './api/legacy-client.js';
+import { initLegacyClient } from './api/v2/legacy-client.js';
 import { prefixUrl } from './prefix-url.js';
 import { request } from './request.superagent.js';
 
