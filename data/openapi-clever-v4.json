@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "url": "https://api.clever-cloud.com/v4",
+      "description": "The production API server (v4)"
+    }
+  ],
+  "paths": {
+    "/products/zones": {
+      "get": {
+        "operationId": "getZones",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "product",
+        "x-function": "getAllZones"
+      }
+    }
+  },
+  "components": {
+  }
+}
