@@ -37,7 +37,7 @@ export class AbstractEventsStream extends AbstractStream {
     return Promise
       .resolve({
         method: 'get',
-        url: '/events/',
+        url: '/v2/events/',
       })
       .then(prefixUrl(this.apiHost))
       .then(this.addOauthHeader(this.tokens))

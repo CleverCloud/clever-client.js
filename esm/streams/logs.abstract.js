@@ -39,7 +39,7 @@ export class AbstractLogsStream extends AbstractStream {
     return Promise
       .resolve({
         method: 'get',
-        url: `/logs/${this.appId}/sse`,
+        url: `/v2/logs/${this.appId}/sse`,
         queryParams: pickNonNull({
           filter: this.filter,
           deployment_id: this.deploymentId,
