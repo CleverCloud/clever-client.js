@@ -1,3 +1,5 @@
+import { expect } from '@esm-bundle/chai';
+
 // Disable this so we can use single and double quotes inside strings the way we want ;-)
 /* eslint quotes: "off" */
 
@@ -11,26 +13,26 @@ import {
 
 describe('validateName()', () => {
 
-  test('OK (classic bash/linux)', () => {
-    expect(validateName('FOOBAR')).toBe(true);
-    expect(validateName('FOO123')).toBe(true);
-    expect(validateName('FOO_BAR')).toBe(true);
+  it('OK (classic bash/linux)', () => {
+    expect(validateName('FOOBAR')).to.equal(true);
+    expect(validateName('FOO123')).to.equal(true);
+    expect(validateName('FOO_BAR')).to.equal(true);
   });
 
-  test('OK (clever cloud specials)', () => {
-    expect(validateName('foobar')).toBe(true);
-    expect(validateName('123BAR')).toBe(true);
-    expect(validateName('FOO-BAR')).toBe(true);
-    expect(validateName('FOO.BAR')).toBe(true);
+  it('OK (clever cloud specials)', () => {
+    expect(validateName('foobar')).to.equal(true);
+    expect(validateName('123BAR')).to.equal(true);
+    expect(validateName('FOO-BAR')).to.equal(true);
+    expect(validateName('FOO.BAR')).to.equal(true);
   });
 
-  test('NOT OK', () => {
-    expect(validateName(' FOOBAR')).toBe(false);
-    expect(validateName('FOOBAR ')).toBe(false);
-    expect(validateName('FOO\nBAR')).toBe(false);
-    expect(validateName('FOO@BAR')).toBe(false);
-    expect(validateName('FOO)BAR')).toBe(false);
-    expect(validateName('FOO=BAR')).toBe(false);
+  it('NOT OK', () => {
+    expect(validateName(' FOOBAR')).to.equal(false);
+    expect(validateName('FOOBAR ')).to.equal(false);
+    expect(validateName('FOO\nBAR')).to.equal(false);
+    expect(validateName('FOO@BAR')).to.equal(false);
+    expect(validateName('FOO)BAR')).to.equal(false);
+    expect(validateName('FOO=BAR')).to.equal(false);
   });
 });
 
@@ -38,9 +40,9 @@ describe('parseRaw()', () => {
 
   describe('OK', () => {
 
-    test('simple var', () => {
+    it('simple var', () => {
       const rawInput = 'NAME_A=AAA';
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: `AAA` },
         ],
@@ -48,13 +50,13 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('multiple vars', () => {
+    it('multiple vars', () => {
       const rawInput = [
         'NAME_A=AAA',
         'NAME_B=BBBB',
         'NAME_C=CCCCC',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_B', value: 'BBBB' },
@@ -64,13 +66,13 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('accept empty values', () => {
+    it('accept empty values', () => {
       const rawInput = [
         'NAME_A=AAA',
         'NAME_B=',
         'NAME_C=',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_B', value: '' },
@@ -81,13 +83,13 @@ describe('parseRaw()', () => {
     });
 
     // We don't consider these as 2 values
-    test('accept space in values', () => {
+    it('accept space in values', () => {
       const rawInput = [
         'NAME_A=AAA',
         'NAME_B=BBBB BBBB',
         'NAME_C=CCCCC',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_B', value: 'BBBB BBBB' },
@@ -97,13 +99,13 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('accept simple quotes in values', () => {
+    it('accept simple quotes in values', () => {
       const rawInput = [
         'NAME_A=AAA',
         `NAME_B=BBBB'BBBB`,
         'NAME_C=CCCCC',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_B', value: `BBBB'BBBB` },
@@ -113,13 +115,13 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('accept double quotes in values', () => {
+    it('accept double quotes in values', () => {
       const rawInput = [
         'NAME_A=AAA',
         `NAME_B=BBBB"BBBB`,
         'NAME_C=CCCCC',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_B', value: `BBBB"BBBB` },
@@ -130,13 +132,13 @@ describe('parseRaw()', () => {
     });
 
     // We consider = as part of the value
-    test('accept = in values', () => {
+    it('accept = in values', () => {
       const rawInput = [
         'NAME_A=AAA',
         'NAME_B=BBBB OTHER=BBBB',
         'NAME_C=CCCCC',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_B', value: 'BBBB OTHER=BBBB' },
@@ -146,13 +148,13 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('ignore lines starting with comments', () => {
+    it('ignore lines starting with comments', () => {
       const rawInput = [
         'NAME_A=AAA',
         '#NAME_B=BBBB',
         'NAME_C=CCCCC',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_C', value: 'CCCCC' },
@@ -161,7 +163,7 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('ignore empty lines', () => {
+    it('ignore empty lines', () => {
       const rawInput = [
         '',
         'NAME_A=AAA',
@@ -170,7 +172,7 @@ describe('parseRaw()', () => {
         'NAME_C=CCCCC',
         '',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_B', value: 'BBBB' },
@@ -180,12 +182,12 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('line breaks must be quoted (simple)', () => {
+    it('line breaks must be quoted (simple)', () => {
       const rawInput = [
         `NAME_A='A\na\nA'`,
         `NAME_B=BBBB`,
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: `A\na\nA` },
           { name: 'NAME_B', value: 'BBBB' },
@@ -194,12 +196,12 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('line breaks must be quoted (double)', () => {
+    it('line breaks must be quoted (double)', () => {
       const rawInput = [
         `NAME_A="A\na\nA"`,
         `NAME_B=BBBB`,
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: `A\na\nA` },
           { name: 'NAME_B', value: 'BBBB' },
@@ -208,13 +210,13 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('simple quotes must be escaped in simple quotes', () => {
+    it('simple quotes must be escaped in simple quotes', () => {
       const rawInput = [
         `NAME_A='AAA'`,
         `NAME_B='BBBB \\' BBBB'`,
         `NAME_C='CCCCC \\'CCCCC\\' CCCCC'`,
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: `AAA` },
           { name: 'NAME_B', value: `BBBB ' BBBB` },
@@ -224,13 +226,13 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('double quotes must be escaped in double quotes', () => {
+    it('double quotes must be escaped in double quotes', () => {
       const rawInput = [
         `NAME_A="AAA"`,
         `NAME_B="BBBB \\" BBBB"`,
         `NAME_C="CCCCC \\"CCCCC\\" CCCCC"`,
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: `AAA` },
           { name: 'NAME_B', value: `BBBB " BBBB` },
@@ -240,7 +242,7 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('understand multiple escaping', () => {
+    it('understand multiple escaping', () => {
       // \" => "
       // \\\" => \"
       // \\\\\\" => \\"
@@ -254,7 +256,7 @@ describe('parseRaw()', () => {
         // CCCCC \\\\\\\"CCCCC\\\\\\\" CCCCC
         `NAME_C="CCCCC \\\\\\\\\\\\\\"CCCCC\\\\\\\\\\\\\\" CCCCC"`,
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           // AAA \" AAA
           { name: 'NAME_A', value: `AAA \\\" AAA` }, // eslint-disable-line no-useless-escape
@@ -267,13 +269,13 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('understand quoted slash+n as 2 different characters', () => {
+    it('understand quoted slash+n as 2 different characters', () => {
       const rawInput = [
         'NAME_A="AAA\nAAA"',
         // BBBB\nBBBB
         `NAME_B="BBBB\\nBBBB"`,
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           // AAA
           // AAA
@@ -285,14 +287,14 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('sort vars by name', () => {
+    it('sort vars by name', () => {
       const rawInput = [
         'NAME_C="CCCCC"',
         'NAME_B="BBBB"',
         'NAME_D="DDDDDD"',
         'NAME_A="AAA"',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: `AAA` },
           { name: 'NAME_B', value: `BBBB` },
@@ -306,13 +308,13 @@ describe('parseRaw()', () => {
 
   describe('return errors', () => {
 
-    test('invalid variable name', () => {
+    it('invalid variable name', () => {
       const rawInput = [
         'NAME_A=AAA',
         'NAME@BBBB=BBBB',
         'NAME_C=CCCCC',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_C', value: 'CCCCC' },
@@ -326,12 +328,12 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('duplicated variable names', () => {
+    it('duplicated variable names', () => {
       const rawInput = [
         'NAME_A=AAA',
         'NAME_A=aaa',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_A', value: 'aaa' },
@@ -344,13 +346,13 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('line without =', () => {
+    it('line without =', () => {
       const rawInput = [
         'NAME_A=A',
         'AA',
         'NAME_B=BBBB',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'A' },
           { name: 'NAME_B', value: 'BBBB' },
@@ -362,12 +364,12 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('simple quoted value with text after last quote', () => {
+    it('simple quoted value with text after last quote', () => {
       const rawInput = [
         `NAME_A='AAA' bad text`,
         'NAME_B=BBBB',
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_B', value: 'BBBB' },
@@ -380,13 +382,13 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('no simple quote at the end', () => {
+    it('no simple quote at the end', () => {
       const rawInput = [
         `NAME_A='AAA'`,
         `NAME_B='BBBB BBBB'`,
         `NAME_C='CCCCC CCCCC CCCCC`,
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: `AAA` },
           { name: 'NAME_B', value: `BBBB BBBB` },
@@ -400,13 +402,13 @@ describe('parseRaw()', () => {
       });
     });
 
-    test('no double quote at the end', () => {
+    it('no double quote at the end', () => {
       const rawInput = [
         `NAME_A="AAA"`,
         `NAME_B="BBBB BBBB"`,
         `NAME_C="CCCCC CCCCC CCCCC`,
       ].join('\n');
-      expect(parseRaw(rawInput)).toEqual({
+      expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: `AAA` },
           { name: 'NAME_B', value: `BBBB BBBB` },
@@ -424,154 +426,154 @@ describe('parseRaw()', () => {
 
 describe('toNameEqualsValueString()', () => {
 
-  test('simple var', () => {
+  it('simple var', () => {
     const variables = [
       { name: 'NAME_A', value: `AAA` },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       `NAME_A="AAA"`,
     ].join('\n'));
   });
 
-  test('multiple vars', () => {
+  it('multiple vars', () => {
     const variables = [
       { name: 'NAME_A', value: 'AAA' },
       { name: 'NAME_B', value: 'BBBB' },
       { name: 'NAME_C', value: 'CCCCC' },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       'NAME_A="AAA"',
       'NAME_B="BBBB"',
       'NAME_C="CCCCC"',
     ].join('\n'));
   });
 
-  test('multiple vars (with exports)', () => {
+  it('multiple vars (with exports)', () => {
     const variables = [
       { name: 'NAME_A', value: 'AAA' },
       { name: 'NAME_B', value: 'BBBB' },
       { name: 'NAME_C', value: 'CCCCC' },
     ];
-    expect(toNameEqualsValueString(variables, { addExports: true })).toBe([
+    expect(toNameEqualsValueString(variables, { addExports: true })).to.equal([
       'export NAME_A="AAA";',
       'export NAME_B="BBBB";',
       'export NAME_C="CCCCC";',
     ].join('\n'));
   });
 
-  test('accept empty values', () => {
+  it('accept empty values', () => {
     const variables = [
       { name: 'NAME_A', value: 'AAA' },
       { name: 'NAME_B', value: '' },
       { name: 'NAME_C', value: '' },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       'NAME_A="AAA"',
       'NAME_B=""',
       'NAME_C=""',
     ].join('\n'));
   });
 
-  test('accept space in values', () => {
+  it('accept space in values', () => {
     const variables = [
       { name: 'NAME_A', value: 'AAA' },
       { name: 'NAME_B', value: 'BBBB BBBB' },
       { name: 'NAME_C', value: 'CCCCC' },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       'NAME_A="AAA"',
       'NAME_B="BBBB BBBB"',
       'NAME_C="CCCCC"',
     ].join('\n'));
   });
 
-  test('accept simple quotes in values', () => {
+  it('accept simple quotes in values', () => {
     const variables = [
       { name: 'NAME_A', value: 'AAA' },
       { name: 'NAME_B', value: `BBBB'BBBB` },
       { name: 'NAME_C', value: 'CCCCC' },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       'NAME_A="AAA"',
       `NAME_B="BBBB'BBBB"`,
       'NAME_C="CCCCC"',
     ].join('\n'));
   });
 
-  test('accept double quotes in values (and escape them)', () => {
+  it('accept double quotes in values (and escape them)', () => {
     const variables = [
       { name: 'NAME_A', value: 'AAA' },
       { name: 'NAME_B', value: `BBBB"BBBB` },
       { name: 'NAME_C', value: 'CCCCC' },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       'NAME_A="AAA"',
       `NAME_B="BBBB\\"BBBB"`,
       'NAME_C="CCCCC"',
     ].join('\n'));
   });
 
-  test('accept = in values', () => {
+  it('accept = in values', () => {
     const variables = [
       { name: 'NAME_A', value: 'AAA' },
       { name: 'NAME_B', value: 'BBBB OTHER=BBBB' },
       { name: 'NAME_C', value: 'CCCCC' },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       'NAME_A="AAA"',
       'NAME_B="BBBB OTHER=BBBB"',
       'NAME_C="CCCCC"',
     ].join('\n'));
   });
 
-  test('accept line breaks', () => {
+  it('accept line breaks', () => {
     const variables = [
       { name: 'NAME_A', value: `A\na\nA` },
       { name: 'NAME_B', value: 'BBBB' },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       `NAME_A="A\na\nA"`,
       'NAME_B="BBBB"',
     ].join('\n'));
   });
 
-  test('accept line breaks (with exports)', () => {
+  it('accept line breaks (with exports)', () => {
     const variables = [
       { name: 'NAME_A', value: `A\na\nA` },
       { name: 'NAME_B', value: 'BBBB' },
     ];
-    expect(toNameEqualsValueString(variables, { addExports: true })).toBe([
+    expect(toNameEqualsValueString(variables, { addExports: true })).to.equal([
       `export NAME_A="A\na\nA";`,
       'export NAME_B="BBBB";',
     ].join('\n'));
   });
 
-  test('accept line breaks and escape double quotes', () => {
+  it('accept line breaks and escape double quotes', () => {
     const variables = [
       { name: 'NAME_A', value: `A\n"a"\nA` },
       { name: 'NAME_B', value: 'BBBB' },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       `NAME_A="A\n\\"a\\"\nA"`,
       'NAME_B="BBBB"',
     ].join('\n'));
   });
 
-  test('escape double quotes', () => {
+  it('escape double quotes', () => {
     // " => \"
     const variables = [
       { name: 'NAME_A', value: `AAA` },
       { name: 'NAME_B', value: `BBBB " BBBB` },
       { name: 'NAME_C', value: `CCCCC "CCCCC" CCCCC` },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       'NAME_A="AAA"',
       `NAME_B="BBBB \\" BBBB"`,
       `NAME_C="CCCCC \\"CCCCC\\" CCCCC"`,
     ].join('\n'));
   });
 
-  test('escape already escaped double quotes', () => {
+  it('escape already escaped double quotes', () => {
     // \" => \\\"
     // \\" => \\\\\\"
     // \\\" => \\\\\\\\"
@@ -584,7 +586,7 @@ describe('toNameEqualsValueString()', () => {
       // CCCCC \\\"CCCCC\\\" CCCCC
       { name: 'NAME_C', value: `CCCCC \\\\\\"CCCCC\\\\\\" CCCCC` },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       // AAA \\\" AAA
       `NAME_A="AAA \\\\\\" AAA"`,
       // BBBB \\\\\"BBBB\\\\\" BBBB
@@ -594,7 +596,7 @@ describe('toNameEqualsValueString()', () => {
     ].join('\n'));
   });
 
-  test('not escape slash+n', () => {
+  it('not escape slash+n', () => {
     const variables = [
       // AAA
       // AAA
@@ -602,21 +604,21 @@ describe('toNameEqualsValueString()', () => {
       // BBBB\nBBBB
       { name: 'NAME_B', value: `BBBB\\nBBBB` },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       'NAME_A="AAA\nAAA"',
       // BBBB\nBBBB
       `NAME_B="BBBB\\nBBBB"`,
     ].join('\n'));
   });
 
-  test('sort vars by name', () => {
+  it('sort vars by name', () => {
     const variables = [
       { name: 'NAME_C', value: `CCCCC` },
       { name: 'NAME_B', value: `BBBB` },
       { name: 'NAME_D', value: `DDDDDD` },
       { name: 'NAME_A', value: `AAA` },
     ];
-    expect(toNameEqualsValueString(variables)).toBe([
+    expect(toNameEqualsValueString(variables)).to.equal([
       'NAME_A="AAA"',
       'NAME_B="BBBB"',
       'NAME_C="CCCCC"',
@@ -627,38 +629,38 @@ describe('toNameEqualsValueString()', () => {
 
 describe('toNameValueObject()', () => {
 
-  test('multiple vars', () => {
+  it('multiple vars', () => {
     const variables = [
       { name: 'NAME_A', value: 'AAA' },
       { name: 'NAME_B', value: 'BBBB' },
       { name: 'NAME_C', value: 'CCCCC' },
     ];
-    expect(toNameValueObject(variables)).toEqual({
+    expect(toNameValueObject(variables)).to.deep.equal({
       NAME_A: 'AAA',
       NAME_B: 'BBBB',
       NAME_C: 'CCCCC',
     });
   });
 
-  test('merge ducplicated names (keep last)', () => {
+  it('merge ducplicated names (keep last)', () => {
     const variables = [
       { name: 'NAME_A', value: 'AAA' },
       { name: 'NAME_A', value: 'aaa' },
       { name: 'NAME_B', value: 'BBBB' },
     ];
-    expect(toNameValueObject(variables)).toEqual({
+    expect(toNameValueObject(variables)).to.deep.equal({
       NAME_A: 'aaa',
       NAME_B: 'BBBB',
     });
   });
 
-  test('filter invalid names', () => {
+  it('filter invalid names', () => {
     const variables = [
       { name: 'NAME_A', value: 'AAA' },
       { name: 'NAME@BBBB', value: 'BBBB' },
       { name: 'NAME_C', value: 'CCCCC' },
     ];
-    expect(toNameValueObject(variables)).toEqual({
+    expect(toNameValueObject(variables)).to.deep.equal({
       NAME_A: 'AAA',
       NAME_C: 'CCCCC',
     });
