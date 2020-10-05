@@ -1,6 +1,6 @@
 # Clever Client changelog
 
-## Unreleased (2020-10-05)
+## 7.0.0 (2020-10-05)
 
 * replace jest by [@web/test-runner](https://modern-web.dev/guides/test-runner/getting-started/)
 * Add new zones API `GET /v4/product/zones` in `api/v4/product.js` with `getAllZones()`. 
