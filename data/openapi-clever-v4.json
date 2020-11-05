@@ -1,5 +1,10 @@
 {
   "openapi": "3.0.1",
+  "info" : {
+    "title": "Clever Cloud Api",
+    "description": "Use this API to manipulate your Clever Cloud services.",
+    "version" : "4.0.0"
+  },
   "servers": [
     {
       "url": "https://api.clever-cloud.com/v4",
@@ -7,6 +12,432 @@
     }
   ],
   "paths": {
+    "/organisations/{owner_id}/networkgroups": {
+      "get": {
+        "operationId": "getNetworkgroups",
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "networkgroup",
+        "x-function": "get"
+      },
+      "post": {
+        "operationId": "createNetworkgroup",
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "description" : "wanted networkgroup id",
+                    "type": "string",
+                    "required": false
+                  },
+                  "owner_id": {
+                    "description" : "organization id",
+                    "type": "string",
+                    "required": true
+                  },
+                  "label": {
+                    "description" : "label of the networkgroup",
+                    "type": "string",
+                    "required": false
+                  },
+                  "description": {
+                    "description" : "description of the networkgroup",
+                    "type": "string",
+                    "required": false
+                  },
+                  "tags": {
+                    "description" : "semantic tags",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "required": false
+                  },
+                  "members": {
+                    "description" : "members to add",
+                    "type": "string",
+                    "required": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "networkgroup",
+        "x-function": "createNg"
+      }
+    },
+    "/organisations/{owner_id}/networkgroups/{id}": {
+      "delete": {
+        "operationId": "deleteNetworkgroup",
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "networkgroup",
+        "x-function": "deleteNg"
+      }
+    },
+    "/organisations/{owner_id}/networkgroups/{id}/members": {
+      "get": {
+        "operationId": "listMembers",
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "networkgroup",
+        "x-function": "listMembers"
+      }
+    },
+    "/organisations/{owner_id}/networkgroups/{ngId}/members/{memberId}": {
+      "get": {
+        "operationId": "getMember",
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ngId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "memberId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "networkgroup",
+        "x-function": "getMember"
+      },
+      "delete": {
+        "operationId": "removeMember",
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ngId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "memberId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "networkgroup",
+        "x-function": "removeMember"
+      }
+    },
+    "/organisations/{owner_id}/networkgroups/{id}/peers": {
+      "get": {
+        "operationId": "listPeers",
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "networkgroup",
+        "x-function": "listPeers"
+      }
+    },
+    "/organisations/{owner_id}/networkgroups/{ngId}/peers/{peerId}": {
+      "get": {
+        "operationId": "getPeer",
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ngId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "peerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "networkgroup",
+        "x-function": "getPeer"
+      }
+    },
+    "/organisations/{owner_id}/networkgroups/{ngId}/external-peers": {
+      "post": {
+        "operationId": "addExternalPeer",
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ngId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ip": {
+                    "description": "The public ip on which you are listening (only for server role)",
+                    "type": "string",
+                    "required": false
+                  },
+                  "port": {
+                    "description": "The public port on which you are listening (only for server role)",
+                    "type": "string",
+                    "required": false
+                  },
+                  "peer-role": {
+                    "description": "The role of this peer in the networgroup",
+                    "type": "string",
+                    "enum": [
+                      "client",
+                      "server"
+                    ],
+                    "required": true
+                  },
+                  "label": {
+                    "description": "The label of the peer",
+                    "type": "string",
+                    "required": false
+                  },
+                  "public-key": {
+                    "description": "The wireguard public key of the peer",
+                    "type": "string",
+                    "required": false
+                  },
+                  "hostname": {
+                    "description": "The hostname to use for the peer",
+                    "type": "string",
+                    "required": false
+                  },
+                  "parent-member": {
+                    "description": "The member id of the peer category",
+                    "type": "string",
+                    "required": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "networkgroup",
+        "x-function": "addExternalPeer"
+      }
+    },
+    "/organisations/{owner_id}/networkgroups/{ngId}/external-peers/{peerId}": {
+      "delete": {
+        "operationId": "removeExternalPeer",
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ngId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "peerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "networkgroup",
+        "x-function": "removeExternalPeer"
+      }
+    },
     "/products/zones": {
       "get": {
         "operationId": "getZones",
