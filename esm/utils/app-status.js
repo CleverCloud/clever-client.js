@@ -1,43 +1,54 @@
+export const STATUSES = {
+  STOPPED: 'stopped',
+  STARTING: 'starting',
+  START_FAILED: 'start-failed',
+  RESTARTING_WITH_DOWNTIME: 'restarting-with-downtime',
+  RESTARTING: 'restarting',
+  RESTART_FAILED: 'restart-failed',
+  RUNNING: 'running',
+  UNKNOWN: 'unknown',
+};
+
 export function getStatus (app, deployments, instances) {
 
   const lastDeploymentState = (deployments != null && deployments[0] != null) ? deployments[0].state : null;
   const upInstancesCount = (instances || []).filter(({ state }) => state === 'UP').length;
 
   if (app.state === 'SHOULD_BE_DOWN') {
-    return 'stopped';
+    return STATUSES.STOPPED;
   }
 
   if (app.state === 'WANTS_TO_BE_UP') {
     if (lastDeploymentState === 'WIP') {
-      return 'starting';
+      return STATUSES.STARTING;
     }
     if (lastDeploymentState === 'FAIL') {
-      return 'start-failed';
+      return STATUSES.START_FAILED;
     }
   }
 
   if (app.state === 'SHOULD_BE_UP') {
     if (lastDeploymentState === 'WIP') {
       if (app.homogeneous === true) {
-        return 'restarting-with-downtime';
+        return STATUSES.RESTARTING_WITH_DOWNTIME;
       }
       if (app.homogeneous === false) {
         if (upInstancesCount > 0) {
-          return 'restarting';
+          return STATUSES.RESTARTING;
         }
       }
     }
     else if (lastDeploymentState === 'FAIL') {
       if (upInstancesCount > 0) {
-        return 'restart-failed';
+        return STATUSES.RESTART_FAILED;
       }
     }
     else {
       if (upInstancesCount > 0) {
-        return 'running';
+        return STATUSES.RUNNING;
       }
     }
   }
 
-  return 'unknown';
+  return STATUSES.UNKNOWN;
 }
