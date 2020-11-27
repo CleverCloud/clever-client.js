@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## 7.1.0 (2020-11-26)
+
+* Expose app statuses
+
 ## 7.0.0 (2020-10-05)
 
 * replace jest by [@web/test-runner](https://modern-web.dev/guides/test-runner/getting-started/)
