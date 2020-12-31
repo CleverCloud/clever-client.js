@@ -1,0 +1,1060 @@
+{
+  "openapi": "3.0.1",
+  "info" : {
+    "title": "Clever Cloud API",
+    "description": "Use this API to manipulate your Clever Cloud services.",
+    "version" : "4.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.clever-cloud.com/v4",
+      "description": "The production API server (v4)."
+    }
+  ],
+  "paths": {
+    "/organisations/{ownerId}/networkgroups": {
+      "get": {
+        "tags": ["networkgroups", "ng-management"],
+        "summary": "List Networkgroups",
+        "description": "Lists networkgroups from an organization.",
+        "operationId": "listNetworkgroups",
+        "x-service": "networkgroup",
+        "x-function": "get",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayOfNetworkgroups" },
+          "401": { "$ref": "#/components/responses/UnauthorizedUserNotInOrga" }
+        }
+      },
+      "post": {
+        "tags": ["networkgroups", "ng-management"],
+        "summary": "Create Networkgroup",
+        "description": "Creates a networkgroup.",
+        "operationId": "createNetworkgroup",
+        "x-service": "networkgroup",
+        "x-function": "createNg",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNetworkgroupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Networkgroup"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "server can't do that, owner_id does not match the orga_id from url"
+              }
+            }
+          },
+          "409": { "$ref": "#/components/responses/NetworkgroupConflictLabel" }
+        }
+      }
+    },
+    "/organisations/{ownerId}/networkgroups/{ngId}": {
+      "delete": {
+        "tags": ["networkgroups", "ng-management"],
+        "summary": "Delete Networkgroup",
+        "description": "Deletes a networkgroup.",
+        "operationId": "deleteNetworkgroup",
+        "x-service": "networkgroup",
+        "x-function": "deleteNg",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" }
+        ],
+        "responses": {
+          "204": { "$ref": "#/components/responses/NoContent" },
+          "401": { "$ref": "#/components/responses/UnauthorizedNgNotInOrga" },
+          "404": { "$ref": "#/components/responses/NetworkgroupNotFound" }
+        }
+      }
+    },
+    "/organisations/{ownerId}/networkgroups/{ngId}/members": {
+      "get": {
+        "tags": ["networkgroups", "members"],
+        "summary": "List Members",
+        "description": "Lists members from a networkgroup.",
+        "operationId": "listMembers",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayOfMembers" },
+          "404": { "$ref": "#/components/responses/NetworkgroupNotFound" }
+        },
+        "x-service": "networkgroup",
+        "x-function": "listMembers"
+      },
+      "post": {
+        "tags": ["networkgroups", "members"],
+        "summary": "Add Member",
+        "description": "Adds a member to a networkgroup.",
+        "operationId": "addMember",
+        "x-service": "networkgroup",
+        "x-function": "addMember",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Member" }
+            }
+          }
+        },
+        "responses": {
+          "202": { "$ref": "#/components/responses/AcceptedForProcessing" }
+        }
+      }
+    },
+    "/organisations/{ownerId}/networkgroups/{ngId}/members/{memberId}": {
+      "get": {
+        "tags": ["networkgroups", "members"],
+        "summary": "Get Member",
+        "description": "Gets details from a networkgroup member.",
+        "operationId": "getMember",
+        "x-service": "networkgroup",
+        "x-function": "getMember",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" },
+          { "$ref": "#/components/parameters/MemberId" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Member" },
+          "404": { "$ref": "#/components/responses/MemberNotFound" }
+        }
+      },
+      "delete": {
+        "tags": ["networkgroups", "members"],
+        "summary": "Remove Member",
+        "description": "Removes a member from a networkgroup.",
+        "operationId": "removeMember",
+        "x-service": "networkgroup",
+        "x-function": "removeMember",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" },
+          { "$ref": "#/components/parameters/MemberId" }
+        ],
+        "responses": {
+          "204": { "$ref": "#/components/responses/NoContent" },
+          "404": { "$ref": "#/components/responses/MemberNotFound" }
+        }
+      }
+    },
+    "/organisations/{ownerId}/networkgroups/{ngId}/peers": {
+      "get": {
+        "tags": ["networkgroups", "peers"],
+        "summary": "List Peers",
+        "description": "Lists peers connected to a networkgroup.",
+        "operationId": "listPeers",
+        "x-service": "networkgroup",
+        "x-function": "listPeers",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayOfPeers" },
+          "404": { "$ref": "#/components/responses/NetworkgroupNotFound" }
+        }
+      }
+    },
+    "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}": {
+      "get": {
+        "tags": ["networkgroups", "peers"],
+        "summary": "Get Peer",
+        "description": "Gets details from a networkgroup peer.",
+        "operationId": "getPeer",
+        "x-service": "networkgroup",
+        "x-function": "getPeer",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" },
+          { "$ref": "#/components/parameters/PeerId" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Peer" },
+          "404": { "$ref": "#/components/responses/PeerNotFound" }
+        }
+      }
+    },
+    "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}/wireguard/configuration": {
+      "get": {
+        "tags": ["networkgroups", "peers", "conf"],
+        "summary": "Get WireGuard Configuration",
+        "description": "Gets the actual WireGuard configuration for a networkgroup peer.",
+        "operationId": "getWgConf",
+        "x-service": "networkgroup",
+        "x-function": "getWgConf",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" },
+          { "$ref": "#/components/parameters/PeerId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WireGuardConf"
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/PeerNotFound" }
+        }
+      }
+    },
+    "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}/wireguard/configuration/stream": {
+      "get": {
+        "tags": ["networkgroups", "peers", "conf", "sse"],
+        "summary": "WireGuard Configuration SSE",
+        "description": "Retreives the actual WireGuard configuration for a networkgroup peer as a Server Sent Event.",
+        "operationId": "sseWgConf",
+        "x-service": "networkgroup",
+        "x-function": "sseWgConf",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" },
+          { "$ref": "#/components/parameters/PeerId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/event-stream": {}
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/PeerNotFound" }
+        }
+      }
+    },
+    "/organisations/{ownerId}/networkgroups/{ngId}/external-peers": {
+      "post": {
+        "tags": ["networkgroups", "external-peers"],
+        "summary": "Add External Peer",
+        "description": "Adds an external peer to a networkgroup.",
+        "operationId": "addExternalPeer",
+        "x-service": "networkgroup",
+        "x-function": "addExternalPeer",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AddExternalPeerRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/EmptyJSON" },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema" : {
+                  "type": "string",
+                  "example": "The request content was malformed:\n012.345.678.901 is not a correct ip address: DownField(ip)"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organisations/{ownerId}/networkgroups/{ngId}/external-peers/{peerId}": {
+      "delete": {
+        "tags": ["networkgroups", "external-peers"],
+        "summary": "Remove External Peer",
+        "description": "Removes an external peer from a networkgroup.",
+        "operationId": "removeExternalPeer",
+        "x-service": "networkgroup",
+        "x-function": "removeExternalPeer",
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" },
+          { "$ref": "#/components/parameters/PeerId" }
+        ],
+        "responses": {
+          "202": { "$ref": "#/components/responses/EmptyJSON" },
+          "401": { "$ref": "#/components/responses/UnauthorizedNgNotInOrga" }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "OwnerId": {
+        "name": "ownerId",
+        "in": "path",
+        "description": "An organization `id` (i.e. `orga_xxx`).",
+        "required": true,
+        "style": "simple",
+        "schema": {
+          "type": "string",
+          "example": "orga_xxx"
+        },
+        "example": {
+          "value": "{{orgaId}}"
+        }
+      },
+      "NetworkgroupId": {
+        "name": "ngId",
+        "in": "path",
+        "description": "A networkgroup `id`.",
+        "required": true,
+        "style": "simple",
+        "schema": {
+          "type": "string",
+          "example": "ng_xxx"
+        },
+        "example": {
+          "value": "{{ngId}}"
+        }
+      },
+      "MemberId": {
+        "name": "memberId",
+        "in": "path",
+        "description": "An app, add-on or external nodes group `id`.",
+        "required": true,
+        "style": "simple",
+        "schema": {
+          "type": "string",
+          "example": "app_xxx"
+        },
+        "example": {
+          "value": "{{appId}}"
+        }
+      },
+      "PeerId": {
+        "name": "peerId",
+        "in": "path",
+        "description": "A peer `id`.",
+        "required": true,
+        "style": "simple",
+        "schema": {
+          "type": "string",
+          "example": "<peer_id>"
+        },
+        "example": {
+          "value": "{{peerId}}"
+        }
+      }
+    },
+    "schemas": {
+      "Member": {
+        "title": "Member",
+        "description": "A networkgroup member is a set of nodes that should be in the network by a simple predicate: `id` is equals to an app `id` (i.e. `app_xxx`), an add-on `id` (i.e. `addon_xxx`) or an external node category `id`.",
+        "required": [
+          "id",
+          "label",
+          "domain-name",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique `id` of the member.",
+            "type": "string"
+          },
+          "label": {
+            "description": "Human-readable name.",
+            "type": "string"
+          },
+          "domain-name": {
+            "description": "Member name used in the `<memberName>.m.<ngID>.ng.clever-cloud.com` domain name alias.",
+            "type": "string"
+          },
+          "type": { "$ref": "#/components/schemas/MemberType" }
+        },
+        "example": {
+          "id": "{{appId}}",
+          "label": "My Member",
+          "domain-name": "my-domain",
+          "type": "application"
+        }
+      },
+      "Hypervisor": {
+        "title": "Hypervisor",
+        "required": [
+          "host",
+          "zone"
+        ],
+        "type": "object",
+        "properties": {
+          "host": {
+            "description": "Name of the hypervisor host.",
+            "type": "string",
+            "example": "hv-par0-001"
+          },
+          "zone": { "$ref": "#/components/schemas/Zone" }
+        },
+        "example": {
+          "host": "hv-par0-001",
+          "zone": {
+            "id": "par0"
+          }
+        }
+      },
+      "Zone": {
+        "title": "Zone",
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The zone `id`.",
+            "type": "string",
+            "example": "par0"
+          }
+        },
+        "example": {
+          "id": "par0"
+        }
+      },
+      "Endpoint": {
+        "title": "Endpoint",
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "ng-term": { "$ref": "#/components/schemas/NGTerm" },
+          "public-term": { "$ref": "#/components/schemas/PublicTerm" },
+          "type": { "$ref": "#/components/schemas/EndpointType" },
+          "ng-ip": {
+            "description": "The networkgroup IP address.",
+            "type": "string"
+          }
+        },
+        "example": {
+          "ng-term": {
+            "ip": "10.101.0.7",
+            "port": 50159
+          },
+          "public-term": {
+            "ip": "62.210.251.80",
+            "port": 45000
+          },
+          "type": "ServerEndpoint"
+        }
+      },
+      "NGTerm": {
+        "title": "Network Group Termination",
+        "description": "A networkgroup termination.",
+        "required": [
+          "ip",
+          "port"
+        ],
+        "type": "object",
+        "properties": {
+          "ip": {
+            "description": "The termination IP address.",
+            "type": "string",
+            "example": "10.101.0.7"
+          },
+          "port": {
+            "description": "The termination port.",
+            "type": "integer",
+            "format": "int32",
+            "example": 50159
+          }
+        },
+        "example": {
+          "ip": "10.101.0.7",
+          "port": 50159
+        }
+      },
+      "PublicTerm": {
+        "title": "Public Termination",
+        "description": "A public termination.",
+        "required": [
+          "ip",
+          "port"
+        ],
+        "type": "object",
+        "properties": {
+          "ip": {
+            "description": "The termination IP address.",
+            "type": "string",
+            "example": "62.210.251.80"
+          },
+          "port": {
+            "description": "The termination port.",
+            "type": "integer",
+            "format": "int32",
+            "example": 45000
+          }
+        },
+        "example": {
+          "ip": "62.210.251.80",
+          "port": 45000
+        }
+      },
+      "AddExternalPeerRequest": {
+        "title": "Add External Peer Request",
+        "required": [
+          "peer-role",
+          "public-key",
+          "parent-member"
+        ],
+        "type": "object",
+        "properties": {
+          "ip": {
+            "description": "The public IP on which you are listening (only for `server` role).",
+            "type": "string"
+          },
+          "port": {
+            "description": "The public port on which you are listening (only for `server` role).",
+            "type": "string"
+          },
+          "peer-role": {
+            "description": "The role of this peer in the networkgroup. Either client (`'client'`) or server (`'server'`).",
+            "type": "string",
+            "enum": [
+              "client",
+              "server"
+            ]
+          },
+          "label": {
+            "description": "The label of the peer.",
+            "type": "string"
+          },
+          "public-key": {
+            "description": "The WireGuard public key of the peer.",
+            "type": "string"
+          },
+          "hostname": {
+            "description": "The host name to use for the peer.",
+            "type": "string"
+          },
+          "parent_member": {
+            "description": "The member `id` of the peer category.",
+            "type": "string"
+          }
+        }
+      },
+      "Networkgroup": {
+        "title": "Network Group",
+        "required": [
+          "id",
+          "owner_id",
+          "label",
+          "description",
+          "network_ip",
+          "last-allocated-ip",
+          "tags",
+          "peers",
+          "members",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "owner_id": {
+            "description" : "An organization `id` (i.e. `orga_xxx`).",
+            "type": "string"
+          },
+          "label": {
+            "description" : "Label of the networkgroup.",
+            "type": "string"
+          },
+          "description": {
+            "description" : "Description of the networkgroup.",
+            "type": "string"
+          },
+          "network_ip": {
+            "type": "string"
+          },
+          "last-allocated-ip": {
+            "type": "string"
+          },
+          "tags": {
+            "description" : "Semantic tags",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "peers": {
+            "description" : "List of peers present in the networkgroup.",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Peer" }
+          },
+          "members": {
+            "description" : "List of members present in the networkgroup.",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Member" }
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "example": { "$ref": "#/components/examples/Networkgroup" }
+      },
+      "Peer": {
+        "title": "Peer",
+        "required": [
+          "id",
+          "label",
+          "hostname",
+          "public-key",
+          "endpoint",
+          "parent_event",
+          "parent_member",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "hostname": {
+            "type": "string"
+          },
+          "hv": {
+            "$ref": "#/components/schemas/Hypervisor"
+          },
+          "public-key": {
+            "type": "string"
+          },
+          "endpoint": {
+            "$ref": "#/components/schemas/Endpoint"
+          },
+          "parent_event": {
+            "type": "string",
+            "nullable": true
+          },
+          "parent_member": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "CleverPeer",
+              "ExternalPeer"
+            ]
+          }
+        },
+        "example": { "$ref": "#/components/examples/Peer" }
+      },
+      "WireGuardConf": {
+        "title": "WireGuard Configuration",
+        "description": "A WireGuard tunnel configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
+        "type": "string",
+        "example": "W0ludGVyZmFjZV0NClByaXZhdGVLZXkgPSA8JVByaXZhdGVLZXklPg0KQWRkcmVzcyA9IDEwLjEwMi4wLjYvMTYNCg0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gS2o5cFRDTjFMQ1JaYms1U1kxbFNPU3hJT2t4dFgyVlJWRlUwTkNaeGNTNHUNCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuMTAvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFpsOTlYV1p5VGpSa1J6TmJVWEF1Sm5WSVZTTXJaaWxrVmxSOVFGb3NSamdLDQogICAgQWxsb3dlZElQcyA9IDEwLjEwMi4wLjUvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFlTMDVjaU5IWkVaNlpqZGpTMTF3TkhWNU4xUXBNMnRRYVVKWVdHUlNYem8NCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuOS8zMg0KICAgIFBlcnNpc3RlbnRLZWVwYWxpdmUgPSAyNQ0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gSVdneldWMGpLRjhsZWwxcmNIczJOV2NyVURRckxHbHlXRlFsVFQ4amUzMA0KICAgIEFsbG93ZWRJUHMgPSAxMC4xMDIuMC43LzMyDQogICAgUGVyc2lzdGVudEtlZXBhbGl2ZSA9IDI1DQoNCg0K"
+      },
+      "CreateNetworkgroupRequest": {
+        "title": "Create Networkgroup Request",
+        "required": [
+          "owner_id",
+          "label",
+          "description",
+          "tags",
+          "members"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Wanted networkgroup `id`.",
+            "type": "string"
+          },
+          "owner_id": {
+            "description" : "An organization `id` (i.e. `orga_xxx`).",
+            "type": "string"
+          },
+          "label": {
+            "description" : "Label of the networkgroup.",
+            "type": "string"
+          },
+          "description": {
+            "description" : "Description of the networkgroup.",
+            "type": "string"
+          },
+          "tags": {
+            "description" : "Semantic tags.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "members": {
+            "description": "`Member`s to add.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Member"
+            }
+          }
+        },
+        "example": { "$ref": "#/components/examples/CreateNetworkgroupRequest" }
+      },
+      "EndpointType": {
+        "title": "Endpoint Type",
+        "description": "The type of a networkgroup endpoint. It can be a client endpoint (`'ClientEndpoint'`) or an server endpoint (`'ServerEndpoint'`).",
+        "type": "string",
+        "enum": [
+          "ClientEndpoint",
+          "ServerEndpoint"
+        ]
+      },
+      "MemberType": {
+        "title": "Member Type",
+        "description": "The type of a networkgroup member. It can be an application (`'application'`), an add-on (`'clevercloudAddonInstance'`) or an external node (`'externalNode'`).",
+        "type": "string",
+        "enum": [
+          "application",
+          "clevercloudAddonInstance",
+          "externalNode"
+        ]
+      }
+    },
+    "responses": {
+      "EmptyJSON": {
+        "description": "Success",
+        "content": {
+          "application/json": {}
+        }
+      },
+      "ArrayOfNetworkgroups": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Networkgroup"
+              }
+            }
+          }
+        }
+      },
+      "Member": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Member"
+            }
+          }
+        }
+      },
+      "ArrayOfMembers": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Member"
+              }
+            }
+          }
+        }
+      },
+      "Peer": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Peer"
+            }
+          }
+        }
+      },
+      "ArrayOfPeers": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Peer"
+              }
+            }
+          }
+        }
+      },
+      "AcceptedForProcessing": {
+        "description": "Success",
+        "content": {
+          "text/plain": {
+            "schema" : {
+              "type": "string",
+              "example": "The request has been accepted for processing, but the processing has not been completed."
+            }
+          }
+        }
+      },
+      "NoContent": {
+        "description": "Success - No Content"
+      },
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "string"
+            },
+            "example": "Authentication is possible but has failed or not yet been provided."
+          }
+        }
+      },
+      "UnauthorizedUserNotInOrga": {
+        "description": "Unauthorized (e.g. not in organization)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "string"
+            },
+            "example": "Authentication is possible but has failed or not yet been provided."
+          }
+        }
+      },
+      "UnauthorizedNgNotInOrga": {
+        "description": "Unauthorized (networkgroup in another organization)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "string"
+            },
+            "example": "Authentication is possible but has failed or not yet been provided."
+          }
+        }
+      },
+      "NetworkgroupNotFound": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "string"
+            },
+            "example": "The requested resource could not be found but may be available again in the future."
+          }
+        }
+      },
+      "MemberNotFound": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "string"
+            },
+            "example": "The requested resource could not be found but may be available again in the future."
+          }
+        }
+      },
+      "PeerNotFound": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "string"
+            },
+            "example": "The requested resource could not be found but may be available again in the future."
+          }
+        }
+      },
+      "NetworkgroupConflictLabel": {
+        "description": "Conflict (label)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "string"
+            },
+            "example": "Seems this networkgroup label is already taken"
+          }
+        }
+      }
+    },
+    "examples": {
+      "Networkgroup": {
+        "summary": "Example networkgroup",
+        "value": {
+          "id": "ng_c1acf968-be9b-4d84-a10c-c6817fada09d",
+          "owner_id": "orga_3eb78ce1-4ce8-4853-90cb-81c3e13c047f",
+          "label": "test-ng",
+          "description": "NG example",
+          "network_ip": "10.101.0.0/16",
+          "last-allocated-ip": "10.101.0.12",
+          "tags": [],
+          "peers": [
+            {
+              "id": "ea21854c-a12a-4f90-9701-d329d8f99f96",
+              "label": "java-1",
+              "hostname": "java-1",
+              "hv": {
+                "host": "hv-par0-001",
+                "zone": {
+                  "id": "par0"
+                }
+              },
+              "public-key": "kd9swNEpWvoovJ9QO8xZg3SEm7RPSDddgdA5KyEFtgM=",
+              "endpoint": {
+                "ng-term": {
+                  "ip": "10.101.0.7",
+                  "port": 50159
+                },
+                "public-term": {
+                  "ip": "62.210.251.80",
+                  "port": 45000
+                },
+                "type": "ServerEndpoint"
+              },
+              "parent_event": null,
+              "parent_member": "app_b888f06d-3adb-4cf1-b017-7eac4f096e90",
+              "type": "CleverPeer"
+            },
+            {
+              "id": "external_f7f5fa23-a469-48c9-bf0b-7d8583d603b1",
+              "label": "mylaptop",
+              "hostname": "mylaptop",
+              "public-key": "GfTtsW0lrKjr7EDsrg2jglikIB+f3cV/wdBoThsESnA=",
+              "endpoint": {
+                "ng-ip": "10.101.0.12",
+                "type": "ClientEndpoint"
+              },
+              "parent_event": null,
+              "parent_member": "app_b888f06d-3adb-4cf1-b017-7eac4f096e93",
+              "type": "ExternalPeer"
+            }
+          ],
+          "members": [
+            {
+              "id": "app_b888f06d-3adb-4cf1-b017-7eac4f096e93",
+              "label": "app_b888f06d-3adb-4cf1-b017-7eac4f096e93",
+              "domain-name": "mydom",
+              "type": "externalNode"
+            },
+            {
+              "id": "app_b888f06d-3adb-4cf1-b017-7eac4f096e90",
+              "label": "app_b888f06d-3adb-4cf1-b017-7eac4f096e90",
+              "domain-name": "app-tester",
+              "type": "application"
+            }
+          ],
+          "version": 14
+        }
+      },
+      "CreateNetworkgroupRequest": {
+        "summary": "Example request for creating networkgroups",
+        "value": {
+          "owner_id": "{{orgaId}}",
+          "label": "prod",
+          "description": "Test Networkgroup",
+          "tags": [
+            "test"
+          ],
+          "members": [
+            {
+              "id": "{{appId}}",
+              "label": "My Member 1",
+              "domain-name": "my-domain",
+              "type": "externalNode"
+            }
+          ]
+        }
+      },
+      "Peer": {
+        "summary": "Example peer",
+        "value": {
+          "id": "ea21854c-a12a-4f90-9701-d329d8f99f96",
+          "label": "java-1",
+          "hostname": "java-1",
+          "hv": {
+            "host": "hv-par0-001",
+            "zone": {
+              "id": "par0"
+            }
+          },
+          "public-key": "kd9swNEpWvoovJ9QO8xZg3SEm7RPSDddgdA5KyEFtgM=",
+          "endpoint": {
+            "ng-term": {
+              "ip": "10.101.0.7",
+              "port": 50159
+            },
+            "public-term": {
+              "ip": "62.210.251.80",
+              "port": 45000
+            },
+            "type": "ServerEndpoint"
+          },
+          "parent_event": null,
+          "parent_member": "app_b888f06d-3adb-4cf1-b017-7eac4f096e90",
+          "type": "CleverPeer"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "networkgroups",
+      "description": "Networkgroups"
+    },
+    {
+      "name": "members",
+      "description": "Members"
+    },
+    {
+      "name": "external-peers",
+      "description": "External Peers"
+    },
+    {
+      "name": "peers",
+      "description": "Peers"
+    },
+    {
+      "name": "conf",
+      "description": "Configuration"
+    },
+    {
+      "name": "sse",
+      "description": "Server Sent Event"
+    },
+    {
+      "name": "ng-management",
+      "description": "Networkgroups Management"
+    }
+  ]
+}
