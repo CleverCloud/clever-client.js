@@ -20,6 +20,23 @@
         "x-service": "product",
         "x-function": "getAllZones"
       }
+    },
+    "/addon-providers/{providerId}": {
+      "get": {
+        "operationId": "getAddonProvider",
+        "parameters": [
+          { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "addon-providers",
+        "x-function": "getAddonProvider"
+      }
     }
   },
   "components": {
