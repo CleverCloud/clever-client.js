@@ -351,8 +351,9 @@ async function generateClient () {
   const openapiV4 = await fs.readJson('./data/openapi-clever-v4.json');
 
   // extract all routes
+  const routesV2 = getRoutes(patchedApiV2, 'v2');
   const allRoutes = [
-    ...getRoutes(patchedApiV2, 'v2'),
+    ...routesV2,
     ...getRoutes(openapiV4, 'v4'),
   ];
 
@@ -388,7 +389,7 @@ async function generateClient () {
 
     if (version === 'v2') {
       // generate and write code for legacy client
-      const legacyClientCode = buildLegacyClientCode(allRoutes, codeByService);
+      const legacyClientCode = buildLegacyClientCode(routesV2, codeByService);
       const legacyClientFilepath = pathJoin(generatedClientPath, 'legacy-client.js');
       const legacyClientFormattedCode = formatCode(legacyClientCode);
       await fs.appendFile(legacyClientFilepath, legacyClientFormattedCode, 'utf8');
