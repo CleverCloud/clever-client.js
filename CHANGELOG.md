@@ -1,5 +1,11 @@
 # Clever Client changelog
 
+## 7.2.0 (2021-01-26)
+
+* Add new addon-providers API `GET /v4/addon-providers/{providerId}` in `api/v4/addon-providers.js`
+  with `getAddonProvider()`.
+* Fix client generation with new `/v4` routes
+
 ## 7.1.0 (2020-11-26)
 
 * Expose app statuses
