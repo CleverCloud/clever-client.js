@@ -79,8 +79,8 @@
           { "$ref": "#/components/parameters/NetworkgroupId" }
         ],
         "responses": {
-          "200": { "$ref": "#/components/responses/ArrayOfMembers" },
-          "404": { "$ref": "#/components/responses/NetworkgroupNotFound" }
+          "200": { "$ref": "#/components/responses/ListMembersSuccess" },
+          "404": { "$ref": "#/components/responses/ListMembersNotFound" }
         },
         "x-service": "networkgroup",
         "x-function": "listMembers"
@@ -753,6 +753,38 @@
         }
       },
 
+      "ListMembersSuccess": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Member"
+              }
+            },
+            "examples": {
+              "default": { "$ref": "#/components/examples/ArrayOfMembers" }
+            }
+          }
+        }
+      },
+      "ListMembersNotFound" : {
+        "description": "Not Found",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Networkgroup not found": {
+                "value": "The requested resource could not be found but may be available again in the future."
+              }
+            }
+          }
+        }
+      },
+
       "EmptyJSON": {
         "description": "Success",
         "content": {
@@ -781,19 +813,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/Member"
-            }
-          }
-        }
-      },
-      "ArrayOfMembers": {
-        "description": "Success",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Member"
-              }
             }
           }
         }
@@ -1086,6 +1105,24 @@
           "domain-name": "my-domain",
           "type": "application"
         }
+      },
+      "ArrayOfMembers": {
+        "summary": "Simple Example",
+        "description": "An example list of members.",
+        "value": [
+          {
+            "id": "app_c992f9db-9a03-4e96-b1ab-29afedebee93",
+            "label": "My first app",
+            "domain-name": "app-1",
+            "type": "application"
+          },
+          {
+            "id": "laptops-1",
+            "label": "Company laptops",
+            "domain-name": "laptops",
+            "type": "externalNode"
+          }
+        ]
       },
       "Peer": {
         "summary": "Example peer",
