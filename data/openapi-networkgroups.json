@@ -16,7 +16,7 @@
       "get": {
         "tags": ["networkgroups"],
         "summary": "List Networkgroups",
-        "description": "Lists networkgroups from an organization.",
+        "description": "Lists networkgroups from an owner.",
         "operationId": "listNetworkgroups",
         "x-service": "networkgroup",
         "x-function": "get",
@@ -25,7 +25,7 @@
         ],
         "responses": {
           "200": { "$ref": "#/components/responses/ArrayOfNetworkgroups" },
-          "401": { "$ref": "#/components/responses/UnauthorizedUserNotInOrga" }
+          "401": { "$ref": "#/components/responses/ListNetworkgroupsUnauthorized" }
         }
       },
       "post": {
@@ -38,39 +38,11 @@
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateNetworkgroupRequest"
-              }
-            }
-          }
-        },
+        "requestBody": { "$ref": "#/components/requestBodies/CreateNetworkgroup" },
         "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Networkgroup"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": "server can't do that, owner_id does not match the orga_id from url"
-              }
-            }
-          },
-          "409": { "$ref": "#/components/responses/NetworkgroupConflictLabel" }
+          "201": { "$ref": "#/components/responses/CreateNetworkgroupSuccess" },
+          "400": { "$ref": "#/components/responses/CreateNetworkgroupBadRequest" },
+          "409": { "$ref": "#/components/responses/CreateNetworkgroupConflict" }
         }
       }
     },
@@ -326,8 +298,10 @@
         "required": true,
         "style": "simple",
         "schema": { "$ref": "#/components/schemas/OwnerId" },
-        "example": {
-          "value": "{{ownerId}}"
+        "examples": {
+          "dynamic": {
+            "value": "{{ownerId}}"
+          }
         }
       },
       "NetworkgroupId": {
@@ -682,7 +656,82 @@
         "items": { "$ref": "#/components/schemas/Peer" }
       }
     },
+    "requestBodies": {
+      "CreateNetworkgroup": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/CreateNetworkgroupRequest" },
+            "examples": {
+              "default": { "$ref": "#/components/examples/CreateNetworkgroupRequest" },
+              "dynamic": { "$ref": "#/components/examples/CreateNetworkgroupPostmanRequest" }
+            }
+          }
+        }
+      }
+    },
     "responses": {
+      "ListNetworkgroupsUnauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "User not in organization": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              }
+            }
+          }
+        }
+      },
+
+      "CreateNetworkgroupSuccess": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Networkgroup" },
+            "examples": {
+              "Created networkgroup": { "$ref": "#/components/examples/NewNetworkgroup" }
+            }
+          }
+        }
+      },
+      "CreateNetworkgroupBadRequest": {
+        "description": "Bad Request",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "`owner_id` from body and path do not match": {
+                "value": "server can't do that, owner_id does not match the orga_id from url"
+              },
+              "Invalid `id`": {
+                "value": "server can't do that, Invalid NetworkGroup ID Some(6e0df72a-17df-47fa-92f5-90cc5df6deb3)"
+              }
+            }
+          }
+        }
+      },
+      "CreateNetworkgroupConflict": {
+        "description": "Conflict",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Label already taken": {
+                "value": "Seems this networkgroup label is already taken"
+              }
+            }
+          }
+        }
+      },
+
       "EmptyJSON": {
         "description": "Success",
         "content": {
@@ -698,6 +747,9 @@
               "items": {
                 "$ref": "#/components/schemas/Networkgroup"
               }
+            },
+            "examples": {
+              "default": { "$ref": "#/components/examples/ArrayOfNetworkgroups" }
             }
           }
         }
@@ -773,17 +825,6 @@
           }
         }
       },
-      "UnauthorizedUserNotInOrga": {
-        "description": "Unauthorized (e.g. not in organization)",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "string"
-            },
-            "example": "Authentication is possible but has failed or not yet been provided."
-          }
-        }
-      },
       "UnauthorizedNgNotInOrga": {
         "description": "Unauthorized (networkgroup in another organization)",
         "content": {
@@ -827,20 +868,24 @@
             "example": "The requested resource could not be found but may be available again in the future."
           }
         }
-      },
-      "NetworkgroupConflictLabel": {
-        "description": "Conflict (label)",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "string"
-            },
-            "example": "Seems this networkgroup label is already taken"
-          }
-        }
       }
     },
     "examples": {
+      "NewNetworkgroup": {
+        "summary": "Newly created networkgroup",
+        "value": {
+          "id": "ng_9636dfb1-d507-48d1-8c49-efedba0bbf22",
+          "owner_id": "orga_74d97a1f-30a9-4015-8f69-bd46e0152417",
+          "label": "example-ng",
+          "description": "Example networkgroup",
+          "network_ip": "10.101.0.0/16",
+          "last-allocated-ip": "10.101.0.0",
+          "tags": [],
+          "peers": [],
+          "members": [],
+          "version": 0
+        }
+      },
       "Networkgroup": {
         "summary": "Example networkgroup",
         "value": {
@@ -909,16 +954,107 @@
           "version": 14
         }
       },
+      "ArrayOfNetworkgroups": {
+        "summary": "Simple Example",
+        "description": "An example list of networkgroups.",
+        "value": [
+          {
+            "id": "ng_c1acf968-be9b-4d84-a10c-c6817fada09d",
+            "owner_id": "orga_3eb78ce1-4ce8-4853-90cb-81c3e13c047f",
+            "label": "test-ng",
+            "description": "NG example",
+            "network_ip": "10.101.0.0/16",
+            "last-allocated-ip": "10.101.0.12",
+            "tags": [],
+            "peers": [
+              {
+                "id": "ea21854c-a12a-4f90-9701-d329d8f99f96",
+                "label": "java-1",
+                "hostname": "java-1",
+                "hv": {
+                  "host": "hv-par0-001",
+                  "zone": {
+                    "id": "par0"
+                  }
+                },
+                "public-key": "kd9swNEpWvoovJ9QO8xZg3SEm7RPSDddgdA5KyEFtgM=",
+                "endpoint": {
+                  "ng-term": {
+                    "ip": "10.101.0.7",
+                    "port": 50159
+                  },
+                  "public-term": {
+                    "ip": "62.210.251.80",
+                    "port": 45000
+                  },
+                  "type": "ServerEndpoint"
+                },
+                "parent_event": null,
+                "parent_member": "app_b888f06d-3adb-4cf1-b017-7eac4f096e90",
+                "type": "CleverPeer"
+              },
+              {
+                "id": "external_f7f5fa23-a469-48c9-bf0b-7d8583d603b1",
+                "label": "mylaptop",
+                "hostname": "mylaptop",
+                "public-key": "GfTtsW0lrKjr7EDsrg2jglikIB+f3cV/wdBoThsESnA=",
+                "endpoint": {
+                  "ng-ip": "10.101.0.12",
+                  "type": "ClientEndpoint"
+                },
+                "parent_event": null,
+                "parent_member": "app_b888f06d-3adb-4cf1-b017-7eac4f096e93",
+                "type": "ExternalPeer"
+              }
+            ],
+            "members": [
+              {
+                "id": "app_b888f06d-3adb-4cf1-b017-7eac4f096e93",
+                "label": "app_b888f06d-3adb-4cf1-b017-7eac4f096e93",
+                "domain-name": "mydom",
+                "type": "externalNode"
+              },
+              {
+                "id": "app_b888f06d-3adb-4cf1-b017-7eac4f096e90",
+                "label": "app_b888f06d-3adb-4cf1-b017-7eac4f096e90",
+                "domain-name": "app-tester",
+                "type": "application"
+              }
+            ],
+            "version": 14
+          },
+          {
+            "id": "ng_9636dfb1-d507-48d1-8c49-efedba0bbf22",
+            "owner_id": "orga_74d97a1f-30a9-4015-8f69-bd46e0152417",
+            "label": "example-ng",
+            "description": "Example networkgroup",
+            "network_ip": "10.101.0.0/16",
+            "last-allocated-ip": "10.101.0.0",
+            "tags": [],
+            "peers": [],
+            "members": [],
+            "version": 0
+          }
+        ]
+      },
       "CreateNetworkgroupRequest": {
-        "summary": "Example request for creating networkgroups",
+        "summary": "Simple Example",
+        "description": "Example request for creating a networkgroup.",
+        "value": {
+          "owner_id": "orga_4cad2a15-7898-4573-bfa9-d9f938088836",
+          "label": "my-networkgroup",
+          "description": "Networkgroup with my apps and add-ons",
+          "tags": ["apps", "test"]
+        }
+      },
+      "CreateNetworkgroupPostmanRequest": {
+        "summary": "Postman Dynamic Example",
+        "description": "Example request for creating a networkgroup with Postman.",
         "value": {
           "owner_id": "{{ownerId}}",
           "label": "{{$randomLoremSlug}}",
           "description": "{{$randomLoremText}}",
-          "tags": [
-            "{{$randomLoremWord}}",
-            "{{$randomLoremWord}}"
-          ]
+          "tags": ["{{$randomLoremWord}}", "{{$randomLoremWord}}"]
         }
       },
       "Member": {
