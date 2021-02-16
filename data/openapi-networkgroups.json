@@ -14,7 +14,7 @@
   "paths": {
     "/organisations/{ownerId}/networkgroups": {
       "get": {
-        "tags": ["networkgroups", "ng-management"],
+        "tags": ["networkgroups"],
         "summary": "List Networkgroups",
         "description": "Lists networkgroups from an organization.",
         "operationId": "listNetworkgroups",
@@ -29,7 +29,7 @@
         }
       },
       "post": {
-        "tags": ["networkgroups", "ng-management"],
+        "tags": ["networkgroups"],
         "summary": "Create Networkgroup",
         "description": "Creates a networkgroup.",
         "operationId": "createNetworkgroup",
@@ -76,7 +76,7 @@
     },
     "/organisations/{ownerId}/networkgroups/{ngId}": {
       "delete": {
-        "tags": ["networkgroups", "ng-management"],
+        "tags": ["networkgroups"],
         "summary": "Delete Networkgroup",
         "description": "Deletes a networkgroup.",
         "operationId": "deleteNetworkgroup",
@@ -322,15 +322,12 @@
       "OwnerId": {
         "name": "ownerId",
         "in": "path",
-        "description": "An organization `id` (i.e. `orga_xxx`).",
+        "description": "An owner `id`.",
         "required": true,
         "style": "simple",
-        "schema": {
-          "type": "string",
-          "example": "orga_xxx"
-        },
+        "schema": { "$ref": "#/components/schemas/OwnerId" },
         "example": {
-          "value": "{{orgaId}}"
+          "value": "{{ownerId}}"
         }
       },
       "NetworkgroupId": {
@@ -339,10 +336,7 @@
         "description": "A networkgroup `id`.",
         "required": true,
         "style": "simple",
-        "schema": {
-          "type": "string",
-          "example": "ng_xxx"
-        },
+        "schema": { "$ref": "#/components/schemas/NetworkgroupId" },
         "example": {
           "value": "{{ngId}}"
         }
@@ -350,13 +344,10 @@
       "MemberId": {
         "name": "memberId",
         "in": "path",
-        "description": "An app, add-on or external nodes group `id`.",
+        "description": "A networkgroup member `id`.",
         "required": true,
         "style": "simple",
-        "schema": {
-          "type": "string",
-          "example": "app_xxx"
-        },
+        "schema": { "$ref": "#/components/schemas/MemberId" },
         "example": {
           "value": "{{appId}}"
         }
@@ -364,168 +355,232 @@
       "PeerId": {
         "name": "peerId",
         "in": "path",
-        "description": "A peer `id`.",
+        "description": "A networkgroup peer `id`.",
         "required": true,
         "style": "simple",
-        "schema": {
-          "type": "string",
-          "example": "<peer_id>"
-        },
+        "schema": { "$ref": "#/components/schemas/PeerId" },
         "example": {
           "value": "{{peerId}}"
         }
       }
     },
     "schemas": {
+      "OwnerId": {
+        "title": "Owner `id`",
+        "description" : "A user `id` (i.e. `user_xxx`) for personal space, or an organization `id` (i.e. `orga_xxx`).",
+        "type": "string",
+        "example": "orga_e7b264c3-fb77-46c6-9c8f-899e14465330"
+      },
+      "NetworkgroupId": {
+        "title": "Networkgroup `id`",
+        "description": "Unique `id` of a networkgroup.",
+        "type": "string",
+        "example": "ng_0358a60f-51de-4918-8790-3f8d60e2053b"
+      },
+      "NetworkgroupLabel": {
+        "title": "Networkgroup Label",
+        "description" : "Label of a networkgroup.",
+        "type": "string",
+        "example": "my-networkgroup"
+      },
+      "NetworkgroupDescription": {
+        "title": "Networkgroup Description",
+        "description" : "Description of a networkgroup.",
+        "type": "string",
+        "example": "A networkgroup with my apps and add-ons."
+      },
+      "MemberId": {
+        "title": "Member `id`",
+        "description": "Unique `id` of a networkgroup member.",
+        "type": "string",
+        "example": "app_df58468f-feaf-4f00-ab43-1f8e16c83a55"
+      },
+      "MemberType": {
+        "title": "Member Type",
+        "description": "The type of a networkgroup member. It can be an application (`'application'`), an add-on (`'clevercloudAddonInstance'`) or an external node (`'externalNode'`).",
+        "type": "string",
+        "enum": ["application", "clevercloudAddonInstance", "externalNode"]
+      },
+      "MemberLabel": {
+        "title": "Member Label",
+        "description": "Human-readable name of a networkgroup member.",
+        "type": "string"
+      },
+      "MemberName": {
+        "title": "Member Name",
+        "description": "Member name used in the `<memberName>.m.<ngID>.ng.clever-cloud.com` domain name alias.",
+        "type": "string"
+      },
+      "PeerId": {
+        "title": "Peer `id`",
+        "description": "Unique `id` of a networkgroup peer.",
+        "type": "string",
+        "example": "external_94a6e943-35de-4c9c-8fd4-e7d405bffda8"
+      },
+      "PeerType": {
+        "title": "Peer Type",
+        "description": "Type of a networkgroup peer.",
+        "type": "string",
+        "enum": ["CleverPeer", "ExternalPeer"]
+      },
+      "PeerLabel": {
+        "title": "Peer Label",
+        "description": "Label of a networkgroup peer.",
+        "type": "string"
+      },
+      "PeerHostName": {
+        "title": "Host Name",
+        "description": "Host name of a networkgroup peer.",
+        "type": "string",
+        "example": "rust-1"
+      },
+      "PeerParentEvent": {
+        "title": "Parent Event",
+        "type": "string",
+        "nullable": true
+      },
+      "ZoneId": {
+        "title": "Zone `id`",
+        "description": "A zone `id`.",
+        "type": "string",
+        "example": "par0"
+      },
+      "SemanticTag": {
+        "title": "Tag",
+        "description" : "A semantic tag.",
+        "type": "string"
+      },
+      "EndpointType": {
+        "title": "Endpoint Type",
+        "description": "The type of a networkgroup endpoint. It can be a client endpoint (`'ClientEndpoint'`) or a server endpoint (`'ServerEndpoint'`).",
+        "type": "string",
+        "enum": ["ClientEndpoint", "ServerEndpoint"]
+      },
+      "Version": {
+        "title": "Version",
+        "description": "Version number.",
+        "type": "integer",
+        "format": "int32",
+        "example": 42
+      },
+      "IpAddress": {
+        "title": "IP Address",
+        "description": "IP address.",
+        "type": "string",
+        "format": "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
+        "example": "10.105.0.42"
+      },
+      "IpAddressWithPort": {
+        "title": "IP Address With Port",
+        "description": "IP address with port number.",
+        "type": "string",
+        "format": "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/\\d{1,5}$",
+        "example": "10.105.0.0/16"
+      },
+      "PortNumber": {
+        "title": "Port",
+        "description": "A port number.",
+        "type": "integer",
+        "format": "int32",
+        "example": 50159
+      },
+      "HypervisorHostName": {
+        "title": "Host Name",
+        "description": "Name of the hypervisor host.",
+        "type": "string",
+        "example": "hv-par0-001"
+      },
+      "WireGuardPublicKey": {
+        "title": "WireGuard® Public Key",
+        "description": "WireGuard® public key of a networkgroup peer. It's a Base64-encoded string (hence the format).",
+        "type": "string",
+        "format": "[a-zA-Z0-9+/]{43}=",
+        "example": "Z5SECcCueLAf0+LwBfxxK81mkz2mskqdZ/GVsk/uFgs="
+      },
+
+      "Networkgroup": {
+        "title": "Networkgroup",
+        "required": ["id", "owner_id", "label", "description", "network_ip", "last-allocated-ip", "tags", "peers", "members", "version"],
+        "type": "object",
+        "properties": {
+          "id":                { "$ref": "#/components/schemas/NetworkgroupId" },
+          "owner_id":          { "$ref": "#/components/schemas/OwnerId" },
+          "label":             { "$ref": "#/components/schemas/NetworkgroupLabel" },
+          "description":       { "$ref": "#/components/schemas/NetworkgroupDescription" },
+          "network_ip":        { "$ref": "#/components/schemas/IpAddressWithPort" },
+          "last-allocated-ip": { "$ref": "#/components/schemas/IpAddress" },
+          "tags":              { "$ref": "#/components/schemas/ArrayOfSemanticTags" },
+          "members":           { "$ref": "#/components/schemas/ArrayOfMembers" },
+          "peers":             { "$ref": "#/components/schemas/ArrayOfPeers" },
+          "version":           { "$ref": "#/components/schemas/Version" }
+        },
+        "example": { "$ref": "#/components/examples/Networkgroup" }
+      },
       "Member": {
         "title": "Member",
         "description": "A networkgroup member is a set of nodes that should be in the network by a simple predicate: `id` is equals to an app `id` (i.e. `app_xxx`), an add-on `id` (i.e. `addon_xxx`) or an external node category `id`.",
-        "required": [
-          "id",
-          "label",
-          "domain-name",
-          "type"
-        ],
+        "required": ["id", "label", "domain-name", "type"],
         "type": "object",
         "properties": {
-          "id": {
-            "description": "Unique `id` of the member.",
-            "type": "string"
-          },
-          "label": {
-            "description": "Human-readable name.",
-            "type": "string"
-          },
-          "domain-name": {
-            "description": "Member name used in the `<memberName>.m.<ngID>.ng.clever-cloud.com` domain name alias.",
-            "type": "string"
-          },
-          "type": { "$ref": "#/components/schemas/MemberType" }
+          "id":          { "$ref": "#/components/schemas/MemberId" },
+          "label":       { "$ref": "#/components/schemas/MemberLabel" },
+          "domain-name": { "$ref": "#/components/schemas/MemberName" },
+          "type":        { "$ref": "#/components/schemas/MemberType" }
         },
-        "example": {
-          "id": "{{appId}}",
-          "label": "My Member",
-          "domain-name": "my-domain",
-          "type": "application"
-        }
+        "example": { "$ref": "#/components/examples/Member" }
       },
       "Hypervisor": {
         "title": "Hypervisor",
-        "required": [
-          "host",
-          "zone"
-        ],
+        "required": ["host", "zone"],
         "type": "object",
         "properties": {
-          "host": {
-            "description": "Name of the hypervisor host.",
-            "type": "string",
-            "example": "hv-par0-001"
-          },
+          "host": { "$ref": "#/components/schemas/HypervisorHostName" },
           "zone": { "$ref": "#/components/schemas/Zone" }
         },
-        "example": {
-          "host": "hv-par0-001",
-          "zone": {
-            "id": "par0"
-          }
-        }
+        "example": { "$ref": "#/components/examples/Hypervisor" }
       },
       "Zone": {
         "title": "Zone",
-        "required": [
-          "id"
-        ],
+        "required": ["id"],
         "type": "object",
         "properties": {
-          "id": {
-            "description": "The zone `id`.",
-            "type": "string",
-            "example": "par0"
-          }
+          "id": { "$ref": "#/components/schemas/ZoneId" }
         },
-        "example": {
-          "id": "par0"
-        }
+        "example": { "$ref": "#/components/examples/Zone" }
       },
       "Endpoint": {
         "title": "Endpoint",
-        "required": [
-          "type"
-        ],
+        "required": ["type"],
         "type": "object",
         "properties": {
-          "ng-term": { "$ref": "#/components/schemas/NGTerm" },
+          "ng-term":     { "$ref": "#/components/schemas/NetworkgroupTerm" },
           "public-term": { "$ref": "#/components/schemas/PublicTerm" },
-          "type": { "$ref": "#/components/schemas/EndpointType" },
-          "ng-ip": {
-            "description": "The networkgroup IP address.",
-            "type": "string"
-          }
+          "type":        { "$ref": "#/components/schemas/EndpointType" },
+          "ng-ip":       { "$ref": "#/components/schemas/IpAddressWithPort" }
         },
-        "example": {
-          "ng-term": {
-            "ip": "10.101.0.7",
-            "port": 50159
-          },
-          "public-term": {
-            "ip": "62.210.251.80",
-            "port": 45000
-          },
-          "type": "ServerEndpoint"
-        }
+        "example": { "$ref": "#/components/examples/Endpoint" }
       },
-      "NGTerm": {
-        "title": "Network Group Termination",
+      "NetworkgroupTerm": {
+        "title": "Networkgroup Termination",
         "description": "A networkgroup termination.",
-        "required": [
-          "ip",
-          "port"
-        ],
+        "required": ["ip", "port"],
         "type": "object",
         "properties": {
-          "ip": {
-            "description": "The termination IP address.",
-            "type": "string",
-            "example": "10.101.0.7"
-          },
-          "port": {
-            "description": "The termination port.",
-            "type": "integer",
-            "format": "int32",
-            "example": 50159
-          }
+          "ip":   { "$ref": "#/components/schemas/IpAddress" },
+          "port": { "$ref": "#/components/schemas/PortNumber" }
         },
-        "example": {
-          "ip": "10.101.0.7",
-          "port": 50159
-        }
+        "example": { "$ref": "#/components/examples/NetworkgroupTerm" }
       },
       "PublicTerm": {
         "title": "Public Termination",
         "description": "A public termination.",
-        "required": [
-          "ip",
-          "port"
-        ],
+        "required": ["ip", "port"],
         "type": "object",
         "properties": {
-          "ip": {
-            "description": "The termination IP address.",
-            "type": "string",
-            "example": "62.210.251.80"
-          },
-          "port": {
-            "description": "The termination port.",
-            "type": "integer",
-            "format": "int32",
-            "example": 45000
-          }
+          "ip":   { "$ref": "#/components/schemas/IpAddress" },
+          "port": { "$ref": "#/components/schemas/PortNumber" }
         },
-        "example": {
-          "ip": "62.210.251.80",
-          "port": 45000
-        }
+        "example": { "$ref": "#/components/examples/PublicTerm" }
       },
       "AddExternalPeerRequest": {
         "title": "Add External Peer Request",
@@ -570,113 +625,20 @@
           }
         }
       },
-      "Networkgroup": {
-        "title": "Network Group",
-        "required": [
-          "id",
-          "owner_id",
-          "label",
-          "description",
-          "network_ip",
-          "last-allocated-ip",
-          "tags",
-          "peers",
-          "members",
-          "version"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "owner_id": {
-            "description" : "An organization `id` (i.e. `orga_xxx`).",
-            "type": "string"
-          },
-          "label": {
-            "description" : "Label of the networkgroup.",
-            "type": "string"
-          },
-          "description": {
-            "description" : "Description of the networkgroup.",
-            "type": "string"
-          },
-          "network_ip": {
-            "type": "string"
-          },
-          "last-allocated-ip": {
-            "type": "string"
-          },
-          "tags": {
-            "description" : "Semantic tags",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "peers": {
-            "description" : "List of peers present in the networkgroup.",
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/Peer" }
-          },
-          "members": {
-            "description" : "List of members present in the networkgroup.",
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/Member" }
-          },
-          "version": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "example": { "$ref": "#/components/examples/Networkgroup" }
-      },
       "Peer": {
         "title": "Peer",
-        "required": [
-          "id",
-          "label",
-          "hostname",
-          "public-key",
-          "endpoint",
-          "parent_event",
-          "parent_member",
-          "type"
-        ],
+        "required": ["id", "label", "hostname", "public-key", "endpoint", "parent_event", "parent_member", "type"],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "label": {
-            "type": "string"
-          },
-          "hostname": {
-            "type": "string"
-          },
-          "hv": {
-            "$ref": "#/components/schemas/Hypervisor"
-          },
-          "public-key": {
-            "type": "string"
-          },
-          "endpoint": {
-            "$ref": "#/components/schemas/Endpoint"
-          },
-          "parent_event": {
-            "type": "string",
-            "nullable": true
-          },
-          "parent_member": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "CleverPeer",
-              "ExternalPeer"
-            ]
-          }
+          "id":            { "$ref": "#/components/schemas/PeerId" },
+          "label":         { "$ref": "#/components/schemas/PeerLabel" },
+          "hostname":      { "$ref": "#/components/schemas/PeerHostName" },
+          "hv":            { "$ref": "#/components/schemas/Hypervisor" },
+          "public-key":    { "$ref": "#/components/schemas/WireGuardPublicKey" },
+          "endpoint":      { "$ref": "#/components/schemas/Endpoint" },
+          "parent_event":  { "$ref": "#/components/schemas/PeerParentEvent" },
+          "parent_member": { "$ref": "#/components/schemas/MemberId" },
+          "type":          { "$ref": "#/components/schemas/PeerType" }
         },
         "example": { "$ref": "#/components/examples/Peer" }
       },
@@ -688,66 +650,36 @@
       },
       "CreateNetworkgroupRequest": {
         "title": "Create Networkgroup Request",
-        "required": [
-          "owner_id",
-          "label",
-          "description",
-          "tags",
-          "members"
-        ],
+        "required": ["owner_id", "label", "description", "tags"],
         "type": "object",
         "properties": {
-          "id": {
-            "description": "Wanted networkgroup `id`.",
-            "type": "string"
-          },
-          "owner_id": {
-            "description" : "An organization `id` (i.e. `orga_xxx`).",
-            "type": "string"
-          },
-          "label": {
-            "description" : "Label of the networkgroup.",
-            "type": "string"
-          },
-          "description": {
-            "description" : "Description of the networkgroup.",
-            "type": "string"
-          },
-          "tags": {
-            "description" : "Semantic tags.",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "members": {
-            "description": "`Member`s to add.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Member"
-            }
-          }
+          "id":          { "$ref": "#/components/schemas/NetworkgroupId" },
+          "owner_id":    { "$ref": "#/components/schemas/OwnerId" },
+          "label":       { "$ref": "#/components/schemas/NetworkgroupLabel" },
+          "description": { "$ref": "#/components/schemas/NetworkgroupDescription" },
+          "tags":        { "$ref": "#/components/schemas/ArrayOfSemanticTags" },
+          "members":     { "$ref": "#/components/schemas/ArrayOfMembers" }
         },
         "example": { "$ref": "#/components/examples/CreateNetworkgroupRequest" }
       },
-      "EndpointType": {
-        "title": "Endpoint Type",
-        "description": "The type of a networkgroup endpoint. It can be a client endpoint (`'ClientEndpoint'`) or an server endpoint (`'ServerEndpoint'`).",
-        "type": "string",
-        "enum": [
-          "ClientEndpoint",
-          "ServerEndpoint"
-        ]
+
+      "ArrayOfSemanticTags": {
+        "title": "Tags",
+        "description" : "An array of semantic tags.",
+        "type": "array",
+        "items": { "$ref": "#/components/schemas/SemanticTag" }
       },
-      "MemberType": {
-        "title": "Member Type",
-        "description": "The type of a networkgroup member. It can be an application (`'application'`), an add-on (`'clevercloudAddonInstance'`) or an external node (`'externalNode'`).",
-        "type": "string",
-        "enum": [
-          "application",
-          "clevercloudAddonInstance",
-          "externalNode"
-        ]
+      "ArrayOfMembers": {
+        "title": "Members",
+        "description": "List of `Member`s in a networkgroup.",
+        "type": "array",
+        "items": { "$ref": "#/components/schemas/Member" }
+      },
+      "ArrayOfPeers": {
+        "title": "Peers",
+        "description": "List of `Peer`s in a networkgroup.",
+        "type": "array",
+        "items": { "$ref": "#/components/schemas/Peer" }
       }
     },
     "responses": {
@@ -980,20 +912,22 @@
       "CreateNetworkgroupRequest": {
         "summary": "Example request for creating networkgroups",
         "value": {
-          "owner_id": "{{orgaId}}",
-          "label": "prod",
-          "description": "Test Networkgroup",
+          "owner_id": "{{ownerId}}",
+          "label": "{{$randomLoremSlug}}",
+          "description": "{{$randomLoremText}}",
           "tags": [
-            "test"
-          ],
-          "members": [
-            {
-              "id": "{{appId}}",
-              "label": "My Member 1",
-              "domain-name": "my-domain",
-              "type": "externalNode"
-            }
+            "{{$randomLoremWord}}",
+            "{{$randomLoremWord}}"
           ]
+        }
+      },
+      "Member": {
+        "summary": "Example networkgroup member",
+        "value": {
+          "id": "{{appId}}",
+          "label": "My Member",
+          "domain-name": "my-domain",
+          "type": "application"
         }
       },
       "Peer": {
@@ -1023,6 +957,49 @@
           "parent_event": null,
           "parent_member": "app_b888f06d-3adb-4cf1-b017-7eac4f096e90",
           "type": "CleverPeer"
+        }
+      },
+      "Hypervisor": {
+        "summary": "Example hypervisor",
+        "value": {
+          "host": "hv-par0-001",
+          "zone": {
+            "id": "par0"
+          }
+        }
+      },
+      "Zone": {
+        "summary": "Example zone",
+        "value": {
+          "id": "par0"
+        }
+      },
+      "Endpoint": {
+        "summary": "Example networkgroup enndpoint",
+        "value": {
+          "ng-term": {
+            "ip": "10.101.0.7",
+            "port": 50159
+          },
+          "public-term": {
+            "ip": "62.210.251.80",
+            "port": 45000
+          },
+          "type": "ServerEndpoint"
+        }
+      },
+      "NetworkgroupTerm": {
+        "summary": "Example networkgroup termination",
+        "value": {
+          "ip": "10.101.0.7",
+          "port": 50159
+        }
+      },
+      "PublicTerm": {
+        "summary": "Example public termination",
+        "value": {
+          "ip": "62.210.251.80",
+          "port": 45000
         }
       }
     }
