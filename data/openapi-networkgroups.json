@@ -95,7 +95,7 @@
     },
     "/organisations/{ownerId}/networkgroups/{ngId}/members": {
       "get": {
-        "tags": ["networkgroups", "members"],
+        "tags": ["networkgroups"],
         "summary": "List Members",
         "description": "Lists members from a networkgroup.",
         "operationId": "listMembers",
@@ -111,7 +111,7 @@
         "x-function": "listMembers"
       },
       "post": {
-        "tags": ["networkgroups", "members"],
+        "tags": ["networkgroups"],
         "summary": "Add Member",
         "description": "Adds a member to a networkgroup.",
         "operationId": "addMember",
@@ -136,7 +136,7 @@
     },
     "/organisations/{ownerId}/networkgroups/{ngId}/members/{memberId}": {
       "get": {
-        "tags": ["networkgroups", "members"],
+        "tags": ["networkgroups"],
         "summary": "Get Member",
         "description": "Gets details from a networkgroup member.",
         "operationId": "getMember",
@@ -153,7 +153,7 @@
         }
       },
       "delete": {
-        "tags": ["networkgroups", "members"],
+        "tags": ["networkgroups"],
         "summary": "Remove Member",
         "description": "Removes a member from a networkgroup.",
         "operationId": "removeMember",
@@ -172,7 +172,7 @@
     },
     "/organisations/{ownerId}/networkgroups/{ngId}/peers": {
       "get": {
-        "tags": ["networkgroups", "peers"],
+        "tags": ["networkgroups"],
         "summary": "List Peers",
         "description": "Lists peers connected to a networkgroup.",
         "operationId": "listPeers",
@@ -190,7 +190,7 @@
     },
     "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}": {
       "get": {
-        "tags": ["networkgroups", "peers"],
+        "tags": ["networkgroups"],
         "summary": "Get Peer",
         "description": "Gets details from a networkgroup peer.",
         "operationId": "getPeer",
@@ -209,7 +209,7 @@
     },
     "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}/wireguard/configuration": {
       "get": {
-        "tags": ["networkgroups", "peers", "conf"],
+        "tags": ["networkgroups"],
         "summary": "Get WireGuard Configuration",
         "description": "Gets the actual WireGuard configuration for a networkgroup peer.",
         "operationId": "getWgConf",
@@ -238,7 +238,7 @@
     },
     "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}/wireguard/configuration/stream": {
       "get": {
-        "tags": ["networkgroups", "peers", "conf", "sse"],
+        "tags": ["networkgroups", "sse"],
         "summary": "WireGuard Configuration SSE",
         "description": "Retreives the actual WireGuard configuration for a networkgroup peer as a Server Sent Event.",
         "operationId": "sseWgConf",
@@ -263,7 +263,7 @@
     },
     "/organisations/{ownerId}/networkgroups/{ngId}/external-peers": {
       "post": {
-        "tags": ["networkgroups", "external-peers"],
+        "tags": ["networkgroups"],
         "summary": "Add External Peer",
         "description": "Adds an external peer to a networkgroup.",
         "operationId": "addExternalPeer",
@@ -299,7 +299,7 @@
     },
     "/organisations/{ownerId}/networkgroups/{ngId}/external-peers/{peerId}": {
       "delete": {
-        "tags": ["networkgroups", "external-peers"],
+        "tags": ["networkgroups"],
         "summary": "Remove External Peer",
         "description": "Removes an external peer from a networkgroup.",
         "operationId": "removeExternalPeer",
@@ -500,7 +500,7 @@
 
       "Networkgroup": {
         "title": "Networkgroup",
-        "required": ["id", "owner_id", "label", "description", "network_ip", "last-allocated-ip", "tags", "peers", "members", "version"],
+        "required": ["id", "owner_id", "label", "description", "network_ip", "last-allocated-ip", "tags", "version"],
         "type": "object",
         "properties": {
           "id":                { "$ref": "#/components/schemas/NetworkgroupId" },
@@ -1010,28 +1010,8 @@
       "description": "Networkgroups"
     },
     {
-      "name": "members",
-      "description": "Members"
-    },
-    {
-      "name": "external-peers",
-      "description": "External Peers"
-    },
-    {
-      "name": "peers",
-      "description": "Peers"
-    },
-    {
-      "name": "conf",
-      "description": "Configuration"
-    },
-    {
       "name": "sse",
       "description": "Server Sent Event"
-    },
-    {
-      "name": "ng-management",
-      "description": "Networkgroups Management"
     }
   ]
 }
