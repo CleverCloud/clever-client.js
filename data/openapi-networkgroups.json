@@ -96,16 +96,12 @@
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/Member" }
-            }
-          }
-        },
+        "requestBody": { "$ref": "#/components/requestBodies/AddMember" },
         "responses": {
-          "202": { "$ref": "#/components/responses/AcceptedForProcessing" }
+          "202": { "$ref": "#/components/responses/AcceptedForProcessing" },
+          "400": { "$ref": "#/components/responses/AddMemberBadRequest" },
+          "401": { "$ref": "#/components/responses/AddMemberUnauthorized" },
+          "404": { "$ref": "#/components/responses/AddMemberNotFound" }
         }
       }
     },
@@ -376,9 +372,9 @@
       },
       "MemberType": {
         "title": "Member Type",
-        "description": "The type of a networkgroup member. It can be an application (`'application'`), an add-on (`'clevercloudAddonInstance'`) or an external node (`'externalNode'`).",
+        "description": "The type of a networkgroup member. It can be an application (`'application'`), an add-on (`'addon'`) or an external node (`'external'`).",
         "type": "string",
-        "enum": ["application", "clevercloudAddonInstance", "externalNode"]
+        "enum": ["application", "addon", "external"]
       },
       "MemberLabel": {
         "title": "Member Label",
@@ -495,6 +491,20 @@
         },
         "example": { "$ref": "#/components/examples/Networkgroup" }
       },
+      "CreateNetworkgroupRequest": {
+        "title": "Create Networkgroup Request",
+        "required": ["owner_id", "label", "description", "tags"],
+        "type": "object",
+        "properties": {
+          "id":          { "$ref": "#/components/schemas/NetworkgroupId" },
+          "owner_id":    { "$ref": "#/components/schemas/OwnerId" },
+          "label":       { "$ref": "#/components/schemas/NetworkgroupLabel" },
+          "description": { "$ref": "#/components/schemas/NetworkgroupDescription" },
+          "tags":        { "$ref": "#/components/schemas/ArrayOfSemanticTags" },
+          "members":     { "$ref": "#/components/schemas/ArrayOfMembers" }
+        },
+        "example": { "$ref": "#/components/examples/CreateNetworkgroupRequest" }
+      },
       "Member": {
         "title": "Member",
         "description": "A networkgroup member is a set of nodes that should be in the network by a simple predicate: `id` is equals to an app `id` (i.e. `app_xxx`), an add-on `id` (i.e. `addon_xxx`) or an external node category `id`.",
@@ -507,6 +517,19 @@
           "type":        { "$ref": "#/components/schemas/MemberType" }
         },
         "example": { "$ref": "#/components/examples/Member" }
+      },
+      "AddMemberRequest": {
+        "title": "Create Member Request",
+        "description": "A networkgroup member is a set of nodes that should be in the network by a simple predicate: `id` is equals to an app `id` (i.e. `app_xxx`), an add-on `id` (i.e. `addon_xxx`) or an external node category `id`.",
+        "required": ["id", "label", "domain-name", "type"],
+        "type": "object",
+        "properties": {
+          "id":          { "$ref": "#/components/schemas/MemberId" },
+          "label":       { "$ref": "#/components/schemas/MemberLabel" },
+          "domain-name": { "$ref": "#/components/schemas/MemberName" },
+          "type":        { "$ref": "#/components/schemas/MemberType" }
+        },
+        "example": { "$ref": "#/components/examples/AddMemberRequest" }
       },
       "Hypervisor": {
         "title": "Hypervisor",
@@ -627,20 +650,6 @@
         "type": "string",
         "example": "W0ludGVyZmFjZV0NClByaXZhdGVLZXkgPSA8JVByaXZhdGVLZXklPg0KQWRkcmVzcyA9IDEwLjEwMi4wLjYvMTYNCg0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gS2o5cFRDTjFMQ1JaYms1U1kxbFNPU3hJT2t4dFgyVlJWRlUwTkNaeGNTNHUNCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuMTAvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFpsOTlYV1p5VGpSa1J6TmJVWEF1Sm5WSVZTTXJaaWxrVmxSOVFGb3NSamdLDQogICAgQWxsb3dlZElQcyA9IDEwLjEwMi4wLjUvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFlTMDVjaU5IWkVaNlpqZGpTMTF3TkhWNU4xUXBNMnRRYVVKWVdHUlNYem8NCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuOS8zMg0KICAgIFBlcnNpc3RlbnRLZWVwYWxpdmUgPSAyNQ0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gSVdneldWMGpLRjhsZWwxcmNIczJOV2NyVURRckxHbHlXRlFsVFQ4amUzMA0KICAgIEFsbG93ZWRJUHMgPSAxMC4xMDIuMC43LzMyDQogICAgUGVyc2lzdGVudEtlZXBhbGl2ZSA9IDI1DQoNCg0K"
       },
-      "CreateNetworkgroupRequest": {
-        "title": "Create Networkgroup Request",
-        "required": ["owner_id", "label", "description", "tags"],
-        "type": "object",
-        "properties": {
-          "id":          { "$ref": "#/components/schemas/NetworkgroupId" },
-          "owner_id":    { "$ref": "#/components/schemas/OwnerId" },
-          "label":       { "$ref": "#/components/schemas/NetworkgroupLabel" },
-          "description": { "$ref": "#/components/schemas/NetworkgroupDescription" },
-          "tags":        { "$ref": "#/components/schemas/ArrayOfSemanticTags" },
-          "members":     { "$ref": "#/components/schemas/ArrayOfMembers" }
-        },
-        "example": { "$ref": "#/components/examples/CreateNetworkgroupRequest" }
-      },
 
       "ArrayOfSemanticTags": {
         "title": "Tags",
@@ -669,13 +678,47 @@
             "schema": { "$ref": "#/components/schemas/CreateNetworkgroupRequest" },
             "examples": {
               "default": { "$ref": "#/components/examples/CreateNetworkgroupRequest" },
-              "Dynamic": { "$ref": "#/components/examples/CreateNetworkgroupPostmanRequest" }
+              "Dynamic": { "$ref": "#/components/examples/CreateNetworkgroupRequest_Postman" }
+            }
+          }
+        }
+      },
+
+      "AddMember": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/AddMemberRequest" },
+            "examples": {
+              "default": { "$ref": "#/components/examples/AddMemberRequest" },
+              "Dynamic": { "$ref": "#/components/examples/AddMemberRequest_Postman" }
             }
           }
         }
       }
     },
     "responses": {
+      "EmptyJSON": {
+        "description": "Success",
+        "content": {
+          "application/json": {}
+        }
+      },
+      "AcceptedForProcessing": {
+        "description": "Success - Accepted",
+        "content": {
+          "text/plain": {
+            "schema" : {
+              "type": "string",
+              "example": "The request has been accepted for processing, but the processing has not been completed."
+            }
+          }
+        }
+      },
+      "NoContent": {
+        "description": "Success - No Content"
+      },
+
       "ListNetworkgroupsUnauthorized": {
         "description": "Unauthorized",
         "content": {
@@ -785,12 +828,52 @@
         }
       },
 
-      "EmptyJSON": {
-        "description": "Success",
+      "AddMemberBadRequest": {
+        "description": "Bad Request",
         "content": {
-          "application/json": {}
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Invalid body (e.g. `type`)": {
+                "value": "server can't do that, Seems the member you try to add is invalid"
+              }
+            }
+          }
         }
       },
+      "AddMemberUnauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Networkgroup from another owner": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              }
+            }
+          }
+        }
+      },
+      "AddMemberNotFound": {
+        "description": "Not Found",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Networkgroup not found": {
+                "value": "The requested resource could not be found but may be available again in the future."
+              }
+            }
+          }
+        }
+      },
+
       "ArrayOfNetworkgroups": {
         "description": "Success",
         "content": {
@@ -839,20 +922,6 @@
             }
           }
         }
-      },
-      "AcceptedForProcessing": {
-        "description": "Success",
-        "content": {
-          "text/plain": {
-            "schema" : {
-              "type": "string",
-              "example": "The request has been accepted for processing, but the processing has not been completed."
-            }
-          }
-        }
-      },
-      "NoContent": {
-        "description": "Success - No Content"
       },
       "Unauthorized": {
         "description": "Unauthorized",
@@ -1087,7 +1156,8 @@
           "tags": ["apps", "test"]
         }
       },
-      "CreateNetworkgroupPostmanRequest": {
+
+      "CreateNetworkgroupRequest_Postman": {
         "summary": "Postman Dynamic Example",
         "description": "Example request for creating a networkgroup with Postman.",
         "value": {
@@ -1124,6 +1194,27 @@
           }
         ]
       },
+      "AddMemberRequest": {
+        "summary": "Simple Example",
+        "description": "Example request for adding a networkgroup member.",
+        "value": {
+          "id": "app_52061589-530c-448a-8a2b-217230da2408",
+          "label": "My Member",
+          "domain-name": "my-domain",
+          "type": "application"
+        }
+      },
+      "AddMemberRequest_Postman": {
+        "summary": "Postman Dynamic Example",
+        "description": "Example request for adding a networkgroup member with Postman.",
+        "value": {
+          "id": "{{$randomLoremSlug}}",
+          "label": "{{$randomLoremText}}",
+          "domain-name": "{{$randomLoremSlug}}",
+          "type": "external"
+        }
+      },
+
       "Peer": {
         "summary": "Example peer",
         "value": {
