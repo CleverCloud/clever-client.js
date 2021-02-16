@@ -1153,7 +1153,7 @@
     },
     {
       "name": "sse",
-      "description": "Server Sent Event"
+      "description": "Server Sent Events"
     }
   ]
 }
