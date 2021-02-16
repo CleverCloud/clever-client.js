@@ -302,7 +302,7 @@
         "required": true,
         "schema": { "$ref": "#/components/schemas/OwnerId" },
         "examples": {
-          "dynamic": {
+          "Dynamic": {
             "value": "{{ownerId}}"
           }
         }
@@ -313,8 +313,10 @@
         "description": "A networkgroup `id`.",
         "required": true,
         "schema": { "$ref": "#/components/schemas/NetworkgroupId" },
-        "example": {
-          "value": "{{ngId}}"
+        "examples": {
+          "Dynamic": {
+            "value": "{{ngId}}"
+          }
         }
       },
       "MemberId": {
@@ -323,8 +325,10 @@
         "description": "A networkgroup member `id`.",
         "required": true,
         "schema": { "$ref": "#/components/schemas/MemberId" },
-        "example": {
-          "value": "{{appId}}"
+        "examples": {
+          "Dynamic": {
+            "value": "{{appId}}"
+          }
         }
       },
       "PeerId": {
@@ -333,8 +337,10 @@
         "description": "A networkgroup peer `id`.",
         "required": true,
         "schema": { "$ref": "#/components/schemas/PeerId" },
-        "example": {
-          "value": "{{peerId}}"
+        "examples": {
+          "Dynamic": {
+            "value": "{{peerId}}"
+          }
         }
       }
     },
@@ -664,7 +670,7 @@
             "schema": { "$ref": "#/components/schemas/CreateNetworkgroupRequest" },
             "examples": {
               "default": { "$ref": "#/components/examples/CreateNetworkgroupRequest" },
-              "dynamic": { "$ref": "#/components/examples/CreateNetworkgroupPostmanRequest" }
+              "Dynamic": { "$ref": "#/components/examples/CreateNetworkgroupPostmanRequest" }
             }
           }
         }
