@@ -9,6 +9,10 @@
     {
       "url": "https://api.clever-cloud.com/v4",
       "description": "The production API server (v4)."
+    },
+    {
+      "url": "https://api.par0.clvrcld.net/v4",
+      "description": "The testing API server (v4)."
     }
   ],
   "paths": {
