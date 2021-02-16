@@ -300,7 +300,6 @@
         "in": "path",
         "description": "An owner `id`.",
         "required": true,
-        "style": "simple",
         "schema": { "$ref": "#/components/schemas/OwnerId" },
         "examples": {
           "dynamic": {
@@ -313,7 +312,6 @@
         "in": "path",
         "description": "A networkgroup `id`.",
         "required": true,
-        "style": "simple",
         "schema": { "$ref": "#/components/schemas/NetworkgroupId" },
         "example": {
           "value": "{{ngId}}"
@@ -324,7 +322,6 @@
         "in": "path",
         "description": "A networkgroup member `id`.",
         "required": true,
-        "style": "simple",
         "schema": { "$ref": "#/components/schemas/MemberId" },
         "example": {
           "value": "{{appId}}"
@@ -335,7 +332,6 @@
         "in": "path",
         "description": "A networkgroup peer `id`.",
         "required": true,
-        "style": "simple",
         "schema": { "$ref": "#/components/schemas/PeerId" },
         "example": {
           "value": "{{peerId}}"
