@@ -64,8 +64,7 @@
         ],
         "responses": {
           "204": { "$ref": "#/components/responses/NoContent" },
-          "401": { "$ref": "#/components/responses/UnauthorizedNgNotInOrga" },
-          "404": { "$ref": "#/components/responses/NetworkgroupNotFound" }
+          "401": { "$ref": "#/components/responses/DeleteNetworkgroupUnauthorized" }
         }
       }
     },
@@ -298,7 +297,7 @@
       "OwnerId": {
         "name": "ownerId",
         "in": "path",
-        "description": "An owner `id`.",
+        "description": "An owner `id`. It can be a user `id` (i.e. `user_xxx`) for personal space, or an organization `id` (i.e. `orga_xxx`).",
         "required": true,
         "schema": { "$ref": "#/components/schemas/OwnerId" },
         "examples": {
@@ -732,6 +731,22 @@
             "examples": {
               "Label already taken": {
                 "value": "Seems this networkgroup label is already taken"
+              }
+            }
+          }
+        }
+      },
+
+      "DeleteNetworkgroupUnauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Networkgroup from another owner": {
+                "value": "Authentication is possible but has failed or not yet been provided."
               }
             }
           }
