@@ -138,6 +138,7 @@
         ],
         "responses": {
           "204": { "$ref": "#/components/responses/NoContent" },
+          "401": { "$ref": "#/components/responses/GetMemberUnauthorized" },
           "404": { "$ref": "#/components/responses/GetMemberNotFound" }
         }
       }
@@ -1245,7 +1246,7 @@
         "description": "Example request for adding a networkgroup member with Postman.",
         "value": {
           "id": "{{$randomLoremSlug}}",
-          "label": "{{$randomLoremText}}",
+          "label": "{{$randomLoremWords}}",
           "domain-name": "{{$randomLoremSlug}}",
           "type": "external"
         }
