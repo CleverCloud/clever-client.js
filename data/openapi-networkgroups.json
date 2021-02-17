@@ -71,6 +71,7 @@
         }
       }
     },
+
     "/organisations/{ownerId}/networkgroups/{ngId}/members": {
       "get": {
         "tags": ["networkgroups"],
@@ -151,6 +152,7 @@
         }
       }
     },
+
     "/organisations/{ownerId}/networkgroups/{ngId}/peers": {
       "get": {
         "tags": ["networkgroups"],
@@ -187,48 +189,6 @@
         ],
         "responses": {
           "200": { "$ref": "#/components/responses/GetPeer_Success" },
-          "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
-          "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
-        }
-      }
-    },
-    "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}/wireguard/configuration": {
-      "get": {
-        "tags": ["networkgroups"],
-        "summary": "Get WireGuard® Configuration",
-        "description": "Gets the actual WireGuard® tunnel configuration file for a networkgroup peer. The endpoint returns a `wg-quick` configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
-        "operationId": "getWgConf",
-        "x-service": "networkgroup",
-        "x-function": "getWgConf",
-        "security": [{ "OAuth1": [] }],
-        "parameters": [
-          { "$ref": "#/components/parameters/OwnerId" },
-          { "$ref": "#/components/parameters/NetworkgroupId" },
-          { "$ref": "#/components/parameters/PeerId" }
-        ],
-        "responses": {
-          "200": { "$ref": "#/components/responses/GetWgConf_Success" },
-          "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
-          "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
-        }
-      }
-    },
-    "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}/wireguard/configuration/stream": {
-      "get": {
-        "tags": ["networkgroups", "sse"],
-        "summary": "WireGuard® Configuration SSE",
-        "description": "Retreives the actual WireGuard® configuration file for a networkgroup peer as a Server Sent Event. The `'conf'` event returns a `wg-quick` configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
-        "operationId": "sseWgConf",
-        "x-service": "networkgroup",
-        "x-function": "sseWgConf",
-        "security": [{ "OAuth1": [] }],
-        "parameters": [
-          { "$ref": "#/components/parameters/OwnerId" },
-          { "$ref": "#/components/parameters/NetworkgroupId" },
-          { "$ref": "#/components/parameters/PeerId" }
-        ],
-        "responses": {
-          "200": { "$ref": "#/components/responses/SSEWgConf_Success" },
           "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
           "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
         }
@@ -272,6 +232,49 @@
         ],
         "responses": {
           "204": { "$ref": "#/components/responses/NoContent" },
+          "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
+        }
+      }
+    },
+
+    "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}/wireguard/configuration": {
+      "get": {
+        "tags": ["networkgroups"],
+        "summary": "Get WireGuard® Configuration",
+        "description": "Gets the actual WireGuard® tunnel configuration file for a networkgroup peer. The endpoint returns a `wg-quick` configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
+        "operationId": "getWgConf",
+        "x-service": "networkgroup",
+        "x-function": "getWgConf",
+        "security": [{ "OAuth1": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" },
+          { "$ref": "#/components/parameters/PeerId" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/GetWgConf_Success" },
+          "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
+        }
+      }
+    },
+    "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}/wireguard/configuration/stream": {
+      "get": {
+        "tags": ["networkgroups", "sse"],
+        "summary": "WireGuard® Configuration SSE",
+        "description": "Retreives the actual WireGuard® configuration file for a networkgroup peer as a Server Sent Event. The `'conf'` event returns a `wg-quick` configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
+        "operationId": "sseWgConf",
+        "x-service": "networkgroup",
+        "x-function": "sseWgConf",
+        "security": [{ "OAuth1": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" },
+          { "$ref": "#/components/parameters/PeerId" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/SSEWgConf_Success" },
           "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
           "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
         }
@@ -547,6 +550,51 @@
         },
         "example": { "$ref": "#/components/examples/AddMemberRequest" }
       },
+      "Peer": {
+        "title": "Peer",
+        "required": ["id", "label", "hostname", "public-key", "endpoint", "parent_event", "parent_member", "type"],
+        "type": "object",
+        "properties": {
+          "id":            { "$ref": "#/components/schemas/PeerId" },
+          "label":         { "$ref": "#/components/schemas/PeerLabel" },
+          "hostname":      { "$ref": "#/components/schemas/PeerHostName" },
+          "hv":            { "$ref": "#/components/schemas/Hypervisor" },
+          "public-key":    { "$ref": "#/components/schemas/WireGuardPublicKey" },
+          "endpoint":      { "$ref": "#/components/schemas/Endpoint" },
+          "parent_event":  { "$ref": "#/components/schemas/PeerParentEvent" },
+          "parent_member": { "$ref": "#/components/schemas/MemberId" },
+          "type":          { "$ref": "#/components/schemas/PeerType" }
+        },
+        "example": { "$ref": "#/components/examples/Peer" }
+      },
+      "AddExternalPeerRequest": {
+        "title": "Add External Peer Request",
+        "required": ["peer-role", "public-key", "parent_member"],
+        "type": "object",
+        "properties": {
+          "peer-role":     { "$ref": "#/components/schemas/ExternalPeerRole" },
+          "label":         { "$ref": "#/components/schemas/PeerLabel" },
+          "public-key":    { "$ref": "#/components/schemas/WireGuardPublicKey" },
+          "hostname":      { "$ref": "#/components/schemas/PeerHostName" },
+          "parent_member": { "$ref": "#/components/schemas/MemberId" },
+          "ip":            { "$ref": "#/components/schemas/ServerPeerIpAddress" },
+          "port":          { "$ref": "#/components/schemas/ServerPeerPort" }
+        }
+      },
+      "AddExternalPeerResponse": {
+        "title": "Add External Peer Response",
+        "required": ["id"],
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "#/components/schemas/PeerId" }
+        }
+      },
+      "WireGuardConf": {
+        "title": "WireGuard® Configuration",
+        "description": "A WireGuard® tunnel configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
+        "type": "string",
+        "example": { "$ref": "#/components/examples/WireGuardConf" }
+      },
       "Hypervisor": {
         "title": "Hypervisor",
         "required": ["host", "zone"],
@@ -600,51 +648,6 @@
         },
         "example": { "$ref": "#/components/examples/PublicTerm" }
       },
-      "AddExternalPeerRequest": {
-        "title": "Add External Peer Request",
-        "required": ["peer-role", "public-key", "parent_member"],
-        "type": "object",
-        "properties": {
-          "peer-role":     { "$ref": "#/components/schemas/ExternalPeerRole" },
-          "label":         { "$ref": "#/components/schemas/PeerLabel" },
-          "public-key":    { "$ref": "#/components/schemas/WireGuardPublicKey" },
-          "hostname":      { "$ref": "#/components/schemas/PeerHostName" },
-          "parent_member": { "$ref": "#/components/schemas/MemberId" },
-          "ip":            { "$ref": "#/components/schemas/ServerPeerIpAddress" },
-          "port":          { "$ref": "#/components/schemas/ServerPeerPort" }
-        }
-      },
-      "AddExternalPeerResponse": {
-        "title": "Add External Peer Response",
-        "required": ["id"],
-        "type": "object",
-        "properties": {
-          "id": { "$ref": "#/components/schemas/PeerId" }
-        }
-      },
-      "Peer": {
-        "title": "Peer",
-        "required": ["id", "label", "hostname", "public-key", "endpoint", "parent_event", "parent_member", "type"],
-        "type": "object",
-        "properties": {
-          "id":            { "$ref": "#/components/schemas/PeerId" },
-          "label":         { "$ref": "#/components/schemas/PeerLabel" },
-          "hostname":      { "$ref": "#/components/schemas/PeerHostName" },
-          "hv":            { "$ref": "#/components/schemas/Hypervisor" },
-          "public-key":    { "$ref": "#/components/schemas/WireGuardPublicKey" },
-          "endpoint":      { "$ref": "#/components/schemas/Endpoint" },
-          "parent_event":  { "$ref": "#/components/schemas/PeerParentEvent" },
-          "parent_member": { "$ref": "#/components/schemas/MemberId" },
-          "type":          { "$ref": "#/components/schemas/PeerType" }
-        },
-        "example": { "$ref": "#/components/examples/Peer" }
-      },
-      "WireGuardConf": {
-        "title": "WireGuard® Configuration",
-        "description": "A WireGuard® tunnel configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
-        "type": "string",
-        "example": { "$ref": "#/components/examples/WireGuardConf" }
-      },
 
       "ArrayOfSemanticTags": {
         "title": "Tags",
@@ -678,7 +681,6 @@
           }
         }
       },
-
       "AddMember": {
         "required": true,
         "content": {
@@ -691,7 +693,6 @@
           }
         }
       },
-
       "AddExternalPeer": {
         "required": true,
         "content": {
@@ -719,38 +720,6 @@
       },
       "NoContent": {
         "description": "Success - No Content"
-      },
-
-      "ListNetworkgroups_Success": {
-        "description": "Success",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Networkgroup"
-              }
-            },
-            "examples": {
-              "default": { "$ref": "#/components/examples/ArrayOfNetworkgroups" }
-            }
-          }
-        }
-      },
-      "ListNetworkgroups_Unauthorized": {
-        "description": "Unauthorized",
-        "content": {
-          "text/plain": {
-            "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "User not in organization": {
-                "value": "Authentication is possible but has failed or not yet been provided."
-              }
-            }
-          }
-        }
       },
 
       "CreateNetworkgroup_Success": {
@@ -792,6 +761,38 @@
             "examples": {
               "Label already taken": {
                 "value": "Seems this networkgroup label is already taken"
+              }
+            }
+          }
+        }
+      },
+
+      "ListNetworkgroups_Success": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Networkgroup"
+              }
+            },
+            "examples": {
+              "default": { "$ref": "#/components/examples/ArrayOfNetworkgroups" }
+            }
+          }
+        }
+      },
+      "ListNetworkgroups_Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "User not in organization": {
+                "value": "Authentication is possible but has failed or not yet been provided."
               }
             }
           }
@@ -851,6 +852,22 @@
         }
       },
 
+      "AddMember_BadRequest": {
+        "description": "Bad Request",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Invalid body (e.g. `type`)": {
+                "value": "server can't do that, Seems the member you try to add is invalid"
+              }
+            }
+          }
+        }
+      },
+
       "ListMembers_Success": {
         "description": "Success",
         "content": {
@@ -863,22 +880,6 @@
             },
             "examples": {
               "default": { "$ref": "#/components/examples/ArrayOfMembers" }
-            }
-          }
-        }
-      },
-
-      "AddMember_BadRequest": {
-        "description": "Bad Request",
-        "content": {
-          "text/plain": {
-            "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "Invalid body (e.g. `type`)": {
-                "value": "server can't do that, Seems the member you try to add is invalid"
-              }
             }
           }
         }
@@ -1141,6 +1142,26 @@
           "version": 14
         }
       },
+      "CreateNetworkgroupRequest": {
+        "summary": "Simple Example",
+        "description": "Example request for creating a networkgroup.",
+        "value": {
+          "owner_id": "orga_4cad2a15-7898-4573-bfa9-d9f938088836",
+          "label": "my-networkgroup",
+          "description": "Networkgroup with my apps and add-ons",
+          "tags": ["apps", "test"]
+        }
+      },
+      "CreateNetworkgroupRequest_Postman": {
+        "summary": "Postman Dynamic Example",
+        "description": "Example request for creating a networkgroup with Postman.",
+        "value": {
+          "owner_id": "{{ownerId}}",
+          "label": "{{$randomLoremSlug}}",
+          "description": "{{$randomLoremText}}",
+          "tags": ["{{$randomLoremWord}}", "{{$randomLoremWord}}"]
+        }
+      },
       "ArrayOfNetworkgroups": {
         "summary": "Simple Example",
         "description": "An example list of networkgroups.",
@@ -1224,26 +1245,6 @@
           }
         ]
       },
-      "CreateNetworkgroupRequest": {
-        "summary": "Simple Example",
-        "description": "Example request for creating a networkgroup.",
-        "value": {
-          "owner_id": "orga_4cad2a15-7898-4573-bfa9-d9f938088836",
-          "label": "my-networkgroup",
-          "description": "Networkgroup with my apps and add-ons",
-          "tags": ["apps", "test"]
-        }
-      },
-      "CreateNetworkgroupRequest_Postman": {
-        "summary": "Postman Dynamic Example",
-        "description": "Example request for creating a networkgroup with Postman.",
-        "value": {
-          "owner_id": "{{ownerId}}",
-          "label": "{{$randomLoremSlug}}",
-          "description": "{{$randomLoremText}}",
-          "tags": ["{{$randomLoremWord}}", "{{$randomLoremWord}}"]
-        }
-      },
 
       "Member": {
         "summary": "Example networkgroup member",
@@ -1253,24 +1254,6 @@
           "domain-name": "my-domain",
           "type": "application"
         }
-      },
-      "ArrayOfMembers": {
-        "summary": "Simple Example",
-        "description": "An example list of networkgroup members.",
-        "value": [
-          {
-            "id": "app_c992f9db-9a03-4e96-b1ab-29afedebee93",
-            "label": "My first app",
-            "domain-name": "app-1",
-            "type": "application"
-          },
-          {
-            "id": "laptops-1",
-            "label": "Company laptops",
-            "domain-name": "laptops",
-            "type": "externalNode"
-          }
-        ]
       },
       "AddMemberRequest": {
         "summary": "Simple Example",
@@ -1291,6 +1274,24 @@
           "domain-name": "{{$randomLoremSlug}}",
           "type": "external"
         }
+      },
+      "ArrayOfMembers": {
+        "summary": "Simple Example",
+        "description": "An example list of networkgroup members.",
+        "value": [
+          {
+            "id": "app_c992f9db-9a03-4e96-b1ab-29afedebee93",
+            "label": "My first app",
+            "domain-name": "app-1",
+            "type": "application"
+          },
+          {
+            "id": "laptops-1",
+            "label": "Company laptops",
+            "domain-name": "laptops",
+            "type": "externalNode"
+          }
+        ]
       },
 
       "Peer": {
