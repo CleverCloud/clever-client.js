@@ -28,7 +28,7 @@
           { "$ref": "#/components/parameters/OwnerId" }
         ],
         "responses": {
-          "200": { "$ref": "#/components/responses/ArrayOfNetworkgroups" },
+          "200": { "$ref": "#/components/responses/ListNetworkgroupsSuccess" },
           "401": { "$ref": "#/components/responses/ListNetworkgroupsUnauthorized" }
         }
       },
@@ -723,6 +723,22 @@
         "description": "Success - No Content"
       },
 
+      "ListNetworkgroupsSuccess": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Networkgroup"
+              }
+            },
+            "examples": {
+              "default": { "$ref": "#/components/examples/ArrayOfNetworkgroups" }
+            }
+          }
+        }
+      },
       "ListNetworkgroupsUnauthorized": {
         "description": "Unauthorized",
         "content": {
@@ -1029,22 +1045,6 @@
         }
       },
 
-      "ArrayOfNetworkgroups": {
-        "description": "Success",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Networkgroup"
-              }
-            },
-            "examples": {
-              "default": { "$ref": "#/components/examples/ArrayOfNetworkgroups" }
-            }
-          }
-        }
-      },
       "Unauthorized": {
         "description": "Unauthorized",
         "content": {
