@@ -217,7 +217,7 @@
       "get": {
         "tags": ["networkgroups", "sse"],
         "summary": "WireGuard® Configuration SSE",
-        "description": "Retreives the actual WireGuard® configuration for a networkgroup peer as a Server Sent Event.",
+        "description": "Retreives the actual WireGuard® configuration file for a networkgroup peer as a Server Sent Event. The `'conf'` event returns a `wg-quick` configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
         "operationId": "sseWgConf",
         "x-service": "networkgroup",
         "x-function": "sseWgConf",
@@ -228,12 +228,7 @@
           { "$ref": "#/components/parameters/PeerId" }
         ],
         "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/event-stream": {}
-            }
-          },
+          "200": { "$ref": "#/components/responses/SSEWgConf_Success" },
           "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
           "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
         }
@@ -1051,6 +1046,21 @@
             }
           }
         }
+      },
+      "SSEWgConf_Success": {
+        "description": "Success",
+        "content": {
+          "text/event-stream": {
+            "schema": {
+              "oneOf": [
+                { "$ref": "#/components/schemas/WireGuardConf" }
+              ]
+            },
+            "examples": {
+              "`'conf'` event": { "$ref": "#/components/examples/WireGuardConf_SSE" }
+            }
+          }
+        }
       }
     },
     "examples": {
@@ -1398,6 +1408,10 @@
 
       "WireGuardConf": {
         "summary": "Example WireGuard® configuration",
+        "value": "W0ludGVyZmFjZV0NClByaXZhdGVLZXkgPSA8JVByaXZhdGVLZXklPg0KQWRkcmVzcyA9IDEwLjEwMi4wLjYvMTYNCg0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gS2o5cFRDTjFMQ1JaYms1U1kxbFNPU3hJT2t4dFgyVlJWRlUwTkNaeGNTNHUNCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuMTAvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFpsOTlYV1p5VGpSa1J6TmJVWEF1Sm5WSVZTTXJaaWxrVmxSOVFGb3NSamdLDQogICAgQWxsb3dlZElQcyA9IDEwLjEwMi4wLjUvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFlTMDVjaU5IWkVaNlpqZGpTMTF3TkhWNU4xUXBNMnRRYVVKWVdHUlNYem8NCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuOS8zMg0KICAgIFBlcnNpc3RlbnRLZWVwYWxpdmUgPSAyNQ0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gSVdneldWMGpLRjhsZWwxcmNIczJOV2NyVURRckxHbHlXRlFsVFQ4amUzMA0KICAgIEFsbG93ZWRJUHMgPSAxMC4xMDIuMC43LzMyDQogICAgUGVyc2lzdGVudEtlZXBhbGl2ZSA9IDI1DQoNCg0K"
+      },
+      "WireGuardConf_SSE": {
+        "summary": "`'conf'` event",
         "value": "W0ludGVyZmFjZV0NClByaXZhdGVLZXkgPSA8JVByaXZhdGVLZXklPg0KQWRkcmVzcyA9IDEwLjEwMi4wLjYvMTYNCg0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gS2o5cFRDTjFMQ1JaYms1U1kxbFNPU3hJT2t4dFgyVlJWRlUwTkNaeGNTNHUNCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuMTAvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFpsOTlYV1p5VGpSa1J6TmJVWEF1Sm5WSVZTTXJaaWxrVmxSOVFGb3NSamdLDQogICAgQWxsb3dlZElQcyA9IDEwLjEwMi4wLjUvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFlTMDVjaU5IWkVaNlpqZGpTMTF3TkhWNU4xUXBNMnRRYVVKWVdHUlNYem8NCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuOS8zMg0KICAgIFBlcnNpc3RlbnRLZWVwYWxpdmUgPSAyNQ0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gSVdneldWMGpLRjhsZWwxcmNIczJOV2NyVURRckxHbHlXRlFsVFQ4amUzMA0KICAgIEFsbG93ZWRJUHMgPSAxMC4xMDIuMC43LzMyDQogICAgUGVyc2lzdGVudEtlZXBhbGl2ZSA9IDI1DQoNCg0K"
       },
 
