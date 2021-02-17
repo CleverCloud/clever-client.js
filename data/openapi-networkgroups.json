@@ -673,6 +673,12 @@
         "type": "array",
         "items": { "$ref": "#/components/schemas/SemanticTag" }
       },
+      "ArrayOfNetworkgroups": {
+        "title": "Networkgroups",
+        "description": "List of networkgroups.",
+        "type": "array",
+        "items": { "$ref": "#/components/schemas/Networkgroup" }
+      },
       "ArrayOfMembers": {
         "title": "Members",
         "description": "List of `Member`s in a networkgroup.",
@@ -789,12 +795,7 @@
         "description": "Success",
         "content": {
           "application/json": {
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Networkgroup"
-              }
-            },
+            "schema": { "$ref": "#/components/schemas/ArrayOfNetworkgroups" },
             "examples": {
               "default": { "$ref": "#/components/examples/ArrayOfNetworkgroups" }
             }
@@ -902,12 +903,7 @@
         "description": "Success",
         "content": {
           "application/json": {
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Member"
-              }
-            },
+            "schema": { "$ref": "#/components/schemas/ArrayOfMembers" },
             "examples": {
               "default": { "$ref": "#/components/examples/ArrayOfMembers" }
             }
