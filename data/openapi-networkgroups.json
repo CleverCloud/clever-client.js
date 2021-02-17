@@ -28,8 +28,8 @@
           { "$ref": "#/components/parameters/OwnerId" }
         ],
         "responses": {
-          "200": { "$ref": "#/components/responses/ListNetworkgroupsSuccess" },
-          "401": { "$ref": "#/components/responses/ListNetworkgroupsUnauthorized" }
+          "200": { "$ref": "#/components/responses/ListNetworkgroups_Success" },
+          "401": { "$ref": "#/components/responses/ListNetworkgroups_Unauthorized" }
         }
       },
       "post": {
@@ -44,9 +44,9 @@
         ],
         "requestBody": { "$ref": "#/components/requestBodies/CreateNetworkgroup" },
         "responses": {
-          "201": { "$ref": "#/components/responses/CreateNetworkgroupSuccess" },
-          "400": { "$ref": "#/components/responses/CreateNetworkgroupBadRequest" },
-          "409": { "$ref": "#/components/responses/CreateNetworkgroupConflict" }
+          "201": { "$ref": "#/components/responses/CreateNetworkgroup_Success" },
+          "400": { "$ref": "#/components/responses/CreateNetworkgroup_BadRequest" },
+          "409": { "$ref": "#/components/responses/CreateNetworkgroup_Conflict" }
         }
       }
     },
@@ -64,7 +64,7 @@
         ],
         "responses": {
           "204": { "$ref": "#/components/responses/NoContent" },
-          "401": { "$ref": "#/components/responses/DeleteNetworkgroupUnauthorized" }
+          "401": { "$ref": "#/components/responses/DeleteNetworkgroup_Unauthorized" }
         }
       }
     },
@@ -79,8 +79,9 @@
           { "$ref": "#/components/parameters/NetworkgroupId" }
         ],
         "responses": {
-          "200": { "$ref": "#/components/responses/ListMembersSuccess" },
-          "404": { "$ref": "#/components/responses/ListMembersNotFound" }
+          "200": { "$ref": "#/components/responses/ListMembers_Success" },
+          "401": { "$ref": "#/components/responses/GetNetworkgroup_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetNetworkgroup_NotFound" }
         },
         "x-service": "networkgroup",
         "x-function": "listMembers"
@@ -99,9 +100,9 @@
         "requestBody": { "$ref": "#/components/requestBodies/AddMember" },
         "responses": {
           "202": { "$ref": "#/components/responses/AcceptedForProcessing" },
-          "400": { "$ref": "#/components/responses/AddMemberBadRequest" },
-          "401": { "$ref": "#/components/responses/GetNetworkgroupUnauthorized" },
-          "404": { "$ref": "#/components/responses/GetNetworkgroupNotFound" }
+          "400": { "$ref": "#/components/responses/AddMember_BadRequest" },
+          "401": { "$ref": "#/components/responses/GetNetworkgroup_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetNetworkgroup_NotFound" }
         }
       }
     },
@@ -119,9 +120,9 @@
           { "$ref": "#/components/parameters/MemberId" }
         ],
         "responses": {
-          "200": { "$ref": "#/components/responses/GetMemberSuccess" },
-          "401": { "$ref": "#/components/responses/GetMemberUnauthorized" },
-          "404": { "$ref": "#/components/responses/GetMemberNotFound" }
+          "200": { "$ref": "#/components/responses/GetMember_Success" },
+          "401": { "$ref": "#/components/responses/GetMember_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetMember_NotFound" }
         }
       },
       "delete": {
@@ -138,8 +139,8 @@
         ],
         "responses": {
           "204": { "$ref": "#/components/responses/NoContent" },
-          "401": { "$ref": "#/components/responses/GetMemberUnauthorized" },
-          "404": { "$ref": "#/components/responses/GetMemberNotFound" }
+          "401": { "$ref": "#/components/responses/GetMember_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetMember_NotFound" }
         }
       }
     },
@@ -156,9 +157,9 @@
           { "$ref": "#/components/parameters/NetworkgroupId" }
         ],
         "responses": {
-          "200": { "$ref": "#/components/responses/ListPeersSuccess" },
-          "401": { "$ref": "#/components/responses/ListPeersUnauthorized" },
-          "404": { "$ref": "#/components/responses/ListPeersNotFound" }
+          "200": { "$ref": "#/components/responses/ListPeers_Success" },
+          "401": { "$ref": "#/components/responses/GetNetworkgroup_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetNetworkgroup_NotFound" }
         }
       }
     },
@@ -176,9 +177,9 @@
           { "$ref": "#/components/parameters/PeerId" }
         ],
         "responses": {
-          "200": { "$ref": "#/components/responses/GetPeerSuccess" },
-          "401": { "$ref": "#/components/responses/GetPeerUnauthorized" },
-          "404": { "$ref": "#/components/responses/GetPeerNotFound" }
+          "200": { "$ref": "#/components/responses/GetPeer_Success" },
+          "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
         }
       }
     },
@@ -196,9 +197,9 @@
           { "$ref": "#/components/parameters/PeerId" }
         ],
         "responses": {
-          "200": { "$ref": "#/components/responses/GetWgConfSuccess" },
-          "401": { "$ref": "#/components/responses/GetPeerUnauthorized" },
-          "404": { "$ref": "#/components/responses/GetPeerNotFound" }
+          "200": { "$ref": "#/components/responses/GetWgConf_Success" },
+          "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
         }
       }
     },
@@ -222,8 +223,8 @@
               "text/event-stream": {}
             }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "404": { "$ref": "#/components/responses/GetPeerNotFound" }
+          "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
         }
       }
     },
@@ -241,10 +242,10 @@
         ],
         "requestBody": { "$ref": "#/components/requestBodies/AddExternalPeer" },
         "responses": {
-          "200": { "$ref": "#/components/responses/AddExternalPeerSuccess" },
-          "400": { "$ref": "#/components/responses/AddExternalPeerBadRequest" },
-          "401": { "$ref": "#/components/responses/GetNetworkgroupUnauthorized" },
-          "404": { "$ref": "#/components/responses/GetNetworkgroupNotFound" }
+          "200": { "$ref": "#/components/responses/AddExternalPeer_Success" },
+          "400": { "$ref": "#/components/responses/AddExternalPeer_BadRequest" },
+          "401": { "$ref": "#/components/responses/GetNetworkgroup_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetNetworkgroup_NotFound" }
         }
       }
     },
@@ -263,7 +264,8 @@
         ],
         "responses": {
           "202": { "$ref": "#/components/responses/EmptyJSON" },
-          "401": { "$ref": "#/components/responses/UnauthorizedNgNotInOrga" }
+          "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
         }
       }
     }
@@ -711,7 +713,7 @@
         "description": "Success - No Content"
       },
 
-      "ListNetworkgroupsSuccess": {
+      "ListNetworkgroups_Success": {
         "description": "Success",
         "content": {
           "application/json": {
@@ -727,7 +729,7 @@
           }
         }
       },
-      "ListNetworkgroupsUnauthorized": {
+      "ListNetworkgroups_Unauthorized": {
         "description": "Unauthorized",
         "content": {
           "text/plain": {
@@ -743,7 +745,7 @@
         }
       },
 
-      "CreateNetworkgroupSuccess": {
+      "CreateNetworkgroup_Success": {
         "description": "Success",
         "content": {
           "application/json": {
@@ -754,7 +756,7 @@
           }
         }
       },
-      "CreateNetworkgroupBadRequest": {
+      "CreateNetworkgroup_BadRequest": {
         "description": "Bad Request",
         "content": {
           "text/plain": {
@@ -772,7 +774,7 @@
           }
         }
       },
-      "CreateNetworkgroupConflict": {
+      "CreateNetworkgroup_Conflict": {
         "description": "Conflict",
         "content": {
           "text/plain": {
@@ -788,7 +790,7 @@
         }
       },
 
-      "GetNetworkgroupUnauthorized": {
+      "GetNetworkgroup_Unauthorized": {
         "description": "Unauthorized",
         "content": {
           "text/plain": {
@@ -806,7 +808,7 @@
           }
         }
       },
-      "GetNetworkgroupNotFound": {
+      "GetNetworkgroup_NotFound": {
         "description": "Not Found",
         "content": {
           "text/plain": {
@@ -822,7 +824,7 @@
         }
       },
 
-      "DeleteNetworkgroupUnauthorized": {
+      "DeleteNetworkgroup_Unauthorized": {
         "description": "Unauthorized",
         "content": {
           "text/plain": {
@@ -841,7 +843,7 @@
         }
       },
 
-      "ListMembersSuccess": {
+      "ListMembers_Success": {
         "description": "Success",
         "content": {
           "application/json": {
@@ -857,23 +859,8 @@
           }
         }
       },
-      "ListMembersNotFound" : {
-        "description": "Not Found",
-        "content": {
-          "text/plain": {
-            "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "Networkgroup not found": {
-                "value": "The requested resource could not be found but may be available again in the future."
-              }
-            }
-          }
-        }
-      },
 
-      "AddMemberBadRequest": {
+      "AddMember_BadRequest": {
         "description": "Bad Request",
         "content": {
           "text/plain": {
@@ -889,7 +876,7 @@
         }
       },
 
-      "GetMemberSuccess": {
+      "GetMember_Success": {
         "description": "Success",
         "content": {
           "application/json": {
@@ -902,7 +889,7 @@
           }
         }
       },
-      "GetMemberUnauthorized": {
+      "GetMember_Unauthorized": {
         "description": "Unauthorized",
         "content": {
           "text/plain": {
@@ -920,7 +907,7 @@
           }
         }
       },
-      "GetMemberNotFound": {
+      "GetMember_NotFound": {
         "description": "Not Found",
         "content": {
           "text/plain": {
@@ -939,7 +926,7 @@
         }
       },
 
-      "ListPeersSuccess": {
+      "ListPeers_Success": {
         "description": "Success",
         "content": {
           "application/json": {
@@ -950,41 +937,8 @@
           }
         }
       },
-      "ListPeersUnauthorized": {
-        "description": "Unauthorized",
-        "content": {
-          "text/plain": {
-            "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "Owner not found": {
-                "value": "Authentication is possible but has failed or not yet been provided."
-              },
-              "Networkgroup from another owner": {
-                "value": "Authentication is possible but has failed or not yet been provided."
-              }
-            }
-          }
-        }
-      },
-      "ListPeersNotFound": {
-        "description": "Not Found",
-        "content": {
-          "text/plain": {
-            "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "Networkgroup not found": {
-                "value": "The requested resource could not be found but may be available again in the future."
-              }
-            }
-          }
-        }
-      },
 
-      "GetPeerSuccess": {
+      "GetPeer_Success": {
         "description": "Success",
         "content": {
           "application/json": {
@@ -997,7 +951,7 @@
           }
         }
       },
-      "GetPeerUnauthorized": {
+      "GetPeer_Unauthorized": {
         "description": "Unauthorized",
         "content": {
           "text/plain": {
@@ -1015,7 +969,7 @@
           }
         }
       },
-      "GetPeerNotFound": {
+      "GetPeer_NotFound": {
         "description": "Not Found",
         "content": {
           "text/plain": {
@@ -1034,7 +988,7 @@
         }
       },
 
-      "AddExternalPeerSuccess": {
+      "AddExternalPeer_Success": {
         "description": "Success",
         "content": {
           "application/json": {
@@ -1047,7 +1001,7 @@
           }
         }
       },
-      "AddExternalPeerBadRequest": {
+      "AddExternalPeer_BadRequest": {
         "description": "Bad Request",
         "content": {
           "text/plain": {
@@ -1066,7 +1020,7 @@
         }
       },
 
-      "GetWgConfSuccess": {
+      "GetWgConf_Success": {
         "description": "Success",
         "content": {
           "application/json": {
@@ -1076,29 +1030,6 @@
             "examples": {
               "default": { "$ref": "#/components/examples/WireGuardConf" }
             }
-          }
-        }
-      },
-
-      "Unauthorized": {
-        "description": "Unauthorized",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "string"
-            },
-            "example": "Authentication is possible but has failed or not yet been provided."
-          }
-        }
-      },
-      "UnauthorizedNgNotInOrga": {
-        "description": "Unauthorized (networkgroup in another organization)",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "string"
-            },
-            "example": "Authentication is possible but has failed or not yet been provided."
           }
         }
       }
