@@ -24,6 +24,7 @@
         "operationId": "listNetworkgroups",
         "x-service": "networkgroup",
         "x-function": "get",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" }
         ],
@@ -39,6 +40,7 @@
         "operationId": "createNetworkgroup",
         "x-service": "networkgroup",
         "x-function": "createNg",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" }
         ],
@@ -58,6 +60,7 @@
         "operationId": "deleteNetworkgroup",
         "x-service": "networkgroup",
         "x-function": "deleteNg",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" }
@@ -74,6 +77,7 @@
         "summary": "List Members",
         "description": "Lists members from a networkgroup.",
         "operationId": "listMembers",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" }
@@ -93,6 +97,7 @@
         "operationId": "addMember",
         "x-service": "networkgroup",
         "x-function": "addMember",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" }
@@ -114,6 +119,7 @@
         "operationId": "getMember",
         "x-service": "networkgroup",
         "x-function": "getMember",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" },
@@ -132,6 +138,7 @@
         "operationId": "removeMember",
         "x-service": "networkgroup",
         "x-function": "removeMember",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" },
@@ -152,6 +159,7 @@
         "operationId": "listPeers",
         "x-service": "networkgroup",
         "x-function": "listPeers",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" }
@@ -171,6 +179,7 @@
         "operationId": "getPeer",
         "x-service": "networkgroup",
         "x-function": "getPeer",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" },
@@ -191,6 +200,7 @@
         "operationId": "getWgConf",
         "x-service": "networkgroup",
         "x-function": "getWgConf",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" },
@@ -211,6 +221,7 @@
         "operationId": "sseWgConf",
         "x-service": "networkgroup",
         "x-function": "sseWgConf",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" },
@@ -236,6 +247,7 @@
         "operationId": "addExternalPeer",
         "x-service": "networkgroup",
         "x-function": "addExternalPeer",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" }
@@ -257,6 +269,7 @@
         "operationId": "removeExternalPeer",
         "x-service": "networkgroup",
         "x-function": "removeExternalPeer",
+        "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" },
@@ -271,6 +284,12 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "OAuth1": {
+        "type": "http",
+        "scheme": "oauth"
+      }
+    },
     "parameters": {
       "OwnerId": {
         "name": "ownerId",
