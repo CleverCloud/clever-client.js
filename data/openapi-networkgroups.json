@@ -176,8 +176,9 @@
           { "$ref": "#/components/parameters/PeerId" }
         ],
         "responses": {
-          "200": { "$ref": "#/components/responses/Peer" },
-          "404": { "$ref": "#/components/responses/PeerNotFound" }
+          "200": { "$ref": "#/components/responses/GetPeerSuccess" },
+          "401": { "$ref": "#/components/responses/GetPeerUnauthorized" },
+          "404": { "$ref": "#/components/responses/GetPeerNotFound" }
         }
       }
     },
@@ -978,6 +979,56 @@
         }
       },
 
+      "GetPeerSuccess": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Peer"
+            },
+            "examples": {
+              "default": { "$ref": "#/components/examples/Peer" }
+            }
+          }
+        }
+      },
+      "GetPeerUnauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Owner not found": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              },
+              "Networkgroup from another owner": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              }
+            }
+          }
+        }
+      },
+      "GetPeerNotFound": {
+        "description": "Not Found",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Networkgroup not found": {
+                "value": "The requested resource could not be found but may be available again in the future."
+              },
+              "Peer not found": {
+                "value": "The requested resource could not be found but may be available again in the future."
+              }
+            }
+          }
+        }
+      },
+
       "ArrayOfNetworkgroups": {
         "description": "Success",
         "content": {
@@ -990,16 +1041,6 @@
             },
             "examples": {
               "default": { "$ref": "#/components/examples/ArrayOfNetworkgroups" }
-            }
-          }
-        }
-      },
-      "Peer": {
-        "description": "Success",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Peer"
             }
           }
         }
