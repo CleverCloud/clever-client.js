@@ -156,8 +156,9 @@
           { "$ref": "#/components/parameters/NetworkgroupId" }
         ],
         "responses": {
-          "200": { "$ref": "#/components/responses/ArrayOfPeers" },
-          "404": { "$ref": "#/components/responses/NetworkgroupNotFound" }
+          "200": { "$ref": "#/components/responses/ListPeersSuccess" },
+          "401": { "$ref": "#/components/responses/ListPeersUnauthorized" },
+          "404": { "$ref": "#/components/responses/ListPeersNotFound" }
         }
       }
     },
@@ -932,6 +933,51 @@
         }
       },
 
+      "ListPeersSuccess": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ArrayOfPeers" },
+            "examples": {
+              "default": { "$ref": "#/components/examples/ArrayOfPeers" }
+            }
+          }
+        }
+      },
+      "ListPeersUnauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Owner not found": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              },
+              "Networkgroup from another owner": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              }
+            }
+          }
+        }
+      },
+      "ListPeersNotFound": {
+        "description": "Not Found",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Networkgroup not found": {
+                "value": "The requested resource could not be found but may be available again in the future."
+              }
+            }
+          }
+        }
+      },
+
       "ArrayOfNetworkgroups": {
         "description": "Success",
         "content": {
@@ -954,19 +1000,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/Peer"
-            }
-          }
-        }
-      },
-      "ArrayOfPeers": {
-        "description": "Success",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Peer"
-              }
             }
           }
         }
@@ -1215,7 +1248,7 @@
       },
       "ArrayOfMembers": {
         "summary": "Simple Example",
-        "description": "An example list of members.",
+        "description": "An example list of networkgroup members.",
         "value": [
           {
             "id": "app_c992f9db-9a03-4e96-b1ab-29afedebee93",
@@ -1250,6 +1283,52 @@
           "domain-name": "{{$randomLoremSlug}}",
           "type": "external"
         }
+      },
+
+      "ArrayOfPeers": {
+        "summary": "Simple Example",
+        "description": "An example list of networkgroup peers.",
+        "value": [
+          {
+            "id": "ea21854c-a12a-4f90-9701-d329d8f99f96",
+            "label": "java-1",
+            "hostname": "java-1",
+            "hv": {
+              "host": "hv-par0-001",
+              "zone": {
+                "id": "par0"
+              }
+            },
+            "public-key": "kd9swNEpWvoovJ9QO8xZg3SEm7RPSDddgdA5KyEFtgM=",
+            "endpoint": {
+              "ng-term": {
+                "ip": "10.101.0.7",
+                "port": 50159
+              },
+              "public-term": {
+                "ip": "62.210.251.80",
+                "port": 45000
+              },
+              "type": "ServerEndpoint"
+            },
+            "parent_event": null,
+            "parent_member": "app_b888f06d-3adb-4cf1-b017-7eac4f096e90",
+            "type": "CleverPeer"
+          },
+          {
+            "id": "external_f7f5fa23-a469-48c9-bf0b-7d8583d603b1",
+            "label": "mylaptop",
+            "hostname": "mylaptop",
+            "public-key": "GfTtsW0lrKjr7EDsrg2jglikIB+f3cV/wdBoThsESnA=",
+            "endpoint": {
+              "ng-ip": "10.101.0.12",
+              "type": "ClientEndpoint"
+            },
+            "parent_event": null,
+            "parent_member": "app_b888f06d-3adb-4cf1-b017-7eac4f096e93",
+            "type": "ExternalPeer"
+          }
+        ]
       },
 
       "Peer": {
