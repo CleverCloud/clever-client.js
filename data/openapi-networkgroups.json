@@ -77,6 +77,8 @@
         "summary": "List Members",
         "description": "Lists members from a networkgroup.",
         "operationId": "listMembers",
+        "x-service": "networkgroup",
+        "x-function": "listMembers",
         "security": [{ "OAuth1": [] }],
         "parameters": [
           { "$ref": "#/components/parameters/OwnerId" },
@@ -86,9 +88,7 @@
           "200": { "$ref": "#/components/responses/ListMembers_Success" },
           "401": { "$ref": "#/components/responses/GetNetworkgroup_Unauthorized" },
           "404": { "$ref": "#/components/responses/GetNetworkgroup_NotFound" }
-        },
-        "x-service": "networkgroup",
-        "x-function": "listMembers"
+        }
       },
       "post": {
         "tags": ["networkgroups"],
