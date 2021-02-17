@@ -185,8 +185,8 @@
     "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}/wireguard/configuration": {
       "get": {
         "tags": ["networkgroups"],
-        "summary": "Get WireGuard Configuration",
-        "description": "Gets the actual WireGuard configuration for a networkgroup peer.",
+        "summary": "Get WireGuard® Configuration",
+        "description": "Gets the actual WireGuard® configuration for a networkgroup peer.",
         "operationId": "getWgConf",
         "x-service": "networkgroup",
         "x-function": "getWgConf",
@@ -214,8 +214,8 @@
     "/organisations/{ownerId}/networkgroups/{ngId}/peers/{peerId}/wireguard/configuration/stream": {
       "get": {
         "tags": ["networkgroups", "sse"],
-        "summary": "WireGuard Configuration SSE",
-        "description": "Retreives the actual WireGuard configuration for a networkgroup peer as a Server Sent Event.",
+        "summary": "WireGuard® Configuration SSE",
+        "description": "Retreives the actual WireGuard® configuration for a networkgroup peer as a Server Sent Event.",
         "operationId": "sseWgConf",
         "x-service": "networkgroup",
         "x-function": "sseWgConf",
@@ -618,7 +618,7 @@
             "type": "string"
           },
           "public-key": {
-            "description": "The WireGuard public key of the peer.",
+            "description": "The WireGuard® public key of the peer.",
             "type": "string"
           },
           "hostname": {
@@ -649,8 +649,8 @@
         "example": { "$ref": "#/components/examples/Peer" }
       },
       "WireGuardConf": {
-        "title": "WireGuard Configuration",
-        "description": "A WireGuard tunnel configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
+        "title": "WireGuard® Configuration",
+        "description": "A WireGuard® tunnel configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
         "type": "string",
         "example": "W0ludGVyZmFjZV0NClByaXZhdGVLZXkgPSA8JVByaXZhdGVLZXklPg0KQWRkcmVzcyA9IDEwLjEwMi4wLjYvMTYNCg0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gS2o5cFRDTjFMQ1JaYms1U1kxbFNPU3hJT2t4dFgyVlJWRlUwTkNaeGNTNHUNCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuMTAvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFpsOTlYV1p5VGpSa1J6TmJVWEF1Sm5WSVZTTXJaaWxrVmxSOVFGb3NSamdLDQogICAgQWxsb3dlZElQcyA9IDEwLjEwMi4wLjUvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFlTMDVjaU5IWkVaNlpqZGpTMTF3TkhWNU4xUXBNMnRRYVVKWVdHUlNYem8NCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuOS8zMg0KICAgIFBlcnNpc3RlbnRLZWVwYWxpdmUgPSAyNQ0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gSVdneldWMGpLRjhsZWwxcmNIczJOV2NyVURRckxHbHlXRlFsVFQ4amUzMA0KICAgIEFsbG93ZWRJUHMgPSAxMC4xMDIuMC43LzMyDQogICAgUGVyc2lzdGVudEtlZXBhbGl2ZSA9IDI1DQoNCg0K"
       },
