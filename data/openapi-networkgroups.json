@@ -1245,7 +1245,6 @@
           "tags": ["apps", "test"]
         }
       },
-
       "CreateNetworkgroupRequest_Postman": {
         "summary": "Postman Dynamic Example",
         "description": "Example request for creating a networkgroup with Postman.",
@@ -1256,6 +1255,7 @@
           "tags": ["{{$randomLoremWord}}", "{{$randomLoremWord}}"]
         }
       },
+
       "Member": {
         "summary": "Example networkgroup member",
         "value": {
@@ -1304,6 +1304,35 @@
         }
       },
 
+      "Peer": {
+        "summary": "Example peer",
+        "value": {
+          "id": "ea21854c-a12a-4f90-9701-d329d8f99f96",
+          "label": "java-1",
+          "hostname": "java-1",
+          "hv": {
+            "host": "hv-par0-001",
+            "zone": {
+              "id": "par0"
+            }
+          },
+          "public-key": "kd9swNEpWvoovJ9QO8xZg3SEm7RPSDddgdA5KyEFtgM=",
+          "endpoint": {
+            "ng-term": {
+              "ip": "10.101.0.7",
+              "port": 50159
+            },
+            "public-term": {
+              "ip": "62.210.251.80",
+              "port": 45000
+            },
+            "type": "ServerEndpoint"
+          },
+          "parent_event": null,
+          "parent_member": "app_b888f06d-3adb-4cf1-b017-7eac4f096e90",
+          "type": "CleverPeer"
+        }
+      },
       "ArrayOfPeers": {
         "summary": "Simple Example",
         "description": "An example list of networkgroup peers.",
@@ -1350,35 +1379,6 @@
         ]
       },
 
-      "Peer": {
-        "summary": "Example peer",
-        "value": {
-          "id": "ea21854c-a12a-4f90-9701-d329d8f99f96",
-          "label": "java-1",
-          "hostname": "java-1",
-          "hv": {
-            "host": "hv-par0-001",
-            "zone": {
-              "id": "par0"
-            }
-          },
-          "public-key": "kd9swNEpWvoovJ9QO8xZg3SEm7RPSDddgdA5KyEFtgM=",
-          "endpoint": {
-            "ng-term": {
-              "ip": "10.101.0.7",
-              "port": 50159
-            },
-            "public-term": {
-              "ip": "62.210.251.80",
-              "port": 45000
-            },
-            "type": "ServerEndpoint"
-          },
-          "parent_event": null,
-          "parent_member": "app_b888f06d-3adb-4cf1-b017-7eac4f096e90",
-          "type": "CleverPeer"
-        }
-      },
       "Hypervisor": {
         "summary": "Example hypervisor",
         "value": {
