@@ -271,7 +271,7 @@
           { "$ref": "#/components/parameters/PeerId" }
         ],
         "responses": {
-          "202": { "$ref": "#/components/responses/EmptyJSON" },
+          "204": { "$ref": "#/components/responses/NoContent" },
           "401": { "$ref": "#/components/responses/GetPeer_Unauthorized" },
           "404": { "$ref": "#/components/responses/GetPeer_NotFound" }
         }
@@ -706,12 +706,6 @@
       }
     },
     "responses": {
-      "EmptyJSON": {
-        "description": "Success",
-        "content": {
-          "application/json": {}
-        }
-      },
       "AcceptedForProcessing": {
         "description": "Success - Accepted",
         "content": {
