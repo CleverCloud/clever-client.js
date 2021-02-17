@@ -53,6 +53,24 @@
       }
     },
     "/organisations/{ownerId}/networkgroups/{ngId}": {
+      "get": {
+        "tags": ["networkgroups"],
+        "summary": "Get Networkgroup",
+        "description": "Gets details from a networkgroup.",
+        "operationId": "getNetworkgroup",
+        "x-service": "networkgroup",
+        "x-function": "getNg",
+        "security": [{ "OAuth1": [] }],
+        "parameters": [
+          { "$ref": "#/components/parameters/OwnerId" },
+          { "$ref": "#/components/parameters/NetworkgroupId" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/GetNetworkgroup_Success" },
+          "401": { "$ref": "#/components/responses/GetNetworkgroup_Unauthorized" },
+          "404": { "$ref": "#/components/responses/GetNetworkgroup_NotFound" }
+        }
+      },
       "delete": {
         "tags": ["networkgroups"],
         "summary": "Delete Networkgroup",
@@ -799,6 +817,18 @@
         }
       },
 
+      "GetNetworkgroup_Success": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Networkgroup" },
+            "examples": {
+              "default": { "$ref": "#/components/examples/Networkgroup" },
+              "new": { "$ref": "#/components/examples/NewNetworkgroup" }
+            }
+          }
+        }
+      },
       "GetNetworkgroup_Unauthorized": {
         "description": "Unauthorized",
         "content": {
