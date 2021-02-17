@@ -100,8 +100,8 @@
         "responses": {
           "202": { "$ref": "#/components/responses/AcceptedForProcessing" },
           "400": { "$ref": "#/components/responses/AddMemberBadRequest" },
-          "401": { "$ref": "#/components/responses/AddMemberUnauthorized" },
-          "404": { "$ref": "#/components/responses/AddMemberNotFound" }
+          "401": { "$ref": "#/components/responses/GetNetworkgroupUnauthorized" },
+          "404": { "$ref": "#/components/responses/GetNetworkgroupNotFound" }
         }
       }
     },
@@ -239,27 +239,12 @@
           { "$ref": "#/components/parameters/OwnerId" },
           { "$ref": "#/components/parameters/NetworkgroupId" }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/AddExternalPeerRequest" }
-            }
-          }
-        },
+        "requestBody": { "$ref": "#/components/requestBodies/AddExternalPeer" },
         "responses": {
-          "200": { "$ref": "#/components/responses/EmptyJSON" },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema" : {
-                  "type": "string",
-                  "example": "The request content was malformed:\n012.345.678.901 is not a correct ip address: DownField(ip)"
-                }
-              }
-            }
-          }
+          "200": { "$ref": "#/components/responses/AddExternalPeerSuccess" },
+          "400": { "$ref": "#/components/responses/AddExternalPeerBadRequest" },
+          "401": { "$ref": "#/components/responses/GetNetworkgroupUnauthorized" },
+          "404": { "$ref": "#/components/responses/GetNetworkgroupNotFound" }
         }
       }
     },
@@ -408,6 +393,26 @@
         "title": "Parent Event",
         "type": "string",
         "nullable": true
+      },
+      "ExternalPeerRole": {
+        "title": "Role",
+        "description": "The role of this peer in the networkgroup. Either client (`'client'`) or server (`'server'`).",
+        "type": "string",
+        "enum": ["client", "server"]
+      },
+      "ServerPeerIpAddress": {
+        "title": "IP Address",
+        "description": "The public IP on which you are listening (only for `server` role).",
+        "type": "string",
+        "format": "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
+        "example": "10.105.0.42"
+      },
+      "ServerPeerPort": {
+        "title": "Port",
+        "description": "The public port on which you are listening (only for `server` role).",
+        "type": "integer",
+        "format": "int32",
+        "example": 50159
       },
       "ZoneId": {
         "title": "Zone `id`",
@@ -581,45 +586,24 @@
       },
       "AddExternalPeerRequest": {
         "title": "Add External Peer Request",
-        "required": [
-          "peer-role",
-          "public-key",
-          "parent-member"
-        ],
+        "required": ["peer-role", "public-key", "parent_member"],
         "type": "object",
         "properties": {
-          "ip": {
-            "description": "The public IP on which you are listening (only for `server` role).",
-            "type": "string"
-          },
-          "port": {
-            "description": "The public port on which you are listening (only for `server` role).",
-            "type": "string"
-          },
-          "peer-role": {
-            "description": "The role of this peer in the networkgroup. Either client (`'client'`) or server (`'server'`).",
-            "type": "string",
-            "enum": [
-              "client",
-              "server"
-            ]
-          },
-          "label": {
-            "description": "The label of the peer.",
-            "type": "string"
-          },
-          "public-key": {
-            "description": "The WireGuard® public key of the peer.",
-            "type": "string"
-          },
-          "hostname": {
-            "description": "The host name to use for the peer.",
-            "type": "string"
-          },
-          "parent_member": {
-            "description": "The member `id` of the peer category.",
-            "type": "string"
-          }
+          "peer-role":     { "$ref": "#/components/schemas/ExternalPeerRole" },
+          "label":         { "$ref": "#/components/schemas/PeerLabel" },
+          "public-key":    { "$ref": "#/components/schemas/WireGuardPublicKey" },
+          "hostname":      { "$ref": "#/components/schemas/PeerHostName" },
+          "parent_member": { "$ref": "#/components/schemas/MemberId" },
+          "ip":            { "$ref": "#/components/schemas/ServerPeerIpAddress" },
+          "port":          { "$ref": "#/components/schemas/ServerPeerPort" }
+        }
+      },
+      "AddExternalPeerResponse": {
+        "title": "Add External Peer Response",
+        "required": ["id"],
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "#/components/schemas/PeerId" }
         }
       },
       "Peer": {
@@ -687,6 +671,19 @@
             "examples": {
               "default": { "$ref": "#/components/examples/AddMemberRequest" },
               "Dynamic": { "$ref": "#/components/examples/AddMemberRequest_Postman" }
+            }
+          }
+        }
+      },
+
+      "AddExternalPeer": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/AddExternalPeerRequest" },
+            "examples": {
+              "default": { "$ref": "#/components/examples/AddExternalPeerRequest" },
+              "Dynamic": { "$ref": "#/components/examples/AddExternalPeerRequest_Postman" }
             }
           }
         }
@@ -791,6 +788,40 @@
         }
       },
 
+      "GetNetworkgroupUnauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Owner not found": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              },
+              "Networkgroup from another owner": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              }
+            }
+          }
+        }
+      },
+      "GetNetworkgroupNotFound": {
+        "description": "Not Found",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Networkgroup not found": {
+                "value": "The requested resource could not be found but may be available again in the future."
+              }
+            }
+          }
+        }
+      },
+
       "DeleteNetworkgroupUnauthorized": {
         "description": "Unauthorized",
         "content": {
@@ -852,39 +883,6 @@
             "examples": {
               "Invalid body (e.g. `type`)": {
                 "value": "server can't do that, Seems the member you try to add is invalid"
-              }
-            }
-          }
-        }
-      },
-      "AddMemberUnauthorized": {
-        "description": "Unauthorized",
-        "content": {
-          "text/plain": {
-            "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "Owner not found": {
-                "value": "Authentication is possible but has failed or not yet been provided."
-              },
-              "Networkgroup from another owner": {
-                "value": "Authentication is possible but has failed or not yet been provided."
-              }
-            }
-          }
-        }
-      },
-      "AddMemberNotFound": {
-        "description": "Not Found",
-        "content": {
-          "text/plain": {
-            "schema": {
-              "type": "string"
-            },
-            "examples": {
-              "Networkgroup not found": {
-                "value": "The requested resource could not be found but may be available again in the future."
               }
             }
           }
@@ -1030,6 +1028,38 @@
               },
               "Peer not found": {
                 "value": "The requested resource could not be found but may be available again in the future."
+              }
+            }
+          }
+        }
+      },
+
+      "AddExternalPeerSuccess": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AddExternalPeerResponse"
+            },
+            "examples": {
+              "default": { "$ref": "#/components/examples/AddExternalPeerResponse" }
+            }
+          }
+        }
+      },
+      "AddExternalPeerBadRequest": {
+        "description": "Bad Request",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Invalid field (`ip`)": {
+                "value": "The request content was malformed:\n012.345.678.901 is not a correct ip address: DownField(ip)"
+              },
+              "Missing field (`public-key`)": {
+                "value": "The request content was malformed:\nAttempt to decode value on failed cursor: DownField(public-key)"
               }
             }
           }
@@ -1382,6 +1412,38 @@
             "type": "ExternalPeer"
           }
         ]
+      },
+
+      "AddExternalPeerRequest": {
+        "summary": "Simple Example",
+        "description": "Example request for adding a networkgroup external peer.",
+        "value": {
+          "peer-role": "client",
+          "public-key": "J0OW17ZDXvByNDDM7nv3KB+vwkvvJUGYGqpsncxZnzU=",
+          "label": "My laptop",
+          "hostname": "my-laptop",
+          "parent_member": "company-laptops"
+        }
+      },
+      "AddExternalPeerRequest_Postman": {
+        "summary": "Postman Dynamic Example",
+        "description": "Example request for adding a networkgroup external peer with Postman.",
+        "value": {
+          "peer-role": "server",
+          "public-key": "{{$randomPassword}}",
+          "ip": "{{$randomIP}}",
+          "port": "{{$randomInt}}",
+          "label": "{{$randomWords}}",
+          "hostname": "{{$randomLoremSlug}}",
+          "parent_member": "{{memberId}}"
+        }
+      },
+      "AddExternalPeerResponse": {
+        "summary": "Example Response",
+        "description": "Example response for adding a networkgroup external peer.",
+        "value": {
+          "id": "external_2824083d-077b-4ec2-9e7c-8dffb2dcd979"
+        }
       },
 
       "WireGuardConf": {
