@@ -119,8 +119,9 @@
           { "$ref": "#/components/parameters/MemberId" }
         ],
         "responses": {
-          "200": { "$ref": "#/components/responses/Member" },
-          "404": { "$ref": "#/components/responses/MemberNotFound" }
+          "200": { "$ref": "#/components/responses/GetMemberSuccess" },
+          "401": { "$ref": "#/components/responses/GetMemberUnauthorized" },
+          "404": { "$ref": "#/components/responses/GetMemberNotFound" }
         }
       },
       "delete": {
@@ -137,7 +138,7 @@
         ],
         "responses": {
           "204": { "$ref": "#/components/responses/NoContent" },
-          "404": { "$ref": "#/components/responses/MemberNotFound" }
+          "404": { "$ref": "#/components/responses/GetMemberNotFound" }
         }
       }
     },
@@ -322,7 +323,7 @@
         "schema": { "$ref": "#/components/schemas/MemberId" },
         "examples": {
           "Dynamic": {
-            "value": "{{appId}}"
+            "value": "{{memberId}}"
           }
         }
       },
@@ -788,6 +789,9 @@
               "type": "string"
             },
             "examples": {
+              "Owner not found": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              },
               "Networkgroup from another owner": {
                 "value": "Authentication is possible but has failed or not yet been provided."
               }
@@ -851,6 +855,9 @@
               "type": "string"
             },
             "examples": {
+              "Owner not found": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              },
               "Networkgroup from another owner": {
                 "value": "Authentication is possible but has failed or not yet been provided."
               }
@@ -874,6 +881,56 @@
         }
       },
 
+      "GetMemberSuccess": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Member"
+            },
+            "examples": {
+              "default": { "$ref": "#/components/examples/Member" }
+            }
+          }
+        }
+      },
+      "GetMemberUnauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Owner not found": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              },
+              "Networkgroup from another owner": {
+                "value": "Authentication is possible but has failed or not yet been provided."
+              }
+            }
+          }
+        }
+      },
+      "GetMemberNotFound": {
+        "description": "Not Found",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "Networkgroup not found": {
+                "value": "The requested resource could not be found but may be available again in the future."
+              },
+              "Member not found": {
+                "value": "The requested resource could not be found but may be available again in the future."
+              }
+            }
+          }
+        }
+      },
+
       "ArrayOfNetworkgroups": {
         "description": "Success",
         "content": {
@@ -886,16 +943,6 @@
             },
             "examples": {
               "default": { "$ref": "#/components/examples/ArrayOfNetworkgroups" }
-            }
-          }
-        }
-      },
-      "Member": {
-        "description": "Success",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Member"
             }
           }
         }
@@ -946,17 +993,6 @@
         }
       },
       "NetworkgroupNotFound": {
-        "description": "Not Found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "string"
-            },
-            "example": "The requested resource could not be found but may be available again in the future."
-          }
-        }
-      },
-      "MemberNotFound": {
         "description": "Not Found",
         "content": {
           "application/json": {
@@ -1170,7 +1206,7 @@
       "Member": {
         "summary": "Example networkgroup member",
         "value": {
-          "id": "{{appId}}",
+          "id": "app_0596acdb-fc59-4fdd-b747-0e3754460a63",
           "label": "My Member",
           "domain-name": "my-domain",
           "type": "application"
