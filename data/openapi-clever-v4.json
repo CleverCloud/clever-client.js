@@ -37,6 +37,25 @@
         "x-service": "addon-providers",
         "x-function": "getAddonProvider"
       }
+    },
+    "/addon-providers/{providerId}/{addonId}": {
+      "get": {
+        "operationId": "getAddon",
+        "x-service": "addon-providers",
+        "x-function": "getAddon",
+        "parameters": [
+          { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": { }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
