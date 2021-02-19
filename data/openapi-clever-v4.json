@@ -38,6 +38,24 @@
         "x-function": "getAddonProvider"
       }
     },
+    "/addon-providers/{providerId}/{addonId}": {
+      "get": {
+        "operationId": "getAddon",
+        "parameters": [
+          { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "addon-providers",
+        "x-function": "getAddon"
+      }
+    },
     "/billing/organisations/{id}/invoices": {
       "get": {
         "operationId": "getAllInvoices",
