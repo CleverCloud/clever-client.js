@@ -86,3 +86,106 @@ export function getContinuousAccessLogsFromWarp10 ({ appId, realAddonId, warpTok
 
   return emitter;
 }
+
+export function getStatusCodesFromWarp10 ({ warpToken, ownerId, appId }) {
+
+  const [granularity, id] = getGranularity(ownerId, appId);
+  const warpscript = `'${warpToken}' '${granularity}' '${id}' NOW 24 h @clevercloud/accessLogs_status_code_v1`;
+
+  return Promise.resolve({
+    method: 'post',
+    url: '/api/v0/exec',
+    body: warpscript,
+    // This is ignored by Warp10, it's here to help identify HTTP calls in browser devtools
+    queryParams: { __: getSlug('statuscodes', ownerId, appId) },
+    responseHandler ([results]) {
+      // Remove status codes "-1" YOLO
+      delete results['-1'];
+      return results;
+    },
+  });
+}
+
+export function getRequestsFromWarp10 ({ warpToken, ownerId, appId }) {
+
+  const ONE_HOUR = 1000 * 60 * 60;
+
+  const now = new Date();
+  const nowTs = now.getTime();
+  const nowRoundedTs = nowTs - nowTs % ONE_HOUR;
+  const endDateMicroSecs = new Date(nowRoundedTs).getTime() * 1000;
+
+  const [granularity, id] = getGranularity(ownerId, appId);
+  const warpscript = `'${warpToken}' '${granularity}' '${id}' ${endDateMicroSecs} 24 h 1 h @clevercloud/accessLogs_request_count_v1`;
+
+  return Promise.resolve({
+    method: 'post',
+    url: '/api/v0/exec',
+    body: warpscript,
+    // This is ignored by Warp10, it's here to help identify HTTP calls in browser devtools
+    queryParams: { __: getSlug('requests', ownerId, appId) },
+    responseHandler ([results]) {
+      // Convert timestamps in ms
+      return results
+        .map(([from, to, count]) => [Math.floor(from / 1000), Math.floor(to / 1000), count]);
+    },
+  });
+}
+
+export function getAccessLogsHeatmapFromWarp10 ({ warpToken, ownerId, appId }) {
+
+  const [granularity, id] = getGranularity(ownerId, appId);
+  const warpscript = `'${warpToken}' '${granularity}' '${id}' 24 @clevercloud/logs_heatmap_v1`;
+
+  return Promise.resolve({
+    method: 'post',
+    url: '/api/v0/exec',
+    body: warpscript,
+    // This is ignored by Warp10, it's here to help identify HTTP calls in browser devtools
+    queryParams: { __: getSlug('heatmap', ownerId, appId) },
+    responseHandler ([results]) {
+      return Object.entries(results)
+        .filter(([jsonData]) => jsonData !== '[NaN,NaN]')
+        .map(([jsonData, count]) => {
+          const [lat, lon] = JSON.parse(jsonData);
+          return { lat, lon, count };
+        });
+    },
+  });
+}
+
+// "from" and "to" are timestamps in microseconds
+export function getAccessLogsDotmapFromWarp10 ({ warpToken, ownerId, appId, from, to }) {
+
+  const [granularity, id] = getGranularity(ownerId, appId);
+  const fromDate = toMicroIsoString(from);
+  const toDate = toMicroIsoString(to);
+  const warpscript = `'${warpToken}' '${granularity}' '${id}' '${fromDate}' '${toDate}' @clevercloud/logs_dotmap_v1`;
+
+  return Promise.resolve({
+    method: 'post',
+    url: '/api/v0/exec',
+    body: warpscript,
+    // This is ignored by Warp10, it's here to help identify HTTP calls in browser devtools
+    queryParams: { __: getSlug('dotmap', ownerId, appId) },
+    responseHandler ([results]) {
+      return Object.entries(results).map(([jsonData, count]) => {
+        const [lat, lon, country, city] = JSON.parse(jsonData);
+        return { lat, lon, country, city, count };
+      });
+    },
+  });
+}
+
+function getGranularity (ownerId, appId) {
+  return (appId != null)
+    ? ['app_id', appId]
+    : ['owner_id', ownerId];
+}
+
+function getSlug (prefix, ...items) {
+  const shortItems = items
+    .filter((a) => a != null)
+    .map((a) => a.slice(0, 10));
+  return [prefix, ...shortItems].join('__');
+}

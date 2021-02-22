@@ -3,6 +3,11 @@
 ## Unreleased (????-??-??)
 
 * Add `execWarpscript()` function for browsers with fetch
+* Add new Warp10 requests around access logs
+  * `getStatusCodesFromWarp10()`
+  * `getRequestsFromWarp10()`
+  * `getAccessLogsHeatmapFromWarp10()`
+  * `getAccessLogsDotmapFromWarp10()`
 
 ## 7.2.0 (2021-01-26)
 
