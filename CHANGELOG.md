@@ -9,6 +9,7 @@
   * `getAccessLogsHeatmapFromWarp10()`
   * `getAccessLogsDotmapFromWarp10()`
 * Add `withCache()` helper function
+* Add `withOptions()` helper function
 
 ## 7.2.0 (2021-01-26)
 
