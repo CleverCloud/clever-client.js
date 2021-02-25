@@ -10,6 +10,7 @@
   * `getAccessLogsDotmapFromWarp10()`
 * Add `withCache()` helper function
 * Add `withOptions()` helper function
+* Add timeout support for browser based request (API and Warp10)
 
 ## 7.2.0 (2021-01-26)
 

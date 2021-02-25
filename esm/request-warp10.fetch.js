@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from './request.fetch-with-timeout.js';
+
 export async function execWarpscript (requestParams) {
 
   const url = new URL(requestParams.url);
@@ -5,11 +7,7 @@ export async function execWarpscript (requestParams) {
     .entries(requestParams.queryParams || {})
     .forEach(([k, v]) => url.searchParams.set(k, v));
 
-  return window
-    .fetch(url.toString(), {
-      ...requestParams,
-      mode: 'cors',
-    })
+  return fetchWithTimeout(url.toString(), { ...requestParams, mode: 'cors' }, requestParams.timeout)
     .then((response) => {
       if (response.status !== 200) {
         const warp10error = 'Warp10 Error: ' + response.headers.get('X-Warp10-Error-Message');
