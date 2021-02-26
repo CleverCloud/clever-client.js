@@ -90,6 +90,7 @@ export class AbstractNetworkgroupStream extends AbstractStream {
       console.log(`message: ${JSON.stringify(message)}`);
       clearTimeout(openTimeoutId);
       const parsedMessage = this.parseLogMessage(message);
+      // FIXME: Do not emit if parsedMessage is null
       this.isPingMessage(parsedMessage)
         ? this._onPing(parsedMessage.heartbeat_delay_ms)
         : this.emit('conf', parsedMessage);
