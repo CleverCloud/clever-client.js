@@ -87,7 +87,6 @@ export class AbstractNetworkgroupStream extends AbstractStream {
 
     // Wire SSE `'message'` to `_onPing()` call or `'conf'` event
     this._sse.addEventListener('message', (message) => {
-      console.log(`message: ${JSON.stringify(message)}`);
       clearTimeout(openTimeoutId);
       const parsedMessage = this.parseLogMessage(message);
       // FIXME: Do not emit if parsedMessage is null
@@ -98,7 +97,6 @@ export class AbstractNetworkgroupStream extends AbstractStream {
 
     // Wire SSE `'error'` to `_onError()` call
     this._sse.addEventListener('error', (error) => {
-      console.log(`error: ${JSON.stringify(error)}`);
       clearTimeout(openTimeoutId);
       this.isAuthErrorMessage(error)
         ? this._onError(new AuthenticationError('Authentication for the networkgroup configuration stream (SSE) failed'))
