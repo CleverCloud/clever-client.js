@@ -509,6 +509,12 @@
         "format": "[a-zA-Z0-9+/]{43}=",
         "example": "Z5SECcCueLAf0+LwBfxxK81mkz2mskqdZ/GVsk/uFgs="
       },
+      "WireGuardConfFile": {
+        "title": "WireGuard® Configuration File",
+        "description": "A WireGuard® tunnel configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
+        "type": "string",
+        "example": { "$ref": "#/components/examples/WireGuardConfFile" }
+      },
 
       "Networkgroup": {
         "title": "Networkgroup",
@@ -609,8 +615,15 @@
       },
       "WireGuardConf": {
         "title": "WireGuard® Configuration",
-        "description": "A WireGuard® tunnel configuration file encoded in Base64 format, without its owner's private key. In `[Interface]`, you have to replace `PrivateKey = <%PrivateKey%>` by the desired private key.",
-        "type": "string",
+        "description": "WireGuard® configuration for a specific networkgroup peer.",
+        "required": ["ng-id", "peer-id", "version", "configuration"],
+        "type": "object",
+        "properties": {
+          "ng-id":         { "$ref": "#/components/schemas/NetworkgroupId" },
+          "peer-id":       { "$ref": "#/components/schemas/PeerId" },
+          "version":       { "$ref": "#/components/schemas/WireGuardPublicKey" },
+          "configuration": { "$ref": "#/components/schemas/WireGuardConfFile" }
+        },
         "example": { "$ref": "#/components/examples/WireGuardConf" }
       },
       "Hypervisor": {
@@ -1429,11 +1442,25 @@
 
       "WireGuardConf": {
         "summary": "Example WireGuard® configuration",
+        "value": {
+          "ng-id": "ng_78da65ea-dfe2-4819-9aa6-721e9d6eaea6",
+          "peer-id": "external_e540d94c-3334-4263-8fa1-3cf40857fc06",
+          "version": 42,
+          "configuration": "W0ludGVyZmFjZV0NClByaXZhdGVLZXkgPSA8JVByaXZhdGVLZXklPg0KQWRkcmVzcyA9IDEwLjEwMi4wLjYvMTYNCg0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gS2o5cFRDTjFMQ1JaYms1U1kxbFNPU3hJT2t4dFgyVlJWRlUwTkNaeGNTNHUNCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuMTAvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFpsOTlYV1p5VGpSa1J6TmJVWEF1Sm5WSVZTTXJaaWxrVmxSOVFGb3NSamdLDQogICAgQWxsb3dlZElQcyA9IDEwLjEwMi4wLjUvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFlTMDVjaU5IWkVaNlpqZGpTMTF3TkhWNU4xUXBNMnRRYVVKWVdHUlNYem8NCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuOS8zMg0KICAgIFBlcnNpc3RlbnRLZWVwYWxpdmUgPSAyNQ0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gSVdneldWMGpLRjhsZWwxcmNIczJOV2NyVURRckxHbHlXRlFsVFQ4amUzMA0KICAgIEFsbG93ZWRJUHMgPSAxMC4xMDIuMC43LzMyDQogICAgUGVyc2lzdGVudEtlZXBhbGl2ZSA9IDI1DQoNCg0K"
+        }
+      },
+      "WireGuardConfFile": {
+        "summary": "Example WireGuard® configuration file",
         "value": "W0ludGVyZmFjZV0NClByaXZhdGVLZXkgPSA8JVByaXZhdGVLZXklPg0KQWRkcmVzcyA9IDEwLjEwMi4wLjYvMTYNCg0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gS2o5cFRDTjFMQ1JaYms1U1kxbFNPU3hJT2t4dFgyVlJWRlUwTkNaeGNTNHUNCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuMTAvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFpsOTlYV1p5VGpSa1J6TmJVWEF1Sm5WSVZTTXJaaWxrVmxSOVFGb3NSamdLDQogICAgQWxsb3dlZElQcyA9IDEwLjEwMi4wLjUvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFlTMDVjaU5IWkVaNlpqZGpTMTF3TkhWNU4xUXBNMnRRYVVKWVdHUlNYem8NCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuOS8zMg0KICAgIFBlcnNpc3RlbnRLZWVwYWxpdmUgPSAyNQ0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gSVdneldWMGpLRjhsZWwxcmNIczJOV2NyVURRckxHbHlXRlFsVFQ4amUzMA0KICAgIEFsbG93ZWRJUHMgPSAxMC4xMDIuMC43LzMyDQogICAgUGVyc2lzdGVudEtlZXBhbGl2ZSA9IDI1DQoNCg0K"
       },
       "WireGuardConf_SSE": {
         "summary": "`'conf'` event",
-        "value": "W0ludGVyZmFjZV0NClByaXZhdGVLZXkgPSA8JVByaXZhdGVLZXklPg0KQWRkcmVzcyA9IDEwLjEwMi4wLjYvMTYNCg0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gS2o5cFRDTjFMQ1JaYms1U1kxbFNPU3hJT2t4dFgyVlJWRlUwTkNaeGNTNHUNCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuMTAvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFpsOTlYV1p5VGpSa1J6TmJVWEF1Sm5WSVZTTXJaaWxrVmxSOVFGb3NSamdLDQogICAgQWxsb3dlZElQcyA9IDEwLjEwMi4wLjUvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFlTMDVjaU5IWkVaNlpqZGpTMTF3TkhWNU4xUXBNMnRRYVVKWVdHUlNYem8NCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuOS8zMg0KICAgIFBlcnNpc3RlbnRLZWVwYWxpdmUgPSAyNQ0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gSVdneldWMGpLRjhsZWwxcmNIczJOV2NyVURRckxHbHlXRlFsVFQ4amUzMA0KICAgIEFsbG93ZWRJUHMgPSAxMC4xMDIuMC43LzMyDQogICAgUGVyc2lzdGVudEtlZXBhbGl2ZSA9IDI1DQoNCg0K"
+        "value": {
+          "ng-id": "ng_78da65ea-dfe2-4819-9aa6-721e9d6eaea6",
+          "peer-id": "external_e540d94c-3334-4263-8fa1-3cf40857fc06",
+          "version": 42,
+          "configuration": "W0ludGVyZmFjZV0NClByaXZhdGVLZXkgPSA8JVByaXZhdGVLZXklPg0KQWRkcmVzcyA9IDEwLjEwMi4wLjYvMTYNCg0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gS2o5cFRDTjFMQ1JaYms1U1kxbFNPU3hJT2t4dFgyVlJWRlUwTkNaeGNTNHUNCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuMTAvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFpsOTlYV1p5VGpSa1J6TmJVWEF1Sm5WSVZTTXJaaWxrVmxSOVFGb3NSamdLDQogICAgQWxsb3dlZElQcyA9IDEwLjEwMi4wLjUvMzINCiAgICBQZXJzaXN0ZW50S2VlcGFsaXZlID0gMjUNCg0KDQoNCltQZWVyXQ0KICAgIFB1YmxpY0tleSA9IFlTMDVjaU5IWkVaNlpqZGpTMTF3TkhWNU4xUXBNMnRRYVVKWVdHUlNYem8NCiAgICBBbGxvd2VkSVBzID0gMTAuMTAyLjAuOS8zMg0KICAgIFBlcnNpc3RlbnRLZWVwYWxpdmUgPSAyNQ0KDQoNCg0KW1BlZXJdDQogICAgUHVibGljS2V5ID0gSVdneldWMGpLRjhsZWwxcmNIczJOV2NyVURRckxHbHlXRlFsVFQ4amUzMA0KICAgIEFsbG93ZWRJUHMgPSAxMC4xMDIuMC43LzMyDQogICAgUGVyc2lzdGVudEtlZXBhbGl2ZSA9IDI1DQoNCg0K"
+        }
       },
 
       "Hypervisor": {
