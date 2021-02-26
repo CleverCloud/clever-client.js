@@ -3,6 +3,10 @@ import { addOauthHeader } from '../oauth.browser.js';
 
 export class NetworkgroupStream extends AbstractNetworkgroupStream {
 
+  atob (str) {
+    return window.atob(str);
+  }
+
   btoa (str) {
     return window.btoa(str);
   }

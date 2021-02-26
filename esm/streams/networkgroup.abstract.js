@@ -60,6 +60,10 @@ export class AbstractNetworkgroupStream extends AbstractStream {
     throw new Error('Not implemented. It\'s up to the class extending `AbstractNetworkgroupStream` to implement how to sign and add an `oAuthHeader`.');
   }
 
+  atob () {
+    throw new Error('Not implemented. It\'s up to the class extending `AbstractNetworkgroupStream` to implement how to do `base64` decoding.');
+  }
+
   btoa () {
     throw new Error('Not implemented. It\'s up to the class extending `AbstractNetworkgroupStream` to implement how to do `base64` encoding.');
   }
@@ -88,11 +92,17 @@ export class AbstractNetworkgroupStream extends AbstractStream {
     // Wire SSE `'message'` to `_onPing()` call or `'conf'` event
     this._sse.addEventListener('message', (message) => {
       clearTimeout(openTimeoutId);
-      const parsedMessage = this.parseLogMessage(message);
-      // FIXME: Do not emit if parsedMessage is null
-      this.isPingMessage(parsedMessage)
-        ? this._onPing(parsedMessage.heartbeat_delay_ms)
-        : this.emit('conf', parsedMessage);
+
+      const parsedMessage = this.parseMessage(message);
+      if (this.isPingMessage(parsedMessage)) {
+        this._onPing(parsedMessage.heartbeat_delay_ms);
+      }
+      else {
+        const conf = this.parseConfMessage(message);
+        if (conf != null) {
+          this.emit('conf', conf);
+        }
+      }
     });
 
     // Wire SSE `'error'` to `_onError()` call
@@ -108,9 +118,27 @@ export class AbstractNetworkgroupStream extends AbstractStream {
     throw new Error('Not implemented. It\'s up to the class extending `AbstractNetworkgroupStream` to implement how to create a SSE connection.');
   }
 
-  parseLogMessage (message) {
+  parseMessage (message) {
     try {
       return JSON.parse(message.data);
+    }
+    catch (e) {
+      return null;
+    }
+  }
+
+  parseConfMessage (message) {
+    try {
+      const object = JSON.parse(message.data);
+      if (object == null || !object.keys().includes(['ng-id', 'peer-id', 'version', 'configuration'])) {
+        return null;
+      }
+      return {
+        ngId: object['ng-id'],
+        peerId: object['peer-id'],
+        version: object.version,
+        configuration: this.atob(object.configuration),
+      };
     }
     catch (e) {
       return null;

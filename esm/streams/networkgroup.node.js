@@ -4,6 +4,10 @@ import { addOauthHeader } from '../oauth.node.js';
 
 export class NetworkgroupStream extends AbstractNetworkgroupStream {
 
+  atob (str) {
+    return Buffer.from(str, 'base64').toString();
+  }
+
   btoa (str) {
     return Buffer.from(str).toString('base64');
   }
