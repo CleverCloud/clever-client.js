@@ -36,7 +36,7 @@
   "peerDependencies": {
     "baconjs": "^0.7.83",
     "eventsource": "^1.0.7",
-    "superagent": "^5.3.1",
+    "superagent": "^6.1.0",
     "ws": "^7.4.3"
   },
   "devDependencies": {
@@ -55,7 +55,7 @@
     "fs-extra": "^9.1.0",
     "lodash": "^4.17.21",
     "prettier": "^2.2.1",
-    "superagent": "^5.1.0"
+    "superagent": "^6.1.0"
   },
   "volta": {
     "node": "14.16.0",
