@@ -2,6 +2,10 @@
 
 ## Unreleased (????-??-??)
 
+...
+
+## 7.3.0 (2021-03-05)
+
 * Add `execWarpscript()` function for browsers with fetch
 * Add new Warp10 requests around access logs
   * `getStatusCodesFromWarp10()`
