@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from './request.fetch-with-timeout.js';
+
 const JSON_TYPE = 'application/json';
 const FORM_TYPE = 'application/x-www-form-urlencoded';
 
@@ -59,11 +61,7 @@ export async function request (requestParams) {
 
   const body = formatBody(requestParams);
 
-  const response = await window.fetch(url.toString(), {
-    ...requestParams,
-    body,
-    mode: 'cors',
-  });
+  const response = await fetchWithTimeout(url.toString(), { ...requestParams, body, mode: 'cors' }, requestParams.timeout);
 
   if (response.status >= 400) {
     const responseBody = await parseResponseBody(response);

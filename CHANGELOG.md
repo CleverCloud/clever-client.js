@@ -1,5 +1,17 @@
 # Clever Client changelog
 
+## Unreleased (????-??-??)
+
+* Add `execWarpscript()` function for browsers with fetch
+* Add new Warp10 requests around access logs
+  * `getStatusCodesFromWarp10()`
+  * `getRequestsFromWarp10()`
+  * `getAccessLogsHeatmapFromWarp10()`
+  * `getAccessLogsDotmapFromWarp10()`
+* Add `withCache()` helper function
+* Add `withOptions()` helper function
+* Add timeout support for browser based request (API and Warp10)
+
 ## 7.2.0 (2021-01-26)
 
 * Add new addon-providers API `GET /v4/addon-providers/{providerId}` in `api/v4/addon-providers.js`
