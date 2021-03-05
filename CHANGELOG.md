@@ -2,7 +2,7 @@
 
 ## Unreleased (????-??-??)
 
-...
+* Update dependencies
 
 ## 7.3.0 (2021-03-05)
 
