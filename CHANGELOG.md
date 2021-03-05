@@ -4,6 +4,10 @@
 
 ...
 
+## 7.3.2 (2021-03-05)
+
+* Update superagent
+
 ## 7.3.1 (2021-03-05)
 
 * Update dependencies
