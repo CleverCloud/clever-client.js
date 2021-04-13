@@ -2,7 +2,20 @@
 
 ## Unreleased (????-??-??)
 
-...
+* Add new billing API endpoints
+  * Add `GET /organisations/{id}/namespaces` in `api/v4/billing.js` with `getNamespaces()`
+  * Add `GET /billing/organisations/{id}/invoices` in `api/v4/billing.js` with `getAllInvoices()`
+  * Add `GET /billing/organisations/{id}/invoices/unpaid` in `api/v4/billing.js` with `getAllUnpaidInvoices()`
+  * Add `GET /billing/organisations/{id}/invoices/{invoiceNumber}{type}` in `api/v4/billing.js` with `getInvoice()`
+  * Add `GET /billing/organisations/{id}/payments/methods` in `api/v4/billing.js` with `getPaymentMethods()`
+  * Add `POST /billing/organisations/{id}/payments/methods` in `api/v4/billing.js` with `createPaymentMethod()`
+  * Add `PUT /billing/organisations/{id}/payments/methods/default` in `api/v4/billing.js` with `setDefaultPaymentMethod()`
+  * Add `DELETE /billing/organisations/{id}/payments/methods/{methodId}` in `api/v4/billing.js` with `deletePaymentMethod()`
+  * Add `POST /billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal` in `api/v4/billing.js` with `initPaypalPayment()`
+  * Add `PUT /billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal/{payerId}` in `api/v4/billing.js` with `authorizePaypalPayment()`
+  * Add `POST /billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe` in `api/v4/billing.js` with `initStripePayment()`
+  * Add `PUT /billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe/{paymentId}` in `api/v4/billing.js` with `authorizeStripePayment()`
+  * Add `GET /billing/organisations/{id}/payments/stripe/intent` in `api/v4/billing.js` with `getStripePaymentIntent()`
 
 ## 7.3.2 (2021-03-05)
 

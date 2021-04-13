@@ -37,6 +37,245 @@
         "x-service": "addon-providers",
         "x-function": "getAddonProvider"
       }
+    },
+    "/billing/organisations/{id}/invoices": {
+      "get": {
+        "operationId": "getAllInvoices",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "since", "in": "query", "required": false, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getAllInvoices"
+      }
+    },
+    "/billing/organisations/{id}/invoices/unpaid": {
+      "get": {
+        "operationId": "getAllUnpaidInvoices",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getAllUnpaidInvoices"
+      }
+    },
+    "/billing/organisations/{id}/invoices/{invoiceNumber}{type}": {
+      "get": {
+        "operationId": "getInvoice",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "invoiceNumber", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "type", "in": "path", "required": false, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getInvoice"
+      }
+    },
+    "/billing/organisations/{id}/payments/methods": {
+      "get": {
+        "operationId": "getPaymentMethods",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getPaymentMethods"
+      },
+      "post": {
+        "operationId": "createPaymentMethod",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "createPaymentMethod"
+      }
+    },
+    "/billing/organisations/{id}/payments/methods/default": {
+      "put": {
+        "operationId": "setDefaultPaymentMethod",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "setDefaultPaymentMethod"
+      }
+    },
+    "/billing/organisations/{id}/payments/methods/{methodId}": {
+      "delete": {
+        "operationId": "deletePaymentMethod",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "deletePaymentMethod"
+      }
+    },
+    "/billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal": {
+      "post": {
+        "operationId": "initPaypalPayment",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "invoiceNumber", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "initPaypalPayment"
+      }
+    },
+    "/billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal/{payerId}": {
+      "put": {
+        "operationId": "authorizePaypalPayment",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "invoiceNumber", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "payerId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "authorizePaypalPayment"
+      }
+    },
+    "/billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe": {
+      "post": {
+        "operationId": "initStripePayment",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "invoiceNumber", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "initStripePayment"
+      }
+    },
+    "/billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe/{paymentId}": {
+      "put": {
+        "operationId": "authorizeStripePayment",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "invoiceNumber", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "paymentId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "authorizeStripePayment"
+      }
+    },
+    "/billing/organisations/{id}/payments/stripe/intent": {
+      "get": {
+        "operationId": "getStripePaymentIntent",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "type", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getStripePaymentIntent"
+      }
     }
   },
   "components": {
