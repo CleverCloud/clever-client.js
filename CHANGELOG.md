@@ -2,6 +2,10 @@
 
 ## Unreleased (????-??-??)
 
+...
+
+## 7.4.0 (2021-04-13)
+
 * Add new billing API endpoints
   * Add `GET /organisations/{id}/namespaces` in `api/v4/billing.js` with `getNamespaces()`
   * Add `GET /billing/organisations/{id}/invoices` in `api/v4/billing.js` with `getAllInvoices()`
