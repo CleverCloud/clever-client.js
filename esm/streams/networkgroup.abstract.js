@@ -130,12 +130,12 @@ export class AbstractNetworkgroupStream extends AbstractStream {
   parseConfMessage (message) {
     try {
       const object = JSON.parse(message.data);
-      if (object == null || !object.keys().includes(['ng-id', 'peer-id', 'version', 'configuration'])) {
+      if (object == null || !object.keys().includes(['ng_id', 'peer_id', 'version', 'configuration'])) {
         return null;
       }
       return {
-        ngId: object['ng-id'],
-        peerId: object['peer-id'],
+        ngId: object.ng_id,
+        peerId: object.peer_id,
         version: object.version,
         configuration: this.atob(object.configuration),
       };
