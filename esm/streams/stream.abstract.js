@@ -70,7 +70,7 @@ export class AbstractStream extends EventEmitter {
     }
 
     this.emit('open');
-    this._openSource().catch((error) => this._onError('error', error));
+    this._openSource().catch((error) => this._onError(error));
   }
 
   async _openSource () {
@@ -99,28 +99,29 @@ export class AbstractStream extends EventEmitter {
 
     if (error instanceof AuthenticationError) {
       this.close(AUTHENTICATION_REASON);
-      this.emit('error', error);
+      return this.emit('error', error);
     }
 
     // any other kind of error => we force close
     this.close({ ...ERROR_REASON, reason: error.message });
 
+    // If auto retry is disabled, we send an error
     if (!this._autoRetry.enabled) {
-      this.emit('error', error);
+      return this.emit('error', error);
     }
-    else {
-      this._autoRetry.counter += 1;
 
-      if (this._autoRetry.counter > this._autoRetry.maxRetryCount) {
-        return this.emit('error', new Error(`Stream connection failed ${this._autoRetry.maxRetryCount} times!`));
-      }
+    // If auto retry is enabled, we recursively try again
+    this._autoRetry.counter += 1;
 
-      const exponentialBackoffDelay = this._autoRetry.initRetryTimeout * (this._autoRetry.backoffFactor ** this._autoRetry.counter);
-      this._autoRetry.timeoutId = setTimeout(() => {
-        this.emit('open');
-        this._openSource().catch((error) => this._onError('error', error));
-      }, exponentialBackoffDelay);
+    if (this._autoRetry.counter > this._autoRetry.maxRetryCount) {
+      return this.emit('error', new Error(`Stream connection failed ${this._autoRetry.maxRetryCount} times!`));
     }
+
+    const exponentialBackoffDelay = this._autoRetry.initRetryTimeout * (this._autoRetry.backoffFactor ** this._autoRetry.counter);
+    this._autoRetry.timeoutId = setTimeout(() => {
+      this.emit('open');
+      this._openSource().catch((error) => this._onError(error));
+    }, exponentialBackoffDelay);
   }
 
   close (reason = FORCE_CLOSE_REASON) {
