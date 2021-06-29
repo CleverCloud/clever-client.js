@@ -56,6 +56,24 @@
         "x-function": "getAddon"
       }
     },
+	"/addon-providers/{providerId}/clusters/{clusterId}": {
+      "get": {
+        "operationId": "getCluster",
+        "parameters": [
+          { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "clusterId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "addon-providers",
+        "x-function": "getCluster"
+      }
+    },
     "/billing/organisations/{id}/invoices": {
       "get": {
         "operationId": "getAllInvoices",
