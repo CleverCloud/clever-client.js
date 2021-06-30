@@ -38,6 +38,42 @@
         "x-function": "getAddonProvider"
       }
     },
+    "/addon-providers/{providerId}/addons/{addonId}": {
+      "get": {
+        "operationId": "getAddon",
+        "parameters": [
+          { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "addon-providers",
+        "x-function": "getAddon"
+      }
+    },
+	"/addon-providers/{providerId}/clusters/{clusterId}": {
+      "get": {
+        "operationId": "getCluster",
+        "parameters": [
+          { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "clusterId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "addon-providers",
+        "x-function": "getCluster"
+      }
+    },
     "/billing/organisations/{id}/invoices": {
       "get": {
         "operationId": "getAllInvoices",
