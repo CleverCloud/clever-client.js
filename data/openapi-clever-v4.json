@@ -38,7 +38,7 @@
         "x-function": "getAddonProvider"
       }
     },
-    "/addon-providers/{providerId}/{addonId}": {
+    "/addon-providers/{providerId}/addons/{addonId}": {
       "get": {
         "operationId": "getAddon",
         "parameters": [
