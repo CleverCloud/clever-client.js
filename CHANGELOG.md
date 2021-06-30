@@ -4,6 +4,13 @@
 
 ...
 
+## 7.5.0 (2021-06-30)
+
+* Add new addon providers v4 endpoints
+  * Add `GET /v4/addon-providers/{addonProviderId}/addons/{addonIdOrRealId} in `api/v4/addon-providers.js` with `getAddon()`
+  * Add `GET /v4/addon-providers/{addonProviderId}/clusters/{clusterId} in `api/v4/addon-providers.js` with `getCluster()`
+
+
 ## 7.4.0 (2021-04-13)
 
 * Add new billing API endpoints
