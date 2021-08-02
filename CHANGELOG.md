@@ -2,7 +2,7 @@
 
 ## Unreleased (????-??-??)
 
-...
+utils/env-var: add a json parser and return valid values
 
 ## 7.5.0 (2021-06-30)
 
