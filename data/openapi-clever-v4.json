@@ -56,7 +56,24 @@
         "x-function": "getAddon"
       }
     },
-	"/addon-providers/{providerId}/clusters/{clusterId}": {
+    "/addon-providers/jenkins/addons/{addonId}/updates": {
+      "get": {
+        "operationId": "getJenkinsUpdates",
+        "parameters": [
+          { "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "addon-providers",
+        "x-function": "getJenkinsUpdates"
+      }
+    },
+    "/addon-providers/{providerId}/clusters/{clusterId}": {
       "get": {
         "operationId": "getCluster",
         "parameters": [
