@@ -4,6 +4,11 @@
 
 ...
 
+## 7.6.0 (2021-08-03)
+
+* Add Jenkins addon provider v4 endpoint to get available updates
+  * Add `GET /v4/addon-providers/jenkins/addons/{addonIdOrRealId} in `api/v4/addon-providers.js` with `getJenkinsUpdates()`
+
 ## 7.5.0 (2021-06-30)
 
 * Add new addon providers v4 endpoints
