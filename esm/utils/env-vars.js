@@ -1,26 +1,40 @@
 /**
  * https://stackoverflow.com/questions/2821043/allowed-characters-in-linux-environment-variable-names
- * Default bash/Linux rules are:
- * letters (upper case only)
- * digits (but not for first char)
- * underscores
- * nothing else
- * /^[a-zA-Z_][a-zA-Z0-9_]*$/
+ * Default bash/Linux rules for environment variable names are:
+ *
+ * - letters (upper case only)
+ * - digits (but not for first char)
+ * - underscores
+ *
+ * /^[A-Z_][A-Z0-9_]*$/
+ *
+ * We don't use this.
  */
 
 /**
- * Clever Cloud rules are based on this but for some variants like Java, we also allow:
- * letters (lower case)
- * digits for first char
- * dashes
- * dots
- * /^[a-zA-Z0-9-_.]+$/
+ * Most Linux systems also accept lower case letters:
+ *
+ * - letters (upper case and lower case)
+ * - digits (but not for first char)
+ * - underscores
  */
+const ENV_VAR_NAME_STRICT_REGEX = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 
+/**
+ * Clever Cloud rules are based on this but for some variants like Java, we also allow dashes and dots:
+ *
+ * - letters (upper case and lower case)
+ * - digits (any position)
+ * - underscores
+ * - dashes
+ * - dots
+ */
 const ENV_VAR_NAME_REGEX = /^[a-zA-Z0-9-_.]+$/;
 
-export function validateName (name) {
-  return ENV_VAR_NAME_REGEX.test(name);
+export function validateName (name, mode = '') {
+  return (mode !== 'strict')
+    ? ENV_VAR_NAME_REGEX.test(name)
+    : ENV_VAR_NAME_STRICT_REGEX.test(name);
 }
 
 export const ERROR_TYPES = {
@@ -31,6 +45,7 @@ export const ERROR_TYPES = {
   INVALID_JSON: 4,
   INVALID_JSON_FORMAT: 5,
   INVALID_JSON_ENTRY: 6,
+  INVALID_NAME_STRICT: 7,
 };
 
 const NEW_LINE = '\n';
@@ -97,11 +112,12 @@ function unquoteString (firstChar, str) {
   return str;
 }
 
-export function parseRaw (rawInput = '') {
+export function parseRaw (rawInput = '', options = {}) {
 
   const parsedVariables = [];
   const parsingErrors = [];
   const allNames = new Set();
+  const { mode = '' } = options;
 
   let startIdx = 0;
   while (startIdx < rawInput.length) {
@@ -123,8 +139,11 @@ export function parseRaw (rawInput = '') {
     const nextEqualIdx = nextIndex(rawInput, EQUAL, startIdx);
     const name = rawInput.substring(startIdx, nextEqualIdx);
 
-    const isNameInvalid = !validateName(name);
-    if (isNameInvalid) {
+    const isNameInvalid = !validateName(name, mode);
+    if (isNameInvalid && (mode === 'strict')) {
+      parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME_STRICT, name, pos: getPosition(rawInput, startIdx) });
+    }
+    else if (isNameInvalid && (mode !== 'strict')) {
       parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME, name, pos: getPosition(rawInput, startIdx) });
     }
 
@@ -171,10 +190,11 @@ export function parseRaw (rawInput = '') {
   return { variables: parsedVariables, errors: parsingErrors };
 }
 
-export function parseRawJson (rawInput = '') {
+export function parseRawJson (rawInput = '', options = {}) {
 
   let parsedInput;
   const parsingErrors = [];
+  const { mode = '' } = options;
 
   try {
     parsedInput = JSON.parse(rawInput);
@@ -203,7 +223,7 @@ export function parseRawJson (rawInput = '') {
 
   variablesWithNameValue.forEach((variable) => {
     const isNameDuplicated = visitedNames.includes(variable.name);
-    const isNameInvalid = !validateName(variable.name);
+    const isNameInvalid = !validateName(variable.name, mode);
     if (isNameDuplicated) {
       duplicatedNames.add(variable.name);
     }
@@ -221,7 +241,12 @@ export function parseRawJson (rawInput = '') {
   });
 
   Array.from(invalidNames).forEach((name) => {
-    parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME, name });
+    if (mode !== 'strict') {
+      parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME, name });
+    }
+    else {
+      parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME_STRICT, name });
+    }
   });
 
   // WARN: Array.prototype.sort edits in place
