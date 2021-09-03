@@ -28,6 +28,9 @@ export const ERROR_TYPES = {
   DUPLICATED_NAME: 1,
   INVALID_LINE: 2,
   INVALID_VALUE: 3,
+  INVALID_JSON: 4,
+  INVALID_JSON_FORMAT: 5,
+  INVALID_JSON_ENTRY: 6,
 };
 
 const NEW_LINE = '\n';
@@ -120,11 +123,13 @@ export function parseRaw (rawInput = '') {
     const nextEqualIdx = nextIndex(rawInput, EQUAL, startIdx);
     const name = rawInput.substring(startIdx, nextEqualIdx);
 
-    if (!validateName(name)) {
+    const isNameInvalid = !validateName(name);
+    if (isNameInvalid) {
       parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME, name, pos: getPosition(rawInput, startIdx) });
     }
 
-    if (allNames.has(name)) {
+    const isNameDuplicated = allNames.has(name);
+    if (isNameDuplicated) {
       parsingErrors.push({ type: ERROR_TYPES.DUPLICATED_NAME, name, pos: getPosition(rawInput, startIdx) });
     }
     else {
@@ -136,8 +141,14 @@ export function parseRaw (rawInput = '') {
       const nextQuoteIdx = nextIndex(rawInput, valueFirstChar, nextEqualIdx + 2);
       const rawValue = rawInput.substring(nextEqualIdx + 2, nextQuoteIdx);
       const value = unquoteString(valueFirstChar, rawValue);
-      parsedVariables.push({ name, value });
-      if (nextNewLineIdx > nextQuoteIdx + 1 || nextQuoteIdx + 1 > rawInput.length) {
+
+      const isValueInvalid = nextNewLineIdx > nextQuoteIdx + 1 || nextQuoteIdx + 1 > rawInput.length;
+
+      if (!isNameInvalid && !isNameDuplicated && !isValueInvalid) {
+        parsedVariables.push({ name, value });
+      }
+
+      if (isValueInvalid) {
         parsingErrors.push({ type: ERROR_TYPES.INVALID_VALUE, name, pos: getPosition(rawInput, nextQuoteIdx + 1) });
         startIdx = nextNewLineIdx + 1;
       }
@@ -147,7 +158,9 @@ export function parseRaw (rawInput = '') {
     }
     else {
       const value = rawInput.substring(nextEqualIdx + 1, nextNewLineIdx);
-      parsedVariables.push({ name, value });
+      if (!isNameInvalid && !isNameDuplicated) {
+        parsedVariables.push({ name, value });
+      }
       startIdx = nextNewLineIdx + 1;
     }
   }
@@ -156,6 +169,75 @@ export function parseRaw (rawInput = '') {
   parsedVariables.sort((a, b) => a.name.localeCompare(b.name));
 
   return { variables: parsedVariables, errors: parsingErrors };
+}
+
+export function parseRawJson (rawInput = '') {
+
+  let parsedInput;
+  const parsingErrors = [];
+
+  try {
+    parsedInput = JSON.parse(rawInput);
+  }
+  catch (e) {
+    parsingErrors.push({ type: ERROR_TYPES.INVALID_JSON });
+    return { variables: [], errors: parsingErrors };
+  }
+
+  if (!Array.isArray(parsedInput) || parsedInput.some((entry) => typeof entry !== 'object')) {
+    parsingErrors.push({ type: ERROR_TYPES.INVALID_JSON_FORMAT });
+    return { variables: [], errors: parsingErrors };
+  }
+
+  const variablesWithNameValue = parsedInput.filter(({ name, value }) => {
+    return (typeof name === 'string') && (typeof value === 'string');
+  });
+  if (variablesWithNameValue.length < parsedInput.length) {
+    parsingErrors.push({ type: ERROR_TYPES.INVALID_JSON_ENTRY });
+  }
+
+  const validVariables = [];
+  const visitedNames = [];
+  const duplicatedNames = new Set();
+  const invalidNames = new Set();
+
+  variablesWithNameValue.forEach((variable) => {
+    const isNameDuplicated = visitedNames.includes(variable.name);
+    const isNameInvalid = !validateName(variable.name);
+    if (isNameDuplicated) {
+      duplicatedNames.add(variable.name);
+    }
+    if (isNameInvalid) {
+      invalidNames.add(variable.name);
+    }
+    if (!isNameDuplicated && !isNameInvalid) {
+      visitedNames.push(variable.name);
+      validVariables.push(variable);
+    }
+  });
+
+  Array.from(duplicatedNames).forEach((name) => {
+    parsingErrors.push({ type: ERROR_TYPES.DUPLICATED_NAME, name });
+  });
+
+  Array.from(invalidNames).forEach((name) => {
+    parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME, name });
+  });
+
+  // WARN: Array.prototype.sort edits in place
+  validVariables.sort((a, b) => a.name.localeCompare(b.name));
+
+  return { variables: validVariables, errors: parsingErrors };
+}
+
+export function toJSONString (variables) {
+  if (variables.length === 0) {
+    return '';
+  }
+  const sortedVariables = variables
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(({ name, value }) => ({ name, value }));
+  return JSON.stringify(sortedVariables, null, 2);
 }
 
 // automatically merges duplicated named (keeps last value)

@@ -2,10 +2,11 @@ import { expect } from '@esm-bundle/chai';
 
 // Disable this so we can use single and double quotes inside strings the way we want ;-)
 /* eslint quotes: "off" */
-
 import {
   ERROR_TYPES,
   parseRaw,
+  parseRawJson,
+  toJSONString,
   toNameEqualsValueString,
   toNameValueObject,
   validateName,
@@ -318,7 +319,6 @@ describe('parseRaw()', () => {
         variables: [
           { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_C', value: 'CCCCC' },
-          { name: 'NAME@BBBB', value: 'BBBB' },
         ],
         errors: [{
           type: ERROR_TYPES.INVALID_NAME,
@@ -336,7 +336,6 @@ describe('parseRaw()', () => {
       expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
           { name: 'NAME_A', value: 'AAA' },
-          { name: 'NAME_A', value: 'aaa' },
         ],
         errors: [{
           type: ERROR_TYPES.DUPLICATED_NAME,
@@ -371,7 +370,6 @@ describe('parseRaw()', () => {
       ].join('\n');
       expect(parseRaw(rawInput)).to.deep.equal({
         variables: [
-          { name: 'NAME_A', value: 'AAA' },
           { name: 'NAME_B', value: 'BBBB' },
         ],
         errors: [{
@@ -392,7 +390,6 @@ describe('parseRaw()', () => {
         variables: [
           { name: 'NAME_A', value: `AAA` },
           { name: 'NAME_B', value: `BBBB BBBB` },
-          { name: 'NAME_C', value: `CCCCC CCCCC CCCCC` },
         ],
         errors: [{
           type: ERROR_TYPES.INVALID_VALUE,
@@ -412,7 +409,6 @@ describe('parseRaw()', () => {
         variables: [
           { name: 'NAME_A', value: `AAA` },
           { name: 'NAME_B', value: `BBBB BBBB` },
-          { name: 'NAME_C', value: `CCCCC CCCCC CCCCC` },
         ],
         errors: [{
           type: ERROR_TYPES.INVALID_VALUE,
@@ -421,6 +417,178 @@ describe('parseRaw()', () => {
         }],
       });
     });
+  });
+});
+
+describe('parseRawJson()', () => {
+
+  describe('OK', () => {
+
+    it('simple var', () => {
+      const rawInput = '[{"name":"NAME_A","value":"AAA"}]';
+      expect(parseRawJson(rawInput)).to.deep.equal({
+        variables: [
+          { name: 'NAME_A', value: `AAA` },
+        ],
+        errors: [],
+      });
+    });
+
+    it('multiple simple var', () => {
+      const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"NAME_B","value":"BBB"}]';
+      expect(parseRawJson(rawInput)).to.deep.equal({
+        variables: [
+          { name: 'NAME_A', value: `AAA` },
+          { name: 'NAME_B', value: `BBB` },
+        ],
+        errors: [],
+      });
+    });
+  });
+
+  describe('return errors', () => {
+
+    it('duplicated name', () => {
+      const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"NAME_A","value":"AAAAAA"}]';
+      expect(parseRawJson(rawInput)).to.deep.equal({
+        variables: [
+          { name: 'NAME_A', value: `AAA` },
+        ],
+        errors: [
+          { type: ERROR_TYPES.DUPLICATED_NAME, name: 'NAME_A' },
+        ],
+      });
+    });
+
+    it('invalid name', () => {
+      const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"NAME@BBBB","value":"AAA"}]';
+      expect(parseRawJson(rawInput)).to.deep.equal({
+        variables: [
+          { name: 'NAME_A', value: `AAA` },
+        ],
+        errors: [
+          { type: ERROR_TYPES.INVALID_NAME, name: 'NAME@BBBB' },
+        ],
+      });
+    });
+
+    it('invalid JSON format', () => {
+      const rawInput = '{"name":"NAME_A","value":"AAA"}';
+      expect(parseRawJson(rawInput)).to.deep.equal({
+        variables: [],
+        errors: [
+          { type: ERROR_TYPES.INVALID_JSON_FORMAT },
+        ],
+      });
+    });
+
+    it('Wrong JSON (comma at end of JSON)', () => {
+      const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"NAME_B","value":"BBB"},]';
+      expect(parseRawJson(rawInput)).to.deep.equal({
+        variables: [],
+        errors: [
+          { type: ERROR_TYPES.INVALID_JSON },
+        ],
+      });
+    });
+
+    it('invalid entry (values not string)', () => {
+      const rawInput = '[{"name":"NAME_A","value":0}, {"name":"NAME_B","value":-5}]';
+      expect(parseRawJson(rawInput)).to.deep.equal({
+        variables: [],
+        errors: [
+          { type: ERROR_TYPES.INVALID_JSON_ENTRY },
+        ],
+      });
+    });
+
+    it('invalid entry (names not string)', () => {
+      const rawInput = '[{"name": 0,"value":"0"}, {"name": false,"value":"-5"}]';
+      expect(parseRawJson(rawInput)).to.deep.equal({
+        variables: [],
+        errors: [
+          { type: ERROR_TYPES.INVALID_JSON_ENTRY },
+        ],
+      });
+    });
+
+    it('invalid entry (names and values not string)', () => {
+      const rawInput = '[{"name": 0,"value":0}, {"name": false,"value":-5}]';
+      expect(parseRawJson(rawInput)).to.deep.equal({
+        variables: [],
+        errors: [
+          { type: ERROR_TYPES.INVALID_JSON_ENTRY },
+        ],
+      });
+    });
+  });
+
+});
+
+describe('toJSONString()', () => {
+
+  it('no vars', () => {
+    const variables = [];
+    expect(toJSONString(variables)).to.equal('');
+  });
+
+  it('simple var', () => {
+    const variables = [
+      { name: 'NAME_A', value: `AAA` },
+    ];
+    expect(toJSONString(variables)).to.equal(
+      `[
+  {
+    "name": "NAME_A",
+    "value": "AAA"
+  }
+]`);
+  });
+
+  it('multiple var', () => {
+    const variables = [
+      { name: 'NAME_A', value: `AAA` },
+      { name: 'NAME_B', value: `BBB` },
+    ];
+    expect(toJSONString(variables)).to.equal(
+      `[
+  {
+    "name": "NAME_A",
+    "value": "AAA"
+  },
+  {
+    "name": "NAME_B",
+    "value": "BBB"
+  }
+]`);
+  });
+
+  it('multple var (unordered)', () => {
+    const variables = [
+      { name: 'NAME_B', value: `BBB` },
+      { name: 'NAME_A', value: `AAA` },
+      { name: 'NAME_D', value: `DDD` },
+      { name: 'NAME_C', value: `CCC` },
+    ];
+    expect(toJSONString(variables)).to.equal(
+      `[
+  {
+    "name": "NAME_A",
+    "value": "AAA"
+  },
+  {
+    "name": "NAME_B",
+    "value": "BBB"
+  },
+  {
+    "name": "NAME_C",
+    "value": "CCC"
+  },
+  {
+    "name": "NAME_D",
+    "value": "DDD"
+  }
+]`);
   });
 });
 
