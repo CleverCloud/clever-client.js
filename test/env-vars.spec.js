@@ -328,6 +328,63 @@ describe('parseRaw()', () => {
       });
     });
 
+    it('invalid variable name (strict mode) digit first char', () => {
+      const rawInput = [
+        'NAME_A=AAA',
+        '0NAME_BBBB=BBBB',
+        'NAME_C=CCCCC',
+      ].join('\n');
+      expect(parseRaw(rawInput, { mode: 'strict' })).to.deep.equal({
+        variables: [
+          { name: 'NAME_A', value: `AAA` },
+          { name: 'NAME_C', value: `CCCCC` },
+        ],
+        errors: [
+          {
+            type: ERROR_TYPES.INVALID_NAME_STRICT, name: '0NAME_BBBB', pos: { line: 2, column: 0 },
+          },
+        ],
+      });
+    });
+
+    it('invalid variable name (strict mode) dash', () => {
+      const rawInput = [
+        'NAME_A=AAA',
+        'NAME-BBBB=BBBB',
+        'NAME_C=CCCCC',
+      ].join('\n');
+      expect(parseRaw(rawInput, { mode: 'strict' })).to.deep.equal({
+        variables: [
+          { name: 'NAME_A', value: `AAA` },
+          { name: 'NAME_C', value: `CCCCC` },
+        ],
+        errors: [
+          {
+            type: ERROR_TYPES.INVALID_NAME_STRICT, name: 'NAME-BBBB', pos: { line: 2, column: 0 },
+          },
+        ],
+      });
+    });
+
+    it('invalid variable name (strict mode) dot', () => {
+      const rawInput = [
+        'NAME_A=AAA',
+        'NAME.BBBB=BBBB',
+        'NAME_C=CCCCC',
+      ].join('\n');
+      expect(parseRaw(rawInput, { mode: 'strict' })).to.deep.equal({
+        variables: [
+          { name: 'NAME_A', value: `AAA` },
+          { name: 'NAME_C', value: `CCCCC` },
+        ],
+        errors: [
+          {
+            type: ERROR_TYPES.INVALID_NAME_STRICT, name: 'NAME.BBBB', pos: { line: 2, column: 0 },
+          },
+        ],
+      });
+    });
+
     it('duplicated variable names', () => {
       const rawInput = [
         'NAME_A=AAA',
@@ -468,6 +525,42 @@ describe('parseRawJson()', () => {
         ],
         errors: [
           { type: ERROR_TYPES.INVALID_NAME, name: 'NAME@BBBB' },
+        ],
+      });
+    });
+
+    it('invalid name (strict mode) digit first char', () => {
+      const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"0NAME_A","value":"AAA"}]';
+      expect(parseRawJson(rawInput, { mode: 'strict' })).to.deep.equal({
+        variables: [
+          { name: 'NAME_A', value: `AAA` },
+        ],
+        errors: [
+          { type: ERROR_TYPES.INVALID_NAME_STRICT, name: '0NAME_A' },
+        ],
+      });
+    });
+
+    it('invalid name (strict mode) dash', () => {
+      const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"-NAME_A","value":"AAA"}]';
+      expect(parseRawJson(rawInput, { mode: 'strict' })).to.deep.equal({
+        variables: [
+          { name: 'NAME_A', value: `AAA` },
+        ],
+        errors: [
+          { type: ERROR_TYPES.INVALID_NAME_STRICT, name: '-NAME_A' },
+        ],
+      });
+    });
+
+    it('invalid name (strict mode) dot', () => {
+      const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":".NAME_A","value":"AAA"}]';
+      expect(parseRawJson(rawInput, { mode: 'strict' })).to.deep.equal({
+        variables: [
+          { name: 'NAME_A', value: `AAA` },
+        ],
+        errors: [
+          { type: ERROR_TYPES.INVALID_NAME_STRICT, name: '.NAME_A' },
         ],
       });
     });

@@ -2,7 +2,9 @@
 
 ## Unreleased (????-??-??)
 
-utils/env-var: add a json parser and return valid values
+* utils/env-var: 
+  * add a json parser and return valid values
+  * add a strict mode validation
 
 ## 7.6.0 (2021-08-03)
 
