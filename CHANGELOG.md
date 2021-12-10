@@ -5,6 +5,7 @@
 * utils/env-var: 
   * add a json parser and return valid values
   * add a strict mode validation
+  * add a warning error for Java validation
 
 ## 7.6.0 (2021-08-03)
 
