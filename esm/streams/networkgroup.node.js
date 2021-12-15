@@ -20,4 +20,11 @@ export class NetworkgroupStream extends AbstractNetworkgroupStream {
     return new EventSource(url);
   }
 
+  _onError (error) {
+    // console.debug(`SSE Error: ${JSON.stringify(error, null, 2)}`);
+    console.error(error);
+    console.trace();
+    super._onError(error);
+  }
+
 }

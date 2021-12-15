@@ -44,13 +44,17 @@ export class AbstractNetworkgroupStream extends AbstractStream {
         // Prepare SSE URL's authorization query param
         const urlObject = new URL(requestParams.url);
 
-        // Add Authorization
+        // Add query params
         const qs = new URLSearchParams();
+        Object.entries(requestParams.queryParams || {})
+          .forEach(([name, value]) => qs.set(name, value));
+
+        // Add Authorization
         const base64AuthorizationHeader = this.btoa(requestParams.headers.Authorization);
-        qs.set('authorization', base64AuthorizationHeader);
-        urlObject.search = qs.toString();
+        qs.set('authorization', `${base64AuthorizationHeader}`);
 
         // Build URL
+        urlObject.search = qs.toString();
         const url = urlObject.toString();
         return { url };
       });
@@ -91,6 +95,7 @@ export class AbstractNetworkgroupStream extends AbstractStream {
 
     // Wire SSE `'message'` to `_onPing()` call or `'conf'` event
     this._sse.addEventListener('message', (message) => {
+      console.debug(`Received message ${JSON.stringify(message, null, 2)}`);
       clearTimeout(openTimeoutId);
 
       const parsedMessage = this.parseMessage(message);
@@ -98,7 +103,7 @@ export class AbstractNetworkgroupStream extends AbstractStream {
         this._onPing(parsedMessage.heartbeat_delay_ms);
       }
       else {
-        const conf = this.parseConfMessage(message);
+        const conf = this.parseConfMessage(parsedMessage);
         if (conf != null) {
           this.emit('conf', conf);
         }
@@ -119,28 +124,38 @@ export class AbstractNetworkgroupStream extends AbstractStream {
   }
 
   parseMessage (message) {
+    if (!message.data) {
+      console.debug('Cannot parse message: message.data is empty');
+      return null;
+    }
     try {
       return JSON.parse(message.data);
     }
     catch (e) {
+      console.debug(`Error parsing message: ${e}`);
       return null;
     }
   }
 
   parseConfMessage (message) {
+    if (message == null) {
+      console.debug('Cannot parse conf message: message is null');
+      return null;
+    }
     try {
-      const object = JSON.parse(message.data);
-      if (object == null || !object.keys().includes(['ng_id', 'peer_id', 'version', 'configuration'])) {
+      if (!(message && message.ng_id && message.peer_id && message.version && message.configuration)) {
+        console.debug('Cannot parse conf message: Missing keys');
         return null;
       }
       return {
-        ngId: object.ng_id,
-        peerId: object.peer_id,
-        version: object.version,
-        configuration: this.atob(object.configuration),
+        ngId: message.ng_id,
+        peerId: message.peer_id,
+        version: message.version,
+        configuration: this.atob(message.configuration),
       };
     }
     catch (e) {
+      console.debug(`Error parsing conf message: ${e}`);
       return null;
     }
   }
