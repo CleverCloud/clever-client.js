@@ -6,7 +6,7 @@ import {
   ERROR_TYPES,
   parseRaw,
   parseRawJson,
-  toJSONString,
+  toJson,
   toNameEqualsValueString,
   toNameValueObject,
   validateName,
@@ -64,6 +64,26 @@ describe('parseRaw()', () => {
           { name: 'NAME_C', value: 'CCCCC' },
         ],
         errors: [],
+      });
+    });
+
+    it('warn java info', () => {
+      const rawInput = [
+        'NAME.A=AAA',
+        'NAME_B=BBBB',
+        'NAME_C=CCCCC',
+      ].join('\n');
+      expect(parseRaw(rawInput)).to.deep.equal({
+        variables: [
+          { name: 'NAME_B', value: 'BBBB' },
+          { name: 'NAME_C', value: 'CCCCC' },
+          { name: 'NAME.A', value: 'AAA' },
+        ],
+        errors: [
+          {
+            type: ERROR_TYPES.JAVA_INFO, name: 'NAME.A', pos: { line: 1, column: 0 },
+          },
+        ],
       });
     });
 
@@ -501,6 +521,22 @@ describe('parseRawJson()', () => {
         errors: [],
       });
     });
+
+    it('warn java info', () => {
+      const rawInput = '[{"name":"NAME.A","value":"AAA"}, {"name":"NAME_B","value":"BBB"}]';
+      expect(parseRawJson(rawInput)).to.deep.equal({
+        variables: [
+          { name: 'NAME_B', value: `BBB` },
+          { name: 'NAME.A', value: `AAA` },
+        ],
+        errors: [
+          {
+            type: ERROR_TYPES.JAVA_INFO, name: 'NAME.A',
+          },
+        ],
+      });
+    });
+
   });
 
   describe('return errors', () => {
@@ -618,18 +654,18 @@ describe('parseRawJson()', () => {
 
 });
 
-describe('toJSONString()', () => {
+describe('toJson()', () => {
 
   it('no vars', () => {
     const variables = [];
-    expect(toJSONString(variables)).to.equal('');
+    expect(toJson(variables)).to.equal('[]');
   });
 
   it('simple var', () => {
     const variables = [
       { name: 'NAME_A', value: `AAA` },
     ];
-    expect(toJSONString(variables)).to.equal(
+    expect(toJson(variables)).to.equal(
       `[
   {
     "name": "NAME_A",
@@ -643,7 +679,7 @@ describe('toJSONString()', () => {
       { name: 'NAME_A', value: `AAA` },
       { name: 'NAME_B', value: `BBB` },
     ];
-    expect(toJSONString(variables)).to.equal(
+    expect(toJson(variables)).to.equal(
       `[
   {
     "name": "NAME_A",
@@ -656,14 +692,14 @@ describe('toJSONString()', () => {
 ]`);
   });
 
-  it('multple var (unordered)', () => {
+  it('multiple var (unordered)', () => {
     const variables = [
       { name: 'NAME_B', value: `BBB` },
       { name: 'NAME_A', value: `AAA` },
       { name: 'NAME_D', value: `DDD` },
       { name: 'NAME_C', value: `CCC` },
     ];
-    expect(toJSONString(variables)).to.equal(
+    expect(toJson(variables)).to.equal(
       `[
   {
     "name": "NAME_A",

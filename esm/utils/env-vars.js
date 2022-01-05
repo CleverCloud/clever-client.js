@@ -46,6 +46,7 @@ export const ERROR_TYPES = {
   INVALID_JSON_FORMAT: 5,
   INVALID_JSON_ENTRY: 6,
   INVALID_NAME_STRICT: 7,
+  JAVA_INFO: 8,
 };
 
 const NEW_LINE = '\n';
@@ -139,12 +140,17 @@ export function parseRaw (rawInput = '', options = {}) {
     const nextEqualIdx = nextIndex(rawInput, EQUAL, startIdx);
     const name = rawInput.substring(startIdx, nextEqualIdx);
 
-    const isNameInvalid = !validateName(name, mode);
-    if (isNameInvalid && (mode === 'strict')) {
+    const isNameInvalidSimple = !validateName(name, 'simple');
+    const isNameInvalidStrict = !validateName(name, 'strict');
+
+    if (isNameInvalidStrict && mode === 'strict') {
       parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME_STRICT, name, pos: getPosition(rawInput, startIdx) });
     }
-    else if (isNameInvalid && (mode !== 'strict')) {
+    else if (isNameInvalidStrict && isNameInvalidSimple && mode !== 'strict') {
       parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME, name, pos: getPosition(rawInput, startIdx) });
+    }
+    else if (isNameInvalidStrict && !isNameInvalidSimple && mode !== 'strict') {
+      parsingErrors.push({ type: ERROR_TYPES.JAVA_INFO, name, pos: getPosition(rawInput, startIdx) });
     }
 
     const isNameDuplicated = allNames.has(name);
@@ -163,7 +169,13 @@ export function parseRaw (rawInput = '', options = {}) {
 
       const isValueInvalid = nextNewLineIdx > nextQuoteIdx + 1 || nextQuoteIdx + 1 > rawInput.length;
 
-      if (!isNameInvalid && !isNameDuplicated && !isValueInvalid) {
+      if (!isNameInvalidStrict && !isNameDuplicated && !isValueInvalid && mode === 'strict') {
+        parsedVariables.push({ name, value });
+      }
+      else if (!isNameInvalidSimple && isNameInvalidStrict && !isNameDuplicated && !isValueInvalid && mode !== 'strict') {
+        parsedVariables.push({ name, value });
+      }
+      else if (!isNameInvalidSimple && !isNameInvalidStrict && !isNameDuplicated && !isValueInvalid && mode !== 'strict') {
         parsedVariables.push({ name, value });
       }
 
@@ -176,10 +188,19 @@ export function parseRaw (rawInput = '', options = {}) {
       }
     }
     else {
+
       const value = rawInput.substring(nextEqualIdx + 1, nextNewLineIdx);
-      if (!isNameInvalid && !isNameDuplicated) {
+
+      if (!isNameInvalidStrict && !isNameDuplicated && mode === 'strict') {
         parsedVariables.push({ name, value });
       }
+      else if (!isNameInvalidSimple && isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
+        parsedVariables.push({ name, value });
+      }
+      else if (!isNameInvalidSimple && !isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
+        parsedVariables.push({ name, value });
+      }
+
       startIdx = nextNewLineIdx + 1;
     }
   }
@@ -220,19 +241,36 @@ export function parseRawJson (rawInput = '', options = {}) {
   const visitedNames = [];
   const duplicatedNames = new Set();
   const invalidNames = new Set();
+  const infoJava = new Set();
 
   variablesWithNameValue.forEach((variable) => {
     const isNameDuplicated = visitedNames.includes(variable.name);
-    const isNameInvalid = !validateName(variable.name, mode);
+    const isNameInvalidSimple = !validateName(variable.name, 'simple');
+    const isNameInvalidStrict = !validateName(variable.name, 'strict');
+
     if (isNameDuplicated) {
       duplicatedNames.add(variable.name);
     }
-    if (isNameInvalid) {
+
+    if (isNameInvalidStrict && mode === 'strict') {
       invalidNames.add(variable.name);
     }
-    if (!isNameDuplicated && !isNameInvalid) {
+    else if (isNameInvalidSimple && isNameInvalidStrict && mode !== 'strict') {
+      invalidNames.add(variable.name);
+    }
+
+    if (!isNameDuplicated && !isNameInvalidStrict && mode === 'strict') {
       visitedNames.push(variable.name);
       validVariables.push(variable);
+    }
+    else if (!isNameInvalidSimple && !isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
+      visitedNames.push(variable.name);
+      validVariables.push(variable);
+    }
+    else if (!isNameInvalidSimple && isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
+      visitedNames.push(variable.name);
+      validVariables.push(variable);
+      infoJava.add(variable.name);
     }
   });
 
@@ -249,15 +287,17 @@ export function parseRawJson (rawInput = '', options = {}) {
     }
   });
 
+  Array.from(infoJava).forEach((name) => parsingErrors.push({ type: ERROR_TYPES.JAVA_INFO, name }));
+
   // WARN: Array.prototype.sort edits in place
   validVariables.sort((a, b) => a.name.localeCompare(b.name));
 
   return { variables: validVariables, errors: parsingErrors };
 }
 
-export function toJSONString (variables) {
+export function toJson (variables) {
   if (variables.length === 0) {
-    return '';
+    return '[]';
   }
   const sortedVariables = variables
     .sort((a, b) => a.name.localeCompare(b.name))
