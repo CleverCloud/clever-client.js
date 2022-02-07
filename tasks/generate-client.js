@@ -7,7 +7,7 @@ const pathJoin = require('path').join;
 const prettier = require('prettier');
 const superagent = require('superagent');
 
-const { CACHE_PATH, OPEN_API_URL_V2 } = require('./config.js');
+const { CACHE_PATH, OPEN_API_URL_V2, OPEN_API_URL_V4_OVD } = require('./config.js');
 
 async function getOpenapi (localCachePath, remoteUrl) {
 
@@ -71,7 +71,14 @@ function getRoutes (openapi, version) {
 
   return _.chain(openapi.paths)
     .entries()
-    .flatMap(([path, methodsAndConfig]) => {
+    .flatMap(([rawPath, methodsAndConfig]) => {
+
+      // Historically, the path did not contain the version as a prefix
+      // If the version is in the path, we remove it
+      const path = (rawPath.startsWith('/' + version + '/'))
+        ? rawPath.replace(new RegExp('^/' + version + '/'), '/')
+        : rawPath;
+
       return _.chain(methodsAndConfig)
         .entries()
         .flatMap(([method, config]) => {
@@ -331,7 +338,7 @@ function buildLegacyClientCode (allRoutes, codeByService) {
  */
 async function generateClient () {
 
-  // fetch and load openapi JSON document
+  // fetch and load OpenAPI JSON document
   const apiLocalCachePathV2 = pathJoin(CACHE_PATH, 'openapi-clever-v2.json');
   const openapi = await getOpenapi(apiLocalCachePathV2, OPEN_API_URL_V2);
 
@@ -340,21 +347,26 @@ async function generateClient () {
   const otherApiLocalPathV2 = './data/other-apis-v2.json';
   const mergedApiV2 = await mergeOpenapi(openapi, otherApiLocalPathV2);
 
-  // patch openapi with custom properties
+  // patch OpenAPI with custom properties
   // TODO: directly add those properties in the source code (Java & Scala APIs)
   const patchLocalPathV2 = './data/patch-for-openapi-clever-v2.json';
   const patchedApiV2 = await patchOpenapi(mergedApiV2, patchLocalPathV2);
   const patchedApiLocalCachePathV2 = pathJoin(CACHE_PATH, 'openapi-clever-v2.patched.json');
   await fs.outputJson(patchedApiLocalCachePathV2, patchedApiV2, { spaces: 2 });
 
-  // Read openapi v4 from local (waiting for a published one)
+  // Read OpenAPI v4 from local (waiting for a published one)
   const openapiV4 = await fs.readJson('./data/openapi-clever-v4.json');
+
+  // Read OpenAPI v4 from remote OVD
+  const apiLocalCachePathV4Ovd = pathJoin(CACHE_PATH, 'openapi-clever-v4-ovd.json');
+  const openapiV4Ovd = await getOpenapi(apiLocalCachePathV4Ovd, OPEN_API_URL_V4_OVD);
 
   // extract all routes
   const routesV2 = getRoutes(patchedApiV2, 'v2');
   const allRoutes = [
     ...routesV2,
     ...getRoutes(openapiV4, 'v4'),
+    ...getRoutes(openapiV4Ovd, 'v4'),
   ];
 
   // group "/self" with "/organisations/{id}"
