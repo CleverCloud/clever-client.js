@@ -2,7 +2,7 @@
 
 ## Unreleased (????-??-??)
 
-...
+* Add support for remote OVD OpenAPI
 
 ## 7.7.0 (2022-01-05)
 
