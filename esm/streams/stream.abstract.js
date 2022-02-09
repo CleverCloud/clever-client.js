@@ -70,7 +70,7 @@ export class AbstractStream extends EventEmitter {
     }
 
     this.emit('open');
-    this._openSource().catch((error) => this._onError('error', error));
+    this._openSource().catch((error) => this._onError(error));
   }
 
   async _openSource () {
@@ -118,7 +118,7 @@ export class AbstractStream extends EventEmitter {
       const exponentialBackoffDelay = this._autoRetry.initRetryTimeout * (this._autoRetry.backoffFactor ** this._autoRetry.counter);
       this._autoRetry.timeoutId = setTimeout(() => {
         this.emit('open');
-        this._openSource().catch((error) => this._onError('error', error));
+        this._openSource().catch((error) => this._onError(error));
       }, exponentialBackoffDelay);
     }
   }
