@@ -2,6 +2,10 @@
 
 ## Unreleased (????-??-??)
 
+... 
+
+## 7.8.0 (2022-02-15)
+
 * Add support for remote OVD OpenAPI
 * Add `cc-client-version` header for all calls
 * Add network group routes in `api/v4/network-group.js`
