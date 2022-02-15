@@ -2,7 +2,7 @@
 
 ## Unreleased (????-??-??)
 
-... 
+* Rollback `cc-client-version` header for all calls
 
 ## 7.8.0 (2022-02-15)
 
