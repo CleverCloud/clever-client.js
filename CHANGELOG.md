@@ -3,6 +3,7 @@
 ## Unreleased (????-??-??)
 
 * Add support for remote OVD OpenAPI
+* Add `cc-client-version` header for all calls
 
 ## 7.7.0 (2022-01-05)
 
