@@ -6,6 +6,7 @@ const fs = require('fs-extra');
 const pathJoin = require('path').join;
 const prettier = require('prettier');
 const superagent = require('superagent');
+const pkg = require('../package.json');
 
 const { CACHE_PATH, OPEN_API_URL_V2, OPEN_API_URL_V4_OVD } = require('./config.js');
 
@@ -200,6 +201,7 @@ function buildClientCode (route) {
   const headers = JSON.stringify({
     ...getAcceptHeader(responses),
     ...getContentTypeHeader(requestBody),
+    'cc-client-version': pkg.version,
   });
 
   const queryParams = getQueryParams(parameters);
