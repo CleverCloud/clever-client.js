@@ -121,7 +121,7 @@ export class AbstractNetworkgroupStream extends AbstractStream {
   // TODO: maybe we should emit errors for this?
   parseMessage (message) {
     if (message.data == null) {
-      //TODO: do we want to keep those, maybe we should emit them...
+      // TODO: do we want to keep those, maybe we should emit them...
       console.debug('Cannot parse message: message.data is empty');
       return null;
     }
@@ -129,7 +129,7 @@ export class AbstractNetworkgroupStream extends AbstractStream {
       return JSON.parse(message.data);
     }
     catch (e) {
-      //TODO: do we want to keep those, maybe we should emit them...
+      // TODO: do we want to keep those, maybe we should emit them...
       console.debug(`Error parsing message: ${e}`);
       return null;
     }
@@ -138,12 +138,12 @@ export class AbstractNetworkgroupStream extends AbstractStream {
   // TODO: maybe we should emit errors for this?
   parseConfMessage (message) {
     if (message == null) {
-      //TODO: do we want to keep those, maybe we should emit them...
+      // TODO: do we want to keep those, maybe we should emit them...
       console.debug('Cannot parse conf message: message is null');
       return null;
     }
     if (message == null || message.ng_id == null || message.peer_id == null || message.version == null || message.configuration == null) {
-      //TODO: do we want to keep those, maybe we should emit them...
+      // TODO: do we want to keep those, maybe we should emit them...
       console.debug('Cannot parse conf message: Missing keys');
       return null;
     }
