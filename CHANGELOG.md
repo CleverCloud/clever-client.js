@@ -4,6 +4,10 @@
 
 ...
 
+## 7.9.0 (2022-02-24)
+
+* Change OVD `openapi.json` URL
+
 ## 7.8.1 (2022-02-15)
 
 * Rollback `cc-client-version` header for all calls
