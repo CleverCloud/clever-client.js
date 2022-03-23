@@ -2,6 +2,10 @@
 
 ## Unreleased (????-??-??)
 
+...
+
+## 7.10.0 (2022-03-23)
+
 * Add new utils `getOrgaPaymentMethodsError` and `getAllOrgaPaymentMethodsErrors`
 
 ## 7.9.0 (2022-02-24)
