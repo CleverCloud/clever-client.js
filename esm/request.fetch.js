@@ -52,6 +52,20 @@ function parseResponseBody (response) {
   return response.text();
 }
 
+function getErrorMessage (responseBody) {
+  if (typeof responseBody?.message === 'string') {
+    return responseBody.message;
+  }
+  else if (typeof responseBody?.error === 'string') {
+    return responseBody.error;
+  }
+  else if (typeof responseBody === 'string') {
+    return responseBody;
+  }
+
+  return 'Unknown error';
+}
+
 export async function request (requestParams) {
 
   const url = new URL(requestParams.url);
@@ -65,9 +79,7 @@ export async function request (requestParams) {
 
   if (response.status >= 400) {
     const responseBody = await parseResponseBody(response);
-    const errorMessage = (responseBody.message != null)
-      ? responseBody.message
-      : responseBody;
+    const errorMessage = getErrorMessage(responseBody);
     const error = new Error(errorMessage);
     // NOTE: This is only for legacy
     if (responseBody.id != null) {
