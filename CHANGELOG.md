@@ -4,6 +4,13 @@
 
 ...
 
+## 7.11.0 (2023-01-09)
+
+* Improve error handling on fetch request
+* Generate-client:
+  * Handle invalid `delete` function name
+  * Handle `requestBody.content` when only described as a `$ref`
+
 ## 7.10.0 (2022-03-23)
 
 * Add new utils `getOrgaPaymentMethodsError` and `getAllOrgaPaymentMethodsErrors`
