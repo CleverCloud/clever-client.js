@@ -216,9 +216,13 @@ function buildClientCode (route) {
     ? 'body,'
     : '// no body';
 
+  const safeFunctionName = (functionName === 'delete')
+    ? '_delete'
+    : functionName;
+
   const code = `
     ${comments}
-    export function ${functionName} (${functionArgs}) {
+    export function ${safeFunctionName} (${functionArgs}) {
       ${multipathIf}
       return Promise.resolve({
         method: '${method}',
