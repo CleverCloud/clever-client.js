@@ -138,13 +138,18 @@ function getAcceptHeader (responses) {
 }
 
 function getContentTypeHeader (requestBody) {
-  if (requestBody != null) {
+  if (requestBody?.content != null) {
     const bodyContentTypes = Object.keys(requestBody.content);
     if (bodyContentTypes.length > 1) {
       // TODO
       console.warn('route has many content types');
     }
     return { 'Content-Type': bodyContentTypes[0] };
+  }
+
+  // TODO: use the real $ref instead of assuming directly 'application/json'
+  if (requestBody?.$ref != null) {
+    return { 'Content-Type': 'application/json' };
   }
   return {};
 }
@@ -211,9 +216,13 @@ function buildClientCode (route) {
     ? 'body,'
     : '// no body';
 
+  const safeFunctionName = (functionName === 'delete')
+    ? '_delete'
+    : functionName;
+
   const code = `
     ${comments}
-    export function ${functionName} (${functionArgs}) {
+    export function ${safeFunctionName} (${functionArgs}) {
       ${multipathIf}
       return Promise.resolve({
         method: '${method}',
