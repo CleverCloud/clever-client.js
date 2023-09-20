@@ -1,18 +1,23 @@
 import OAuth from 'oauth-1.0a';
 
-function arrayBufferToBase64 (buffer) {
-  let binary = '';
-  const bytes = new Uint8Array(buffer);
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i]);
+async function getSubtleCrypto () {
+
+  // Browser environment
+  if (globalThis.crypto?.subtle != null) {
+    return globalThis.crypto?.subtle;
   }
-  return window.btoa(binary);
+  // Node environment
+  else {
+    const cryptoModule = await import('node:crypto');
+    return cryptoModule.subtle;
+  }
 }
 
 export function addOauthHeader (tokens) {
 
   return async function (requestParams) {
+
+    const cryptoSubtle = await getSubtleCrypto();
 
     const { method, url, headers, queryParams } = requestParams;
 
@@ -28,7 +33,7 @@ export function addOauthHeader (tokens) {
         const encodedText = encoder.encode(baseString);
         const encodedKey = encoder.encode(key);
 
-        const cryptoKey = await window.crypto.subtle.importKey(
+        const cryptoKey = await cryptoSubtle.importKey(
           'raw',
           encodedKey,
           { name: 'HMAC', hash: 'SHA-512' },
@@ -36,13 +41,20 @@ export function addOauthHeader (tokens) {
           ['sign'],
         );
 
-        const result = await window.crypto.subtle.sign(
+        const result = await cryptoSubtle.sign(
           { name: 'HMAC', hash: 'SHA-512' },
           cryptoKey,
           encodedText,
         );
 
-        const base64Result = arrayBufferToBase64(result);
+        let binary = '';
+        const bytes = new Uint8Array(result);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        const base64Result = globalThis.btoa(binary);
+
         return base64Result;
       },
     });
