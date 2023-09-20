@@ -5,7 +5,7 @@ export function fetchWithTimeout (url, params, timeoutDelay) {
 
   const ac = controllerWithSignal(params.signal);
 
-  const fetchPromise = window.fetch(url, { ...params, signal: ac.signal });
+  const fetchPromise = fetch(url, { ...params, signal: ac.signal });
   const timeoutPromise = new Promise((resolve, reject) => setTimeout(() => {
     ac.abort();
     reject(new Error('TimeoutError'));
@@ -15,7 +15,7 @@ export function fetchWithTimeout (url, params, timeoutDelay) {
 }
 
 function controllerWithSignal (signal) {
-  const ac = new window.AbortController();
+  const ac = new AbortController();
   if (signal != null) {
     signal.addEventListener('abort', () => ac.abort(), { once: true });
   }
