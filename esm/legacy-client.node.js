@@ -1,9 +1,9 @@
 import Bacon from 'baconjs';
-import { addOauthHeader } from './oauth.node.js';
+import { addOauthHeader } from './oauth.js';
 import { sendLegacyRequest } from './send-legacy-request.js';
 import { initLegacyClient } from './api/v2/legacy-client.js';
 import { prefixUrl } from './prefix-url.js';
-import { request } from './request.superagent.js';
+import { request } from './request.fetch.js';
 
 export function initCleverClient (config) {
 
