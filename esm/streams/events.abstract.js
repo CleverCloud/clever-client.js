@@ -1,5 +1,6 @@
 import { AbstractStream, AuthenticationError } from './stream.abstract.js';
 import { prefixUrl } from '../prefix-url.js';
+import { addOauthHeader } from '../oauth.js';
 
 const PONG_MESSAGE = JSON.stringify({
   type: 'heartbeat',
@@ -40,7 +41,7 @@ export class AbstractEventsStream extends AbstractStream {
         url: '/v2/events/',
       })
       .then(prefixUrl(this.apiHost))
-      .then(this.addOauthHeader(this.tokens))
+      .then(addOauthHeader(this.tokens))
       .then((requestParams) => {
         // prepare WebSocket URL from URL used for signature
         const urlObj = new URL(requestParams.url);
@@ -54,11 +55,6 @@ export class AbstractEventsStream extends AbstractStream {
         });
         return { url, authMessage };
       });
-  }
-
-  addOauthHeader () {
-    // It's up to the class extending AbstractEventsStream to implement how to sign and add an oAuthHeader
-    throw new Error('Not implemented');
   }
 
   // Prepare WS auth => open connection =>

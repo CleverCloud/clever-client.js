@@ -39,15 +39,16 @@ export default class CleverCloudSse extends CustomEventTarget {
 
         return [param, [values]];
       })
-      .map(([param, values]) => values.forEach(value => {
-        if (value==null) {
-          return;
-        }
+      .map(([param, values]) => {
+        return values.forEach(value => {
+          if (value == null) {
+            return;
+          }
 
-        url.searchParams.append(param, formatValue(value));
-      }));
+          url.searchParams.append(param, formatValue(value));
+        });
+      });
 
-    console.log(url.toString());
     return url.toString();
   }
 

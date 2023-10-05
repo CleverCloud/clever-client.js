@@ -1,6 +1,7 @@
 import { AbstractStream, AuthenticationError } from './stream.abstract.js';
 import { pickNonNull } from '../pick-non-null.js';
 import { prefixUrl } from '../prefix-url.js';
+import { addOauthHeader } from '../oauth.js';
 
 const OPEN_TIMEOUT = 3000;
 
@@ -46,29 +47,19 @@ export class AbstractLogsStream extends AbstractStream {
         }, ['filter', 'deployment_id']),
       })
       .then(prefixUrl(this.apiHost))
-      .then(this.addOauthHeader(this.tokens))
+      .then(addOauthHeader(this.tokens))
       .then((requestParams) => {
         // prepare SSE URL's authorization query param
         const urlObject = new URL(requestParams.url);
         const qs = new URLSearchParams();
         Object.entries(requestParams.queryParams)
           .forEach(([name, value]) => qs.set(name, value));
-        const base64AuthorizationHeader = this.btoa(requestParams.headers.Authorization);
+        const base64AuthorizationHeader = globalThis.btoa(requestParams.headers.Authorization);
         qs.set('authorization', base64AuthorizationHeader);
         urlObject.search = qs.toString();
         const url = urlObject.toString();
         return { url };
       });
-  }
-
-  addOauthHeader () {
-    // It's up to the class extending AbstractLogsStream to implement how to sign and add an oAuthHeader
-    throw new Error('Not implemented');
-  }
-
-  btoa () {
-    // It's up to the class extending AbstractLogsStream to implement how to do base64 encoding
-    throw new Error('Not implemented');
   }
 
   // Prepare SSE auth => open connection => check min activity.
