@@ -4,6 +4,7 @@
   "description": "JavaScript REST client and utils for Clever Cloud's API",
   "homepage": "https://github.com/CleverCloud/clever-client.js",
   "license": "Apache-2.0",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/CleverCloud/clever-client.js"
@@ -27,7 +28,8 @@
     "lint:fix": "eslint --fix esm tasks test",
     "prepack": "npm run lint && npm run test && npm run generate-client",
     "test": "web-test-runner \"test/**/*.spec.js\" --node-resolve",
-    "test:watch": "web-test-runner \"test/**/*.spec.js\" --node-resolve --watch"
+    "test:watch": "web-test-runner \"test/**/*.spec.js\" --node-resolve --watch",
+    "miton": "node ./test.js"
   },
   "dependencies": {
     "component-emitter": "^1.3.0",
@@ -58,6 +60,6 @@
     "superagent": "^6.1.0"
   },
   "volta": {
-    "node": "18.5.0"
+    "node": "18.18.0"
   }
 }
