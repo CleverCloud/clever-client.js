@@ -33,7 +33,7 @@ Here's an example for a browser based project using ECMAScript modules with oAut
 In a file, expose this function:
 
 ```js
-import { addOauthHeader } from '@clevercloud/client/esm/oauth.browser.js';
+import { addOauthHeader } from '@clevercloud/client/esm/oauth.js';
 import { prefixUrl } from '@clevercloud/client/esm/prefix-url.js';
 import { request } from '@clevercloud/client/esm/request.fetch.js';
 
@@ -71,14 +71,14 @@ NOTE: It returns a promise, you may want to use `await` with it.
 
 ### In a Node.js based project?
 
-Here's an example for a Node.js based project using CommonJS modules with oAuth v1 signature and using the `superagent` module to send requests.
+Here's an example for a Node.js based project using CommonJS modules with oAuth v1 signature and using the `fetch` module to send requests.
 
 In a file, expose this function:
 
 ```js
-const { addOauthHeader } = require('@clevercloud/client/cjs/oauth.node.js');
+const { addOauthHeader } = require('@clevercloud/client/cjs/oauth.js');
 const { prefixUrl } = require('@clevercloud/client/cjs/prefix-url.js');
-const { request } = require('@clevercloud/client/cjs/request.superagent.js');
+const { request } = require('@clevercloud/client/cjs/request.fetch.js');
 
 module.exports.sendToApi = function sendToApi (requestParams) {
 
@@ -99,7 +99,7 @@ module.exports.sendToApi = function sendToApi (requestParams) {
 }
 ```
 
-NOTE: If your project relies on a specific REST library (axios, request...), you'll have to write your own request function to plug the params to your lib instead of using `request.superagent.js`.
+NOTE: If your project relies on a specific REST library (axios, request...), you'll have to write your own request function to plug the params to your lib instead of using `request.fetch.js`.
 
 Then, in any file of your app, require the service, call the function on it and add a `.then(sendToApi)` like this:
 
@@ -182,16 +182,11 @@ npm run generate-cjs-modules
 
 NOTE: This is based on the ECMAScript modules in `esm`. Be sure to generate the ESM client before running this.
 
-## What about streams?
-
-This project exposes two "stream" APIs:
-
-* Stream of logs via SSE, Server Sent Events (also called `EventSource`)
-* Stream of events via WebSocket
-
-Those streams are exposed with [`component-emitter`](https://www.npmjs.com/package/component-emitter), a tiny lib implementing an API that closely match both [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) from the DOM and [`EventEmitter`](https://nodejs.org/api/events.html) from Node.js. 
+## Logs stream and event API stream (v2)
 
 ### Retrieving logs from Clever Cloud
+
+This stream is exposed the inner SSE source with [`component-emitter`](https://www.npmjs.com/package/component-emitter), a tiny lib implementing an API that closely match both [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) from the DOM and [`EventEmitter`](https://nodejs.org/api/events.html) from Node.js.
 
 Here's an example of how to use `LogsStream` to retrieve live logs from an app:
 
@@ -220,6 +215,8 @@ logsStream.open();
 ```
 
 ### Retrieving events from Clever Cloud
+
+This stream is exposed the inner WebSocket source with [`component-emitter`](https://www.npmjs.com/package/component-emitter), a tiny lib implementing an API that closely match both [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) from the DOM and [`EventEmitter`](https://nodejs.org/api/events.html) from Node.js.
 
 Here's an example of how to use `EventsStream` to retrieve events from the Clever Cloud platform:
 
@@ -307,6 +304,54 @@ stream.open({
   // Maximum number of consecutive iterations the auto retry behaviour can do, defaults to Infinity
   maxRetryCount: 6,
 });
+```
+
+## Logs stream (v4)
+
+```js
+import { ApplicationLogStream } from '@clevercloud/client/esm/streams/application-log.js';
+
+// Load and cache config and tokens
+const API_HOST = 'https://api.clever-cloud.com';
+const tokens = {
+  OAUTH_CONSUMER_KEY: 'your OAUTH_CONSUMER_KEY',
+  OAUTH_CONSUMER_SECRET: 'your OAUTH_CONSUMER_SECRET',
+  API_OAUTH_TOKEN: 'your API_OAUTH_TOKEN',
+  API_OAUTH_TOKEN_SECRET: 'your API_OAUTH_TOKEN_SECRET',
+};
+
+// Create an EventsStream instance (appId is optional)
+const logsStream = new ApplicationLogStream({
+  apiHost: API_HOST,
+  tokens,
+  ownerId: 'YYY',
+  appId: 'XXX',
+  // and optionnal params
+  // since: Date,
+  // until: Date,
+  // service: string[],
+  // limit: number,
+  // deploymentId: string,
+  // instanceId: string[],
+  // filter: string,
+  // field: string[],
+  // throttleElements: number,
+  // throttlePerInMilliseconds: number,
+});
+
+logsStream
+  .on('opened', (event) => console.debug('stream opened!', event))
+  .on('close', (event) => console.debug('stream closed', event.reason, `last id: ${logsStream.lastId}`))
+  .on('error', (event) => console.error('error', event.error))
+  .on('APPLICATION_LOG', (event) => console.log(event.data.date, event.data.message))
+
+logsStream.start();
+
+// You can also pause the stream
+logsStream.pause();
+
+// And resume it
+logsStream.resume();
 ```
 
 ## License
