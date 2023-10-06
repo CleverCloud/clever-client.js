@@ -5,15 +5,33 @@ import CleverCloudSse from './clever-cloud-sse.js';
  */
 export class ApplicationLogStream extends CleverCloudSse {
   /**
-   * @param {string} apiHost
-   * @param {string} tokens
-   * @param {string} organizationId
-   * @param {string} applicationId
-   * @param {string} options
+   * @param {object} options
+   * @param {string} options.apiHost
+   * @param {object} options.tokens
+   * @param {string} options.tokens.OAUTH_CONSUMER_KEY
+   * @param {string} options.tokens.OAUTH_CONSUMER_SECRET
+   * @param {string} options.tokens.API_OAUTH_TOKEN
+   * @param {string} options.tokens.API_OAUTH_TOKEN_SECRET
+   * @param {string} options.ownerId
+   * @param {string} options.appId
+   * @param {object} options.retryConfiguration
+   * @param {boolean} options.retryConfiguration.enabled
+   * @param {number} options.retryConfiguration.backoffFactor
+   * @param {number} options.retryConfiguration.initRetryTimeout
+   * @param {number} options.retryConfiguration.maxRetryCount
+   * @param {Date} options.since
+   * @param {Date} options.until
+   * @param {number} options.limit
+   * @param {string} options.deploymentId
+   * @param {string} options.instanceId[]
+   * @param {string} options.filter
+   * @param {string} options.field[]
+   * @param {number} options.throttleElements
+   * @param {number} options.throttlePerInMilliseconds
+   *
    */
-  constructor ({ apiHost, tokens, ownerId, appId, ...options }) {
-    super(apiHost, tokens);
-
+  constructor ({ apiHost, tokens, ownerId, appId, retryConfiguration, ...options }) {
+    super(apiHost, tokens, retryConfiguration ?? {});
     this.ownerId = ownerId;
     this.appId = appId;
     this.options = options;
@@ -54,5 +72,14 @@ export class ApplicationLogStream extends CleverCloudSse {
     }
 
     return data;
+  }
+
+  /**
+   * shortcut for .on('APPLICATION_LOG', (event) => ...)
+   * @param {Function} fn which handle logs
+   * @returns {any}
+   */
+  onLog (fn) {
+    return this.on('APPLICATION_LOG', (event) => fn(event.data));
   }
 }
