@@ -8,7 +8,7 @@ const prettier = require('prettier');
 const superagent = require('superagent');
 // const pkg = require('../package.json');
 
-const { CACHE_PATH, OPEN_API_URL_V2, OPEN_API_URL_V4_OVD } = require('./config.js');
+const { CACHE_PATH, OPEN_API_URL_V2, OPEN_API_URL_V4_OVD } = require('./config.cjs');
 
 async function getOpenapi (localCachePath, remoteUrl) {
 
