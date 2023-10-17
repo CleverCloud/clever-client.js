@@ -1,5 +1,9 @@
 # Clever Client changelog
 
+## Unreleased (????-??-??)
+
+* adjust esm/cjs build to transform dynamic imports into Node.js compatible syntax
+
 ## 8.0.0 (2023-10-17)
 
 ### ⚠ BREAKING CHANGES
