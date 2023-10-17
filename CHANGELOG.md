@@ -1,8 +1,21 @@
 # Clever Client changelog
 
-## Unreleased (????-??-??)
+## 8.0.0 (2023-10-17)
 
-...
+### ⚠ BREAKING CHANGES
+
+* Update project to Node.js 18.5
+* Replace `oauth.browser.js` and `oauth.node.js` with one browser/Node.js compatible file: `oauth.js`
+  * You may need to adjust your bundler's settings to assume `crypto` as a global
+* Delete `request.superagent.js` and make `request.fetch.js` compatible with Node.js
+* Move project from CJS to ESM
+  * Files are is still distributed in `esm` and `cjs` directories
+  * The `cjs` will be removed in a later major release
+  * There are still some Node.js specific files we need to replace with browser/Node.js compatible versions
+
+### Features
+
+* Introduce new `ApplicationLogsStream` class for new SSE logs (v4)
 
 ## 7.11.0 (2023-01-09)
 
@@ -31,7 +44,7 @@
 
 ## 7.7.0 (2022-01-05)
 
-* utils/env-var: 
+* utils/env-var:
   * add a json parser and return valid values
   * add a strict mode validation
   * add a warning error for Java validation
@@ -39,14 +52,16 @@
 ## 7.6.0 (2021-08-03)
 
 * Add Jenkins addon provider v4 endpoint to get available updates
-  * Add `GET /v4/addon-providers/jenkins/addons/{addonIdOrRealId} in `api/v4/addon-providers.js` with `getJenkinsUpdates()`
+  * Add `GET /v4/addon-providers/jenkins/addons/{addonIdOrRealId} in `api/v4/addon-providers.js` with `
+    getJenkinsUpdates()`
 
 ## 7.5.0 (2021-06-30)
 
 * Add new addon providers v4 endpoints
-  * Add `GET /v4/addon-providers/{addonProviderId}/addons/{addonIdOrRealId} in `api/v4/addon-providers.js` with `getAddon()`
-  * Add `GET /v4/addon-providers/{addonProviderId}/clusters/{clusterId} in `api/v4/addon-providers.js` with `getCluster()`
-
+  * Add `GET /v4/addon-providers/{addonProviderId}/addons/{addonIdOrRealId} in `api/v4/addon-providers.js` with `
+    getAddon()`
+  * Add `GET /v4/addon-providers/{addonProviderId}/clusters/{clusterId} in `api/v4/addon-providers.js` with `
+    getCluster()`
 
 ## 7.4.0 (2021-04-13)
 
@@ -57,12 +72,18 @@
   * Add `GET /billing/organisations/{id}/invoices/{invoiceNumber}{type}` in `api/v4/billing.js` with `getInvoice()`
   * Add `GET /billing/organisations/{id}/payments/methods` in `api/v4/billing.js` with `getPaymentMethods()`
   * Add `POST /billing/organisations/{id}/payments/methods` in `api/v4/billing.js` with `createPaymentMethod()`
-  * Add `PUT /billing/organisations/{id}/payments/methods/default` in `api/v4/billing.js` with `setDefaultPaymentMethod()`
-  * Add `DELETE /billing/organisations/{id}/payments/methods/{methodId}` in `api/v4/billing.js` with `deletePaymentMethod()`
-  * Add `POST /billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal` in `api/v4/billing.js` with `initPaypalPayment()`
-  * Add `PUT /billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal/{payerId}` in `api/v4/billing.js` with `authorizePaypalPayment()`
-  * Add `POST /billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe` in `api/v4/billing.js` with `initStripePayment()`
-  * Add `PUT /billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe/{paymentId}` in `api/v4/billing.js` with `authorizeStripePayment()`
+  * Add `PUT /billing/organisations/{id}/payments/methods/default` in `api/v4/billing.js`
+    with `setDefaultPaymentMethod()`
+  * Add `DELETE /billing/organisations/{id}/payments/methods/{methodId}` in `api/v4/billing.js`
+    with `deletePaymentMethod()`
+  * Add `POST /billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal` in `api/v4/billing.js`
+    with `initPaypalPayment()`
+  * Add `PUT /billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal/{payerId}` in `api/v4/billing.js`
+    with `authorizePaypalPayment()`
+  * Add `POST /billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe` in `api/v4/billing.js`
+    with `initStripePayment()`
+  * Add `PUT /billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe/{paymentId}` in `api/v4/billing.js`
+    with `authorizeStripePayment()`
   * Add `GET /billing/organisations/{id}/payments/stripe/intent` in `api/v4/billing.js` with `getStripePaymentIntent()`
 
 ## 7.3.2 (2021-03-05)
@@ -98,7 +119,7 @@
 ## 7.0.0 (2020-10-05)
 
 * replace jest by [@web/test-runner](https://modern-web.dev/guides/test-runner/getting-started/)
-* Add new zones API `GET /v4/product/zones` in `api/v4/product.js` with `getAllZones()`. 
+* Add new zones API `GET /v4/product/zones` in `api/v4/product.js` with `getAllZones()`.
 
 ### ⚠️ BREAKING CHANGES
 
@@ -107,7 +128,8 @@
 
 In order to support both v2 *and* v4 endpoints we changed the way we handle the version prefix.
 
-* You no longer need to configure it as part of the `API_HOST` when you call `prefixUrl(API_HOST)` in your `sendToApi()`.
+* You no longer need to configure it as part of the `API_HOST` when you call `prefixUrl(API_HOST)` in
+  your `sendToApi()`.
 * You only need to defined the origin with no trailing slash. Example for production: `'https://api.clever-cloud.com'`.
 * All v2 service modules that you imported from `esm/api` or `cjs/api` were moved to `esm/api/v2` or `cjs/api/v2`.
 
@@ -131,7 +153,8 @@ Fix missing `/self` vs `/organisations/{id}`:
 
 * Rename `POST /self/addons/preorders` to `api/addon` with `preorder()`
   * Used to be `api/addon` with `todo_preorderSelfAddon()`
-* Rename `GET /organisations/{id}/applications/{appId}/deployments/{deploymentId}/instances` to `api/application` with `cancelDeployment()`
+* Rename `GET /organisations/{id}/applications/{appId}/deployments/{deploymentId}/instances` to `api/application`
+  with `cancelDeployment()`
   * Used to be `api/application` with `getAllDeploymentInstances()`
 
 ## 5.0.0 (2020-03-27)
@@ -144,7 +167,8 @@ Fix missing `/self` vs `/organisations/{id}`:
   * Used to be `api/unknown` with `todo_getAddonProviders()`
 * Move `GET /products/prices` to `api/product` with `getCreditPrice()`
   * Used to be `api/unknown` with `todo_getExcahngeRates()`
-* Rename `GET /self/applications/{appId}/deployments/{deploymentId}/instances` to `api/application` with `cancelDeployment()`
+* Rename `GET /self/applications/{appId}/deployments/{deploymentId}/instances` to `api/application`
+  with `cancelDeployment()`
   * Used to be `api/application` with `getAllDeploymentInstances()`
 
 ## 4.2.0 (2020-03-26)
@@ -152,7 +176,8 @@ Fix missing `/self` vs `/organisations/{id}`:
 * Add `GET /organisations/{id}/namespaces` in `api/organisation.js` with `getNamespaces()`
 * Add `GET /organisations/{id}/applications/{appId}/tcpRedirs` in `api/application.js` with `getTcpRedirs()`
 * Add `POST /organisations/{id}/applications/{appId}/tcpRedirs` in `api/application.js` with `addTcpRedir()`
-* Add `DELETE /organisations/{id}/applications/{appId}/tcpRedirs/{sourcePort}` in `api/application.js` with `removeTcpRedir()`
+* Add `DELETE /organisations/{id}/applications/{appId}/tcpRedirs/{sourcePort}` in `api/application.js`
+  with `removeTcpRedir()`
 
 ## 4.1.0 (2020-03-20)
 
@@ -279,7 +304,7 @@ Please read [PR 18](https://github.com/CleverCloud/clever-client.js/pull/18) for
 
 ## 1.0.0 (2019-07-25)
 
-- utils/env-vars: utils/env-var: sort variables by name (`parseRaw` and `toNameEqualsValueString`) 
+- utils/env-vars: utils/env-var: sort variables by name (`parseRaw` and `toNameEqualsValueString`)
 
 ## 1.0.0-beta.0 (2019-07-22)
 
