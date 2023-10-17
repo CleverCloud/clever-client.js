@@ -81,6 +81,7 @@ export function getLines (onLine) {
             break;
           case CONTROL_CHARS.CarriageReturn:
             discardTrailingNewline = true;
+          // eslint-disable-next-line no-fallthrough
           case CONTROL_CHARS.NewLine:
             lineEnd = position;
             break;
@@ -157,13 +158,14 @@ export function getMessages (onMessage, onId, onRetry) {
         case 'id':
           onId?.(message.id = value);
           break;
-        case 'retry':
+        case 'retry': {
           const retry = parseInt(value, 10);
           // per spec, ignore non-integers
           if (!isNaN(retry)) {
             onRetry?.(message.retry = retry);
           }
           break;
+        }
       }
     }
   };
