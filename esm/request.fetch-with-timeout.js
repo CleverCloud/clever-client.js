@@ -5,11 +5,17 @@ export function fetchWithTimeout (url, params, timeoutDelay) {
 
   const ac = controllerWithSignal(params.signal);
 
+  let timeoutId;
+
   const fetchPromise = fetch(url, { ...params, signal: ac.signal });
-  const timeoutPromise = new Promise((resolve, reject) => setTimeout(() => {
-    ac.abort();
-    reject(new Error('TimeoutError'));
-  }, timeoutDelay || FIVE_MINUTES));
+  const timeoutPromise = new Promise((resolve, reject) => {
+    timeoutId = setTimeout(() => {
+      ac.abort();
+      reject(new Error('TimeoutError'));
+    }, timeoutDelay || FIVE_MINUTES);
+  });
+
+  fetchPromise.finally(() => clearTimeout(timeoutId));
 
   return Promise.race([fetchPromise, timeoutPromise]);
 }
