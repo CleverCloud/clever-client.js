@@ -11,4 +11,10 @@ module.exports = {
     // So we can create ES6 code using template strings in JavaScript strings :p
     'no-template-curly-in-string': 'off',
   },
+  'globals': {
+    'fetch': true,
+    'Event': true,
+    'EventTarget': true,
+    'AbortController': true,
+  },
 };
