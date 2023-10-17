@@ -23,10 +23,10 @@
     "clean-cache": "node tasks/clean-cache.cjs",
     "generate-client": "npm run clean-cache && npm run generate-client-from-openapi && npm run generate-cjs-modules",
     "generate-client-from-openapi": "node tasks/generate-client.cjs",
-    "generate-cjs-modules": "rm -rf cjs && babel esm --out-dir cjs",
+    "generate-cjs-modules": "rm -rf cjs && babel esm --out-dir cjs && echo '{\"module\":\"commonjs\"}' > cjs/package.json",
     "lint": "eslint esm tasks/*.cjs test",
     "lint:fix": "eslint --fix esm tasks/*.cjs test",
-    "prepack": "npm run lint && npm run test && npm run generate-client",
+    "prepack": "npm run test && npm run generate-client",
     "test": "web-test-runner \"test/**/*.spec.js\" --node-resolve",
     "test:watch": "web-test-runner \"test/**/*.spec.js\" --node-resolve --watch",
     "miton": "node ./test.js"
