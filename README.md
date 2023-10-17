@@ -326,7 +326,14 @@ const logsStream = new ApplicationLogStream({
   tokens,
   ownerId: 'YYY',
   appId: 'XXX',
-  // and optionnal params
+  // optionnal auto retry config
+  // retryConfiguration: {
+  //   enabled: true,
+    // backoffFactor: number,
+    // initRetryTimeout: number,
+    // maxRetryCount: number,
+  // },
+  // optionnal logs request params
   // since: Date,
   // until: Date,
   // service: string[],
@@ -340,10 +347,9 @@ const logsStream = new ApplicationLogStream({
 });
 
 logsStream
-  .on('opened', (event) => console.debug('stream opened!', event))
-  .on('close', (event) => console.debug('stream closed', event.reason, `last id: ${logsStream.lastId}`))
+  .on('open', (event) => console.debug('stream opened!', event))
   .on('error', (event) => console.error('error', event.error))
-  .on('APPLICATION_LOG', (event) => console.log(event.data.date, event.data.message))
+  .onLog((event) => console.log(event.data.date, event.data.message));
 
 logsStream.start();
 

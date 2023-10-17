@@ -244,7 +244,7 @@ export default class CleverCloudSse extends CustomEventTarget {
    */
   _onClose (reason) {
     clearInterval(this.healthCheckerIntervalId);
-    // don't emit 'close' event if we just pause
+    // don't close if we just paused
     if (this.paused) {
       return;
     }
