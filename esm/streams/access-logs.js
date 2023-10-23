@@ -1,11 +1,12 @@
 import CleverCloudSse from './clever-cloud-sse.js';
 
-const APPLICATION_LOG_EVENT_NAME = 'APPLICATION_LOG';
+const ACCESS_LOG_EVENT_NAME = 'ACCESS_LOG';
 
 /**
- * CleverCloud Application' logs stream
+ * CleverCloud Application' access logs stream
  */
-export class ApplicationLogStream extends CleverCloudSse {
+export class ApplicationAccessLogStream extends CleverCloudSse {
+
   /**
    * @param {object} options
    * @param {string} options.apiHost
@@ -16,7 +17,6 @@ export class ApplicationLogStream extends CleverCloudSse {
    * @param {string} options.tokens.API_OAUTH_TOKEN_SECRET
    * @param {string} options.ownerId
    * @param {string} options.appId
-   * @param {number} options.connectionTimeout
    * @param {object} options.retryConfiguration
    * @param {boolean} options.retryConfiguration.enabled
    * @param {number} options.retryConfiguration.backoffFactor
@@ -25,12 +25,10 @@ export class ApplicationLogStream extends CleverCloudSse {
    * @param {Date} options.since
    * @param {Date} options.until
    * @param {number} options.limit
-   * @param {string} options.deploymentId
-   * @param {string} options.instanceId[]
-   * @param {string} options.filter
    * @param {string} options.field[]
    * @param {number} options.throttleElements
    * @param {number} options.throttlePerInMilliseconds
+   *
    */
   constructor ({ apiHost, tokens, ownerId, appId, retryConfiguration, connectionTimeout, ...options }) {
     super(apiHost, tokens, retryConfiguration ?? {}, connectionTimeout);
@@ -47,11 +45,11 @@ export class ApplicationLogStream extends CleverCloudSse {
 
   /**
    * compute full URL with query params
-   * @returns {URL}
+   * @returns {string}
    */
   getUrl () {
-    return this.buildUrl(
-      `/v4/logs/organisations/${this._ownerId}/applications/${this._appId}/logs`,
+    const url = this.buildUrl(
+      `/v4/accesslogs/organisations/${this._ownerId}/applications/${this._appId}/accesslogs`,
       {
         ...this._options,
         // in case of pause() then resume():
@@ -59,6 +57,8 @@ export class ApplicationLogStream extends CleverCloudSse {
         limit: this._computedLimit(),
       },
     );
+
+    return url;
   }
 
   // compute the number of events to retrieve, based on elements already received
@@ -74,7 +74,7 @@ export class ApplicationLogStream extends CleverCloudSse {
    */
   transform (event, data) {
 
-    if (event !== APPLICATION_LOG_EVENT_NAME) {
+    if (event !== ACCESS_LOG_EVENT_NAME) {
       return data;
     }
 
@@ -82,6 +82,7 @@ export class ApplicationLogStream extends CleverCloudSse {
     if (log.date) {
       log.date = new Date(log.date);
     }
+
     return log;
   }
 
@@ -91,6 +92,6 @@ export class ApplicationLogStream extends CleverCloudSse {
    * @returns {any}
    */
   onLog (fn) {
-    return this.on(APPLICATION_LOG_EVENT_NAME, (event) => fn(event.data));
+    return this.on(ACCESS_LOG_EVENT_NAME, (event) => fn(event.data));
   }
 }
