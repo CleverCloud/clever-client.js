@@ -42,7 +42,7 @@ export function fetchEventSource (input, {
 
       const onLine = getMessages(onMessage);
 
-      await getBytes(response.body, getLines(onLine));
+      await getBytes(response.body, getLines(onLine), abortController.signal);
 
       return onClose?.();
     })

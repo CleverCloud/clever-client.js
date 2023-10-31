@@ -12,16 +12,28 @@ const CONTROL_CHARS = {
  * Converts a ReadableStream into a callback pattern.
  * @param stream The input ReadableStream.
  * @param onChunk A function that will be called on each new byte chunk in the stream.
+ * @param signal An AbortSignal instance (required for Node.js versions before 18.6)
  * @returns {Promise<void>} A promise that will be resolved when the stream closes.
  */
-export async function getBytes (stream, onChunk) {
+export async function getBytes (stream, onChunk, signal) {
+
   if ('getReader' in stream) {
     const reader = stream.getReader();
-    let result;
-    while (!(result = await reader.read()).done) {
+    let shouldContinue = true;
+    while (shouldContinue) {
+
+      // There's a bug in Node.js < 18.16.
+      // Aborting a fetch request does not stop the response body stream from being read.
+      // This if is only necessary for this reason.
+      if (signal.aborted) {
+        reader.cancel(signal.reason);
+        throw new Error('AbortError in sse-parse');
+      }
+
+      const result = await reader.read();
       onChunk(result.value);
+      shouldContinue = !result.done;
     }
-    return;
   }
 
   for await (const chunk of stream) {
