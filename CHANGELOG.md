@@ -2,6 +2,10 @@
 
 ## Unreleased (????-??-??)
 
+...
+
+## 8.0.2 (2023-10-31)
+
 * fix: abort controller behaviour with `sse-parse` used by `ApplicationLogsStream` (Node.js < 18.16)
 
 ## 8.0.1 (2023-10-17)
