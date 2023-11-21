@@ -58,7 +58,7 @@ export class AbstractStream extends EventEmitter {
     const { autoRetry = false } = options;
 
     // Make sure the source is closed before opening it
-    this._close();
+    this._closeSource();
 
     this._autoRetry.enabled = autoRetry;
     if (this._autoRetry.enabled) {
@@ -125,7 +125,7 @@ export class AbstractStream extends EventEmitter {
 
   close (reason = FORCE_CLOSE_REASON) {
     // Close source stream
-    this._close();
+    this._closeSource();
     // Always clear all timeouts
     clearTimeout(this._pingTimeoutId);
     clearTimeout(this._autoRetry.timeoutId);
