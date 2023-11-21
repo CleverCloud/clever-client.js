@@ -100,6 +100,7 @@ export class AbstractStream extends EventEmitter {
     if (error instanceof AuthenticationError) {
       this.close(AUTHENTICATION_REASON);
       this.emit('error', error);
+      return;
     }
 
     // any other kind of error => we force close
