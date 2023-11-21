@@ -126,11 +126,9 @@ export class AbstractStream extends EventEmitter {
   close (reason = FORCE_CLOSE_REASON) {
     // Close source stream
     this._close();
-    if (reason === FORCE_CLOSE_REASON) {
-      // If the user of the stream called close(), we stop everything
-      clearTimeout(this._pingTimeoutId);
-      clearTimeout(this._autoRetry.timeoutId);
-    }
+    // Always clear all timeouts
+    clearTimeout(this._pingTimeoutId);
+    clearTimeout(this._autoRetry.timeoutId);
     this.emit('close', reason);
   }
 

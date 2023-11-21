@@ -2,7 +2,7 @@
 
 ## Unreleased (????-??-??)
 
-...
+* fix: always clear timeouts in stream.abstract close method (logs SSE and events WS)
 
 ## 8.0.2 (2023-10-31)
 
