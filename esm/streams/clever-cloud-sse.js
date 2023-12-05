@@ -148,14 +148,11 @@ export default class CleverCloudSse extends CustomEventTarget {
     const now = new Date();
     const diff = now.getTime() - this.lastContact.getTime();
     if (diff > SAFE_SSE_HEARTBEAT_PERIOD) {
-      /**
-       * @event CleverCloudSse#error
-       * @type {Event}
-       * @property {Error} error
-       */
-      this.emit('error', { error: new Error(`no healthcheck since ${diff}, restarting...`) });
-      this.pause();
-      this.resume();
+      // I think we need to subclass error with a type
+      this._onError(new Error(`no healthcheck since ${diff}, restarting...`));
+      // Without this, we may lack the proper cleanup
+      // this.pause();
+      // this.resume();
     }
   }
 
@@ -265,14 +262,23 @@ export default class CleverCloudSse extends CustomEventTarget {
       return;
     }
 
+    // We should not try to waitNextRetry if not enabled
+    if (!this.retryable.enabled) {
+      this.reject(error);
+      return;
+    }
+
+    // Why would we wait to display the error
+    this.emit('error', { error });
+
     this.retryable.waitNextRetry()
       .then(() => {
         // emit a retryable error
-        this.emit('error', { error });
         this._start();
       })
       .catch((err) => {
-        this.reject(err + ': ' + error);
+        // We need to reject the error as is (or wrap it with a new Error + reason)
+        this.reject(error);
       });
   }
 }

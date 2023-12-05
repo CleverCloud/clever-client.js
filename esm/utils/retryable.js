@@ -42,11 +42,15 @@ export class Retryable {
    * @returns {Promise}
    */
   async waitNextRetry () {
+    // This felt weird at first but if clever-cloud-sse checks for "enabled" before calling waitNextRetry(),
+    // I guess it's fair to throw
     if (!this.enabled) {
+      // I think we need so subclass error with a type
       throw new Error('retry is not enabled');
     }
 
     if (!this._canRetry()) {
+      // I think we need so subclass error with a type
       throw new Error('max retry count reached');
     }
 
