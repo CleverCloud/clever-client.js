@@ -116,7 +116,7 @@ export class AbstractLogsStream extends AbstractStream {
   }
 
   // Closing is the same call for browser/node
-  _close () {
+  _closeSource () {
     if (this._sse != null) {
       this._sse.close();
       this._sse = null;

@@ -97,7 +97,7 @@ export class AbstractEventsStream extends AbstractStream {
 
     this._ws.addEventListener('error', (error) => this._onError(error));
 
-    // Save this listener so we can remove it easily in _close
+    // Save this listener so we can remove it easily in _closeSource
     this._wsCloseListener = (reason) => {
       this._onError(new Error(`Events stream (WS) was closed reason:${JSON.stringify(reason)}`));
     };
@@ -138,9 +138,9 @@ export class AbstractEventsStream extends AbstractStream {
     return (event.data.id === appId || event.data.appId === appId);
   }
 
-  _close () {
+  _closeSource () {
     if (this._ws != null) {
-      // When _close() is called, we already know this._ws is about to be forced closed
+      // When _closeSource() is called, we already know this._ws is about to be forced closed
       // so we need to remove the listner before calling closeWebSocket()
       this._ws.removeEventListener('close', this._wsCloseListener);
       this.closeWebSocket(this._ws);
