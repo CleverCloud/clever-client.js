@@ -28,8 +28,7 @@
     "lint:fix": "eslint --fix esm tasks/*.cjs test",
     "prepack": "npm run lint && npm run test-wtr && npm run generate-client",
     "test-wtr": "web-test-runner",
-    "test-wtr:watch": "web-test-runner --watch",
-    "miton": "node ./test.js"
+    "test-wtr:watch": "web-test-runner --watch"
   },
   "dependencies": {
     "component-emitter": "^1.3.0",
