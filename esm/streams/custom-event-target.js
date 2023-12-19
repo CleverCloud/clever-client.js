@@ -3,7 +3,7 @@ export class CustomEventTarget extends EventTarget {
    * alias for EventTarget.addEventListener()
    * @param {string} type
    * @param {EventListenerOrEventListenerObject} callback
-   * @param {AddEventListenerOptions | boolean} options
+   * @param {AddEventListenerOptions | boolean} [options]
    * @return {this}
    */
   on (type, callback, options) {
