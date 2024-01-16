@@ -1,7 +1,7 @@
 // This code is adapted from https://github.com/Azure/fetch-event-source
 // MIT License Copyright (c) Microsoft Corporation.
 
-import { getBytes, getLines, getMessages } from './sse-parse.js';
+import { readBytes } from './sse-parse.js';
 
 export const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
 export const JSON_CONTENT_TYPE = 'application/json';
@@ -39,20 +39,16 @@ export function fetchEventSource (input, {
   })
     .then(async (response) => {
       await onOpen(response);
-
-      const onLine = getMessages(onMessage);
-
-      await getBytes(response.body, getLines(onLine), abortController.signal);
-
+      await readBytes(response.body, abortController.signal, onMessage);
       return onClose?.();
     })
     .catch((err) => {
       if (abortController.signal.aborted) {
-        onClose(abortController.signal.reason);
-        return;
+        onClose?.(abortController.signal.reason);
       }
-
-      // if we haven't aborted the request ourselves:
-      onError?.(err);
+      else {
+        // if we haven't aborted the request ourselves:
+        onError?.(err);
+      }
     });
 }
