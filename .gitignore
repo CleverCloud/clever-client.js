@@ -4,6 +4,7 @@ cjs
 esm/api
 node_modules
 /*.tgz
+.idea
 
 # macOS system files
 .DS_Store
