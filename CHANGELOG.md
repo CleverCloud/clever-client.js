@@ -2,7 +2,26 @@
 
 ## Unreleased (????-??-??)
 
-* fix: always clear timeouts in stream.abstract close method (logs SSE and events WS)
+...
+
+## 8.0.3 (2024-01-30)
+
+* chore: make the options param of the on method optional
+* fix: always clear timeouts in `stream.abstract` close method (logs SSE and events WS)
+* fix: various fixes on ApplicationLogStream (see https://github.com/CleverCloud/clever-client.js/pull/93)
+  * introduce new errors `NetworkError`, `HttpError` with `status` property and `ServerError`
+  * Clear heartbeat `setInterval` properly
+  * Make sure `start.then()` resolves with a `reason` not being an `Error` object
+  * Make sure `start.catch()` rejects with an `Error` object
+  * Fix the `getBytes` bug
+  * Fix the `last-event-id`
+  * Remove the double retry caused by inner pause/resume
+  * Fix lastContact when no logs are emitted
+  * Mark some errors as retryable and some not
+
+### For devs
+
+* test: introduce a test suite for ApplicationLogStream
 
 ## 8.0.2 (2023-10-31)
 
