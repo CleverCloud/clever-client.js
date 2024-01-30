@@ -28,13 +28,18 @@ export class ApplicationLogStream extends CleverCloudSse {
    * @param {string} options.field[]
    * @param {number} options.throttleElements
    * @param {number} options.throttlePerInMilliseconds
-   *
    */
   constructor ({ apiHost, tokens, ownerId, appId, retryConfiguration, ...options }) {
     super(apiHost, tokens, retryConfiguration ?? {});
-    this.ownerId = ownerId;
-    this.appId = appId;
-    this.options = options;
+    this._ownerId = ownerId;
+    this._appId = appId;
+    this._options = options;
+
+    // Count the number of logs, so we can update the "limit" query param on pause/resume or error/retry
+    this._logsCount = 0;
+    this.onLog(() => {
+      this._logsCount++;
+    });
   }
 
   /**
@@ -43,9 +48,9 @@ export class ApplicationLogStream extends CleverCloudSse {
    */
   getUrl () {
     const url = this.buildUrl(
-      `/v4/logs/organisations/${this.ownerId}/applications/${this.appId}/logs`,
+      `/v4/logs/organisations/${this._ownerId}/applications/${this._appId}/logs`,
       {
-        ...this.options,
+        ...this._options,
         // in case of pause() then resume():
         // we don' t want N another logs, we want the initial passed number less the events count already received
         limit: this._computedLimit(),
@@ -57,21 +62,26 @@ export class ApplicationLogStream extends CleverCloudSse {
 
   // compute the number of events to retrieve, based on elements already received
   _computedLimit () {
-    if (this.options.limit == null) {
+    if (this._options.limit == null) {
       return null;
     }
-    return Math.max(this.options.limit - this.eventCount, 0);
+    return Math.max(this._options.limit - this._logsCount, 0);
   }
 
   /**
    * override default method
    */
-  transform (data) {
-    if (data.date) {
-      data.date = new Date(data.date);
+  transform (event, data) {
+
+    if (event !== 'APPLICATION_LOG') {
+      return data;
     }
 
-    return data;
+    const log = JSON.parse(data);
+    if (log.date) {
+      log.date = new Date(log.date);
+    }
+    return log;
   }
 
   /**

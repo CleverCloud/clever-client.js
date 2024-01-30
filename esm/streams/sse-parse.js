@@ -11,33 +11,33 @@ const CONTROL_CHARS = {
 /**
  * Converts a ReadableStream into a callback pattern.
  * @param stream The input ReadableStream.
- * @param onChunk A function that will be called on each new byte chunk in the stream.
  * @param signal An AbortSignal instance (required for Node.js versions before 18.6)
+ * @param onChunk A function that will be called on each new byte chunk in the stream.
  * @returns {Promise<void>} A promise that will be resolved when the stream closes.
  */
-export async function getBytes (stream, onChunk, signal) {
+export async function readBytes (stream, signal, onMessage) {
+
+  // Setup parsers
+  const onLine = getMessages(onMessage);
+  const onChunk = getLines(onLine);
 
   if ('getReader' in stream) {
     const reader = stream.getReader();
+
+    // There's a bug in Node.js < 18.16.
+    // Aborting a fetch request does not stop the response body stream from being read.
+    signal.addEventListener('abort', () => {
+      reader.cancel(signal.reason);
+    }, { once: true });
+
     let shouldContinue = true;
     while (shouldContinue) {
-
-      // There's a bug in Node.js < 18.16.
-      // Aborting a fetch request does not stop the response body stream from being read.
-      // This if is only necessary for this reason.
-      if (signal.aborted) {
-        reader.cancel(signal.reason);
-        throw new Error('AbortError in sse-parse');
-      }
-
       const result = await reader.read();
-      onChunk(result.value);
       shouldContinue = !result.done;
+      if (shouldContinue) {
+        onChunk(result.value);
+      }
     }
-  }
-
-  for await (const chunk of stream) {
-    onChunk(chunk);
   }
 }
 
@@ -130,12 +130,10 @@ export function getLines (onLine) {
 
 /**
  * Parses line buffers into EventSourceMessages.
- * @param onId A function that will be called on each `id` field.
- * @param onRetry A function that will be called on each `retry` field.
  * @param onMessage A function that will be called on each message.
  * @returns A function that should be called for each incoming line buffer.
  */
-export function getMessages (onMessage, onId, onRetry) {
+export function getMessages (onMessage) {
   let message = newMessage();
   const decoder = new TextDecoder();
 
@@ -168,13 +166,13 @@ export function getMessages (onMessage, onId, onRetry) {
           message.event = value;
           break;
         case 'id':
-          onId?.(message.id = value);
+          message.id = value;
           break;
         case 'retry': {
           const retry = parseInt(value, 10);
           // per spec, ignore non-integers
           if (!isNaN(retry)) {
-            onRetry?.(message.retry = retry);
+            message.retry = retry;
           }
           break;
         }

@@ -1,11 +1,19 @@
-import { EVENT_STREAM_CONTENT_TYPE, fetchEventSource, JSON_CONTENT_TYPE } from './sse-fetch-event-source.js';
-import { addOauthHeader } from '../oauth.js';
 import { CustomEventTarget } from './custom-event-target.js';
-import { Retryable } from '../utils/retryable.js';
+import { addOauthHeader } from '../oauth.js';
+import { EVENT_STREAM_CONTENT_TYPE, fetchEventSource, JSON_CONTENT_TYPE } from './sse-fetch-event-source.js';
 
+const DEFAULT_RETRY_CONFIGURATION = {
+  enabled: false,
+  backoffFactor: 1.25,
+  initRetryTimeout: 1000,
+  maxRetryCount: Infinity,
+};
 const SSE_HEARTBEAT_PERIOD_MS = 2 * 1000;
 const SAFE_SSE_HEARTBEAT_PERIOD = SSE_HEARTBEAT_PERIOD_MS * 2;
 const HEALTHCHECK_INTERVAL_MS = 1000;
+const CONNECTION_TIMEOUT_MS = 5000;
+
+const NETWORK_ERROR_CODES = ['EAI_AGAIN', 'ECONNREFUSED', 'ECONNRESET', 'EPIPE', 'ETIMEDOUT', 'UND_ERR_SOCKET'];
 
 /**
  * CleverCloud specificities over an SSE
@@ -28,22 +36,19 @@ export default class CleverCloudSse extends CustomEventTarget {
    * @param {number} retryConfiguration.initRetryTimeout
    * @param {number} retryConfiguration.maxRetryCount
    */
-  constructor (apiHost, tokens, retryConfiguration) {
+  constructor (apiHost, tokens, retryConfiguration = {}) {
     super();
-    this.apiHost = apiHost;
-    this.tokens = tokens;
-    this.retryable = new Retryable(retryConfiguration);
-    this.lastId = null;
-    this.lastContact = null;
-    this.healthCheckerIntervalId = null;
-    this.promise = null;
-    this.paused = false;
-    this.eventCount = 0;
-    this._setupAbortController();
-  }
-
-  _setupAbortController () {
-    this.abortController = new AbortController();
+    this._apiHost = apiHost;
+    this._tokens = tokens;
+    this._promise = null;
+    this._lastId = null;
+    this._lastContact = null;
+    this._connectionTimeoutId = null;
+    this._heartbeatIntervalId = null;
+    this._retry = { ...DEFAULT_RETRY_CONFIGURATION, ...retryConfiguration };
+    this._retryTimeoutId = null;
+    this._retryCount = 0;
+    this.state = 'init';
   }
 
   /**
@@ -53,35 +58,20 @@ export default class CleverCloudSse extends CustomEventTarget {
    * @returns {URL}
    */
   buildUrl (path = '', queryParams = {}) {
-    const url = new URL(path, this.apiHost);
+    const url = new URL(path, this._apiHost);
 
-    Object.entries(queryParams)
-      .map(([param, values]) => {
-        if (Array.isArray(values)) {
-          return [param, values];
-        }
-
-        return [param, [values]];
-      })
-      .map(([param, values]) => {
-        return values.forEach((value) => {
-          if (value == null) {
-            return;
-          }
-
+    Object.entries(queryParams).forEach(([param, valueOrValues]) => {
+      const values = Array.isArray(valueOrValues)
+        ? valueOrValues
+        : [valueOrValues];
+      values
+        .filter((value) => value != null)
+        .forEach((value) => {
           url.searchParams.append(param, formatValue(value));
         });
-      });
+    });
 
     return url.toString();
-  }
-
-  /**
-   * manually close the stream
-   * @param {any} reason
-   */
-  close (reason) {
-    this.abortController.abort(reason);
   }
 
   /**
@@ -98,37 +88,36 @@ export default class CleverCloudSse extends CustomEventTarget {
    * @returns {}
    */
   async start () {
-    if (this.promise == null) {
-      this.promise = new Promise((resolve, reject) => {
-        this.resolve = resolve;
-        this.reject = reject;
+    if (this._promise == null) {
+      this._promise = new Promise((resolve, reject) => {
+        this._resolve = resolve;
+        this._reject = reject;
       });
-
       this._start();
     }
 
-    return this.promise;
+    return this._promise;
   }
 
   async _start () {
     try {
-      if (this.abortController.signal.aborted) {
-        throw new Error('cannot start, controller has been aborted');
-      }
 
       let requestParams = { method: 'get', url: this.getUrl() };
-      if (this.tokens != null) {
-        requestParams = await addOauthHeader(this.tokens)(requestParams);
+      if (this._tokens != null) {
+        requestParams = await addOauthHeader(this._tokens)(requestParams);
       }
 
-      this.healthCheckerIntervalId = setInterval(() => {
-        this.performHealthCheck();
-      }, HEALTHCHECK_INTERVAL_MS);
+      this.state = 'connecting';
+      this._abortController = new AbortController();
+
+      this._connectionTimeoutId = setTimeout(() => {
+        this._onError(new NetworkError('Connection timeout...'));
+      }, CONNECTION_TIMEOUT_MS);
 
       fetchEventSource(requestParams.url, {
         headers: requestParams.headers,
-        abortController: this.abortController,
-        resumeFrom: this.lastId,
+        abortController: this._abortController,
+        resumeFrom: this._lastId,
         onOpen: (res) => this._onOpen(res),
         onMessage: (msg) => this._onMessage(msg),
         onClose: (reason) => this._onClose(reason),
@@ -136,38 +125,55 @@ export default class CleverCloudSse extends CustomEventTarget {
       });
     }
     catch (error) {
-      this.reject(error);
-    }
-  }
-
-  performHealthCheck () {
-    if (this.lastContact == null) {
-      return;
-    }
-
-    const now = new Date();
-    const diff = now.getTime() - this.lastContact.getTime();
-    if (diff > SAFE_SSE_HEARTBEAT_PERIOD) {
-      /**
-       * @event CleverCloudSse#error
-       * @type {Event}
-       * @property {Error} error
-       */
-      this.emit('error', { error: new Error(`no healthcheck since ${diff}, restarting...`) });
-      this.pause();
-      this.resume();
+      this._onError(new NetworkError('Server closed the response without a END_OF_STREAM event', { cause: error }));
     }
   }
 
   pause () {
-    this.paused = true;
-    this.abortController.abort('pause');
-    this.lastContact = null;
+    this.state = 'paused';
+    this._cleanup();
   }
 
   resume () {
-    this._setupAbortController();
     this._start();
+  }
+
+  /**
+   * manually close the stream
+   * @param {any} reason
+   */
+  close (reason) {
+    if (this.state === 'closed') {
+      return;
+    }
+    this.state = 'closed';
+    this._cleanup();
+    this._resolve({ reason });
+  }
+
+  _canRetry (error) {
+
+    if (!this._retry.enabled) {
+      return false;
+    }
+
+    if (this._retryCount >= this._retry.maxRetryCount) {
+      return false;
+    }
+
+    const isErrorRetryable = (error == null)
+      || error instanceof ServerError
+      || error instanceof NetworkError
+      || (error instanceof HttpError && error.status >= 500);
+
+    return isErrorRetryable;
+  }
+
+  _cleanup () {
+    clearTimeout(this._retryTimeoutId);
+    clearTimeout(this._connectionTimeoutId);
+    clearInterval(this._heartbeatIntervalId);
+    this._abortController?.abort();
   }
 
   /**
@@ -175,24 +181,39 @@ export default class CleverCloudSse extends CustomEventTarget {
    * @param {Response} response
    */
   async _onOpen (response) {
+
+    clearTimeout(this._connectionTimeoutId);
+
     const contentType = response.headers.get('content-type');
-    if (!contentType?.startsWith(EVENT_STREAM_CONTENT_TYPE)) {
+
+    if (response.status !== 200) {
       if (contentType === JSON_CONTENT_TYPE) {
-        const content = await response.json();
-
-        if (response.status === 401) {
-          throw new AuthenticationError(content.error);
-        }
-
-        const { fieldValue } = content.context.OVDErrorFieldContext || {};
-        throw new Error(`${content.error} ${fieldValue || ''}`);
+        const errorBody = await response.json();
+        const details = errorBody.context?.OVDErrorFieldContext?.fieldValue || '';
+        throw new HttpError(response.status, `${errorBody.error} ${details}`);
       }
+      else {
+        const errorBody = await response.text();
+        throw new HttpError(response.status, errorBody || 'Unknown error');
+      }
+    }
 
-      throw new Error(`bad content type for an SSE: ${contentType}`);
+    if (!contentType?.startsWith(EVENT_STREAM_CONTENT_TYPE)) {
+      throw new ServerError(`Invalid content type for an SSE: ${contentType}`);
     }
 
     this.emit('open', { response });
-    this.paused = false;
+    this.state = 'open';
+    this._lastContact = new Date();
+    this._retryCount = 0;
+
+    this._heartbeatIntervalId = setInterval(() => {
+      const now = new Date();
+      const diff = now.getTime() - this._lastContact.getTime();
+      if (diff > SAFE_SSE_HEARTBEAT_PERIOD) {
+        this._onError(new NetworkError(`Failed to receive heartbeat within ${SAFE_SSE_HEARTBEAT_PERIOD}ms period`));
+      }
+    }, HEALTHCHECK_INTERVAL_MS);
   }
 
   /**
@@ -200,8 +221,8 @@ export default class CleverCloudSse extends CustomEventTarget {
    * @param {object} msg
    * @returns {object}
    */
-  transform (msg) {
-    return msg;
+  transform (event, data) {
+    return data;
   }
 
   /**
@@ -209,28 +230,39 @@ export default class CleverCloudSse extends CustomEventTarget {
    * @param {EventSourceMessage} msg
    */
   _onMessage (msg) {
-    if (msg.id) {
-      this.lastId = msg.id;
+
+    this._lastContact = new Date();
+
+    if (msg.id != null) {
+      this._lastId = msg.id;
     }
-    this.lastContact = new Date();
-    this.retryable.reset();
 
     switch (msg.event) {
       case 'HEARTBEAT':
         return;
-      case 'END_OF_STREAM':
-        this.endOfStreamReason = JSON.parse(msg.data).endedBy;
-        // the server will soon close the connection
+      case 'END_OF_STREAM': {
+        try {
+          const reason = JSON.parse(msg.data);
+          this.close(reason);
+        }
+        catch (e) {
+          this._onError(new ServerError(`Expect JSON for END_OF_STREAM event but got "${msg.data}"`, { cause: e }));
+        }
         return;
+      }
       default: {
-        this.eventCount++;
-        const data = this.transform(JSON.parse(msg.data));
-        /**
-         * @event CleverCloudSse#data
-         * @type {Event}
-         * @property {object} data
-         */
-        this.emit(msg.event, { data });
+        try {
+          const data = this.transform(msg.event, msg.data);
+          /**
+           * @event CleverCloudSse#data
+           * @type {Event}
+           * @property {object} data
+           */
+          this.emit(msg.event, { data });
+        }
+        catch (e) {
+          this._onError(new ServerError(`Cannot transform ${msg.event} event`, { cause: e }));
+        }
       }
     }
   };
@@ -243,13 +275,10 @@ export default class CleverCloudSse extends CustomEventTarget {
    * @param {*} reason
    */
   _onClose (reason) {
-    clearInterval(this.healthCheckerIntervalId);
-    // don't close if we just paused
-    if (this.paused) {
+    if (this.state === 'closed' || this.state === 'paused') {
       return;
     }
-
-    this.resolve({ reason: reason || this.abortController.signal.reason || this.endOfStreamReason });
+    this._onError(new ServerError('Server closed the response without a END_OF_STREAM event'));
   }
 
   /**
@@ -257,23 +286,33 @@ export default class CleverCloudSse extends CustomEventTarget {
    * @param {any} err
    */
   _onError (error) {
-    clearInterval(this.healthCheckerIntervalId);
-
-    if (error instanceof AuthenticationError) {
-      // unrecoverable error
-      this.reject(error);
+    if (this.state === 'closed' || this.state === 'paused') {
       return;
     }
 
-    this.retryable.waitNextRetry()
-      .then(() => {
-        // emit a retryable error
-        this.emit('error', { error });
+    this._cleanup();
+
+    // TODO List some well know NetworkError (node and browser)
+    const errorCode = error?.cause?.code ?? error.code;
+    const wrappedError = NETWORK_ERROR_CODES.includes(errorCode)
+      ? new NetworkError('Failed to establish/maintain the connection with the server', { cause: error })
+      : error;
+
+    if (this._canRetry(wrappedError)) {
+      this.state = 'paused';
+      this.emit('error', { error: wrappedError });
+
+      this._retryCount++;
+      const exponentialBackoffDelay = this._retry.initRetryTimeout * (this._retry.backoffFactor ** this._retryCount);
+
+      this._retryTimeoutId = setTimeout(() => {
         this._start();
-      })
-      .catch((err) => {
-        this.reject(err + ': ' + error);
-      });
+      }, exponentialBackoffDelay);
+    }
+    else {
+      this.state = 'closed';
+      this._reject(wrappedError);
+    }
   }
 }
 
@@ -289,5 +328,15 @@ function formatValue (value) {
   return value.toString();
 }
 
-export class AuthenticationError extends Error {
-};
+export class NetworkError extends Error {
+}
+
+export class HttpError extends Error {
+  constructor (status, details, options) {
+    super(`HTTP error ${status}: ${details}`, options);
+    this.status = status;
+  }
+}
+
+export class ServerError extends Error {
+}
