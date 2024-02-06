@@ -47,7 +47,7 @@ export default class CleverCloudSse extends CustomEventTarget {
     this._heartbeatIntervalId = null;
     this._retry = { ...DEFAULT_RETRY_CONFIGURATION, ...retryConfiguration };
     this._retryTimeoutId = null;
-    this._retryCount = 0;
+    this.retryCount = 0;
     this.state = 'init';
   }
 
@@ -157,7 +157,7 @@ export default class CleverCloudSse extends CustomEventTarget {
       return false;
     }
 
-    if (this._retryCount >= this._retry.maxRetryCount) {
+    if (this.retryCount >= this._retry.maxRetryCount) {
       return false;
     }
 
@@ -205,7 +205,7 @@ export default class CleverCloudSse extends CustomEventTarget {
     this.emit('open', { response });
     this.state = 'open';
     this._lastContact = new Date();
-    this._retryCount = 0;
+    this.retryCount = 0;
 
     this._heartbeatIntervalId = setInterval(() => {
       const now = new Date();
@@ -302,8 +302,8 @@ export default class CleverCloudSse extends CustomEventTarget {
       this.state = 'paused';
       this.emit('error', { error: wrappedError });
 
-      this._retryCount++;
-      const exponentialBackoffDelay = this._retry.initRetryTimeout * (this._retry.backoffFactor ** this._retryCount);
+      this.retryCount++;
+      const exponentialBackoffDelay = this._retry.initRetryTimeout * (this._retry.backoffFactor ** this.retryCount);
 
       this._retryTimeoutId = setTimeout(() => {
         this._start();
