@@ -2,7 +2,7 @@
 
 ## Unreleased (????-??-??)
 
-...
+* fix(stream): consider `ENOTFOUND` (macOS DNS error) as retryable for ApplicationLogStream
 
 ## 8.0.3 (2024-01-30)
 
