@@ -14,6 +14,7 @@ export class ApplicationLogStream extends CleverCloudSse {
    * @param {string} options.tokens.API_OAUTH_TOKEN_SECRET
    * @param {string} options.ownerId
    * @param {string} options.appId
+   * @param {number} options.connectionTimeout
    * @param {object} options.retryConfiguration
    * @param {boolean} options.retryConfiguration.enabled
    * @param {number} options.retryConfiguration.backoffFactor
@@ -29,8 +30,8 @@ export class ApplicationLogStream extends CleverCloudSse {
    * @param {number} options.throttleElements
    * @param {number} options.throttlePerInMilliseconds
    */
-  constructor ({ apiHost, tokens, ownerId, appId, retryConfiguration, ...options }) {
-    super(apiHost, tokens, retryConfiguration ?? {});
+  constructor ({ apiHost, tokens, ownerId, appId, retryConfiguration, connectionTimeout, ...options }) {
+    super(apiHost, tokens, retryConfiguration ?? {}, connectionTimeout);
     this._ownerId = ownerId;
     this._appId = appId;
     this._options = options;

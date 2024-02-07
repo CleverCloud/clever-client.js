@@ -30,13 +30,14 @@ export default class CleverCloudSse extends CustomEventTarget {
    * @param {string} tokens.OAUTH_CONSUMER_SECRET
    * @param {string} tokens.API_OAUTH_TOKEN
    * @param {string} tokens.API_OAUTH_TOKEN_SECRET
+   * @param {number} connectionTimeout
    * @param {object} retryConfiguration
    * @param {boolean} retryConfiguration.enabled
    * @param {number} retryConfiguration.backoffFactor
    * @param {number} retryConfiguration.initRetryTimeout
    * @param {number} retryConfiguration.maxRetryCount
    */
-  constructor (apiHost, tokens, retryConfiguration = {}) {
+  constructor (apiHost, tokens, retryConfiguration = {}, connectionTimeout) {
     super();
     this._apiHost = apiHost;
     this._tokens = tokens;
@@ -48,6 +49,7 @@ export default class CleverCloudSse extends CustomEventTarget {
     this._retry = { ...DEFAULT_RETRY_CONFIGURATION, ...retryConfiguration };
     this._retryTimeoutId = null;
     this.retryCount = 0;
+    this._connectionTimeout = connectionTimeout ?? CONNECTION_TIMEOUT_MS;
     this.state = 'init';
   }
 

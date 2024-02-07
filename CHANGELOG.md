@@ -6,6 +6,7 @@
 * feat(stream): make `retryCount` public on ApplicationLogStream
 * fix(stream): prevent uncaught errors on retry with ApplicationLogStream (firefox)
 * fix(stream): consider browser network errors as retryable
+* feat(stream): add a `connectionTimeout` param on ApplicationLogStream (default: 5s)
 
 ## 8.0.3 (2024-01-30)
 
