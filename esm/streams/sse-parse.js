@@ -27,7 +27,9 @@ export async function readBytes (stream, signal, onMessage) {
     // There's a bug in Node.js < 18.16.
     // Aborting a fetch request does not stop the response body stream from being read.
     signal.addEventListener('abort', () => {
-      reader.cancel(signal.reason);
+      reader.cancel(signal.reason)
+        // Firefox doesn't like when we cancel a reader that is already closed but we can ignore this
+        .catch(() => null);
     }, { once: true });
 
     let shouldContinue = true;
