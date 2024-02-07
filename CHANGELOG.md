@@ -5,6 +5,7 @@
 * fix(stream): consider `ENOTFOUND` (macOS DNS error) as retryable for ApplicationLogStream
 * feat(stream): make `retryCount` public on ApplicationLogStream
 * fix(stream): prevent uncaught errors on retry with ApplicationLogStream (firefox)
+* fix(stream): consider browser network errors as retryable
 
 ## 8.0.3 (2024-01-30)
 

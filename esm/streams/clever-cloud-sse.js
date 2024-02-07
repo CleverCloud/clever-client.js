@@ -292,9 +292,7 @@ export default class CleverCloudSse extends CustomEventTarget {
 
     this._cleanup();
 
-    // TODO List some well know NetworkError (node and browser)
-    const errorCode = error?.cause?.code ?? error.code;
-    const wrappedError = NETWORK_ERROR_CODES.includes(errorCode)
+    const wrappedError = isNetworkError(error)
       ? new NetworkError('Failed to establish/maintain the connection with the server', { cause: error })
       : error;
 
@@ -326,6 +324,25 @@ function formatValue (value) {
     return value.toISOString();
   }
   return value.toString();
+}
+
+function isNetworkError (error) {
+
+  const errorCode = error?.cause?.code ?? error.code;
+  if (NETWORK_ERROR_CODES.includes(errorCode)) {
+    return true;
+  }
+
+  if (error.name === 'TypeError') {
+    if (error.message === 'Failed to fetch') {
+      return true;
+    }
+    if (error.message.startsWith('NetworkError')) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 export class NetworkError extends Error {
