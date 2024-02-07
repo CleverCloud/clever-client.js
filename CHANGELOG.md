@@ -2,6 +2,10 @@
 
 ## Unreleased (????-??-??)
 
+...
+
+## 8.1.0 (2024-02-07)
+
 * fix(stream): consider `ENOTFOUND` (macOS DNS error) as retryable for ApplicationLogStream
 * feat(stream): make `retryCount` public on ApplicationLogStream
 * fix(stream): prevent uncaught errors on retry with ApplicationLogStream (firefox)
