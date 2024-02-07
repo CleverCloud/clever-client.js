@@ -13,7 +13,7 @@ const SAFE_SSE_HEARTBEAT_PERIOD = SSE_HEARTBEAT_PERIOD_MS * 2;
 const HEALTHCHECK_INTERVAL_MS = 1000;
 const CONNECTION_TIMEOUT_MS = 5000;
 
-const NETWORK_ERROR_CODES = ['EAI_AGAIN', 'ECONNREFUSED', 'ECONNRESET', 'EPIPE', 'ETIMEDOUT', 'UND_ERR_SOCKET'];
+const NETWORK_ERROR_CODES = ['EAI_AGAIN', 'ENOTFOUND', 'ECONNREFUSED', 'ECONNRESET', 'EPIPE', 'ETIMEDOUT', 'UND_ERR_SOCKET'];
 
 /**
  * CleverCloud specificities over an SSE
@@ -30,13 +30,14 @@ export default class CleverCloudSse extends CustomEventTarget {
    * @param {string} tokens.OAUTH_CONSUMER_SECRET
    * @param {string} tokens.API_OAUTH_TOKEN
    * @param {string} tokens.API_OAUTH_TOKEN_SECRET
+   * @param {number} connectionTimeout
    * @param {object} retryConfiguration
    * @param {boolean} retryConfiguration.enabled
    * @param {number} retryConfiguration.backoffFactor
    * @param {number} retryConfiguration.initRetryTimeout
    * @param {number} retryConfiguration.maxRetryCount
    */
-  constructor (apiHost, tokens, retryConfiguration = {}) {
+  constructor (apiHost, tokens, retryConfiguration = {}, connectionTimeout) {
     super();
     this._apiHost = apiHost;
     this._tokens = tokens;
@@ -47,7 +48,8 @@ export default class CleverCloudSse extends CustomEventTarget {
     this._heartbeatIntervalId = null;
     this._retry = { ...DEFAULT_RETRY_CONFIGURATION, ...retryConfiguration };
     this._retryTimeoutId = null;
-    this._retryCount = 0;
+    this.retryCount = 0;
+    this._connectionTimeout = connectionTimeout ?? CONNECTION_TIMEOUT_MS;
     this.state = 'init';
   }
 
@@ -157,7 +159,7 @@ export default class CleverCloudSse extends CustomEventTarget {
       return false;
     }
 
-    if (this._retryCount >= this._retry.maxRetryCount) {
+    if (this.retryCount >= this._retry.maxRetryCount) {
       return false;
     }
 
@@ -205,7 +207,7 @@ export default class CleverCloudSse extends CustomEventTarget {
     this.emit('open', { response });
     this.state = 'open';
     this._lastContact = new Date();
-    this._retryCount = 0;
+    this.retryCount = 0;
 
     this._heartbeatIntervalId = setInterval(() => {
       const now = new Date();
@@ -292,9 +294,7 @@ export default class CleverCloudSse extends CustomEventTarget {
 
     this._cleanup();
 
-    // TODO List some well know NetworkError (node and browser)
-    const errorCode = error?.cause?.code ?? error.code;
-    const wrappedError = NETWORK_ERROR_CODES.includes(errorCode)
+    const wrappedError = isNetworkError(error)
       ? new NetworkError('Failed to establish/maintain the connection with the server', { cause: error })
       : error;
 
@@ -302,8 +302,8 @@ export default class CleverCloudSse extends CustomEventTarget {
       this.state = 'paused';
       this.emit('error', { error: wrappedError });
 
-      this._retryCount++;
-      const exponentialBackoffDelay = this._retry.initRetryTimeout * (this._retry.backoffFactor ** this._retryCount);
+      this.retryCount++;
+      const exponentialBackoffDelay = this._retry.initRetryTimeout * (this._retry.backoffFactor ** this.retryCount);
 
       this._retryTimeoutId = setTimeout(() => {
         this._start();
@@ -326,6 +326,25 @@ function formatValue (value) {
     return value.toISOString();
   }
   return value.toString();
+}
+
+function isNetworkError (error) {
+
+  const errorCode = error?.cause?.code ?? error.code;
+  if (NETWORK_ERROR_CODES.includes(errorCode)) {
+    return true;
+  }
+
+  if (error.name === 'TypeError') {
+    if (error.message === 'Failed to fetch') {
+      return true;
+    }
+    if (error.message.startsWith('NetworkError')) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 export class NetworkError extends Error {
