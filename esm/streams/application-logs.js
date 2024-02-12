@@ -45,10 +45,10 @@ export class ApplicationLogStream extends CleverCloudSse {
 
   /**
    * compute full URL with query params
-   * @returns {string}
+   * @returns {URL}
    */
   getUrl () {
-    const url = this.buildUrl(
+    return this.buildUrl(
       `/v4/logs/organisations/${this._ownerId}/applications/${this._appId}/logs`,
       {
         ...this._options,
@@ -57,8 +57,6 @@ export class ApplicationLogStream extends CleverCloudSse {
         limit: this._computedLimit(),
       },
     );
-
-    return url;
   }
 
   // compute the number of events to retrieve, based on elements already received

@@ -73,12 +73,12 @@ export default class CleverCloudSse extends CustomEventTarget {
         });
     });
 
-    return url.toString();
+    return url;
   }
 
   /**
    * ABSTRACT compute full URL with query params
-   * @returns {string}
+   * @returns {URL}
    */
   getUrl () {
     throw new Error('please implement getUrl() method');
@@ -104,7 +104,12 @@ export default class CleverCloudSse extends CustomEventTarget {
   async _start () {
     try {
 
-      let requestParams = { method: 'get', url: this.getUrl() };
+      const url = this.getUrl();
+      let requestParams = {
+        method: 'get',
+        url: url.origin + url.pathname,
+        queryParams: Object.entries(url.searchParams),
+      };
       if (this._tokens != null) {
         requestParams = await addOauthHeader(this._tokens)(requestParams);
       }
