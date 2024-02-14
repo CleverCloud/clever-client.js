@@ -108,7 +108,7 @@ export default class CleverCloudSse extends CustomEventTarget {
       let requestParams = {
         method: 'get',
         url: url.origin + url.pathname,
-        queryParams: Object.entries(url.searchParams),
+        queryParams: Object.fromEntries(url.searchParams),
       };
       if (this._tokens != null) {
         requestParams = await addOauthHeader(this._tokens)(requestParams);
@@ -121,7 +121,7 @@ export default class CleverCloudSse extends CustomEventTarget {
         this._onError(new NetworkError('Connection timeout...'));
       }, CONNECTION_TIMEOUT_MS);
 
-      fetchEventSource(requestParams.url, {
+      fetchEventSource(url.toString(), {
         headers: requestParams.headers,
         abortController: this._abortController,
         resumeFrom: this._lastId,
