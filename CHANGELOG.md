@@ -4,6 +4,10 @@
 
 ...
 
+## 8.1.2 (2024-02-15)
+
+* fix(stream): fix query params with ApplicationLogStream
+
 ## 8.1.1 (2024-02-13)
 
 * fix(sse): use query parameters in OAuth signature
