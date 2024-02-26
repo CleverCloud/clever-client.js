@@ -1,4 +1,5 @@
 import OAuth from 'oauth-1.0a';
+import { urlSearchParamsToObject } from './utils/url.js';
 
 async function getSubtleCrypto () {
 
@@ -59,7 +60,11 @@ export function addOauthHeader (tokens) {
       },
     });
 
-    const requestData = { url, method, data: queryParams };
+    const requestData = {
+      url,
+      method,
+      data: queryParams instanceof URLSearchParams ? urlSearchParamsToObject(queryParams) : queryParams,
+    };
     const oauthData = oauth.authorize(requestData, {
       key: tokens.API_OAUTH_TOKEN,
       secret: tokens.API_OAUTH_TOKEN_SECRET,

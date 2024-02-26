@@ -66,15 +66,30 @@ function getErrorMessage (responseBody) {
   return 'Unknown error';
 }
 
+/**
+ *
+ * @param {Object} requestParams
+ * @param {string} requestParams.url
+ * @param {Object.<string, any> | URLSearchParams} requestParams.queryParams
+ * @param {Object.<string, string>} requestParams.headers
+ * @param {any} requestParams.body
+ * @returns {Promise<any>}
+ */
 export async function request (requestParams) {
 
   const url = new URL(requestParams.url);
-  Object
-    .entries(requestParams.queryParams || {})
-    .map(([k, v]) => Array.isArray(v) ? [k, v] : [k, [v]])
-    .forEach(([k, v]) => {
-      v.forEach((e) => url.searchParams.append(k, e))
-    });
+
+  if (requestParams.queryParams instanceof URLSearchParams) {
+    url.searchParams = requestParams.queryParams;
+  }
+  else {
+    Object
+      .entries(requestParams.queryParams || {})
+      .map(([k, v]) => Array.isArray(v) ? [k, v] : [k, [v]])
+      .forEach(([k, v]) => {
+        v.forEach((e) => url.searchParams.append(k, e));
+      });
+  }
 
   const body = formatBody(requestParams);
 

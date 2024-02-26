@@ -108,7 +108,7 @@ export default class CleverCloudSse extends CustomEventTarget {
       let requestParams = {
         method: 'get',
         url: url.origin + url.pathname,
-        queryParams: Object.fromEntries(url.searchParams),
+        queryParams: url.searchParams,
       };
       if (this._tokens != null) {
         requestParams = await addOauthHeader(this._tokens)(requestParams);
