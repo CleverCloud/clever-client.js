@@ -4,6 +4,12 @@
 
 ...
 
+## 8.2.0 (2024-02-27)
+
+* feat: allow error handling from legacy client
+* feat: support repeatable query params
+* fix(sse): fix OAuth signature when a query param is repeated
+
 ## 8.1.2 (2024-02-15)
 
 * fix(stream): fix query params with ApplicationLogStream
