@@ -5,7 +5,12 @@ import { initLegacyClient } from './api/v2/legacy-client.js';
 import { prefixUrl } from './prefix-url.js';
 import { request } from './request.fetch.js';
 
-export function initCleverClient (config) {
+/**
+* @param {Object} config - configuration object
+* @param {Function} onError - function to handle API errors
+* @returns {Promise}
+*/
+export function initCleverClient (config, onError) {
 
   const legacyClient = initLegacyClient((clientFn, pathParamNames = []) => {
 
@@ -28,7 +33,13 @@ export function initCleverClient (config) {
         })
         .then(prefixUrl(config.API_HOST))
         .then(addOauthHeader(config))
-        .then(request);
+        .then(request)
+        .catch((error) => {
+          if (onError != null) {
+            return onError(error);
+          }
+          throw error;
+        });
 
       return Bacon.fromPromise(restCallPromise);
     });
