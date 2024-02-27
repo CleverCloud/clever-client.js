@@ -107,7 +107,7 @@ export default class CleverCloudSse extends CustomEventTarget {
       const url = this.getUrl();
 
       const queryParams = {};
-      Array.from(url.searchParams.entries()).forEach(([k,v]) => {
+      Array.from(url.searchParams.entries()).forEach(([k, v]) => {
         if (Object.hasOwn(queryParams, k)) {
           if (Array.isArray(queryParams[k])) {
             queryParams[k] = [...queryParams[k], v];

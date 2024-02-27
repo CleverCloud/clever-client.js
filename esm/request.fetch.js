@@ -73,7 +73,7 @@ export async function request (requestParams) {
     .entries(requestParams.queryParams || {})
     .map(([k, v]) => Array.isArray(v) ? [k, v] : [k, [v]])
     .forEach(([k, v]) => {
-      v.forEach((e) => url.searchParams.append(k, e))
+      v.forEach((e) => url.searchParams.append(k, e));
     });
 
   const body = formatBody(requestParams);
