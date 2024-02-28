@@ -2,6 +2,7 @@
 
 ## Unreleased (????-??-??)
 
+* feat(sse): flatten reason object and add a mandatory type
 ...
 
 ## 8.2.0 (2024-02-27)
