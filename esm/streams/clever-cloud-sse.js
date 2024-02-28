@@ -164,14 +164,15 @@ export default class CleverCloudSse extends CustomEventTarget {
   /**
    * manually close the stream
    * @param {any} reason
+   * @param {string} reason.type
    */
-  close (reason) {
+  close (reason = { type: 'UNKNOW' }) {
     if (this.state === 'closed') {
       return;
     }
     this.state = 'closed';
     this._cleanup();
-    this._resolve({ reason });
+    this._resolve(reason);
   }
 
   _canRetry (error) {
@@ -266,7 +267,7 @@ export default class CleverCloudSse extends CustomEventTarget {
       case 'END_OF_STREAM': {
         try {
           const reason = JSON.parse(msg.data);
-          this.close(reason);
+          this.close({ type: reason.endedBy });
         }
         catch (e) {
           this._onError(new ServerError(`Expect JSON for END_OF_STREAM event but got "${msg.data}"`, { cause: e }));
