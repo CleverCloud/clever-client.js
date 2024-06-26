@@ -2,8 +2,12 @@
 
 ## Unreleased (????-??-??)
 
-* feat(sse): flatten reason object and add a mandatory type
 ...
+
+## 8.3.0 (2024-06-26)
+
+* feat(streams): new accesslogs API
+* feat(sse): flatten reason object and add a mandatory type
 
 ## 8.2.0 (2024-02-27)
 
