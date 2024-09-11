@@ -1,23 +1,8 @@
 import OAuth from 'oauth-1.0a';
 
-async function getSubtleCrypto () {
-
-  // Browser environment
-  if (globalThis.crypto?.subtle != null) {
-    return globalThis.crypto?.subtle;
-  }
-  // Node environment
-  else {
-    const cryptoModule = await import('node:crypto');
-    return cryptoModule.subtle;
-  }
-}
-
 export function addOauthHeader (tokens) {
 
   return async function (requestParams) {
-
-    const cryptoSubtle = await getSubtleCrypto();
 
     const { method, url, headers, queryParams } = requestParams;
 
@@ -33,7 +18,7 @@ export function addOauthHeader (tokens) {
         const encodedText = encoder.encode(baseString);
         const encodedKey = encoder.encode(key);
 
-        const cryptoKey = await cryptoSubtle.importKey(
+        const cryptoKey = await globalThis.crypto.subtle.importKey(
           'raw',
           encodedKey,
           { name: 'HMAC', hash: 'SHA-512' },
@@ -41,7 +26,7 @@ export function addOauthHeader (tokens) {
           ['sign'],
         );
 
-        const result = await cryptoSubtle.sign(
+        const result = await globalThis.crypto.subtle.sign(
           { name: 'HMAC', hash: 'SHA-512' },
           cryptoKey,
           encodedText,
