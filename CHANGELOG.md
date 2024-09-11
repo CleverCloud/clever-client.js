@@ -4,6 +4,12 @@
 
 ...
 
+## 9.0.0 (2024-09-11)
+
+⚠ BREAKING CHANGES
+
+* refactor(oauth): rely on global crypto instead of using a conditionnal `import('node:crypto')`
+
 ## 8.3.0 (2024-06-26)
 
 * feat(streams): new accesslogs API
