@@ -4,6 +4,10 @@
 
 ...
 
+## 9.1.0 (2024-10-16)
+
+* feat(esm/utils): add `diagDomainConfig`
+
 ## 9.0.0 (2024-09-11)
 
 ⚠ BREAKING CHANGES
