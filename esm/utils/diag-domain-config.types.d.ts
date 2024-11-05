@@ -30,8 +30,7 @@ export type DiagSummary =
   | "no-config"
   | "invalid"
   | "incomplete"
-  | "valid"
-  | "private";
+  | "valid";
 
 export interface RecordDiag {
   code:
