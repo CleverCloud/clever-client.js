@@ -364,6 +364,24 @@
         "x-service": "billing",
         "x-function": "getOrganisationPriceSystem"
       }
+    },
+    "/materia/organisations/{ownerId}/materia/databases/{id}": {
+      "get": {
+        "operationId": "getMateriaKvInfo",
+        "parameters": [
+          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "materia",
+        "x-function": "getMateriaKvInfo"
+      }
     }
   },
   "components": {
