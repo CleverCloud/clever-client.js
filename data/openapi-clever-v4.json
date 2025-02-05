@@ -329,6 +329,23 @@
         "x-service": "billing",
         "x-function": "getStripePaymentIntent"
       }
+    },
+    "/billing/organisations/{id}/credits/summary": {
+      "get": {
+        "operationId": "getCreditsSummary",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getCreditsSummary"
+      }
     }
   },
   "components": {
