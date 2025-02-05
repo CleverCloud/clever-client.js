@@ -11,6 +11,7 @@ import * as oauthConsumer from './oauth-consumer.js';
 import * as organisation from './organisation.js';
 import * as product from './product.js';
 import * as providers from './providers.js';
+import * as saas from './saas.js';
 import * as self from './self.js';
 import * as unknown from './unknown.js';
 import * as user from './user.js';
@@ -571,6 +572,17 @@ export function initLegacyClient(prepareRequest) {
         tmp: {
           'services-flavors': {
             get: prepareRequest(providers.getEsOptionsFlavors),
+          },
+        },
+      },
+    },
+    saas: {
+      heptapod: {
+        _: {
+          'heptapod.host': {
+            'price-prevision': {
+              get: prepareRequest(saas.getHeptapodPricePrevision, ['id']),
+            },
           },
         },
       },
