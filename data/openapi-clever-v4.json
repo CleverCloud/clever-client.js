@@ -636,6 +636,23 @@
         "x-service": "billing",
         "x-function": "getPriceSystem"
       }
+    },
+    "/saas/grafana/{id}": {
+      "get": {
+        "operationId": "getGrafanaOrganisation",
+        "parameters": [
+          { "name": "zone_id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "saas",
+        "x-function": "getGrafanaOrganisation"
+      }
     }
   },
   "components": {
