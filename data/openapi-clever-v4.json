@@ -664,6 +664,18 @@
         },
         "x-function": "createGrafanaOrganisation",
         "x-service": "saas"
+      },
+      "delete": {
+        "operationId": "deleteGrafanaOrganisation",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-function": "deleteGrafanaOrganisation",
+        "x-service": "saas"
       }
     }
   },
