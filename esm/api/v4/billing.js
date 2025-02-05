@@ -1,6 +1,22 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * GET /billing/organisations/{id}/credits/summary
+ * @param {Object} params
+ * @param {String} params.id
+ */
+export function getCreditsSummary(params) {
+  // no multipath for /self or /organisations/{id}
+  return Promise.resolve({
+    method: 'get',
+    url: `/v4/billing/organisations/${params.id}/credits/summary`,
+    headers: { Accept: 'application/json' },
+    // no query params
+    // no body
+  });
+}
+
+/**
  * GET /billing/organisations/{id}/invoices
  * @param {Object} params
  * @param {String} params.id
