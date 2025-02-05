@@ -641,7 +641,7 @@
       "get": {
         "operationId": "getGrafanaOrganisation",
         "parameters": [
-          { "name": "zone_id", "in": "path", "required": true, "schema": { "type": "string" } }
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
         "responses": {
           "200": {
@@ -652,6 +652,18 @@
         },
         "x-service": "saas",
         "x-function": "getGrafanaOrganisation"
+      },
+      "post": {
+        "operationId": "createGrafanaOrganisation",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-function": "createGrafanaOrganisation",
+        "x-service": "saas"
       }
     }
   },
