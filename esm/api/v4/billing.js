@@ -237,3 +237,20 @@ export function getOrganisationPriceSystem(params) {
     // no body
   });
 }
+
+/**
+ * GET /billing/price-system
+ * @param {Object} params
+ * @param {String} params.zone_id
+ * @param {String} params.currency
+ */
+export function getPriceSystem(params) {
+  // no multipath for /self or /organisations/{id}
+  return Promise.resolve({
+    method: 'get',
+    url: `/v4/billing/price-system`,
+    headers: { Accept: 'application/json' },
+    queryParams: pickNonNull(params, ['zone_id', 'currency']),
+    // no body
+  });
+}
