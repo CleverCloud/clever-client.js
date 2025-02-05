@@ -220,3 +220,20 @@ export function getStripePaymentIntent(params) {
     // no body
   });
 }
+
+/**
+ * GET /billing/organisations/{owner_id}/price-system
+ * @param {Object} params
+ * @param {String} params.owner_id
+ * @param {String} params.zone_id
+ */
+export function getOrganisationPriceSystem(params) {
+  // no multipath for /self or /organisations/{id}
+  return Promise.resolve({
+    method: 'get',
+    url: `/v4/billing/organisations/${params.owner_id}/price-system`,
+    headers: { Accept: 'application/json' },
+    queryParams: pickNonNull(params, ['zone_id']),
+    // no body
+  });
+}
