@@ -650,6 +650,21 @@
           }
         }
       }
+    },
+    "/providers/es-addon/tmp/services-flavors": {
+      "get": {
+        "operationId": "getEsOptionsFlavors",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "providers",
+        "x-function": "getEsOptionsFlavors"
+      }
     }
   },
   "components": {
