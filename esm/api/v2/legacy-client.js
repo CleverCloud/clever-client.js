@@ -567,6 +567,13 @@ export function initLegacyClient(prepareRequest) {
           get: prepareRequest(providers.getAddon, ['providerId', 'addonId']),
         },
       },
+      'es-addon': {
+        tmp: {
+          'services-flavors': {
+            get: prepareRequest(providers.getEsOptionsFlavors),
+          },
+        },
+      },
     },
     self: {
       delete: prepareRequest(organisation.remove),
