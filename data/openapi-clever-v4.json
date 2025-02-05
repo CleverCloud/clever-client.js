@@ -677,6 +677,20 @@
         "x-function": "deleteGrafanaOrganisation",
         "x-service": "saas"
       }
+    },
+    "/saas/grafana/{id}/reset": {
+      "post": {
+        "operationId": "resetGrafanaOrganisation",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-function": "resetGrafanaOrganisation",
+        "x-service": "saas"
+      }
     }
   },
   "components": {
