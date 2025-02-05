@@ -618,6 +618,24 @@
         "x-function": "getAllApplicationInstances",
         "x-service": "instance"
       }
+    },
+    "/billing/price-system": {
+      "get": {
+        "operationId": "getPriceSystem",
+        "parameters": [
+          { "name": "zone_id", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "currency", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getPriceSystem"
+      }
     }
   },
   "components": {
