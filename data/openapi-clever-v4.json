@@ -382,6 +382,24 @@
         "x-service": "materia",
         "x-function": "getMateriaKvInfo"
       }
+    },
+    "/load-balancers/organisations/{ownerId}/applications/{appId}/load-balancers/default": {
+      "get": {
+        "operationId": "getDefaultLoadBalancersDnsInfo",
+        "parameters": [
+          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "loadBalancers",
+        "x-function": "getDefaultLoadBalancersDnsInfo"
+      }
     }
   },
   "components": {

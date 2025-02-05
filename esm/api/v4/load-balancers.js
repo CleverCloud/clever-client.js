@@ -19,6 +19,23 @@ export function listAddonLoadBalancers(params) {
 }
 
 /**
+ * GET /load-balancers/organisations/{ownerId}/applications/{appId}/load-balancers/default
+ * @param {Object} params
+ * @param {String} params.ownerId
+ * @param {String} params.appId
+ */
+export function getDefaultLoadBalancersDnsInfo(params) {
+  // no multipath for /self or /organisations/{id}
+  return Promise.resolve({
+    method: 'get',
+    url: `/v4/load-balancers/organisations/${params.ownerId}/applications/${params.appId}/load-balancers/default`,
+    headers: { Accept: 'application/json' },
+    // no query params
+    // no body
+  });
+}
+
+/**
  * GET /load-balancers/organisations/{ownerId}/applications/{applicationId}/load-balancers/{loadBalancerKind}
  * @param {Object} params
  * @param {String} params.ownerId
