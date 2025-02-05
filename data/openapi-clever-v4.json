@@ -346,6 +346,24 @@
         "x-service": "billing",
         "x-function": "getCreditsSummary"
       }
+    },
+    "/billing/organisations/{owner_id}/price-system": {
+      "get": {
+        "operationId": "getOrganisationPriceSystem",
+        "parameters": [
+          { "name": "owner_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "zone_id", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getOrganisationPriceSystem"
+      }
     }
   },
   "components": {
