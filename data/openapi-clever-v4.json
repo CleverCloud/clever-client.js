@@ -691,6 +691,38 @@
         "x-function": "resetGrafanaOrganisation",
         "x-service": "saas"
       }
+    },
+    "/stats/organisations/{ownerId}/requests": {
+      "get": {
+        "operationId": "fetchHeatmapPoints",
+        "parameters": [
+          {
+            "name": "ownerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "application",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "stats",
+        "x-function": "fetchHeatmapPoints"
+      }
     }
   },
   "components": {
