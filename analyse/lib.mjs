@@ -42,7 +42,7 @@ export function getApiCalls (projectDir, sourceFilepaths) {
         allApiCalls.push({ method, path, filepath, line });
       }
 
-      const importsAndRequireByFunctionName = findCleverClientImportsAndRequire(ast);
+      const importsAndRequireByFunctionName = findCleverClientImportsAndRequire(projectDir, ast);
 
       const newCalls = findCleverClientNewCalls(ast, sourceCode);
       for (const { functionName, line } of newCalls) {
@@ -99,10 +99,11 @@ function getAstAndComments (filepath) {
 }
 
 /**
+ * @param {string} projectDir
  * @param {AcornProgram} ast
  * @return {Record<string, { filepath: string, innerFunctionName: string, functionName: string }>}
  */
-function findCleverClientImportsAndRequire (ast) {
+function findCleverClientImportsAndRequire (projectDir, ast) {
 
   /** @type {Record<string, { filepath: string, innerFunctionName: string, functionName: string }>} */
   const functionImportOrRequireByName = {};
@@ -114,7 +115,7 @@ function findCleverClientImportsAndRequire (ast) {
           for (const property of node.declarations[0].id.properties) {
             const functionName = property.value.name;
             functionImportOrRequireByName[functionName] = {
-              filepath: 'node_modules/' + node.declarations[0].init.arguments[0].value,
+              filepath: projectDir + '/node_modules/' + node.declarations[0].init.arguments[0].value,
               innerFunctionName: property.key.name,
               functionName,
             };
@@ -125,7 +126,7 @@ function findCleverClientImportsAndRequire (ast) {
         for (const specifier of node.specifiers) {
           const functionName = specifier.local.name;
           functionImportOrRequireByName[functionName] = {
-            filepath: 'node_modules/' + node.source.value,
+            filepath: projectDir + '/node_modules/' + node.source.value,
             innerFunctionName: specifier.imported.name,
             functionName,
           };
