@@ -650,6 +650,38 @@
           }
         }
       }
+    },
+    "/providers/es-addon/tmp/services-flavors": {
+      "get": {
+        "operationId": "getEsOptionsFlavors",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "providers",
+        "x-function": "getEsOptionsFlavors"
+      }
+    },
+    "/saas/heptapod/{id}/heptapod.host/price-prevision": {
+      "get": {
+        "operationId": "getHeptapodPricePrevision",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "saas",
+        "x-function": "getHeptapodPricePrevision"
+      }
     }
   },
   "components": {
