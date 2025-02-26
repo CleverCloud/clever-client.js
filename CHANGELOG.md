@@ -4,6 +4,24 @@
 
 ...
 
+## 9.2.0 (2025-02-26)
+
+* feat: add `stats.fetchHeatmapPoints`
+* feat: add `saas.resetGrafanaOrganisation`
+* feat: add `saas.deleteGrafanaOrganisation`
+* feat: add `saas.createGrafanaOrganisation`
+* feat: add `saas.getGrafanaOrganisation`
+* feat: add `billing.getPriceSystem`
+* feat: add `instance.getAllApplicationInstances`
+* feat: add `loadBalancers.getDefaultLoadBalancersDnsInfo`
+* feat: add `saas.getHeptapodPricePrevision`
+* feat: add `providers.getEsOptionsFlavors`
+* feat: add `materia.getMateriaKvInfo`
+* feat: add `billing.getOrganisationPriceSystem`
+* feat: add `billing.getCreditsSummary`
+* chore: include esm/api in sources
+* refactor(diag-domain-config.types): remove `private` from `DiagSummary`
+
 ## 9.1.0 (2024-10-16)
 
 * feat(esm/utils): add `diagDomainConfig`
