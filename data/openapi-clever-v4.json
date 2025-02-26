@@ -329,6 +329,400 @@
         "x-service": "billing",
         "x-function": "getStripePaymentIntent"
       }
+    },
+    "/billing/organisations/{id}/credits/summary": {
+      "get": {
+        "operationId": "getCreditsSummary",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getCreditsSummary"
+      }
+    },
+    "/billing/organisations/{owner_id}/price-system": {
+      "get": {
+        "operationId": "getOrganisationPriceSystem",
+        "parameters": [
+          { "name": "owner_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "zone_id", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getOrganisationPriceSystem"
+      }
+    },
+    "/materia/organisations/{ownerId}/materia/databases/{id}": {
+      "get": {
+        "operationId": "getMateriaKvInfo",
+        "parameters": [
+          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "materia",
+        "x-function": "getMateriaKvInfo"
+      }
+    },
+    "/load-balancers/organisations/{ownerId}/applications/{appId}/load-balancers/default": {
+      "get": {
+        "operationId": "getDefaultLoadBalancersDnsInfo",
+        "parameters": [
+          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "loadBalancers",
+        "x-function": "getDefaultLoadBalancersDnsInfo"
+      }
+    },
+    "/orchestration/organisations/{ownerId}/applications/{applicationId}/instances": {
+      "get": {
+        "summary": "Get instances for a given applicationId (with support for deployment_id",
+        "operationId": "getAllApplicationInstances",
+        "parameters": [
+          {
+            "name": "ownerId",
+            "in": "path",
+            "description": "ID of the desired organization (user ID for personal space).",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "$ref": "#/components/schemas/OwnerID"
+            }
+          },
+          {
+            "name": "applicationId",
+            "in": "path",
+            "description": "ID of the application",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "$ref": "#/components/schemas/ApplicationId"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeState",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "excludeState",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "deploymentId",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InstanceView"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "text/plain; charset=UTF-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {
+                  "Bad request body": {
+                    "$ref": "#/components/examples/BadRequest"
+                  },
+                  "No request body": {
+                    "$ref": "#/components/examples/NoRequestBody"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain; charset=UTF-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {
+                  "Default error": {
+                    "$ref": "#/components/examples/Unauthorized"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; charset=UTF-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {
+                  "Default error": {
+                    "value": "You are not authorized to perform this action"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "requested resource does not exists",
+            "content": {
+              "text/plain; charset=UTF-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "text/plain; charset=UTF-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {
+                  "Default error": {
+                    "value": "An internal server error occured"
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway timeout",
+            "content": {
+              "text/plain; charset=UTF-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {
+                  "Default error": {
+                    "value": "A gateway timeout"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-function": "getAllApplicationInstances",
+        "x-service": "instance"
+      }
+    },
+    "/billing/price-system": {
+      "get": {
+        "operationId": "getPriceSystem",
+        "parameters": [
+          { "name": "zone_id", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "currency", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getPriceSystem"
+      }
+    },
+    "/saas/grafana/{id}": {
+      "get": {
+        "operationId": "getGrafanaOrganisation",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-service": "saas",
+        "x-function": "getGrafanaOrganisation"
+      },
+      "post": {
+        "operationId": "createGrafanaOrganisation",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-function": "createGrafanaOrganisation",
+        "x-service": "saas"
+      },
+      "delete": {
+        "operationId": "deleteGrafanaOrganisation",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-function": "deleteGrafanaOrganisation",
+        "x-service": "saas"
+      }
+    },
+    "/saas/grafana/{id}/reset": {
+      "post": {
+        "operationId": "resetGrafanaOrganisation",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": { }
+            }
+          }
+        },
+        "x-function": "resetGrafanaOrganisation",
+        "x-service": "saas"
+      }
+    },
+    "/stats/organisations/{ownerId}/requests": {
+      "get": {
+        "operationId": "fetchHeatmapPoints",
+        "parameters": [
+          {
+            "name": "ownerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "application",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "stats",
+        "x-function": "fetchHeatmapPoints"
+      }
     }
   },
   "components": {
