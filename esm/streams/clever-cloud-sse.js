@@ -1,7 +1,20 @@
 import { CustomEventTarget } from './custom-event-target.js';
 import { addOauthHeader } from '../oauth.js';
 import { EVENT_STREAM_CONTENT_TYPE, fetchEventSource, JSON_CONTENT_TYPE } from './sse-fetch-event-source.js';
+import { extractQueryParamsFormUrl, fillUrlSearchParams } from '../utils/query-params.js';
 
+/**
+ * @typedef {import('./streams.types.js').RetryConfiguration} RetryConfiguration
+ * @typedef {import('./streams.types.js').SseCloseReason} SseCloseReason
+ * @typedef {import('./streams.types.js').SseMessage} SseMessage
+ * @typedef {import('../oauth.types.js').OAuthTokens} OAuthTokens
+ * @typedef {import('../utils/query-params.types.js').QueryParams} QueryParams
+ * @typedef {import('../request.types.js').RequestParams} RequestParams
+ */
+
+/**
+ * @type {RetryConfiguration}
+ */
 const DEFAULT_RETRY_CONFIGURATION = {
   enabled: false,
   backoffFactor: 1.25,
@@ -25,17 +38,9 @@ const NETWORK_ERROR_CODES = ['EAI_AGAIN', 'ENOTFOUND', 'ECONNREFUSED', 'ECONNRES
 export default class CleverCloudSse extends CustomEventTarget {
   /**
    * @param {string} apiHost
-   * @param {object} tokens
-   * @param {string} tokens.OAUTH_CONSUMER_KEY
-   * @param {string} tokens.OAUTH_CONSUMER_SECRET
-   * @param {string} tokens.API_OAUTH_TOKEN
-   * @param {string} tokens.API_OAUTH_TOKEN_SECRET
-   * @param {number} connectionTimeout
-   * @param {object} retryConfiguration
-   * @param {boolean} retryConfiguration.enabled
-   * @param {number} retryConfiguration.backoffFactor
-   * @param {number} retryConfiguration.initRetryTimeout
-   * @param {number} retryConfiguration.maxRetryCount
+   * @param {OAuthTokens} tokens
+   * @param {RetryConfiguration} [retryConfiguration]
+   * @param {number} [connectionTimeout]
    */
   constructor (apiHost, tokens, retryConfiguration = {}, connectionTimeout) {
     super();
@@ -54,24 +59,16 @@ export default class CleverCloudSse extends CustomEventTarget {
   }
 
   /**
-   * build an URL from a base path and advanced query params
-   * @param {*} path
-   * @param {*} queryParams
+   * Build a URL from a base path and advanced query params
+   *
+   * @param {string} path
+   * @param {import('../utils/query-params.types.js').QueryParams<string|Date|number>} queryParams
    * @returns {URL}
    */
   buildUrl (path = '', queryParams = {}) {
     const url = new URL(path, this._apiHost);
 
-    Object.entries(queryParams).forEach(([param, valueOrValues]) => {
-      const values = Array.isArray(valueOrValues)
-        ? valueOrValues
-        : [valueOrValues];
-      values
-        .filter((value) => value != null)
-        .forEach((value) => {
-          url.searchParams.append(param, formatValue(value));
-        });
-    });
+    fillUrlSearchParams(url, queryParams, formatValue);
 
     return url;
   }
@@ -87,7 +84,7 @@ export default class CleverCloudSse extends CustomEventTarget {
   /**
    * start the stream
    * cannot reject (use onError() for that)
-   * @returns {}
+   * @returns {Promise<SseCloseReason>}
    */
   async start () {
     if (this._promise == null) {
@@ -106,21 +103,10 @@ export default class CleverCloudSse extends CustomEventTarget {
 
       const url = this.getUrl();
 
-      const queryParams = {};
-      Array.from(url.searchParams.entries()).forEach(([k, v]) => {
-        if (Object.hasOwn(queryParams, k)) {
-          if (Array.isArray(queryParams[k])) {
-            queryParams[k] = [...queryParams[k], v];
-          }
-          else {
-            queryParams[k] = [queryParams[k], v];
-          }
-        }
-        else {
-          queryParams[k] = v;
-        }
-      });
+      /** @type {QueryParams} */
+      const queryParams = extractQueryParamsFormUrl(url);
 
+      /** @type {RequestParams} */
       let requestParams = {
         method: 'get',
         url: url.origin + url.pathname,
@@ -135,7 +121,7 @@ export default class CleverCloudSse extends CustomEventTarget {
 
       this._connectionTimeoutId = setTimeout(() => {
         this._onError(new NetworkError('Connection timeout...'));
-      }, CONNECTION_TIMEOUT_MS);
+      }, this._connectionTimeout);
 
       fetchEventSource(url.toString(), {
         headers: requestParams.headers,
@@ -143,12 +129,12 @@ export default class CleverCloudSse extends CustomEventTarget {
         resumeFrom: this._lastId,
         onOpen: (res) => this._onOpen(res),
         onMessage: (msg) => this._onMessage(msg),
-        onClose: (reason) => this._onClose(reason),
+        onClose: () => this._onClose(),
         onError: (err) => this._onError(err),
       });
     }
     catch (error) {
-      this._onError(new NetworkError('Server closed the response without a END_OF_STREAM event', { cause: error }));
+      this._onError(new NetworkError('Server closed the response without a END_OF_STREAM event', error));
     }
   }
 
@@ -163,10 +149,9 @@ export default class CleverCloudSse extends CustomEventTarget {
 
   /**
    * manually close the stream
-   * @param {any} reason
-   * @param {string} reason.type
+   * @param {SseCloseReason} [reason]
    */
-  close (reason = { type: 'UNKNOW' }) {
+  close (reason = { type: 'UNKNOWN' }) {
     if (this.state === 'closed') {
       return;
     }
@@ -175,6 +160,10 @@ export default class CleverCloudSse extends CustomEventTarget {
     this._resolve(reason);
   }
 
+  /**
+   * @param {any} error
+   * @returns {boolean}
+   */
   _canRetry (error) {
 
     if (!this._retry.enabled) {
@@ -205,7 +194,6 @@ export default class CleverCloudSse extends CustomEventTarget {
    * @param {Response} response
    */
   async _onOpen (response) {
-
     clearTimeout(this._connectionTimeoutId);
 
     const contentType = response.headers.get('content-type');
@@ -213,7 +201,8 @@ export default class CleverCloudSse extends CustomEventTarget {
     if (response.status !== 200) {
       if (contentType === JSON_CONTENT_TYPE) {
         const errorBody = await response.json();
-        const details = errorBody.context?.OVDErrorFieldContext?.fieldValue || '';
+        const details
+          = errorBody.context?.OVDErrorFieldContext?.fieldValue || '';
         throw new HttpError(response.status, `${errorBody.error} ${details}`);
       }
       else {
@@ -226,6 +215,11 @@ export default class CleverCloudSse extends CustomEventTarget {
       throw new ServerError(`Invalid content type for an SSE: ${contentType}`);
     }
 
+    /**
+     * @event CleverCloudSse#open
+     * @type {Event}
+     * @property {{response: Response}} data
+     */
     this.emit('open', { response });
     this.state = 'open';
     this._lastContact = new Date();
@@ -235,23 +229,30 @@ export default class CleverCloudSse extends CustomEventTarget {
       const now = new Date();
       const diff = now.getTime() - this._lastContact.getTime();
       if (diff > SAFE_SSE_HEARTBEAT_PERIOD) {
-        this._onError(new NetworkError(`Failed to receive heartbeat within ${SAFE_SSE_HEARTBEAT_PERIOD}ms period`));
+        this._onError(
+          new NetworkError(
+            `Failed to receive heartbeat within ${SAFE_SSE_HEARTBEAT_PERIOD}ms period`,
+          ),
+        );
       }
     }, HEALTHCHECK_INTERVAL_MS);
   }
 
   /**
-   * transform a message before an event is emitted
-   * @param {object} msg
-   * @returns {object}
+   * Transform a message before an event is emitted
+   *
+   * @param {string} _event
+   * @param {any} data
+   * @returns {any}
    */
-  transform (event, data) {
+  transform (_event, data) {
     return data;
   }
 
   /**
    * when a message is received through SSE
-   * @param {EventSourceMessage} msg
+   *
+   * @param {SseMessage} msg
    */
   _onMessage (msg) {
 
@@ -280,7 +281,7 @@ export default class CleverCloudSse extends CustomEventTarget {
           /**
            * @event CleverCloudSse#data
            * @type {Event}
-           * @property {object} data
+           * @property {{data: any}} data
            */
           this.emit(msg.event, { data });
         }
@@ -296,9 +297,8 @@ export default class CleverCloudSse extends CustomEventTarget {
    * if a limiting parameter is reached, it's stored by the msg loop
    * but there is no reason given by the server in term of SSE
    * so we can give the reason sent in last EOS message
-   * @param {*} reason
    */
-  _onClose (reason) {
+  _onClose () {
     if (this.state === 'closed' || this.state === 'paused') {
       return;
     }
@@ -307,7 +307,7 @@ export default class CleverCloudSse extends CustomEventTarget {
 
   /**
    * when the SSE has an error
-   * @param {any} err
+   * @param {any} error
    */
   _onError (error) {
     if (this.state === 'closed' || this.state === 'paused') {
@@ -317,15 +317,22 @@ export default class CleverCloudSse extends CustomEventTarget {
     this._cleanup();
 
     const wrappedError = isNetworkError(error)
-      ? new NetworkError('Failed to establish/maintain the connection with the server', { cause: error })
+      ? new NetworkError('Failed to establish/maintain the connection with the server', error)
       : error;
 
     if (this._canRetry(wrappedError)) {
       this.state = 'paused';
+      /**
+       * @event CleverCloudSse#error
+       * @type {Event}
+       * @property {{error: any}} data
+       */
       this.emit('error', { error: wrappedError });
 
       this.retryCount++;
-      const exponentialBackoffDelay = this._retry.initRetryTimeout * (this._retry.backoffFactor ** this.retryCount);
+      const exponentialBackoffDelay
+        = this._retry.initRetryTimeout
+        * this._retry.backoffFactor ** this.retryCount;
 
       this._retryTimeoutId = setTimeout(() => {
         this._start();
@@ -350,6 +357,10 @@ function formatValue (value) {
   return value.toString();
 }
 
+/**
+ * @param {{name: string, message: string, cause?: {code?: string}, code?: string}} error
+ * @returns {boolean}
+ */
 function isNetworkError (error) {
 
   const errorCode = error?.cause?.code ?? error.code;
@@ -370,14 +381,34 @@ function isNetworkError (error) {
 }
 
 export class NetworkError extends Error {
+  /**
+   * @param {string} message
+   * @param {any} [cause]
+   */
+  constructor (message, cause) {
+    super(message);
+    this.cause = cause;
+  }
 }
 
 export class HttpError extends Error {
-  constructor (status, details, options) {
-    super(`HTTP error ${status}: ${details}`, options);
+  /**
+   * @param {number} status
+   * @param {string} details
+   */
+  constructor (status, details) {
+    super(`HTTP error ${status}: ${details}`);
     this.status = status;
   }
 }
 
 export class ServerError extends Error {
+  /**
+   * @param {string} message
+   * @param {any} [cause]
+   */
+  constructor (message, cause) {
+    super(message);
+    this.cause = cause;
+  }
 }

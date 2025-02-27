@@ -1,7 +1,7 @@
 /**
- * @typedef {import('./types.js').Orga} Orga
- * @typedef {import('./types.js').PaymentMethod} PaymentMethod
- * @typedef {import('./types.js').PaymentMethodError} PaymentMethodError
+ * @typedef {import('./payments.types.js').Orga} Orga
+ * @typedef {import('./payments.types.js').PaymentMethod} PaymentMethod
+ * @typedef {import('./payments.types.js').PaymentMethodError} PaymentMethodError
  */
 
 export const ERROR_TYPES = {

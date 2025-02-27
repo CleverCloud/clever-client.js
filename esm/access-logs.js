@@ -1,3 +1,14 @@
+/**
+ * @typedef {import('./request-warp10.types.js').Warp10RequestParams} Warp10RequestParams
+ */
+
+/**
+ * @param {object} _
+ * @param {string} _.warpToken
+ * @param {string} _.ownerId
+ * @param {string} _.appId
+ * @returns {Promise<Warp10RequestParams>}
+ */
 export function getStatusCodesFromWarp10 ({ warpToken, ownerId, appId }) {
 
   const [granularity, id] = getGranularity(ownerId, appId);
@@ -17,12 +28,22 @@ export function getStatusCodesFromWarp10 ({ warpToken, ownerId, appId }) {
   });
 }
 
+/**
+ * @param {string} ownerId
+ * @param {string} appId
+ * @returns {(string|*)[]}
+ */
 function getGranularity (ownerId, appId) {
   return (appId != null)
     ? ['app_id', appId]
     : ['owner_id', ownerId];
 }
 
+/**
+ * @param {string} prefix
+ * @param {Array<string>} items
+ * @returns {string}
+ */
 function getSlug (prefix, ...items) {
   const shortItems = items
     .filter((a) => a != null)

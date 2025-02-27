@@ -12,6 +12,12 @@
  */
 
 /**
+ * @typedef {import('./env-vars.types.js').EnvVar} EnvVar
+ * @typedef {import('./env-vars.types.js').EnvVarValidationMode} EnvVarValidationMode
+ * @typedef {import('./env-vars.types.js').EnvVarParsingError} EnvVarParsingError
+ */
+
+/**
  * Most Linux systems also accept lower case letters:
  *
  * - letters (upper case and lower case)
@@ -31,6 +37,11 @@ const ENV_VAR_NAME_STRICT_REGEX = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
  */
 const ENV_VAR_NAME_REGEX = /^[a-zA-Z0-9-_.]+$/;
 
+/**
+ * @param {string} name
+ * @param {string} mode
+ * @returns {boolean}
+ */
 export function validateName (name, mode = '') {
   return (mode !== 'strict')
     ? ENV_VAR_NAME_REGEX.test(name)
@@ -57,6 +68,13 @@ const SIMPLE_QUOTE_REPLACE = /([\\]*)'/g;
 const DOUBLE_QUOTE = '"';
 const DOUBLE_QUOTE_REPLACE = /([\\]*)"/g;
 
+/**
+ *
+ * @param {string} text
+ * @param {string} char
+ * @param {number} start
+ * @returns {number}
+ */
 function nextIndex (text, char, start = 0) {
   let i = start;
   let escaped = false;
@@ -70,14 +88,27 @@ function nextIndex (text, char, start = 0) {
   return i;
 }
 
+/**
+ * @param {string} line
+ * @returns {boolean}
+ */
 function isEmptyLine (line) {
   return line.trim() === '';
 }
 
+/**
+ * @param {string} line
+ * @returns {boolean}
+ */
 function isCommentLine (line) {
   return line.trim().startsWith('#');
 }
 
+/**
+ * @param {string} text
+ * @param {number} index
+ * @returns {{line: number, column: number}}
+ */
 function getPosition (text, index) {
   const lines = text.substring(0, index).split(NEW_LINE);
   const line = lines.length;
@@ -85,40 +116,58 @@ function getPosition (text, index) {
   return { line, column };
 }
 
-// Here we surround a string with double quotes,
-// it means we need to escape existing double quotes,
-// we need to do so in a way that is compatible with shells and environment variables,
-// this is why we have (slashes * 2 + 1).
+/**
+ * @param {string} str
+ * @returns {string}
+ */
 function doubleQuoteString (str) {
-  const escapedString = str.replace(DOUBLE_QUOTE_REPLACE, (m, slashes) => {
+  // Here we surround a string with double quotes,
+  // it means we need to escape existing double quotes,
+  // we need to do so in a way that is compatible with shells and environment variables,
+  // this is why we have (slashes * 2 + 1).
+
+  const escapedString = str.replace(DOUBLE_QUOTE_REPLACE, (_, slashes) => {
     return SLASH.repeat(slashes.length * 2 + 1) + DOUBLE_QUOTE;
   });
   return DOUBLE_QUOTE + escapedString + DOUBLE_QUOTE;
 }
 
-// Here we must be able to reverse what doubleQuoteString() does,
-// with the same logic,
-// we also want it to work with simple quotes.
+/**
+ * @param {string} firstChar
+ * @param {string} str
+ * @returns {string}
+ */
 function unquoteString (firstChar, str) {
+  // Here we must be able to reverse what doubleQuoteString() does,
+  // with the same logic,
+  // we also want it to work with simple quotes.
+
   if (firstChar === SIMPLE_QUOTE) {
-    return str.replace(SIMPLE_QUOTE_REPLACE, (match, slashes) => {
+    return str.replace(SIMPLE_QUOTE_REPLACE, (_, slashes) => {
       return SLASH.repeat((slashes.length - 1) / 2) + SIMPLE_QUOTE;
     });
   }
   if (firstChar === DOUBLE_QUOTE) {
-    return str.replace(DOUBLE_QUOTE_REPLACE, (match, slashes) => {
+    return str.replace(DOUBLE_QUOTE_REPLACE, (_, slashes) => {
       return SLASH.repeat((slashes.length - 1) / 2) + DOUBLE_QUOTE;
     });
   }
   return str;
 }
 
+/**
+ * @param {string} [rawInput]
+ * @param {{mode?: EnvVarValidationMode}} [options]
+ * @returns {{variables: Array<EnvVar>, errors: Array<EnvVarParsingError>}}
+ */
 export function parseRaw (rawInput = '', options = {}) {
 
+  /** @type {Array<EnvVar>} */
   const parsedVariables = [];
+  /** @type {Array<EnvVarParsingError>} */
   const parsingErrors = [];
   const allNames = new Set();
-  const { mode = '' } = options;
+  const { mode = 'simple' } = options;
 
   let startIdx = 0;
   while (startIdx < rawInput.length) {
@@ -211,11 +260,17 @@ export function parseRaw (rawInput = '', options = {}) {
   return { variables: parsedVariables, errors: parsingErrors };
 }
 
+/**
+ * @param {string} [rawInput]
+ * @param {{mode?: EnvVarValidationMode}} [options]
+ * @returns {{variables: Array<EnvVar>, errors: Array<EnvVarParsingError>}}
+ */
 export function parseRawJson (rawInput = '', options = {}) {
 
   let parsedInput;
+  /** @type {Array<EnvVarParsingError>} */
   const parsingErrors = [];
-  const { mode = '' } = options;
+  const { mode = 'simple' } = options;
 
   try {
     parsedInput = JSON.parse(rawInput);
@@ -237,7 +292,9 @@ export function parseRawJson (rawInput = '', options = {}) {
     parsingErrors.push({ type: ERROR_TYPES.INVALID_JSON_ENTRY });
   }
 
+  /** @type {Array<EnvVar>} */
   const validVariables = [];
+  /** @type {Array<string>} */
   const visitedNames = [];
   const duplicatedNames = new Set();
   const invalidNames = new Set();
@@ -295,6 +352,10 @@ export function parseRawJson (rawInput = '', options = {}) {
   return { variables: validVariables, errors: parsingErrors };
 }
 
+/**
+ * @param {Array<EnvVar>} variables
+ * @returns {string}
+ */
 export function toJson (variables) {
   if (variables.length === 0) {
     return '[]';
@@ -305,9 +366,15 @@ export function toJson (variables) {
   return JSON.stringify(sortedVariables, null, 2);
 }
 
-// automatically merges duplicated named (keeps last value)
-// automatically removes variables with invalid names
-// always double quote values (with proper escaping)
+/**
+ * automatically merges duplicated named (keeps last value),
+ * automatically removes variables with invalid names,
+ * always double quote values (with proper escaping).
+ *
+ * @param {Array<EnvVar>} variables
+ * @param {{addExports?: boolean}} [options]
+ * @returns {*}
+ */
 export function toNameEqualsValueString (variables, options = {}) {
   const { addExports = false } = options;
   return variables
@@ -322,9 +389,15 @@ export function toNameEqualsValueString (variables, options = {}) {
     .join('\n');
 }
 
-// automatically merges duplicated named (keeps last value)
-// automatically removes variables with invalid names
+/**
+ * automatically merges duplicated named (keeps last value),
+ * automatically removes variables with invalid names.
+ *
+ * @param {Array<EnvVar>} variables
+ * @returns {Record<string, string>}
+ */
 export function toNameValueObject (variables) {
+  /** @type {Record<string, string>} */
   const keyValueObject = {};
   variables
     .filter(({ name }) => validateName(name))

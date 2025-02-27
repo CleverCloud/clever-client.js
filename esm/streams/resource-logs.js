@@ -1,31 +1,18 @@
 import CleverCloudSse from './clever-cloud-sse.js';
 
+/**
+ * @typedef {import('./resource-logs.types.js').ResourceLogsStreamParams} ResourceLogsStreamParams
+ * @typedef {import('./resource-logs.types.js').ResourceLog} ResourceLog
+ */
+
 const RESOURCE_LOG_EVENT_NAME = 'RESOURCE_LOG';
 
+/**
+ * Clever Cloud Resource's logs stream
+ */
 export class ResourceLogStream extends CleverCloudSse {
   /**
-   * @param {object} options
-   * @param {string} options.apiHost
-   * @param {object} options.tokens
-   * @param {string} options.tokens.OAUTH_CONSUMER_KEY
-   * @param {string} options.tokens.OAUTH_CONSUMER_SECRET
-   * @param {string} options.tokens.API_OAUTH_TOKEN
-   * @param {string} options.tokens.API_OAUTH_TOKEN_SECRET
-   * @param {string} options.ownerId
-   * @param {string} options.addonId
-   * @param {number} options.connectionTimeout
-   * @param {object} options.retryConfiguration
-   * @param {boolean} options.retryConfiguration.enabled
-   * @param {number} options.retryConfiguration.backoffFactor
-   * @param {number} options.retryConfiguration.initRetryTimeout
-   * @param {number} options.retryConfiguration.maxRetryCount
-   * @param {Date} options.since
-   * @param {Date} options.until
-   * @param {number} options.limit
-   * @param {string} options.filter
-   * @param {string} options.field[]
-   * @param {number} options.throttleElements
-   * @param {number} options.throttlePerInMilliseconds
+   * @param {ResourceLogsStreamParams} params
    */
   constructor ({ apiHost, tokens, ownerId, addonId, retryConfiguration, connectionTimeout, ...options }) {
     super(apiHost, tokens, retryConfiguration ?? {}, connectionTimeout);
@@ -40,6 +27,7 @@ export class ResourceLogStream extends CleverCloudSse {
 
   /**
    * compute full URL with query params
+   *
    * @returns {URL}
    */
   getUrl () {
@@ -63,13 +51,18 @@ export class ResourceLogStream extends CleverCloudSse {
   }
 
   /**
-   * override default method
+   * Transform the log event data to a resource log object.
+   *
+   * @param {string} event
+   * @param {any} data
+   * @returns {any}
    */
   transform (event, data) {
     if (event !== RESOURCE_LOG_EVENT_NAME) {
       return data;
     }
 
+    /** @type {ResourceLog} */
     const log = JSON.parse(data);
 
     if (log.date) {
@@ -80,27 +73,15 @@ export class ResourceLogStream extends CleverCloudSse {
   }
 
   /**
-   * catch Log messages from stream
-   * @param {logCallback} fn callback which handle logs
+   * shortcut for .on('ACCESS_LOG', (event) => ...)
+   *
+   * @param {(log:ResourceLog) => void} fn which handle logs
    * @returns {this}
    */
   onLog (fn) {
-    return this.on(RESOURCE_LOG_EVENT_NAME, (event) => fn(event.data));
+    return this.on(RESOURCE_LOG_EVENT_NAME, (event) => {
+      // @ts-ignore
+      fn(event.data);
+    });
   }
-
-/**
- * This callback handle a Log.
- * @callback logCallback
- * @param {object} log
- * @param {Date}   log.date
- * @param {string} log.hostname
- * @param {string} log.id
- * @param {string} log.instanceId
- * @param {string} log.message
- * @param {string} log.region
- * @param {string} log.resourceId
- * @param {string} log.service
- * @param {string} log.severity
- * @param {string} log.zone
- */
 }

@@ -2,6 +2,10 @@ import { pickNonNull } from './pick-non-null.js';
 
 const cache = new Map();
 
+/**
+ * @param {Record<string, any>} cacheParams
+ * @returns {string}
+ */
 function getKey (cacheParams) {
   const objectKey = pickNonNull(cacheParams, [
     'API_HOST',
@@ -21,7 +25,15 @@ export const NO_CACHE = 0;
 export const ONE_SECOND = 1000;
 export const ONE_DAY = 1000 * 60 * 60 * 24;
 
-export function withCache (cacheParams, cacheDelay = ONE_SECOND, createPromise) {
+/**
+ *
+ * @param {Record<string, any>} cacheParams
+ * @param {number} cacheDelay
+ * @param {() => Promise<T>} createPromise
+ * @returns {Promise<T>}
+ * @template T
+ */
+export function withCache (cacheParams, cacheDelay, createPromise) {
 
   const cacheKey = getKey(cacheParams);
 
