@@ -1,3 +1,5 @@
+// @ts-nocheck
+// TODO: remove this useless file
 import req from 'superagent';
 
 export function execWarpscript (requestParams, options = {}) {

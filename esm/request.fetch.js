@@ -1,8 +1,19 @@
 import { fetchWithTimeout } from './request.fetch-with-timeout.js';
+import { fillUrlSearchParams } from './utils/query-params.js';
+
+/**
+ * @typedef {import('./request.types.js').RequestParams} RequestParams
+ * @typedef {import('./request.types.js').RequestError} RequestError
+ */
 
 const JSON_TYPE = 'application/json';
 const FORM_TYPE = 'application/x-www-form-urlencoded';
 
+/**
+ * @param {RequestParams} requestParams
+ * @returns {*|string}
+ * @throws {RequestError}
+ */
 function formatBody (requestParams) {
 
   // for now we support the fact that users sometimes already stringified the body
@@ -22,6 +33,10 @@ function formatBody (requestParams) {
   return requestParams.body;
 }
 
+/**
+ * @param {Headers} headers
+ * @returns {string}
+ */
 function getContentType (headers) {
   const contentType = headers.get('Content-Type');
   return (contentType != null)
@@ -29,8 +44,11 @@ function getContentType (headers) {
     : contentType;
 }
 
-function parseResponseBody (response) {
-
+/**
+ * @param {Response} response
+ * @returns {Promise<any>}
+ */
+async function parseResponseBody (response) {
   const contentType = getContentType(response.headers);
 
   if (contentType === JSON_TYPE) {
@@ -38,43 +56,47 @@ function parseResponseBody (response) {
   }
 
   if (contentType === FORM_TYPE) {
-    return response.text()
-      .then((text) => {
-        const responseObject = {};
-        Array
-          .from(new URLSearchParams(text).entries())
-          .forEach(([name, value]) => (responseObject[name] = value));
-        return responseObject;
-        // TODO: return Object.fromEntries(new URLSearchParams(text).entries())
-      });
+    const text = await response.text();
+    /** @type {Record<string, string>} */
+    const responseObject = {};
+    Array
+      .from(new URLSearchParams(text).entries())
+      .forEach(([name, value]) => (responseObject[name] = value));
+    return responseObject;
   }
 
   return response.text();
 }
 
+/**
+ *
+ * @param {null|string|{message?: string, error?: string}} responseBody
+ * @returns {string}
+ */
 function getErrorMessage (responseBody) {
+  if (typeof responseBody === 'string') {
+    return responseBody;
+  }
   if (typeof responseBody?.message === 'string') {
     return responseBody.message;
   }
-  else if (typeof responseBody?.error === 'string') {
+  if (typeof responseBody?.error === 'string') {
     return responseBody.error;
-  }
-  else if (typeof responseBody === 'string') {
-    return responseBody;
   }
 
   return 'Unknown error';
 }
 
+/**
+ * @param {RequestParams} requestParams
+ * @returns {Promise<T>}
+ * @throws {RequestError}
+ * @template T
+ */
 export async function request (requestParams) {
 
   const url = new URL(requestParams.url);
-  Object
-    .entries(requestParams.queryParams || {})
-    .map(([k, v]) => Array.isArray(v) ? [k, v] : [k, [v]])
-    .forEach(([k, v]) => {
-      v.forEach((e) => url.searchParams.append(k, e));
-    });
+  fillUrlSearchParams(url, requestParams.queryParams);
 
   const body = formatBody(requestParams);
 
@@ -83,7 +105,7 @@ export async function request (requestParams) {
   if (response.status >= 400) {
     const responseBody = await parseResponseBody(response);
     const errorMessage = getErrorMessage(responseBody);
-    const error = new Error(errorMessage);
+    const error = /** @type {RequestError} */ (new Error(errorMessage));
     // NOTE: This is only for legacy
     if (responseBody.id != null) {
       error.id = responseBody.id;
@@ -94,7 +116,7 @@ export async function request (requestParams) {
   }
 
   if (response.status === 204) {
-    return;
+    return undefined;
   }
 
   return parseResponseBody(response);

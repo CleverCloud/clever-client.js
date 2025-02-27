@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Bacon from 'baconjs';
 import { addOauthHeader } from './oauth.js';
 import { sendLegacyRequest } from './send-legacy-request.js';

@@ -3,15 +3,23 @@
 
 import { readBytes } from './sse-parse.js';
 
+/**
+ * @typedef {import('./streams.types.js').SseMessage} SseMessage
+ */
+
 export const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
 export const JSON_CONTENT_TYPE = 'application/json';
 const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
 
 /**
+ * @typedef {import('./streams.types.js').SseFetchEventSourceParams} SseFetchEventSourceParams
+ */
+
+/**
  * Native implementation of an SSE
+ *
  * @param {string} input
- * @param {object} param1
- * @returns
+ * @param {SseFetchEventSourceParams} params
  */
 export function fetchEventSource (input, {
   abortController = new AbortController(),
@@ -24,11 +32,12 @@ export function fetchEventSource (input, {
   ...rest
 }) {
   // make a copy of the input headers since we may modify it below:
+  /** @type {Record<string, string>} */
   const _headers = {
     accept: EVENT_STREAM_CONTENT_TYPE,
     ...headers,
   };
-  if (resumeFrom) {
+  if (resumeFrom != null) {
     _headers[LAST_EVENT_ID_HEADER] = resumeFrom;
   }
 
