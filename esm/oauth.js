@@ -1,19 +1,28 @@
 import OAuth from 'oauth-1.0a';
 
-export function addOauthHeader (tokens) {
+/**
+ * @typedef {import('./oauth.types.js').OAuthTokens} OAuthTokens
+ * @typedef {import('./request.types.js').RequestParams} RequestParams
+ */
 
+/**
+ * @param {OAuthTokens} tokens
+ * @returns {(requestParams: RequestParams) => Promise<RequestParams>}
+ */
+export function addOauthHeader (tokens) {
   return async function (requestParams) {
 
     const { method, url, headers, queryParams } = requestParams;
 
-    const oauth = OAuth({
+    // @ts-ignore
+    const oauth = new OAuth({
       consumer: {
         key: tokens.OAUTH_CONSUMER_KEY,
         secret: tokens.OAUTH_CONSUMER_SECRET,
       },
       signature_method: 'HMAC-SHA512',
+      // @ts-ignore
       async hash_function (baseString, key) {
-
         const encoder = new TextEncoder();
         const encodedText = encoder.encode(baseString);
         const encodedKey = encoder.encode(key);
