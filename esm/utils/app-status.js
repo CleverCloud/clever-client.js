@@ -9,6 +9,12 @@ export const STATUSES = {
   UNKNOWN: 'unknown',
 };
 
+/**
+ * @param {{state: 'SHOULD_BE_DOWN'|'WANTS_TO_BE_UP'|'SHOULD_BE_UP', homogeneous: boolean}} app
+ * @param {Array<{state: 'WIP'|'FAIL'}>} deployments
+ * @param {Array<{state: 'UP'}>} instances
+ * @returns {string}
+ */
 export function getStatus (app, deployments, instances) {
 
   const lastDeploymentState = (deployments != null && deployments[0] != null) ? deployments[0].state : null;

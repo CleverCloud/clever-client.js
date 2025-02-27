@@ -1,0 +1,24 @@
+{
+  "include": ["esm/**/*"],
+  "exclude": ["esm/api/**/*", "esm/legacy-client.*.js"],
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "nodenext",
+    "allowJs": true ,
+    "checkJs": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "strictNullChecks": false,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitOverride": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+  }
+}
