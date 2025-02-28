@@ -1,9 +1,14 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * POST /oauth/access_token
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function fetchAccessToken(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -20,6 +25,7 @@ export function fetchAccessToken(params, body) {
  * GET /oauth/login_data
  * @param {Object} params
  * @param {String} params.oauth_key
+ * @returns {Promise<RequestParams>}
  */
 export function getLoginData(params) {
   // no multipath for /self or /organisations/{id}
@@ -37,6 +43,7 @@ export function getLoginData(params) {
  * @param {Object} params
  * @param {String} params.partner_id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function fetchRequestToken(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -53,6 +60,7 @@ export function fetchRequestToken(params, body) {
  * POST /sessions/login
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function loginWithEmailAndPassword(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -69,6 +77,7 @@ export function loginWithEmailAndPassword(params, body) {
  * POST /sessions/mfa_login
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function loginWithMfa(params, body) {
   // no multipath for /self or /organisations/{id}
