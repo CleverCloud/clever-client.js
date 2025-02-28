@@ -182,6 +182,7 @@ function buildClientCode (route) {
     '* @param {Object} params',
     ...paramsJsDoc,
     bodyJsDoc,
+    '* @returns {Promise<RequestParams>}',
     '*/',
   ].filter((a) => a != null).join('\n');
 
@@ -410,7 +411,13 @@ async function generateClient () {
         imports.push('import { pickNonNull } from \'../../pick-non-null.js\';');
       }
 
+      const typedef = `/**
+       * @typedef {import('../../request.types.js').RequestParams} RequestParams
+       */`;
+
       const rawContentsWithImports = `${imports.join('\n')}
+      
+       ${typedef}
     
        ${rawContents}`;
 
