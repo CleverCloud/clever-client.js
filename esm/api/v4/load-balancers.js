@@ -1,4 +1,6 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * GET /load-balancers/organisations/{ownerId}/addons/{addonId}/load-balancers/{loadBalancerKind}
@@ -6,6 +8,7 @@ import { pickNonNull } from '../../pick-non-null.js';
  * @param {String} params.ownerId
  * @param {String} params.addonId
  * @param {String} params.loadBalancerKind
+ * @returns {Promise<RequestParams>}
  */
 export function listAddonLoadBalancers(params) {
   // no multipath for /self or /organisations/{id}
@@ -23,6 +26,7 @@ export function listAddonLoadBalancers(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getDefaultLoadBalancersDnsInfo(params) {
   // no multipath for /self or /organisations/{id}
@@ -41,6 +45,7 @@ export function getDefaultLoadBalancersDnsInfo(params) {
  * @param {String} params.ownerId
  * @param {String} params.applicationId
  * @param {String} params.loadBalancerKind
+ * @returns {Promise<RequestParams>}
  */
 export function listApplicationLoadBalancers(params) {
   // no multipath for /self or /organisations/{id}

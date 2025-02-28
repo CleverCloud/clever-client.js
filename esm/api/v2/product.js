@@ -1,9 +1,14 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /products/addonproviders
  * @param {Object} params
  * @param {String} params.orgaId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllAddonProviders(params) {
   // no multipath for /self or /organisations/{id}
@@ -21,6 +26,7 @@ export function getAllAddonProviders(params) {
  * @param {Object} params
  * @param {String} params.provider_id
  * @param {String} params.orgaId
+ * @returns {Promise<RequestParams>}
  */
 export function getAddonProvider(params) {
   // no multipath for /self or /organisations/{id}
@@ -37,6 +43,7 @@ export function getAddonProvider(params) {
  * GET /products/instances
  * @param {Object} params
  * @param {String} params.for
+ * @returns {Promise<RequestParams>}
  */
 export function getAvailableInstances(params) {
   // no multipath for /self or /organisations/{id}
@@ -51,7 +58,7 @@ export function getAvailableInstances(params) {
 
 /**
  * GET /products/prices
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getCreditPrice() {
   // no multipath for /self or /organisations/{id}
@@ -66,7 +73,7 @@ export function getCreditPrice() {
 
 /**
  * GET /products/zones
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getAllZones() {
   // no multipath for /self or /organisations/{id}

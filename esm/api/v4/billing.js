@@ -1,9 +1,14 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /billing/organisations/{id}/credits/summary
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getCreditsSummary(params) {
   // no multipath for /self or /organisations/{id}
@@ -21,6 +26,7 @@ export function getCreditsSummary(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.since
+ * @returns {Promise<RequestParams>}
  */
 export function getAllInvoices(params) {
   // no multipath for /self or /organisations/{id}
@@ -37,6 +43,7 @@ export function getAllInvoices(params) {
  * GET /billing/organisations/{id}/invoices/unpaid
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getAllUnpaidInvoices(params) {
   // no multipath for /self or /organisations/{id}
@@ -54,6 +61,7 @@ export function getAllUnpaidInvoices(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.invoiceNumber
+ * @returns {Promise<RequestParams>}
  */
 export function initPaypalPayment(params) {
   // no multipath for /self or /organisations/{id}
@@ -72,6 +80,7 @@ export function initPaypalPayment(params) {
  * @param {String} params.id
  * @param {String} params.invoiceNumber
  * @param {String} params.payerId
+ * @returns {Promise<RequestParams>}
  */
 export function authorizePaypalPayment(params) {
   // no multipath for /self or /organisations/{id}
@@ -90,6 +99,7 @@ export function authorizePaypalPayment(params) {
  * @param {String} params.id
  * @param {String} params.invoiceNumber
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function initStripePayment(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -108,6 +118,7 @@ export function initStripePayment(params, body) {
  * @param {String} params.id
  * @param {String} params.invoiceNumber
  * @param {String} params.paymentId
+ * @returns {Promise<RequestParams>}
  */
 export function authorizeStripePayment(params) {
   // no multipath for /self or /organisations/{id}
@@ -126,6 +137,7 @@ export function authorizeStripePayment(params) {
  * @param {String} params.id
  * @param {String} params.invoiceNumber
  * @param {String} params.type
+ * @returns {Promise<RequestParams>}
  */
 export function getInvoice(params) {
   // no multipath for /self or /organisations/{id}
@@ -142,6 +154,7 @@ export function getInvoice(params) {
  * GET /billing/organisations/{id}/payments/methods
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getPaymentMethods(params) {
   // no multipath for /self or /organisations/{id}
@@ -159,6 +172,7 @@ export function getPaymentMethods(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createPaymentMethod(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -176,6 +190,7 @@ export function createPaymentMethod(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function setDefaultPaymentMethod(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -192,6 +207,8 @@ export function setDefaultPaymentMethod(params, body) {
  * DELETE /billing/organisations/{id}/payments/methods/{methodId}
  * @param {Object} params
  * @param {String} params.id
+ * @param {String} params.methodId
+ * @returns {Promise<RequestParams>}
  */
 export function deletePaymentMethod(params) {
   // no multipath for /self or /organisations/{id}
@@ -209,6 +226,7 @@ export function deletePaymentMethod(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.type
+ * @returns {Promise<RequestParams>}
  */
 export function getStripePaymentIntent(params) {
   // no multipath for /self or /organisations/{id}
@@ -226,6 +244,7 @@ export function getStripePaymentIntent(params) {
  * @param {Object} params
  * @param {String} params.owner_id
  * @param {String} params.zone_id
+ * @returns {Promise<RequestParams>}
  */
 export function getOrganisationPriceSystem(params) {
   // no multipath for /self or /organisations/{id}
@@ -243,6 +262,7 @@ export function getOrganisationPriceSystem(params) {
  * @param {Object} params
  * @param {String} params.zone_id
  * @param {String} params.currency
+ * @returns {Promise<RequestParams>}
  */
 export function getPriceSystem(params) {
   // no multipath for /self or /organisations/{id}

@@ -1,9 +1,14 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * PUT /self/change_password
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_changeUserPassword(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -20,6 +25,7 @@ export function todo_changeUserPassword(params, body) {
  * GET /self/cli_tokens
  * @param {Object} params
  * @param {String} params.cli_token
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSelfCliTokens(params) {
   // no multipath for /self or /organisations/{id}
@@ -34,7 +40,7 @@ export function todo_getSelfCliTokens(params) {
 
 /**
  * GET /self/confirmation_email
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getConfirmationEmail() {
   // no multipath for /self or /organisations/{id}
@@ -49,7 +55,7 @@ export function todo_getConfirmationEmail() {
 
 /**
  * GET /self/emails
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getEmailAddresses() {
   // no multipath for /self or /organisations/{id}
@@ -66,6 +72,7 @@ export function todo_getEmailAddresses() {
  * DELETE /self/emails/{email}
  * @param {Object} params
  * @param {String} params.email
+ * @returns {Promise<RequestParams>}
  */
 export function todo_removeEmailAddress(params) {
   // no multipath for /self or /organisations/{id}
@@ -83,6 +90,7 @@ export function todo_removeEmailAddress(params) {
  * @param {Object} params
  * @param {String} params.email
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_addEmailAddress(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -97,7 +105,7 @@ export function todo_addEmailAddress(params, body) {
 
 /**
  * GET /self/id
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getId() {
   // no multipath for /self or /organisations/{id}
@@ -112,7 +120,7 @@ export function getId() {
 
 /**
  * GET /self/keys
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSshKeys() {
   // no multipath for /self or /organisations/{id}
@@ -129,6 +137,7 @@ export function todo_getSshKeys() {
  * DELETE /self/keys/{key}
  * @param {Object} params
  * @param {String} params.key
+ * @returns {Promise<RequestParams>}
  */
 export function todo_removeSshKey(params) {
   // no multipath for /self or /organisations/{id}
@@ -146,6 +155,7 @@ export function todo_removeSshKey(params) {
  * @param {Object} params
  * @param {String} params.key
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_addSshKey(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -162,6 +172,7 @@ export function todo_addSshKey(params, body) {
  * DELETE /self/mfa/{kind}
  * @param {Object} params
  * @param {String} params.kind
+ * @returns {Promise<RequestParams>}
  */
 export function todo_deleteSelfMFA(params) {
   // no multipath for /self or /organisations/{id}
@@ -178,6 +189,7 @@ export function todo_deleteSelfMFA(params) {
  * POST /self/mfa/{kind}
  * @param {Object} params
  * @param {String} params.kind
+ * @returns {Promise<RequestParams>}
  */
 export function todo_createSelfMFA(params) {
   // no multipath for /self or /organisations/{id}
@@ -195,6 +207,7 @@ export function todo_createSelfMFA(params) {
  * @param {Object} params
  * @param {String} params.kind
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_setSelfFavouriteMFA(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -211,6 +224,7 @@ export function todo_setSelfFavouriteMFA(params, body) {
  * GET /self/mfa/{kind}/backupcodes
  * @param {Object} params
  * @param {String} params.kind
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSelfBackupCodes(params) {
   // no multipath for /self or /organisations/{id}
@@ -228,6 +242,7 @@ export function todo_getSelfBackupCodes(params) {
  * @param {Object} params
  * @param {String} params.kind
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_validateSelfMFA(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -242,7 +257,7 @@ export function todo_validateSelfMFA(params, body) {
 
 /**
  * DELETE /self/tokens
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_revokeSelfTokens() {
   // no multipath for /self or /organisations/{id}
@@ -257,7 +272,7 @@ export function todo_revokeSelfTokens() {
 
 /**
  * GET /self/tokens
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_listSelfTokens() {
   // no multipath for /self or /organisations/{id}
@@ -274,6 +289,7 @@ export function todo_listSelfTokens() {
  * DELETE /self/tokens/{token}
  * @param {Object} params
  * @param {String} params.token
+ * @returns {Promise<RequestParams>}
  */
 export function todo_revokeSelfToken(params) {
   // no multipath for /self or /organisations/{id}
@@ -290,6 +306,7 @@ export function todo_revokeSelfToken(params) {
  * GET /self/validate_email
  * @param {Object} params
  * @param {String} params.validationKey
+ * @returns {Promise<RequestParams>}
  */
 export function todo_validateEmail(params) {
   // no multipath for /self or /organisations/{id}
@@ -306,6 +323,7 @@ export function todo_validateEmail(params) {
  * GET /summary
  * @param {Object} params
  * @param {String} params.full
+ * @returns {Promise<RequestParams>}
  */
 export function getSummary(params) {
   // no multipath for /self or /organisations/{id}
@@ -322,6 +340,7 @@ export function getSummary(params) {
  * POST /users
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function create(params, body) {
   // no multipath for /self or /organisations/{id}
