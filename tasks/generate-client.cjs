@@ -176,10 +176,18 @@ function buildClientCode (route) {
   const paramsJsDoc = parameters.map(({ name }) => `* @param {String} params.${name}`);
   const bodyJsDoc = (requestBody != null) ? '* @param {Object} body' : null;
 
+  const functionArgs = (requestBody != null)
+    ? 'params, body'
+    : parameters.length > 0
+      ? 'params'
+      : '';
+
+  const hasArgs = functionArgs.length > 0;
+
   const comments = [
     '/**',
     ...urlComments,
-    '* @param {Object} params',
+    hasArgs ? '* @param {Object} params' : null,
     ...paramsJsDoc,
     bodyJsDoc,
     '* @returns {Promise<RequestParams>}',
@@ -189,12 +197,6 @@ function buildClientCode (route) {
   const multipathIf = isMultipath
     ? 'const urlBase = (params.id == null) ? \'/self\' : `/organisations/${params.id}`'
     : '// no multipath for /self or /organisations/{id}';
-
-  const functionArgs = (requestBody != null)
-    ? 'params, body'
-    : parameters.length > 0
-      ? 'params'
-      : '';
 
   const rawPath = isMultipath
     ? '/' + version + '${urlBase}' + path[0].replace('/organisations/{id}', '').replace(/\{(.*?)\}/g, '${params.$1}')
