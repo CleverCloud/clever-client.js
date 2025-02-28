@@ -26,7 +26,7 @@
     "generate-cjs-modules": "rm -rf cjs && babel esm --out-dir cjs && echo '{\"module\":\"commonjs\"}' > cjs/package.json",
     "lint": "eslint esm tasks/*.cjs test",
     "lint:fix": "eslint --fix esm tasks/*.cjs test",
-    "prepack": "npm run lint && npm run test-wtr && npm run generate-client",
+    "prepack": "npm run lint && npm run typecheck && npm run test-wtr && npm run generate-client",
     "test-wtr": "web-test-runner",
     "test-wtr:watch": "web-test-runner --watch",
     "test-mocha": "mocha -t 60000 test/application-logs.spec.js",
