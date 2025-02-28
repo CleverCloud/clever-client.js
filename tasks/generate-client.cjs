@@ -326,6 +326,7 @@ function buildLegacyClientCode (allRoutes, codeByService) {
 
   const legacyClientCode = [];
 
+  legacyClientCode.push('// @ts-nocheck');
   for (const service in codeByService) {
     legacyClientCode.push(`import * as ${service} from './${_.kebabCase(service)}.js'`);
   }
