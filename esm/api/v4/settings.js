@@ -1,9 +1,14 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /console/settings
  * @param {Object} params
  * @param {String} params.env
+ * @returns {Promise<RequestParams>}
  */
 export function list(params) {
   // no multipath for /self or /organisations/{id}
@@ -21,6 +26,7 @@ export function list(params) {
  * @param {Object} params
  * @param {String} params.env
  * @param {String} params.name
+ * @returns {Promise<RequestParams>}
  */
 export function _delete(params) {
   // no multipath for /self or /organisations/{id}
@@ -38,6 +44,7 @@ export function _delete(params) {
  * @param {Object} params
  * @param {String} params.env
  * @param {String} params.name
+ * @returns {Promise<RequestParams>}
  */
 export function get(params) {
   // no multipath for /self or /organisations/{id}
@@ -56,6 +63,7 @@ export function get(params) {
  * @param {String} params.env
  * @param {String} params.name
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function put(params, body) {
   // no multipath for /self or /organisations/{id}
