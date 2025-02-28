@@ -26,9 +26,7 @@ You will need to chain some helpers to the function call to:
 Those helpers are ready to use for browsers or Node.js and for oAuth v1 signature auth.
 The recommended way is to wrap those helpers in one place of your app and to reuse it everywhere you need to send API calls.
 
-### In a browser based project?
-
-Here's an example for a browser based project using ECMAScript modules with oAuth v1 signature and using the `fetch` API to send requests.
+Here's an example using ECMAScript modules with oAuth v1 signature and using the `fetch` API to send requests.
 
 In a file, expose this function:
 
@@ -65,49 +63,6 @@ import { getAllEnvVars } from '@clevercloud/client/esm/api/v2/application.js';
 import { sendToApi } from '../send-to-api.js';
 
 const envVars = await getAllEnvVars({ id: oid, appId }).then(sendToApi);
-```
-
-NOTE: It returns a promise, you may want to use `await` with it.
-
-### In a Node.js based project?
-
-Here's an example for a Node.js based project using CommonJS modules with oAuth v1 signature and using the `fetch` module to send requests.
-
-In a file, expose this function:
-
-```js
-const { addOauthHeader } = require('@clevercloud/client/cjs/oauth.js');
-const { prefixUrl } = require('@clevercloud/client/cjs/prefix-url.js');
-const { request } = require('@clevercloud/client/cjs/request.fetch.js');
-
-module.exports.sendToApi = function sendToApi (requestParams) {
-
-  // load and cache config and tokens
-  const API_HOST = 'https://api.clever-cloud.com'
-  const tokens = {
-    OAUTH_CONSUMER_KEY: 'your OAUTH_CONSUMER_KEY',
-    OAUTH_CONSUMER_SECRET: 'your OAUTH_CONSUMER_SECRET',
-    API_OAUTH_TOKEN: 'your API_OAUTH_TOKEN',
-    API_OAUTH_TOKEN_SECRET: 'your API_OAUTH_TOKEN_SECRET',
-  }
-
-  return Promise.resolve(requestParams)
-    .then(prefixUrl(API_HOST))
-    .then(addOauthHeader(tokens))
-    .then(request);
-    // chain a .catch() call here if you need to handle some errors or maybe redirect to login
-}
-```
-
-NOTE: If your project relies on a specific REST library (axios, request...), you'll have to write your own request function to plug the params to your lib instead of using `request.fetch.js`.
-
-Then, in any file of your app, require the service, call the function on it and add a `.then(sendToApi)` like this:
-
-```js
-const application = require('@clevercloud/client/cjs/api/v2/application.js');
-const { sendToApi } = require('../send-to-api.js');
-
-const envVars = await application.getAllEnvVars({ id: oid, appId }).then(sendToApi);
 ```
 
 NOTE: It returns a promise, you may want to use `await` with it.
@@ -171,16 +126,6 @@ npm run clean-cache
 ```
 
 If you want to generate a client for the preprod, you can change the config of `OPEN_API_URL` in `tasks/config.js`.
-
-## How can I generate a REST client for Node.js (CommonJS modules) from the API?
-
-To generate a REST client for Node.js (CommonJS modules) from the API, run this command:
-
-```sh
-npm run generate-cjs-modules
-```
-
-NOTE: This is based on the ECMAScript modules in `esm`. Be sure to generate the ESM client before running this.
 
 ## Logs stream and event API stream (v2)
 
