@@ -1,6 +1,5 @@
 {
   "include": ["esm/**/*"],
-  "exclude": ["esm/api/**/*", "esm/legacy-client.*.js"],
   "compilerOptions": {
     "target": "ES2022",
     "lib": [
