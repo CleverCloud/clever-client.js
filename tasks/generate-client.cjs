@@ -404,9 +404,16 @@ async function generateClient () {
     for (const service in codeByService) {
       const filepath = pathJoin(generatedClientPath, `${_.kebabCase(service)}.js`);
       const rawContents = codeByService[service];
-      const rawContentsWithImports = `import { pickNonNull } from '../../pick-non-null.js';
+
+      const imports = [];
+      if (rawContents.includes('pickNonNull(')) {
+        imports.push('import { pickNonNull } from \'../../pick-non-null.js\';');
+      }
+
+      const rawContentsWithImports = `${imports.join('\n')}
     
-    ${rawContents}`;
+       ${rawContents}`;
+
       const contents = formatCode(rawContentsWithImports);
       await fs.appendFile(filepath, contents, 'utf8');
     }
