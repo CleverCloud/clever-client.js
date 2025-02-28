@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as addon from './addon.js';
 import * as addonProvider from './addon-provider.js';
 import * as application from './application.js';

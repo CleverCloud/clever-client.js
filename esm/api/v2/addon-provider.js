@@ -1,9 +1,12 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * GET /organisations/{id}/addonproviders
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getAll(params) {
   // no multipath for /self or /organisations/{id}
@@ -21,6 +24,7 @@ export function getAll(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function create(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -38,6 +42,7 @@ export function create(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.providerId
+ * @returns {Promise<RequestParams>}
  */
 export function remove(params) {
   // no multipath for /self or /organisations/{id}
@@ -55,6 +60,7 @@ export function remove(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.providerId
+ * @returns {Promise<RequestParams>}
  */
 export function get(params) {
   // no multipath for /self or /organisations/{id}
@@ -73,6 +79,7 @@ export function get(params) {
  * @param {String} params.id
  * @param {String} params.providerId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function update(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -90,6 +97,7 @@ export function update(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.providerId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllFeatures(params) {
   // no multipath for /self or /organisations/{id}
@@ -108,6 +116,7 @@ export function getAllFeatures(params) {
  * @param {String} params.id
  * @param {String} params.providerId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function addFeature(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -126,6 +135,7 @@ export function addFeature(params, body) {
  * @param {String} params.id
  * @param {String} params.providerId
  * @param {String} params.featureId
+ * @returns {Promise<RequestParams>}
  */
 export function removeFeature(params) {
   // no multipath for /self or /organisations/{id}
@@ -143,6 +153,7 @@ export function removeFeature(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.providerId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllPlans(params) {
   // no multipath for /self or /organisations/{id}
@@ -161,6 +172,7 @@ export function getAllPlans(params) {
  * @param {String} params.id
  * @param {String} params.providerId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function addPlan(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -179,6 +191,7 @@ export function addPlan(params, body) {
  * @param {String} params.id
  * @param {String} params.providerId
  * @param {String} params.planId
+ * @returns {Promise<RequestParams>}
  */
 export function removePlan(params) {
   // no multipath for /self or /organisations/{id}
@@ -197,6 +210,7 @@ export function removePlan(params) {
  * @param {String} params.id
  * @param {String} params.providerId
  * @param {String} params.planId
+ * @returns {Promise<RequestParams>}
  */
 export function getPlan(params) {
   // no multipath for /self or /organisations/{id}
@@ -216,6 +230,7 @@ export function getPlan(params) {
  * @param {String} params.providerId
  * @param {String} params.planId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updatePlan(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -235,6 +250,7 @@ export function updatePlan(params, body) {
  * @param {String} params.providerId
  * @param {String} params.planId
  * @param {String} params.featureName
+ * @returns {Promise<RequestParams>}
  */
 export function removePlanFeature(params) {
   // no multipath for /self or /organisations/{id}
@@ -255,6 +271,7 @@ export function removePlanFeature(params) {
  * @param {String} params.planId
  * @param {String} params.featureName
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updatePlanFeature(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -272,6 +289,7 @@ export function updatePlanFeature(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.providerId
+ * @returns {Promise<RequestParams>}
  */
 export function getSsoData(params) {
   // no multipath for /self or /organisations/{id}
@@ -289,6 +307,7 @@ export function getSsoData(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.providerId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllTags(params) {
   // no multipath for /self or /organisations/{id}
@@ -306,6 +325,7 @@ export function getAllTags(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.providerId
+ * @returns {Promise<RequestParams>}
  */
 export function addBetaTester(params) {
   // no multipath for /self or /organisations/{id}

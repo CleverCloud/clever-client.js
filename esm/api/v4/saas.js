@@ -1,10 +1,14 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * DELETE /saas/grafana/{id}
  * @param {Object} params
+ * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
-export function deleteGrafanaOrganisation() {
+export function deleteGrafanaOrganisation(params) {
   // no multipath for /self or /organisations/{id}
   return Promise.resolve({
     method: 'delete',
@@ -19,6 +23,7 @@ export function deleteGrafanaOrganisation() {
  * GET /saas/grafana/{id}
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getGrafanaOrganisation(params) {
   // no multipath for /self or /organisations/{id}
@@ -34,8 +39,10 @@ export function getGrafanaOrganisation(params) {
 /**
  * POST /saas/grafana/{id}
  * @param {Object} params
+ * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
-export function createGrafanaOrganisation() {
+export function createGrafanaOrganisation(params) {
   // no multipath for /self or /organisations/{id}
   return Promise.resolve({
     method: 'post',
@@ -49,8 +56,10 @@ export function createGrafanaOrganisation() {
 /**
  * POST /saas/grafana/{id}/reset
  * @param {Object} params
+ * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
-export function resetGrafanaOrganisation() {
+export function resetGrafanaOrganisation(params) {
   // no multipath for /self or /organisations/{id}
   return Promise.resolve({
     method: 'post',

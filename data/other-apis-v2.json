@@ -204,7 +204,8 @@
         "x-service": "log",
         "x-function": "deleteDrain",
         "parameters": [
-          { "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } }
+          { "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "drainId", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
         "responses": {
           "default": {
