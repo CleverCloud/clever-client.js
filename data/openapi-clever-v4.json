@@ -216,7 +216,8 @@
       "delete": {
         "operationId": "deletePaymentMethod",
         "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "methodId", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
         "responses": {
           "200": {
