@@ -53,7 +53,7 @@ async function patchOpenapi (openapi, patchLocalPath) {
 
   const patch = await fs.readJson(patchLocalPath);
 
-  patch.forEach(({ path, method, 'x-service': service, 'x-function': functionName, responses }) => {
+  patch.forEach(({ path, method, 'x-service': service, 'x-function': functionName, responses, parameters }) => {
     if (service != null) {
       openapi.paths[path][method]['x-service'] = service;
     }
@@ -62,6 +62,9 @@ async function patchOpenapi (openapi, patchLocalPath) {
     }
     if (responses != null) {
       openapi.paths[path][method].responses = responses;
+    }
+    if (parameters != null) {
+      openapi.paths[path][method].parameters = parameters;
     }
   });
 
@@ -377,12 +380,18 @@ async function generateClient () {
   const apiLocalCachePathV4Ovd = pathJoin(CACHE_PATH, 'openapi-clever-v4-ovd.json');
   const openapiV4Ovd = await getOpenapi(apiLocalCachePathV4Ovd, OPEN_API_URL_V4_OVD);
 
+  // patch remote OpenAPI v4 with custom properties
+  const patchLocalPathV4 = './data/patch-for-openapi-clever-v4.json';
+  const patchedApiV4 = await patchOpenapi(openapiV4Ovd, patchLocalPathV4);
+  const patchedApiLocalCachePathV4 = pathJoin(CACHE_PATH, 'openapi-clever-v4.patched.json');
+  await fs.outputJson(patchedApiLocalCachePathV4, patchedApiV4, { spaces: 2 });
+
   // extract all routes
   const routesV2 = getRoutes(patchedApiV2, 'v2');
   const allRoutes = [
     ...routesV2,
     ...getRoutes(openapiV4, 'v4'),
-    ...getRoutes(openapiV4Ovd, 'v4'),
+    ...getRoutes(patchedApiV4, 'v4'),
   ];
 
   // group "/self" with "/organisations/{id}"
