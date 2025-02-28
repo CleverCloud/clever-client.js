@@ -1,6 +1,10 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /logs/{appId}
  * @param {Object} params
  * @param {String} params.appId
@@ -11,6 +15,7 @@ import { pickNonNull } from '../../pick-non-null.js';
  * @param {String} params.before
  * @param {String} params.filter
  * @param {String} params.deployment_id
+ * @returns {Promise<RequestParams>}
  */
 export function getOldLogs(params) {
   // no multipath for /self or /organisations/{id}
@@ -27,6 +32,7 @@ export function getOldLogs(params) {
  * GET /logs/{appId}/drains
  * @param {Object} params
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getDrains(params) {
   // no multipath for /self or /organisations/{id}
@@ -44,6 +50,7 @@ export function getDrains(params) {
  * @param {Object} params
  * @param {String} params.appId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createDrain(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -60,6 +67,8 @@ export function createDrain(params, body) {
  * DELETE /logs/{appId}/drains/{drainId}
  * @param {Object} params
  * @param {String} params.appId
+ * @param {String} params.drainId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteDrain(params) {
   // no multipath for /self or /organisations/{id}
@@ -78,6 +87,7 @@ export function deleteDrain(params) {
  * @param {String} params.appId
  * @param {String} params.drainId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updateDrainState(params, body) {
   // no multipath for /self or /organisations/{id}

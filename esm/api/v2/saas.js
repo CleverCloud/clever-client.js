@@ -1,9 +1,12 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * GET /saas/heptapod/{id}/heptapod.host/price-prevision
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getHeptapodPricePrevision(params) {
   // no multipath for /self or /organisations/{id}

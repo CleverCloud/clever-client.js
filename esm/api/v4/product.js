@@ -1,8 +1,10 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * GET /products/zones
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getAllZones() {
   // no multipath for /self or /organisations/{id}
@@ -17,10 +19,9 @@ export function getAllZones() {
 
 /**
  * GET /products/zones
- * @param {Object} params
- * @param {String} params.undefined
+ * @returns {Promise<RequestParams>}
  */
-export function listZones(params) {
+export function listZones() {
   // no multipath for /self or /organisations/{id}
   return Promise.resolve({
     method: 'get',
@@ -35,6 +36,7 @@ export function listZones(params) {
  * GET /products/zones/{zoneName}
  * @param {Object} params
  * @param {String} params.zoneName
+ * @returns {Promise<RequestParams>}
  */
 export function getZone(params) {
   // no multipath for /self or /organisations/{id}

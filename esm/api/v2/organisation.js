@@ -1,8 +1,12 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /organisations
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getAll() {
   // no multipath for /self or /organisations/{id}
@@ -19,6 +23,7 @@ export function getAll() {
  * POST /organisations
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function create(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -36,6 +41,7 @@ export function create(params, body) {
  * DELETE /self
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function remove(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -53,6 +59,7 @@ export function remove(params) {
  * GET /self
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function get(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -71,6 +78,7 @@ export function get(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function update(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -90,6 +98,7 @@ export function update(params, body) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updateApplicationTags(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -107,6 +116,7 @@ export function updateApplicationTags(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function listApplicationUDPRedirections(params) {
   // no multipath for /self or /organisations/{id}
@@ -125,6 +135,7 @@ export function listApplicationUDPRedirections(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createApplicationUDPRedirection(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -144,6 +155,7 @@ export function createApplicationUDPRedirection(params, body) {
  * @param {String} params.appId
  * @param {String} params.sourcePort
  * @param {String} params.namespace
+ * @returns {Promise<RequestParams>}
  */
 export function deleteApplicationUDPRedirection(params) {
   // no multipath for /self or /organisations/{id}
@@ -162,6 +174,7 @@ export function deleteApplicationUDPRedirection(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updateAvatar(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -183,6 +196,7 @@ export function updateAvatar(params, body) {
  * @param {String} params.from
  * @param {String} params.to
  * @param {String} params.for
+ * @returns {Promise<RequestParams>}
  */
 export function getConsumptions(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -200,6 +214,7 @@ export function getConsumptions(params) {
  * GET /self/credits
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getCredits(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -217,6 +232,7 @@ export function getCredits(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.limit
+ * @returns {Promise<RequestParams>}
  */
 export function getAllDeployments(params) {
   // no multipath for /self or /organisations/{id}
@@ -234,6 +250,7 @@ export function getAllDeployments(params) {
  * GET /self/instances
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getAllInstances(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -250,6 +267,7 @@ export function getAllInstances(params) {
  * GET /organisations/{id}/members
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getAllMembers(params) {
   // no multipath for /self or /organisations/{id}
@@ -268,6 +286,7 @@ export function getAllMembers(params) {
  * @param {String} params.id
  * @param {String} params.invitationKey
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function addMember(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -285,6 +304,7 @@ export function addMember(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.userId
+ * @returns {Promise<RequestParams>}
  */
 export function removeMemeber(params) {
   // no multipath for /self or /organisations/{id}
@@ -303,6 +323,7 @@ export function removeMemeber(params) {
  * @param {String} params.id
  * @param {String} params.userId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updateMember(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -319,6 +340,7 @@ export function updateMember(params, body) {
  * GET /organisations/{id}/namespaces
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getNamespaces(params) {
   // no multipath for /self or /organisations/{id}
@@ -336,6 +358,7 @@ export function getNamespaces(params) {
  * GET /self/payment-info
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getPaymentInfo(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -352,6 +375,7 @@ export function getPaymentInfo(params) {
  * GET /organisations/{id}/payments/billings
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getInvoicesByOrga(params) {
   // no multipath for /self or /organisations/{id}
@@ -369,6 +393,7 @@ export function todo_getInvoicesByOrga(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_buyDropsByOrga(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -385,6 +410,7 @@ export function todo_buyDropsByOrga(params, body) {
  * GET /organisations/{id}/payments/billings/unpaid
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getUnpaidInvoicesByOrga_1(params) {
   // no multipath for /self or /organisations/{id}
@@ -403,6 +429,7 @@ export function todo_getUnpaidInvoicesByOrga_1(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.bid
+ * @returns {Promise<RequestParams>}
  */
 export function deletePurchaseOrder(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -421,6 +448,7 @@ export function deletePurchaseOrder(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.bid
+ * @returns {Promise<RequestParams>}
  */
 export function getInvoice(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -440,6 +468,7 @@ export function getInvoice(params) {
  * @param {String} params.id
  * @param {String} params.bid
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function choosePaymentProvider(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -458,6 +487,7 @@ export function choosePaymentProvider(params, body) {
  * @param {String} params.id
  * @param {String} params.bid
  * @param {String} params.token
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getPdfInvoiceByOrga(params) {
   // no multipath for /self or /organisations/{id}
@@ -475,6 +505,7 @@ export function todo_getPdfInvoiceByOrga(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.price
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getPriceWithTaxByOrga(params) {
   // no multipath for /self or /organisations/{id}
@@ -491,6 +522,7 @@ export function todo_getPriceWithTaxByOrga(params) {
  * GET /organisations/{id}/payments/methods
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getUnpaidInvoicesByOrga(params) {
   // no multipath for /self or /organisations/{id}
@@ -508,6 +540,7 @@ export function todo_getUnpaidInvoicesByOrga(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_addPaymentMethodByOrga(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -524,6 +557,7 @@ export function todo_addPaymentMethodByOrga(params, body) {
  * GET /organisations/{id}/payments/methods/default
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getDefaultMethodByOrga(params) {
   // no multipath for /self or /organisations/{id}
@@ -541,6 +575,7 @@ export function todo_getDefaultMethodByOrga(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_setDefaultMethodByOrga(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -558,6 +593,7 @@ export function todo_setDefaultMethodByOrga(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.type
+ * @returns {Promise<RequestParams>}
  */
 export function getNewSetupIntent(params) {
   // no multipath for /self or /organisations/{id}
@@ -575,6 +611,7 @@ export function getNewSetupIntent(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.mId
+ * @returns {Promise<RequestParams>}
  */
 export function todo_deletePaymentMethodByOrga(params) {
   // no multipath for /self or /organisations/{id}
@@ -592,6 +629,7 @@ export function todo_deletePaymentMethodByOrga(params) {
  * GET /self/payments/monthlyinvoice
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getMonthlyInvoice(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -609,6 +647,7 @@ export function getMonthlyInvoice(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_setMaxCreditsPerMonthByOrga(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -625,6 +664,7 @@ export function todo_setMaxCreditsPerMonthByOrga(params, body) {
  * DELETE /organisations/{id}/payments/recurring
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_deleteRecurrentPaymentByOrga(params) {
   // no multipath for /self or /organisations/{id}
@@ -641,6 +681,7 @@ export function todo_deleteRecurrentPaymentByOrga(params) {
  * GET /organisations/{id}/payments/recurring
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getRecurrentPaymentByOrga(params) {
   // no multipath for /self or /organisations/{id}
@@ -657,6 +698,7 @@ export function todo_getRecurrentPaymentByOrga(params) {
  * GET /organisations/{id}/payments/tokens/stripe
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getStripeToken(params) {
   // no multipath for /self or /organisations/{id}
@@ -671,7 +713,7 @@ export function getStripeToken(params) {
 
 /**
  * GET /self/payments/billings
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSelfInvoices() {
   // no multipath for /self or /organisations/{id}
@@ -688,6 +730,7 @@ export function todo_getSelfInvoices() {
  * POST /self/payments/billings
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_buySelfDrops(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -705,6 +748,7 @@ export function todo_buySelfDrops(params, body) {
  * @param {Object} params
  * @param {String} params.bid
  * @param {String} params.token
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSelfPdfInvoiceById(params) {
   // no multipath for /self or /organisations/{id}
@@ -721,6 +765,7 @@ export function todo_getSelfPdfInvoiceById(params) {
  * GET /self/payments/fullprice/{price}
  * @param {Object} params
  * @param {String} params.price
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSelfPriceWithTax(params) {
   // no multipath for /self or /organisations/{id}
@@ -735,7 +780,7 @@ export function todo_getSelfPriceWithTax(params) {
 
 /**
  * GET /self/payments/methods
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSelfPaymentMethods() {
   // no multipath for /self or /organisations/{id}
@@ -752,6 +797,7 @@ export function todo_getSelfPaymentMethods() {
  * POST /self/payments/methods
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_addSelfPaymentMethod(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -766,7 +812,7 @@ export function todo_addSelfPaymentMethod(params, body) {
 
 /**
  * GET /self/payments/methods/default
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSelfDefaultMethod() {
   // no multipath for /self or /organisations/{id}
@@ -783,6 +829,7 @@ export function todo_getSelfDefaultMethod() {
  * PUT /self/payments/methods/default
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_setSelfDefaultMethod(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -799,6 +846,7 @@ export function todo_setSelfDefaultMethod(params, body) {
  * DELETE /self/payments/methods/{mId}
  * @param {Object} params
  * @param {String} params.mId
+ * @returns {Promise<RequestParams>}
  */
 export function todo_deleteSelfCard(params) {
   // no multipath for /self or /organisations/{id}
@@ -815,6 +863,7 @@ export function todo_deleteSelfCard(params) {
  * PUT /self/payments/monthlyinvoice/maxcredit
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_setSelfMaxCreditsPerMonth(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -829,7 +878,7 @@ export function todo_setSelfMaxCreditsPerMonth(params, body) {
 
 /**
  * DELETE /self/payments/recurring
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_deleteSelfRecurrentPayment() {
   // no multipath for /self or /organisations/{id}
@@ -844,7 +893,7 @@ export function todo_deleteSelfRecurrentPayment() {
 
 /**
  * GET /self/payments/recurring
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSelfRecurrentPayment() {
   // no multipath for /self or /organisations/{id}
@@ -859,7 +908,7 @@ export function todo_getSelfRecurrentPayment() {
 
 /**
  * GET /self/payments/tokens/stripe
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSelfStripeToken() {
   // no multipath for /self or /organisations/{id}

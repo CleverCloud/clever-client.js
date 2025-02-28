@@ -1,9 +1,12 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * GET /networkgroups/organisations/{ownerId}/networkgroups
  * @param {Object} params
  * @param {String} params.ownerId
+ * @returns {Promise<RequestParams>}
  */
 export function listNetworkGroups(params) {
   // no multipath for /self or /organisations/{id}
@@ -21,6 +24,7 @@ export function listNetworkGroups(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createNetworkGroup(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -38,6 +42,7 @@ export function createNetworkGroup(params, body) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteNetworkGroup(params) {
   // no multipath for /self or /organisations/{id}
@@ -55,6 +60,7 @@ export function deleteNetworkGroup(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
+ * @returns {Promise<RequestParams>}
  */
 export function getNetworkGroup(params) {
   // no multipath for /self or /organisations/{id}
@@ -73,6 +79,7 @@ export function getNetworkGroup(params) {
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createNetworkGroupExternalPeer(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -91,6 +98,7 @@ export function createNetworkGroupExternalPeer(params, body) {
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
  * @param {String} params.peerId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteNetworkGroupExternalPeer(params) {
   // no multipath for /self or /organisations/{id}
@@ -108,6 +116,7 @@ export function deleteNetworkGroupExternalPeer(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
+ * @returns {Promise<RequestParams>}
  */
 export function listNetworkGroupMembers(params) {
   // no multipath for /self or /organisations/{id}
@@ -126,6 +135,7 @@ export function listNetworkGroupMembers(params) {
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createNetworkGroupMember(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -144,6 +154,7 @@ export function createNetworkGroupMember(params, body) {
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
  * @param {String} params.memberId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteNetworkGroupMember(params) {
   // no multipath for /self or /organisations/{id}
@@ -162,6 +173,7 @@ export function deleteNetworkGroupMember(params) {
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
  * @param {String} params.memberId
+ * @returns {Promise<RequestParams>}
  */
 export function getNetworkGroupMember(params) {
   // no multipath for /self or /organisations/{id}
@@ -179,6 +191,7 @@ export function getNetworkGroupMember(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
+ * @returns {Promise<RequestParams>}
  */
 export function listNetworkGroupPeers(params) {
   // no multipath for /self or /organisations/{id}
@@ -197,6 +210,7 @@ export function listNetworkGroupPeers(params) {
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
  * @param {String} params.peerId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteNetworkGroupPeer(params) {
   // no multipath for /self or /organisations/{id}
@@ -215,6 +229,7 @@ export function deleteNetworkGroupPeer(params) {
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
  * @param {String} params.peerId
+ * @returns {Promise<RequestParams>}
  */
 export function getNetworkGroupPeer(params) {
   // no multipath for /self or /organisations/{id}
@@ -233,6 +248,7 @@ export function getNetworkGroupPeer(params) {
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
  * @param {String} params.peerId
+ * @returns {Promise<RequestParams>}
  */
 export function getNetworkGroupWireGuardConfiguration(params) {
   // no multipath for /self or /organisations/{id}
@@ -251,6 +267,7 @@ export function getNetworkGroupWireGuardConfiguration(params) {
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
  * @param {String} params.peerId
+ * @returns {Promise<RequestParams>}
  */
 export function getNetworkGroupWireGuardConfigurationStream(params) {
   // no multipath for /self or /organisations/{id}
@@ -268,6 +285,7 @@ export function getNetworkGroupWireGuardConfigurationStream(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.networkGroupId
+ * @returns {Promise<RequestParams>}
  */
 export function getNetworkGroupStream(params) {
   // no multipath for /self or /organisations/{id}

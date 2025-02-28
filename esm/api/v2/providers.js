@@ -1,8 +1,10 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * GET /providers/es-addon/tmp/services-flavors
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getEsOptionsFlavors() {
   // no multipath for /self or /organisations/{id}
@@ -20,6 +22,7 @@ export function getEsOptionsFlavors() {
  * @param {Object} params
  * @param {String} params.providerId
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function getAddon(params) {
   // no multipath for /self or /organisations/{id}

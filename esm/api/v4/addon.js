@@ -1,9 +1,14 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /addon-providers/addon-matomo/addons/{matomoId}
  * @param {Object} params
  * @param {String} params.matomoId
+ * @returns {Promise<RequestParams>}
  */
 export function getMatomo(params) {
   // no multipath for /self or /organisations/{id}
@@ -20,6 +25,7 @@ export function getMatomo(params) {
  * GET /addon-providers/addon-matomo/token/validate
  * @param {Object} params
  * @param {String} params.keycloakToken
+ * @returns {Promise<RequestParams>}
  */
 export function getMatomoVHosts(params) {
   // no multipath for /self or /organisations/{id}
@@ -37,6 +43,7 @@ export function getMatomoVHosts(params) {
  * @param {Object} params
  * @param {String} params.appOnly
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createTardis(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -53,6 +60,7 @@ export function createTardis(params, body) {
  * DELETE /addon-providers/addon-tardis/addons/{tardisId}
  * @param {Object} params
  * @param {String} params.tardisId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteTardis(params) {
   // no multipath for /self or /organisations/{id}
@@ -69,6 +77,7 @@ export function deleteTardis(params) {
  * GET /addon-providers/addon-tardis/addons/{tardisId}
  * @param {Object} params
  * @param {String} params.tardisId
+ * @returns {Promise<RequestParams>}
  */
 export function getTardis(params) {
   // no multipath for /self or /organisations/{id}
@@ -86,6 +95,7 @@ export function getTardis(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.tardisId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteTardisAddonWithOwner(params) {
   // no multipath for /self or /organisations/{id}
@@ -103,6 +113,7 @@ export function deleteTardisAddonWithOwner(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.tardisId
+ * @returns {Promise<RequestParams>}
  */
 export function getTardisAddonWithOwner(params) {
   // no multipath for /self or /organisations/{id}
@@ -120,6 +131,7 @@ export function getTardisAddonWithOwner(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.tardisId
+ * @returns {Promise<RequestParams>}
  */
 export function revertTardisAddonDeletion(params) {
   // no multipath for /self or /organisations/{id}
@@ -138,6 +150,7 @@ export function revertTardisAddonDeletion(params) {
  * @param {String} params.ownerId
  * @param {String} params.tardisId
  * @param {String} params.tokenId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteTardisAddonToken(params) {
   // no multipath for /self or /organisations/{id}
@@ -156,6 +169,7 @@ export function deleteTardisAddonToken(params) {
  * @param {String} params.ownerId
  * @param {String} params.tardisId
  * @param {String} params.tokenId
+ * @returns {Promise<RequestParams>}
  */
 export function getTardisToken(params) {
   // no multipath for /self or /organisations/{id}
@@ -176,6 +190,7 @@ export function getTardisToken(params) {
  * @param {String} params.onlyId
  * @param {String} params.from
  * @param {String} params.to
+ * @returns {Promise<RequestParams>}
  */
 export function listTardisAddonTokens(params) {
   // no multipath for /self or /organisations/{id}
@@ -194,6 +209,7 @@ export function listTardisAddonTokens(params) {
  * @param {String} params.ownerId
  * @param {String} params.tardisId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createTardisToken(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -212,6 +228,7 @@ export function createTardisToken(params, body) {
  * @param {String} params.ownerId
  * @param {String} params.from
  * @param {String} params.to
+ * @returns {Promise<RequestParams>}
  */
 export function listTardisAddons(params) {
   // no multipath for /self or /organisations/{id}
@@ -230,6 +247,7 @@ export function listTardisAddons(params) {
  * @param {String} params.ownerId
  * @param {String} params.appOnly
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createTardisAddonWithOwner(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -246,6 +264,7 @@ export function createTardisAddonWithOwner(params, body) {
  * POST /addon-providers/addon-tardis/token/revoke
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function revokeAndDeleteTardisAddonToken(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -262,6 +281,7 @@ export function revokeAndDeleteTardisAddonToken(params, body) {
  * GET /addon-providers/config-provider/addons/{configurationProviderId}
  * @param {Object} params
  * @param {String} params.configurationProviderId
+ * @returns {Promise<RequestParams>}
  */
 export function getConfigProvider(params) {
   // no multipath for /self or /organisations/{id}
@@ -278,6 +298,7 @@ export function getConfigProvider(params) {
  * GET /addon-providers/config-provider/addons/{configurationProviderId}/env
  * @param {Object} params
  * @param {String} params.configurationProviderId
+ * @returns {Promise<RequestParams>}
  */
 export function getConfigProviderEnv(params) {
   // no multipath for /self or /organisations/{id}
@@ -295,6 +316,7 @@ export function getConfigProviderEnv(params) {
  * @param {Object} params
  * @param {String} params.configurationProviderId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updateConfigProviderEnv(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -311,6 +333,7 @@ export function updateConfigProviderEnv(params, body) {
  * POST /v2/providers/addon-matomo/resources
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createMatomo(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -327,6 +350,7 @@ export function createMatomo(params, body) {
  * DELETE /v2/providers/addon-matomo/resources/{matomoId}
  * @param {Object} params
  * @param {String} params.matomoId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteMatomo(params) {
   // no multipath for /self or /organisations/{id}
@@ -343,6 +367,7 @@ export function deleteMatomo(params) {
  * POST /v2/providers/addon-tardis/resources
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createTardisAddon(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -359,6 +384,7 @@ export function createTardisAddon(params, body) {
  * DELETE /v2/providers/addon-tardis/resources/{tardisId}
  * @param {Object} params
  * @param {String} params.tardisId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteTardisAddon(params) {
   // no multipath for /self or /organisations/{id}
@@ -375,6 +401,7 @@ export function deleteTardisAddon(params) {
  * GET /v2/providers/addon-tardis/resources/{tardisId}
  * @param {Object} params
  * @param {String} params.tardisId
+ * @returns {Promise<RequestParams>}
  */
 export function getTardisAddon(params) {
   // no multipath for /self or /organisations/{id}

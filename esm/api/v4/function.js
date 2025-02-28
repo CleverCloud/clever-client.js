@@ -1,9 +1,12 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * GET /functions/organisations/{ownerId}/functions
  * @param {Object} params
  * @param {String} params.ownerId
+ * @returns {Promise<RequestParams>}
  */
 export function list(params) {
   // no multipath for /self or /organisations/{id}
@@ -21,6 +24,7 @@ export function list(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function create(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -38,6 +42,7 @@ export function create(params, body) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.functionId
+ * @returns {Promise<RequestParams>}
  */
 export function _delete(params) {
   // no multipath for /self or /organisations/{id}
@@ -55,6 +60,7 @@ export function _delete(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.functionId
+ * @returns {Promise<RequestParams>}
  */
 export function get(params) {
   // no multipath for /self or /organisations/{id}
@@ -73,6 +79,7 @@ export function get(params) {
  * @param {String} params.ownerId
  * @param {String} params.functionId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function update(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -90,6 +97,7 @@ export function update(params, body) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.functionId
+ * @returns {Promise<RequestParams>}
  */
 export function listDeployments(params) {
   // no multipath for /self or /organisations/{id}
@@ -108,6 +116,7 @@ export function listDeployments(params) {
  * @param {String} params.ownerId
  * @param {String} params.functionId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createDeployment(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -126,6 +135,7 @@ export function createDeployment(params, body) {
  * @param {String} params.ownerId
  * @param {String} params.functionId
  * @param {String} params.deploymentId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteDeployment(params) {
   // no multipath for /self or /organisations/{id}
@@ -144,6 +154,7 @@ export function deleteDeployment(params) {
  * @param {String} params.ownerId
  * @param {String} params.functionId
  * @param {String} params.deploymentId
+ * @returns {Promise<RequestParams>}
  */
 export function getDeployment(params) {
   // no multipath for /self or /organisations/{id}
@@ -162,6 +173,7 @@ export function getDeployment(params) {
  * @param {String} params.ownerId
  * @param {String} params.functionId
  * @param {String} params.deploymentId
+ * @returns {Promise<RequestParams>}
  */
 export function triggerDeployment(params) {
   // no multipath for /self or /organisations/{id}
@@ -181,6 +193,7 @@ export function triggerDeployment(params) {
  * @param {String} params.functionId
  * @param {String} params.deploymentId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updateDeployment(params, body) {
   // no multipath for /self or /organisations/{id}
