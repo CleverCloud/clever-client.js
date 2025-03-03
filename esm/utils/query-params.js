@@ -13,9 +13,11 @@ export function fillUrlSearchParams (url, queryParams, formatValue) {
     .entries(queryParams || {})
     .forEach(([k, v]) => {
       const values = Array.isArray(v) ? v : [v];
-      values.forEach((value) => {
-        url.searchParams.append(k, formatValue ? formatValue(value) : String(value));
-      });
+      values
+        .filter((value) => value != null)
+        .forEach((value) => {
+          url.searchParams.append(k, formatValue ? formatValue(value) : String(value));
+        });
     });
 }
 
