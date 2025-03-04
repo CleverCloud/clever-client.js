@@ -3,6 +3,9 @@
 ## Unreleased (????-??-??)
 
 ...
+## 9.2.1 (2025-03-04)
+
+* fix: fix grafana management methods
 
 ## 9.2.0 (2025-02-26)
 
