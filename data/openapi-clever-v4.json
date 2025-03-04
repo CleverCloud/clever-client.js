@@ -655,6 +655,9 @@
       },
       "post": {
         "operationId": "createGrafanaOrganisation",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -667,6 +670,9 @@
       },
       "delete": {
         "operationId": "deleteGrafanaOrganisation",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -681,6 +687,9 @@
     "/saas/grafana/{id}/reset": {
       "post": {
         "operationId": "resetGrafanaOrganisation",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
         "responses": {
           "200": {
             "content": {
