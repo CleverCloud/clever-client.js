@@ -3,8 +3,9 @@ import { pickNonNull } from '../../pick-non-null.js';
 /**
  * DELETE /saas/grafana/{id}
  * @param {Object} params
+ * @param {String} params.id
  */
-export function deleteGrafanaOrganisation() {
+export function deleteGrafanaOrganisation(params) {
   // no multipath for /self or /organisations/{id}
   return Promise.resolve({
     method: 'delete',
@@ -34,8 +35,9 @@ export function getGrafanaOrganisation(params) {
 /**
  * POST /saas/grafana/{id}
  * @param {Object} params
+ * @param {String} params.id
  */
-export function createGrafanaOrganisation() {
+export function createGrafanaOrganisation(params) {
   // no multipath for /self or /organisations/{id}
   return Promise.resolve({
     method: 'post',
@@ -49,8 +51,9 @@ export function createGrafanaOrganisation() {
 /**
  * POST /saas/grafana/{id}/reset
  * @param {Object} params
+ * @param {String} params.id
  */
-export function resetGrafanaOrganisation() {
+export function resetGrafanaOrganisation(params) {
   // no multipath for /self or /organisations/{id}
   return Promise.resolve({
     method: 'post',
