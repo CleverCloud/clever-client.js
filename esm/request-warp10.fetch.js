@@ -1,11 +1,18 @@
 import { fetchWithTimeout } from './request.fetch-with-timeout.js';
+import { fillUrlSearchParams } from './utils/query-params.js';
 
+/**
+ * @typedef {import('./request-warp10.types.js').Warp10RequestParams} Warp10RequestParams
+ */
+
+/**
+ * @param {Warp10RequestParams} requestParams
+ * @returns {Promise<Response>}
+ */
 export async function execWarpscript (requestParams) {
 
   const url = new URL(requestParams.url);
-  Object
-    .entries(requestParams.queryParams || {})
-    .forEach(([k, v]) => url.searchParams.set(k, v));
+  fillUrlSearchParams(url, requestParams.queryParams);
 
   return fetchWithTimeout(url.toString(), { ...requestParams, mode: 'cors' }, requestParams.timeout)
     .then((response) => {

@@ -1,11 +1,16 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /organisations/{id}/applications
  * GET /self/applications
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.instanceId
+ * @returns {Promise<RequestParams>}
  */
 export function getAll(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -24,6 +29,7 @@ export function getAll(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function create(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -42,6 +48,7 @@ export function create(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function remove(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -60,6 +67,7 @@ export function remove(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function get(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -79,6 +87,7 @@ export function get(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function update(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -97,6 +106,7 @@ export function update(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllLinkedAddons(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -116,6 +126,7 @@ export function getAllLinkedAddons(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function linkAddon(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -134,6 +145,7 @@ export function linkAddon(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllEnvVarsForAddons(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -153,6 +165,7 @@ export function getAllEnvVarsForAddons(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function unlinkAddon(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -172,6 +185,7 @@ export function unlinkAddon(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function setBranch(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -190,6 +204,7 @@ export function setBranch(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllBranches(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -209,6 +224,7 @@ export function getAllBranches(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function setBuildInstanceFlavor(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -227,6 +243,7 @@ export function setBuildInstanceFlavor(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllDependencies(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -245,6 +262,7 @@ export function getAllDependencies(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllEnvVarsForDependencies(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -264,6 +282,7 @@ export function getAllEnvVarsForDependencies(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {String} params.dependencyId
+ * @returns {Promise<RequestParams>}
  */
 export function removeDependency(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -283,6 +302,7 @@ export function removeDependency(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {String} params.dependencyId
+ * @returns {Promise<RequestParams>}
  */
 export function addDependency(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -300,6 +320,7 @@ export function addDependency(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getApplicationDependentsByOrgaAndAppId(params) {
   // no multipath for /self or /organisations/{id}
@@ -321,6 +342,7 @@ export function todo_getApplicationDependentsByOrgaAndAppId(params) {
  * @param {String} params.limit
  * @param {String} params.offset
  * @param {String} params.action
+ * @returns {Promise<RequestParams>}
  */
 export function getAllDeployments(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -340,6 +362,7 @@ export function getAllDeployments(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {String} params.deploymentId
+ * @returns {Promise<RequestParams>}
  */
 export function getDeployment(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -359,6 +382,7 @@ export function getDeployment(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {String} params.deploymentId
+ * @returns {Promise<RequestParams>}
  */
 export function cancelDeployment(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -377,6 +401,7 @@ export function cancelDeployment(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllEnvVars(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -396,6 +421,7 @@ export function getAllEnvVars(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updateAllEnvVars(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -415,6 +441,7 @@ export function updateAllEnvVars(params, body) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {String} params.envName
+ * @returns {Promise<RequestParams>}
  */
 export function removeEnvVar(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -435,6 +462,7 @@ export function removeEnvVar(params) {
  * @param {String} params.appId
  * @param {String} params.envName
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updateEnvVar(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -453,6 +481,7 @@ export function updateEnvVar(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllExposedEnvVars(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -472,6 +501,7 @@ export function getAllExposedEnvVars(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updateAllExposedEnvVars(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -490,6 +520,7 @@ export function updateAllExposedEnvVars(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function undeploy(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -510,6 +541,7 @@ export function undeploy(params) {
  * @param {String} params.appId
  * @param {String} params.deploymentId
  * @param {String} params.withDeleted
+ * @returns {Promise<RequestParams>}
  */
 export function getAllInstances(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -530,6 +562,7 @@ export function getAllInstances(params) {
  * @param {String} params.appId
  * @param {String} params.commit
  * @param {String} params.useCache
+ * @returns {Promise<RequestParams>}
  */
 export function redeploy(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -549,6 +582,7 @@ export function redeploy(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {String} params.instanceId
+ * @returns {Promise<RequestParams>}
  */
 export function getInstance(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -567,6 +601,7 @@ export function getInstance(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllTags(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -586,6 +621,7 @@ export function getAllTags(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {String} params.tag
+ * @returns {Promise<RequestParams>}
  */
 export function removeTag(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -605,6 +641,7 @@ export function removeTag(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {String} params.tag
+ * @returns {Promise<RequestParams>}
  */
 export function updateTag(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -622,6 +659,7 @@ export function updateTag(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getTcpRedirs(params) {
   // no multipath for /self or /organisations/{id}
@@ -640,6 +678,7 @@ export function getTcpRedirs(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function addTcpRedir(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -659,6 +698,7 @@ export function addTcpRedir(params, body) {
  * @param {String} params.appId
  * @param {String} params.sourcePort
  * @param {String} params.namespace
+ * @returns {Promise<RequestParams>}
  */
 export function removeTcpRedir(params) {
   // no multipath for /self or /organisations/{id}
@@ -677,6 +717,7 @@ export function removeTcpRedir(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllDomains(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -695,6 +736,7 @@ export function getAllDomains(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function unmarkFavouriteDomain(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -713,6 +755,7 @@ export function unmarkFavouriteDomain(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function getFavouriteDomain(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -732,6 +775,7 @@ export function getFavouriteDomain(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function markFavouriteDomain(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -751,6 +795,7 @@ export function markFavouriteDomain(params, body) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {String} params.domain
+ * @returns {Promise<RequestParams>}
  */
 export function removeDomain(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -770,6 +815,7 @@ export function removeDomain(params) {
  * @param {String} params.id
  * @param {String} params.appId
  * @param {String} params.domain
+ * @returns {Promise<RequestParams>}
  */
 export function addDomain(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -786,6 +832,7 @@ export function addDomain(params) {
  * GET /self/applications/{appId}/dependents
  * @param {Object} params
  * @param {String} params.appId
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSelfApplicationDependents(params) {
   // no multipath for /self or /organisations/{id}

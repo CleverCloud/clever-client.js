@@ -1,6 +1,10 @@
 // This code is adapted from https://github.com/Azure/fetch-event-source
 // MIT License Copyright (c) Microsoft Corporation.
 
+/**
+ * @typedef {import('./streams.types.js').SseMessage} SseMessage
+ */
+
 const CONTROL_CHARS = {
   NewLine: 10,
   CarriageReturn: 13,
@@ -10,9 +14,10 @@ const CONTROL_CHARS = {
 
 /**
  * Converts a ReadableStream into a callback pattern.
- * @param stream The input ReadableStream.
- * @param signal An AbortSignal instance (required for Node.js versions before 18.6)
- * @param onChunk A function that will be called on each new byte chunk in the stream.
+ *
+ * @param {ReadableStream<any>} stream The input ReadableStream.
+ * @param {AbortSignal} signal An AbortSignal instance (required for Node.js versions before 18.6)
+ * @param {(message: SseMessage) => void} onMessage A function that will be called on each message.
  * @returns {Promise<void>} A promise that will be resolved when the stream closes.
  */
 export async function readBytes (stream, signal, onMessage) {
@@ -29,7 +34,7 @@ export async function readBytes (stream, signal, onMessage) {
     signal.addEventListener('abort', () => {
       reader.cancel(signal.reason)
         // Firefox doesn't like when we cancel a reader that is already closed but we can ignore this
-        .catch(() => null);
+        .catch(() => {});
     }, { once: true });
 
     let shouldContinue = true;
@@ -44,16 +49,17 @@ export async function readBytes (stream, signal, onMessage) {
 }
 
 /**
- * Parses arbitary byte chunks into EventSource line buffers.
+ * Parses arbitrary byte chunks into EventSource line buffers.
  * Each line should be of the format "field: value" and ends with \r, \n, or \r\n.
- * @param onLine A function that will be called on each new EventSource line.
- * @returns A function that should be called for each incoming byte chunk.
+ * @param {(line: Uint8Array, fieldLength: number) => void} onLine A function that will be called on each new EventSource line.
+ * @returns {(chunk: Uint8Array) => void} A function that should be called for each incoming byte chunk.
  */
 export function getLines (onLine) {
+  /** @type {Uint8Array} */
   let buffer;
-  // current read position
+  /** @type {number} current read position */
   let position;
-  // length of the `field` portion of the line
+  /** @type {number} length of the `field` portion of the line */
   let fieldLength;
   let discardTrailingNewline = false;
 
@@ -93,6 +99,7 @@ export function getLines (onLine) {
               fieldLength = position - lineStart;
             }
             break;
+          // @ts-ignore
           case CONTROL_CHARS.CarriageReturn:
             discardTrailingNewline = true;
           // eslint-disable-next-line no-fallthrough
@@ -132,8 +139,8 @@ export function getLines (onLine) {
 
 /**
  * Parses line buffers into EventSourceMessages.
- * @param onMessage A function that will be called on each message.
- * @returns A function that should be called for each incoming line buffer.
+ * @param {(message: SseMessage) => void} onMessage A function that will be called on each message.
+ * @returns {(line: Uint8Array, fieldLength: number) => void} A function that should be called for each incoming line buffer.
  */
 export function getMessages (onMessage) {
   let message = newMessage();
@@ -183,6 +190,11 @@ export function getMessages (onMessage) {
   };
 }
 
+/**
+ * @param {Uint8Array} a
+ * @param {Uint8Array} b
+ * @returns {Uint8Array}
+ */
 function concat (a, b) {
   const res = new Uint8Array(a.length + b.length);
   res.set(a);
@@ -190,6 +202,9 @@ function concat (a, b) {
   return res;
 }
 
+/**
+ * @returns {SseMessage}
+ */
 function newMessage () {
   // data, event, and id must be initialized to empty strings:
   // https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation

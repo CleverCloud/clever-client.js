@@ -16,20 +16,19 @@
     "client"
   ],
   "files": [
-    "/cjs/",
     "/esm/"
   ],
   "scripts": {
     "clean-cache": "node tasks/clean-cache.cjs",
-    "generate-client": "npm run clean-cache && npm run generate-client-from-openapi && npm run generate-cjs-modules",
+    "generate-client": "npm run clean-cache && npm run generate-client-from-openapi",
     "generate-client-from-openapi": "node tasks/generate-client.cjs",
-    "generate-cjs-modules": "rm -rf cjs && babel esm --out-dir cjs && echo '{\"module\":\"commonjs\"}' > cjs/package.json",
     "lint": "eslint esm tasks/*.cjs test",
     "lint:fix": "eslint --fix esm tasks/*.cjs test",
-    "prepack": "npm run lint && npm run test-wtr && npm run generate-client",
+    "prepack": "npm run lint && npm run typecheck && npm run test-wtr && npm run generate-client",
     "test-wtr": "web-test-runner",
     "test-wtr:watch": "web-test-runner --watch",
-    "test-mocha": "mocha -t 60000 test/application-logs.spec.js"
+    "test-mocha": "mocha -t 60000 test/application-logs.spec.js",
+    "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
     "component-emitter": "^1.3.0",
@@ -38,14 +37,12 @@
   "peerDependencies": {
     "baconjs": "^0.7.83",
     "eventsource": "^1.0.7",
-    "superagent": "^6.1.0",
     "ws": "^7.4.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.13.0",
-    "@babel/core": "^7.13.8",
-    "@babel/plugin-transform-modules-commonjs": "^7.13.8",
     "@esm-bundle/chai": "^4.3.3",
+    "@types/component-emitter": "^1.2.14",
+    "@types/eventsource": "^1.1.15",
     "@web/test-runner": "^0.18.1",
     "@web/test-runner-mocha": "^0.9.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
@@ -58,7 +55,8 @@
     "lodash": "^4.17.21",
     "mocha": "^10.2.0",
     "prettier": "^2.2.1",
-    "superagent": "^6.1.0"
+    "superagent": "^6.1.0",
+    "typescript": "^5.7.3"
   },
   "volta": {
     "node": "22.7.0"

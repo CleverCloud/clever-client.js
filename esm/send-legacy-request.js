@@ -1,3 +1,4 @@
+// @ts-nocheck
 export function sendLegacyRequest (sendCallback) {
 
   const req = {};

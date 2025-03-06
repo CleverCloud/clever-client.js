@@ -1,17 +1,17 @@
-interface Orga {
+export interface Orga {
   id: string;
   name: string;
   cleverEnterprise: boolean;
   isTrusted: boolean;
 }
 
-interface PaymentMethod {
+export interface PaymentMethod {
   type: string;
   isDefault: boolean;
   isExpired: boolean;
 }
 
-interface PaymentMethodError {
+export interface PaymentMethodError {
   type: number;
   orga?: Orga;
 }

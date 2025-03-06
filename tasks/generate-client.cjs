@@ -53,7 +53,7 @@ async function patchOpenapi (openapi, patchLocalPath) {
 
   const patch = await fs.readJson(patchLocalPath);
 
-  patch.forEach(({ path, method, 'x-service': service, 'x-function': functionName, responses }) => {
+  patch.forEach(({ path, method, 'x-service': service, 'x-function': functionName, responses, parameters }) => {
     if (service != null) {
       openapi.paths[path][method]['x-service'] = service;
     }
@@ -62,6 +62,9 @@ async function patchOpenapi (openapi, patchLocalPath) {
     }
     if (responses != null) {
       openapi.paths[path][method].responses = responses;
+    }
+    if (parameters != null) {
+      openapi.paths[path][method].parameters = parameters;
     }
   });
 
@@ -176,24 +179,27 @@ function buildClientCode (route) {
   const paramsJsDoc = parameters.map(({ name }) => `* @param {String} params.${name}`);
   const bodyJsDoc = (requestBody != null) ? '* @param {Object} body' : null;
 
+  const functionArgs = (requestBody != null)
+    ? 'params, body'
+    : parameters.length > 0
+      ? 'params'
+      : '';
+
+  const hasArgs = functionArgs.length > 0;
+
   const comments = [
     '/**',
     ...urlComments,
-    '* @param {Object} params',
+    hasArgs ? '* @param {Object} params' : null,
     ...paramsJsDoc,
     bodyJsDoc,
+    '* @returns {Promise<RequestParams>}',
     '*/',
   ].filter((a) => a != null).join('\n');
 
   const multipathIf = isMultipath
     ? 'const urlBase = (params.id == null) ? \'/self\' : `/organisations/${params.id}`'
     : '// no multipath for /self or /organisations/{id}';
-
-  const functionArgs = (requestBody != null)
-    ? 'params, body'
-    : parameters.length > 0
-      ? 'params'
-      : '';
 
   const rawPath = isMultipath
     ? '/' + version + '${urlBase}' + path[0].replace('/organisations/{id}', '').replace(/\{(.*?)\}/g, '${params.$1}')
@@ -323,6 +329,7 @@ function buildLegacyClientCode (allRoutes, codeByService) {
 
   const legacyClientCode = [];
 
+  legacyClientCode.push('// @ts-nocheck');
   for (const service in codeByService) {
     legacyClientCode.push(`import * as ${service} from './${_.kebabCase(service)}.js'`);
   }
@@ -373,12 +380,18 @@ async function generateClient () {
   const apiLocalCachePathV4Ovd = pathJoin(CACHE_PATH, 'openapi-clever-v4-ovd.json');
   const openapiV4Ovd = await getOpenapi(apiLocalCachePathV4Ovd, OPEN_API_URL_V4_OVD);
 
+  // patch remote OpenAPI v4 with custom properties
+  const patchLocalPathV4 = './data/patch-for-openapi-clever-v4.json';
+  const patchedApiV4 = await patchOpenapi(openapiV4Ovd, patchLocalPathV4);
+  const patchedApiLocalCachePathV4 = pathJoin(CACHE_PATH, 'openapi-clever-v4.patched.json');
+  await fs.outputJson(patchedApiLocalCachePathV4, patchedApiV4, { spaces: 2 });
+
   // extract all routes
   const routesV2 = getRoutes(patchedApiV2, 'v2');
   const allRoutes = [
     ...routesV2,
     ...getRoutes(openapiV4, 'v4'),
-    ...getRoutes(openapiV4Ovd, 'v4'),
+    ...getRoutes(patchedApiV4, 'v4'),
   ];
 
   // group "/self" with "/organisations/{id}"
@@ -404,9 +417,22 @@ async function generateClient () {
     for (const service in codeByService) {
       const filepath = pathJoin(generatedClientPath, `${_.kebabCase(service)}.js`);
       const rawContents = codeByService[service];
-      const rawContentsWithImports = `import { pickNonNull } from '../../pick-non-null.js';
+
+      const imports = [];
+      if (rawContents.includes('pickNonNull(')) {
+        imports.push('import { pickNonNull } from \'../../pick-non-null.js\';');
+      }
+
+      const typedef = `/**
+       * @typedef {import('../../request.types.js').RequestParams} RequestParams
+       */`;
+
+      const rawContentsWithImports = `${imports.join('\n')}
+      
+       ${typedef}
     
-    ${rawContents}`;
+       ${rawContents}`;
+
       const contents = formatCode(rawContentsWithImports);
       await fs.appendFile(filepath, contents, 'utf8');
     }

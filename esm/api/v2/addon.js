@@ -1,10 +1,15 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /organisations/{id}/addons
  * GET /self/addons
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getAll(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -23,6 +28,7 @@ export function getAll(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function create(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -41,6 +47,7 @@ export function create(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function preorder(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -59,6 +66,7 @@ export function preorder(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function remove(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -77,6 +85,7 @@ export function remove(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function get(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -96,6 +105,7 @@ export function get(params) {
  * @param {String} params.id
  * @param {String} params.addonId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function update(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -114,6 +124,7 @@ export function update(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function getLinkedApplications(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -132,6 +143,7 @@ export function getLinkedApplications(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllEnvVars(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -151,6 +163,7 @@ export function getAllEnvVars(params) {
  * @param {String} params.addonId
  * @param {String} params.deploymentId
  * @param {String} params.withDeleted
+ * @returns {Promise<RequestParams>}
  */
 export function getAllInstances(params) {
   // no multipath for /self or /organisations/{id}
@@ -169,6 +182,7 @@ export function getAllInstances(params) {
  * @param {String} params.id
  * @param {String} params.addonId
  * @param {String} params.instanceId
+ * @returns {Promise<RequestParams>}
  */
 export function getInstance(params) {
   // no multipath for /self or /organisations/{id}
@@ -186,6 +200,7 @@ export function getInstance(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllMigrations(params) {
   // no multipath for /self or /organisations/{id}
@@ -204,6 +219,7 @@ export function getAllMigrations(params) {
  * @param {String} params.id
  * @param {String} params.addonId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function updateMigration(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -222,6 +238,7 @@ export function updateMigration(params, body) {
  * @param {String} params.id
  * @param {String} params.addonId
  * @param {String} params.planId
+ * @returns {Promise<RequestParams>}
  */
 export function todo_preorderMigration(params) {
   // no multipath for /self or /organisations/{id}
@@ -240,6 +257,7 @@ export function todo_preorderMigration(params) {
  * @param {String} params.id
  * @param {String} params.addonId
  * @param {String} params.migrationId
+ * @returns {Promise<RequestParams>}
  */
 export function abortMigration(params) {
   // no multipath for /self or /organisations/{id}
@@ -258,6 +276,7 @@ export function abortMigration(params) {
  * @param {String} params.id
  * @param {String} params.addonId
  * @param {String} params.migrationId
+ * @returns {Promise<RequestParams>}
  */
 export function getMigration(params) {
   // no multipath for /self or /organisations/{id}
@@ -276,6 +295,7 @@ export function getMigration(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function getSsoData(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -294,6 +314,7 @@ export function getSsoData(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function getAllTags(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -313,6 +334,7 @@ export function getAllTags(params) {
  * @param {String} params.id
  * @param {String} params.addonId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function replaceAddonTags(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -332,6 +354,7 @@ export function replaceAddonTags(params, body) {
  * @param {String} params.id
  * @param {String} params.addonId
  * @param {String} params.tag
+ * @returns {Promise<RequestParams>}
  */
 export function removeTag(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -351,6 +374,7 @@ export function removeTag(params) {
  * @param {String} params.id
  * @param {String} params.addonId
  * @param {String} params.tag
+ * @returns {Promise<RequestParams>}
  */
 export function addTag(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -368,6 +392,7 @@ export function addTag(params) {
  * @param {Object} params
  * @param {String} params.addonId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_changeSelfAddonPlanByAddonId(params, body) {
   // no multipath for /self or /organisations/{id}
