@@ -25,27 +25,15 @@ export interface DomainDiag extends DomainDiagInfo {
   diagDetails: Array<RecordDiag>;
 }
 
-export type DiagSummary =
-  | "managed"
-  | "no-config"
-  | "invalid"
-  | "incomplete"
-  | "valid";
+export type DiagSummary = 'managed' | 'no-config' | 'invalid' | 'incomplete' | 'valid';
 
 export interface RecordDiag {
-  code:
-    | "valid-a"
-    | "unknown-a"
-    | "missing-a"
-    | "suggested-cname"
-    | "unknown-cname"
-    | "missing-cname"
-    | "test-only";
+  code: 'valid-a' | 'unknown-a' | 'missing-a' | 'suggested-cname' | 'unknown-cname' | 'missing-cname' | 'test-only';
   record?: Record;
 }
 
 export type Record = {
-  source: "resolved" | "expected";
-  type: "CNAME" | "A";
+  source: 'resolved' | 'expected';
+  type: 'CNAME' | 'A';
   value: string;
 };

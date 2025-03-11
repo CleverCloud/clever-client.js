@@ -6,21 +6,12 @@ import { diagDomainConfig } from '../esm/utils/diag-domain-config.js';
  */
 
 const HOSTNAME_EXAMPLE = 'example.com';
-const HOSTNAME_TESTONLY
-  = 'app-f6ed4d4f-9668-4a03-a6fd-b297c15fc825.cleverapps.io';
+const HOSTNAME_TESTONLY = 'app-f6ed4d4f-9668-4a03-a6fd-b297c15fc825.cleverapps.io';
 
 const A_RECORDS = ['50.100.150.200', '50.100.150.201', '50.100.150.202'];
 const A_RECORDS_WITH_ONE_MISSING = ['50.100.150.201', '50.100.150.202'];
-const A_RECORDS_WITH_ONE_UNKNOWN = [
-  '50.100.150.210',
-  '50.100.150.201',
-  '50.100.150.202',
-];
-const A_RECORDS_WITH_ALL_UNKNOWN = [
-  '50.100.150.210',
-  '50.100.150.211',
-  '50.100.150.212',
-];
+const A_RECORDS_WITH_ONE_UNKNOWN = ['50.100.150.210', '50.100.150.201', '50.100.150.202'];
+const A_RECORDS_WITH_ALL_UNKNOWN = ['50.100.150.210', '50.100.150.211', '50.100.150.212'];
 
 const CNAME_RECORD = 'cname.example.com.';
 const ALTERNATIVE_CNAME_RECORD = 'example.net.';
@@ -42,11 +33,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
       /** @type {ResolveDnsResult} */
       const resolveDnsResult = { aRecords: A_RECORDS, cnameRecords: [] };
 
-      const domainDiagResults = diagDomainConfig(
-        domainInfo,
-        resolveDnsResult,
-        loadBalancerDnsConfig,
-      );
+      const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
       expect(domainDiagResults).to.deep.equal({
         hostname: domainInfo.hostname,
@@ -78,11 +65,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
         cnameRecords: [],
       };
 
-      const domainDiagResults = diagDomainConfig(
-        domainInfo,
-        resolveDnsResult,
-        loadBalancerDnsConfig,
-      );
+      const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
       expect(domainDiagResults).to.deep.equal({
         hostname: domainInfo.hostname,
@@ -118,11 +101,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
         cnameRecords: [],
       };
 
-      const domainDiagResults = diagDomainConfig(
-        domainInfo,
-        resolveDnsResult,
-        loadBalancerDnsConfig,
-      );
+      const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
       expect(domainDiagResults).to.deep.equal({
         hostname: domainInfo.hostname,
@@ -166,11 +145,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
         cnameRecords: [],
       };
 
-      const domainDiagResults = diagDomainConfig(
-        domainInfo,
-        resolveDnsResult,
-        loadBalancerDnsConfig,
-      );
+      const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
       expect(domainDiagResults).to.deep.equal({
         hostname: domainInfo.hostname,
@@ -199,11 +174,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
       /** @type {ResolveDnsResult} */
       const resolveDnsResult = { aRecords: [], cnameRecords: [] };
 
-      const domainDiagResults = diagDomainConfig(
-        domainInfo,
-        resolveDnsResult,
-        loadBalancerDnsConfig,
-      );
+      const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
       expect(domainDiagResults).to.deep.equal({
         hostname: domainInfo.hostname,
@@ -245,11 +216,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
           cnameRecords: [CNAME_RECORD],
         };
 
-        const domainDiagResults = diagDomainConfig(
-          domainInfo,
-          resolveDnsResult,
-          loadBalancerDnsConfig,
-        );
+        const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
         expect(domainDiagResults).to.deep.equal({
           hostname: domainInfo.hostname,
@@ -293,11 +260,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
           cnameRecords: [ALTERNATIVE_CNAME_RECORD],
         };
 
-        const domainDiagResults = diagDomainConfig(
-          domainInfo,
-          resolveDnsResult,
-          loadBalancerDnsConfig,
-        );
+        const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
         expect(domainDiagResults).to.deep.equal({
           hostname: domainInfo.hostname,
@@ -365,11 +328,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
           cnameRecords: [ALTERNATIVE_CNAME_RECORD],
         };
 
-        const domainDiagResults = diagDomainConfig(
-          domainInfo,
-          resolveDnsResult,
-          loadBalancerDnsConfig,
-        );
+        const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
         expect(domainDiagResults).to.deep.equal({
           hostname: domainInfo.hostname,
@@ -429,11 +388,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
           cnameRecords: [ALTERNATIVE_CNAME_RECORD],
         };
 
-        const domainDiagResults = diagDomainConfig(
-          domainInfo,
-          resolveDnsResult,
-          loadBalancerDnsConfig,
-        );
+        const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
         expect(domainDiagResults).to.deep.equal({
           hostname: domainInfo.hostname,
@@ -493,11 +448,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
           cnameRecords: [ALTERNATIVE_CNAME_RECORD],
         };
 
-        const domainDiagResults = diagDomainConfig(
-          domainInfo,
-          resolveDnsResult,
-          loadBalancerDnsConfig,
-        );
+        const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
         expect(domainDiagResults).to.deep.equal({
           hostname: domainInfo.hostname,
@@ -535,11 +486,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
           cnameRecords: [],
         };
 
-        const domainDiagResults = diagDomainConfig(
-          domainInfo,
-          resolveDnsResult,
-          loadBalancerDnsConfig,
-        );
+        const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
         expect(domainDiagResults).to.deep.equal({
           hostname: domainInfo.hostname,
@@ -591,11 +538,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
           cnameRecords: [],
         };
 
-        const domainDiagResults = diagDomainConfig(
-          domainInfo,
-          resolveDnsResult,
-          loadBalancerDnsConfig,
-        );
+        const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
         expect(domainDiagResults).to.deep.equal({
           hostname: domainInfo.hostname,
@@ -655,11 +598,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
           cnameRecords: [],
         };
 
-        const domainDiagResults = diagDomainConfig(
-          domainInfo,
-          resolveDnsResult,
-          loadBalancerDnsConfig,
-        );
+        const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
         expect(domainDiagResults).to.deep.equal({
           hostname: domainInfo.hostname,
@@ -735,11 +674,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
           cnameRecords: [],
         };
 
-        const domainDiagResults = diagDomainConfig(
-          domainInfo,
-          resolveDnsResult,
-          loadBalancerDnsConfig,
-        );
+        const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
         expect(domainDiagResults).to.deep.equal({
           hostname: domainInfo.hostname,
@@ -791,11 +726,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
           cnameRecords: [],
         };
 
-        const domainDiagResults = diagDomainConfig(
-          domainInfo,
-          resolveDnsResult,
-          loadBalancerDnsConfig,
-        );
+        const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
         expect(domainDiagResults).to.deep.equal({
           hostname: domainInfo.hostname,
@@ -829,11 +760,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
       /** @type {null} */
       const loadBalancerDnsConfig = null;
 
-      const domainDiagResults = diagDomainConfig(
-        domainInfo,
-        resolveDnsResult,
-        loadBalancerDnsConfig,
-      );
+      const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
       expect(domainDiagResults).to.deep.equal({
         hostname: domainInfo.hostname,

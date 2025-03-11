@@ -14,7 +14,7 @@ export class ResourceLogStream extends CleverCloudSse {
   /**
    * @param {ResourceLogsStreamParams} params
    */
-  constructor ({ apiHost, tokens, ownerId, addonId, retryConfiguration, connectionTimeout, ...options }) {
+  constructor({ apiHost, tokens, ownerId, addonId, retryConfiguration, connectionTimeout, ...options }) {
     super(apiHost, tokens, retryConfiguration ?? {}, connectionTimeout);
     this._ownerId = ownerId;
     this._addonId = addonId;
@@ -30,7 +30,7 @@ export class ResourceLogStream extends CleverCloudSse {
    *
    * @returns {URL}
    */
-  getUrl () {
+  getUrl() {
     return this.buildUrl(`/v4/logs/organisations/${this._ownerId}/resources/${this._addonId}/logs`, {
       ...this._options,
       // in case of pause() then resume():
@@ -42,7 +42,7 @@ export class ResourceLogStream extends CleverCloudSse {
   /**
    * compute the number of events to retrieve, based on elements already received
    */
-  _computedLimit () {
+  _computedLimit() {
     if (this._options.limit == null) {
       return null;
     }
@@ -57,7 +57,7 @@ export class ResourceLogStream extends CleverCloudSse {
    * @param {any} data
    * @returns {any}
    */
-  transform (event, data) {
+  transform(event, data) {
     if (event !== RESOURCE_LOG_EVENT_NAME) {
       return data;
     }
@@ -78,7 +78,7 @@ export class ResourceLogStream extends CleverCloudSse {
    * @param {(log:ResourceLog) => void} fn which handle logs
    * @returns {this}
    */
-  onLog (fn) {
+  onLog(fn) {
     return this.on(RESOURCE_LOG_EVENT_NAME, (event) => {
       // @ts-ignore
       fn(event.data);

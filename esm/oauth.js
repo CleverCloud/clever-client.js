@@ -9,9 +9,8 @@ import OAuth from 'oauth-1.0a';
  * @param {OAuthTokens} tokens
  * @returns {(requestParams: RequestParams) => Promise<RequestParams>}
  */
-export function addOauthHeader (tokens) {
+export function addOauthHeader(tokens) {
   return async function (requestParams) {
-
     const { method, url, headers, queryParams } = requestParams;
 
     // @ts-ignore
@@ -22,7 +21,7 @@ export function addOauthHeader (tokens) {
       },
       signature_method: 'HMAC-SHA512',
       // @ts-ignore
-      async hash_function (baseString, key) {
+      async hash_function(baseString, key) {
         const encoder = new TextEncoder();
         const encodedText = encoder.encode(baseString);
         const encodedKey = encoder.encode(key);
@@ -35,11 +34,7 @@ export function addOauthHeader (tokens) {
           ['sign'],
         );
 
-        const result = await globalThis.crypto.subtle.sign(
-          { name: 'HMAC', hash: 'SHA-512' },
-          cryptoKey,
-          encodedText,
-        );
+        const result = await globalThis.crypto.subtle.sign({ name: 'HMAC', hash: 'SHA-512' }, cryptoKey, encodedText);
 
         let binary = '';
         const bytes = new Uint8Array(result);

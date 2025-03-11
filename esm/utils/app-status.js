@@ -15,9 +15,8 @@ export const STATUSES = {
  * @param {Array<{state: 'UP'}>} instances
  * @returns {string}
  */
-export function getStatus (app, deployments, instances) {
-
-  const lastDeploymentState = (deployments != null && deployments[0] != null) ? deployments[0].state : null;
+export function getStatus(app, deployments, instances) {
+  const lastDeploymentState = deployments != null && deployments[0] != null ? deployments[0].state : null;
   const upInstancesCount = (instances || []).filter(({ state }) => state === 'UP').length;
 
   if (app.state === 'SHOULD_BE_DOWN') {
@@ -43,13 +42,11 @@ export function getStatus (app, deployments, instances) {
           return STATUSES.RESTARTING;
         }
       }
-    }
-    else if (lastDeploymentState === 'FAIL') {
+    } else if (lastDeploymentState === 'FAIL') {
       if (upInstancesCount > 0) {
         return STATUSES.RESTART_FAILED;
       }
-    }
-    else {
+    } else {
       if (upInstancesCount > 0) {
         return STATUSES.RUNNING;
       }

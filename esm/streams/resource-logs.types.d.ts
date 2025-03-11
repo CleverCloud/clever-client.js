@@ -1,5 +1,5 @@
-import type { OAuthTokens } from "../oauth.types.js";
-import type { RetryConfiguration } from "./streams.types.js";
+import type { OAuthTokens } from '../oauth.types.js';
+import type { RetryConfiguration } from './streams.types.js';
 
 export interface ResourceLogsStreamParams extends ResourceLogStreamOptions {
   apiHost: string;

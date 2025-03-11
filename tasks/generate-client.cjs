@@ -10,8 +10,7 @@ const superagent = require('superagent');
 
 const { CACHE_PATH, OPEN_API_URL_V2, OPEN_API_URL_V4_OVD } = require('./config.cjs');
 
-async function getOpenapi (localCachePath, remoteUrl) {
-
+async function getOpenapi(localCachePath, remoteUrl) {
   const existsInCache = await fs.pathExists(localCachePath);
 
   if (existsInCache) {
@@ -26,14 +25,11 @@ async function getOpenapi (localCachePath, remoteUrl) {
   return openapi;
 }
 
-function orValue (value, valueIfEmptyString) {
-  return (value == null || value === '')
-    ? valueIfEmptyString
-    : value;
+function orValue(value, valueIfEmptyString) {
+  return value == null || value === '' ? valueIfEmptyString : value;
 }
 
-async function mergeOpenapi (openapi, otherApiLocalPath) {
-
+async function mergeOpenapi(openapi, otherApiLocalPath) {
   const otherApi = await fs.readJson(otherApiLocalPath);
 
   openapi.paths = {
@@ -49,8 +45,7 @@ async function mergeOpenapi (openapi, otherApiLocalPath) {
   return openapi;
 }
 
-async function patchOpenapi (openapi, patchLocalPath) {
-
+async function patchOpenapi(openapi, patchLocalPath) {
   const patch = await fs.readJson(patchLocalPath);
 
   patch.forEach(({ path, method, 'x-service': service, 'x-function': functionName, responses, parameters }) => {
@@ -71,22 +66,20 @@ async function patchOpenapi (openapi, patchLocalPath) {
   return openapi;
 }
 
-function getRoutes (openapi, version) {
-
+function getRoutes(openapi, version) {
   return _.chain(openapi.paths)
     .entries()
     .flatMap(([rawPath, methodsAndConfig]) => {
-
       // Historically, the path did not contain the version as a prefix
       // If the version is in the path, we remove it
-      const path = (rawPath.startsWith('/' + version + '/'))
+      const path = rawPath.startsWith('/' + version + '/')
         ? rawPath.replace(new RegExp('^/' + version + '/'), '/')
         : rawPath;
 
       return _.chain(methodsAndConfig)
         .entries()
         .flatMap(([method, config]) => {
-          return ({ version, path, method, ...config });
+          return { version, path, method, ...config };
         })
         .value();
     })
@@ -100,8 +93,7 @@ function getRoutes (openapi, version) {
     .value();
 }
 
-function mergeSimilarRoutes (allRoutes) {
-
+function mergeSimilarRoutes(allRoutes) {
   const orgaToSelf = {};
   const selfToOrga = {};
 
@@ -110,7 +102,7 @@ function mergeSimilarRoutes (allRoutes) {
     .forEach((route) => {
       const selfPath = route.path.replace(/^\/organisations\/\{id\}/, '/self');
       const correspondingSelfRoute = allRoutes.find((sr) => {
-        return (route.method === sr.method) && (selfPath === sr.path) && (route.functionName === sr.functionName);
+        return route.method === sr.method && selfPath === sr.path && route.functionName === sr.functionName;
       });
       if (correspondingSelfRoute) {
         orgaToSelf[route.path] = selfPath;
@@ -131,7 +123,7 @@ function mergeSimilarRoutes (allRoutes) {
     });
 }
 
-function getAcceptHeader (responses) {
+function getAcceptHeader(responses) {
   const res = responses['200'] || responses.default;
   if (res == null || res.content == null) {
     return {};
@@ -140,7 +132,7 @@ function getAcceptHeader (responses) {
   return { Accept: acceptValues.join(', ') };
 }
 
-function getContentTypeHeader (requestBody) {
+function getContentTypeHeader(requestBody) {
   if (requestBody?.content != null) {
     const bodyContentTypes = Object.keys(requestBody.content);
     if (bodyContentTypes.length > 1) {
@@ -157,33 +149,24 @@ function getContentTypeHeader (requestBody) {
   return {};
 }
 
-function getQueryParams (parameters) {
+function getQueryParams(parameters) {
+  const queryParams = parameters.filter((param) => param.in === 'query').map(({ name }) => `'${name}'`);
 
-  const queryParams = parameters
-    .filter((param) => param.in === 'query')
-    .map(({ name }) => `'${name}'`);
-
-  return (queryParams.length > 0)
+  return queryParams.length > 0
     ? `queryParams: pickNonNull(params, [${queryParams.join(', ')}]),`
     : '// no query params';
 }
 
-function buildClientCode (route) {
-
+function buildClientCode(route) {
   const { method, version, path, parameters = [], responses, requestBody, functionName } = route;
 
   const isMultipath = Array.isArray(path);
 
-  const urlComments = (isMultipath ? path : [path])
-    .map((p) => `* ${method.toLocaleUpperCase()} ${p}`);
+  const urlComments = (isMultipath ? path : [path]).map((p) => `* ${method.toLocaleUpperCase()} ${p}`);
   const paramsJsDoc = parameters.map(({ name }) => `* @param {String} params.${name}`);
-  const bodyJsDoc = (requestBody != null) ? '* @param {Object} body' : null;
+  const bodyJsDoc = requestBody != null ? '* @param {Object} body' : null;
 
-  const functionArgs = (requestBody != null)
-    ? 'params, body'
-    : parameters.length > 0
-      ? 'params'
-      : '';
+  const functionArgs = requestBody != null ? 'params, body' : parameters.length > 0 ? 'params' : '';
 
   const hasArgs = functionArgs.length > 0;
 
@@ -195,10 +178,12 @@ function buildClientCode (route) {
     bodyJsDoc,
     '* @returns {Promise<RequestParams>}',
     '*/',
-  ].filter((a) => a != null).join('\n');
+  ]
+    .filter((a) => a != null)
+    .join('\n');
 
   const multipathIf = isMultipath
-    ? 'const urlBase = (params.id == null) ? \'/self\' : `/organisations/${params.id}`'
+    ? "const urlBase = (params.id == null) ? '/self' : `/organisations/${params.id}`"
     : '// no multipath for /self or /organisations/{id}';
 
   const rawPath = isMultipath
@@ -218,13 +203,9 @@ function buildClientCode (route) {
 
   const queryParams = getQueryParams(parameters);
 
-  const body = (requestBody != null)
-    ? 'body,'
-    : '// no body';
+  const body = requestBody != null ? 'body,' : '// no body';
 
-  const safeFunctionName = (functionName === 'delete')
-    ? '_delete'
-    : functionName;
+  const safeFunctionName = functionName === 'delete' ? '_delete' : functionName;
 
   const code = `
     ${comments}
@@ -243,8 +224,7 @@ function buildClientCode (route) {
   return { ...route, code };
 }
 
-function mergeCodesByService (allRoutesWithCode) {
-
+function mergeCodesByService(allRoutesWithCode) {
   return _.chain(allRoutesWithCode)
     .groupBy((r) => r.service)
     .mapValues((allRoutesForService) => {
@@ -260,7 +240,7 @@ function mergeCodesByService (allRoutesWithCode) {
     .value();
 }
 
-function formatCode (rawContents) {
+function formatCode(rawContents) {
   // format (also parse and check what is generated)
   return prettier.format(rawContents, {
     parser: 'babel',
@@ -271,10 +251,10 @@ function formatCode (rawContents) {
   });
 }
 
-function buildLecagyClientSnippet (obj) {
+function buildLecagyClientSnippet(obj) {
   return _.flatMap(obj, (value, key) => {
     const safeKey = JSON.stringify(key);
-    return (typeof value === 'string')
+    return typeof value === 'string'
       ? `${safeKey}: ${value},`
       : [`${safeKey}: {`, ...buildLecagyClientSnippet(value), '},'];
   });
@@ -282,45 +262,36 @@ function buildLecagyClientSnippet (obj) {
 
 // sort keys so we can easily diff client
 // HTTP methods first, then _, then the rest
-function sortLegacyClientObject (object) {
+function sortLegacyClientObject(object) {
   return _.chain(object)
     .toPairs()
     .sortBy(([key]) => {
-      return ['get', 'put', 'post', 'delete'].includes(key)
-        ? `$${key}`
-        : key;
+      return ['get', 'put', 'post', 'delete'].includes(key) ? `$${key}` : key;
     })
     .fromPairs()
     .mapValues((value) => {
-      return (typeof value === 'object' && !Array.isArray(value))
-        ? sortLegacyClientObject(value)
-        : value;
+      return typeof value === 'object' && !Array.isArray(value) ? sortLegacyClientObject(value) : value;
     })
     .value();
 }
 
-function buildLegacyClientCode (allRoutes, codeByService) {
-
+function buildLegacyClientCode(allRoutes, codeByService) {
   // generate legacy client
   const legacyClient = {};
   allRoutes.forEach(({ path, method, service, functionName }) => {
+    const rawSegments = (path + '/' + method).replace(/^\//, '').replace(/\/$/, '').split('/');
 
-    const rawSegments = (path + '/' + method)
-      .replace(/^\//, '')
-      .replace(/\/$/, '')
-      .split('/');
-
-    const objectSegments = rawSegments
-      .map((s) => s.replace(/\{.+?\}/g, '_'));
+    const objectSegments = rawSegments.map((s) => s.replace(/\{.+?\}/g, '_'));
 
     const pathParams = rawSegments
       .flatMap((a) => a.match(/\{.+?\}/g))
       .filter((a) => a != null)
       .map((a) => a.replace(/\{(.+?)\}/g, '$1'));
 
-    const value = (pathParams.length > 0)
-      ? `prepareRequest(${service}.${functionName}, ${JSON.stringify(pathParams)})`
-      : `prepareRequest(${service}.${functionName})`;
+    const value =
+      pathParams.length > 0
+        ? `prepareRequest(${service}.${functionName}, ${JSON.stringify(pathParams)})`
+        : `prepareRequest(${service}.${functionName})`;
 
     _.set(legacyClient, objectSegments, value);
   });
@@ -355,8 +326,7 @@ function buildLegacyClientCode (allRoutes, codeByService) {
  * Generates legacy API client
  * - simple wrapper around new modules with legacy object API (by path)
  */
-async function generateClient () {
-
+async function generateClient() {
   // fetch and load OpenAPI JSON document
   const apiLocalCachePathV2 = pathJoin(CACHE_PATH, 'openapi-clever-v2.json');
   const openapi = await getOpenapi(apiLocalCachePathV2, OPEN_API_URL_V2);
@@ -388,11 +358,7 @@ async function generateClient () {
 
   // extract all routes
   const routesV2 = getRoutes(patchedApiV2, 'v2');
-  const allRoutes = [
-    ...routesV2,
-    ...getRoutes(openapiV4, 'v4'),
-    ...getRoutes(patchedApiV4, 'v4'),
-  ];
+  const allRoutes = [...routesV2, ...getRoutes(openapiV4, 'v4'), ...getRoutes(patchedApiV4, 'v4')];
 
   // group "/self" with "/organisations/{id}"
   const mergedRoutes = mergeSimilarRoutes(allRoutes);
@@ -403,7 +369,6 @@ async function generateClient () {
   await del(pathJoin(generatedClientBasePath, '**', '*'));
 
   for (const [version, routes] of Object.entries(routesByVersion)) {
-
     const generatedClientPath = pathJoin(generatedClientBasePath, version);
     await fs.ensureDir(generatedClientPath);
 
@@ -420,7 +385,7 @@ async function generateClient () {
 
       const imports = [];
       if (rawContents.includes('pickNonNull(')) {
-        imports.push('import { pickNonNull } from \'../../pick-non-null.js\';');
+        imports.push("import { pickNonNull } from '../../pick-non-null.js';");
       }
 
       const typedef = `/**
@@ -447,8 +412,7 @@ async function generateClient () {
   }
 }
 
-generateClient()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  });
+generateClient().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

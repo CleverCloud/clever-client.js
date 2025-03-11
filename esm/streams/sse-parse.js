@@ -20,8 +20,7 @@ const CONTROL_CHARS = {
  * @param {(message: SseMessage) => void} onMessage A function that will be called on each message.
  * @returns {Promise<void>} A promise that will be resolved when the stream closes.
  */
-export async function readBytes (stream, signal, onMessage) {
-
+export async function readBytes(stream, signal, onMessage) {
   // Setup parsers
   const onLine = getMessages(onMessage);
   const onChunk = getLines(onLine);
@@ -31,11 +30,16 @@ export async function readBytes (stream, signal, onMessage) {
 
     // There's a bug in Node.js < 18.16.
     // Aborting a fetch request does not stop the response body stream from being read.
-    signal.addEventListener('abort', () => {
-      reader.cancel(signal.reason)
-        // Firefox doesn't like when we cancel a reader that is already closed but we can ignore this
-        .catch(() => {});
-    }, { once: true });
+    signal.addEventListener(
+      'abort',
+      () => {
+        reader
+          .cancel(signal.reason)
+          // Firefox doesn't like when we cancel a reader that is already closed but we can ignore this
+          .catch(() => {});
+      },
+      { once: true },
+    );
 
     let shouldContinue = true;
     while (shouldContinue) {
@@ -54,7 +58,7 @@ export async function readBytes (stream, signal, onMessage) {
  * @param {(line: Uint8Array, fieldLength: number) => void} onLine A function that will be called on each new EventSource line.
  * @returns {(chunk: Uint8Array) => void} A function that should be called for each incoming byte chunk.
  */
-export function getLines (onLine) {
+export function getLines(onLine) {
   /** @type {Uint8Array} */
   let buffer;
   /** @type {number} current read position */
@@ -64,13 +68,12 @@ export function getLines (onLine) {
   let discardTrailingNewline = false;
 
   // return a function that can process each incoming byte chunk:
-  return function onChunk (arr) {
+  return function onChunk(arr) {
     if (buffer === undefined) {
       buffer = arr;
       position = 0;
       fieldLength = -1;
-    }
-    else {
+    } else {
       // we're still parsing the old line. Append the new bytes into buffer:
       buffer = concat(buffer, arr);
     }
@@ -142,12 +145,12 @@ export function getLines (onLine) {
  * @param {(message: SseMessage) => void} onMessage A function that will be called on each message.
  * @returns {(line: Uint8Array, fieldLength: number) => void} A function that should be called for each incoming line buffer.
  */
-export function getMessages (onMessage) {
+export function getMessages(onMessage) {
   let message = newMessage();
   const decoder = new TextDecoder();
 
   // return a function that can process each incoming line buffer:
-  return function onLine (line, fieldLength) {
+  return function onLine(line, fieldLength) {
     if (line.length === 0) {
       // empty line denotes end of message. Trigger the callback and start a new message:
       onMessage?.(message);
@@ -167,9 +170,7 @@ export function getMessages (onMessage) {
         case 'data':
           // if this message already has data, append the new value to the old.
           // otherwise, just set to the new value:
-          message.data = message.data
-            ? message.data + '\n' + value
-            : value;
+          message.data = message.data ? message.data + '\n' + value : value;
           break;
         case 'event':
           message.event = value;
@@ -195,7 +196,7 @@ export function getMessages (onMessage) {
  * @param {Uint8Array} b
  * @returns {Uint8Array}
  */
-function concat (a, b) {
+function concat(a, b) {
   const res = new Uint8Array(a.length + b.length);
   res.set(a);
   res.set(b, a.length);
@@ -205,7 +206,7 @@ function concat (a, b) {
 /**
  * @returns {SseMessage}
  */
-function newMessage () {
+function newMessage() {
   // data, event, and id must be initialized to empty strings:
   // https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation
   // retry should be initialized to undefined so we return a consistent shape

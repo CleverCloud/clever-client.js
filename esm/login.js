@@ -12,7 +12,7 @@ import { fetchAccessToken as doFetchAccessToken, fetchRequestToken as doFetchReq
  * @param {string} [_.tokenSecret]
  * @returns {{oauth_consumer_key: string, oauth_signature_method: string, oauth_signature: string, oauth_timestamp: number, oauth_nonce: string}}
  */
-export function getOauthParams ({ consumerKey, consumerSecret, tokenSecret = '' }) {
+export function getOauthParams({ consumerKey, consumerSecret, tokenSecret = '' }) {
   // We need this for getNonce()
   OAuth.prototype.nonce_length = 32;
   return {
@@ -31,7 +31,7 @@ export function getOauthParams ({ consumerKey, consumerSecret, tokenSecret = '' 
  * @param {string} _.oauthCallback
  * @returns {Promise<RequestParams>}
  */
-export function fetchRequestToken ({ consumerKey, consumerSecret, oauthCallback }) {
+export function fetchRequestToken({ consumerKey, consumerSecret, oauthCallback }) {
   return doFetchRequestToken(null, {
     ...getOauthParams({ consumerKey, consumerSecret }),
     oauth_callback: oauthCallback,
@@ -47,7 +47,7 @@ export function fetchRequestToken ({ consumerKey, consumerSecret, oauthCallback 
  * @param {string} _.oauthVerifier
  * @returns {Promise<RequestParams>}
  */
-export function fetchAccessToken ({ consumerKey, consumerSecret, tokenSecret, oauthToken, oauthVerifier }) {
+export function fetchAccessToken({ consumerKey, consumerSecret, tokenSecret, oauthToken, oauthVerifier }) {
   return doFetchAccessToken(null, {
     ...getOauthParams({ consumerKey, consumerSecret, tokenSecret }),
     oauth_token: oauthToken,

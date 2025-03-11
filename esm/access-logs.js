@@ -9,8 +9,7 @@
  * @param {string} _.appId
  * @returns {Promise<Warp10RequestParams>}
  */
-export function getStatusCodesFromWarp10 ({ warpToken, ownerId, appId }) {
-
+export function getStatusCodesFromWarp10({ warpToken, ownerId, appId }) {
   const [granularity, id] = getGranularity(ownerId, appId);
   const warpscript = `'${warpToken}' '${granularity}' '${id}' NOW 24 h @clevercloud/accessLogs_status_code_v1`;
 
@@ -20,7 +19,7 @@ export function getStatusCodesFromWarp10 ({ warpToken, ownerId, appId }) {
     body: warpscript,
     // This is ignored by Warp10, it's here to help identify HTTP calls in browser devtools
     queryParams: { __: getSlug('statuscodes', ownerId, appId) },
-    responseHandler ([results]) {
+    responseHandler([results]) {
       // Remove status codes "-1" YOLO
       delete results['-1'];
       return results;
@@ -33,10 +32,8 @@ export function getStatusCodesFromWarp10 ({ warpToken, ownerId, appId }) {
  * @param {string} appId
  * @returns {(string|*)[]}
  */
-function getGranularity (ownerId, appId) {
-  return (appId != null)
-    ? ['app_id', appId]
-    : ['owner_id', ownerId];
+function getGranularity(ownerId, appId) {
+  return appId != null ? ['app_id', appId] : ['owner_id', ownerId];
 }
 
 /**
@@ -44,9 +41,7 @@ function getGranularity (ownerId, appId) {
  * @param {Array<string>} items
  * @returns {string}
  */
-function getSlug (prefix, ...items) {
-  const shortItems = items
-    .filter((a) => a != null)
-    .map((a) => a.slice(0, 10));
+function getSlug(prefix, ...items) {
+  const shortItems = items.filter((a) => a != null).map((a) => a.slice(0, 10));
   return [prefix, ...shortItems].join('__');
 }

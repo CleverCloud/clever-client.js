@@ -7,7 +7,7 @@ export class CustomEventTarget extends EventTarget {
    * @param {AddEventListenerOptions | boolean} [options]
    * @return {this}
    */
-  on (type, callback, options) {
+  on(type, callback, options) {
     this.addEventListener(type, callback, options);
     return this;
   }
@@ -19,11 +19,11 @@ export class CustomEventTarget extends EventTarget {
    * @param {object} data
    * @returns {boolean}
    */
-  emit (type, data) {
+  emit(type, data) {
     /** @type {Event} */
     const event = new Event(type);
     Object.entries(data).forEach(([prop, value]) => {
-      const p = (prop);
+      const p = prop;
       // @ts-ignore
       event[p] = value;
     });

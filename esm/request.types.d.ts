@@ -1,9 +1,9 @@
-import { QueryParams } from "./utils/query-params.types.js";
+import { QueryParams } from './utils/query-params.types.js';
 
-export interface RequestParams extends Omit<RequestInit, 'headers'|'body'> {
+export interface RequestParams extends Omit<RequestInit, 'headers' | 'body'> {
   url: string;
   headers?: Record<string, string>;
-  body?: Object|string;
+  body?: Object | string;
   queryParams?: QueryParams;
   timeout?: number;
 }

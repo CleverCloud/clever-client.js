@@ -1,9 +1,9 @@
-import { ApplicationLogStream } from '../esm/streams/application-logs.js';
-import { TestSseServer } from './lib/test-sse-server.js';
-import { createStub } from './lib/stub.js';
 import { expect } from 'chai';
-import { clearTimers, patchTimers, sleep, unpatchTimers } from './lib/timers.js';
+import { ApplicationLogStream } from '../esm/streams/application-logs.js';
 import { HttpError, NetworkError, ServerError } from '../esm/streams/clever-cloud-sse.js';
+import { createStub } from './lib/stub.js';
+import { TestSseServer } from './lib/test-sse-server.js';
+import { clearTimers, patchTimers, sleep, unpatchTimers } from './lib/timers.js';
 
 const DEBUG_LEVEL = 2;
 
@@ -11,7 +11,6 @@ const SERVER_PORT = 8080;
 const ASYNC_TEST_TIMEOUT_MS = 10_000;
 
 describe('ApplicationLogStream', () => {
-
   before(patchTimers);
   after(unpatchTimers);
 
@@ -34,7 +33,6 @@ describe('ApplicationLogStream', () => {
   });
 
   describe('getUrl()', () => {
-
     it('Without query params', () => {
       const appsLogs = new ApplicationLogStream({
         apiHost: 'http://localhost:' + SERVER_PORT,
@@ -56,7 +54,9 @@ describe('ApplicationLogStream', () => {
         until: new Date('2023-12-01T01:00:00.000Z'),
       });
       const url = appsLogs.getUrl();
-      expect(url).to.equal('http://localhost:8080/v4/logs/organisations/ownerId/applications/appId/logs?since=2023-12-01T00%3A00%3A00.000Z&until=2023-12-01T01%3A00%3A00.000Z');
+      expect(url).to.equal(
+        'http://localhost:8080/v4/logs/organisations/ownerId/applications/appId/logs?since=2023-12-01T00%3A00%3A00.000Z&until=2023-12-01T01%3A00%3A00.000Z',
+      );
     });
 
     it('With instance IDs', () => {
@@ -68,7 +68,9 @@ describe('ApplicationLogStream', () => {
         instanceId: ['aaa', 'bbb', 'ccc'],
       });
       const url = appsLogs.getUrl();
-      expect(url).to.equal('http://localhost:8080/v4/logs/organisations/ownerId/applications/appId/logs?instanceId=aaa&instanceId=bbb&instanceId=ccc');
+      expect(url).to.equal(
+        'http://localhost:8080/v4/logs/organisations/ownerId/applications/appId/logs?instanceId=aaa&instanceId=bbb&instanceId=ccc',
+      );
     });
 
     it('With fields', () => {
@@ -80,7 +82,9 @@ describe('ApplicationLogStream', () => {
         fields: ['aaa', 'bbb', 'ccc'],
       });
       const url = appsLogs.getUrl();
-      expect(url).to.equal('http://localhost:8080/v4/logs/organisations/ownerId/applications/appId/logs?fields=aaa&fields=bbb&fields=ccc');
+      expect(url).to.equal(
+        'http://localhost:8080/v4/logs/organisations/ownerId/applications/appId/logs?fields=aaa&fields=bbb&fields=ccc',
+      );
     });
 
     it('With undefined and null query params', () => {
@@ -98,7 +102,6 @@ describe('ApplicationLogStream', () => {
   });
 
   describe('no retry', () => {
-
     let callbacks;
 
     // Prepare an ApplicationLogStream instance with stubbed callbacks for each test
@@ -114,7 +117,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Send 3 logs should trigger onLog 3 times', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendLogs(['000000', '000001', '000002'], 1000);
 
@@ -125,7 +127,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Send logs and heartbeats should not timeout', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendHeartbeats(5, 1000);
       await sseServer.sendLogs(['000000', '000001', '000002'], 1000);
@@ -135,7 +136,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Close log stream should trigger onSuccess', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendHeartbeats(2, 1000);
 
@@ -145,7 +145,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Pause log stream should not timeout', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendLogs(['000000', '000001', '000002'], 1000);
 
@@ -159,7 +158,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Pause log stream, wait and resume should trigger onOpen again, with last event ID', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendLogs(['000000', '000001', '000002'], 1000);
 
@@ -181,7 +179,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Pause log stream, wait and resume should trigger onOpen again, with last event ID and update limit query param', async () => {
-
       // Reset setup to specify a limit
       appLogs.close();
       const _ = createApplicationLogStream({
@@ -209,7 +206,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Close server response should trigger onSuccess if END_OF_STREAM(UNTIL_REACHED) was sent and received', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendLogs(['000000', '000001', '000002'], 1000);
       await sseServer.sendEvent({ event: 'END_OF_STREAM', data: { endedBy: 'UNTIL_REACHED' } });
@@ -220,7 +216,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Close server response should trigger onFailure if END_OF_STREAM(UNTIL_REACHED) was NOT sent or received', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendLogs(['000000', '000001', '000002'], 1000);
       await sseServer.closeResponse();
@@ -232,7 +227,6 @@ describe('ApplicationLogStream', () => {
 
     // TODO: where is the accept and no logs?
     it('No logs or heartbeats should trigger onFailure', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendLogs(['000000', '000001', '000002'], 1000);
       await sleep(5_000);
@@ -243,7 +237,6 @@ describe('ApplicationLogStream', () => {
 
     // TODO start client after server stop
     it('Stop server directly should trigger onFailure', async () => {
-
       await sseServer.stop();
 
       await expectCounts(callbacks, { onOpen: 0, onError: 0, onLog: 0, onSuccess: 0, onFailure: 1 });
@@ -251,7 +244,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Send logs and stop server should trigger onFailure', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendLogs(['000000', '000001', '000002'], 1000);
 
@@ -265,7 +257,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Destroy server response should trigger onFailure', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendLogs(['000000', '000001', '000002'], 1000);
 
@@ -310,7 +301,6 @@ describe('ApplicationLogStream', () => {
   });
 
   describe('2 retry max', () => {
-
     let callbacks;
 
     // Prepare an ApplicationLogStream instance with stubbed callbacks and an auto retry (max 2) for each test
@@ -326,7 +316,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Pause log stream should not retry', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendLogs(['000000', '000001', '000002'], 1000);
 
@@ -340,7 +329,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Close server response should trigger onError and retry if END_OF_STREAM(UNTIL_REACHED) was NOT sent or received', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendLogs(['000000', '000001', '000002'], 1000);
       await sseServer.closeResponse();
@@ -354,7 +342,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('No logs or heartbeats should trigger onError and retry', async () => {
-
       await sseServer.acceptRequest();
       await expectCounts(callbacks, { onOpen: 1, onError: 1, onLog: 0, onSuccess: 0, onFailure: 0 });
       expect(callbacks.onError.getCall(0).args[0].error).to.be.instanceof(NetworkError);
@@ -364,7 +351,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Stop server directly should trigger onError and retry', async () => {
-
       await sseServer.stop();
 
       // Reset setup to start the client after a server stop
@@ -388,7 +374,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Destroy server response should trigger onError and retry', async () => {
-
       await sseServer.destroyResponse();
       await expectCounts(callbacks, { onOpen: 0, onError: 1, onLog: 0, onSuccess: 0, onFailure: 0 });
       expect(callbacks.onError.getCall(0).args[0].error).to.be.instanceof(NetworkError);
@@ -398,7 +383,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Send server response with 200 and invalid content type should trigger onError and retry', async () => {
-
       await sseServer.acceptRequestWithBadContentType();
       await expectCounts(callbacks, { onOpen: 0, onError: 1, onLog: 0, onSuccess: 0, onFailure: 0 });
       expectError(callbacks.onError.getCall(0).args[0].error, ServerError);
@@ -426,7 +410,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Send server response with 500 should trigger onError and retry', async () => {
-
       await sseServer.acceptRequestWith500();
       await expectCounts(callbacks, { onOpen: 0, onError: 1, onLog: 0, onSuccess: 0, onFailure: 0 });
       expectError(callbacks.onError.getCall(0).args[0].error, HttpError, { status: 500 });
@@ -436,7 +419,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Multiple "error + successful retry" should trigger onError and onOpen with last event ID and and update limit query param, the max retry should not be reached', async () => {
-
       // Reset setup to specify a limit
       appLogs.close();
       const _ = createApplicationLogStream({
@@ -500,7 +482,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Multiple "error + successful retry" should trigger onError and onOpen with last event ID, the max retry should not be reached', async () => {
-
       await sseServer.acceptRequest();
       await sseServer.sendLogs(['000000', '000001', '000002'], 100);
       await expectCounts(callbacks, { onOpen: 1, onError: 0, onLog: 3, onSuccess: 0, onFailure: 0 });
@@ -546,7 +527,6 @@ describe('ApplicationLogStream', () => {
     });
 
     it('Multiple "error + failed retry" should trigger onError, reach the max retry and trigger onFailure', async () => {
-
       // Wait for 1st error timeout error
       await expectCounts(callbacks, { onOpen: 0, onError: 1, onLog: 0, onSuccess: 0, onFailure: 0 });
       expect(callbacks.onError.getCall(0).args[0].error).to.be.instanceof(NetworkError);
@@ -563,8 +543,7 @@ describe('ApplicationLogStream', () => {
 });
 
 // Set up a ApplicationLogStream with a series of stubbed callbacks
-function createApplicationLogStream (options = {}) {
-
+function createApplicationLogStream(options = {}) {
   const appLogs = new ApplicationLogStream({
     apiHost: 'http://localhost:' + SERVER_PORT,
     tokens: null,
@@ -574,31 +553,26 @@ function createApplicationLogStream (options = {}) {
   });
 
   const onOpen = createStub(() => {
-    (DEBUG_LEVEL > 0) && console.log('onOpen');
+    DEBUG_LEVEL > 0 && console.log('onOpen');
   });
   const onError = createStub((ev) => {
-    (DEBUG_LEVEL > 0) && console.error(`onError (${ev.error.constructor.name}) ${ev.error.message}`);
-    (DEBUG_LEVEL > 1) && console.error(ev.error);
+    DEBUG_LEVEL > 0 && console.error(`onError (${ev.error.constructor.name}) ${ev.error.message}`);
+    DEBUG_LEVEL > 1 && console.error(ev.error);
   });
   const onLog = createStub((log) => {
-    (DEBUG_LEVEL > 0) && console.log('onLog', log);
+    DEBUG_LEVEL > 0 && console.log('onLog', log);
   });
   const onSuccess = createStub((reason) => {
-    (DEBUG_LEVEL > 0) && console.log('onSuccess', reason);
+    DEBUG_LEVEL > 0 && console.log('onSuccess', reason);
   });
   const onFailure = createStub((e) => {
-    (DEBUG_LEVEL > 0) && console.error(`onFailure (${e.constructor.name}) ${e.message}`);
-    (DEBUG_LEVEL > 1) && console.error(e);
+    DEBUG_LEVEL > 0 && console.error(`onFailure (${e.constructor.name}) ${e.message}`);
+    DEBUG_LEVEL > 1 && console.error(e);
   });
 
-  appLogs
-    .on('open', onOpen.handler)
-    .on('error', onError.handler)
-    .onLog(onLog.handler);
+  appLogs.on('open', onOpen.handler).on('error', onError.handler).onLog(onLog.handler);
 
-  appLogs.start()
-    .then(onSuccess.handler)
-    .catch(onFailure.handler);
+  appLogs.start().then(onSuccess.handler).catch(onFailure.handler);
 
   return {
     appLogs,
@@ -614,19 +588,15 @@ function createApplicationLogStream (options = {}) {
 
 // Give it an object of named stubbed callbacks and wait for the given expected count of calls
 // Fails if timeoutLimit it reached
-async function expectCounts (callbacks, counts) {
-
+async function expectCounts(callbacks, counts) {
   const limit = new Date().getTime() + ASYNC_TEST_TIMEOUT_MS;
 
   let shouldContinue = true;
 
   while (shouldContinue) {
-
     const now = new Date().getTime();
     if (now > limit) {
-      const countDetails = Object.fromEntries(
-        Object.entries(callbacks).map(([name, cb]) => [name, cb.callCount]),
-      );
+      const countDetails = Object.fromEntries(Object.entries(callbacks).map(([name, cb]) => [name, cb.callCount]));
       throw new Error('Timeout error on "expectCounts": ' + JSON.stringify(countDetails));
     }
 
@@ -634,7 +604,7 @@ async function expectCounts (callbacks, counts) {
       if (callbacks[name].callCount > expectedCount) {
         throw new Error(`Callback "${name}" was called ${callbacks[name].callCount} times instead of ${expectedCount}`);
       }
-      return (callbacks[name].callCount !== expectedCount);
+      return callbacks[name].callCount !== expectedCount;
     });
 
     if (shouldContinue) {
@@ -643,7 +613,7 @@ async function expectCounts (callbacks, counts) {
   }
 }
 
-function expectError (error, theClass, properties = {}) {
+function expectError(error, theClass, properties = {}) {
   expect(error).to.be.instanceof(theClass);
   for (const [name, value] of Object.entries(properties)) {
     expect(error[name]).to.equal(value);

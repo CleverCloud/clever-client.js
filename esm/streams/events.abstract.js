@@ -1,6 +1,6 @@
-import { AbstractStream, AuthenticationError } from './stream.abstract.js';
-import { prefixUrl } from '../prefix-url.js';
 import { addOauthHeader } from '../oauth.js';
+import { prefixUrl } from '../prefix-url.js';
+import { AbstractStream, AuthenticationError } from './stream.abstract.js';
 
 /**
  * @typedef {import('./events.types.js').WebSocketLike} WebSocketLike
@@ -20,14 +20,13 @@ const PONG_MESSAGE = JSON.stringify({
  * @template {WebSocketLike} T
  */
 export class AbstractEventsStream extends AbstractStream {
-
   /**
    * @param {Object} options
    * @param {String} options.apiHost
    * @param {OAuthTokens} options.tokens
    * @param {String} [options.appId]
    */
-  constructor ({ apiHost, tokens, appId }) {
+  constructor({ apiHost, tokens, appId }) {
     super();
     this.apiHost = apiHost;
     this.tokens = tokens;
@@ -40,7 +39,7 @@ export class AbstractEventsStream extends AbstractStream {
    * @returns {Promise<void>}
    * @protected
    */
-  async _openSource () {
+  async _openSource() {
     // Prepare WS auth => open connection =>
     // Then, wire source stream events to the system:
     // * tech events wired to _on*():
@@ -56,7 +55,6 @@ export class AbstractEventsStream extends AbstractStream {
     this._ws.addEventListener('open', () => this._ws.send(authMessage));
 
     this._ws.addEventListener('message', (message) => {
-
       const parsedMessage = this._parseEventMessage(message);
 
       // Ignore socket_ready message
@@ -81,7 +79,7 @@ export class AbstractEventsStream extends AbstractStream {
     this._ws.addEventListener('error', (error) => this._onError(error));
 
     // Save this listener so we can remove it easily in _closeSource
-    this._wsCloseListener = /** @param {any} reason */(reason) => {
+    this._wsCloseListener = /** @param {any} reason */ (reason) => {
       this._onError(new Error(`Events stream (WS) was closed reason:${JSON.stringify(reason)}`));
     };
 
@@ -91,7 +89,7 @@ export class AbstractEventsStream extends AbstractStream {
   /**
    * @protected
    */
-  _closeSource () {
+  _closeSource() {
     if (this._ws != null) {
       // When _closeSource() is called, we already know this._ws is about to be forced closed
       // so we need to remove the listener before calling closeWebSocket()
@@ -108,7 +106,7 @@ export class AbstractEventsStream extends AbstractStream {
    * @abstract
    * @protected
    */
-  _createWebSocket (_url) {
+  _createWebSocket(_url) {
     // It's up to the class extending AbstractEventsStream to implement how to create a WS connection
     throw new Error('Not implemented');
   }
@@ -117,7 +115,7 @@ export class AbstractEventsStream extends AbstractStream {
    * @param {T} _webSocket
    * @protected
    */
-  _closeWebSocket (_webSocket) {
+  _closeWebSocket(_webSocket) {
     // It's up to the class extending AbstractEventsStream to implement how to close a WS connection
     throw new Error('Not implemented');
   }
@@ -127,16 +125,15 @@ export class AbstractEventsStream extends AbstractStream {
   /**
    * @returns {Promise<{url: string, authMessage: string}>}
    */
-  _prepareEventsWs () {
+  _prepareEventsWs() {
     // To authenticate to the WebSocket endpoint, we use the oAuth v1 "Authorization" header,
     // we pass it as message in the socket as JSON '{ "message_type": "oauth", "authorization": "Authorization Header ..." }'
     // * URL used for signature is https://api.domain.tld/vX/events
     // * URL used for WebSocket connection is wss://api.domain.tld/vX/events/event-socket
-    return Promise
-      .resolve({
-        method: 'get',
-        url: '/v2/events/',
-      })
+    return Promise.resolve({
+      method: 'get',
+      url: '/v2/events/',
+    })
       .then(prefixUrl(this.apiHost))
       .then(addOauthHeader(this.tokens))
       .then((requestParams) => {
@@ -159,15 +156,12 @@ export class AbstractEventsStream extends AbstractStream {
    * @returns {any|null}
    * @private
    */
-  _parseEventMessage (message) {
+  _parseEventMessage(message) {
     try {
       const event = JSON.parse(message.data);
-      const data = (event.data != null)
-        ? JSON.parse(event.data)
-        : null;
+      const data = event.data != null ? JSON.parse(event.data) : null;
       return { ...event, data };
-    }
-    catch (e) {
+    } catch (e) {
       return null;
     }
   }
@@ -177,8 +171,8 @@ export class AbstractEventsStream extends AbstractStream {
    * @returns {boolean}
    * @private
    */
-  _isSocketReadyMessage (data) {
-    return (data != null) && (data.message_type === 'socket_ready');
+  _isSocketReadyMessage(data) {
+    return data != null && data.message_type === 'socket_ready';
   }
 
   /**
@@ -186,8 +180,8 @@ export class AbstractEventsStream extends AbstractStream {
    * @returns {boolean}
    * @private
    */
-  _isAuthErrorMessage (err) {
-    return (err != null) && (err.type === 'error') && (err.id === 2001);
+  _isAuthErrorMessage(err) {
+    return err != null && err.type === 'error' && err.id === 2001;
   }
 
   /**
@@ -196,10 +190,10 @@ export class AbstractEventsStream extends AbstractStream {
    * @returns {boolean}
    * @private
    */
-  _matchesAppId (appId, event) {
+  _matchesAppId(appId, event) {
     if (event == null || event.data == null) {
       return false;
     }
-    return (event.data.id === appId || event.data.appId === appId);
+    return event.data.id === appId || event.data.appId === appId;
   }
 }

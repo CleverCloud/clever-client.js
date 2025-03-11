@@ -1,4 +1,4 @@
-import { RequestParams } from "./request.types.js";
+import { RequestParams } from './request.types.js';
 
 export interface Warp10RequestParams extends RequestParams {
   body: string;

@@ -6,7 +6,7 @@
  * @param {string} prefix
  * @returns {(requestParams: RequestParams) => RequestParams}
  */
-export function prefixUrl (prefix) {
+export function prefixUrl(prefix) {
   return function (requestParams) {
     const { url = '' } = requestParams;
     return {

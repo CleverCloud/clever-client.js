@@ -37,11 +37,12 @@ logStream
   .on('error', (event) => console.log('RETRYABLE_ERROR', event.error))
   .onLog((log) => console.log(log.date, log.message));
 
-logStream.start()
+logStream
+  .start()
   .then((reason) => console.info('OK', reason)) // -> FIN
   .catch((error) => console.error('FATAL_ERROR', error)) // -> FIN alternative
   .then(() => {
-    console.log('c\'est fini');
+    console.log("c'est fini");
   });
 
 //setInterval(() => { console.log({test: logStream.promise}) }, 1000)

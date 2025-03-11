@@ -26,8 +26,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json" : {
-              }
+              "application/json": {}
             }
           }
         }
@@ -51,8 +50,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           }
         }
@@ -76,8 +74,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-              }
+              "application/json": {}
             }
           }
         }
@@ -126,8 +123,7 @@
             }
           }
         },
-        "responses": {
-        }
+        "responses": {}
       }
     },
     "/logs/{appId}": {
@@ -149,7 +145,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -160,14 +156,12 @@
         "operationId": "getDrains",
         "x-service": "log",
         "x-function": "getDrains",
-        "parameters": [
-          { "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -176,14 +170,11 @@
         "operationId": "createDrain",
         "x-service": "log",
         "x-function": "createDrain",
-        "parameters": [
-          { "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } }],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-              }
+              "schema": {}
             }
           },
           "required": true
@@ -192,7 +183,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -211,7 +202,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -229,8 +220,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-              }
+              "schema": {}
             }
           },
           "required": true
@@ -239,7 +229,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -251,14 +241,11 @@
         "operationId": "createWebhook",
         "x-service": "notification",
         "x-function": "createWebhook",
-        "parameters": [
-          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-              }
+              "schema": {}
             }
           },
           "required": true
@@ -267,7 +254,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -277,14 +264,12 @@
         "operationId": "getWebhooks",
         "x-service": "notification",
         "x-function": "getWebhooks",
-        "parameters": [
-          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -303,8 +288,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-              }
+              "schema": {}
             }
           },
           "required": true
@@ -313,7 +297,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -331,7 +315,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -343,14 +327,11 @@
         "operationId": "createEmailhook",
         "x-service": "notification",
         "x-function": "createEmailhook",
-        "parameters": [
-          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-              }
+              "schema": {}
             }
           },
           "required": true
@@ -359,7 +340,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -369,14 +350,12 @@
         "operationId": "getEmailhooks",
         "x-service": "notification",
         "x-function": "getEmailhooks",
-        "parameters": [
-          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -395,8 +374,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-              }
+              "schema": {}
             }
           },
           "required": true
@@ -405,7 +383,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -423,7 +401,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -438,7 +416,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -453,7 +431,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -472,7 +450,7 @@
           "default": {
             "description": "default response",
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         }
@@ -659,7 +637,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -670,13 +648,11 @@
     "/saas/heptapod/{id}/heptapod.host/price-prevision": {
       "get": {
         "operationId": "getHeptapodPricePrevision",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -686,7 +662,6 @@
     }
   },
   "components": {
-    "schemas": {
-    }
+    "schemas": {}
   }
 }

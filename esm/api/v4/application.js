@@ -23,7 +23,14 @@ export function streamAccessLogs(params) {
     method: 'get',
     url: `/v4/logs/organisations/${params.ownerId}/applications/${params.applicationId}/accesslogs`,
     headers: { Accept: 'text/event-stream' },
-    queryParams: pickNonNull(params, ['since', 'until', 'limit', 'field', 'throttleElements', 'throttlePerInMilliseconds']),
+    queryParams: pickNonNull(params, [
+      'since',
+      'until',
+      'limit',
+      'field',
+      'throttleElements',
+      'throttlePerInMilliseconds',
+    ]),
     // no body
   });
 }
@@ -51,7 +58,18 @@ export function streamLogs(params) {
     method: 'get',
     url: `/v4/logs/organisations/${params.ownerId}/applications/${params.applicationId}/logs`,
     headers: { Accept: 'text/event-stream' },
-    queryParams: pickNonNull(params, ['since', 'until', 'limit', 'deploymentId', 'instanceId', 'filter', 'service', 'field', 'throttleElements', 'throttlePerInMilliseconds']),
+    queryParams: pickNonNull(params, [
+      'since',
+      'until',
+      'limit',
+      'deploymentId',
+      'instanceId',
+      'filter',
+      'service',
+      'field',
+      'throttleElements',
+      'throttlePerInMilliseconds',
+    ]),
     // no body
   });
 }

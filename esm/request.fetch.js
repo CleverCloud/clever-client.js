@@ -14,8 +14,7 @@ const FORM_TYPE = 'application/x-www-form-urlencoded';
  * @returns {*|string}
  * @throws {RequestError}
  */
-function formatBody (requestParams) {
-
+function formatBody(requestParams) {
   // for now we support the fact that users sometimes already stringified the body
   if (requestParams.headers['Content-Type'] === JSON_TYPE && typeof requestParams.body !== 'string') {
     return JSON.stringify(requestParams.body);
@@ -24,9 +23,7 @@ function formatBody (requestParams) {
   // for now we support the fact that users sometimes already stringified the body
   if (requestParams.headers['Content-Type'] === FORM_TYPE && typeof requestParams.body !== 'string') {
     const qs = new URLSearchParams();
-    Object
-      .entries(requestParams.body)
-      .forEach(([name, value]) => qs.set(name, value));
+    Object.entries(requestParams.body).forEach(([name, value]) => qs.set(name, value));
     return qs.toString();
   }
 
@@ -37,18 +34,16 @@ function formatBody (requestParams) {
  * @param {Headers} headers
  * @returns {string}
  */
-function getContentType (headers) {
+function getContentType(headers) {
   const contentType = headers.get('Content-Type');
-  return (contentType != null)
-    ? contentType.split(';')[0]
-    : contentType;
+  return contentType != null ? contentType.split(';')[0] : contentType;
 }
 
 /**
  * @param {Response} response
  * @returns {Promise<any>}
  */
-async function parseResponseBody (response) {
+async function parseResponseBody(response) {
   const contentType = getContentType(response.headers);
 
   if (contentType === JSON_TYPE) {
@@ -59,9 +54,7 @@ async function parseResponseBody (response) {
     const text = await response.text();
     /** @type {Record<string, string>} */
     const responseObject = {};
-    Array
-      .from(new URLSearchParams(text).entries())
-      .forEach(([name, value]) => (responseObject[name] = value));
+    Array.from(new URLSearchParams(text).entries()).forEach(([name, value]) => (responseObject[name] = value));
     return responseObject;
   }
 
@@ -73,7 +66,7 @@ async function parseResponseBody (response) {
  * @param {null|string|{message?: string, error?: string}} responseBody
  * @returns {string}
  */
-function getErrorMessage (responseBody) {
+function getErrorMessage(responseBody) {
   if (typeof responseBody === 'string') {
     return responseBody;
   }
@@ -93,14 +86,17 @@ function getErrorMessage (responseBody) {
  * @throws {RequestError}
  * @template T
  */
-export async function request (requestParams) {
-
+export async function request(requestParams) {
   const url = new URL(requestParams.url);
   fillUrlSearchParams(url, requestParams.queryParams);
 
   const body = formatBody(requestParams);
 
-  const response = await fetchWithTimeout(url.toString(), { ...requestParams, body, mode: 'cors' }, requestParams.timeout);
+  const response = await fetchWithTimeout(
+    url.toString(),
+    { ...requestParams, body, mode: 'cors' },
+    requestParams.timeout,
+  );
 
   if (response.status >= 400) {
     const responseBody = await parseResponseBody(response);

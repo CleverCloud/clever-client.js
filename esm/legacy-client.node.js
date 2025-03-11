@@ -1,29 +1,27 @@
 // @ts-nocheck
 import Bacon from 'baconjs';
-import { addOauthHeader } from './oauth.js';
-import { sendLegacyRequest } from './send-legacy-request.js';
 import { initLegacyClient } from './api/v2/legacy-client.js';
+import { addOauthHeader } from './oauth.js';
 import { prefixUrl } from './prefix-url.js';
 import { request } from './request.fetch.js';
+import { sendLegacyRequest } from './send-legacy-request.js';
 
-export function initCleverClient (config) {
-
+export function initCleverClient(config) {
   const legacyClient = initLegacyClient((clientFn, pathParamNames = []) => {
+    return () =>
+      sendLegacyRequest((req, body) => {
+        const params = { ...req.query };
+        pathParamNames.forEach((paramName, i) => {
+          params[paramName] = req.params[i];
+        });
 
-    return () => sendLegacyRequest((req, body) => {
+        const restCallPromise = clientFn(params, body)
+          .then(prefixUrl(config.API_HOST))
+          .then(addOauthHeader(config))
+          .then(request);
 
-      const params = { ...req.query };
-      pathParamNames.forEach((paramName, i) => {
-        params[paramName] = req.params[i];
+        return Bacon.fromPromise(restCallPromise);
       });
-
-      const restCallPromise = clientFn(params, body)
-        .then(prefixUrl(config.API_HOST))
-        .then(addOauthHeader(config))
-        .then(request);
-
-      return Bacon.fromPromise(restCallPromise);
-    });
   });
 
   // add special "owner" helper function

@@ -42,10 +42,8 @@ const ENV_VAR_NAME_REGEX = /^[a-zA-Z0-9-_.]+$/;
  * @param {string} mode
  * @returns {boolean}
  */
-export function validateName (name, mode = '') {
-  return (mode !== 'strict')
-    ? ENV_VAR_NAME_REGEX.test(name)
-    : ENV_VAR_NAME_STRICT_REGEX.test(name);
+export function validateName(name, mode = '') {
+  return mode !== 'strict' ? ENV_VAR_NAME_REGEX.test(name) : ENV_VAR_NAME_STRICT_REGEX.test(name);
 }
 
 export const ERROR_TYPES = {
@@ -61,7 +59,7 @@ export const ERROR_TYPES = {
 };
 
 const NEW_LINE = '\n';
-const SIMPLE_QUOTE = '\'';
+const SIMPLE_QUOTE = "'";
 const EQUAL = '=';
 const SLASH = '\\';
 const SIMPLE_QUOTE_REPLACE = /([\\]*)'/g;
@@ -75,14 +73,14 @@ const DOUBLE_QUOTE_REPLACE = /([\\]*)"/g;
  * @param {number} start
  * @returns {number}
  */
-function nextIndex (text, char, start = 0) {
+function nextIndex(text, char, start = 0) {
   let i = start;
   let escaped = false;
   while (i < text.length) {
     if (text[i] === char && !escaped) {
       return i;
     }
-    escaped = (text[i] === '\\');
+    escaped = text[i] === '\\';
     i += 1;
   }
   return i;
@@ -92,7 +90,7 @@ function nextIndex (text, char, start = 0) {
  * @param {string} line
  * @returns {boolean}
  */
-function isEmptyLine (line) {
+function isEmptyLine(line) {
   return line.trim() === '';
 }
 
@@ -100,7 +98,7 @@ function isEmptyLine (line) {
  * @param {string} line
  * @returns {boolean}
  */
-function isCommentLine (line) {
+function isCommentLine(line) {
   return line.trim().startsWith('#');
 }
 
@@ -109,7 +107,7 @@ function isCommentLine (line) {
  * @param {number} index
  * @returns {{line: number, column: number}}
  */
-function getPosition (text, index) {
+function getPosition(text, index) {
   const lines = text.substring(0, index).split(NEW_LINE);
   const line = lines.length;
   const column = lines.slice(-1)[0].length;
@@ -120,7 +118,7 @@ function getPosition (text, index) {
  * @param {string} str
  * @returns {string}
  */
-function doubleQuoteString (str) {
+function doubleQuoteString(str) {
   // Here we surround a string with double quotes,
   // it means we need to escape existing double quotes,
   // we need to do so in a way that is compatible with shells and environment variables,
@@ -137,7 +135,7 @@ function doubleQuoteString (str) {
  * @param {string} str
  * @returns {string}
  */
-function unquoteString (firstChar, str) {
+function unquoteString(firstChar, str) {
   // Here we must be able to reverse what doubleQuoteString() does,
   // with the same logic,
   // we also want it to work with simple quotes.
@@ -160,8 +158,7 @@ function unquoteString (firstChar, str) {
  * @param {{mode?: EnvVarValidationMode}} [options]
  * @returns {{variables: Array<EnvVar>, errors: Array<EnvVarParsingError>}}
  */
-export function parseRaw (rawInput = '', options = {}) {
-
+export function parseRaw(rawInput = '', options = {}) {
   /** @type {Array<EnvVar>} */
   const parsedVariables = [];
   /** @type {Array<EnvVarParsingError>} */
@@ -171,7 +168,6 @@ export function parseRaw (rawInput = '', options = {}) {
 
   let startIdx = 0;
   while (startIdx < rawInput.length) {
-
     const nextNewLineIdx = nextIndex(rawInput, NEW_LINE, startIdx);
     const line = rawInput.substring(startIdx, nextNewLineIdx);
 
@@ -194,19 +190,16 @@ export function parseRaw (rawInput = '', options = {}) {
 
     if (isNameInvalidStrict && mode === 'strict') {
       parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME_STRICT, name, pos: getPosition(rawInput, startIdx) });
-    }
-    else if (isNameInvalidStrict && isNameInvalidSimple && mode !== 'strict') {
+    } else if (isNameInvalidStrict && isNameInvalidSimple && mode !== 'strict') {
       parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME, name, pos: getPosition(rawInput, startIdx) });
-    }
-    else if (isNameInvalidStrict && !isNameInvalidSimple && mode !== 'strict') {
+    } else if (isNameInvalidStrict && !isNameInvalidSimple && mode !== 'strict') {
       parsingErrors.push({ type: ERROR_TYPES.JAVA_INFO, name, pos: getPosition(rawInput, startIdx) });
     }
 
     const isNameDuplicated = allNames.has(name);
     if (isNameDuplicated) {
       parsingErrors.push({ type: ERROR_TYPES.DUPLICATED_NAME, name, pos: getPosition(rawInput, startIdx) });
-    }
-    else {
+    } else {
       allNames.add(name);
     }
 
@@ -220,33 +213,38 @@ export function parseRaw (rawInput = '', options = {}) {
 
       if (!isNameInvalidStrict && !isNameDuplicated && !isValueInvalid && mode === 'strict') {
         parsedVariables.push({ name, value });
-      }
-      else if (!isNameInvalidSimple && isNameInvalidStrict && !isNameDuplicated && !isValueInvalid && mode !== 'strict') {
+      } else if (
+        !isNameInvalidSimple &&
+        isNameInvalidStrict &&
+        !isNameDuplicated &&
+        !isValueInvalid &&
+        mode !== 'strict'
+      ) {
         parsedVariables.push({ name, value });
-      }
-      else if (!isNameInvalidSimple && !isNameInvalidStrict && !isNameDuplicated && !isValueInvalid && mode !== 'strict') {
+      } else if (
+        !isNameInvalidSimple &&
+        !isNameInvalidStrict &&
+        !isNameDuplicated &&
+        !isValueInvalid &&
+        mode !== 'strict'
+      ) {
         parsedVariables.push({ name, value });
       }
 
       if (isValueInvalid) {
         parsingErrors.push({ type: ERROR_TYPES.INVALID_VALUE, name, pos: getPosition(rawInput, nextQuoteIdx + 1) });
         startIdx = nextNewLineIdx + 1;
-      }
-      else {
+      } else {
         startIdx = nextQuoteIdx + 1;
       }
-    }
-    else {
-
+    } else {
       const value = rawInput.substring(nextEqualIdx + 1, nextNewLineIdx);
 
       if (!isNameInvalidStrict && !isNameDuplicated && mode === 'strict') {
         parsedVariables.push({ name, value });
-      }
-      else if (!isNameInvalidSimple && isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
+      } else if (!isNameInvalidSimple && isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
         parsedVariables.push({ name, value });
-      }
-      else if (!isNameInvalidSimple && !isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
+      } else if (!isNameInvalidSimple && !isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
         parsedVariables.push({ name, value });
       }
 
@@ -265,8 +263,7 @@ export function parseRaw (rawInput = '', options = {}) {
  * @param {{mode?: EnvVarValidationMode}} [options]
  * @returns {{variables: Array<EnvVar>, errors: Array<EnvVarParsingError>}}
  */
-export function parseRawJson (rawInput = '', options = {}) {
-
+export function parseRawJson(rawInput = '', options = {}) {
   let parsedInput;
   /** @type {Array<EnvVarParsingError>} */
   const parsingErrors = [];
@@ -274,8 +271,7 @@ export function parseRawJson (rawInput = '', options = {}) {
 
   try {
     parsedInput = JSON.parse(rawInput);
-  }
-  catch (e) {
+  } catch (e) {
     parsingErrors.push({ type: ERROR_TYPES.INVALID_JSON });
     return { variables: [], errors: parsingErrors };
   }
@@ -286,7 +282,7 @@ export function parseRawJson (rawInput = '', options = {}) {
   }
 
   const variablesWithNameValue = parsedInput.filter(({ name, value }) => {
-    return (typeof name === 'string') && (typeof value === 'string');
+    return typeof name === 'string' && typeof value === 'string';
   });
   if (variablesWithNameValue.length < parsedInput.length) {
     parsingErrors.push({ type: ERROR_TYPES.INVALID_JSON_ENTRY });
@@ -311,20 +307,17 @@ export function parseRawJson (rawInput = '', options = {}) {
 
     if (isNameInvalidStrict && mode === 'strict') {
       invalidNames.add(variable.name);
-    }
-    else if (isNameInvalidSimple && isNameInvalidStrict && mode !== 'strict') {
+    } else if (isNameInvalidSimple && isNameInvalidStrict && mode !== 'strict') {
       invalidNames.add(variable.name);
     }
 
     if (!isNameDuplicated && !isNameInvalidStrict && mode === 'strict') {
       visitedNames.push(variable.name);
       validVariables.push(variable);
-    }
-    else if (!isNameInvalidSimple && !isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
+    } else if (!isNameInvalidSimple && !isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
       visitedNames.push(variable.name);
       validVariables.push(variable);
-    }
-    else if (!isNameInvalidSimple && isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
+    } else if (!isNameInvalidSimple && isNameInvalidStrict && !isNameDuplicated && mode !== 'strict') {
       visitedNames.push(variable.name);
       validVariables.push(variable);
       infoJava.add(variable.name);
@@ -338,8 +331,7 @@ export function parseRawJson (rawInput = '', options = {}) {
   Array.from(invalidNames).forEach((name) => {
     if (mode !== 'strict') {
       parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME, name });
-    }
-    else {
+    } else {
       parsingErrors.push({ type: ERROR_TYPES.INVALID_NAME_STRICT, name });
     }
   });
@@ -356,7 +348,7 @@ export function parseRawJson (rawInput = '', options = {}) {
  * @param {Array<EnvVar>} variables
  * @returns {string}
  */
-export function toJson (variables) {
+export function toJson(variables) {
   if (variables.length === 0) {
     return '[]';
   }
@@ -375,16 +367,14 @@ export function toJson (variables) {
  * @param {{addExports?: boolean}} [options]
  * @returns {*}
  */
-export function toNameEqualsValueString (variables, options = {}) {
+export function toNameEqualsValueString(variables, options = {}) {
   const { addExports = false } = options;
   return variables
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(({ name, value }) => {
       const quotedValue = doubleQuoteString(value);
       const nameValue = `${name}=${quotedValue}`;
-      return addExports
-        ? `export ${nameValue};`
-        : nameValue;
+      return addExports ? `export ${nameValue};` : nameValue;
     })
     .join('\n');
 }
@@ -396,7 +386,7 @@ export function toNameEqualsValueString (variables, options = {}) {
  * @param {Array<EnvVar>} variables
  * @returns {Record<string, string>}
  */
-export function toNameValueObject (variables) {
+export function toNameValueObject(variables) {
   /** @type {Record<string, string>} */
   const keyValueObject = {};
   variables

@@ -1,10 +1,7 @@
 import { defaultReporter, summaryReporter } from '@web/test-runner';
 
 export default {
-  files: [
-    'test/**/*.spec.js',
-    '!test/application-logs.spec.js',
-  ],
+  files: ['test/**/*.spec.js', '!test/application-logs.spec.js'],
   nodeResolve: true,
   reporters: [
     // mocha like report
