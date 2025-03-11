@@ -2,23 +2,24 @@ import { AbstractStream, AuthenticationError } from './stream.abstract.js';
 import { pickNonNull } from '../pick-non-null.js';
 import { prefixUrl } from '../prefix-url.js';
 import { addOauthHeader } from '../oauth.js';
+import { fillUrlSearchParams } from '../utils/query-params.js';
+
+/**
+ * @typedef {import('./logs.types.js').SseLike} SseLike
+ * @typedef {import('../oauth.types.js').OAuthTokens} OAuthTokens
+ */
 
 const OPEN_TIMEOUT = 3000;
 
 /**
- * @typedef {Object} OauthTokens
- * @prop {String} OAUTH_CONSUMER_KEY
- * @prop {String} OAUTH_CONSUMER_SECRET
- * @prop {String} API_OAUTH_TOKEN
- * @prop {String} API_OAUTH_TOKEN_SECRET
+ * @template {SseLike} T
  */
-
 export class AbstractLogsStream extends AbstractStream {
 
   /**
    * @param {Object} options
    * @param {String} options.apiHost
-   * @param {OauthTokens} options.tokens
+   * @param {OAuthTokens} options.tokens
    * @param {String} options.appId
    * @param {String} [options.filter]
    * @param {String} [options.deploymentId]
@@ -32,11 +33,101 @@ export class AbstractLogsStream extends AbstractStream {
     this.deploymentId = deploymentId;
   }
 
-  // To authenticate to the Server Sent Event endpoint, we use the oAuth v1 "Authorization" header,
-  // we pass it as query param in the connexion URL (encoded as base64).
-  // * URL used for signature is https://api.domain.tld/vX/logs/{appId}/see?foo=bar
-  // * URL used for SSE connection is https://api.domain.tld/vX/logs/{appId}/see?foo=bar&authorization=base64AuthHeader
-  prepareLogsSse () {
+  // -- AbstractStream implementation ------
+
+  /**
+   * @returns {Promise<void>}
+   * @protected
+   */
+  async _openSource () {
+    // Prepare SSE auth => open connection => check min activity.
+    // Then, wire source stream events to the system:
+    // * tech events wired to _on*(): "message(ping)" => _onPing(), "error" => _onError()
+    // * user events wired to event emitter: "message(log)" => "log"
+
+    const { url } = await this._prepareLogsSse();
+    this._sse = this._createEventSource(url);
+
+    // Sometimes, the EventSource is open but no messages are returned and no errors thrown.
+    // It's supposed to emit at least a first ping if everything is OK.
+    // If we don't receive a message or an error within the duration OPEN_TIMEOUT,
+    // we consider that the opening process failed, and we signal an OpenError.
+    const openTimeoutId = setTimeout(() => {
+      this._onError(new Error('Logs stream (SSE) was opened but nothing was received'));
+    }, OPEN_TIMEOUT);
+
+    // Wire SSE "message" to _onPing() call or "log" event
+    this._sse.addEventListener('message', (message) => {
+      clearTimeout(openTimeoutId);
+      const parsedMessage = this._parseLogMessage(message);
+      this._isPingMessage(parsedMessage)
+        ? this._onPing(parsedMessage.heartbeat_delay_ms)
+        : this.emit('log', parsedMessage);
+    });
+
+    // Wire SSE "error" to _onError() call
+    this._sse.addEventListener('error', (error) => {
+      clearTimeout(openTimeoutId);
+      this._isAuthErrorMessage(error)
+        ? this._onError(new AuthenticationError('Authentication for the logs stream (SSE) failed'))
+        : this._onError(error);
+    });
+  }
+
+  _closeSource () {
+    // Closing is the same call for browser/node
+    if (this._sse != null) {
+      this._sse.close();
+      this._sse = null;
+    }
+  }
+
+  // -- abstract methods ------
+
+  /**
+   * @param {string} _url
+   * @returns {T}
+   * @abstract
+   * @protected
+   */
+  _createEventSource (_url) {
+    // It's up to the class extending AbstractLogsStream to implement how to create a SSE connection
+    throw new Error('Not implemented');
+  }
+
+  // -- private methods ------
+
+  /**
+   * @param {any} message
+   * @returns {any|null}
+   */
+  _parseLogMessage (message) {
+    try {
+      return JSON.parse(message.data);
+    }
+    catch (e) {
+      return null;
+    }
+  }
+
+  /**
+   * @param {any} err
+   * @returns {boolean}
+   */
+  _isAuthErrorMessage (err) {
+    return (err != null) && (err.type === 'error') && (err.status === 401);
+  }
+
+  /**
+   * @returns {Promise<{url: string}>}
+   * @private
+   */
+  _prepareLogsSse () {
+    // To authenticate to the Server Sent Event endpoint, we use the oAuth v1 "Authorization" header,
+    // we pass it as query param in the connexion URL (encoded as base64).
+    // * URL used for signature is https://api.domain.tld/vX/logs/{appId}/see?foo=bar
+    // * URL used for SSE connexion is https://api.domain.tld/vX/logs/{appId}/see?foo=bar&authorization=base64AuthHeader
+
     return Promise
       .resolve({
         method: 'get',
@@ -50,76 +141,11 @@ export class AbstractLogsStream extends AbstractStream {
       .then(addOauthHeader(this.tokens))
       .then((requestParams) => {
         // prepare SSE URL's authorization query param
-        const urlObject = new URL(requestParams.url);
-        const qs = new URLSearchParams();
-        Object.entries(requestParams.queryParams)
-          .forEach(([name, value]) => qs.set(name, value));
+        const url = new URL(requestParams.url);
+        fillUrlSearchParams(url, requestParams.queryParams);
         const base64AuthorizationHeader = globalThis.btoa(requestParams.headers.Authorization);
-        qs.set('authorization', base64AuthorizationHeader);
-        urlObject.search = qs.toString();
-        const url = urlObject.toString();
-        return { url };
+        url.searchParams.set('authorization', base64AuthorizationHeader);
+        return { url: url.toString() };
       });
-  }
-
-  // Prepare SSE auth => open connection => check min activity.
-  // Then, wire source stream events to the system:
-  // * tech events wired to _on*(): "message(ping)" => _onPing(), "error" => _onError()
-  // * user events wired to event emitter: "message(log)" => "log"
-  async _openSource () {
-
-    const { url } = await this.prepareLogsSse();
-    this._sse = this.createEventSource(url);
-
-    // Sometimes, the EventSource is open but no messages are returned and no errors thrown.
-    // It's supposed to emit at least a first ping if everything is OK.
-    // If we don't received a message or an error within the duration OPEN_TIMEOUT,
-    // we consider that the opening process failed and we signal an OpenError.
-    const openTimeoutId = setTimeout(() => {
-      this._onError(new Error('Logs stream (SSE) was opened but nothing was received'));
-    }, OPEN_TIMEOUT);
-
-    // Wire SSE "message" to _onPing() call or "log" event
-    this._sse.addEventListener('message', (message) => {
-      clearTimeout(openTimeoutId);
-      const parsedMessage = this.parseLogMessage(message);
-      this.isPingMessage(parsedMessage)
-        ? this._onPing(parsedMessage.heartbeat_delay_ms)
-        : this.emit('log', parsedMessage);
-    });
-
-    // Wire SSE "error" to _onError() call
-    this._sse.addEventListener('error', (error) => {
-      clearTimeout(openTimeoutId);
-      this.isAuthErrorMessage(error)
-        ? this._onError(new AuthenticationError('Authentication for the logs stream (SSE) failed'))
-        : this._onError(error);
-    });
-  }
-
-  createEventSource () {
-    // It's up to the class extending AbstractLogsStream to implement how to create a SSE connection
-    throw new Error('Not implemented');
-  }
-
-  parseLogMessage (message) {
-    try {
-      return JSON.parse(message.data);
-    }
-    catch (e) {
-      return null;
-    }
-  }
-
-  isAuthErrorMessage (err) {
-    return (err != null) && (err.type === 'error') && (err.status === 401);
-  }
-
-  // Closing is the same call for browser/node
-  _closeSource () {
-    if (this._sse != null) {
-      this._sse.close();
-      this._sse = null;
-    }
   }
 }

@@ -1,9 +1,12 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * GET /notifications/emailhooks/{ownerId}
  * @param {Object} params
  * @param {String} params.ownerId
+ * @returns {Promise<RequestParams>}
  */
 export function getEmailhooks(params) {
   // no multipath for /self or /organisations/{id}
@@ -21,6 +24,7 @@ export function getEmailhooks(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createEmailhook(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -38,6 +42,7 @@ export function createEmailhook(params, body) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function deleteEmailhook(params) {
   // no multipath for /self or /organisations/{id}
@@ -56,6 +61,7 @@ export function deleteEmailhook(params) {
  * @param {String} params.ownerId
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function editEmailhook(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -70,7 +76,7 @@ export function editEmailhook(params, body) {
 
 /**
  * GET /notifications/info/events
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getAvailableEvents() {
   // no multipath for /self or /organisations/{id}
@@ -85,7 +91,7 @@ export function getAvailableEvents() {
 
 /**
  * GET /notifications/info/webhookformats
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getWebhookFormats() {
   // no multipath for /self or /organisations/{id}
@@ -102,6 +108,7 @@ export function getWebhookFormats() {
  * GET /notifications/webhooks/{ownerId}
  * @param {Object} params
  * @param {String} params.ownerId
+ * @returns {Promise<RequestParams>}
  */
 export function getWebhooks(params) {
   // no multipath for /self or /organisations/{id}
@@ -119,6 +126,7 @@ export function getWebhooks(params) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function createWebhook(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -136,6 +144,7 @@ export function createWebhook(params, body) {
  * @param {Object} params
  * @param {String} params.ownerId
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function deleteWebhook(params) {
   // no multipath for /self or /organisations/{id}
@@ -154,6 +163,7 @@ export function deleteWebhook(params) {
  * @param {String} params.ownerId
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function editWebhook(params, body) {
   // no multipath for /self or /organisations/{id}

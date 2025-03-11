@@ -1,10 +1,15 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /application/{appId}/environment
  * @param {Object} params
  * @param {String} params.appId
  * @param {String} params.token
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getEnv(params) {
   // no multipath for /self or /organisations/{id}
@@ -23,6 +28,7 @@ export function todo_getEnv(params) {
  * @param {String} params.appId
  * @param {String} params.token
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_updateEnv(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -40,6 +46,7 @@ export function todo_updateEnv(params, body) {
  * @param {Object} params
  * @param {String} params.owner
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_postAuthenticate(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -56,6 +63,7 @@ export function todo_postAuthenticate(params, body) {
  * POST /authorize
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_postAuthorize(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -72,6 +80,7 @@ export function todo_postAuthorize(params, body) {
  * DELETE /invoice/external/paypal/{bid}
  * @param {Object} params
  * @param {String} params.bid
+ * @returns {Promise<RequestParams>}
  */
 export function todo_cancelPaypalTransaction(params) {
   // no multipath for /self or /organisations/{id}
@@ -89,6 +98,7 @@ export function todo_cancelPaypalTransaction(params) {
  * @param {Object} params
  * @param {String} params.bid
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_authorizePaypalTransaction(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -106,6 +116,7 @@ export function todo_authorizePaypalTransaction(params, body) {
  * @param {Object} params
  * @param {String} params.bid
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_updateInvoice(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -120,7 +131,7 @@ export function todo_updateInvoice(params, body) {
 
 /**
  * GET /newsfeeds/blog
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getBlogFeed() {
   // no multipath for /self or /organisations/{id}
@@ -135,7 +146,7 @@ export function todo_getBlogFeed() {
 
 /**
  * GET /newsfeeds/engineering
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getEngineeringFeed() {
   // no multipath for /self or /organisations/{id}
@@ -162,6 +173,7 @@ export function todo_getEngineeringFeed() {
  * @param {String} params.oauth_callback
  * @param {String} params.oauth_token_secret
  * @param {String} params.oauth_callback_confirmed
+ * @returns {Promise<RequestParams>}
  */
 export function todo_postAccessTokenRequestQuery(params) {
   // no multipath for /self or /organisations/{id}
@@ -196,6 +208,7 @@ export function todo_postAccessTokenRequestQuery(params) {
  * @param {String} params.cli_token
  * @param {String} params.from_oauth
  * @param {String} params.partner_id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_authorizeForm(params) {
   // no multipath for /self or /organisations/{id}
@@ -214,6 +227,7 @@ export function todo_authorizeForm(params) {
  * @param {String} params.ccid
  * @param {String} params.cctk
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_authorizeToken(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -241,6 +255,7 @@ export function todo_authorizeToken(params, body) {
  * @param {String} params.oauth_callback
  * @param {String} params.oauth_token_secret
  * @param {String} params.oauth_callback_confirmed
+ * @returns {Promise<RequestParams>}
  */
 export function todo_postReqTokenRequestQueryString(params) {
   // no multipath for /self or /organisations/{id}
@@ -268,7 +283,7 @@ export function todo_postReqTokenRequestQueryString(params) {
 
 /**
  * GET /oauth/rights
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getAvailableRights() {
   // no multipath for /self or /organisations/{id}
@@ -291,6 +306,7 @@ export function todo_getAvailableRights() {
  * @param {String} params.error
  * @param {String} params.error_description
  * @param {String} params.error_uri
+ * @returns {Promise<RequestParams>}
  */
 export function todo_oidcCallback(params) {
   // no multipath for /self or /organisations/{id}
@@ -314,6 +330,7 @@ export function todo_oidcCallback(params) {
  * @param {String} params.oauth_token
  * @param {String} params.invitationKey
  * @param {String} params.subscriptionSource
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getOIDCLogin(params) {
   // no multipath for /self or /organisations/{id}
@@ -338,6 +355,7 @@ export function todo_getOIDCLogin(params) {
  * @param {String} params.subscriptionSource
  * @param {String} params.terms
  * @param {String} params.partnerId
+ * @returns {Promise<RequestParams>}
  */
 export function todo_oidcSignup(params) {
   // no multipath for /self or /organisations/{id}
@@ -355,6 +373,7 @@ export function todo_oidcSignup(params) {
  * @param {Object} params
  * @param {String} params.service
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_oidcSignupEnd(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -371,6 +390,7 @@ export function todo_oidcSignupEnd(params, body) {
  * GET /password_forgotten
  * @param {Object} params
  * @param {String} params.partner_id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getPasswordForgottenForm(params) {
   // no multipath for /self or /organisations/{id}
@@ -387,6 +407,7 @@ export function todo_getPasswordForgottenForm(params) {
  * POST /password_forgotten
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_askForPasswordResetViaForm(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -404,6 +425,7 @@ export function todo_askForPasswordResetViaForm(params, body) {
  * @param {Object} params
  * @param {String} params.key
  * @param {String} params.partner_id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_confirmPasswordResetRequest(params) {
   // no multipath for /self or /organisations/{id}
@@ -421,6 +443,7 @@ export function todo_confirmPasswordResetRequest(params) {
  * @param {Object} params
  * @param {String} params.key
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_resetPasswordForgotten(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -437,6 +460,7 @@ export function todo_resetPasswordForgotten(params, body) {
  * GET /payments/assets/pay_button/{token}/button.png
  * @param {Object} params
  * @param {String} params.token
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getInvoiceStatusButton(params) {
   // no multipath for /self or /organisations/{id}
@@ -453,6 +477,7 @@ export function todo_getInvoiceStatusButton(params) {
  * GET /payments/coupons/{name}
  * @param {Object} params
  * @param {String} params.name
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getCoupon(params) {
   // no multipath for /self or /organisations/{id}
@@ -467,7 +492,7 @@ export function todo_getCoupon(params) {
 
 /**
  * GET /payments/providers
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getAvailablePaymentProviders() {
   // no multipath for /self or /organisations/{id}
@@ -482,7 +507,7 @@ export function todo_getAvailablePaymentProviders() {
 
 /**
  * GET /payments/tokens/stripe
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getStripeToken() {
   // no multipath for /self or /organisations/{id}
@@ -500,6 +525,7 @@ export function todo_getStripeToken() {
  * @param {Object} params
  * @param {String} params.Stripe-Signature
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_stripeSepaWebhook(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -517,6 +543,7 @@ export function todo_stripeSepaWebhook(params, body) {
  * @param {Object} params
  * @param {String} params.bid
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_endPaymentWithStripe(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -534,6 +561,7 @@ export function todo_endPaymentWithStripe(params, body) {
  * @param {Object} params
  * @param {String} params.bid
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_updateStripePayment(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -550,6 +578,7 @@ export function todo_updateStripePayment(params, body) {
  * GET /products/addonproviders/{provider_id}/informations
  * @param {Object} params
  * @param {String} params.provider_id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getAddonProviderInfos(params) {
   // no multipath for /self or /organisations/{id}
@@ -566,6 +595,7 @@ export function todo_getAddonProviderInfos(params) {
  * GET /products/addonproviders/{provider_id}/versions
  * @param {Object} params
  * @param {String} params.provider_id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getAddonProviderVersions(params) {
   // no multipath for /self or /organisations/{id}
@@ -580,7 +610,7 @@ export function todo_getAddonProviderVersions(params) {
 
 /**
  * GET /products/countries
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getCountries() {
   // no multipath for /self or /organisations/{id}
@@ -595,7 +625,7 @@ export function todo_getCountries() {
 
 /**
  * GET /products/countrycodes
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getCountryCodes() {
   // no multipath for /self or /organisations/{id}
@@ -612,6 +642,7 @@ export function todo_getCountryCodes() {
  * GET /products/flavors
  * @param {Object} params
  * @param {String} params.context
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getFlavors(params) {
   // no multipath for /self or /organisations/{id}
@@ -631,6 +662,7 @@ export function todo_getFlavors(params) {
  * @param {String} params.version
  * @param {String} params.for
  * @param {String} params.app
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getInstance(params) {
   // no multipath for /self or /organisations/{id}
@@ -645,7 +677,7 @@ export function todo_getInstance(params) {
 
 /**
  * GET /products/mfa_kinds
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getMFAKinds() {
   // no multipath for /self or /organisations/{id}
@@ -664,6 +696,7 @@ export function todo_getMFAKinds() {
  * @param {String} params.coupon
  * @param {String} params.orgaId
  * @param {String} params.currency
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getAvailablePackages(params) {
   // no multipath for /self or /organisations/{id}
@@ -683,6 +716,7 @@ export function todo_getAvailablePackages(params) {
  * @param {String} params.url_next
  * @param {String} params.subscription_source
  * @param {String} params.partner_id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSignupFormForSource(params) {
   // no multipath for /self or /organisations/{id}
@@ -703,6 +737,7 @@ export function todo_getSignupFormForSource(params) {
  * @param {String} params.fromAuthorize
  * @param {String} params.cli_token
  * @param {String} params.partner_id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getLoginForm(params) {
   // no multipath for /self or /organisations/{id}
@@ -719,6 +754,7 @@ export function todo_getLoginForm(params) {
  * POST /session/login
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_login(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -735,6 +771,7 @@ export function todo_login(params, body) {
  * POST /session/mfa_login
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_mfaLogin(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -754,6 +791,7 @@ export function todo_mfaLogin(params, body) {
  * @param {String} params.url_next
  * @param {String} params.subscription_source
  * @param {String} params.partner_id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSignupForm(params) {
   // no multipath for /self or /organisations/{id}
@@ -773,6 +811,7 @@ export function todo_getSignupForm(params) {
  * @param {String} params.invitationKey
  * @param {String} params.url_next
  * @param {String} params.partner_id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSignupFormForSource_1(params) {
   // no multipath for /self or /organisations/{id}
@@ -793,6 +832,7 @@ export function todo_getSignupFormForSource_1(params) {
  * @param {String} params.fromAuthorize
  * @param {String} params.cli_token
  * @param {String} params.partner_id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getLoginForm_1(params) {
   // no multipath for /self or /organisations/{id}
@@ -812,6 +852,7 @@ export function todo_getLoginForm_1(params) {
  * @param {String} params.url_next
  * @param {String} params.subscription_source
  * @param {String} params.partner_id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getSignupForm_1(params) {
   // no multipath for /self or /organisations/{id}
@@ -828,6 +869,7 @@ export function todo_getSignupForm_1(params) {
  * GET /users/{id}
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getUser(params) {
   // no multipath for /self or /organisations/{id}
@@ -844,6 +886,7 @@ export function todo_getUser(params) {
  * GET /users/{id}/applications
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function todo_listUserApplications(params) {
   // no multipath for /self or /organisations/{id}
@@ -860,6 +903,7 @@ export function todo_listUserApplications(params) {
  * GET /users/{userId}/git-info
  * @param {Object} params
  * @param {String} params.userId
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getUserGitInformations(params) {
   // no multipath for /self or /organisations/{id}
@@ -877,6 +921,7 @@ export function todo_getUserGitInformations(params) {
  * @param {Object} params
  * @param {String} params.key
  * @param {String} params.action
+ * @returns {Promise<RequestParams>}
  */
 export function todo_validate(params) {
   // no multipath for /self or /organisations/{id}
@@ -894,6 +939,7 @@ export function todo_validate(params) {
  * @param {Object} params
  * @param {String} params.country
  * @param {String} params.vat
+ * @returns {Promise<RequestParams>}
  */
 export function todo_checkVat(params) {
   // no multipath for /self or /organisations/{id}
@@ -910,6 +956,7 @@ export function todo_checkVat(params) {
  * POST /vendor/addons
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_provisionOtherAddon(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -926,6 +973,7 @@ export function todo_provisionOtherAddon(params, body) {
  * GET /vendor/apps
  * @param {Object} params
  * @param {String} params.offset
+ * @returns {Promise<RequestParams>}
  */
 export function todo_listApps(params) {
   // no multipath for /self or /organisations/{id}
@@ -942,6 +990,7 @@ export function todo_listApps(params) {
  * GET /vendor/apps/{addonId}
  * @param {Object} params
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function todo_getApplicationInfo(params) {
   // no multipath for /self or /organisations/{id}
@@ -959,6 +1008,7 @@ export function todo_getApplicationInfo(params) {
  * @param {Object} params
  * @param {String} params.addonId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_editApplicationConfiguration(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -976,6 +1026,7 @@ export function todo_editApplicationConfiguration(params, body) {
  * @param {Object} params
  * @param {String} params.addonId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_billOwner(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -992,6 +1043,7 @@ export function todo_billOwner(params, body) {
  * GET /vendor/apps/{addonId}/logscollector
  * @param {Object} params
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function todo_logscollector(params) {
   // no multipath for /self or /organisations/{id}
@@ -1011,6 +1063,7 @@ export function todo_logscollector(params) {
  * @param {String} params.plan_id
  * @param {String} params.region
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function todo_endAddonMigration(params, body) {
   // no multipath for /self or /organisations/{id}

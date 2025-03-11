@@ -1,10 +1,15 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * POST /iam/organisations/{ownerId}/iam/materia-db-kv/{KVId}/tokens
  * @param {Object} params
- * @param {String} params.undefined
- * @param {String} params.resourceId
+ * @param {String} params.ownerId
+ * @param {String} params.KVId
+ * @returns {Promise<RequestParams>}
  */
 export function createMateriaDBKVToken(params) {
   // no multipath for /self or /organisations/{id}
@@ -20,9 +25,10 @@ export function createMateriaDBKVToken(params) {
 /**
  * GET /iam/organisations/{ownerId}/iam/tokens
  * @param {Object} params
- * @param {String} params.undefined
+ * @param {String} params.ownerId
  * @param {String} params.from
  * @param {String} params.size
+ * @returns {Promise<RequestParams>}
  */
 export function listOrganisationTokens(params) {
   // no multipath for /self or /organisations/{id}
@@ -38,8 +44,9 @@ export function listOrganisationTokens(params) {
 /**
  * DELETE /iam/organisations/{ownerId}/iam/tokens/{tokenId}
  * @param {Object} params
- * @param {String} params.undefined
- * @param {String} params.apiKeyId
+ * @param {String} params.ownerId
+ * @param {String} params.tokenId
+ * @returns {Promise<RequestParams>}
  */
 export function revokeToken(params) {
   // no multipath for /self or /organisations/{id}
@@ -55,8 +62,9 @@ export function revokeToken(params) {
 /**
  * GET /iam/organisations/{ownerId}/iam/tokens/{tokenId}
  * @param {Object} params
- * @param {String} params.undefined
+ * @param {String} params.ownerId
  * @param {String} params.tokenId
+ * @returns {Promise<RequestParams>}
  */
 export function getOrganisationToken(params) {
   // no multipath for /self or /organisations/{id}
@@ -74,6 +82,7 @@ export function getOrganisationToken(params) {
  * @param {Object} params
  * @param {String} params.from
  * @param {String} params.size
+ * @returns {Promise<RequestParams>}
  */
 export function listTokenRevocations(params) {
   // no multipath for /self or /organisations/{id}

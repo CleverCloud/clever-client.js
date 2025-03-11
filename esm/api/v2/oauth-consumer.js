@@ -1,10 +1,13 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * GET /organisations/{id}/consumers
  * GET /self/consumers
  * @param {Object} params
  * @param {String} params.id
+ * @returns {Promise<RequestParams>}
  */
 export function getAll(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -23,6 +26,7 @@ export function getAll(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function create(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -41,6 +45,7 @@ export function create(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.key
+ * @returns {Promise<RequestParams>}
  */
 export function remove(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -59,6 +64,7 @@ export function remove(params) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.key
+ * @returns {Promise<RequestParams>}
  */
 export function get(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -78,6 +84,7 @@ export function get(params) {
  * @param {String} params.id
  * @param {String} params.key
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function update(params, body) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;
@@ -96,6 +103,7 @@ export function update(params, body) {
  * @param {Object} params
  * @param {String} params.id
  * @param {String} params.key
+ * @returns {Promise<RequestParams>}
  */
 export function getSecret(params) {
   const urlBase = params.id == null ? '/self' : `/organisations/${params.id}`;

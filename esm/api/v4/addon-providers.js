@@ -1,9 +1,12 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * GET /addon-providers/jenkins/addons/{addonId}/updates
  * @param {Object} params
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function getJenkinsUpdates(params) {
   // no multipath for /self or /organisations/{id}
@@ -20,6 +23,7 @@ export function getJenkinsUpdates(params) {
  * GET /addon-providers/{providerId}
  * @param {Object} params
  * @param {String} params.providerId
+ * @returns {Promise<RequestParams>}
  */
 export function getAddonProvider(params) {
   // no multipath for /self or /organisations/{id}
@@ -37,6 +41,7 @@ export function getAddonProvider(params) {
  * @param {Object} params
  * @param {String} params.providerId
  * @param {String} params.addonId
+ * @returns {Promise<RequestParams>}
  */
 export function getAddon(params) {
   // no multipath for /self or /organisations/{id}
@@ -54,6 +59,7 @@ export function getAddon(params) {
  * @param {Object} params
  * @param {String} params.providerId
  * @param {String} params.clusterId
+ * @returns {Promise<RequestParams>}
  */
 export function getCluster(params) {
   // no multipath for /self or /organisations/{id}

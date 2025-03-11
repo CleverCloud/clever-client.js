@@ -1,6 +1,10 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /orchestration/organisations/{ownerId}/applications/{applicationId}/deployments
  * @param {Object} params
  * @param {String} params.ownerId
@@ -9,6 +13,7 @@ import { pickNonNull } from '../../pick-non-null.js';
  * @param {String} params.action
  * @param {String} params.limit
  * @param {String} params.order
+ * @returns {Promise<RequestParams>}
  */
 export function listApplicationDeployments(params) {
   // no multipath for /self or /organisations/{id}

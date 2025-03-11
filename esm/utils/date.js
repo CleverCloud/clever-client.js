@@ -1,6 +1,10 @@
 export const ONE_HOUR_MICROS = 60 * 60 * 1000 * 1000;
 export const ONE_SECOND_MICROS = 1000 * 1000;
 
+/**
+ * @param {number} microTimestamp
+ * @returns {string}
+ */
 export function toMicroIsoString (microTimestamp) {
   const milliTimestamp = Math.floor(microTimestamp / 1000);
   const milliIsoString = new Date(milliTimestamp).toISOString();
@@ -8,6 +12,10 @@ export function toMicroIsoString (microTimestamp) {
   return milliIsoString.replace(/Z$/, `${microSuffix}Z`);
 }
 
+/**
+ * @param {string} [isoString]
+ * @returns {number}
+ */
 export function toMicroTimestamp (isoString) {
   if (isoString == null) {
     return Date.now() * 1000;

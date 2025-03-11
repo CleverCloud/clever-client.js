@@ -1,8 +1,12 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /addon-providers/addon-pulsar
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getPulsarProviderInformations() {
   // no multipath for /self or /organisations/{id}
@@ -19,6 +23,7 @@ export function getPulsarProviderInformations() {
  * GET /addon-providers/addon-pulsar/addons/{pulsarId}
  * @param {Object} params
  * @param {String} params.pulsarId
+ * @returns {Promise<RequestParams>}
  */
 export function getPulsar(params) {
   // no multipath for /self or /organisations/{id}
@@ -35,6 +40,7 @@ export function getPulsar(params) {
  * POST /addon-providers/addon-pulsar/addons/{pulsarId}/create-tenant-and-namespace
  * @param {Object} params
  * @param {String} params.pulsarId
+ * @returns {Promise<RequestParams>}
  */
 export function createTenantAndNamespace(params) {
   // no multipath for /self or /organisations/{id}
@@ -51,6 +57,7 @@ export function createTenantAndNamespace(params) {
  * DELETE /addon-providers/addon-pulsar/addons/{pulsarId}/delete-tenant-and-namespace
  * @param {Object} params
  * @param {String} params.pulsarId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteTenantAndNamespace(params) {
   // no multipath for /self or /organisations/{id}
@@ -67,6 +74,7 @@ export function deleteTenantAndNamespace(params) {
  * GET /addon-providers/addon-pulsar/addons/{pulsarId}/storage-policies
  * @param {Object} params
  * @param {String} params.pulsarId
+ * @returns {Promise<RequestParams>}
  */
 export function getPulsarStoragePolicy(params) {
   // no multipath for /self or /organisations/{id}
@@ -84,6 +92,7 @@ export function getPulsarStoragePolicy(params) {
  * @param {Object} params
  * @param {String} params.pulsarId
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function patchStoragePolicies(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -99,8 +108,10 @@ export function patchStoragePolicies(params, body) {
 /**
  * DELETE /addon-providers/addon-pulsar/addons/{pulsarId}/topics/{topicName}
  * @param {Object} params
- * @param {String} params.undefined
- * @param {String} params.undefined
+ * @param {String} params.pulsarId
+ * @param {String} params.topicName
+ * @param {String} params.instanceId
+ * @returns {Promise<RequestParams>}
  */
 export function deleteTopic(params) {
   // no multipath for /self or /organisations/{id}
@@ -108,7 +119,7 @@ export function deleteTopic(params) {
     method: 'delete',
     url: `/v4/addon-providers/addon-pulsar/addons/${params.pulsarId}/topics/${params.topicName}`,
     headers: {},
-    // no query params
+    queryParams: pickNonNull(params, ['instanceId']),
     // no body
   });
 }
@@ -117,6 +128,7 @@ export function deleteTopic(params) {
  * GET /addon-providers/addon-pulsar/clusters/{clusterId}
  * @param {Object} params
  * @param {String} params.clusterId
+ * @returns {Promise<RequestParams>}
  */
 export function getPulsarCluster(params) {
   // no multipath for /self or /organisations/{id}

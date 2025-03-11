@@ -1,9 +1,12 @@
-import { pickNonNull } from '../../pick-non-null.js';
+/**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
 
 /**
  * GET /metrics/read/{orgaId}
  * @param {Object} params
  * @param {String} params.orgaId
+ * @returns {Promise<RequestParams>}
  */
 export function getToken(params) {
   // no multipath for /self or /organisations/{id}

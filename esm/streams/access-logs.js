@@ -1,34 +1,19 @@
 import CleverCloudSse from './clever-cloud-sse.js';
 
+/**
+ * @typedef {import('./access-logs.types.js').ApplicationAccessLogsStreamParams} ApplicationAccessLogsStreamParams
+ * @typedef {import('./access-logs.types.js').ApplicationAccessLog} ApplicationAccessLog
+ */
+
 const ACCESS_LOG_EVENT_NAME = 'ACCESS_LOG';
 
 /**
- * CleverCloud Application' access logs stream
+ * CleverCloud Application's access logs stream
  */
 export class ApplicationAccessLogStream extends CleverCloudSse {
 
   /**
-   * @param {object} options
-   * @param {string} options.apiHost
-   * @param {object} options.tokens
-   * @param {string} options.tokens.OAUTH_CONSUMER_KEY
-   * @param {string} options.tokens.OAUTH_CONSUMER_SECRET
-   * @param {string} options.tokens.API_OAUTH_TOKEN
-   * @param {string} options.tokens.API_OAUTH_TOKEN_SECRET
-   * @param {string} options.ownerId
-   * @param {string} options.appId
-   * @param {object} options.retryConfiguration
-   * @param {boolean} options.retryConfiguration.enabled
-   * @param {number} options.retryConfiguration.backoffFactor
-   * @param {number} options.retryConfiguration.initRetryTimeout
-   * @param {number} options.retryConfiguration.maxRetryCount
-   * @param {Date} options.since
-   * @param {Date} options.until
-   * @param {number} options.limit
-   * @param {string} options.field[]
-   * @param {number} options.throttleElements
-   * @param {number} options.throttlePerInMilliseconds
-   *
+   * @param {ApplicationAccessLogsStreamParams} params
    */
   constructor ({ apiHost, tokens, ownerId, appId, retryConfiguration, connectionTimeout, ...options }) {
     super(apiHost, tokens, retryConfiguration ?? {}, connectionTimeout);
@@ -45,7 +30,8 @@ export class ApplicationAccessLogStream extends CleverCloudSse {
 
   /**
    * compute full URL with query params
-   * @returns {string}
+   *
+   * @returns {URL}
    */
   getUrl () {
     const url = this.buildUrl(
@@ -70,16 +56,20 @@ export class ApplicationAccessLogStream extends CleverCloudSse {
   }
 
   /**
-   * override default method
+   * Transform the log event data to an application log object.
+   *
+   * @param {string} event
+   * @param {any} data
+   * @returns {any}
    */
   transform (event, data) {
-
     if (event !== ACCESS_LOG_EVENT_NAME) {
       return data;
     }
 
+    /** @type {ApplicationAccessLog} */
     const log = JSON.parse(data);
-    if (log.date) {
+    if (log.date != null) {
       log.date = new Date(log.date);
     }
 
@@ -87,11 +77,15 @@ export class ApplicationAccessLogStream extends CleverCloudSse {
   }
 
   /**
-   * shortcut for .on('APPLICATION_LOG', (event) => ...)
-   * @param {Function} fn which handle logs
+   * shortcut for .on('ACCESS_LOG', (event) => ...)
+   *
+   * @param {(log:ApplicationAccessLog) => void} fn which handle logs
    * @returns {this}
    */
   onLog (fn) {
-    return this.on(ACCESS_LOG_EVENT_NAME, (event) => fn(event.data));
+    return this.on(ACCESS_LOG_EVENT_NAME, (event) => {
+      // @ts-ignore
+      fn(event.data);
+    });
   }
 }

@@ -1,8 +1,12 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /github
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function get() {
   // no multipath for /self or /organisations/{id}
@@ -17,7 +21,7 @@ export function get() {
 
 /**
  * GET /github/applications
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getApplications() {
   // no multipath for /self or /organisations/{id}
@@ -39,6 +43,7 @@ export function getApplications() {
  * @param {String} params.error
  * @param {String} params.error_description
  * @param {String} params.error_uri
+ * @returns {Promise<RequestParams>}
  */
 export function getCallback(params) {
   // no multipath for /self or /organisations/{id}
@@ -53,7 +58,7 @@ export function getCallback(params) {
 
 /**
  * GET /github/emails
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getEmailsAddresses() {
   // no multipath for /self or /organisations/{id}
@@ -68,7 +73,7 @@ export function getEmailsAddresses() {
 
 /**
  * GET /github/keys
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getKeys() {
   // no multipath for /self or /organisations/{id}
@@ -83,7 +88,7 @@ export function getKeys() {
 
 /**
  * DELETE /github/link
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function removeLink() {
   // no multipath for /self or /organisations/{id}
@@ -102,6 +107,7 @@ export function removeLink() {
  * @param {String} params.transactionId
  * @param {String} params.redirectUrl
  * @param {String} params.partner_id
+ * @returns {Promise<RequestParams>}
  */
 export function getLink(params) {
   // no multipath for /self or /organisations/{id}
@@ -124,6 +130,7 @@ export function getLink(params) {
  * @param {String} params.oauth_token
  * @param {String} params.invitationKey
  * @param {String} params.subscriptionSource
+ * @returns {Promise<RequestParams>}
  */
 export function getLogin(params) {
   // no multipath for /self or /organisations/{id}
@@ -143,6 +150,7 @@ export function getLogin(params) {
  * @param {String} params.X-Github-Event
  * @param {String} params.X-Hub-Signature
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function redeploy(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -166,6 +174,7 @@ export function redeploy(params, body) {
  * @param {String} params.invitationKey
  * @param {String} params.subscriptionSource
  * @param {String} params.terms
+ * @returns {Promise<RequestParams>}
  */
 export function signup(params) {
   // no multipath for /self or /organisations/{id}
@@ -182,6 +191,7 @@ export function signup(params) {
  * POST /github/signup
  * @param {Object} params
  * @param {Object} body
+ * @returns {Promise<RequestParams>}
  */
 export function finishSignup(params, body) {
   // no multipath for /self or /organisations/{id}
@@ -196,7 +206,7 @@ export function finishSignup(params, body) {
 
 /**
  * GET /github/username
- * @param {Object} params
+ * @returns {Promise<RequestParams>}
  */
 export function getUsername() {
   // no multipath for /self or /organisations/{id}

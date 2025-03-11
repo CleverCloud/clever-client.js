@@ -1,36 +1,18 @@
 import CleverCloudSse from './clever-cloud-sse.js';
 
+/**
+ * @typedef {import('./application-logs.types.js').ApplicationLogsStreamParams} ApplicationLogsStreamParams
+ * @typedef {import('./application-logs.types.js').ApplicationLog} ApplicationLog
+ */
+
 const APPLICATION_LOG_EVENT_NAME = 'APPLICATION_LOG';
 
 /**
- * CleverCloud Application' logs stream
+ * CleverCloud Applications' logs stream
  */
 export class ApplicationLogStream extends CleverCloudSse {
   /**
-   * @param {object} options
-   * @param {string} options.apiHost
-   * @param {object} options.tokens
-   * @param {string} options.tokens.OAUTH_CONSUMER_KEY
-   * @param {string} options.tokens.OAUTH_CONSUMER_SECRET
-   * @param {string} options.tokens.API_OAUTH_TOKEN
-   * @param {string} options.tokens.API_OAUTH_TOKEN_SECRET
-   * @param {string} options.ownerId
-   * @param {string} options.appId
-   * @param {number} options.connectionTimeout
-   * @param {object} options.retryConfiguration
-   * @param {boolean} options.retryConfiguration.enabled
-   * @param {number} options.retryConfiguration.backoffFactor
-   * @param {number} options.retryConfiguration.initRetryTimeout
-   * @param {number} options.retryConfiguration.maxRetryCount
-   * @param {Date} options.since
-   * @param {Date} options.until
-   * @param {number} options.limit
-   * @param {string} options.deploymentId
-   * @param {string} options.instanceId[]
-   * @param {string} options.filter
-   * @param {string} options.field[]
-   * @param {number} options.throttleElements
-   * @param {number} options.throttlePerInMilliseconds
+   * @param {ApplicationLogsStreamParams} params
    */
   constructor ({ apiHost, tokens, ownerId, appId, retryConfiguration, connectionTimeout, ...options }) {
     super(apiHost, tokens, retryConfiguration ?? {}, connectionTimeout);
@@ -55,7 +37,7 @@ export class ApplicationLogStream extends CleverCloudSse {
       {
         ...this._options,
         // in case of pause() then resume():
-        // we don' t want N another logs, we want the initial passed number less the events count already received
+        // we don't want N another logs, we want the initial passed number less the events count already received
         limit: this._computedLimit(),
       },
     );
@@ -70,7 +52,11 @@ export class ApplicationLogStream extends CleverCloudSse {
   }
 
   /**
-   * override default method
+   * Transform the log event data to an application log object.
+   *
+   * @param {string} event
+   * @param {any} data
+   * @returns {any}
    */
   transform (event, data) {
 
@@ -78,8 +64,9 @@ export class ApplicationLogStream extends CleverCloudSse {
       return data;
     }
 
+    /** @type {ApplicationLog} */
     const log = JSON.parse(data);
-    if (log.date) {
+    if (log.date != null) {
       log.date = new Date(log.date);
     }
     return log;
@@ -87,10 +74,14 @@ export class ApplicationLogStream extends CleverCloudSse {
 
   /**
    * shortcut for .on('APPLICATION_LOG', (event) => ...)
-   * @param {Function} fn which handle logs
+   *
+   * @param {(log: ApplicationLog) => void} fn The function which handle log
    * @returns {this}
    */
   onLog (fn) {
-    return this.on(APPLICATION_LOG_EVENT_NAME, (event) => fn(event.data));
+    return this.on(APPLICATION_LOG_EVENT_NAME, (event) => {
+      // @ts-ignore
+      return fn(event.data);
+    });
   }
 }

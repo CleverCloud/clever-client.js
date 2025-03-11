@@ -1,17 +1,21 @@
 import { pickNonNull } from '../../pick-non-null.js';
 
 /**
+ * @typedef {import('../../request.types.js').RequestParams} RequestParams
+ */
+
+/**
  * GET /logs/organisations/{ownerId}/applications/{applicationId}/accesslogs
  * @param {Object} params
  * @param {String} params.ownerId
- * @param {String} params.resourceId
+ * @param {String} params.applicationId
  * @param {String} params.since
  * @param {String} params.until
  * @param {String} params.limit
  * @param {String} params.field
  * @param {String} params.throttleElements
  * @param {String} params.throttlePerInMilliseconds
- * @param {String} params.Last-Event-ID
+ * @returns {Promise<RequestParams>}
  */
 export function streamAccessLogs(params) {
   // no multipath for /self or /organisations/{id}
@@ -27,7 +31,7 @@ export function streamAccessLogs(params) {
 /**
  * GET /logs/organisations/{ownerId}/applications/{applicationId}/logs
  * @param {Object} params
- * @param {String} params.undefined
+ * @param {String} params.ownerId
  * @param {String} params.applicationId
  * @param {String} params.since
  * @param {String} params.until
@@ -39,7 +43,7 @@ export function streamAccessLogs(params) {
  * @param {String} params.field
  * @param {String} params.throttleElements
  * @param {String} params.throttlePerInMilliseconds
- * @param {String} params.Last-Event-ID
+ * @returns {Promise<RequestParams>}
  */
 export function streamLogs(params) {
   // no multipath for /self or /organisations/{id}
