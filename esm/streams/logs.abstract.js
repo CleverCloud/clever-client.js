@@ -103,7 +103,7 @@ export class AbstractLogsStream extends AbstractStream {
   _parseLogMessage(message) {
     try {
       return JSON.parse(message.data);
-    } catch (e) {
+    } catch (_e) {
       return null;
     }
   }
@@ -132,6 +132,7 @@ export class AbstractLogsStream extends AbstractStream {
       queryParams: pickNonNull(
         {
           filter: this.filter,
+          // eslint-disable-next-line camelcase
           deployment_id: this.deploymentId,
         },
         ['filter', 'deployment_id'],

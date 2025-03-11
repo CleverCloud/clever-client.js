@@ -1,9 +1,9 @@
 let timersArePatched = false;
 
-const globalSetTimeout = global.setTimeout;
-const globalClearTimeout = global.clearTimeout;
-const globalSetInterval = global.setInterval;
-const globalClearInterval = global.clearInterval;
+const globalSetTimeout = globalThis.setTimeout;
+const globalClearTimeout = globalThis.clearTimeout;
+const globalSetInterval = globalThis.setInterval;
+const globalClearInterval = globalThis.clearInterval;
 
 const timeoutIds = new Map();
 const intervalIds = new Set();
@@ -24,7 +24,7 @@ export function patchTimers() {
   timeoutIds.clear();
   intervalIds.clear();
 
-  global.setTimeout = (callback, delay) => {
+  globalThis.setTimeout = (callback, delay) => {
     // Not sure why but some tests had a residual setTimeout of one second at the end
     // We can ignore those
     if (isCallInsidePath('node:internal/deps/undici')) {
@@ -39,12 +39,12 @@ export function patchTimers() {
     return id;
   };
 
-  global.clearTimeout = (id) => {
+  globalThis.clearTimeout = (id) => {
     timeoutIds.delete(id);
     return globalClearTimeout(id);
   };
 
-  global.setInterval = (callback, delay) => {
+  globalThis.setInterval = (callback, delay) => {
     const id = globalSetInterval(() => {
       return callback();
     }, delay);
@@ -52,7 +52,7 @@ export function patchTimers() {
     return id;
   };
 
-  global.clearInterval = (id) => {
+  globalThis.clearInterval = (id) => {
     intervalIds.delete(id);
     return globalClearInterval(id);
   };
@@ -96,10 +96,10 @@ export function unpatchTimers() {
 
   timersArePatched = false;
 
-  global.setTimeout = globalSetTimeout;
-  global.clearTimeout = globalClearTimeout;
-  global.setInterval = globalSetInterval;
-  global.clearInterval = globalClearInterval;
+  globalThis.setTimeout = globalSetTimeout;
+  globalThis.clearTimeout = globalClearTimeout;
+  globalThis.setInterval = globalSetInterval;
+  globalThis.clearInterval = globalClearInterval;
 }
 
 export function withTimeout(asyncTestFunction, timeoutLimit = 3_000) {

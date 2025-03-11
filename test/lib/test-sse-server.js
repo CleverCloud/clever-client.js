@@ -80,6 +80,7 @@ export class TestSseServer {
 
   async acceptRequestWith400() {
     return this.rejectRequest(400, {
+      // eslint-disable-next-line camelcase
       api_request_id: 'request_http_XXX',
       code: 'clever.core.bad-request',
       context: {
@@ -94,6 +95,7 @@ export class TestSseServer {
 
   async acceptRequestWith401() {
     return this.rejectRequest(401, {
+      // eslint-disable-next-line camelcase
       api_request_id: 'request_http_XXX',
       code: 'clever.auth.unauthorized',
       context: {},
@@ -103,6 +105,7 @@ export class TestSseServer {
 
   async acceptRequestWith404() {
     return this.rejectRequest(404, {
+      // eslint-disable-next-line camelcase
       api_request_id: 'request_http_XXX',
       code: 'clever.core.not-found',
       context: {},

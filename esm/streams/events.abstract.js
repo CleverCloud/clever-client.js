@@ -9,6 +9,7 @@ import { AbstractStream, AuthenticationError } from './stream.abstract.js';
 
 const PONG_MESSAGE = JSON.stringify({
   type: 'heartbeat',
+  // eslint-disable-next-line camelcase
   heartbeat_msg: 'pong',
 });
 
@@ -144,6 +145,7 @@ export class AbstractEventsStream extends AbstractStream {
         const url = urlObj.toString();
         // prepare message to auth WebSocket
         const authMessage = JSON.stringify({
+          // eslint-disable-next-line camelcase
           message_type: 'oauth',
           authorization: requestParams.headers.Authorization,
         });
@@ -161,7 +163,7 @@ export class AbstractEventsStream extends AbstractStream {
       const event = JSON.parse(message.data);
       const data = event.data != null ? JSON.parse(event.data) : null;
       return { ...event, data };
-    } catch (e) {
+    } catch (_e) {
       return null;
     }
   }

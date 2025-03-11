@@ -19,8 +19,10 @@ export function addOauthHeader(tokens) {
         key: tokens.OAUTH_CONSUMER_KEY,
         secret: tokens.OAUTH_CONSUMER_SECRET,
       },
+      // eslint-disable-next-line camelcase
       signature_method: 'HMAC-SHA512',
       // @ts-ignore
+      // eslint-disable-next-line camelcase
       async hash_function(baseString, key) {
         const encoder = new TextEncoder();
         const encodedText = encoder.encode(baseString);
@@ -54,6 +56,7 @@ export function addOauthHeader(tokens) {
       secret: tokens.API_OAUTH_TOKEN_SECRET,
     });
     // unwrap promise
+    // eslint-disable-next-line camelcase
     oauthData.oauth_signature = await oauthData.oauth_signature;
     const oauthHeaders = oauth.toHeader(oauthData);
 
