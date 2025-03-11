@@ -39,7 +39,6 @@
     "oauth-1.0a": "^2.2.6"
   },
   "peerDependencies": {
-    "baconjs": "^0.7.83",
     "eventsource": "^1.0.7",
     "ws": "^7.4.3"
   },
