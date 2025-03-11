@@ -89,7 +89,7 @@ export class ApplicationAccessLogStream extends CleverCloudSse {
   /**
    * shortcut for .on('APPLICATION_LOG', (event) => ...)
    * @param {Function} fn which handle logs
-   * @returns {any}
+   * @returns {this}
    */
   onLog (fn) {
     return this.on(ACCESS_LOG_EVENT_NAME, (event) => fn(event.data));
