@@ -240,15 +240,11 @@ function mergeCodesByService(allRoutesWithCode) {
     .value();
 }
 
-function formatCode(rawContents) {
+async function formatCode(rawContents) {
   // format (also parse and check what is generated)
-  return prettier.format(rawContents, {
-    parser: 'babel',
-    printWidth: 200,
-    semi: true,
-    singleQuote: true,
-    trailingComma: 'es5',
-  });
+  const options = await prettier.resolveConfig(pathJoin('./.prettierrc'));
+  options.parser = 'babel';
+  return await prettier.format(rawContents, options);
 }
 
 function buildLecagyClientSnippet(obj) {
@@ -398,7 +394,7 @@ async function generateClient() {
     
        ${rawContents}`;
 
-      const contents = formatCode(rawContentsWithImports);
+      const contents = await formatCode(rawContentsWithImports);
       await fs.appendFile(filepath, contents, 'utf8');
     }
 
@@ -406,7 +402,7 @@ async function generateClient() {
       // generate and write code for legacy client
       const legacyClientCode = buildLegacyClientCode(routesV2, codeByService);
       const legacyClientFilepath = pathJoin(generatedClientPath, 'legacy-client.js');
-      const legacyClientFormattedCode = formatCode(legacyClientCode);
+      const legacyClientFormattedCode = await formatCode(legacyClientCode);
       await fs.appendFile(legacyClientFilepath, legacyClientFormattedCode, 'utf8');
     }
   }
