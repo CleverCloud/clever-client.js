@@ -44,6 +44,8 @@
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.7",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@esm-bundle/chai": "^4.3.3",
     "@types/component-emitter": "^1.2.14",
     "@types/eventsource": "^1.1.15",
