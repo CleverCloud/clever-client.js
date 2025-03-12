@@ -1,0 +1,41 @@
+name: Publish
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+'
+jobs:
+  publish:
+    name: 'Publish'
+    runs-on: ubuntu-latest
+    steps:
+      - name: '[Prepare] Decode version from tag'
+        id: version_regex
+        uses: KyoriPowered/action-regex-match@v3
+        with:
+          text: ${{ github.ref_name }}
+          regex: '^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(beta)\.(?:0|[1-9]\d*))?$'
+      - name: '[Prepare] Parse version'
+        id: version_parse
+        if: steps.version_regex.outputs.match != ''
+        run: echo "prerelease=${{ steps.version_regex.outputs.group1 }}" >> $GITHUB_OUTPUT
+      - name: '[Prepare] Extract NPM tag'
+        id: npm_tag
+        run: p=${{ steps.version_parse.outputs.prerelease }} && echo "tag=${p:-latest}" >> $GITHUB_OUTPUT
+      - name: '[Prepare] Checkout'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - name: '[Prepare] Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: 'npm'
+      - name: '[Prepare] Install dependencies'
+        run: npm ci
+      - name: '[Publish] version ${{ github.ref_name }} with tag ${{ steps.npm_tag.outputs.tag }}'
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
+          npm publish --access public --tag ${{ steps.npm_tag.outputs.tag }}      
