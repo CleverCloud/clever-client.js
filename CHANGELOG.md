@@ -1,8 +1,5 @@
 # Clever Client changelog
 
-## Unreleased (????-??-??)
-
-...
 ## 9.2.1 (2025-03-04)
 
 * fix: fix grafana management methods
