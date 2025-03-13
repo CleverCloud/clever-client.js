@@ -2,7 +2,6 @@ import { expect } from '@esm-bundle/chai';
 import { toMicroIsoString, toMicroTimestamp } from '../esm/utils/date.js';
 
 describe('date#toMicroIsoString()', () => {
-
   it('from timestamp without microseconds precision', () => {
     const date = new Date('2020-03-11T11:11:11.111Z');
     const milliTimestamp = date.getTime();
@@ -21,22 +20,21 @@ describe('date#toMicroIsoString()', () => {
 });
 
 describe('date#toMicroTimestamp()', () => {
-
   it('from round micro ISO string', () => {
     const microTimestamp = toMicroTimestamp('2020-03-11T11:11:11.111000Z');
-    const milliTimestamp = (new Date('2020-03-11T11:11:11.111Z')).getTime();
+    const milliTimestamp = new Date('2020-03-11T11:11:11.111Z').getTime();
     expect(microTimestamp).to.equal(milliTimestamp * 1000);
   });
 
   it('from precise micro ISO string', () => {
     const microTimestamp = toMicroTimestamp('2020-03-11T11:11:11.111345Z');
-    const milliTimestamp = (new Date('2020-03-11T11:11:11.111Z')).getTime();
+    const milliTimestamp = new Date('2020-03-11T11:11:11.111Z').getTime();
     expect(microTimestamp).to.equal(milliTimestamp * 1000 + 345);
   });
 
   it('from milli ISO string', () => {
     const microTimestamp = toMicroTimestamp('2020-03-11T11:11:11.111Z');
-    const milliTimestamp = (new Date('2020-03-11T11:11:11.111Z')).getTime();
+    const milliTimestamp = new Date('2020-03-11T11:11:11.111Z').getTime();
     expect(microTimestamp).to.equal(milliTimestamp * 1000);
   });
 });

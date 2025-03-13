@@ -30,11 +30,9 @@ export const ERROR_REASON = {
   code: 4003,
 };
 
-export class AuthenticationError extends Error {
-}
+export class AuthenticationError extends Error {}
 
-export class PingError extends Error {
-}
+export class PingError extends Error {}
 
 /**
  * Base class for connecting to stream APIs (WebSocket, SSE, ...).
@@ -45,8 +43,7 @@ export class PingError extends Error {
  * @abstract
  */
 export class AbstractStream extends EventEmitter {
-
-  constructor () {
+  constructor() {
     super();
     /** @type {AutoRetry|null} */
     this._autoRetry = null;
@@ -65,8 +62,7 @@ export class AbstractStream extends EventEmitter {
    * @param {Number} [options.pingTimeoutFactor=PING_TIMEOUT_FACTOR] - Factor used to wait a bit longer than the ping delay promised by the API
    * @param {Number} [options.maxRetryCount=MAX_RETRY_COUNT] - Maximum number of consecutive iterations the auto retry behaviour can do
    */
-  open (options = {}) {
-
+  open(options = {}) {
     const { autoRetry = false } = options;
 
     // Make sure the source is closed before opening it
@@ -86,7 +82,7 @@ export class AbstractStream extends EventEmitter {
     this._openSource().catch((error) => this._onError(error));
   }
 
-  close (reason = FORCE_CLOSE_REASON) {
+  close(reason = FORCE_CLOSE_REASON) {
     // Close source stream
     this._closeSource();
     // Always clear all timeouts
@@ -102,7 +98,7 @@ export class AbstractStream extends EventEmitter {
    * @abstract
    * @protected
    */
-  async _openSource () {
+  async _openSource() {
     // It's up to the class extending AbstractStream to implement how to open a source of data (SSE, WebSocket...)
     throw new Error('Not implemented');
   }
@@ -112,7 +108,7 @@ export class AbstractStream extends EventEmitter {
    * @abstract
    * @protected
    */
-  _closeSource () {
+  _closeSource() {
     // It's up to the class extending AbstractStream to implement how to close a source of data (SSE, WebSocket...)
     throw new Error('Not implemented');
   }
@@ -123,7 +119,7 @@ export class AbstractStream extends EventEmitter {
    * @param {number} delay in milliseconds
    * @protected
    */
-  _onPing (delay) {
+  _onPing(delay) {
     this.emit('ping', delay);
     if (this._autoRetry != null) {
       // Receiving a ping means the stream works fine and we can reset the auto retry counter
@@ -139,8 +135,7 @@ export class AbstractStream extends EventEmitter {
    * @param {any} error
    * @protected
    */
-  _onError (error) {
-
+  _onError(error) {
     if (error instanceof AuthenticationError) {
       this.close(AUTHENTICATION_REASON);
       this.emit('error', error);
@@ -152,15 +147,15 @@ export class AbstractStream extends EventEmitter {
 
     if (this._autoRetry == null) {
       this.emit('error', error);
-    }
-    else {
+    } else {
       this._autoRetry.counter += 1;
 
       if (this._autoRetry.counter > this._autoRetry.maxRetryCount) {
         return this.emit('error', new Error(`Stream connection failed ${this._autoRetry.maxRetryCount} times!`));
       }
 
-      const exponentialBackoffDelay = this._autoRetry.initRetryTimeout * (this._autoRetry.backoffFactor ** this._autoRetry.counter);
+      const exponentialBackoffDelay =
+        this._autoRetry.initRetryTimeout * this._autoRetry.backoffFactor ** this._autoRetry.counter;
       this._autoRetry.timeoutId = setTimeout(() => {
         this.emit('open');
         this._openSource().catch((error) => this._onError(error));
@@ -173,8 +168,8 @@ export class AbstractStream extends EventEmitter {
    * @returns {boolean}
    * @protected
    */
-  _isPingMessage (data) {
+  _isPingMessage(data) {
     // Our ping/pong system is common to all our implementations
-    return (data != null) && (data.type === 'heartbeat') && (data.heartbeat_msg === 'ping');
+    return data != null && data.type === 'heartbeat' && data.heartbeat_msg === 'ping';
   }
 }

@@ -1,11 +1,11 @@
 import { expect } from '@esm-bundle/chai';
 import {
-  parseDomain,
   DomainParseError,
-  getHostWithWildcard,
   getDomainUrl,
+  getHostWithWildcard,
   isTestDomain,
   isTestDomainWithSubdomain,
+  parseDomain,
   sortDomains,
 } from '../esm/utils/domains.js';
 

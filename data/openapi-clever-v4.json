@@ -13,7 +13,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -24,13 +24,11 @@
     "/addon-providers/{providerId}": {
       "get": {
         "operationId": "getAddonProvider",
-        "parameters": [
-          { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -48,7 +46,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -59,13 +57,11 @@
     "/addon-providers/jenkins/addons/{addonId}/updates": {
       "get": {
         "operationId": "getJenkinsUpdates",
-        "parameters": [
-          { "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -83,7 +79,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -101,7 +97,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -112,13 +108,11 @@
     "/billing/organisations/{id}/invoices/unpaid": {
       "get": {
         "operationId": "getAllUnpaidInvoices",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -137,7 +131,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -148,13 +142,11 @@
     "/billing/organisations/{id}/payments/methods": {
       "get": {
         "operationId": "getPaymentMethods",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -163,14 +155,11 @@
       },
       "post": {
         "operationId": "createPaymentMethod",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-              }
+              "schema": {}
             }
           },
           "required": true
@@ -178,7 +167,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -189,14 +178,11 @@
     "/billing/organisations/{id}/payments/methods/default": {
       "put": {
         "operationId": "setDefaultPaymentMethod",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-              }
+              "schema": {}
             }
           },
           "required": true
@@ -204,7 +190,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -222,7 +208,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -240,7 +226,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -259,7 +245,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -277,8 +263,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-              }
+              "schema": {}
             }
           },
           "required": true
@@ -286,7 +271,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -305,7 +290,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -323,7 +308,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -334,13 +319,11 @@
     "/billing/organisations/{id}/credits/summary": {
       "get": {
         "operationId": "getCreditsSummary",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -358,7 +341,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -376,7 +359,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -394,7 +377,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -506,10 +489,7 @@
             "explode": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "ASC",
-                "DESC"
-              ]
+              "enum": ["ASC", "DESC"]
             }
           }
         ],
@@ -630,7 +610,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -641,13 +621,11 @@
     "/saas/grafana/{id}": {
       "get": {
         "operationId": "getGrafanaOrganisation",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -656,13 +634,11 @@
       },
       "post": {
         "operationId": "createGrafanaOrganisation",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -671,13 +647,11 @@
       },
       "delete": {
         "operationId": "deleteGrafanaOrganisation",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -688,13 +662,11 @@
     "/saas/grafana/{id}/reset": {
       "post": {
         "operationId": "resetGrafanaOrganisation",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": {
           "200": {
             "content": {
-              "application/json": { }
+              "application/json": {}
             }
           }
         },
@@ -735,6 +707,5 @@
       }
     }
   },
-  "components": {
-  }
+  "components": {}
 }

@@ -1,6 +1,5 @@
 // @ts-nocheck
-export function sendLegacyRequest (sendCallback) {
-
+export function sendLegacyRequest(sendCallback) {
   const req = {};
   req.params = [];
   req.headers = {};

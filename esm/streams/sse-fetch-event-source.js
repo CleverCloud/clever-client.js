@@ -21,16 +21,10 @@ const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
  * @param {string} input
  * @param {SseFetchEventSourceParams} params
  */
-export function fetchEventSource (input, {
-  abortController = new AbortController(),
-  headers,
-  onOpen,
-  onMessage,
-  onClose,
-  onError,
-  resumeFrom,
-  ...rest
-}) {
+export function fetchEventSource(
+  input,
+  { abortController = new AbortController(), headers, onOpen, onMessage, onClose, onError, resumeFrom, ...rest },
+) {
   // make a copy of the input headers since we may modify it below:
   /** @type {Record<string, string>} */
   const _headers = {
@@ -54,8 +48,7 @@ export function fetchEventSource (input, {
     .catch((err) => {
       if (abortController.signal.aborted) {
         onClose?.(abortController.signal.reason);
-      }
-      else {
+      } else {
         // if we haven't aborted the request ourselves:
         onError?.(err);
       }

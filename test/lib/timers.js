@@ -1,21 +1,20 @@
 let timersArePatched = false;
 
-const globalSetTimeout = global.setTimeout;
-const globalClearTimeout = global.clearTimeout;
-const globalSetInterval = global.setInterval;
-const globalClearInterval = global.clearInterval;
+const globalSetTimeout = globalThis.setTimeout;
+const globalClearTimeout = globalThis.clearTimeout;
+const globalSetInterval = globalThis.setInterval;
+const globalClearInterval = globalThis.clearInterval;
 
 const timeoutIds = new Map();
 const intervalIds = new Set();
 
-export function sleep (delay) {
+export function sleep(delay) {
   return new Promise((resolve) => {
     globalSetTimeout(resolve, delay);
   });
 }
 
-export function patchTimers () {
-
+export function patchTimers() {
   if (timersArePatched) {
     return;
   }
@@ -25,8 +24,7 @@ export function patchTimers () {
   timeoutIds.clear();
   intervalIds.clear();
 
-  global.setTimeout = (callback, delay) => {
-
+  globalThis.setTimeout = (callback, delay) => {
     // Not sure why but some tests had a residual setTimeout of one second at the end
     // We can ignore those
     if (isCallInsidePath('node:internal/deps/undici')) {
@@ -41,12 +39,12 @@ export function patchTimers () {
     return id;
   };
 
-  global.clearTimeout = (id) => {
+  globalThis.clearTimeout = (id) => {
     timeoutIds.delete(id);
     return globalClearTimeout(id);
   };
 
-  global.setInterval = (callback, delay) => {
+  globalThis.setInterval = (callback, delay) => {
     const id = globalSetInterval(() => {
       return callback();
     }, delay);
@@ -54,20 +52,19 @@ export function patchTimers () {
     return id;
   };
 
-  global.clearInterval = (id) => {
+  globalThis.clearInterval = (id) => {
     intervalIds.delete(id);
     return globalClearInterval(id);
   };
 }
 
-function isCallInsidePath (path) {
+function isCallInsidePath(path) {
   const err = new Error();
   const stackLines = err.stack.split('\n');
   return stackLines.some((line) => line.includes(path));
 }
 
-export function clearTimers () {
-
+export function clearTimers() {
   if (!timersArePatched) {
     return;
   }
@@ -76,7 +73,6 @@ export function clearTimers () {
   const intervalsCount = intervalIds.size;
 
   if (timeoutsCount > 0 || intervalsCount > 0) {
-
     for (const id of timeoutIds) {
       globalClearTimeout(id);
     }
@@ -87,25 +83,26 @@ export function clearTimers () {
     }
     intervalIds.clear();
 
-    throw new Error(`Some timers were not cleared properly (timeouts: ${timeoutsCount} / intervals: ${intervalsCount})`);
+    throw new Error(
+      `Some timers were not cleared properly (timeouts: ${timeoutsCount} / intervals: ${intervalsCount})`,
+    );
   }
 }
 
-export function unpatchTimers () {
-
+export function unpatchTimers() {
   if (!timersArePatched) {
     return;
   }
 
   timersArePatched = false;
 
-  global.setTimeout = globalSetTimeout;
-  global.clearTimeout = globalClearTimeout;
-  global.setInterval = globalSetInterval;
-  global.clearInterval = globalClearInterval;
+  globalThis.setTimeout = globalSetTimeout;
+  globalThis.clearTimeout = globalClearTimeout;
+  globalThis.setInterval = globalSetInterval;
+  globalThis.clearInterval = globalClearInterval;
 }
 
-export function withTimeout (asyncTestFunction, timeoutLimit = 3_000) {
+export function withTimeout(asyncTestFunction, timeoutLimit = 3_000) {
   return async function () {
     this.timeout(timeoutLimit);
     return asyncTestFunction();

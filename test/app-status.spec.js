@@ -2,7 +2,6 @@ import { expect } from '@esm-bundle/chai';
 import { getStatus } from '../esm/utils/app-status.js';
 
 describe('app-status#getStatus()', () => {
-
   it('stopped', () => {
     const app = { state: 'SHOULD_BE_DOWN' };
     const deployments = null;

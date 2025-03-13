@@ -138,7 +138,15 @@ export function getLogin(params) {
     method: 'get',
     url: `/v2/github/login`,
     headers: { Accept: 'application/json' },
-    queryParams: pickNonNull(params, ['redirectUrl', 'fromAuthorize', 'cli_token', 'partner_id', 'oauth_token', 'invitationKey', 'subscriptionSource']),
+    queryParams: pickNonNull(params, [
+      'redirectUrl',
+      'fromAuthorize',
+      'cli_token',
+      'partner_id',
+      'oauth_token',
+      'invitationKey',
+      'subscriptionSource',
+    ]),
     // no body
   });
 }
@@ -182,7 +190,16 @@ export function signup(params) {
     method: 'get',
     url: `/v2/github/signup`,
     headers: { Accept: 'application/json' },
-    queryParams: pickNonNull(params, ['redirectUrl', 'fromAuthorize', 'cli_token', 'partner_id', 'oauth_token', 'invitationKey', 'subscriptionSource', 'terms']),
+    queryParams: pickNonNull(params, [
+      'redirectUrl',
+      'fromAuthorize',
+      'cli_token',
+      'partner_id',
+      'oauth_token',
+      'invitationKey',
+      'subscriptionSource',
+      'terms',
+    ]),
     // no body
   });
 }

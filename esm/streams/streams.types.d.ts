@@ -1,24 +1,24 @@
 export interface RetryConfiguration {
   enabled?: boolean;
-  backoffFactor?: number
+  backoffFactor?: number;
   initRetryTimeout?: number;
   maxRetryCount?: number;
 }
 
 export interface SseCloseReason {
-  type: string|'UNKNOWN'
+  type: string | 'UNKNOWN';
 }
 
 export interface SseMessage {
-  data: string,
-  event: string,
-  id: string,
-  retry: undefined|number,
+  data: string;
+  event: string;
+  id: string;
+  retry: undefined | number;
 }
 
 export interface SseFetchEventSourceParams extends RequestInit {
-  abortController: AbortController ;
-  headers: Record<string, string> ;
+  abortController: AbortController;
+  headers: Record<string, string>;
   onOpen: (response: Response) => Promise<void>;
   onMessage: (message: SseMessage) => void;
   onClose: (reason?: any) => void;

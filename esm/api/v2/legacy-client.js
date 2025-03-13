@@ -1,14 +1,14 @@
 // @ts-nocheck
-import * as addon from './addon.js';
 import * as addonProvider from './addon-provider.js';
+import * as addon from './addon.js';
 import * as application from './application.js';
 import * as backups from './backups.js';
 import * as github from './github.js';
 import * as log from './log.js';
 import * as metrics from './metrics.js';
 import * as notification from './notification.js';
-import * as oauth from './oauth.js';
 import * as oauthConsumer from './oauth-consumer.js';
+import * as oauth from './oauth.js';
 import * as organisation from './organisation.js';
 import * as product from './product.js';
 import * as providers from './providers.js';
@@ -214,7 +214,12 @@ export function initLegacyClient(prepareRequest) {
                 put: prepareRequest(addonProvider.updatePlan, ['id', 'providerId', 'planId']),
                 features: {
                   _: {
-                    delete: prepareRequest(addonProvider.removePlanFeature, ['id', 'providerId', 'planId', 'featureName']),
+                    delete: prepareRequest(addonProvider.removePlanFeature, [
+                      'id',
+                      'providerId',
+                      'planId',
+                      'featureName',
+                    ]),
                     put: prepareRequest(addonProvider.updatePlanFeature, ['id', 'providerId', 'planId', 'featureName']),
                   },
                 },

@@ -8,7 +8,7 @@
  * @param {string} domain
  * @return {{ hostname: string, pathname: string, isWildcard: boolean }}
  */
-export function parseDomain (domain) {
+export function parseDomain(domain) {
   const domainWithHttp = domain.match(/^https?:\/\//) != null ? domain : 'https://' + domain;
   // With firefox, 'https://*.toto.com' is considered invalid so we strip it off for the test
   // because we know this part is valid and we want the rest to be sanitized by the URL parser
@@ -26,8 +26,7 @@ export function parseDomain (domain) {
       pathname,
       isWildcard,
     };
-  }
-  catch (e) {
+  } catch (e) {
     if (domain.length === 0) {
       throw new DomainParseError('empty', 'Empty domain value');
     }
@@ -42,7 +41,7 @@ export class DomainParseError extends Error {
    * @param {string} message
    * @param {unknown} [cause]
    */
-  constructor (code, message, cause) {
+  constructor(code, message, cause) {
     super(message);
 
     this.code = code;
@@ -58,7 +57,7 @@ export class DomainParseError extends Error {
  * @param {boolean} isWildcard
  * @returns {string}
  */
-export function getHostWithWildcard (hostname, isWildcard) {
+export function getHostWithWildcard(hostname, isWildcard) {
   return [isWildcard ? '*.' : '', hostname].join('');
 }
 
@@ -69,7 +68,7 @@ export function getHostWithWildcard (hostname, isWildcard) {
  * @param {boolean} isHttpOnly
  * @returns {string}
  */
-export function getDomainUrl (hostname, pathPrefix, isWildcard, isHttpOnly) {
+export function getDomainUrl(hostname, pathPrefix, isWildcard, isHttpOnly) {
   return [isHttpOnly ? 'http://' : 'https://', isWildcard ? 'www.' : '', hostname, pathPrefix].join('');
 }
 
@@ -77,7 +76,7 @@ export function getDomainUrl (hostname, pathPrefix, isWildcard, isHttpOnly) {
  * @param {string} hostname
  * @return {boolean}
  */
-export function isTestDomain (hostname) {
+export function isTestDomain(hostname) {
   return hostname.endsWith('cleverapps.io');
 }
 
@@ -88,7 +87,7 @@ export function isTestDomain (hostname) {
  * @param {string} domain
  * @return {boolean} whether the domain is a `cleverapps.io` is HTTP only or not
  */
-export function isTestDomainWithSubdomain (domain) {
+export function isTestDomainWithSubdomain(domain) {
   return isTestDomain(domain) && domain.split('.').length > 3;
 }
 
@@ -97,7 +96,7 @@ export function isTestDomainWithSubdomain (domain) {
  * @param {Pick<DomainInfo, 'isPrimary' | 'hostname' | 'isWildcard' | 'pathPrefix'>} domainB
  * @returns {number}
  */
-export function sortDomains (domainA, domainB) {
+export function sortDomains(domainA, domainB) {
   if (domainA.isPrimary) {
     return -1;
   }
@@ -116,6 +115,6 @@ export function sortDomains (domainA, domainB) {
  * @param {Pick<DomainInfo, 'hostname' | 'isWildcard' | 'pathPrefix'>} domain
  * @returns {string}
  */
-function reverseDomain (domain) {
+function reverseDomain(domain) {
   return domain.hostname.split('.').reverse().join('.') + (domain.isWildcard ? '.*' : '') + domain.pathPrefix;
 }

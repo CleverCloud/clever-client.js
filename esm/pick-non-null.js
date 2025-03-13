@@ -4,7 +4,7 @@
  * @returns {Partial<T>}
  * @template {object} T
  */
-export function pickNonNull (src, keyNames) {
+export function pickNonNull(src, keyNames) {
   /** @type {Partial<T>} */
   const result = {};
 

@@ -9,8 +9,7 @@ import { fillUrlSearchParams } from './utils/query-params.js';
  * @param {Warp10RequestParams} requestParams
  * @returns {Promise<Response>}
  */
-export async function execWarpscript (requestParams) {
-
+export async function execWarpscript(requestParams) {
   const url = new URL(requestParams.url);
   fillUrlSearchParams(url, requestParams.queryParams);
 
@@ -23,8 +22,6 @@ export async function execWarpscript (requestParams) {
       return response.json();
     })
     .then((parsedResponse) => {
-      return (requestParams.responseHandler != null)
-        ? requestParams.responseHandler(parsedResponse)
-        : parsedResponse;
+      return requestParams.responseHandler != null ? requestParams.responseHandler(parsedResponse) : parsedResponse;
     });
 }

@@ -6,7 +6,7 @@ const cache = new Map();
  * @param {Record<string, any>} cacheParams
  * @returns {string}
  */
-function getKey (cacheParams) {
+function getKey(cacheParams) {
   const objectKey = pickNonNull(cacheParams, [
     'API_HOST',
     'WARP_10_HOST',
@@ -33,8 +33,7 @@ export const ONE_DAY = 1000 * 60 * 60 * 24;
  * @returns {Promise<T>}
  * @template T
  */
-export function withCache (cacheParams, cacheDelay, createPromise) {
-
+export function withCache(cacheParams, cacheDelay, createPromise) {
   const cacheKey = getKey(cacheParams);
 
   if (cacheParams.method === 'get' && cache.has(cacheKey) && cacheDelay !== NO_CACHE) {

@@ -9,9 +9,8 @@ import OAuth from 'oauth-1.0a';
  * @param {OAuthTokens} tokens
  * @returns {(requestParams: RequestParams) => Promise<RequestParams>}
  */
-export function addOauthHeader (tokens) {
+export function addOauthHeader(tokens) {
   return async function (requestParams) {
-
     const { method, url, headers, queryParams } = requestParams;
 
     // @ts-ignore
@@ -20,9 +19,11 @@ export function addOauthHeader (tokens) {
         key: tokens.OAUTH_CONSUMER_KEY,
         secret: tokens.OAUTH_CONSUMER_SECRET,
       },
+      // eslint-disable-next-line camelcase
       signature_method: 'HMAC-SHA512',
       // @ts-ignore
-      async hash_function (baseString, key) {
+      // eslint-disable-next-line camelcase
+      async hash_function(baseString, key) {
         const encoder = new TextEncoder();
         const encodedText = encoder.encode(baseString);
         const encodedKey = encoder.encode(key);
@@ -35,11 +36,7 @@ export function addOauthHeader (tokens) {
           ['sign'],
         );
 
-        const result = await globalThis.crypto.subtle.sign(
-          { name: 'HMAC', hash: 'SHA-512' },
-          cryptoKey,
-          encodedText,
-        );
+        const result = await globalThis.crypto.subtle.sign({ name: 'HMAC', hash: 'SHA-512' }, cryptoKey, encodedText);
 
         let binary = '';
         const bytes = new Uint8Array(result);
@@ -59,6 +56,7 @@ export function addOauthHeader (tokens) {
       secret: tokens.API_OAUTH_TOKEN_SECRET,
     });
     // unwrap promise
+    // eslint-disable-next-line camelcase
     oauthData.oauth_signature = await oauthData.oauth_signature;
     const oauthHeaders = oauth.toHeader(oauthData);
 

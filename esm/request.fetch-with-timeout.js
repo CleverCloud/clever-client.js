@@ -8,8 +8,7 @@ export const THIRTY_SECONDS = 1000 * 30;
  * @param {number} [timeoutDelay]
  * @returns {Promise<Response>}
  */
-export function fetchWithTimeout (url, params, timeoutDelay) {
-
+export function fetchWithTimeout(url, params, timeoutDelay) {
   const ac = controllerWithSignal(params.signal);
 
   /** @type {any} */
@@ -32,7 +31,7 @@ export function fetchWithTimeout (url, params, timeoutDelay) {
  * @param {AbortSignal} signal
  * @returns {AbortController}
  */
-function controllerWithSignal (signal) {
+function controllerWithSignal(signal) {
   const ac = new AbortController();
   if (signal != null) {
     signal.addEventListener('abort', () => ac.abort(), { once: true });

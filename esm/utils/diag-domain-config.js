@@ -16,11 +16,7 @@ import { isTestDomain } from './domains.js';
  * @param {LoadBalancerDnsConfig|null} loadBalancerDnsConfig
  * @return {DomainDiag}
  */
-export function diagDomainConfig (
-  domainInfo,
-  resolveDnsResult,
-  loadBalancerDnsConfig,
-) {
+export function diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig) {
   if (isTestDomain(domainInfo.hostname)) {
     return {
       ...domainInfo,
@@ -33,10 +29,12 @@ export function diagDomainConfig (
     return {
       ...domainInfo,
       diagSummary: 'no-config',
-      diagDetails: [{
-        code: 'missing-cname',
-        record: { source: 'expected', type: 'CNAME', value: loadBalancerDnsConfig.cnameRecord },
-      }],
+      diagDetails: [
+        {
+          code: 'missing-cname',
+          record: { source: 'expected', type: 'CNAME', value: loadBalancerDnsConfig.cnameRecord },
+        },
+      ],
     };
   }
 
@@ -44,13 +42,16 @@ export function diagDomainConfig (
     return {
       ...domainInfo,
       diagSummary: 'invalid',
-      diagDetails: [{
-        code: 'missing-cname',
-        record: { source: 'expected', type: 'CNAME', value: loadBalancerDnsConfig.cnameRecord },
-      }, {
-        code: 'unknown-cname',
-        record: { source: 'resolved', type: 'CNAME', value: resolveDnsResult.cnameRecords[0] },
-      }],
+      diagDetails: [
+        {
+          code: 'missing-cname',
+          record: { source: 'expected', type: 'CNAME', value: loadBalancerDnsConfig.cnameRecord },
+        },
+        {
+          code: 'unknown-cname',
+          record: { source: 'resolved', type: 'CNAME', value: resolveDnsResult.cnameRecords[0] },
+        },
+      ],
     };
   }
 
@@ -86,7 +87,7 @@ export function diagDomainConfig (
  * @param {LoadBalancerDnsConfig} loadBalancerDnsConfig
  * @returns {Array<RecordDiag>}
  */
-function checkARecords (aRecords, loadBalancerDnsConfig) {
+function checkARecords(aRecords, loadBalancerDnsConfig) {
   /** @type {Array<RecordDiag>} */
   const diagDetails = [];
 
@@ -95,8 +96,7 @@ function checkARecords (aRecords, loadBalancerDnsConfig) {
     const record = { source: 'resolved', type: 'A', value: recordValue };
     if (loadBalancerDnsConfig.aRecords.includes(recordValue)) {
       diagDetails.push({ code: 'valid-a', record });
-    }
-    else {
+    } else {
       diagDetails.push({ code: 'unknown-a', record });
     }
   }
@@ -117,21 +117,18 @@ function checkARecords (aRecords, loadBalancerDnsConfig) {
  * @param {Array<RecordDiag>} diagDetails
  * @returns {DiagSummary}
  */
-function getSummaryCode (diagDetails) {
+function getSummaryCode(diagDetails) {
   const hasError = diagDetails.some((diag) => diag.code === 'unknown-a');
   const hasMissing = diagDetails.some((diag) => diag.code === 'missing-a');
   const allMissing = diagDetails.every((diag) => diag.code === 'missing-a');
 
   if (allMissing) {
     return 'no-config';
-  }
-  else if (hasError) {
+  } else if (hasError) {
     return 'invalid';
-  }
-  else if (hasMissing) {
+  } else if (hasMissing) {
     return 'incomplete';
-  }
-  else {
+  } else {
     return 'valid';
   }
 }

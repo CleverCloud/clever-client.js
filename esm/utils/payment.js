@@ -15,8 +15,7 @@ export const ERROR_TYPES = {
  * @param {Array<PaymentMethod>} paymentMethodList
  * @return {null|number}
  */
-export function getOrgaPaymentMethodsError (orga, paymentMethodList) {
-
+export function getOrgaPaymentMethodsError(orga, paymentMethodList) {
   // Trusted orgas are OK
   if (orga.isTrusted) {
     return null;
@@ -49,22 +48,17 @@ export function getOrgaPaymentMethodsError (orga, paymentMethodList) {
  * @param {Array<{ orga: Orga, paymentMethods: Array<PaymentMethod> }>} otherOrgaList
  * @return {Array<PaymentMethodError>}
  */
-export function getAllOrgaPaymentMethodsErrors (personal, otherOrgaList = []) {
-
+export function getAllOrgaPaymentMethodsErrors(personal, otherOrgaList = []) {
   // If the user only has a personal orga, we display the errors of the personal orga
   if (otherOrgaList.length === 0) {
     const type = getOrgaPaymentMethodsError(personal.orga, personal.paymentMethods);
-    return (type != null)
-      ? [{ type, orga: personal.orga }]
-      : [];
+    return type != null ? [{ type, orga: personal.orga }] : [];
   }
 
   return otherOrgaList
     .map(({ orga, paymentMethods }) => {
       const type = getOrgaPaymentMethodsError(orga, paymentMethods);
-      return (type != null)
-        ? { type, orga }
-        : null;
+      return type != null ? { type, orga } : null;
     })
     .filter((error) => error != null);
 }

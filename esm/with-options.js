@@ -6,7 +6,7 @@
  * @param {Partial<RequestParams>} options
  * @returns {(requestParams: RequestParams) => RequestParams}
  */
-export function withOptions (options = {}) {
+export function withOptions(options = {}) {
   return (requestParams) => {
     return { ...requestParams, ...options };
   };

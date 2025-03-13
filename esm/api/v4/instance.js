@@ -24,7 +24,15 @@ export function getAllApplicationInstances(params) {
     method: 'get',
     url: `/v4/orchestration/organisations/${params.ownerId}/applications/${params.applicationId}/instances`,
     headers: { Accept: 'application/json' },
-    queryParams: pickNonNull(params, ['since', 'until', 'includeState', 'excludeState', 'deploymentId', 'limit', 'order']),
+    queryParams: pickNonNull(params, [
+      'since',
+      'until',
+      'includeState',
+      'excludeState',
+      'deploymentId',
+      'limit',
+      'order',
+    ]),
     // no body
   });
 }
@@ -49,7 +57,15 @@ export function getApplicationInstances(params) {
     method: 'get',
     url: `/v4/orchestration/organisations/${params.ownerId}/applications/${params.applicationId}/instances`,
     headers: { Accept: 'application/json' },
-    queryParams: pickNonNull(params, ['since', 'until', 'includeState', 'excludeState', 'deploymentId', 'limit', 'order']),
+    queryParams: pickNonNull(params, [
+      'since',
+      'until',
+      'includeState',
+      'excludeState',
+      'deploymentId',
+      'limit',
+      'order',
+    ]),
     // no body
   });
 }

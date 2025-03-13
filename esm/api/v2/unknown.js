@@ -338,7 +338,15 @@ export function todo_getOIDCLogin(params) {
     method: 'get',
     url: `/v2/oidc/${params.service}/login`,
     headers: { Accept: 'application/json' },
-    queryParams: pickNonNull(params, ['redirectUrl', 'fromAuthorize', 'cli_token', 'partner_id', 'oauth_token', 'invitationKey', 'subscriptionSource']),
+    queryParams: pickNonNull(params, [
+      'redirectUrl',
+      'fromAuthorize',
+      'cli_token',
+      'partner_id',
+      'oauth_token',
+      'invitationKey',
+      'subscriptionSource',
+    ]),
     // no body
   });
 }
@@ -363,7 +371,16 @@ export function todo_oidcSignup(params) {
     method: 'get',
     url: `/v2/oidc/${params.service}/signup`,
     headers: { Accept: 'application/json' },
-    queryParams: pickNonNull(params, ['redirectUrl', 'fromAuthorize', 'cli_token', 'oauth_token', 'invitationKey', 'subscriptionSource', 'terms', 'partnerId']),
+    queryParams: pickNonNull(params, [
+      'redirectUrl',
+      'fromAuthorize',
+      'cli_token',
+      'oauth_token',
+      'invitationKey',
+      'subscriptionSource',
+      'terms',
+      'partnerId',
+    ]),
     // no body
   });
 }

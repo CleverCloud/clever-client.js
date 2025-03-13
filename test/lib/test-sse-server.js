@@ -2,8 +2,7 @@ import http from 'http';
 import { sleep } from './timers.js';
 
 export class TestSseServer {
-
-  constructor (port) {
+  constructor(port) {
     this._alive = false;
     this._port = port;
     this._eventId = 0;
@@ -15,21 +14,20 @@ export class TestSseServer {
           delete this._request;
           delete this._response;
         });
-      }
-      else {
+      } else {
         throw new Error('Already response');
       }
     });
   }
 
-  async start () {
+  async start() {
     this._alive = true;
     this._server.close();
     this._server.listen(this._port);
     await sleep(100);
   }
 
-  async stop () {
+  async stop() {
     this._alive = false;
     this._server.closeAllConnections();
     this._server.close();
@@ -37,21 +35,21 @@ export class TestSseServer {
     delete this._response;
   }
 
-  async getRequestHeader (header) {
+  async getRequestHeader(header) {
     while (this._request == null && this._alive) {
       await sleep(100);
     }
     return this._request.headers[header];
   }
 
-  async getQueryParam (name) {
+  async getQueryParam(name) {
     while (this._request == null && this._alive) {
       await sleep(100);
     }
     return new URL(this._request.url, `http://localhost:${this._port}`).searchParams.get(name);
   }
 
-  async handleRequest (status, headers, body) {
+  async handleRequest(status, headers, body) {
     while (this._response == null && this._alive) {
       await sleep(100);
     }
@@ -63,47 +61,41 @@ export class TestSseServer {
     }
   }
 
-  async acceptRequest () {
+  async acceptRequest() {
     return this.handleRequest(200, {
       'content-type': 'text/event-stream',
       'access-control-allow-origin': '*',
     });
   }
 
-  async rejectRequest (status, bodyObject) {
-    const headers = (bodyObject != null)
-      ? { 'content-type': 'application/json' }
-      : {};
-    const body = (bodyObject != null)
-      ? JSON.stringify(bodyObject)
-      : '';
+  async rejectRequest(status, bodyObject) {
+    const headers = bodyObject != null ? { 'content-type': 'application/json' } : {};
+    const body = bodyObject != null ? JSON.stringify(bodyObject) : '';
     return this.handleRequest(status, headers, body);
   }
 
-  async acceptRequestWithBadContentType () {
-    return this.handleRequest(
-      200,
-      { 'content-type': 'text/plain' },
-      'Hello World!',
-    );
+  async acceptRequestWithBadContentType() {
+    return this.handleRequest(200, { 'content-type': 'text/plain' }, 'Hello World!');
   }
 
-  async acceptRequestWith400 () {
+  async acceptRequestWith400() {
     return this.rejectRequest(400, {
+      // eslint-disable-next-line camelcase
       api_request_id: 'request_http_XXX',
       code: 'clever.core.bad-request',
       context: {
         OVDErrorFieldContext: {
           fieldName: 'limit',
-          fieldValue: '\'a\' is not a valid 32-bit signed integer value',
+          fieldValue: "'a' is not a valid 32-bit signed integer value",
         },
       },
       error: 'The query parameter was malformed.',
     });
   }
 
-  async acceptRequestWith401 () {
+  async acceptRequestWith401() {
     return this.rejectRequest(401, {
+      // eslint-disable-next-line camelcase
       api_request_id: 'request_http_XXX',
       code: 'clever.auth.unauthorized',
       context: {},
@@ -111,28 +103,29 @@ export class TestSseServer {
     });
   }
 
-  async acceptRequestWith404 () {
+  async acceptRequestWith404() {
     return this.rejectRequest(404, {
+      // eslint-disable-next-line camelcase
       api_request_id: 'request_http_XXX',
       code: 'clever.core.not-found',
       context: {},
-      error: 'Partitioned Topic not found: persistent://orga_540caeb6-521c-4a19-a955-efe6da35d142/logs/app_457bd0d5-23c5-48c3-93bc-881ab5e4492-partition-0 has zero partitions',
+      error:
+        'Partitioned Topic not found: persistent://orga_540caeb6-521c-4a19-a955-efe6da35d142/logs/app_457bd0d5-23c5-48c3-93bc-881ab5e4492-partition-0 has zero partitions',
     });
   }
 
-  async acceptRequestWith500 () {
+  async acceptRequestWith500() {
     return this.rejectRequest(500);
   }
 
-  async sendEvent ({ id, event = 'message', data }) {
+  async sendEvent({ id, event = 'message', data }) {
     while (this._response == null && this._alive) {
       await sleep(100);
     }
 
     if (id != null) {
       this._response.write(`id:${id}\n`);
-    }
-    else {
+    } else {
       this._eventId++;
       this._response.write(`id:${this._eventId}\n`);
     }
@@ -141,9 +134,7 @@ export class TestSseServer {
       this._response.write(`event:${event}\n`);
     }
 
-    const text = (typeof data !== 'string')
-      ? JSON.stringify(data)
-      : data;
+    const text = typeof data !== 'string' ? JSON.stringify(data) : data;
 
     const lines = text.split('\n');
     for (const line of lines) {
@@ -152,14 +143,14 @@ export class TestSseServer {
     this._response.write('\n');
   }
 
-  async sendHeartbeats (count, delay) {
+  async sendHeartbeats(count, delay) {
     for (let i = 0; i < count; i++) {
       await sleep(delay);
       await this.sendEvent({ event: 'HEARTBEAT', data: '' });
     }
   }
 
-  async sendLog (id) {
+  async sendLog(id) {
     return this.sendEvent({
       id,
       event: 'APPLICATION_LOG',
@@ -167,7 +158,7 @@ export class TestSseServer {
     });
   }
 
-  async sendLogs (ids, delay) {
+  async sendLogs(ids, delay) {
     for (const id of ids) {
       await sleep(delay);
       await this.sendEvent({
@@ -178,14 +169,14 @@ export class TestSseServer {
     }
   }
 
-  async closeResponse () {
+  async closeResponse() {
     while (this._response == null && this._alive) {
       await sleep(100);
     }
     this._response.end();
   }
 
-  async destroyResponse () {
+  async destroyResponse() {
     while (this._response == null && this._alive) {
       await sleep(100);
     }

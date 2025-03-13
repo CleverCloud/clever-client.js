@@ -4,5 +4,5 @@ export interface WebSocketLike {
   send(message: any): void;
 }
 
-type EventType = 'open'|'message'|'close'|'error';
-type EventListener = (event: {data: any}) => void
+type EventType = 'open' | 'message' | 'close' | 'error';
+type EventListener = (event: { data: any }) => void;
