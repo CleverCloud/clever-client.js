@@ -1,16 +1,10 @@
-import { CleverClient } from '../src/clever-client.js';
-import { requestAdapterFetch } from '../src/request/request-adapter-fetch.js';
-import http from 'http';
-import { AbstractCommand } from '../src/commands/abstract-command.js';
 import { expect } from 'chai';
 import { findFreePorts } from 'find-free-ports';
 import * as hanbi from 'hanbi';
-import { QueryParams } from '../src/request/query-params.js';
-import { prepareRequestPrefixUrl } from '../src/plugins/prepare-request-prefix-url.js';
-
-/**
- * @typedef {import('../src/plugins/plugins.type.js').RequestWrapperPlugin} WrapperPlugin
- */
+import http from 'http';
+import { CcClient } from '../src/lib/cc-client.js';
+import { AbstractCommand } from '../src/lib/command/abstract-command.js';
+import { QueryParams } from '../src/lib/request/query-params.js';
 
 class MockServer {
   /** @type {number} */
@@ -23,11 +17,11 @@ class MockServer {
     res.end();
   };
 
-  constructor () {
+  constructor() {
     this.spy = hanbi.spy();
   }
 
-  async start () {
+  async start() {
     const server = http.createServer((req, res) => {
       let body = '';
       req.on('data', (chunk) => {
@@ -66,18 +60,18 @@ class MockServer {
     return promise;
   }
 
-  getUrl () {
+  getUrl() {
     return `http://localhost:${this.#port}`;
   }
 
   /**
    * @param {http.RequestListener} handler
    */
-  setHandler (handler) {
+  setHandler(handler) {
     this.#handler = handler;
   }
 
-  stop () {
+  stop() {
     this.#stopServer?.();
   }
 }
@@ -99,20 +93,18 @@ describe('clever-client', () => {
   });
 
   describe('with fetch', () => {
-    /** @type {CleverClient} */
+    /** @type {CcClient} */
     let client;
 
     beforeEach(async () => {
-      client = new CleverClient(requestAdapterFetch)
-        .register(prepareRequestPrefixUrl(mockServer.getUrl()))
-      ;
+      client = new CcClient({ baseUrl: mockServer.getUrl() });
     });
 
     // request
 
     it('should send request with the right method', async () => {
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'GET',
             url: '/',
@@ -121,7 +113,7 @@ describe('clever-client', () => {
         }
       }
 
-      await client.run(new MyCommand());
+      await client.send(new MyCommand());
 
       expect(mockServer.spy.callCount).to.eq(1);
       expect(mockServer.spy.firstCall.args[0].method).to.eq('GET');
@@ -129,7 +121,7 @@ describe('clever-client', () => {
 
     it('should send request with the right path', async () => {
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'GET',
             url: '/path/subPath',
@@ -138,7 +130,7 @@ describe('clever-client', () => {
         }
       }
 
-      await client.run(new MyCommand());
+      await client.send(new MyCommand());
 
       expect(mockServer.spy.callCount).to.eq(1);
       expect(mockServer.spy.firstCall.args[0].path).to.eq('/path/subPath');
@@ -146,7 +138,7 @@ describe('clever-client', () => {
 
     it('should send request with the right accept header', async () => {
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'GET',
             url: '/path/subPath',
@@ -155,7 +147,7 @@ describe('clever-client', () => {
         }
       }
 
-      await client.run(new MyCommand());
+      await client.send(new MyCommand());
 
       expect(mockServer.spy.callCount).to.eq(1);
       expect(mockServer.spy.firstCall.args[0].headers.accept).to.eq('application/json');
@@ -163,16 +155,19 @@ describe('clever-client', () => {
 
     it('should send request with the right content-type header', async () => {
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'GET',
             url: '/',
-            headers: new Headers({ Accept: 'application/json', 'Content-Type': 'text/plain' }),
+            headers: new Headers({
+              Accept: 'application/json',
+              'Content-Type': 'text/plain',
+            }),
           };
         }
       }
 
-      await client.run(new MyCommand());
+      await client.send(new MyCommand());
 
       expect(mockServer.spy.callCount).to.eq(1);
       expect(mockServer.spy.firstCall.args[0].headers['content-type']).to.eq('text/plain');
@@ -180,17 +175,20 @@ describe('clever-client', () => {
 
     it('should send request with the right query params', async () => {
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'GET',
             url: '/',
             queryParams: new QueryParams({ foo: ['bar1', 'bar2'], bar: 'foo' }),
-            headers: new Headers({ Accept: 'application/json', 'Content-Type': 'text/plain' }),
+            headers: new Headers({
+              Accept: 'application/json',
+              'Content-Type': 'text/plain',
+            }),
           };
         }
       }
 
-      await client.run(new MyCommand());
+      await client.send(new MyCommand());
 
       expect(mockServer.spy.callCount).to.eq(1);
       expect(mockServer.spy.firstCall.args[0].path).to.eq('/?foo=bar1&foo=bar2&bar=foo');
@@ -198,17 +196,20 @@ describe('clever-client', () => {
 
     it('should send request with the right plain text body', async () => {
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'POST',
             url: '/',
-            headers: new Headers({ Accept: 'application/json', 'Content-Type': 'plain/text' }),
+            headers: new Headers({
+              Accept: 'application/json',
+              'Content-Type': 'plain/text',
+            }),
             body: 'hello world',
           };
         }
       }
 
-      await client.run(new MyCommand());
+      await client.send(new MyCommand());
 
       expect(mockServer.spy.callCount).to.eq(1);
       expect(mockServer.spy.firstCall.args[0].body).to.eq('hello world');
@@ -216,17 +217,20 @@ describe('clever-client', () => {
 
     it('should send request with the right json body', async () => {
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'POST',
             url: '/',
-            headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+            headers: new Headers({
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            }),
             body: { hello: 'world' },
           };
         }
       }
 
-      await client.run(new MyCommand());
+      await client.send(new MyCommand());
 
       expect(mockServer.spy.callCount).to.eq(1);
       expect(mockServer.spy.firstCall.args[0].body).to.eq('{"hello":"world"}');
@@ -234,17 +238,20 @@ describe('clever-client', () => {
 
     it('should send request with the right json body already stringified', async () => {
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'POST',
             url: '/',
-            headers: new Headers({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+            headers: new Headers({
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            }),
             body: '{"hello":"world"}',
           };
         }
       }
 
-      await client.run(new MyCommand());
+      await client.send(new MyCommand());
 
       expect(mockServer.spy.callCount).to.eq(1);
       expect(mockServer.spy.firstCall.args[0].body).to.eq('{"hello":"world"}');
@@ -258,7 +265,7 @@ describe('clever-client', () => {
         res.end();
       });
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'GET',
             url: '/',
@@ -267,7 +274,7 @@ describe('clever-client', () => {
         }
       }
 
-      const response = await client.run(new MyCommand());
+      const response = await client.send(new MyCommand());
 
       expect(response.status).to.deep.eq(211);
     });
@@ -279,7 +286,7 @@ describe('clever-client', () => {
       });
 
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'GET',
             url: '/',
@@ -288,7 +295,7 @@ describe('clever-client', () => {
         }
       }
 
-      const response = await client.run(new MyCommand());
+      const response = await client.send(new MyCommand());
       const body = await response.body;
 
       expect(body).to.equal('Hello');
@@ -302,7 +309,7 @@ describe('clever-client', () => {
 
       /** @extends {AbstractCommand<{ hello: string }>} */
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'GET',
             url: '/',
@@ -312,7 +319,7 @@ describe('clever-client', () => {
       }
 
       // const response = await client.run(new MyCommand('coucou'));
-      const response = await client.run(new MyCommand());
+      const response = await client.send(new MyCommand());
       const body = await response.body;
 
       expect(body).to.deep.eq({ hello: 'world' });
@@ -325,7 +332,7 @@ describe('clever-client', () => {
       });
 
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'GET',
             url: '/',
@@ -334,7 +341,7 @@ describe('clever-client', () => {
         }
       }
 
-      const response = await client.run(new MyCommand());
+      const response = await client.send(new MyCommand());
       const body = await response.body;
 
       expect(body).to.deep.eq(null);
@@ -342,58 +349,58 @@ describe('clever-client', () => {
 
     // request wrapper plugin
 
-    it('should apply wrapper plugins properly', async () => {
-      // prepare
-      const spy = hanbi.spy();
-
-      /**
-       * @param {number} i
-       * @returns {WrapperPlugin}
-       */
-      function requestWrapperPlugin (i) {
-        return {
-          type: 'requestWrapper',
-          async handle (requestParams, handler) {
-            spy.handler(`before ${i}`);
-            const result = await handler(requestParams);
-            spy.handler(`after ${i}`);
-            return result;
-          },
-        };
-      }
-
-      client
-        .register(requestWrapperPlugin(0))
-        .register(requestWrapperPlugin(1))
-        .register(requestWrapperPlugin(2))
-        .register(requestWrapperPlugin(3));
-
-      class MyCommand extends AbstractCommand {
-        toRequestParams () {
-          return {
-            method: 'GET',
-            url: '/',
-            headers: new Headers({ Accept: 'application/json' }),
-          };
-        }
-      }
-
-      // action
-      await client.run(new MyCommand());
-
-      // assert
-      expect(spy.callCount).to.eq(8);
-      expect(Array.from(spy.calls.values()).flatMap((e) => e.args)).to.deep.eq([
-        'before 0',
-        'before 1',
-        'before 2',
-        'before 3',
-        'after 3',
-        'after 2',
-        'after 1',
-        'after 0',
-      ]);
-    });
+    // it('should apply wrapper plugins properly', async () => {
+    //   // prepare
+    //   const spy = hanbi.spy();
+    //
+    //   /**
+    //    * @param {number} i
+    //    * @returns {WrapperPlugin}
+    //    */
+    //   function requestWrapperPlugin(i) {
+    //     return {
+    //       type: 'requestWrapper',
+    //       async handle(requestParams, handler) {
+    //         spy.handler(`before ${i}`);
+    //         const result = await handler(requestParams);
+    //         spy.handler(`after ${i}`);
+    //         return result;
+    //       },
+    //     };
+    //   }
+    //
+    //   client
+    //     .register(requestWrapperPlugin(0))
+    //     .register(requestWrapperPlugin(1))
+    //     .register(requestWrapperPlugin(2))
+    //     .register(requestWrapperPlugin(3));
+    //
+    //   class MyCommand extends AbstractCommand {
+    //     toRequestParams() {
+    //       return {
+    //         method: 'GET',
+    //         url: '/',
+    //         headers: new Headers({ Accept: 'application/json' }),
+    //       };
+    //     }
+    //   }
+    //
+    //   // action
+    //   await client.send(new MyCommand());
+    //
+    //   // assert
+    //   expect(spy.callCount).to.eq(8);
+    //   expect(Array.from(spy.calls.values()).flatMap((e) => e.args)).to.deep.eq([
+    //     'before 0',
+    //     'before 1',
+    //     'before 2',
+    //     'before 3',
+    //     'after 3',
+    //     'after 2',
+    //     'after 1',
+    //     'after 0',
+    //   ]);
+    // });
 
     // errors
 
@@ -402,11 +409,9 @@ describe('clever-client', () => {
         res.writeHead(211);
         res.end();
       });
-      client = new CleverClient(requestAdapterFetch)
-        .register(prepareRequestPrefixUrl('http://oups'))
-      ;
+      client = new CcClient({ baseUrl: 'http://oups' });
       class MyCommand extends AbstractCommand {
-        toRequestParams () {
+        toRequestParams() {
           return {
             method: 'GET',
             url: '/',
@@ -415,7 +420,7 @@ describe('clever-client', () => {
         }
       }
 
-      const response = await client.run(new MyCommand());
+      const response = await client.send(new MyCommand());
 
       expect(response.status).to.deep.eq(211);
     });
