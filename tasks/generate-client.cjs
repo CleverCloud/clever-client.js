@@ -176,7 +176,7 @@ function buildClientCode(route) {
     hasArgs ? '* @param {Object} params' : null,
     ...paramsJsDoc,
     bodyJsDoc,
-    '* @returns {Promise<RequestParams>}',
+    '* @returns {Promise<CcRequestParams>}',
     '*/',
   ]
     .filter((a) => a != null)
