@@ -3,6 +3,24 @@
 ## Unreleased (????-??-??)
 
 ...
+## 10.0.0 (2025-03-25)
+
+### ⚠ BREAKING CHANGES
+
+* build: remove cjs client generation (#124)
+* chore(legacy-client): remove legacy client (#125)
+* chore(access-logs-metrics): remove useless functions
+
+### Features
+
+* logs: introduce new `ResourceLogStream` class for new SSE addon logs
+
+### Refactor
+
+* build: add prettier (#121)
+* build: upgrade eslint (#122)
+* build: add typechecking (#123)
+
 ## 9.2.1 (2025-03-04)
 
 * fix: fix grafana management methods
