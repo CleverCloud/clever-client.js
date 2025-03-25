@@ -247,71 +247,6 @@ async function formatCode(rawContents) {
   return await prettier.format(rawContents, options);
 }
 
-function buildLecagyClientSnippet(obj) {
-  return _.flatMap(obj, (value, key) => {
-    const safeKey = JSON.stringify(key);
-    return typeof value === 'string'
-      ? `${safeKey}: ${value},`
-      : [`${safeKey}: {`, ...buildLecagyClientSnippet(value), '},'];
-  });
-}
-
-// sort keys so we can easily diff client
-// HTTP methods first, then _, then the rest
-function sortLegacyClientObject(object) {
-  return _.chain(object)
-    .toPairs()
-    .sortBy(([key]) => {
-      return ['get', 'put', 'post', 'delete'].includes(key) ? `$${key}` : key;
-    })
-    .fromPairs()
-    .mapValues((value) => {
-      return typeof value === 'object' && !Array.isArray(value) ? sortLegacyClientObject(value) : value;
-    })
-    .value();
-}
-
-function buildLegacyClientCode(allRoutes, codeByService) {
-  // generate legacy client
-  const legacyClient = {};
-  allRoutes.forEach(({ path, method, service, functionName }) => {
-    const rawSegments = (path + '/' + method).replace(/^\//, '').replace(/\/$/, '').split('/');
-
-    const objectSegments = rawSegments.map((s) => s.replace(/\{.+?\}/g, '_'));
-
-    const pathParams = rawSegments
-      .flatMap((a) => a.match(/\{.+?\}/g))
-      .filter((a) => a != null)
-      .map((a) => a.replace(/\{(.+?)\}/g, '$1'));
-
-    const value =
-      pathParams.length > 0
-        ? `prepareRequest(${service}.${functionName}, ${JSON.stringify(pathParams)})`
-        : `prepareRequest(${service}.${functionName})`;
-
-    _.set(legacyClient, objectSegments, value);
-  });
-
-  const sortedLegacyClient = sortLegacyClientObject(legacyClient);
-
-  const legacyClientCode = [];
-
-  legacyClientCode.push('// @ts-nocheck');
-  for (const service in codeByService) {
-    legacyClientCode.push(`import * as ${service} from './${_.kebabCase(service)}.js'`);
-  }
-  legacyClientCode.push('');
-
-  legacyClientCode.push('export function initLegacyClient(prepareRequest) {');
-  legacyClientCode.push('const client = {');
-  legacyClientCode.push(...buildLecagyClientSnippet(sortedLegacyClient));
-  legacyClientCode.push('};');
-  legacyClientCode.push('return client;');
-  legacyClientCode.push('};');
-
-  return legacyClientCode.join('\n');
-}
-
 /**
  * Takes OpenAPI JSON document from remote (or from cache)
  * Use patch to add "x-service" and "x-function" (temporary :p)
@@ -319,8 +254,6 @@ function buildLegacyClientCode(allRoutes, codeByService) {
  * - grouped by service
  * - merged by "/self" and "/organization/{id}"
  * - tree-shakable
- * Generates legacy API client
- * - simple wrapper around new modules with legacy object API (by path)
  */
 async function generateClient() {
   // fetch and load OpenAPI JSON document
@@ -396,14 +329,6 @@ async function generateClient() {
 
       const contents = await formatCode(rawContentsWithImports);
       await fs.appendFile(filepath, contents, 'utf8');
-    }
-
-    if (version === 'v2') {
-      // generate and write code for legacy client
-      const legacyClientCode = buildLegacyClientCode(routesV2, codeByService);
-      const legacyClientFilepath = pathJoin(generatedClientPath, 'legacy-client.js');
-      const legacyClientFormattedCode = await formatCode(legacyClientCode);
-      await fs.appendFile(legacyClientFilepath, legacyClientFormattedCode, 'utf8');
     }
   }
 }
