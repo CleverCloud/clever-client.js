@@ -3,6 +3,6 @@
 node_modules
 /*.tgz
 .idea
-
+.env
 # macOS system files
 .DS_Store
