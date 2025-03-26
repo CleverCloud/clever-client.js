@@ -11,6 +11,7 @@ import { getSourceFileObject } from './lib/source-get.js';
 /**
  * @typedef {import('./lib/endpoint.types.js').EndpointsSource} EndpointsSource
  * @typedef {import('./lib/endpoint.types.js').Endpoint} Endpoint
+ * @typedef {import('./lib/endpoint.types.js').CommandDetail} CommandDetail
  */
 
 /**
@@ -119,12 +120,15 @@ export interface ${outputInterface} {}
 async function run() {
   let count = 0;
 
+  /** @type {Map<string, Array<CommandDetail>>} */
+  const commandsByTarget = new Map();
+
   for (let source of SOURCES) {
     console.log(`${styleText(['bold', 'underline'], `Processing source ${source.id}...`)}`);
 
     //-- parse commands ------
 
-    const commandsFilePath = path.join(WORKING_DIR, `./commands/${source.id}.csv`);
+    const commandsFilePath = path.join(WORKING_DIR, `./commands/${source.target}.csv`);
 
     if (!fs.existsSync(commandsFilePath)) {
       console.log(
@@ -133,10 +137,14 @@ async function run() {
       continue;
     }
 
-    console.log(`${styleText('blue', `▶ Reading commands from file ${commandsFilePath}...`)}`);
-    const commands = Array.from(parseCommandsList(commandsFilePath).entries()).map(
-      ([endpointId, commandClassName]) => ({ endpointId, commandClassName }),
-    );
+    /** @type {Array<CommandDetail>} */
+    let commands = commandsByTarget.get(source.target);
+    if (commands == null) {
+      console.log(`${styleText('blue', `▶ Reading commands from file ${commandsFilePath}...`)}`);
+      commands = Array.from(parseCommandsList(commandsFilePath).values());
+      commandsByTarget.set(source.target, commands);
+    }
+    commands = commands.filter((command) => command.sourceId === source.id);
     console.log(`${styleText('gray', `> Found ${commands.length} command(s).`)}`);
 
     //-- parse endpoints ------
@@ -153,6 +161,9 @@ async function run() {
     console.log(`${styleText('blue', `▶ Generating command classes...`)}`);
     let skippedCommandsCount = 0;
     const commandClasses = commands
+      .filter(({ commandClassName }) => commandClassName !== 'IGNORE') // this means that this endpoint is to be ignored deliberately
+      .filter(({ commandClassName }) => commandClassName !== 'PERSONAL_ORGA') // this means that this is a /self/ endpoint with an /orga/:XXX/ alternative
+      .filter(({ commandClassName }) => commandClassName.endsWith('*')) // this means that another command will handle this endpoint
       .map(({ endpointId, commandClassName }) => {
         if (commandClassName.trim().length === 0) {
           console.log(`${styleText('yellow', `! ${endpointId} will be skipped because no class name is proposed`)}`);
