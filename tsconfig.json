@@ -1,5 +1,5 @@
 {
-  "include": ["esm/**/*", "src/**/*", "test/clever-client.test.js"],
+  "include": ["esm/**/*", "src/**/*", "tasks/endpoints-*.js", "test/clever-client.test.js"],
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
