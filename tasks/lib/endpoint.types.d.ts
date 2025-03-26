@@ -85,3 +85,11 @@ export interface OpenapiDiff {
   deletedEndpoints?: Array<Endpoint>;
   modifiedEndpoints?: Array<Endpoint>;
 }
+
+export interface CommandDetail {
+  sourceId: string;
+  endpointId: string;
+  isUsed: boolean;
+  commandClassName: string;
+  comment: string;
+}
