@@ -1,0 +1,22 @@
+Endpoint id,Command name (without Command suffix)
+[GET] /,
+[POST] /command,CmdSend
+[POST] /command/cli,CmdCliSend
+[POST] /keys/_scan,Scan
+[POST] /key/_delete,KeyDelete
+[POST] /key/string/_get,StringKeyGet
+[POST] /key/string/_create,StringKeyCreate
+[POST] /key/string/_update,StringKeyUpdate
+[POST] /key/hash/_create,HashKeyCreate
+[POST] /key/hash/_scan,HashKeyScan
+[POST] /key/hash/_delete,HashKeyElementDelete
+[POST] /key/hash/_set,HashKeyElementSet
+[POST] /key/list/_create,ListKeyCreate
+[POST] /key/list/_scan,ListKeyScan
+[POST] /key/list/_get,ListKeyElementGet
+[POST] /key/list/_update,ListKeyElementUpdate
+[POST] /key/list/_push,ListKeyElementAdd
+[POST] /key/set/_create,SetKeyCreate
+[POST] /key/set/_scan,SetKeyScan
+[POST] /key/set/_delete,SetKeyElementDelete
+[POST] /key/set/_set,SetKeyElementSet
