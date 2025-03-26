@@ -1,0 +1,11 @@
+# List of ignored enpoints
+#
+# Expected format of a line: "SOURCE_TARGET ENDPOINT_ID"
+# -> SOURCE_TARGET is one of "api", "auth-backend", "redis-http"
+# -> ENDPOINT_ID is "[METHOD_TO_UPPERCASE] NORMALIZED_PATH
+# -> NORMALIZED_PATH is a path where all path params have been replaced by ":XXX"
+#
+# Example
+# api [PUT] /logs/:XXX/drains/:XXX/state
+
+redis-http [GET] /
