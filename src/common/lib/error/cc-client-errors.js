@@ -1,6 +1,6 @@
 /**
  * @typedef {import('../../types/request.types.js').CcRequest} CcRequest
- * @typedef {import('../../types/request.types.js').CcResponse<unknown>} CcResponse
+ * @typedef {import('../../types/request.types.js').CcResponse<any>} CcResponse
  */
 
 export class CcClientError extends Error {

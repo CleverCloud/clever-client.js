@@ -1,7 +1,7 @@
 import type { OAuthTokens } from './auth.types.js';
 import type { OnErrorHook, OnResponseHook, PrepareRequestParamsHook } from './hook.types.js';
 import type { CcRequestConfig } from './request.types.js';
-import type { Optionalize } from './utils.types.js';
+import type { WithOptional } from './utils.types.js';
 
 export type CcClientConfig = {
   baseUrl: string;
@@ -15,7 +15,7 @@ export interface CcClientHooks {
   onError?: OnErrorHook;
 }
 
-export type CcApiClientConfig = Optionalize<CcClientConfig, 'baseUrl'>;
+export type CcApiClientConfig = WithOptional<CcClientConfig, 'baseUrl'>;
 
 export type CcApiClientConfigWithOAuth = CcApiClientConfig & {
   oAuthTokens: OAuthTokens;
@@ -29,4 +29,4 @@ export type CcAuthBackendClientConfig = CcApiClientConfig & {
   oAuthTokens: OAuthTokens;
 };
 
-export type CcRedisHttpClientConfig = Optionalize<CcClientConfig, 'baseUrl'>;
+export type CcRedisHttpClientConfig = WithOptional<CcClientConfig, 'baseUrl'>;

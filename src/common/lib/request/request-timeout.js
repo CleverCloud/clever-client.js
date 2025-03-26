@@ -1,4 +1,4 @@
-import { CcClientError } from '../errors/cc-client-errors.js';
+import { CcClientError } from '../error/cc-client-errors.js';
 
 /**
  * @typedef {import('../../types/request.types.js').RequestWrapper} RequestWrapper

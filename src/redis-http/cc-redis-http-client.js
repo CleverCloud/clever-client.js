@@ -1,8 +1,8 @@
-import { CcClient } from '../lib/cc-client.js';
+import { CcClient } from '../common/lib/cc-client.js';
 
 /**
- * @typedef {import('../types/clever-client.types.js').CcRedisHttpClientConfig} CcRedisHttpClientConfig
- * @typedef {import('../types/request.types.js').CcRequestConfig} CcRequestConfig
+ * @typedef {import('../common/types/clever-client.types.js').CcRedisHttpClientConfig} CcRedisHttpClientConfig
+ * @typedef {import('../common/types/request.types.js').CcRequestConfig} CcRequestConfig
  */
 
 export class CcRedisHttpClient extends CcClient {

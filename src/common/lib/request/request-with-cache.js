@@ -44,7 +44,7 @@ export const requestWithCache = async (request, handler) => {
 
 /**
  * @param {Partial<CcRequestParams>} requestParams
- *  @return {string}
+ *  @returns {string}
  */
 function calculateCacheKey(requestParams) {
   const cacheParams = [

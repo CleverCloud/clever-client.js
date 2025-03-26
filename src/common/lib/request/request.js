@@ -1,4 +1,4 @@
-import { CcClientError } from '../errors/cc-client-errors.js';
+import { CcClientError } from '../error/cc-client-errors.js';
 import { requestDebug } from './request-debug.js';
 import { requestTimeout } from './request-timeout.js';
 import { requestWithCache } from './request-with-cache.js';
@@ -121,7 +121,7 @@ function getRequestBody(request) {
 
 /**
  * @param {Response} fetchResponse
- * @return {Promise<any>}
+ * @returns {Promise<any>}
  */
 async function getResponseBody(fetchResponse) {
   if (fetchResponse.status === 204) {

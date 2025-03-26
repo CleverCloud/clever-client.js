@@ -2,9 +2,9 @@ import { expect } from 'chai';
 import { findFreePorts } from 'find-free-ports';
 import * as hanbi from 'hanbi';
 import http from 'http';
-import { CcClient } from '../src/lib/cc-client.js';
-import { AbstractCommand } from '../src/lib/command/abstract-command.js';
-import { QueryParams } from '../src/lib/request/query-params.js';
+import { CcClient } from '../src/common/lib/cc-client.js';
+import { SimpleCommand } from '../src/common/lib/command/simpleCommand.js';
+import { QueryParams } from '../src/common/lib/request/query-params.js';
 
 class MockServer {
   /** @type {number} */
@@ -103,7 +103,7 @@ describe('clever-client', () => {
     // request
 
     it('should send request with the right method', async () => {
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'GET',
@@ -120,7 +120,7 @@ describe('clever-client', () => {
     });
 
     it('should send request with the right path', async () => {
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'GET',
@@ -137,7 +137,7 @@ describe('clever-client', () => {
     });
 
     it('should send request with the right accept header', async () => {
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'GET',
@@ -154,7 +154,7 @@ describe('clever-client', () => {
     });
 
     it('should send request with the right content-type header', async () => {
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'GET',
@@ -174,7 +174,7 @@ describe('clever-client', () => {
     });
 
     it('should send request with the right query params', async () => {
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'GET',
@@ -195,7 +195,7 @@ describe('clever-client', () => {
     });
 
     it('should send request with the right plain text body', async () => {
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'POST',
@@ -216,7 +216,7 @@ describe('clever-client', () => {
     });
 
     it('should send request with the right json body', async () => {
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'POST',
@@ -237,7 +237,7 @@ describe('clever-client', () => {
     });
 
     it('should send request with the right json body already stringified', async () => {
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'POST',
@@ -264,7 +264,7 @@ describe('clever-client', () => {
         res.writeHead(211);
         res.end();
       });
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'GET',
@@ -285,7 +285,7 @@ describe('clever-client', () => {
         res.end('Hello');
       });
 
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'GET',
@@ -307,8 +307,8 @@ describe('clever-client', () => {
         res.end('{"hello": "world"}');
       });
 
-      /** @extends {AbstractCommand<{ hello: string }>} */
-      class MyCommand extends AbstractCommand {
+      /** @extends {SimpleCommand<{ hello: string }>} */
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'GET',
@@ -331,7 +331,7 @@ describe('clever-client', () => {
         res.end();
       });
 
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'GET',
@@ -375,7 +375,7 @@ describe('clever-client', () => {
     //     .register(requestWrapperPlugin(2))
     //     .register(requestWrapperPlugin(3));
     //
-    //   class MyCommand extends AbstractCommand {
+    //   class MyCommand extends Command {
     //     toRequestParams() {
     //       return {
     //         method: 'GET',
@@ -410,7 +410,7 @@ describe('clever-client', () => {
         res.end();
       });
       client = new CcClient({ baseUrl: 'http://oups' });
-      class MyCommand extends AbstractCommand {
+      class MyCommand extends SimpleCommand {
         toRequestParams() {
           return {
             method: 'GET',
