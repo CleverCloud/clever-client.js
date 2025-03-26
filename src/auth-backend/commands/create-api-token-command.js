@@ -1,10 +1,10 @@
-import { post } from '../../lib/request/request-params-builder.js';
+import { post } from '../../common/lib/request/request-params-builder.js';
 import { AbstractAuthBackendCommand } from './abstract-auth-backend-command.js';
 
 /**
  * @typedef {import('./create-api-token-command.types.js').CreateApiTokenCommandInput} CreateApiTokenCommandInput
  * @typedef {import('./create-api-token-command.types.js').CreateApiTokenCommandResponse} CreateApiTokenCommandResponse
- * @typedef {import('../../types/request.types.js').CcRequestParams} CcRequestParams
+ * @typedef {import('../../common/types/request.types.js').CcRequestParams} CcRequestParams
  */
 
 /**
@@ -35,9 +35,9 @@ export class CreateApiTokenCommand extends AbstractAuthBackendCommand {
 
   /**
    * @param {any} response
-   * @return {CreateApiTokenCommandResponse} response
+   * @returns {CreateApiTokenCommandResponse} response
    */
-  convertResponseBody(response) {
+  transformResponseBody(response) {
     return {
       ...response,
       expirationDate: new Date(response.expirationDate),

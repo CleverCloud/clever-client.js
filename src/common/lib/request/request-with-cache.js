@@ -13,38 +13,33 @@ const CACHE = new Map();
  */
 export const requestWithCache = async (request, handler) => {
   // no caching on HTTP method other than GET
-  if (request.method.toLowerCase() !== 'get') {
-    return handler(request);
-  }
-
-  const delay = request.cacheDelay ?? 0;
-
-  // no caching
-  if (delay <= 0) {
+  if (request.cache === false || request.method.toLowerCase() !== 'get') {
     return handler(request);
   }
 
   const cacheKey = calculateCacheKey(request);
 
   // cache hit
-  if (CACHE.has(cacheKey)) {
+  if (request.cache !== 'reload' && CACHE.has(cacheKey)) {
     return CACHE.get(cacheKey);
   }
 
   // cache miss
   const response = await handler(request);
 
-  CACHE.set(cacheKey, response);
-  setTimeout(() => {
-    CACHE.delete(cacheKey);
-  }, delay);
+  if (request.cacheDelay > 0) {
+    CACHE.set(cacheKey, response);
+    setTimeout(() => {
+      CACHE.delete(cacheKey);
+    }, request.cacheDelay);
+  }
 
   return response;
 };
 
 /**
  * @param {Partial<CcRequestParams>} requestParams
- *  @return {string}
+ *  @returns {string}
  */
 function calculateCacheKey(requestParams) {
   const cacheParams = [

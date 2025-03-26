@@ -1,11 +1,11 @@
-import { AbstractCommand } from '../../lib/command/abstract-command.js';
+import { SimpleCommand } from '../../common/lib/command/simpleCommand.js';
 
 /**
- * @extends {AbstractCommand<ResponseBody>}
+ * @extends {SimpleCommand<ResponseBody>}
  * @template ResponseBody
  * @abstract
  */
-export class AbstractAuthBackendCommand extends AbstractCommand {
+export class AbstractAuthBackendCommand extends SimpleCommand {
   /**
    * @returns {'auth-backend-command'}
    */

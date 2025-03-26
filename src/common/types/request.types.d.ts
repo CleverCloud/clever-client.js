@@ -13,6 +13,7 @@ export interface CcRequestParams {
 export interface CcRequestConfig {
   cors: boolean;
   timeout: number;
+  cache: boolean | 'reload';
   cacheDelay: number;
   signal?: AbortSignal;
   debug: DebugConfig;

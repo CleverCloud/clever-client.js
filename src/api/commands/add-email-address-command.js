@@ -1,14 +1,14 @@
-import { put } from '../../lib/request/request-params-builder.js';
-import { AbstractApiCommand } from './abstract-api-command.js';
+import { put } from '../../common/lib/request/request-params-builder.js';
+import { CcApiSimpleCommand } from '../common/cc-api-commands.js';
 
 /**
- * @typedef {import('../../types/request.types.js').CcRequestParams} CcRequestParams
+ * @typedef {import('../../common/types/request.types.js').CcRequestParams} CcRequestParams
  */
 
 /**
- * @extends {AbstractApiCommand<{instanceId: string}>}
+ * @extends {CcApiSimpleCommand<{instanceId: string}>}
  */
-export class AddEmailAddressCommand extends AbstractApiCommand {
+export class AddEmailAddressCommand extends CcApiSimpleCommand {
   /**
    * @param {object} params
    * @param {string} params.emailAddress

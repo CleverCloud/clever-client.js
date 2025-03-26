@@ -1,37 +1,39 @@
-import { AbstractCommand } from '../../lib/command/abstract-command.js';
-import { get } from '../../lib/request/request-params-builder.js';
+import { get } from '../../common/lib/request/request-params-builder.js';
+import { CcApiSimpleWithAutoOwnerCommand } from '../common/cc-api-commands.js';
 
 /**
- * @typedef {import('../../types/request.types.js').CcRequestParams} CcRequestParams
+ * @typedef {import('./get-instance-command.types.js').GetInstanceCommandInput} GetInstanceCommandInput
+ * @typedef {import('../../common/types/request.types.js').CcRequestParams} CcRequestParams
  */
 
 /**
  * // description ...
  *
- * @extends {AbstractCommand<{instanceId: string}>}
+ * @extends {CcApiSimpleWithAutoOwnerCommand<GetInstanceCommandInput, {instanceId: string}>}
  */
-export class GetInstanceCommand extends AbstractCommand {
+export class GetInstanceCommand extends CcApiSimpleWithAutoOwnerCommand {
   /**
-   * @param {object} params
-   * @param {string} params.ownerId
-   * @param {string} params.applicationId
-   * @param {string} params.instanceId
+   * @param {GetInstanceCommandInput} params
    */
   constructor(params) {
-    super();
-    this.params = params;
+    super(params);
   }
 
   /**
+   * @param {import('../types/cc-api.types.js').WithOwnerId<GetInstanceCommandInput>} params
    * @returns {Partial<CcRequestParams>}
    */
-  toRequestParams() {
+  toRequestParamsWithOwnerId(params) {
     return get(
-      `/v4/orchestration/organisations/${this.params.ownerId}/applications/${this.params.applicationId}/instances/${this.params.instanceId}`,
+      `/v4/orchestration/organisations/${params.ownerId}/applications/${params.applicationId}/instances/${params.instanceId}`,
     );
   }
 
-  is404Success() {
-    return true;
+  /**
+   * @param {number} status
+   * @returns {boolean}
+   */
+  isEmptyResponse(status) {
+    return status === 404;
   }
 }

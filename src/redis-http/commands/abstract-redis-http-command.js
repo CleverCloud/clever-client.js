@@ -1,11 +1,11 @@
-import { AbstractCommand } from '../../lib/command/abstract-command.js';
+import { SimpleCommand } from '../../common/lib/command/simpleCommand.js';
 
 /**
- * @extends {AbstractCommand<ResponseBody>}
+ * @extends {SimpleCommand<ResponseBody>}
  * @template ResponseBody
  * @abstract
  */
-export class AbstractRedisHttpCommand extends AbstractCommand {
+export class AbstractRedisHttpCommand extends SimpleCommand {
   /**
    * @returns {'redis-http-command'}
    */

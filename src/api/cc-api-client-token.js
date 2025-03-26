@@ -1,10 +1,10 @@
-import { prepareRequestWithBearerToken } from '../lib/auth/auth-bearer-token.js';
+import { prepareRequestWithBearerToken } from '../common/lib/auth/auth-bearer-token.js';
 import { CcApiClient } from './cc-api-client.js';
 
 /**
- * @typedef {import('../types/auth.types.js').CcAuth} CcAuth
- * @typedef {import('../types/clever-client.types.js').CcApiClientConfigWithApiToken} CcApiClientConfigWithApiToken
- * @typedef {import('../types/request.types.js').CcRequestConfig} CcRequestConfig
+ * @typedef {import('../common/types/auth.types.js').CcAuth} CcAuth
+ * @typedef {import('../common/types/clever-client.types.js').CcApiClientConfigWithApiToken} CcApiClientConfigWithApiToken
+ * @typedef {import('../common/types/request.types.js').CcRequestConfig} CcRequestConfig
  */
 
 /**

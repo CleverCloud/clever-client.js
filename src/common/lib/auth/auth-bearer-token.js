@@ -7,7 +7,7 @@ import { HeadersBuilder } from '../request/headers-builder.js';
 /**
  * @param {Partial<CcRequestParams>} requestParams
  * @param {string} bearerToken
- * @return {Partial<CcRequestParams>}
+ * @returns {Partial<CcRequestParams>}
  */
 export function prepareRequestWithBearerToken(requestParams, bearerToken) {
   return {

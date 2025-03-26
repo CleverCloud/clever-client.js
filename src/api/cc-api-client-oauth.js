@@ -1,10 +1,10 @@
-import { prepareRequestAuthV1Plaintext } from '../lib/auth/auth-oauth-v1-plaintext.js';
+import { prepareRequestAuthV1Plaintext } from '../common/lib/auth/auth-oauth-v1-plaintext.js';
 import { CcApiClient } from './cc-api-client.js';
 
 /**
- * @typedef {import('../types/auth.types.js').CcAuth} CcAuth
- * @typedef {import('../types/clever-client.types.js').CcApiClientConfigWithOAuth} CcApiClientConfigWithOAuth
- * @typedef {import('../types/request.types.js').CcRequestConfig} CcRequestConfig
+ * @typedef {import('../common/types/auth.types.js').CcAuth} CcAuth
+ * @typedef {import('../common/types/clever-client.types.js').CcApiClientConfigWithOAuth} CcApiClientConfigWithOAuth
+ * @typedef {import('../common/types/request.types.js').CcRequestConfig} CcRequestConfig
  */
 
 /**

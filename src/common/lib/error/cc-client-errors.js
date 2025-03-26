@@ -1,27 +1,23 @@
 /**
  * @typedef {import('../../types/request.types.js').CcRequest} CcRequest
- * @typedef {import('../../types/request.types.js').CcResponse<unknown>} CcResponse
+ * @typedef {import('../../types/request.types.js').CcResponse<any>} CcResponse
  */
 
 export class CcClientError extends Error {
   /** @type {string} */
   #code;
-  /** @type {CcRequest} */
-  #request;
 
   /**
    * @param {string} message
    * @param {string} code
-   * @param {CcRequest} request
-   * @param {unknown} cause
+   * @param {unknown} [cause]
    */
-  constructor(message, code, request, cause) {
+  constructor(message, code, cause) {
     super(message);
+    this.#code = code;
     if (cause != null) {
       this.cause = cause;
     }
-    this.#code = code;
-    this.#request = request;
   }
 
   /**
@@ -29,6 +25,22 @@ export class CcClientError extends Error {
    */
   get code() {
     return this.#code;
+  }
+}
+
+export class CcRequestError extends CcClientError {
+  /** @type {CcRequest} */
+  #request;
+
+  /**
+   * @param {string} message
+   * @param {string} code
+   * @param {CcRequest} request
+   * @param {unknown} [cause]
+   */
+  constructor(message, code, request, cause) {
+    super(message, code, cause);
+    this.#request = request;
   }
 
   /**
@@ -69,6 +81,14 @@ export class CcHttpError extends CcClientError {
  */
 export function isCcClientError(error) {
   return error instanceof CcClientError;
+}
+
+/**
+ * @param {any} error
+ * @returns {error is CcRequestError}
+ */
+export function isCcRequestError(error) {
+  return error instanceof CcRequestError;
 }
 
 /**

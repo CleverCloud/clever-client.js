@@ -8,7 +8,7 @@ import { HeadersBuilder } from '../request/headers-builder.js';
 /**
  * @param {Partial<CcRequestParams>} requestParams
  * @param {OAuthTokens} oAuthTokens
- * @return {Partial<CcRequestParams>}
+ * @returns {Partial<CcRequestParams>}
  */
 export function prepareRequestAuthV1Plaintext(requestParams, oAuthTokens) {
   const oauthTokens = [

@@ -1,4 +1,5 @@
-import { handleHttpErrors } from './errors/handle-http-errors.js';
+import { CompositeCommand } from './command/simpleCommand.js';
+import { handleHttpErrors } from './error/handle-http-errors.js';
 import { sendRequest } from './request/request.js';
 
 /**
@@ -15,6 +16,7 @@ import { sendRequest } from './request/request.js';
 const DEFAULT_REQUEST_CONFIG = {
   cors: false,
   timeout: 0,
+  cache: false,
   cacheDelay: 0,
   debug: false,
 };
@@ -47,17 +49,22 @@ export class CcClient {
   }
 
   /**
-   * @param {import('./command/abstract-command.js').AbstractCommand<ResponseBody>} command
+   * @param {import('../types/command.types.js').Command<ResponseBody>} command
    * @param {Partial<CcRequestConfig>} [requestConfig]
    * @returns {Promise<ResponseBody>}
    * @template ResponseBody
    */
   async send(command, requestConfig) {
-    return this.#prepareRequest(command, requestConfig)
+    if (command instanceof CompositeCommand) {
+      return this._compose(command, requestConfig);
+    }
+
+    return this._getCommandRequestParams(command, requestConfig)
+      .then((requestParams) => this._prepareRequest(command, requestParams, requestConfig))
       .then((request) => sendRequest(request))
-      .then((response) => this.#handleResponse(response, command))
+      .then((response) => this._handleResponse(response, command))
       .catch(async (e) => {
-        await this.#onError(e);
+        await this._onError(e);
       });
   }
 
@@ -69,69 +76,96 @@ export class CcClient {
   }
 
   /**
-   * @param {import('./command/abstract-command.js').AbstractCommand<?>} command
+   * @param {import('./command/simpleCommand.js').CompositeCommand<ResponseBody, CcClient>} command
+   * @param {Partial<CcRequestConfig>} [requestConfig]
+   * @returns {Promise<ResponseBody>}
+   * @template ResponseBody
+   * @protected
+   */
+  async _compose(command, requestConfig) {
+    return command.compose({
+      send: (command, rc) => this.send(command, { ...(requestConfig ?? {}), ...(rc ?? {}) }),
+    });
+  }
+
+  /**
+   * @param {import('./command/./simpleCommand.js').SimpleCommand<?>} command
+   * @param {Partial<CcRequestConfig>} [_requestConfig]
+   * @returns {Promise<Partial<CcRequestParams>>}
+   * @protected
+   */
+  async _getCommandRequestParams(command, _requestConfig) {
+    return command.toRequestParams();
+  }
+
+  /**
+   * @param {import('./command/./simpleCommand.js').SimpleCommand<?>} command
+   * @param {Partial<CcRequestParams>} requestParams
    * @param {Partial<CcRequestConfig>} [requestConfig]
    * @returns {Promise<CcRequest>}
+   * @protected
    */
-  async #prepareRequest(command, requestConfig) {
+  async _prepareRequest(command, requestParams, requestConfig) {
     /** @type {Partial<CcRequestParams>} */
-    let requestParams = command.toRequestParams();
+    let rp = requestParams;
 
     // apply hook
     if (this.#hooks.prepareRequestParams != null) {
-      requestParams = await this.#hooks.prepareRequestParams(requestParams);
+      rp = await this.#hooks.prepareRequestParams(rp);
     }
 
     // apply auth (if required by command and if auth method is defined on client)
     if (command.isAuthRequired()) {
       const auth = this.getAuth();
       if (auth) {
-        requestParams = await auth(requestParams);
+        rp = await auth(rp);
       }
     }
 
     return {
       // params
       ...DEFAULT_REQUEST_PARAMS,
-      ...requestParams,
+      ...rp,
       // config
       ...this.#defaultRequestsConfig,
       ...(requestConfig ?? {}),
       // url
-      url: this.#baseUrl + requestParams.url,
+      url: this.#baseUrl + rp.url,
     };
   }
 
   /**
    * @param {import('../types/request.types.js').CcResponse<ResponseBody>} response
-   * @param {import('./command/abstract-command.js').AbstractCommand<ResponseBody>} command
+   * @param {import('./command/./simpleCommand.js').SimpleCommand<?>} command
    * @returns {Promise<ResponseBody>}
    * @template ResponseBody
    * @throws CcClientError
    * @throws CcHttpError
+   * @protected
    */
-  async #handleResponse(response, command) {
+  async _handleResponse(response, command) {
     // apply hook
     if (this.#hooks.onResponse != null) {
       await this.#hooks.onResponse(response);
     }
 
-    // special case for 404
-    if (command.is404Success() && response.status === 404) {
+    // special case for null response
+    if (command.isEmptyResponse(response.status, response.body)) {
       return null;
     }
 
     // handle http errors
     handleHttpErrors(response);
 
-    return command.convertResponseBody(response.body);
+    return command.transformResponseBody(response.body);
   }
 
   /**
    * @param {any} e
    * @returns {Promise<any>}
+   * @protected
    */
-  async #onError(e) {
+  async _onError(e) {
     // apply hook
     if (this.#hooks.onError != null) {
       this.#hooks.onError(e);

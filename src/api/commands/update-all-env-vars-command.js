@@ -1,6 +1,6 @@
 import { toNameValueObject } from '../../../esm/utils/env-vars.js';
-import { AbstractCommand } from '../../lib/command/abstract-command.js';
-import { put } from '../../lib/request/request-params-builder.js';
+import { put } from '../../common/lib/request/request-params-builder.js';
+import { CcApiSimpleCommand } from '../common/cc-api-commands.js';
 
 /**
  * @api GET /v2/self/applications/${XXX}/env
@@ -8,9 +8,9 @@ import { put } from '../../lib/request/request-params-builder.js';
  * @api GET /v2/organisations/${XXX}/applications/${XXX}/env
  * @operationId ...
  *
- * @extends {AbstractCommand<import('./update-all-env-vars-command.types.js').UpdateAllEnvVarsCommandResponse>}
+ * @extends {CcApiSimpleCommand<import('./update-all-env-vars-command.types.js').UpdateAllEnvVarsCommandResponse>}
  */
-export class UpdateAllEnvVarsCommand extends AbstractCommand {
+export class UpdateAllEnvVarsCommand extends CcApiSimpleCommand {
   /**
    * @param {object} params
    * @param {string} [params.ownerId]

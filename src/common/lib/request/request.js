@@ -1,4 +1,4 @@
-import { CcClientError } from '../errors/cc-client-errors.js';
+import { CcClientError, CcRequestError } from '../error/cc-client-errors.js';
 import { requestDebug } from './request-debug.js';
 import { requestTimeout } from './request-timeout.js';
 import { requestWithCache } from './request-with-cache.js';
@@ -57,12 +57,12 @@ async function doRequest(request) {
     };
   } catch (err) {
     /** @param {Error|any} err */
-    if (err instanceof CcClientError) {
+    if (err instanceof CcRequestError) {
       throw err;
     }
 
     if (err instanceof TypeError && /fetch/i.test(err.message)) {
-      throw new CcClientError(
+      throw new CcRequestError(
         'A network error occurred while fetching HTTP endpoint',
         'NETWORK_ERROR',
         request,
@@ -70,7 +70,7 @@ async function doRequest(request) {
       );
     }
 
-    throw new CcClientError('An unknown error occurred while fetching HTTP endpoint', 'UNKNOWN_ERROR', request, err);
+    throw new CcRequestError('An unknown error occurred while fetching HTTP endpoint', 'UNKNOWN_ERROR', request, err);
   }
 }
 
@@ -84,7 +84,7 @@ function getRequestUrl(request) {
   try {
     url = new URL(request.url);
   } catch (e) {
-    throw new CcClientError(`Invalid URL: "${request.url}"`, 'INVALID_URL', request, e);
+    throw new CcRequestError(`Invalid URL: "${request.url}"`, 'INVALID_URL', request, e);
   }
 
   request.queryParams?.applyOnUrl(url);
@@ -121,7 +121,7 @@ function getRequestBody(request) {
 
 /**
  * @param {Response} fetchResponse
- * @return {Promise<any>}
+ * @returns {Promise<any>}
  */
 async function getResponseBody(fetchResponse) {
   if (fetchResponse.status === 204) {
