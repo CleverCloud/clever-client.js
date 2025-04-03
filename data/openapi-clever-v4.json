@@ -687,7 +687,7 @@
             }
           },
           {
-            "name": "application",
+            "name": "applicationId",
             "in": "query",
             "required": false,
             "schema": {
