@@ -100,11 +100,6 @@
   {
     "path": "/v4/products/zones",
     "method": "get",
-    "parameters": []
-  },
-  {
-    "path": "/v4/products/zones",
-    "method": "get",
-    "parameters": []
+    "parameters": [{ "name": "ownerId", "in": "query", "required": false, "schema": { "type": "string" } }]
   }
 ]
