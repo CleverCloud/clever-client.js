@@ -18,7 +18,11 @@
   "files": [
     "/esm/"
   ],
+  "engines": {
+    "node": "22"
+  },
   "scripts": {
+    "api-usage-analyze": "node tasks/api-usage-analyze.js -i ../console3 -i ../clever-components -i ../clever-tools",
     "clean-cache": "node tasks/clean-cache.cjs",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
@@ -49,6 +53,7 @@
     "@types/eventsource": "^1.1.15",
     "@web/test-runner": "^0.18.1",
     "@web/test-runner-mocha": "^0.9.0",
+    "acorn": "^8.14.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "chai": "^4.3.10",
     "del": "^6.0.0",
@@ -56,7 +61,9 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-n": "^17.16.2",
+    "estree-walker": "^3.0.3",
     "fs-extra": "^9.1.0",
+    "globby": "^14.0.2",
     "globals": "^16.0.0",
     "hanbi": "^1.0.1",
     "lodash": "^4.17.21",
