@@ -20,6 +20,10 @@ export class TestSseServer {
     });
   }
 
+  getUrl() {
+    return `http://localhost:${this._port}`;
+  }
+
   async start() {
     this._alive = true;
     this._server.close();

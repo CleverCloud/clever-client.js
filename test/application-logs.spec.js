@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import findFreePorts from 'find-free-ports';
 import { ApplicationLogStream } from '../esm/streams/application-logs.js';
 import { HttpError, NetworkError, ServerError } from '../esm/streams/clever-cloud-sse.js';
 import { createStub } from './lib/stub.js';
@@ -7,27 +8,28 @@ import { clearTimers, patchTimers, sleep, unpatchTimers } from './lib/timers.js'
 
 const DEBUG_LEVEL = 2;
 
-const SERVER_PORT = 8080;
 const ASYNC_TEST_TIMEOUT_MS = 10_000;
 
 describe('ApplicationLogStream', () => {
   before(patchTimers);
   after(unpatchTimers);
 
+  /** @type {TestSseServer} */
   let sseServer;
   let appLogs;
 
   // Prepare a test SSE server instance for each test
-  beforeEach(() => {
-    sseServer?.stop();
-    sseServer = new TestSseServer(SERVER_PORT);
-    sseServer.start();
+  beforeEach(async () => {
+    const port = (await findFreePorts(1, { startPort: 8000 }))[0];
+    await sseServer?.stop();
+    sseServer = new TestSseServer(port);
+    await sseServer.start();
   });
 
   // Cleanup server and client
-  afterEach(() => {
+  afterEach(async () => {
     appLogs?.close();
-    sseServer?.stop();
+    await sseServer?.stop();
     // This one may trigger an error if some timeouts or intervals are not cleared
     clearTimers();
   });
@@ -35,69 +37,69 @@ describe('ApplicationLogStream', () => {
   describe('getUrl()', () => {
     it('Without query params', () => {
       const appsLogs = new ApplicationLogStream({
-        apiHost: 'http://localhost:' + SERVER_PORT,
+        apiHost: sseServer.getUrl(),
         tokens: null,
         ownerId: 'ownerId',
         appId: 'appId',
       });
-      const url = appsLogs.getUrl();
-      expect(url).to.equal('http://localhost:8080/v4/logs/organisations/ownerId/applications/appId/logs');
+      const url = appsLogs.getUrl().toString();
+      expect(url).to.equal(`${sseServer.getUrl()}/v4/logs/organisations/ownerId/applications/appId/logs`);
     });
 
     it('With since and until dates', () => {
       const appsLogs = new ApplicationLogStream({
-        apiHost: 'http://localhost:' + SERVER_PORT,
+        apiHost: sseServer.getUrl(),
         tokens: null,
         ownerId: 'ownerId',
         appId: 'appId',
         since: new Date('2023-12-01T00:00:00.000Z'),
         until: new Date('2023-12-01T01:00:00.000Z'),
       });
-      const url = appsLogs.getUrl();
+      const url = appsLogs.getUrl().toString();
       expect(url).to.equal(
-        'http://localhost:8080/v4/logs/organisations/ownerId/applications/appId/logs?since=2023-12-01T00%3A00%3A00.000Z&until=2023-12-01T01%3A00%3A00.000Z',
+        `${sseServer.getUrl()}/v4/logs/organisations/ownerId/applications/appId/logs?since=2023-12-01T00%3A00%3A00.000Z&until=2023-12-01T01%3A00%3A00.000Z`,
       );
     });
 
     it('With instance IDs', () => {
       const appsLogs = new ApplicationLogStream({
-        apiHost: 'http://localhost:' + SERVER_PORT,
+        apiHost: sseServer.getUrl(),
         tokens: null,
         ownerId: 'ownerId',
         appId: 'appId',
         instanceId: ['aaa', 'bbb', 'ccc'],
       });
-      const url = appsLogs.getUrl();
+      const url = appsLogs.getUrl().toString();
       expect(url).to.equal(
-        'http://localhost:8080/v4/logs/organisations/ownerId/applications/appId/logs?instanceId=aaa&instanceId=bbb&instanceId=ccc',
+        `${sseServer.getUrl()}/v4/logs/organisations/ownerId/applications/appId/logs?instanceId=aaa&instanceId=bbb&instanceId=ccc`,
       );
     });
 
     it('With fields', () => {
       const appsLogs = new ApplicationLogStream({
-        apiHost: 'http://localhost:' + SERVER_PORT,
+        apiHost: sseServer.getUrl(),
         tokens: null,
         ownerId: 'ownerId',
         appId: 'appId',
         fields: ['aaa', 'bbb', 'ccc'],
       });
-      const url = appsLogs.getUrl();
+      const url = appsLogs.getUrl().toString();
       expect(url).to.equal(
-        'http://localhost:8080/v4/logs/organisations/ownerId/applications/appId/logs?fields=aaa&fields=bbb&fields=ccc',
+        `${sseServer.getUrl()}/v4/logs/organisations/ownerId/applications/appId/logs?fields=aaa&fields=bbb&fields=ccc`,
       );
     });
 
     it('With undefined and null query params', () => {
       const appsLogs = new ApplicationLogStream({
-        apiHost: 'http://localhost:' + SERVER_PORT,
+        apiHost: sseServer.getUrl(),
         tokens: null,
         ownerId: 'ownerId',
         appId: 'appId',
         deploymentId: undefined,
         filter: null,
       });
-      const url = appsLogs.getUrl();
-      expect(url).to.equal('http://localhost:8080/v4/logs/organisations/ownerId/applications/appId/logs');
+      const url = appsLogs.getUrl().toString();
+      expect(url).to.equal(`${sseServer.getUrl()}/v4/logs/organisations/ownerId/applications/appId/logs`);
     });
   });
 
@@ -106,7 +108,7 @@ describe('ApplicationLogStream', () => {
 
     // Prepare an ApplicationLogStream instance with stubbed callbacks for each test
     beforeEach(() => {
-      const _ = createApplicationLogStream();
+      const _ = createApplicationLogStream(sseServer.getUrl());
       appLogs = _.appLogs;
       callbacks = _.callbacks;
     });
@@ -141,7 +143,7 @@ describe('ApplicationLogStream', () => {
 
       appLogs.close('the reason');
       await expectCounts(callbacks, { onOpen: 1, onError: 0, onLog: 0, onSuccess: 1, onFailure: 0 });
-      expect(callbacks.onSuccess.getCall(0).args[0]).to.deep.equal({ reason: 'the reason' });
+      expect(callbacks.onSuccess.getCall(0).args[0]).to.deep.equal('the reason');
     });
 
     it('Pause log stream should not timeout', async () => {
@@ -181,7 +183,7 @@ describe('ApplicationLogStream', () => {
     it('Pause log stream, wait and resume should trigger onOpen again, with last event ID and update limit query param', async () => {
       // Reset setup to specify a limit
       appLogs.close();
-      const _ = createApplicationLogStream({
+      const _ = createApplicationLogStream(sseServer.getUrl(), {
         limit: 10,
       });
       appLogs = _.appLogs;
@@ -212,7 +214,7 @@ describe('ApplicationLogStream', () => {
       await sseServer.closeResponse();
 
       await expectCounts(callbacks, { onOpen: 1, onError: 0, onLog: 3, onSuccess: 1, onFailure: 0 });
-      expect(callbacks.onSuccess.getCall(0).args).to.deep.equal([{ reason: { endedBy: 'UNTIL_REACHED' } }]);
+      expect(callbacks.onSuccess.getCall(0).args).to.deep.equal([{ type: 'UNTIL_REACHED' }]);
     });
 
     it('Close server response should trigger onFailure if END_OF_STREAM(UNTIL_REACHED) was NOT sent or received', async () => {
@@ -305,7 +307,7 @@ describe('ApplicationLogStream', () => {
 
     // Prepare an ApplicationLogStream instance with stubbed callbacks and an auto retry (max 2) for each test
     beforeEach(() => {
-      const _ = createApplicationLogStream({
+      const _ = createApplicationLogStream(sseServer.getUrl(), {
         retryConfiguration: {
           enabled: true,
           maxRetryCount: 2,
@@ -355,7 +357,7 @@ describe('ApplicationLogStream', () => {
 
       // Reset setup to start the client after a server stop
       appLogs.close();
-      const _ = createApplicationLogStream({
+      const _ = createApplicationLogStream(sseServer.getUrl(), {
         retryConfiguration: {
           enabled: true,
           maxRetryCount: 2,
@@ -421,7 +423,7 @@ describe('ApplicationLogStream', () => {
     it('Multiple "error + successful retry" should trigger onError and onOpen with last event ID and and update limit query param, the max retry should not be reached', async () => {
       // Reset setup to specify a limit
       appLogs.close();
-      const _ = createApplicationLogStream({
+      const _ = createApplicationLogStream(sseServer.getUrl(), {
         retryConfiguration: {
           enabled: true,
           maxRetryCount: 2,
@@ -543,9 +545,9 @@ describe('ApplicationLogStream', () => {
 });
 
 // Set up a ApplicationLogStream with a series of stubbed callbacks
-function createApplicationLogStream(options = {}) {
+function createApplicationLogStream(url, options = {}) {
   const appLogs = new ApplicationLogStream({
-    apiHost: 'http://localhost:' + SERVER_PORT,
+    apiHost: url,
     tokens: null,
     ownerId: 'ownerId',
     appId: 'appId',
