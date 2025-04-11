@@ -1,9 +1,5 @@
 # Clever Client changelog
 
-## Unreleased (????-??-??)
-
-...
-
 ## 10.1.0 (2025-04-04)
 
 * feat(zones): add ownerId query param (#141)
