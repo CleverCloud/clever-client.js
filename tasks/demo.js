@@ -1,15 +1,18 @@
-import { CcApiClientOAuth } from '../src/api/cc-api-client-oauth.js';
-import { GetInstanceCommand } from '../src/api/commands/get-instance-command.js';
-import { CcAuthBackendClient } from '../src/auth-backend/cc-auth-backend-client.js';
-import { CreateApiTokenCommand } from '../src/auth-backend/commands/create-api-token-command.js';
-import { isCcHttpError } from '../src/common/lib/error/cc-client-errors.js';
+import { CcApiClientOAuth } from '../src/clients/api/cc-api-client-oauth.js';
+import { CcApiClientToken } from '../src/clients/api/cc-api-client-token.js';
+import { GetEnvironmentCommand } from '../src/clients/api/commands/environment/get-environment-command.js';
+import { GetInstanceCommand } from '../src/clients/api/commands/get-instance-command.js';
+import { GetSelfCommand } from '../src/clients/api/commands/get-self-command.js';
+import { GetPulsarInfoCommand } from '../src/clients/api/commands/pulsar/get-pulsar-info-command.js';
+import { CcAuthBackendClient } from '../src/clients/auth-backend/cc-auth-backend-client.js';
+import { CreateApiTokenCommand } from '../src/clients/auth-backend/commands/create-api-token-command.js';
+import { isCcHttpError } from '../src/lib/error/cc-client-errors.js';
 import { prompt } from './lib/prompt.js';
 
 /**
- * @typedef {import('../src/common/lib/cc-client.js').CcClient} CcClient
- * @typedef {import('../src/common/types/auth.types.js').OAuthTokens} OAuthTokens
- * @typedef {import('../src/common/types/request.types.js').CcRequestConfig} CcRequestConfig
- * @typedef {import('../src/common/types/clever-client.types.js').CcClientHooks} CcClientHooks
+ * @typedef {import('../src/types/auth.types.js').OAuthTokens} OAuthTokens
+ * @typedef {import('../src/types/request.types.js').CcRequestConfig} CcRequestConfig
+ * @typedef {import('../src/types/client.types.js').CcClientHooks} CcClientHooks
  */
 
 /** @type {OAuthTokens} */
@@ -26,7 +29,7 @@ const apiTokenFromEnv = process.env.CC_API_TOKEN;
  * @type {Partial<CcRequestConfig>}
  */
 const defaultRequestConfig = {
-  debug: true,
+  debug: (o) => console.log(JSON.stringify(o)),
   timeout: 10_000,
   cacheDelay: 5_000,
 };
@@ -84,44 +87,20 @@ async function run() {
   let userEmail;
 
   // -- get connected user email with oAuth v1 authentication method
-  // try {
-  //   const commandResponse = await apiClient.send(new GetSelfCommand());
-  //   userEmail = commandResponse.email;
-  //   console.log(`You are connected as ${userEmail}`);
-  //   console.log(`=> Let's switch to Clever Cloud APIs with API token instead of Oauth v1 ...`);
-  // } catch (e) {
-  //   if (isCcHttpError(e) && e.response.status === 401) {
-  //     console.log(`You are not connected`);
-  //     console.log(`=> Let's try with API token instead ...`);
-  //   } else {
-  //     throw e;
-  //   }
-  // }
+  try {
+    const commandResponse = await apiClient.send(new GetSelfCommand());
+    userEmail = commandResponse.email;
+    console.log(`You are connected as ${userEmail}`);
+    console.log(`=> Let's switch to Clever Cloud APIs with API token instead of Oauth v1 ...`);
+  } catch (e) {
+    if (isCcHttpError(e) && e.response.status === 401) {
+      console.log(`You are not connected`);
+      console.log(`=> Let's try with API token instead ...`);
+    } else {
+      throw e;
+    }
+  }
 
-  // const pulsarInfo = await apiClient.send(
-  //   new GetPulsarInfoCommand({ addonId: 'pulsar_283e6360-af4e-4973-87ab-c35640bd6648' }),
-  // );
-  // console.log(pulsarInfo);
-
-  // const env = await apiClient.send(
-  //   new GetEnvironmentCommand({
-  //     // ownerId: 'orga_3547a882-d464-4c34-8168-add4b3e0c135',
-  //     applicationId: 'app_7c6f466c-3314-4753-9e06-f87912f6b856',
-  //     includeLinkedApplications: true,
-  //     includeLinkedAddons: true,
-  //   }),
-  // );
-  // console.log(JSON.stringify(env, null, 2));
-
-  const instance = await apiClient.send(
-    new GetInstanceCommand({
-      applicationId: 'app_7c6f466c-3314-4753-9e06-f87912f6b856',
-      instanceId: '58ea2db5-3ab3-46a4-9689-0dd1d3e9e811',
-    }),
-  );
-  console.log(JSON.stringify(instance, null, 2));
-
-  /*
   // -- get api token from env var or create it if needed
   let apiToken;
   if (apiTokenFromEnv?.length) {
@@ -145,7 +124,32 @@ async function run() {
     } else {
       throw e;
     }
-  }*/
+  }
+
+  // -- use some other commands
+
+  const pulsarInfo = await apiClient.send(
+    new GetPulsarInfoCommand({ addonId: 'pulsar_283e6360-af4e-4973-87ab-c35640bd6648' }),
+  );
+  console.log(pulsarInfo);
+
+  const env = await apiClient.send(
+    new GetEnvironmentCommand({
+      // ownerId: 'orga_3547a882-d464-4c34-8168-add4b3e0c135',
+      applicationId: 'app_7c6f466c-3314-4753-9e06-f87912f6b856',
+      includeLinkedApplications: true,
+      includeLinkedAddons: true,
+    }),
+  );
+  console.log(JSON.stringify(env, null, 2));
+
+  const instance = await apiClient.send(
+    new GetInstanceCommand({
+      applicationId: 'app_7c6f466c-3314-4753-9e06-f87912f6b856',
+      instanceId: '58ea2db5-3ab3-46a4-9689-0dd1d3e9e811',
+    }),
+  );
+  console.log(JSON.stringify(instance, null, 2));
 }
 
 //-- run ------

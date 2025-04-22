@@ -99,6 +99,9 @@ async function run() {
         sourceId,
         endpointId: endpoint.id,
         isUsed,
+        namespace: alreadyExist ? existingCommands.get(endpoint.id).namespace : '',
+        target: alreadyExist ? existingCommands.get(endpoint.id).target : '',
+        action: alreadyExist ? existingCommands.get(endpoint.id).action : '',
         commandClassName: alreadyExist ? existingCommands.get(endpoint.id).commandClassName : '',
         comment,
       });
@@ -133,8 +136,12 @@ console.log(styleText(['bold', 'underline', 'italic'], 'Endpoints listing'));
 console.log('-> This tool takes all endpoints and generate one CSV file per source api target:');
 console.log('-> * column 1: the source id');
 console.log('-> * column 2: the endpoint id');
-console.log('-> * column 3: the command class name (to be defined manually)');
-console.log('-> * column 4: a free comment');
+console.log('-> * column 3: whether the endpoint is used or not');
+console.log('-> * column 4: the namespace (to be defined manually)');
+console.log('-> * column 5: the target (to be defined manually)');
+console.log('-> * column 6: the action (to be defined manually)');
+console.log('-> * column 7: the command class name (to be defined manually)');
+console.log('-> * column 8: a free comment');
 console.log("-> You'll then be able to define all command class names manually.");
 console.log("-> Then, you'll use the `endpoints-generate` tool to generate the client scaffolding.");
 console.log('-> Note that, if a CSV file already exists, the class names will be kept unchanged.');

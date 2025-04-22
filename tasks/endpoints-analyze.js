@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
-import { styleText } from 'node:util';
 import path from 'node:path';
+import { styleText } from 'node:util';
 import { SOURCES, WORKING_DIR } from './lib/config.js';
 import { compareEndpoints, generateJsonReport, generateMarkdownReport } from './lib/endpoint-compare.js';
 import { parseEndpoints } from './lib/endpoint-parse.js';

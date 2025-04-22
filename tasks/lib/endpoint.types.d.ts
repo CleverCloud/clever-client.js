@@ -90,6 +90,9 @@ export interface CommandDetail {
   sourceId: string;
   endpointId: string;
   isUsed: boolean;
+  namespace: string;
+  target: string;
+  action: string;
   commandClassName: string;
   comment: string;
 }
