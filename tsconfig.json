@@ -1,5 +1,5 @@
 {
-  "include": ["esm/**/*", "tasks/lib/api-analyze.js"],
+  "include": ["esm/**/*", "tasks/endpoints-*.js", "tasks/lib/api-analyze.js"],
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
