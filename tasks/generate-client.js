@@ -2,10 +2,10 @@ import { deleteSync } from 'del';
 import fs from 'fs-extra';
 import _ from 'lodash';
 import { join as pathJoin } from 'path';
-import { format, resolveConfig } from 'prettier';
 import superagent from 'superagent';
 // const pkg = require('../package.json');
 import { CACHE_PATH, OPEN_API_URL_V2, OPEN_API_URL_V4_OVD } from './config.js';
+import { formatJsCode } from './lib/format-code.js';
 
 async function getOpenapi(localCachePath, remoteUrl) {
   const existsInCache = await fs.pathExists(localCachePath);
@@ -237,13 +237,6 @@ function mergeCodesByService(allRoutesWithCode) {
     .value();
 }
 
-async function formatCode(rawContents) {
-  // format (also parse and check what is generated)
-  const options = await resolveConfig(pathJoin('./.prettierrc'));
-  options.parser = 'babel';
-  return await format(rawContents, options);
-}
-
 /**
  * Takes OpenAPI JSON document from remote (or from cache)
  * Use patch to add "x-service" and "x-function" (temporary :p)
@@ -324,7 +317,7 @@ async function generateClient() {
     
        ${rawContents}`;
 
-      const contents = await formatCode(rawContentsWithImports);
+      const contents = await formatJsCode(rawContentsWithImports);
       await fs.appendFile(filepath, contents, 'utf8');
     }
   }
