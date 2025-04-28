@@ -1,4 +1,4 @@
-import { expect } from '@esm-bundle/chai';
+import { expect } from 'chai';
 import { getStatus } from '../esm/utils/app-status.js';
 
 describe('app-status#getStatus()', () => {
