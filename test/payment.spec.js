@@ -1,4 +1,4 @@
-import { expect } from '@esm-bundle/chai';
+import { expect } from 'chai';
 import { ERROR_TYPES, getAllOrgaPaymentMethodsErrors, getOrgaPaymentMethodsError } from '../esm/utils/payment.js';
 
 const simpleOrga = {

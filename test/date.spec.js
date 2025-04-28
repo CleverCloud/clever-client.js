@@ -1,4 +1,4 @@
-import { expect } from '@esm-bundle/chai';
+import { expect } from 'chai';
 import { toMicroIsoString, toMicroTimestamp } from '../esm/utils/date.js';
 
 describe('date#toMicroIsoString()', () => {
