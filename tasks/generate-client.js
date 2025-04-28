@@ -1,14 +1,11 @@
-'use strict';
-
-const _ = require('lodash');
-const del = require('del');
-const fs = require('fs-extra');
-const pathJoin = require('path').join;
-const prettier = require('prettier');
-const superagent = require('superagent');
+import { deleteSync } from 'del';
+import fs from 'fs-extra';
+import _ from 'lodash';
+import { join as pathJoin } from 'path';
+import { format, resolveConfig } from 'prettier';
+import superagent from 'superagent';
 // const pkg = require('../package.json');
-
-const { CACHE_PATH, OPEN_API_URL_V2, OPEN_API_URL_V4_OVD } = require('./config.cjs');
+import { CACHE_PATH, OPEN_API_URL_V2, OPEN_API_URL_V4_OVD } from './config.js';
 
 async function getOpenapi(localCachePath, remoteUrl) {
   const existsInCache = await fs.pathExists(localCachePath);
@@ -242,9 +239,9 @@ function mergeCodesByService(allRoutesWithCode) {
 
 async function formatCode(rawContents) {
   // format (also parse and check what is generated)
-  const options = await prettier.resolveConfig(pathJoin('./.prettierrc'));
+  const options = await resolveConfig(pathJoin('./.prettierrc'));
   options.parser = 'babel';
-  return await prettier.format(rawContents, options);
+  return await format(rawContents, options);
 }
 
 /**
@@ -295,7 +292,7 @@ async function generateClient() {
 
   // clear generated client dir
   const generatedClientBasePath = './esm/api';
-  await del(pathJoin(generatedClientBasePath, '**', '*'));
+  deleteSync(pathJoin(generatedClientBasePath, '**', '*'));
 
   for (const [version, routes] of Object.entries(routesByVersion)) {
     const generatedClientPath = pathJoin(generatedClientBasePath, version);

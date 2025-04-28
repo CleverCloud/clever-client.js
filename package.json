@@ -23,11 +23,11 @@
   },
   "scripts": {
     "api-usage-analyze": "node tasks/api-usage-analyze.js -i ../console3 -i ../clever-components -i ../clever-tools",
-    "clean-cache": "node tasks/clean-cache.cjs",
+    "clean-cache": "node tasks/clean-cache.js",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "generate-client": "npm run clean-cache && npm run generate-client-from-openapi",
-    "generate-client-from-openapi": "node tasks/generate-client.cjs",
+    "generate-client-from-openapi": "node tasks/generate-client.js",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "prepack:dev": "npm run generate-client",
