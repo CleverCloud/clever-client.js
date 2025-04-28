@@ -6,3 +6,4 @@ node_modules
 .env
 # macOS system files
 .DS_Store
+types

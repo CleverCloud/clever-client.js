@@ -17,7 +17,14 @@ export default [
   // Allow importing dev dependencies for files that are related to build / tooling / testing
   {
     name: 'allow-extraneous-imports',
-    files: ['test/**/*.*js', 'eslint.config.js', 'eslint/**/*.*js', 'tasks/**/*.js', 'web-test-runner.config.js'],
+    files: [
+      'test/**/*.*js',
+      'eslint.config.js',
+      'eslint/**/*.*js',
+      'tasks/**/*.js',
+      'web-test-runner.config.js',
+      'rollup.config.js',
+    ],
     rules: {
       'import/no-extraneous-dependencies': [
         'off',
@@ -38,7 +45,7 @@ export default [
   // Specific rules for node esm modules
   {
     name: 'node-esm-context',
-    files: ['tasks/**/*.js', 'web-test-runner.config.js', 'manual_tests/**/*.js'],
+    files: ['tasks/**/*.js', 'web-test-runner.config.js', 'manual_tests/**/*.js', 'rollup.config.js'],
     languageOptions: {
       globals: {
         ...globals.node,
