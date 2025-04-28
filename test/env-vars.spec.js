@@ -1,4 +1,4 @@
-import { expect } from '@esm-bundle/chai';
+import { expect } from 'chai';
 
 // Disable this so we can use single and double quotes inside strings the way we want ;-)
 /* eslint quotes: "off" */
