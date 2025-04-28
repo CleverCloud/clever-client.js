@@ -9,3 +9,4 @@
 # api [PUT] /logs/:XXX/drains/:XXX/state
 
 redis-http [GET] /
+auth-backend [GET] /
