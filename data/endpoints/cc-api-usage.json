@@ -1,0 +1,987 @@
+{
+  "[GET] /v2/backups/:XXX/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/database.js:21",
+    "/home/pierre/pro/dev/clever-tools/src/commands/database.js:76",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-backups.sp.js:73",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-backups.sp.js:89"
+  ],
+  "[GET] /v2/github": [
+    "/home/pierre/pro/dev/console3/src/modules/github/main.js:35"
+  ],
+  "[GET] /v2/github/applications": [
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/docker/cc-configure-docker.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/dotnet/cc-configure-dotnet.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/elixir/cc-configure-elixir.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/go/cc-configure-go.smart.js:46",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/haskell/cc-configure-haskell.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-gradle/cc-configure-java-gradle.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-jar/cc-configure-java-jar.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-maven/cc-configure-java-maven.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-play1/cc-configure-java-play1.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-play2/cc-configure-java-play2.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-war/cc-configure-java-war.smart.js:46",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/meteor/cc-configure-meteor.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/node/cc-configure-node.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/php/cc-configure-php.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/python/cc-configure-python.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/ruby/cc-configure-ruby.smart.js:45",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/rust/cc-configure-rust.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/scala/cc-configure-scala.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/static/cc-configure-static.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/modules/github/main.js:7",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppCreationSP.js:52"
+  ],
+  "[GET] /v2/github/keys": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-ssh-key-list/cc-ssh-key-list.smart.js:173",
+    "/home/pierre/pro/dev/console3/src/modules/ssh-keys/main.js:56"
+  ],
+  "[DELETE] /v2/github/link": [
+    "/home/pierre/pro/dev/console3/src/modules/github/main.js:24"
+  ],
+  "[GET] /v2/github/username": [
+    "/home/pierre/pro/dev/console3/src/statepoints/UserInformationSP.js:22"
+  ],
+  "[GET] /v2/logs/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/log.js:77"
+  ],
+  "[GET] /v2/logs/:XXX/drains": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/drain.js:19"
+  ],
+  "[POST] /v2/logs/:XXX/drains": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/drain.js:63"
+  ],
+  "[DELETE] /v2/logs/:XXX/drains/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/drain.js:73"
+  ],
+  "[PUT] /v2/logs/:XXX/drains/:XXX/state": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/drain.js:83",
+    "/home/pierre/pro/dev/clever-tools/src/commands/drain.js:93"
+  ],
+  "[GET] /v2/metrics/read/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/Metrics.es6.js:212"
+  ],
+  "[GET] /v2/notifications/emailhooks/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/notify-email.js:14",
+    "/home/pierre/pro/dev/console3/src/modules/owner-notifications/main.es6.js:87"
+  ],
+  "[POST] /v2/notifications/emailhooks/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/notify-email.js:90",
+    "/home/pierre/pro/dev/console3/src/modules/owner-notifications/main.es6.js:114"
+  ],
+  "[DELETE] /v2/notifications/emailhooks/:XXX/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/notify-email.js:100",
+    "/home/pierre/pro/dev/console3/src/modules/owner-notifications/main.es6.js:124"
+  ],
+  "[GET] /v2/notifications/info/events": [
+    "/home/pierre/pro/dev/console3/src/modules/owner-notifications/main.es6.js:77"
+  ],
+  "[GET] /v2/notifications/info/webhookformats": [
+    "/home/pierre/pro/dev/console3/src/modules/owner-notifications/main.es6.js:72"
+  ],
+  "[GET] /v2/notifications/webhooks/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/webhooks.js:14",
+    "/home/pierre/pro/dev/console3/src/modules/owner-notifications/main.es6.js:82"
+  ],
+  "[POST] /v2/notifications/webhooks/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/webhooks.js:63",
+    "/home/pierre/pro/dev/console3/src/modules/owner-notifications/main.es6.js:103"
+  ],
+  "[DELETE] /v2/notifications/webhooks/:XXX/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/webhooks.js:73",
+    "/home/pierre/pro/dev/console3/src/modules/owner-notifications/main.es6.js:119"
+  ],
+  "[GET] /v2/oauth/rights": [
+    "/home/pierre/pro/dev/console3/src/modules/oauth-consumer-creation/main.es6.js:32"
+  ],
+  "[GET] /v2/organisations": [
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/summary.js:197",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/user-deletion.sp.js:178"
+  ],
+  "[POST] /v2/organisations": [
+    "/home/pierre/pro/dev/console3/src/statepoints/OrgaCreationSP.js:42"
+  ],
+  "[GET] /v2/organisations/_[part]": [
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/summary.js:129"
+  ],
+  "[DELETE] /v2/organisations/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/user-deletion.sp.js:191",
+    "/home/pierre/pro/dev/console3/src/statepoints/OrgaSP.es6.js:145"
+  ],
+  "[GET] /v2/organisations/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-email-list/cc-email-list.smart.js:286",
+    "/home/pierre/pro/dev/clever-components/src/components/cc-ssh-key-list/cc-ssh-key-list.smart.js:166",
+    "/home/pierre/pro/dev/clever-tools/src/models/user.js:5",
+    "/home/pierre/pro/dev/clever-tools/src/models/user.js:9",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/docker/configure-docker.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/dotnet/configure-dotnet.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/elixir/configure-elixir.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/go/configure-go.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/haskell/configure-haskell.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-gradle/configure-java-gradle.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-jar/configure-java-jar.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-maven/configure-java-maven.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-play1/configure-java-play1.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-play2/configure-java-play2.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-war/configure-java-war.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/meteor/configure-meteor.sp.js:14",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/node/configure-node.sp.js:15",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/php/configure-php.sp.js:14",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/python/configure-python.sp.js:14",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/ruby/configure-ruby.sp.js:14",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/rust/configure-rust.sp.js:14",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/scala/configure-scala.sp.js:14",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/static/configure-static.sp.js:14",
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/summary.js:177",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/orga-overview.sp.js:111",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/user-deletion.sp.js:174",
+    "/home/pierre/pro/dev/console3/src/statepoints/OrgaSP.es6.js:24",
+    "/home/pierre/pro/dev/console3/src/statepoints/PaymentSP.es6.js:26"
+  ],
+  "[PUT] /v2/organisations/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/OrgaSP.es6.js:188"
+  ],
+  "[POST] /v2/organisations/:XXX/addonproviders": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonProviderCreationSP.es6.js:46"
+  ],
+  "[GET] /v2/organisations/:XXX/addonproviders/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonProviderSP.js:13"
+  ],
+  "[PUT] /v2/organisations/:XXX/addonproviders/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonProviderSP.js:50"
+  ],
+  "[GET] /v2/organisations/:XXX/addonproviders/:XXX/features": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonProviderPlansSP.js:19"
+  ],
+  "[POST] /v2/organisations/:XXX/addonproviders/:XXX/features": [
+    "/home/pierre/pro/dev/console3/src/modules/addon-provider-plans/view.js:115"
+  ],
+  "[DELETE] /v2/organisations/:XXX/addonproviders/:XXX/features/:XXX": [
+    "/home/pierre/pro/dev/console3/src/modules/addon-provider-plans/view.js:199"
+  ],
+  "[GET] /v2/organisations/:XXX/addonproviders/:XXX/plans": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonProviderPlansSP.js:18"
+  ],
+  "[POST] /v2/organisations/:XXX/addonproviders/:XXX/plans": [
+    "/home/pierre/pro/dev/console3/src/modules/addon-provider-plans/view.js:61"
+  ],
+  "[DELETE] /v2/organisations/:XXX/addonproviders/:XXX/plans/:XXX": [
+    "/home/pierre/pro/dev/console3/src/modules/addon-provider-plans/view.js:215"
+  ],
+  "[PUT] /v2/organisations/:XXX/addonproviders/:XXX/plans/:XXX": [
+    "/home/pierre/pro/dev/console3/src/modules/addon-provider-plans/view.js:78",
+    "/home/pierre/pro/dev/console3/src/modules/addon-provider-plans/view.js:141",
+    "/home/pierre/pro/dev/console3/src/modules/addon-provider-plans/view.js:257"
+  ],
+  "[GET] /v2/organisations/:XXX/addons": [
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:38",
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:171",
+    "/home/pierre/pro/dev/console3/src/modules/apps-pane/apps-pane.data-streams.js:77",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:59"
+  ],
+  "[POST] /v2/organisations/:XXX/addons": [
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:164",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/cellar/cc-configure-cellar.smart.js:51",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/config-provider/cc-configure-config-provider.smart.js:32",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/elasticsearch/cc-configure-elasticsearch.smart.js:67",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/fs-bucket/cc-configure-fs-bucket.smart.js:53",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/jenkins/cc-configure-jenkins.smart.js:63",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/keycloak/cc-configure-keycloak.smart.js:32",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/kv/cc-configure-kv.smart.js:32",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/mailpace/cc-configure-mailpace.smart.js:47",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/matomo/cc-configure-matomo.smart.js:46",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/mongodb/cc-configure-mongodb.smart.js:63",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/mysql/cc-configure-mysql.smart.js:63",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/postgresql/cc-configure-postgresql.smart.js:63",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/pulsar/cc-configure-pulsar.smart.js:51",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/redis/cc-configure-redis.smart.js:63",
+    "/home/pierre/pro/dev/console3/src/modules/addon-creation/view.js:190"
+  ],
+  "[DELETE] /v2/organisations/:XXX/addons/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:209",
+    "/home/pierre/pro/dev/console3/src/helpers/addonOverview.js:73",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:169"
+  ],
+  "[GET] /v2/organisations/:XXX/addons/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-env-var-form/cc-env-var-form.smart-config-provider.js:106",
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:231",
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:247",
+    "/home/pierre/pro/dev/console3/src/clever-client/various.js:50",
+    "/home/pierre/pro/dev/console3/src/clever-client/various.js:55",
+    "/home/pierre/pro/dev/console3/src/modules/events-notifications/main.js:295",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-backups.sp.js:21",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-switch-statepoint.js:137",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonLogsSP.es6.js:26",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonMigrationSP.es6.js:36",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:48",
+    "/home/pierre/pro/dev/console3/src/statepoints/Metrics.es6.js:69"
+  ],
+  "[PUT] /v2/organisations/:XXX/addons/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:214",
+    "/home/pierre/pro/dev/console3/src/helpers/addonOverview.js:15",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:231"
+  ],
+  "[GET] /v2/organisations/:XXX/addons/:XXX/applications": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-addon-linked-apps/cc-addon-linked-apps.smart.js:98",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonMigrationSP.es6.js:81",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:30"
+  ],
+  "[GET] /v2/organisations/:XXX/addons/:XXX/env": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-env-var-form/cc-env-var-form.smart-env-var-addon.js:56",
+    "/home/pierre/pro/dev/clever-tools/src/commands/addon.js:397",
+    "/home/pierre/pro/dev/clever-tools/src/commands/kv.js:65",
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:165",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-materia-explorer.js:16",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-redis-explorer.js:18",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-env-vars.sp.js:72",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:53"
+  ],
+  "[GET] /v2/organisations/:XXX/addons/:XXX/instances": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonLogsSP.es6.js:27",
+    "/home/pierre/pro/dev/console3/src/statepoints/Metrics.es6.js:56"
+  ],
+  "[GET] /v2/organisations/:XXX/addons/:XXX/instances/:XXX": [
+    "/home/pierre/pro/dev/console3/src/modules/metrics/advanced.es6.js:127"
+  ],
+  "[GET] /v2/organisations/:XXX/addons/:XXX/migrations": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonMigrationSP.es6.js:468"
+  ],
+  "[POST] /v2/organisations/:XXX/addons/:XXX/migrations": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonMigrationSP.es6.js:492"
+  ],
+  "[DELETE] /v2/organisations/:XXX/addons/:XXX/migrations/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonMigrationSP.es6.js:408"
+  ],
+  "[GET] /v2/organisations/:XXX/addons/:XXX/migrations/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonMigrationSP.es6.js:479"
+  ],
+  "[GET] /v2/organisations/:XXX/addons/:XXX/migrations/preorders": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonMigrationSP.es6.js:64"
+  ],
+  "[GET] /v2/organisations/:XXX/addons/:XXX/sso": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonConfigurationSP.js:15"
+  ],
+  "[GET] /v2/organisations/:XXX/addons/:XXX/tags": [
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-config-provider.sp.js:47",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-elasticsearch.sp.js:67",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-jenkins.sp.js:36",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-keycloak.sp.js:36",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-materia-kv.sp.js:52",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-matomo.sp.js:40",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-metabase.sp.js:36",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-otoroshi.sp.js:36",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-pulsar.sp.js:76",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:75"
+  ],
+  "[PUT] /v2/organisations/:XXX/addons/:XXX/tags": [
+    "/home/pierre/pro/dev/console3/src/helpers/addonOverview.js:29"
+  ],
+  "[DELETE] /v2/organisations/:XXX/addons/:XXX/tags/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:112"
+  ],
+  "[PUT] /v2/organisations/:XXX/addons/:XXX/tags/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:255"
+  ],
+  "[GET] /v2/organisations/:XXX/applications": [
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:136",
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:163",
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:324"
+  ],
+  "[POST] /v2/organisations/:XXX/applications": [
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:96",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/docker/cc-configure-docker.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/dotnet/cc-configure-dotnet.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/elixir/cc-configure-elixir.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/go/cc-configure-go.smart.js:91",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/haskell/cc-configure-haskell.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-gradle/cc-configure-java-gradle.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-jar/cc-configure-java-jar.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-maven/cc-configure-java-maven.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-play1/cc-configure-java-play1.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-play2/cc-configure-java-play2.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/java-war/cc-configure-java-war.smart.js:91",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/meteor/cc-configure-meteor.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/node/cc-configure-node.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/php/cc-configure-php.smart.js:93",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/python/cc-configure-python.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/ruby/cc-configure-ruby.smart.js:90",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/rust/cc-configure-rust.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/scala/cc-configure-scala.smart.js:92",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/static/cc-configure-static.smart.js:93",
+    "/home/pierre/pro/dev/console3/src/modules/app-creation/view.js:155"
+  ],
+  "[DELETE] /v2/organisations/:XXX/applications/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:110",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppSP.js:270"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/lib/api-helpers.js:29",
+    "/home/pierre/pro/dev/clever-tools/src/commands/domain.js:45",
+    "/home/pierre/pro/dev/clever-tools/src/commands/domain.js:113",
+    "/home/pierre/pro/dev/clever-tools/src/commands/status.js:15",
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:169",
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:177",
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:296",
+    "/home/pierre/pro/dev/console3/src/modules/events-notifications/main.js:316",
+    "/home/pierre/pro/dev/console3/src/modules/events-notifications/main.js:346",
+    "/home/pierre/pro/dev/console3/src/modules/events-notifications/main.js:410",
+    "/home/pierre/pro/dev/console3/src/modules/events-notifications/main.js:430",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppConfigurationSP.js:91",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppDeploymentsSP.js:35",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:49",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppSP.js:29",
+    "/home/pierre/pro/dev/console3/src/statepoints/Metrics.es6.js:44"
+  ],
+  "[PUT] /v2/organisations/:XXX/applications/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/config.js:29",
+    "/home/pierre/pro/dev/clever-tools/src/commands/config.js:44",
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:314",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppConfigurationSP.js:199",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppSP.js:160",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppSP.js:289"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/addons": [
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:45",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-env-vars.sp.js:71",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-overview.sp.js:279",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:76"
+  ],
+  "[POST] /v2/organisations/:XXX/applications/:XXX/addons": [
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:194",
+    "/home/pierre/pro/dev/console3/src/modules/addon-creation/view.js:526",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:204"
+  ],
+  "[DELETE] /v2/organisations/:XXX/applications/:XXX/addons/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:199",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:224"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/addons/env": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/env.js:22"
+  ],
+  "[PUT] /v2/organisations/:XXX/applications/:XXX/branch": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppSP.js:170"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/branches": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppSP.js:50"
+  ],
+  "[PUT] /v2/organisations/:XXX/applications/:XXX/buildflavor": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppSP.js:184"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/dependencies": [
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:318",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:81"
+  ],
+  "[DELETE] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:340",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:354"
+  ],
+  "[PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:335",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:334"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/dependencies/env": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/env.js:23",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-env-vars.sp.js:76"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/deployments": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/cancel-deploy.js:10",
+    "/home/pierre/pro/dev/clever-tools/src/commands/deploy.js:67",
+    "/home/pierre/pro/dev/clever-tools/src/models/activity.js:6",
+    "/home/pierre/pro/dev/clever-tools/src/models/deployments.js:22",
+    "/home/pierre/pro/dev/console3/src/modules/app-deployment/main.js:48",
+    "/home/pierre/pro/dev/console3/src/modules/logs/main.js:223",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppDeploymentsSP.js:274"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/deployments/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-logs-app-runtime/cc-logs-app-runtime.smart.js:905",
+    "/home/pierre/pro/dev/clever-tools/src/models/deployments.js:49",
+    "/home/pierre/pro/dev/console3/src/modules/logs/main.js:215"
+  ],
+  "[DELETE] /v2/organisations/:XXX/applications/:XXX/deployments/:XXX/instances": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/cancel-deploy.js:17",
+    "/home/pierre/pro/dev/console3/src/modules/logs/main.js:179",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-overview.sp.js:268",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppDeploymentsSP.js:111"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/env": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/env.js:21",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-env-vars.sp.js:45"
+  ],
+  "[PUT] /v2/organisations/:XXX/applications/:XXX/env": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/env.js:100",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-env-vars.sp.js:92"
+  ],
+  "[DELETE] /v2/organisations/:XXX/applications/:XXX/env/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/env.js:89"
+  ],
+  "[PUT] /v2/organisations/:XXX/applications/:XXX/env/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/env.js:79",
+    "/home/pierre/pro/dev/clever-tools/src/commands/env.js:120"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/exposed_env": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-env-var-form/cc-env-var-form.smart-exposed-config.js:93",
+    "/home/pierre/pro/dev/clever-tools/src/commands/published-config.js:12",
+    "/home/pierre/pro/dev/clever-tools/src/commands/published-config.js:42",
+    "/home/pierre/pro/dev/clever-tools/src/commands/published-config.js:54"
+  ],
+  "[PUT] /v2/organisations/:XXX/applications/:XXX/exposed_env": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-env-var-form/cc-env-var-form.smart-exposed-config.js:114",
+    "/home/pierre/pro/dev/clever-tools/src/commands/published-config.js:44",
+    "/home/pierre/pro/dev/clever-tools/src/commands/published-config.js:56",
+    "/home/pierre/pro/dev/clever-tools/src/commands/published-config.js:67"
+  ],
+  "[DELETE] /v2/organisations/:XXX/applications/:XXX/instances": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/stop.js:10",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-overview.sp.js:275"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/instances": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/status.js:14",
+    "/home/pierre/pro/dev/console3/src/modules/logs/main.js:187",
+    "/home/pierre/pro/dev/console3/src/modules/logs/main.js:236",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppConfigurationSP.js:232"
+  ],
+  "[POST] /v2/organisations/:XXX/applications/:XXX/instances": [
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:258",
+    "/home/pierre/pro/dev/console3/src/modules/app-deployment/main.js:126",
+    "/home/pierre/pro/dev/console3/src/modules/headbar/main.js:235",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-env-vars.sp.js:121",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-overview.sp.js:261",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppDeploymentsSP.js:234"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/instances/:XXX": [
+    "/home/pierre/pro/dev/console3/src/modules/metrics/advanced.es6.js:124"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/tcpRedirs": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-tcp-redirection-form/cc-tcp-redirection-form.smart.js:139",
+    "/home/pierre/pro/dev/clever-tools/src/commands/tcp-redirs.js:47"
+  ],
+  "[POST] /v2/organisations/:XXX/applications/:XXX/tcpRedirs": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-tcp-redirection-form/cc-tcp-redirection-form.smart.js:161",
+    "/home/pierre/pro/dev/clever-tools/src/commands/tcp-redirs.js:86",
+    "/home/pierre/pro/dev/clever-tools/src/commands/tcp-redirs.js:89"
+  ],
+  "[DELETE] /v2/organisations/:XXX/applications/:XXX/tcpRedirs/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-tcp-redirection-form/cc-tcp-redirection-form.smart.js:174",
+    "/home/pierre/pro/dev/clever-tools/src/commands/tcp-redirs.js:105"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/vhosts": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-domain-management/cc-domain-management.smart.js:363",
+    "/home/pierre/pro/dev/clever-tools/src/commands/domain.js:185",
+    "/home/pierre/pro/dev/clever-tools/src/models/domain.js:17",
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/vhosts.js:19"
+  ],
+  "[DELETE] /v2/organisations/:XXX/applications/:XXX/vhosts/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-domain-management/cc-domain-management.smart.js:294",
+    "/home/pierre/pro/dev/clever-tools/src/commands/domain.js:101"
+  ],
+  "[PUT] /v2/organisations/:XXX/applications/:XXX/vhosts/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-domain-management/cc-domain-management.smart.js:282",
+    "/home/pierre/pro/dev/clever-tools/src/commands/domain.js:61"
+  ],
+  "[DELETE] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-domain-management/cc-domain-management.smart.js:306",
+    "/home/pierre/pro/dev/clever-tools/src/commands/domain.js:91"
+  ],
+  "[GET] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-domain-management/cc-domain-management.smart.js:341",
+    "/home/pierre/pro/dev/clever-tools/src/commands/domain.js:29",
+    "/home/pierre/pro/dev/clever-tools/src/models/domain.js:9",
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/vhosts.js:24"
+  ],
+  "[PUT] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-domain-management/cc-domain-management.smart.js:308",
+    "/home/pierre/pro/dev/clever-tools/src/commands/domain.js:83"
+  ],
+  "[PUT] /v2/organisations/:XXX/avatar": [
+    "/home/pierre/pro/dev/console3/src/modules/avatar/view.js:181"
+  ],
+  "[POST] /v2/organisations/:XXX/consumers": [
+    "/home/pierre/pro/dev/console3/src/modules/oauth-consumer-creation/main.es6.js:136"
+  ],
+  "[DELETE] /v2/organisations/:XXX/consumers/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/OauthConsumerSP.es6.js:69"
+  ],
+  "[GET] /v2/organisations/:XXX/consumers/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/OauthConsumerEditSP.es6.js:22",
+    "/home/pierre/pro/dev/console3/src/statepoints/OauthConsumerSP.es6.js:24"
+  ],
+  "[PUT] /v2/organisations/:XXX/consumers/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/OauthConsumerEditSP.es6.js:75"
+  ],
+  "[GET] /v2/organisations/:XXX/consumers/:XXX/secret": [
+    "/home/pierre/pro/dev/console3/src/statepoints/OauthConsumerSP.es6.js:28"
+  ],
+  "[GET] /v2/organisations/:XXX/deployments": [
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/deployment.js:50"
+  ],
+  "[GET] /v2/organisations/:XXX/instances": [
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/instance.js:16"
+  ],
+  "[GET] /v2/organisations/:XXX/members": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-orga-member-list/cc-orga-member-list.smart.js:320",
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/summary.js:222",
+    "/home/pierre/pro/dev/console3/src/modules/events-notifications/main.js:183",
+    "/home/pierre/pro/dev/console3/src/modules/owner-notifications/main.es6.js:53",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/ticket-center.sp.js:47",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/user-deletion.sp.js:181",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonCreationSP.js:38",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppCreationSP.js:27",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppDeploymentsSP.js:52",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppSP.js:46",
+    "/home/pierre/pro/dev/console3/src/statepoints/OrgaSP.es6.js:26"
+  ],
+  "[POST] /v2/organisations/:XXX/members": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-orga-member-list/cc-orga-member-list.smart.js:353",
+    "/home/pierre/pro/dev/console3/src/statepoints/OrgaJoinSP.js:11"
+  ],
+  "[DELETE] /v2/organisations/:XXX/members/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-orga-member-list/cc-orga-member-list.smart.js:364"
+  ],
+  "[PUT] /v2/organisations/:XXX/members/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-orga-member-list/cc-orga-member-list.smart.js:376"
+  ],
+  "[GET] /v2/organisations/:XXX/namespaces": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-tcp-redirection-form/cc-tcp-redirection-form.smart.js:138",
+    "/home/pierre/pro/dev/clever-tools/src/models/namespaces.js:7"
+  ],
+  "[POST] /v2/password_forgotten": [
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:394"
+  ],
+  "[GET] /v2/products/addonproviders": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-pricing-product/cc-pricing-product.smart-addon.js:87",
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:15",
+    "/home/pierre/pro/dev/console3/src/clever-client/various.js:188",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/elasticsearch/cc-configure-elasticsearch.smart.js:26",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/fs-bucket/cc-configure-fs-bucket.smart.js:24",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/jenkins/cc-configure-jenkins.smart.js:26",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/mailpace/cc-configure-mailpace.smart.js:22",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/matomo/cc-configure-matomo.smart.js:22",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/mongodb/cc-configure-mongodb.smart.js:26",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/mysql/cc-configure-mysql.smart.js:26",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/postgresql/cc-configure-postgresql.smart.js:26",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/pulsar/cc-configure-pulsar.smart.js:22",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/redis/cc-configure-redis.smart.js:26",
+    "/home/pierre/pro/dev/console3/src/modules/loader/main.js:76",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/creation-tunnel-step-one.sp.js:24",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppCreationSP.js:83"
+  ],
+  "[GET] /v2/products/addonproviders/:XXX": [
+    "/home/pierre/pro/dev/console3/src/clever-client/various.js:197"
+  ],
+  "[GET] /v2/products/addonproviders/:XXX/versions": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonMigrationSP.es6.js:54"
+  ],
+  "[GET] /v2/products/instances": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-pricing-product/cc-pricing-product.smart-runtime.js:83",
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:55",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/creation-tunnel.helpers.js:36",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/creation-tunnel-step-one.sp.js:23",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppCreationSP.js:67"
+  ],
+  "[GET] /v2/products/instances['_-_']": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppConfigurationSP.js:39"
+  ],
+  "[GET] /v2/products/prices": [
+    "/home/pierre/pro/dev/console3/src/modules/events-notifications/main.js:370",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppConfigurationSP.js:101",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppCreationSP.js:69",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:39"
+  ],
+  "[GET] /v2/providers/:XXX/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-elasticsearch.sp.js:65",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-overview.sp.js:281"
+  ],
+  "[GET] /v2/providers/es-addon/tmp/services-flavors": [
+    "/home/pierre/pro/dev/console3/src/modules/addon-creation/view.js:589"
+  ],
+  "[GET] /v2/saas/heptapod/:XXX/heptapod.host/price-prevision": [
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/orga-saas.sp.js:18"
+  ],
+  "[GET] /v2/self": [
+    "/home/pierre/pro/dev/console3/src/Console.js:387",
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/summary.js:177",
+    "/home/pierre/pro/dev/console3/src/modules/app-creation/view.js:187",
+    "/home/pierre/pro/dev/console3/src/modules/panes/main.js:39",
+    "/home/pierre/pro/dev/console3/src/modules/ssh-keys/main.js:48",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppCreationSP.js:44",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppDeploymentsSP.js:53",
+    "/home/pierre/pro/dev/console3/src/statepoints/HomeSP.js:162",
+    "/home/pierre/pro/dev/console3/src/statepoints/UserInformationSP.js:18",
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:23",
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:84",
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:94",
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:289",
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:419"
+  ],
+  "[PUT] /v2/self": [
+    "/home/pierre/pro/dev/console3/src/modules/user-information/view.js:40",
+    "/home/pierre/pro/dev/console3/src/modules/user-information/view.js:102"
+  ],
+  "[GET] /v2/self[part]": [
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/summary.js:129"
+  ],
+  "[GET] /v2/self/addons": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:59"
+  ],
+  "[POST] /v2/self/addons": [
+    "/home/pierre/pro/dev/console3/src/modules/addon-creation/view.js:191"
+  ],
+  "[DELETE] /v2/self/addons/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:170"
+  ],
+  "[GET] /v2/self/addons/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonMigrationSP.es6.js:37",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:49"
+  ],
+  "[PUT] /v2/self/addons/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:232"
+  ],
+  "[GET] /v2/self/addons/:XXX/applications": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:31"
+  ],
+  "[GET] /v2/self/addons/:XXX/env": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:54"
+  ],
+  "[GET] /v2/self/addons/:XXX/sso": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonConfigurationSP.js:16"
+  ],
+  "[GET] /v2/self/addons/:XXX/tags": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:76"
+  ],
+  "[DELETE] /v2/self/addons/:XXX/tags/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:113"
+  ],
+  "[PUT] /v2/self/addons/:XXX/tags/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:256"
+  ],
+  "[POST] /v2/self/applications": [
+    "/home/pierre/pro/dev/console3/src/modules/app-creation/view.js:156"
+  ],
+  "[GET] /v2/self/applications/:XXX": [
+    "/home/pierre/pro/dev/console3/src/modules/events-notifications/main.js:344",
+    "/home/pierre/pro/dev/console3/src/modules/events-notifications/main.js:411",
+    "/home/pierre/pro/dev/console3/src/modules/events-notifications/main.js:431",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppConfigurationSP.js:92",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppDeploymentsSP.js:36",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:50"
+  ],
+  "[PUT] /v2/self/applications/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppConfigurationSP.js:200"
+  ],
+  "[GET] /v2/self/applications/:XXX/addons": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:77"
+  ],
+  "[POST] /v2/self/applications/:XXX/addons": [
+    "/home/pierre/pro/dev/console3/src/modules/addon-creation/view.js:530",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:205"
+  ],
+  "[DELETE] /v2/self/applications/:XXX/addons/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:225"
+  ],
+  "[GET] /v2/self/applications/:XXX/dependencies": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:82"
+  ],
+  "[DELETE] /v2/self/applications/:XXX/dependencies/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:355"
+  ],
+  "[PUT] /v2/self/applications/:XXX/dependencies/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:335"
+  ],
+  "[GET] /v2/self/applications/:XXX/deployments": [
+    "/home/pierre/pro/dev/console3/src/modules/app-deployment/main.js:49",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppDeploymentsSP.js:275"
+  ],
+  "[DELETE] /v2/self/applications/:XXX/deployments/:XXX/instances": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppDeploymentsSP.js:115"
+  ],
+  "[GET] /v2/self/applications/:XXX/instances": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AppConfigurationSP.js:233"
+  ],
+  "[POST] /v2/self/applications/:XXX/instances": [
+    "/home/pierre/pro/dev/console3/src/modules/app-deployment/main.js:127",
+    "/home/pierre/pro/dev/console3/src/modules/headbar/main.js:236",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppDeploymentsSP.js:235"
+  ],
+  "[GET] /v2/self/applications/:XXX/vhosts": [
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/vhosts.js:20"
+  ],
+  "[GET] /v2/self/applications/:XXX/vhosts/favourite": [
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/vhosts.js:25"
+  ],
+  "[PUT] /v2/self/avatar": [
+    "/home/pierre/pro/dev/console3/src/modules/avatar/view.js:186"
+  ],
+  "[PUT] /v2/self/change_password": [
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:48"
+  ],
+  "[GET] /v2/self/confirmation_email": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-email-list/cc-email-list.smart.js:297",
+    "/home/pierre/pro/dev/console3/src/Console.js:409",
+    "/home/pierre/pro/dev/console3/src/statepoints/HomeSP.js:226"
+  ],
+  "[POST] /v2/self/consumers": [
+    "/home/pierre/pro/dev/console3/src/modules/oauth-consumer-creation/main.es6.js:137"
+  ],
+  "[DELETE] /v2/self/consumers/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/OauthConsumerSP.es6.js:70"
+  ],
+  "[GET] /v2/self/consumers/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/OauthConsumerEditSP.es6.js:23",
+    "/home/pierre/pro/dev/console3/src/statepoints/OauthConsumerSP.es6.js:25"
+  ],
+  "[PUT] /v2/self/consumers/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/OauthConsumerEditSP.es6.js:76"
+  ],
+  "[GET] /v2/self/consumers/:XXX/secret": [
+    "/home/pierre/pro/dev/console3/src/statepoints/OauthConsumerSP.es6.js:29"
+  ],
+  "[GET] /v2/self/emails": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-email-list/cc-email-list.smart.js:293",
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:294"
+  ],
+  "[DELETE] /v2/self/emails/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-email-list/cc-email-list.smart.js:311"
+  ],
+  "[PUT] /v2/self/emails/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-email-list/cc-email-list.smart.js:304",
+    "/home/pierre/pro/dev/clever-components/src/components/cc-email-list/cc-email-list.smart.js:318"
+  ],
+  "[GET] /v2/self/id": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-orga-member-list/cc-orga-member-list.smart.js:319"
+  ],
+  "[GET] /v2/self/keys": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-ssh-key-list/cc-ssh-key-list.smart.js:167",
+    "/home/pierre/pro/dev/console3/src/modules/app-deployment/main.js:78",
+    "/home/pierre/pro/dev/console3/src/modules/ssh-keys/main.js:52",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppSP.js:41"
+  ],
+  "[DELETE] /v2/self/keys/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-ssh-key-list/cc-ssh-key-list.smart.js:201",
+    "/home/pierre/pro/dev/console3/src/modules/ssh-keys/main.js:66"
+  ],
+  "[PUT] /v2/self/keys/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-ssh-key-list/cc-ssh-key-list.smart.js:188",
+    "/home/pierre/pro/dev/console3/src/modules/ssh-keys/main.js:60"
+  ],
+  "[DELETE] /v2/self/mfa/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:229"
+  ],
+  "[POST] /v2/self/mfa/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:118"
+  ],
+  "[GET] /v2/self/mfa/:XXX/backupcodes": [
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:260"
+  ],
+  "[POST] /v2/self/mfa/:XXX/confirmation": [
+    "/home/pierre/pro/dev/console3/src/statepoints/UserSecuritySP.js:184"
+  ],
+  "[DELETE] /v2/self/tokens": [
+    "/home/pierre/pro/dev/console3/src/statepoints/UserTokensSP.js:88"
+  ],
+  "[GET] /v2/self/tokens": [
+    "/home/pierre/pro/dev/console3/src/statepoints/UserTokensSP.js:11"
+  ],
+  "[DELETE] /v2/self/tokens/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AuthLogoutSP.js:22",
+    "/home/pierre/pro/dev/console3/src/statepoints/UserTokensSP.js:72"
+  ],
+  "[GET] /v2/summary": [
+    "/home/pierre/pro/dev/clever-tools/src/commands/domain.js:169",
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:227",
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:243",
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:115",
+    "/home/pierre/pro/dev/clever-tools/src/models/application.js:213",
+    "/home/pierre/pro/dev/clever-tools/src/models/ids-resolver.js:84",
+    "/home/pierre/pro/dev/clever-tools/src/models/ids-resolver.js:116",
+    "/home/pierre/pro/dev/clever-tools/src/models/ng-resources.js:220",
+    "/home/pierre/pro/dev/clever-tools/src/models/organisation.js:21",
+    "/home/pierre/pro/dev/console3/src/models/business/proxys/summary.js:14"
+  ],
+  "[GET] /v2/vat_check": [
+    "/home/pierre/pro/dev/console3/src/modules/orga-informations/main.es6.js:29"
+  ],
+  "[GET] /v2/w10tokens/accessLogs/read/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-tile-status-codes/cc-tile-status-codes.smart.js:57"
+  ],
+  "[GET] /v4/addon-providers/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/addon.js:28",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/elasticsearch/cc-configure-elasticsearch.smart.js:28",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/jenkins/cc-configure-jenkins.smart.js:28",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/mongodb/cc-configure-mongodb.smart.js:28",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/mysql/cc-configure-mysql.smart.js:28",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/postgresql/cc-configure-postgresql.smart.js:28",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/redis/cc-configure-redis.smart.js:28",
+    "/home/pierre/pro/dev/console3/src/helpers/getAddonProvider.js:5"
+  ],
+  "[GET] /v4/addon-providers/:XXX/addons/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-jenkins-info/cc-jenkins-info.smart.js:54",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-backups.sp.js:23",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-jenkins.sp.js:34",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-matomo.sp.js:31",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-pulsar.sp.js:63"
+  ],
+  "[GET] /v4/addon-providers/:XXX/clusters/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-pulsar.sp.js:66"
+  ],
+  "[GET] /v4/addon-providers/config-provider/addons/:XXX/env": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-env-var-form/cc-env-var-form.smart-config-provider.js:117"
+  ],
+  "[PUT] /v4/addon-providers/config-provider/addons/:XXX/env": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-env-var-form/cc-env-var-form.smart-config-provider.js:128"
+  ],
+  "[GET] /v4/addon-providers/jenkins/addons/:XXX/updates": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-jenkins-info/cc-jenkins-info.smart.js:55"
+  ],
+  "[GET] /v4/billing/organisations/:XXX/credits/summary": [
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/invoice-list.sp.js:31"
+  ],
+  "[GET] /v4/billing/organisations/:XXX/invoices": [
+    "/home/pierre/pro/dev/clever-components/src/lib/api-helpers.js:67"
+  ],
+  "[GET] /v4/billing/organisations/:XXX/invoices/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/lib/api-helpers.js:41",
+    "/home/pierre/pro/dev/clever-components/src/lib/api-helpers.js:55",
+    "/home/pierre/pro/dev/console3/src/clever-client/billing-payment.js:8"
+  ],
+  "[POST] /v4/billing/organisations/:XXX/invoices/:XXX/payments/paypal": [
+    "/home/pierre/pro/dev/console3/src/modules/payment/view.js:101"
+  ],
+  "[PUT] /v4/billing/organisations/:XXX/invoices/:XXX/payments/paypal/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints/PaypalSuccessSP.es6.js:17"
+  ],
+  "[POST] /v4/billing/organisations/:XXX/invoices/:XXX/payments/stripe": [
+    "/home/pierre/pro/dev/console3/src/modules/payment/view.js:136"
+  ],
+  "[PUT] /v4/billing/organisations/:XXX/invoices/:XXX/payments/stripe/:XXX": [
+    "/home/pierre/pro/dev/console3/src/modules/payment/view.js:147"
+  ],
+  "[GET] /v4/billing/organisations/:XXX/invoices/unpaid": [
+    "/home/pierre/pro/dev/console3/src/modules/panes/main.js:88"
+  ],
+  "[GET] /v4/billing/organisations/:XXX/payments/methods": [
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/orga-overview.sp.js:59",
+    "/home/pierre/pro/dev/console3/src/statepoints/BillSP.js:23",
+    "/home/pierre/pro/dev/console3/src/statepoints/HomeSP.js:172",
+    "/home/pierre/pro/dev/console3/src/statepoints/PaymentSP.es6.js:32"
+  ],
+  "[POST] /v4/billing/organisations/:XXX/payments/methods": [
+    "/home/pierre/pro/dev/console3/src/modules/cards/view.es6.js:126",
+    "/home/pierre/pro/dev/console3/src/modules/cards/view.es6.js:157"
+  ],
+  "[DELETE] /v4/billing/organisations/:XXX/payments/methods/:XXX": [
+    "/home/pierre/pro/dev/console3/src/modules/owner-cards/main.es6.js:58"
+  ],
+  "[PUT] /v4/billing/organisations/:XXX/payments/methods/default": [
+    "/home/pierre/pro/dev/console3/src/modules/owner-cards/main.es6.js:87"
+  ],
+  "[GET] /v4/billing/organisations/:XXX/payments/stripe/intent": [
+    "/home/pierre/pro/dev/console3/src/modules/cards/view.es6.js:97"
+  ],
+  "[GET] /v4/billing/organisations/:XXX/price-system": [
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonCreationSP.js:61",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonMigrationSP.es6.js:96",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppConfigurationSP.js:51",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppCreationSP.js:92"
+  ],
+  "[GET] /v4/billing/price-system": [
+    "/home/pierre/pro/dev/clever-components/src/lib/api-helpers.js:139"
+  ],
+  "[DELETE] /v4/console/settings/:XXX": [
+    "/home/pierre/pro/dev/console3/src/lib/settings.js:93"
+  ],
+  "[GET] /v4/console/settings/:XXX": [
+    "/home/pierre/pro/dev/console3/src/lib/settings.js:37"
+  ],
+  "[PUT] /v4/console/settings/:XXX": [
+    "/home/pierre/pro/dev/console3/src/lib/settings.js:80"
+  ],
+  "[GET] /v4/load-balancers/organisations/:XXX/applications/:XXX/load-balancers/default": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-domain-management/cc-domain-management.smart.js:320",
+    "/home/pierre/pro/dev/clever-tools/src/commands/domain.js:114"
+  ],
+  "[GET] /v4/materia/organisations/:XXX/materia/databases/:XXX": [
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-materia-kv.sp.js:50"
+  ],
+  "[GET] /v4/networkgroups/organisations/:XXX/networkgroups": [
+    "/home/pierre/pro/dev/clever-tools/src/models/ng.js:133",
+    "/home/pierre/pro/dev/clever-tools/src/models/ng.js:235"
+  ],
+  "[POST] /v4/networkgroups/organisations/:XXX/networkgroups": [
+    "/home/pierre/pro/dev/clever-tools/src/models/ng.js:44"
+  ],
+  "[DELETE] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/ng.js:63"
+  ],
+  "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/ng.js:118"
+  ],
+  "[POST] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/external-peers": [
+    "/home/pierre/pro/dev/clever-tools/src/models/ng-resources.js:66"
+  ],
+  "[DELETE] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/external-peers/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/ng-resources.js:103"
+  ],
+  "[POST] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members": [
+    "/home/pierre/pro/dev/clever-tools/src/models/ng-resources.js:159"
+  ],
+  "[DELETE] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members/:XXX": [
+    "/home/pierre/pro/dev/clever-tools/src/models/ng-resources.js:196"
+  ],
+  "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX/wireguard/configuration": [
+    "/home/pierre/pro/dev/clever-tools/src/models/ng.js:98"
+  ],
+  "[GET] /v4/orchestration/organisations/:XXX/applications/:XXX/deployments/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-logs-app-runtime/cc-logs-app-runtime.smart.js:897"
+  ],
+  "[GET] /v4/orchestration/organisations/:XXX/applications/:XXX/instances": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-logs-app-runtime/cc-logs-app-runtime.smart.js:914",
+    "/home/pierre/pro/dev/clever-components/src/components/cc-logs-app-runtime/cc-logs-app-runtime.smart.js:924"
+  ],
+  "[GET] /v4/orchestration/organisations/:XXX/applications/:XXX/instances/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-logs-app-runtime/cc-logs-app-runtime.smart.js:934"
+  ],
+  "[GET] /v4/products/zones": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-addon-linked-apps/cc-addon-linked-apps.smart.js:86",
+    "/home/pierre/pro/dev/clever-components/src/components/cc-pricing-header/cc-pricing-header.smart.js:93",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/cellar/cc-configure-cellar.smart.js:23",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/creation-tunnel.helpers.js:36",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/elasticsearch/cc-configure-elasticsearch.smart.js:27",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/fs-bucket/cc-configure-fs-bucket.smart.js:24",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/jenkins/cc-configure-jenkins.smart.js:27",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/mongodb/cc-configure-mongodb.smart.js:27",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/mysql/cc-configure-mysql.smart.js:27",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/postgresql/cc-configure-postgresql.smart.js:27",
+    "/home/pierre/pro/dev/console3/src/creation-tunnel/redis/cc-configure-redis.smart.js:27",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-config-provider.sp.js:52",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-elasticsearch.sp.js:72",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-jenkins.sp.js:41",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-keycloak.sp.js:41",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-materia-kv.sp.js:57",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-matomo.sp.js:45",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-metabase.sp.js:41",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-otoroshi.sp.js:41",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/addon-overview-pulsar.sp.js:81",
+    "/home/pierre/pro/dev/console3/src/statepoints-wc/app-overview.sp.js:173",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonCreationSP.js:30",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonMigrationSP.es6.js:48",
+    "/home/pierre/pro/dev/console3/src/statepoints/AddonSP.js:33",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppCreationSP.js:78",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppServicesDependenciesSP.es6.js:53",
+    "/home/pierre/pro/dev/console3/src/statepoints/AppSP.js:35"
+  ],
+  "[DELETE] /v4/saas/grafana/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-grafana-info/cc-grafana-info.smart.js:193"
+  ],
+  "[GET] /v4/saas/grafana/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-grafana-info/cc-grafana-info.smart.js:154",
+    "/home/pierre/pro/dev/clever-components/src/components/cc-tile-metrics/cc-tile-metrics.smart.js:121"
+  ],
+  "[POST] /v4/saas/grafana/:XXX": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-grafana-info/cc-grafana-info.smart.js:203"
+  ],
+  "[POST] /v4/saas/grafana/:XXX/reset": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-grafana-info/cc-grafana-info.smart.js:183"
+  ],
+  "[GET] /v4/stats/organisations/:XXX/resources/:XXX/metrics": [
+    "/home/pierre/pro/dev/clever-components/src/components/cc-tile-metrics/cc-tile-metrics.smart.js:78"
+  ]
+}
