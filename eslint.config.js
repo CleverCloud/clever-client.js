@@ -24,6 +24,7 @@ export default [
       'tasks/**/*.js',
       'web-test-runner.config.js',
       'mock-api/**/*.js',
+      'rollup.config.js',
     ],
     rules: {
       'import/no-extraneous-dependencies': [
