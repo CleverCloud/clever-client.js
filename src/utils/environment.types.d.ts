@@ -1,6 +1,6 @@
 export type EnvVarValidationMode = 'simple' | 'strict';
 
-export interface EnvVar {
+export interface EnvironmentVariable {
   name: string;
   value: string;
 }
