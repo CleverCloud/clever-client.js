@@ -31,3 +31,12 @@ export async function expectAsyncFunctionThrows(fn, verify) {
   expect(err).not.to.equal(null, 'An error was expected but not thrown');
   verify?.(err);
 }
+
+/**
+ * @param {string} date
+ */
+export function checkDateFormat(date) {
+  if (date != null) {
+    expect(date).to.equal(new Date(date).toISOString());
+  }
+}

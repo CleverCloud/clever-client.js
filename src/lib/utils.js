@@ -38,12 +38,6 @@ export function normalizeDate(date) {
   } else if (typeof date === 'string') {
     // remove potential '[UTC]' suffix
     let fixedDateString = date.replace(/(.+)(\[UTC\])/g, '$1');
-    // fix milliseconds of iso strings that can be on 1 or 2 digits: '42' instead of '042'
-    const match = fixedDateString.match(/^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\.)(\d{1,3})Z$/);
-    if (match != null) {
-      const fixedMillis = match[2].padStart(3, '0');
-      fixedDateString = `${match[1]}${fixedMillis}Z`;
-    }
 
     parsedDate = new Date(fixedDateString);
   }

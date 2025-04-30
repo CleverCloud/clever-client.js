@@ -12,9 +12,13 @@ import { CcHttpError } from './cc-client-errors.js';
 export function handleHttpErrors(response, command) {
   if (response.status >= 400) {
     // try to parse message and code from error
-    const errorMessage = parseErrorMessage(response);
+    const parsedErrorMessage = parseErrorMessage(response);
     const parsedErrorCode = parseErrorCode(response);
 
+    const errorMessage =
+      parsedErrorMessage == null || parsedErrorMessage.length === 0
+        ? `Error ${response.status}`
+        : `[${response.status}]: ${parsedErrorMessage}`;
     // ask command to transform error code
     const errorCode = parsedErrorCode == null ? null : command.transformErrorCode(parsedErrorCode);
 
@@ -25,7 +29,7 @@ export function handleHttpErrors(response, command) {
 
 /**
  * @param {CcResponse<?>} response
- * @returns {string}
+ * @returns {string|null}
  */
 function parseErrorMessage(response) {
   if (typeof response.body === 'string') {
@@ -38,7 +42,7 @@ function parseErrorMessage(response) {
     return response.body.error;
   }
 
-  return `Error ${response.status}`;
+  return null;
 }
 
 /**
