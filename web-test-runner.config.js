@@ -1,7 +1,8 @@
 import { defaultReporter, summaryReporter } from '@web/test-runner';
+import { mockApiPlugin } from './test/lib/mock-api/support/mock-web-test-runner-plugin.js';
 
 export default {
-  files: ['test/**/*.spec.js', '!test/application-logs.spec.js'],
+  files: ['test/**/*.spec.js', '!test/node/**/*.spec.js'],
   nodeResolve: true,
   reporters: [
     // mocha like report
@@ -9,4 +10,5 @@ export default {
     // report global tests progress
     defaultReporter({ reportTestResults: true, reportTestProgress: true }),
   ],
+  plugins: [mockApiPlugin],
 };
