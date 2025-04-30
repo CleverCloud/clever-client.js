@@ -38,5 +38,5 @@ jobs:
       - name: '[Unit tests] Node tests'
         run: npm run test:unit:node
 
-      - name: '[Build] Generate client'
-        run: npm run generate-client
+      - name: '[Build]'
+        run: npm run build
