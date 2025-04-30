@@ -16,25 +16,81 @@
     "client"
   ],
   "files": [
-    "/esm/"
+    "esm/",
+    "!esm/**/*.types.d.ts",
+    "src/",
+    "!src/**/*.types.d.ts",
+    "dist/"
   ],
   "engines": {
     "node": "22"
   },
+  "exports": {
+    "./cc-api-client.js": {
+      "types": "./dist/types/src/clients/api/cc-api-client.d.ts",
+      "default": "./src/clients/api/cc-api-client.js"
+    },
+    "./cc-api-client-oauth.js": {
+      "types": "./dist/types/src/clients/api/cc-api-client-oauth.d.ts",
+      "default": "./src/clients/api/cc-api-client-oauth.js"
+    },
+    "./cc-api-client-token.js": {
+      "types": "./dist/types/src/clients/api/cc-api-client-token.d.ts",
+      "default": "./src/clients/api/cc-api-client-token.js"
+    },
+    "./cc-api-commands/*": {
+      "types": "./dist/types/src/clients/api/commands/*",
+      "default": "./src/clients/api/commands/*"
+    },
+    "./cc-api-local-storage-store.js": {
+      "types": "./dist/types/src/clients/api/lib/store/local-storage-store.d.ts",
+      "browser": "./src/clients/api/lib/store/local-storage-store.js"
+    },
+    "./cc-api-file-store.js": {
+      "types": "./dist/types/src/clients/api/lib/store/file-store.d.ts",
+      "node": "./src/clients/api/lib/store/file-store.js"
+    },
+    "./auth-backend-client.js": {
+      "types": "./dist/types/src/clients/auth-backend/cc-auth-backend-client.d.ts",
+      "default": "./src/clients/auth-backend/cc-auth-backend-client.js"
+    },
+    "./auth-backend-commands/*": {
+      "types": "./dist/types/src/clients/auth-backend/commands/*",
+      "default": "./src/clients/auth-backend/commands/*"
+    },
+    "./redis-http-client.js": {
+      "types": "./dist/types/src/clients/redis-http/cc-redis-http-client.d.ts",
+      "default": "./src/clients/redis-http/cc-redis-http-client.js"
+    },
+    "./redis-http-commands/*": {
+      "types": "./dist/types/src/clients/redis-http/commands/*",
+      "default": "./src/clients/redis-http/commands/*"
+    },
+    "./utils/*": {
+      "types": "./dist/types/src/utils/*",
+      "default": "./src/utils/*"
+    },
+    "./esm/*": {
+      "types": "./dist/types/esm/*",
+      "default": "./esm/*"
+    }
+  },
   "scripts": {
     "api-usage-analyze": "node tasks/api-usage-analyze.js -i ../console3 -i ../clever-components -i ../clever-tools",
-    "clean-cache": "node tasks/clean-cache.js",
+    "build": "npm run build:legacy && npm run build:types",
+    "build:types": "rollup -c",
+    "build:legacy": "npm run legacy:clean-cache && npm run legacy:generate-client",
     "endpoints-analyze": "node tasks/endpoints-analyze.js",
     "endpoints-generate": "node tasks/endpoints-generate.js",
     "endpoints-list": "node tasks/endpoints-list.js",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "generate-client": "npm run clean-cache && npm run generate-client-from-openapi",
-    "generate-client-from-openapi": "node tasks/generate-client.js",
+    "legacy:clean-cache": "node tasks/clean-cache.js",
+    "legacy:generate-client": "node tasks/generate-client.js",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "prepack:dev": "npm run generate-client",
-    "prepack:prod": "npm run format:check && npm run lint && npm run typecheck && npm run test-wtr && npm run generate-client",
+    "prepack:dev": "npm run build",
+    "prepack:prod": "npm run format:check && npm run lint && npm run typecheck && npm run test-wtr && npm run build",
     "prepack": "[ \"$DEV\" == \"true\" ] && npm run prepack:dev || npm run prepack:prod",
     "test-wtr": "web-test-runner",
     "test-wtr:watch": "web-test-runner --watch",
@@ -56,6 +112,8 @@
     "@eslint/compat": "^1.2.8",
     "@fastify/cors": "^11.0.0",
     "@inquirer/prompts": "^7.5.0",
+    "@rollup-extras/plugin-clean": "^1.3.9",
+    "@rollup/plugin-terser": "^0.4.4",
     "@scalar/openapi-parser": "^0.10.16",
     "@scalar/openapi-types": "^0.2.1",
     "@scalar/types": "^0.1.11",
@@ -85,8 +143,10 @@
     "mocha": "^11.1.0",
     "prettier": "^3.5.3",
     "prettier-plugin-organize-imports": "^4.1.0",
+    "rollup-plugin-dts": "^6.2.1",
     "safe-stringify": "^1.1.1",
     "superagent": "^6.1.0",
+    "tinyglobby": "^0.2.13",
     "typescript": "^5.8.3"
   },
   "volta": {
