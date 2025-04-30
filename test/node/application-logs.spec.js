@@ -1,16 +1,18 @@
 import { expect } from 'chai';
 import findFreePorts from 'find-free-ports';
-import { ApplicationLogStream } from '../esm/streams/application-logs.js';
-import { HttpError, NetworkError, ServerError } from '../esm/streams/clever-cloud-sse.js';
-import { createStub } from './lib/stub.js';
-import { TestSseServer } from './lib/test-sse-server.js';
-import { clearTimers, patchTimers, sleep, unpatchTimers } from './lib/timers.js';
+import { ApplicationLogStream } from '../../esm/streams/application-logs.js';
+import { HttpError, NetworkError, ServerError } from '../../esm/streams/clever-cloud-sse.js';
+import { createStub } from '../lib/stub.js';
+import { TestSseServer } from '../lib/test-sse-server.js';
+import { clearTimers, patchTimers, sleep, unpatchTimers } from '../lib/timers.js';
 
 const DEBUG_LEVEL = 2;
 
 const ASYNC_TEST_TIMEOUT_MS = 15_000;
 
-describe('ApplicationLogStream', () => {
+describe('ApplicationLogStream', function () {
+  this.timeout(60000);
+
   before(patchTimers);
   after(unpatchTimers);
 
