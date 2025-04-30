@@ -54,6 +54,7 @@ export default {
       ];
     }),
     getProxy('avatar', `https://www.clever-cloud.com/app/themes/Starter/assets/img/brand-assets/square-png.png`),
+    getProxy(`redis-http`, `https://kv-proxy.services.clever-cloud.com`),
   ],
 };
 
