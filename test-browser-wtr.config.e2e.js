@@ -1,4 +1,5 @@
 import proxy from 'koa-proxies';
+import { TOTP } from 'totp-generator';
 import { CcAuthApiToken } from './src/lib/auth/cc-auth-api-token.js';
 import { CcAuthOauthV1Plaintext } from './src/lib/auth/cc-auth-oauth-v1-plaintext.js';
 import { encodeToBase64 } from './src/lib/utils.js';
@@ -17,7 +18,7 @@ export default {
   testsFinishTimeout: 1000 * 60 * 10,
   middleware: [
     async (ctx, next) => {
-      const rewrite = [rewriteCcApiChangePassword];
+      const rewrite = [rewriteCcApiChangePassword, rewriteCcApiBridgeCreateToken];
       for (const r of rewrite) {
         if (r.match(ctx.request.url)) {
           const rawBody = await getRawBody(ctx.req);
@@ -43,6 +44,13 @@ export default {
           user,
           new CcAuthOauthV1Plaintext(user.oauthTokens).getAuthorization(),
         ),
+        getProxy(
+          `cc-api-bridge-${user.userName}-oauth-v1`,
+          `https://api-bridge.clever-cloud.com`,
+          user,
+          new CcAuthOauthV1Plaintext(user.oauthTokens).getAuthorization(),
+        ),
+        getProxy(`cc-api-bridge-${user.userName}-none`, `https://api-bridge.clever-cloud.com`, user),
       ];
     }),
     getProxy('avatar', `https://www.clever-cloud.com/app/themes/Starter/assets/img/brand-assets/square-png.png`),
@@ -106,6 +114,23 @@ const rewriteCcApiChangePassword = {
     }
     if (body.oldPassword === user.newTemporaryPassword) {
       body.newPassword = user.password;
+    }
+    return body;
+  },
+};
+
+const rewriteCcApiBridgeCreateToken = {
+  match(url) {
+    return url.match(/\/cc-api-bridge-(.+)-none\/api-tokens/) != null;
+  },
+  newBody(body, url) {
+    const match = url.match(/\/cc-api-bridge-(.+)-none\/api-tokens/);
+    const userId = match[1];
+    const user = getE2eUser(userId);
+    body.email = user.email;
+    body.password = user.password;
+    if (user.totpSecret != null) {
+      body.mfaCode = TOTP.generate(user.totpSecret).otp;
     }
     return body;
   },
