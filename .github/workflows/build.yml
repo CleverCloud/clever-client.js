@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: '[Prepare] Checkout'
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - name: '[Prepare] Setup Node.js'
         uses: actions/setup-node@v4
         with:
@@ -36,5 +34,5 @@ jobs:
       - name: '[Unit tests] Node tests'
         run: npm run test-mocha
 
-      - name: '[Build] Generate client'
-        run: npm run generate-client
+      - name: '[Build]'
+        run: npm run build

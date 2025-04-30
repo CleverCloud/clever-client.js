@@ -16,24 +16,46 @@
     "client"
   ],
   "files": [
-    "/esm/"
+    "esm/",
+    "!esm/**/*.types.d.ts",
+    "src/",
+    "!src/**/*.types.d.ts",
+    "dist/"
   ],
+  "types": "dist/types/src/index.d.ts",
+  "module": "dist/index.js",
   "engines": {
     "node": "22"
   },
+  "exports": {
+    ".": {
+      "types": "./dist/types/src/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./src/*.js": {
+      "types": "./dist/types/src/*.d.ts",
+      "import": "./src/*.js"
+    },
+    "./esm/*.js": {
+      "types": "./dist/types/esm/*.d.ts",
+      "import": "./esm/*.js"
+    }
+  },
   "scripts": {
-    "clean-cache": "node tasks/clean-cache.js",
+    "build": "npm run build:legacy && npm run build:bundle",
+    "build:bundle": "rollup -c",
+    "build:legacy": "npm run legacy:clean-cache && npm run legacy:generate-client",
     "endpoints-analyze": "node tasks/endpoints-analyze.js",
     "endpoints-generate": "node tasks/endpoints-generate.js",
     "endpoints-list": "node tasks/endpoints-list.js",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "generate-client": "npm run clean-cache && npm run generate-client-from-openapi",
-    "generate-client-from-openapi": "node tasks/generate-client.js",
+    "legacy:clean-cache": "node tasks/clean-cache.js",
+    "legacy:generate-client": "node tasks/generate-client.js",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "prepack:dev": "npm run generate-client",
-    "prepack:prod": "npm run format:check && npm run lint && npm run typecheck && npm run test-wtr && npm run generate-client",
+    "prepack:dev": "npm run build",
+    "prepack:prod": "npm run format:check && npm run lint && npm run typecheck && npm run test-wtr && npm run build",
     "prepack": "[ \"$DEV\" == \"true\" ] && npm run prepack:dev || npm run prepack:prod",
     "test-wtr": "web-test-runner",
     "test-wtr:watch": "web-test-runner --watch",
@@ -81,8 +103,10 @@
     "mocha": "^11.1.0",
     "prettier": "^3.5.3",
     "prettier-plugin-organize-imports": "^4.1.0",
+    "rollup-plugin-dts": "^6.2.1",
     "safe-stringify": "^1.1.1",
     "superagent": "^6.1.0",
+    "tinyglobby": "^0.2.13",
     "typescript": "^5.8.3"
   },
   "volta": {

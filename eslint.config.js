@@ -24,6 +24,7 @@ export default [
       'tasks/**/*.js',
       'web-test-runner.config.js',
       'mock-api/**/*.js',
+      'rollup.config.js',
     ],
     rules: {
       'import/no-extraneous-dependencies': [
@@ -66,6 +67,14 @@ export default [
     files: ['esm/api/**/*.js'],
     rules: {
       camelcase: ['off'],
+    },
+  },
+  // Specific rules for barrel files
+  {
+    name: 'barrel-files-context',
+    files: ['src/**/index.js'],
+    rules: {
+      'import/no-useless-path-segments': ['off'],
     },
   },
 ];
