@@ -27,6 +27,6 @@ describe('cmd commands', function () {
 
     expect(response.success).to.equal(true);
     expect(response.result).to.be.an('array');
-    expect(response.result[0]).to.equal('PONG');
+    expect(response.result[0]).to.equal(`"PONG"`);
   });
 });
