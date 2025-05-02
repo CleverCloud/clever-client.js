@@ -10,7 +10,7 @@ import {
 } from '../esm/utils/domains.js';
 
 /**
- * @typedef {import('../esm/utils/diag-domain-config.types.js').DomainInfo} DomainInfo
+ * @import { DomainInfo } from '../esm/utils/diag-domain-config.types.js'
  */
 
 describe('domains', () => {
