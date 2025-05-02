@@ -538,8 +538,7 @@ describe('parseRawJson()', () => {
 
 describe('toJson()', () => {
   it('no vars', () => {
-    const variables = [];
-    expect(toJson(variables)).to.equal('[]');
+    expect(toJson([])).to.equal('[]');
   });
 
   it('simple var', () => {
