@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getStatus } from '../esm/utils/app-status.js';
+import { getStatus } from '../../../esm/utils/app-status.js';
 
 describe('app-status#getStatus()', () => {
   it('stopped', () => {
