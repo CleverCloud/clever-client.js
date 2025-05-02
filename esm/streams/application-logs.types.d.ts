@@ -6,20 +6,20 @@ export interface ApplicationLogsStreamParams extends ApplicationLogStreamOptions
   tokens: OAuthTokens;
   ownerId: string;
   appId: string;
-  retryConfiguration: RetryConfiguration;
-  connectionTimeout: number;
+  retryConfiguration?: RetryConfiguration;
+  connectionTimeout?: number;
 }
 
 export interface ApplicationLogStreamOptions {
-  since: Date;
-  until: Date;
-  limit: number;
-  deploymentId: string;
-  filter: string;
-  instanceId: Array<string>;
-  field: Array<string>;
-  throttleElements: number;
-  throttlePerInMilliseconds: number;
+  since?: Date;
+  until?: Date;
+  limit?: number;
+  deploymentId?: string;
+  filter?: string;
+  instanceId?: Array<string>;
+  field?: Array<string>;
+  throttleElements?: number;
+  throttlePerInMilliseconds?: number;
 }
 
 export interface ApplicationLog {
