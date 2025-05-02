@@ -1,7 +1,4 @@
 import { expect } from 'chai';
-
-// Disable this so we can use single and double quotes inside strings the way we want ;-)
-/* eslint quotes: "off" */
 import {
   ERROR_TYPES,
   parseRaw,
@@ -10,7 +7,7 @@ import {
   toNameEqualsValueString,
   toNameValueObject,
   validateName,
-} from '../esm/utils/env-vars.js';
+} from '../../../esm/utils/env-vars.js';
 
 describe('validateName()', () => {
   it('OK (classic bash/linux)', () => {

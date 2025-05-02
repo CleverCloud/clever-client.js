@@ -1,8 +1,8 @@
 /**
- * @import {PaymentMethod, Orga} from '../esm/utils/payments.types.js'
+ * @import {PaymentMethod, Orga} from '../../../esm/utils/payments.types.js'
  */
 import { expect } from 'chai';
-import { ERROR_TYPES, getAllOrgaPaymentMethodsErrors, getOrgaPaymentMethodsError } from '../esm/utils/payment.js';
+import { ERROR_TYPES, getAllOrgaPaymentMethodsErrors, getOrgaPaymentMethodsError } from '../../../esm/utils/payment.js';
 
 /** @type {Orga} */
 const simpleOrga = {
