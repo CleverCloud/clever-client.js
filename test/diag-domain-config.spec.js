@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { diagDomainConfig } from '../esm/utils/diag-domain-config.js';
 
 /**
- * @typedef {import('../esm/utils/diag-domain-config.types.js').ResolveDnsResult} ResolveDnsResult
+ * @import { ResolveDnsResult } from '../esm/utils/diag-domain-config.types.js'
  */
 
 const HOSTNAME_EXAMPLE = 'example.com';
