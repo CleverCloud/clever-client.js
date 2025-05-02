@@ -3,11 +3,11 @@
  */
 import { expect } from 'chai';
 import { findFreePorts } from 'find-free-ports';
-import { ApplicationLogStream } from '../../esm/streams/application-logs.js';
-import { HttpError, NetworkError, ServerError } from '../../esm/streams/clever-cloud-sse.js';
-import { createStub } from '../lib/stub.js';
-import { TestSseServer } from '../lib/test-sse-server.js';
-import { clearTimers, patchTimers, sleep, unpatchTimers } from '../lib/timers.js';
+import { ApplicationLogStream } from '../../../esm/streams/application-logs.js';
+import { HttpError, NetworkError, ServerError } from '../../../esm/streams/clever-cloud-sse.js';
+import { createStub } from '../../test-lib/stub.js';
+import { TestSseServer } from '../../test-lib/test-sse-server.js';
+import { clearTimers, patchTimers, sleep, unpatchTimers } from '../../test-lib/timers.js';
 
 /**
  * @typedef {object} Callbacks
@@ -99,7 +99,7 @@ describe('ApplicationLogStream', function () {
       });
       const url = appsLogs.getUrl().toString();
       expect(url).to.equal(
-        `${sseServer.getUrl()}/v4/logs/organisations/ownerId/applications/appId/logs?fields=aaa&fields=bbb&fields=ccc`,
+        `${sseServer.getUrl()}/v4/logs/organisations/ownerId/applications/appId/logs?field=aaa&field=bbb&field=ccc`,
       );
     });
 
