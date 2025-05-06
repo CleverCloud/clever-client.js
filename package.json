@@ -18,7 +18,11 @@
   "files": [
     "/esm/"
   ],
+  "engines": {
+    "node": "22"
+  },
   "scripts": {
+    "api-usage-analyze": "node tasks/api-usage-analyze.js -i ../console3 -i ../clever-components -i ../clever-tools",
     "clean-cache": "node tasks/clean-cache.cjs",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
@@ -43,10 +47,14 @@
     "ws": "^7.4.3"
   },
   "devDependencies": {
+    "@babel/parser": "^7.27.0",
+    "@babel/traverse": "^7.27.0",
+    "@babel/types": "^7.27.0",
     "@eslint/compat": "^1.2.7",
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@esm-bundle/chai": "^4.3.3",
+    "@types/babel__traverse": "^7.20.7",
     "@types/component-emitter": "^1.2.14",
     "@types/eventsource": "^1.1.15",
     "@web/test-runner": "^0.18.1",
@@ -61,6 +69,7 @@
     "find-free-ports": "^3.1.1",
     "fs-extra": "^9.1.0",
     "globals": "^16.0.0",
+    "globby": "^14.0.2",
     "hanbi": "^1.0.1",
     "lodash": "^4.17.21",
     "mocha": "^10.2.0",
