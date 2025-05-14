@@ -6,7 +6,7 @@
  * GET /organisations/{id}/consumers
  * GET /self/consumers
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @returns {Promise<RequestParams>}
  */
 export function getAll(params) {
@@ -24,7 +24,7 @@ export function getAll(params) {
  * POST /organisations/{id}/consumers
  * POST /self/consumers
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {Object} body
  * @returns {Promise<RequestParams>}
  */
@@ -43,7 +43,7 @@ export function create(params, body) {
  * DELETE /organisations/{id}/consumers/{key}
  * DELETE /self/consumers/{key}
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.key
  * @returns {Promise<RequestParams>}
  */
@@ -62,7 +62,7 @@ export function remove(params) {
  * GET /organisations/{id}/consumers/{key}
  * GET /self/consumers/{key}
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.key
  * @returns {Promise<RequestParams>}
  */
@@ -81,7 +81,7 @@ export function get(params) {
  * PUT /organisations/{id}/consumers/{key}
  * PUT /self/consumers/{key}
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.key
  * @param {Object} body
  * @returns {Promise<RequestParams>}
@@ -101,7 +101,7 @@ export function update(params, body) {
  * GET /organisations/{id}/consumers/{key}/secret
  * GET /self/consumers/{key}/secret
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.key
  * @returns {Promise<RequestParams>}
  */

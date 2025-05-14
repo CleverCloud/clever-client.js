@@ -8,7 +8,7 @@ import { pickNonNull } from '../../pick-non-null.js';
  * GET /organisations/{id}/addons
  * GET /self/addons
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @returns {Promise<RequestParams>}
  */
 export function getAll(params) {
@@ -26,7 +26,7 @@ export function getAll(params) {
  * POST /organisations/{id}/addons
  * POST /self/addons
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {Object} body
  * @returns {Promise<RequestParams>}
  */
@@ -45,7 +45,7 @@ export function create(params, body) {
  * POST /organisations/{id}/addons/preorders
  * POST /self/addons/preorders
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {Object} body
  * @returns {Promise<RequestParams>}
  */
@@ -64,7 +64,7 @@ export function preorder(params, body) {
  * DELETE /organisations/{id}/addons/{addonId}
  * DELETE /self/addons/{addonId}
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.addonId
  * @returns {Promise<RequestParams>}
  */
@@ -83,7 +83,7 @@ export function remove(params) {
  * GET /organisations/{id}/addons/{addonId}
  * GET /self/addons/{addonId}
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.addonId
  * @returns {Promise<RequestParams>}
  */
@@ -102,7 +102,7 @@ export function get(params) {
  * PUT /organisations/{id}/addons/{addonId}
  * PUT /self/addons/{addonId}
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.addonId
  * @param {Object} body
  * @returns {Promise<RequestParams>}
@@ -122,7 +122,7 @@ export function update(params, body) {
  * GET /organisations/{id}/addons/{addonId}/applications
  * GET /self/addons/{addonId}/applications
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.addonId
  * @returns {Promise<RequestParams>}
  */
@@ -141,7 +141,7 @@ export function getLinkedApplications(params) {
  * GET /organisations/{id}/addons/{addonId}/env
  * GET /self/addons/{addonId}/env
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.addonId
  * @returns {Promise<RequestParams>}
  */
@@ -293,7 +293,7 @@ export function getMigration(params) {
  * GET /organisations/{id}/addons/{addonId}/sso
  * GET /self/addons/{addonId}/sso
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.addonId
  * @returns {Promise<RequestParams>}
  */
@@ -312,7 +312,7 @@ export function getSsoData(params) {
  * GET /organisations/{id}/addons/{addonId}/tags
  * GET /self/addons/{addonId}/tags
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.addonId
  * @returns {Promise<RequestParams>}
  */
@@ -331,7 +331,7 @@ export function getAllTags(params) {
  * PUT /organisations/{id}/addons/{addonId}/tags
  * PUT /self/addons/{addonId}/tags
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.addonId
  * @param {Object} body
  * @returns {Promise<RequestParams>}
@@ -351,7 +351,7 @@ export function replaceAddonTags(params, body) {
  * DELETE /organisations/{id}/addons/{addonId}/tags/{tag}
  * DELETE /self/addons/{addonId}/tags/{tag}
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.addonId
  * @param {String} params.tag
  * @returns {Promise<RequestParams>}
@@ -371,7 +371,7 @@ export function removeTag(params) {
  * PUT /organisations/{id}/addons/{addonId}/tags/{tag}
  * PUT /self/addons/{addonId}/tags/{tag}
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.addonId
  * @param {String} params.tag
  * @returns {Promise<RequestParams>}
