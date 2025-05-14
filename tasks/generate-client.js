@@ -160,7 +160,12 @@ function buildClientCode(route) {
   const isMultipath = Array.isArray(path);
 
   const urlComments = (isMultipath ? path : [path]).map((p) => `* ${method.toLocaleUpperCase()} ${p}`);
-  const paramsJsDoc = parameters.map(({ name }) => `* @param {String} params.${name}`);
+  const paramsJsDoc = parameters.map(({ name }) => {
+    if (name === 'id' && isMultipath) {
+      return `* @param {String} [params.${name}]`;
+    }
+    return `* @param {String} params.${name}`;
+  });
   const bodyJsDoc = requestBody != null ? '* @param {Object} body' : null;
 
   const functionArgs = requestBody != null ? 'params, body' : parameters.length > 0 ? 'params' : '';

@@ -40,7 +40,7 @@ export function create(params, body) {
  * DELETE /organisations/{id}
  * DELETE /self
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @returns {Promise<RequestParams>}
  */
 export function remove(params) {
@@ -58,7 +58,7 @@ export function remove(params) {
  * GET /organisations/{id}
  * GET /self
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @returns {Promise<RequestParams>}
  */
 export function get(params) {
@@ -76,7 +76,7 @@ export function get(params) {
  * PUT /organisations/{id}
  * PUT /self
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {Object} body
  * @returns {Promise<RequestParams>}
  */
@@ -95,7 +95,7 @@ export function update(params, body) {
  * PUT /organisations/{id}/applications/{appId}/tags
  * PUT /self/applications/{appId}/tags
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.appId
  * @param {Object} body
  * @returns {Promise<RequestParams>}
@@ -172,7 +172,7 @@ export function deleteApplicationUDPRedirection(params) {
  * PUT /organisations/{id}/avatar
  * PUT /self/avatar
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {Object} body
  * @returns {Promise<RequestParams>}
  */
@@ -191,7 +191,7 @@ export function updateAvatar(params, body) {
  * GET /organisations/{id}/consumptions
  * GET /self/consumptions
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.appId
  * @param {String} params.from
  * @param {String} params.to
@@ -213,7 +213,7 @@ export function getConsumptions(params) {
  * GET /organisations/{id}/credits
  * GET /self/credits
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @returns {Promise<RequestParams>}
  */
 export function getCredits(params) {
@@ -249,7 +249,7 @@ export function getAllDeployments(params) {
  * GET /organisations/{id}/instances
  * GET /self/instances
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @returns {Promise<RequestParams>}
  */
 export function getAllInstances(params) {
@@ -357,7 +357,7 @@ export function getNamespaces(params) {
  * GET /organisations/{id}/payment-info
  * GET /self/payment-info
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @returns {Promise<RequestParams>}
  */
 export function getPaymentInfo(params) {
@@ -427,7 +427,7 @@ export function todo_getUnpaidInvoicesByOrga_1(params) {
  * DELETE /organisations/{id}/payments/billings/{bid}
  * DELETE /self/payments/billings/{bid}
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.bid
  * @returns {Promise<RequestParams>}
  */
@@ -446,7 +446,7 @@ export function deletePurchaseOrder(params) {
  * GET /organisations/{id}/payments/billings/{bid}
  * GET /self/payments/billings/{bid}
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.bid
  * @returns {Promise<RequestParams>}
  */
@@ -465,7 +465,7 @@ export function getInvoice(params) {
  * PUT /organisations/{id}/payments/billings/{bid}
  * PUT /self/payments/billings/{bid}
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @param {String} params.bid
  * @param {Object} body
  * @returns {Promise<RequestParams>}
@@ -628,7 +628,7 @@ export function todo_deletePaymentMethodByOrga(params) {
  * GET /organisations/{id}/payments/monthlyinvoice
  * GET /self/payments/monthlyinvoice
  * @param {Object} params
- * @param {String} params.id
+ * @param {String} [params.id]
  * @returns {Promise<RequestParams>}
  */
 export function getMonthlyInvoice(params) {
