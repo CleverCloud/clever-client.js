@@ -1,5 +1,12 @@
 # Clever Client changelog
 
+## [10.2.0](https://github.com/CleverCloud/clever-client.js/compare/10.1.0...10.2.0) (2025-05-20)
+
+
+### 🚀 Features
+
+* add API call analysis scripts ([49f01da](https://github.com/CleverCloud/clever-client.js/commit/49f01da276afd1494ee5e7402dc6f0c3550d451f))
+
 ## 10.1.0 (2025-04-04)
 
 * feat(zones): add ownerId query param (#141)
