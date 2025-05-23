@@ -24,28 +24,7 @@ export function toArray(value) {
  * @param {Date|string|number} date
  * @return {string|null}
  */
-export function normalizeOutputDate(date) {
-  if (date == null) {
-    return null;
-  }
-  if (date instanceof Date) {
-    return date.toISOString();
-  }
-  if (typeof date === 'string') {
-    return date;
-  }
-  if (typeof date === 'number') {
-    return new Date(date).toISOString();
-  }
-
-  throw new Error(`Invalid date: ${date}`);
-}
-
-/**
- * @param {Date|string|number} date
- * @return {string|null}
- */
-export function normalizeInputDate(date) {
+export function normalizeDate(date) {
   if (date == null) {
     return null;
   }

@@ -6,7 +6,7 @@ export interface OrganisationSummary {
   addons: Array<AddonSummary>;
   consumers: Array<ConsumerSummary>;
   providers: Array<ProviderSummary>;
-  role: 'ADMIN';
+  role: 'NONE' | 'ADMIN' | 'ACCOUNTING' | 'DEVELOPER' | 'MANAGER';
   vatState: string;
   canPay: boolean;
   canSEPA: boolean;

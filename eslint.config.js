@@ -22,7 +22,7 @@ export default [
       'eslint.config.js',
       'eslint/**/*.*js',
       'tasks/**/*.js',
-      'web-test-runner.config.js',
+      '**/test-*.config.*.{cjs,js}',
       'mock-api/**/*.js',
       'rollup.config.js',
     ],
@@ -46,7 +46,13 @@ export default [
   // Specific rules for node esm modules
   {
     name: 'node-esm-context',
-    files: ['tasks/**/*.js', 'web-test-runner.config.js', 'manual_tests/**/*.js', 'mock-api/**/*.js'],
+    files: [
+      'tasks/**/*.js',
+      '**/test-*.config.*.{cjs,js}',
+      'test/manual/**/*.js',
+      'mock-api/**/*.js',
+      'test/**/*.node.spec.js',
+    ],
     languageOptions: {
       globals: {
         ...globals.node,

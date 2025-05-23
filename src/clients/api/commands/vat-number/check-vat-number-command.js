@@ -1,0 +1,24 @@
+/**
+ * @import { CheckVatNumberCommandInput, CheckVatNumberCommandOutput } from './check-vat-number-command.types.js';
+ */
+import { get } from '../../../../lib/request/request-params-builder.js';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+
+/**
+ *
+ * @extends {CcApiSimpleCommand<CheckVatNumberCommandInput, CheckVatNumberCommandOutput>}
+ * @endpoint [GET] /v2/vat_check
+ * @group VatNumber
+ * @version 2
+ */
+export class CheckVatNumberCommand extends CcApiSimpleCommand {
+  /** @type {CcApiSimpleCommand<CheckVatNumberCommandInput, CheckVatNumberCommandOutput>['toRequestParams']} */
+  toRequestParams(params) {
+    return get(`/v2/vat_check`);
+  }
+
+  /** @type {CcApiSimpleCommand<CheckVatNumberCommandInput, CheckVatNumberCommandOutput>['isEmptyResponse']} */
+  isEmptyResponse(status) {
+    return status === 404;
+  }
+}

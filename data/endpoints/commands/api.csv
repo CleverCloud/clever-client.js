@@ -22,8 +22,8 @@ local-cc-api-v4,[GET] /v4/load-balancers/organisations/:XXX/applications/:XXX/lo
 local-cc-api-v4,[GET] /v4/billing/price-system,true,PriceSystem,,Get,GetPriceSystem*,,false,,À regrouper
 local-cc-api-v4,[GET] /v4/saas/grafana/:XXX,true,Grafana,,Get,GetGrafana,false,false,,
 local-cc-api-v4,[POST] /v4/saas/grafana/:XXX,true,Grafana,,Enable,EnableGrafana,false,false,,
-local-cc-api-v4,[DELETE] /v4/saas/grafana/:XXX,true,Grafana,,Delete,DeleteGrafana,false,false,,
-local-cc-api-v4,[POST] /v4/saas/grafana/:XXX/reset,true,Grafana,,Disable,DisableGrafana,false,false,,
+local-cc-api-v4,[DELETE] /v4/saas/grafana/:XXX,true,Grafana,,Disable,DisableGrafana,false,false,,
+local-cc-api-v4,[POST] /v4/saas/grafana/:XXX/reset,true,Grafana,,Reset,ResetGrafana,false,false,,
 local-cc-api-v4,[GET] /v4/stats/organisations/:XXX/requests,false,,,,,,,,
 remote-cc-api-ovd,[POST] /v2/providers/addon-matomo/resources,false,,,,,,,,
 remote-cc-api-ovd,[DELETE] /v2/providers/addon-matomo/resources/:XXX,false,,,,,,,,
@@ -165,8 +165,8 @@ remote-cc-api-v2,[POST] /v2/oidc/:XXX/signup,false,,,,,,,,
 remote-cc-api-v2,[GET] /v2/organisations/:XXX,true,Organisation,,Get,GetOrganisation,false,false,,
 remote-cc-api-v2,[PUT] /v2/organisations/:XXX,true,Organisation,,Update,UpdateOrganisation,false,false,,
 remote-cc-api-v2,[DELETE] /v2/organisations/:XXX,true,Organisation,,Delete,DeleteOrganisation,false,false,,
-remote-cc-api-v2,[GET] /v2/organisations/:XXX/deployments,true,Deployment,,List,ListDeployment,false,false,,On regroupe
-remote-cc-api-v2,[GET] /v2/organisations/:XXX/instances,true,Instance,,List,ListInstance*,false,false,,On regroupe
+remote-cc-api-v2,[GET] /v2/organisations/:XXX/deployments,true,Deployment,,List,ListDeployment,true,true,,On regroupe
+remote-cc-api-v2,[GET] /v2/organisations/:XXX/instances,true,Instance,,List,ListInstance*,true,true,,On regroupe
 remote-cc-api-v2,[GET] /v2/organisations/:XXX/namespaces,true,TcpRedirection,Namespace,List,ListTcpRedirectionNamespace,false,false,,
 remote-cc-api-v2,[GET] /v2/organisations/:XXX/payment-info,false,,,,,,,,
 remote-cc-api-v2,[PUT] /v2/organisations/:XXX/avatar,true,Organisation,Avatar,Update,UpdateOrganisationAvatar,false,false,,
@@ -208,8 +208,8 @@ remote-cc-api-v2,[GET] /v2/organisations/:XXX/addons/:XXX/applications,true,Link
 remote-cc-api-v2,[GET] /v2/organisations/:XXX/addons/:XXX/sso,true,Addon,Sso,Get,GetAddonSso,false,true,,??
 remote-cc-api-v2,[POST] /v2/organisations/:XXX/addons/preorders,false,,,,,,,,
 remote-cc-api-v2,[GET] /v2/organisations/:XXX/addons/:XXX/migrations/preorders,true,Migration,Preorder,List,ListMigrationPreorder,false,true,,??
-remote-cc-api-v2,[PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX,true,Link,,Add,AddLink,false,true,,À fusionner
-remote-cc-api-v2,[DELETE] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX,true,Link,,Remove,RemoveLink,false,true,,À fusionner
+remote-cc-api-v2,[PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX,true,Link,,Add,AddLink,true,true,,À fusionner
+remote-cc-api-v2,[DELETE] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX,true,Link,,Remove,RemoveLink,true,true,,À fusionner
 remote-cc-api-v2,[GET] /v2/organisations/:XXX/applications/:XXX/dependencies,true,Link,,List,ListLink*,,,,À fusionner
 remote-cc-api-v2,[GET] /v2/organisations/:XXX/applications/:XXX/dependencies/env,true,Environment,,Get,GetEnvironment*,,,,Fusion avec app/addon et avec inlude links
 remote-cc-api-v2,[GET] /v2/organisations/:XXX/applications/:XXX/dependents,false,,,,,,,,
@@ -241,7 +241,7 @@ remote-cc-api-v2,[PUT] /v2/organisations/:XXX/applications/:XXX/env/:XXX,true,En
 remote-cc-api-v2,[DELETE] /v2/organisations/:XXX/applications/:XXX/env/:XXX,true,Environment,Variable,Delete,DeleteEnvironmentVariable,false,true,,On devrait arreter ça à terme coté CLI
 remote-cc-api-v2,[GET] /v2/organisations/:XXX/applications/:XXX/addons,true,Link,,List,ListLink*,,,,À fusionner
 remote-cc-api-v2,[POST] /v2/organisations/:XXX/applications/:XXX/addons,true,Link,,Add,AddLink*,,,,À fusionner
-remote-cc-api-v2,[GET] /v2/organisations/:XXX/applications/:XXX/branches,true,Application,,Get,GetApplication*,,,,À fusionner avec get application
+remote-cc-api-v2,[GET] /v2/organisations/:XXX/applications/:XXX/branches,true,Application,Branches,Get,GetApplicationBranches,,,,À fusionner avec get application
 remote-cc-api-v2,[GET] /v2/organisations/:XXX/applications/:XXX/instances/:XXX,true,Instance,,Get,GetInstance*,false,true,true,À mettre en legacy et fusionner avec le endpoint full orga
 remote-cc-api-v2,[GET] /v2/organisations/:XXX/applications/:XXX/instances,true,Instance,,List,ListInstance*,false,true,true,À mettre en legacy et fusionner avec le endpoint full orga
 remote-cc-api-v2,[POST] /v2/organisations/:XXX/applications/:XXX/instances,true,Application,,Deploy,DeployApplication,false,true,,

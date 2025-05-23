@@ -1,0 +1,3 @@
+export interface GetNetworkGroupWireguardConfigurationCommandInput {}
+
+export interface GetNetworkGroupWireguardConfigurationCommandOutput {}
