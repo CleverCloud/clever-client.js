@@ -1,4 +1,4 @@
-import EventSource from 'eventsource';
+import { EventSource } from 'eventsource';
 import { AbstractLogsStream } from './logs.abstract.js';
 
 /**
