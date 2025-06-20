@@ -20,7 +20,7 @@ const PONG_MESSAGE = JSON.stringify({
  * @extends {AbstractStream}
  * @template {WebSocketLike} T
  */
-export class AbstractEventsStream extends AbstractStream {
+export class EventsStream extends AbstractStream {
   /**
    * @param {Object} options
    * @param {String} options.apiHost
@@ -51,7 +51,7 @@ export class AbstractEventsStream extends AbstractStream {
     // * user events wired to event emitter: "message(event)" => "event"
 
     const { url, authMessage } = await this._prepareEventsWs();
-    this._ws = this._createWebSocket(url);
+    this._ws = new globalThis.WebSocket(url);
 
     this._ws.addEventListener('open', () => this._ws.send(authMessage));
 
@@ -95,30 +95,8 @@ export class AbstractEventsStream extends AbstractStream {
       // When _closeSource() is called, we already know this._ws is about to be forced closed
       // so we need to remove the listener before calling closeWebSocket()
       this._ws.removeEventListener('close', this._wsCloseListener);
-      this._closeWebSocket(this._ws);
+      this._ws.close();
     }
-  }
-
-  // -- abstract methods ------
-
-  /**
-   * @param {string} _url
-   * @returns {T}
-   * @abstract
-   * @protected
-   */
-  _createWebSocket(_url) {
-    // It's up to the class extending AbstractEventsStream to implement how to create a WS connection
-    throw new Error('Not implemented');
-  }
-
-  /**
-   * @param {T} _webSocket
-   * @protected
-   */
-  _closeWebSocket(_webSocket) {
-    // It's up to the class extending AbstractEventsStream to implement how to close a WS connection
-    throw new Error('Not implemented');
   }
 
   // -- private methods ------

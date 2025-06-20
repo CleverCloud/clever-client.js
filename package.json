@@ -43,8 +43,7 @@
     "oauth-1.0a": "^2.2.6"
   },
   "peerDependencies": {
-    "eventsource": "^4.0.0",
-    "ws": "^7.4.3"
+    "eventsource": "^4.0.0"
   },
   "devDependencies": {
     "@babel/parser": "^7.27.0",
