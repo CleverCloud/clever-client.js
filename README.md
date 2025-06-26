@@ -166,9 +166,8 @@ This stream is exposed the inner WebSocket source with [`component-emitter`](htt
 Here's an example of how to use `EventsStream` to retrieve events from the Clever Cloud platform:
 
 ```js
-// Browser implementation or Node.js implementation
-import { EventsStream } from '@clevercloud/client/esm/streams/events.browser.js';
-// import { EventsStream } from '@clevercloud/client/esm/streams/events.node.js';
+// Browser and Node.js 21+ implementation
+import { EventsStream } from '@clevercloud/client/esm/streams/events.js';
 
 // Load and cache config and tokens
 const API_HOST = 'https://api.clever-cloud.com';
