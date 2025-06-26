@@ -77,59 +77,6 @@ export function todo_postAuthorize(params, body) {
 }
 
 /**
- * DELETE /invoice/external/paypal/{bid}
- * @param {Object} params
- * @param {String} params.bid
- * @returns {Promise<RequestParams>}
- */
-export function todo_cancelPaypalTransaction(params) {
-  // no multipath for /self or /organisations/{id}
-  return Promise.resolve({
-    method: 'delete',
-    url: `/v2/invoice/external/paypal/${params.bid}`,
-    headers: { Accept: 'application/json' },
-    // no query params
-    // no body
-  });
-}
-
-/**
- * PUT /invoice/external/paypal/{bid}
- * @param {Object} params
- * @param {String} params.bid
- * @param {Object} body
- * @returns {Promise<RequestParams>}
- */
-export function todo_authorizePaypalTransaction(params, body) {
-  // no multipath for /self or /organisations/{id}
-  return Promise.resolve({
-    method: 'put',
-    url: `/v2/invoice/external/paypal/${params.bid}`,
-    headers: { Accept: 'application/json', 'Content-Type': '*/*' },
-    // no query params
-    body,
-  });
-}
-
-/**
- * POST /invoice/external/{bid}
- * @param {Object} params
- * @param {String} params.bid
- * @param {Object} body
- * @returns {Promise<RequestParams>}
- */
-export function todo_updateInvoice(params, body) {
-  // no multipath for /self or /organisations/{id}
-  return Promise.resolve({
-    method: 'post',
-    url: `/v2/invoice/external/${params.bid}`,
-    headers: { Accept: 'application/json', 'Content-Type': '*/*' },
-    // no query params
-    body,
-  });
-}
-
-/**
  * GET /newsfeeds/blog
  * @returns {Promise<RequestParams>}
  */
@@ -929,24 +876,6 @@ export function todo_getUserGitInformations(params) {
     url: `/v2/users/${params.userId}/git-info`,
     headers: { Accept: 'application/json' },
     // no query params
-    // no body
-  });
-}
-
-/**
- * GET /validation/vat/{key}
- * @param {Object} params
- * @param {String} params.key
- * @param {String} params.action
- * @returns {Promise<RequestParams>}
- */
-export function todo_validate(params) {
-  // no multipath for /self or /organisations/{id}
-  return Promise.resolve({
-    method: 'get',
-    url: `/v2/validation/vat/${params.key}`,
-    headers: { Accept: 'application/json' },
-    queryParams: pickNonNull(params, ['action']),
     // no body
   });
 }
