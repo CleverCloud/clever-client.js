@@ -6,4 +6,9 @@ import { SimpleCommand } from '../../../lib/command/command.js';
  * @template CommandOutput
  * @abstract
  */
-export class RedisHttpCommand extends SimpleCommand {}
+export class RedisHttpCommand extends SimpleCommand {
+  /** @type {SimpleCommand<'redis-http', CommandInput, CommandOutput>['api']} */
+  get api() {
+    return 'redis-http';
+  }
+}

@@ -14,11 +14,8 @@ export class CcClientError extends Error {
    * @param {unknown} [cause]
    */
   constructor(message, code, cause) {
-    super(message);
+    super(message, { cause });
     this.#code = code;
-    if (cause != null) {
-      this.cause = cause;
-    }
   }
 
   /**

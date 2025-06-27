@@ -7,7 +7,6 @@ import { requestTimeout } from './request-timeout.js';
 import { requestWithCache } from './request-with-cache.js';
 
 const JSON_TYPE = 'application/json';
-const FORM_TYPE = 'application/x-www-form-urlencoded';
 
 /** @type {Array<RequestWrapper>} */
 const REQUEST_WRAPPERS = [requestWithCache, requestTimeout, requestDebug];
@@ -67,6 +66,8 @@ async function doRequest(request) {
       );
     }
 
+    console.error(err);
+
     throw new CcRequestError('An unknown error occurred while fetching HTTP endpoint', 'UNKNOWN_ERROR', request, err);
   }
 }
@@ -79,7 +80,7 @@ async function doRequest(request) {
 function getRequestUrl(request) {
   let url;
   try {
-    url = new URL(request.url);
+    url = new URL(request.url, globalThis.location?.href);
   } catch (e) {
     throw new CcRequestError(`Invalid URL: "${request.url}"`, 'INVALID_URL', request, e);
   }
@@ -98,16 +99,14 @@ function getRequestBody(request) {
     return null;
   }
 
+  if (request.body instanceof Blob) {
+    return request.body;
+  }
+
   const contentType = getContentType(request.headers);
 
   if (contentType === JSON_TYPE) {
     return JSON.stringify(request.body);
-  }
-
-  if (contentType === FORM_TYPE) {
-    const formData = new URLSearchParams();
-    Object.entries(request.body).forEach(([name, value]) => formData.append(name, value));
-    return formData;
   }
 
   // todo: if text/plain but got object => error?
@@ -130,18 +129,13 @@ async function getResponseBody(fetchResponse) {
     return fetchResponse.json();
   }
 
-  if (responseContentType === FORM_TYPE) {
-    const text = await fetchResponse.text();
-    /** @type {Record<string, string>} */
-    const responseObject = {};
-    Array.from(new URLSearchParams(text).entries()).forEach(([name, value]) => (responseObject[name] = value));
-
-    return responseObject;
+  if (responseContentType?.startsWith('text/')) {
+    return fetchResponse.text();
   }
 
   // todo. streamable response
 
-  return fetchResponse.text();
+  return fetchResponse.blob();
 }
 
 /**

@@ -1,4 +1,16 @@
-import { confirm as iConfirm } from '@inquirer/prompts';
+import { confirm as iConfirm, input, password as iPassword } from '@inquirer/prompts';
+
+/**
+ * @param {string} message
+ * @param {boolean} [password]
+ * @returns {Promise<string>}
+ */
+export async function prompt(message, password = false) {
+  if (password) {
+    return await catchPrompt(iPassword({ message, mask: true }));
+  }
+  return await catchPrompt(input({ message }));
+}
 
 /**
  * @param {string} message

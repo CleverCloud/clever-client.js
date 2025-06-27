@@ -2,8 +2,6 @@
  * @import { RequestWrapper, CcRequestParams } from '../../types/request.types.js'
  */
 
-//--
-
 /**
  * @type {Map<string, import('../../types/request.types.js').CcResponse<?>>}
  */

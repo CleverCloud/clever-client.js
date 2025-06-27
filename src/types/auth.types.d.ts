@@ -1,8 +1,4 @@
-import type { PrepareRequestParamsHook } from './hook.types.js';
-
-export type CcAuth = false | PrepareRequestParamsHook;
-
-export interface OAuthTokens {
+export interface OauthTokens {
   consumerKey: string;
   consumerSecret: string;
   token: string;

@@ -2,9 +2,13 @@
  * @import { CcApiCompositeCommand, CcApiSimpleCommand } from './lib/cc-api-command.js'
  * @import { CcApiType, CcApiClientConfig } from './types/cc-api.types.js'
  * @import { AddonIdResolve } from './types/resource-id-resolver.types.js';
+ * @import { CcAuth } from '../../lib/auth/cc-auth.js'
  * @import { CcRequestConfig } from '../../types/request.types.js'
  */
+import { CcAuthApiToken } from '../../lib/auth/cc-auth-api-token.js';
+import { CcAuthOauthV1Plaintext } from '../../lib/auth/cc-auth-oauth-v1-plaintext.js';
 import { CcClient } from '../../lib/cc-client.js';
+import { omit } from '../../lib/utils.js';
 import { ResourceIdResolver } from './lib/resource-id-resolver.js';
 import { MemoryStore } from './lib/store/memory-store.js';
 
@@ -19,10 +23,13 @@ export class CcApiClient extends CcClient {
    * @param {CcApiClientConfig} [config]
    */
   constructor(config) {
-    super({
-      baseUrl: 'https://api.clever-cloud.com',
-      ...(config ?? {}),
-    });
+    super(
+      {
+        baseUrl: getBaseUrl(config),
+        ...omit(config ?? {}, 'baseUrl'),
+      },
+      getAuth(config),
+    );
 
     this.#resourceIdResolver = new ResourceIdResolver(this, config.resourceIdResolverStore ?? new MemoryStore());
   }
@@ -65,5 +72,38 @@ export class CcApiClient extends CcClient {
     }
 
     return { ...command.params, ...resolvedIds };
+  }
+}
+
+/**
+ * @param {CcApiClientConfig} config
+ * @returns {string}
+ */
+function getBaseUrl(config) {
+  if (config?.baseUrl != null) {
+    return config.baseUrl;
+  }
+
+  if (config?.authMethod == null || config.authMethod.type === 'oauth-v1-plaintext') {
+    return 'https://api.clever-cloud.com';
+  }
+  if (config.authMethod.type === 'api-token') {
+    return 'https://api-bridge.clever-cloud.com';
+  }
+}
+
+/**
+ * @param {CcApiClientConfig} config
+ * @returns {CcAuth|null}
+ */
+function getAuth(config) {
+  if (config?.authMethod == null) {
+    return null;
+  }
+  if (config.authMethod.type === 'oauth-v1-plaintext') {
+    return new CcAuthOauthV1Plaintext(config.authMethod.oauthTokens);
+  }
+  if (config.authMethod.type === 'api-token') {
+    return new CcAuthApiToken(config.authMethod.apiToken);
   }
 }

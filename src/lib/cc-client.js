@@ -1,7 +1,8 @@
 /**
- * @import { CcAuth } from '../types/auth.types.js'
+ * @import { CcAuth } from './auth/cc-auth.js'
  * @import { Command } from '../types/command.types.js'
  * @import { SimpleCommand } from './command/command.js'
+ * @import { GetUrl } from './get-url.js'
  * @import { CcClientConfig, CcClientHooks } from '../types/client.types.js'
  * @import { CcRequest, CcRequestParams, CcRequestConfig, CcResponse, HttpMethod } from '../types/request.types.js'
  */
@@ -32,17 +33,21 @@ export class CcClient {
   #defaultRequestsConfig;
   /** @type {CcClientHooks} */
   #hooks;
+  /** @type {CcAuth|null} */
+  #auth;
 
   /**
    * @param {CcClientConfig} config
+   * @param {CcAuth|null} [auth]
    */
-  constructor(config) {
+  constructor(config, auth) {
     this.#baseUrl = config.baseUrl;
     this.#defaultRequestsConfig = {
       ...DEFAULT_REQUEST_CONFIG,
       ...(config.defaultRequestConfig ?? {}),
     };
     this.#hooks = config.hooks ?? {};
+    this.#auth = auth;
   }
 
   /**
@@ -72,11 +77,17 @@ export class CcClient {
   }
 
   /**
-   * @returns {CcAuth}
-   * @protected
+   * @param {GetUrl<Api, ?>} getUrl
+   * @returns {URL}
    */
-  _getAuth() {
-    return false;
+  getUrl(getUrl) {
+    const url = new URL(getUrl.get(getUrl.params), this.#baseUrl);
+
+    if (getUrl.isAuthRequired()) {
+      this.#auth?.applyOnUrl(url);
+    }
+
+    return url;
   }
 
   /**
@@ -134,10 +145,7 @@ export class CcClient {
 
     // apply auth (if required by command and if auth method is defined on client)
     if (command.isAuthRequired()) {
-      const auth = this._getAuth();
-      if (auth) {
-        preparedRequestParams = await auth(preparedRequestParams);
-      }
+      this.#auth?.applyOnRequestParams(preparedRequestParams);
     }
 
     return {

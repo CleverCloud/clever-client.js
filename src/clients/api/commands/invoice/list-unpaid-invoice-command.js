@@ -1,0 +1,36 @@
+/**
+ * @import { ListUnpaidInvoiceCommandInput, ListUnpaidInvoiceCommandOutput } from './list-unpaid-invoice-command.types.js';
+ */
+import { get } from '../../../../lib/request/request-params-builder.js';
+import { safeUrl } from '../../../../lib/utils.js';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { transformInvoice } from './invoice-transform.js';
+
+/**
+ *
+ * @extends {CcApiSimpleCommand<ListUnpaidInvoiceCommandInput, ListUnpaidInvoiceCommandOutput>}
+ * @endpoint [GET] /v4/billing/organisations/:XXX/invoices/unpaid
+ * @group Invoice
+ * @version 4
+ */
+export class ListUnpaidInvoiceCommand extends CcApiSimpleCommand {
+  /** @type {CcApiSimpleCommand<ListUnpaidInvoiceCommandInput, ListUnpaidInvoiceCommandOutput>['toRequestParams']} */
+  toRequestParams(params) {
+    return get(safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/unpaid`);
+  }
+
+  /** @type {CcApiSimpleCommand<ListUnpaidInvoiceCommandInput, ListUnpaidInvoiceCommandOutput>['isEmptyResponse']} */
+  isEmptyResponse(status) {
+    return status === 404;
+  }
+
+  /** @type {CcApiSimpleCommand<ListUnpaidInvoiceCommandInput, ListUnpaidInvoiceCommandOutput>['getEmptyResponse']} */
+  getEmptyResponse() {
+    return [];
+  }
+
+  /** @type {CcApiSimpleCommand<ListUnpaidInvoiceCommandInput, ListUnpaidInvoiceCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return response.map(transformInvoice);
+  }
+}

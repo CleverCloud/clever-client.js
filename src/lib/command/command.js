@@ -1,6 +1,7 @@
 /**
  * @import { CcRequestParams } from '../../types/request.types.js'
  * @import { Composer } from '../../types/command.types.js'
+ * @import { SelfOrPromise } from '../../types/utils.types.js'
  * @internal
  */
 
@@ -47,7 +48,7 @@ export class AbstractCommand {
 export class SimpleCommand extends AbstractCommand {
   /**
    * @param {CommandInput} _params
-   * @returns {Partial<CcRequestParams>}
+   * @returns {SelfOrPromise<Partial<CcRequestParams>>}
    * @abstract
    */
   toRequestParams(_params) {

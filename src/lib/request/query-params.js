@@ -9,11 +9,15 @@ export class QueryParams {
   #queryParams = new Map();
 
   /**
-   * @param {Record<string, OneOrMany<QueryParamValue>>} [params]
+   * @param {Record<string, OneOrMany<QueryParamValue>>|QueryParams} [params]
    */
   constructor(params) {
     if (params != null) {
-      this.setParams(params);
+      if (params instanceof QueryParams) {
+        this.setParams(params.toObject());
+      } else {
+        this.setParams(params);
+      }
     }
   }
 
