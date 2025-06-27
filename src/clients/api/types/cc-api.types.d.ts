@@ -1,4 +1,5 @@
-import type { OAuthTokens } from '../../../types/auth.types.js';
+import type { CompositeCommand, SimpleCommand } from '../../../lib/command/command.js';
+import type { OauthTokens } from '../../../types/auth.types.js';
 import type { CcClientConfig } from '../../../types/client.types.js';
 import type { Composer } from '../../../types/command.types.js';
 import type { WithOptional } from '../../../types/utils.types.js';
@@ -8,15 +9,24 @@ export type CcApiType = 'api';
 
 export interface CcApiClientConfig extends WithOptional<CcClientConfig, 'baseUrl'> {
   resourceIdResolverStore?: Store<ResourceIdIndex>;
+  authMethod?: CcApiAuth;
 }
 
-export interface CcApiClientConfigWithOAuth extends CcApiClientConfig {
-  oAuthTokens: OAuthTokens;
-}
+export type CcApiAuth = CcApiAuthWithApiToken | CcApiAuthWithOauthV1PlainText;
 
-export interface CcApiClientConfigWithApiToken extends CcApiClientConfig {
+export interface CcApiAuthWithApiToken {
+  type: 'api-token';
   apiToken: string;
 }
+
+export interface CcApiAuthWithOauthV1PlainText {
+  type: 'oauth-v1-plaintext';
+  oauthTokens: OauthTokens;
+}
+
+export type CcApiCommand<CommandInput, CommandOutput> =
+  | SimpleCommand<CcApiType, CommandInput, CommandOutput>
+  | CompositeCommand<CcApiType, CommandInput, CommandOutput>;
 
 export type CcApiComposer = Composer<CcApiType>;
 

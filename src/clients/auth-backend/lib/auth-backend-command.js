@@ -10,4 +10,9 @@ export class AuthBackendCommand extends SimpleCommand {
   isAuthRequired() {
     return true;
   }
+
+  /** @type {SimpleCommand<'auth-backend', CommandInput, CommandOutput>['api']} */
+  get api() {
+    return 'auth-backend';
+  }
 }

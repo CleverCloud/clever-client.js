@@ -11,6 +11,8 @@ export function handleHttpErrors(response) {
   if (response.status >= 400) {
     const responseBody = response.body;
     const errorMessage = getErrorMessage(responseBody);
+    // todo: should be done by debug logger ?
+    console.log(response);
     throw new CcHttpError(errorMessage, response);
     // NOTE: This is only for legacy todo: do we still need that?
     // if (responseBody.id != null) {

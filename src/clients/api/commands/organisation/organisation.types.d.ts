@@ -6,7 +6,7 @@ export interface OrganisationSummary {
   addons: Array<AddonSummary>;
   consumers: Array<ConsumerSummary>;
   providers: Array<ProviderSummary>;
-  role: 'ADMIN';
+  role: 'NONE' | 'ADMIN' | 'ACCOUNTING' | 'DEVELOPER' | 'MANAGER';
   vatState: string;
   canPay: boolean;
   canSEPA: boolean;
@@ -51,3 +51,39 @@ export interface ProviderSummary {
   id: string;
   name: string;
 }
+
+export interface Organisation {
+  id: string;
+  name: string;
+  description: string;
+  // renamed from billingEmail
+  billingEmailAddress: string;
+  address: string;
+  city: string;
+  zipcode: string;
+  country: string;
+  company: string;
+  VAT: string;
+  avatar: string;
+  vatState: 'INVALID' | 'PENDING_VALIDATION' | 'VALID' | 'NOT_NEEDED' | 'NOT_APPLICABLE';
+  customerFullName: string;
+  canPay: boolean;
+  cleverEnterprise: boolean;
+  emergencyNumber: string;
+  canSEPA: boolean;
+  isTrusted: boolean;
+}
+
+export interface OrganisationMember {
+  id: string;
+  email: string;
+  name: string;
+  avatar: string;
+  preferredMFA: OrganisationMemberMFA;
+  role: OrganisationMemberRole;
+  job?: string;
+}
+
+export type OrganisationMemberRole = 'NONE' | 'ADMIN' | 'ACCOUNTING' | 'DEVELOPER' | 'MANAGER';
+
+export type OrganisationMemberMFA = 'NONE' | 'TOTP';

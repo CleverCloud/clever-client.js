@@ -26,7 +26,7 @@ export interface CcResponse<CommandOutput> {
   request: CcRequest;
 }
 
-export type RequestBody = string | Object;
+export type RequestBody = string | Object | Blob;
 
 export type RequestAdapter = <CommandOutput>(request: CcRequest) => Promise<CcResponse<CommandOutput>>;
 

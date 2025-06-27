@@ -21,6 +21,11 @@ export class CcApiSimpleCommand extends SimpleCommand {
   getIdsToResolve() {
     return null;
   }
+
+  /** @type {SimpleCommand<CcApiType, CommandInput, CommandOutput>['api']} */
+  get api() {
+    return 'api';
+  }
 }
 
 /**
@@ -35,5 +40,10 @@ export class CcApiCompositeCommand extends CompositeCommand {
    */
   getIdsToResolve() {
     return null;
+  }
+
+  /** @type {SimpleCommand<CcApiType, CommandInput, CommandOutput>['api']} */
+  get api() {
+    return 'api';
   }
 }
