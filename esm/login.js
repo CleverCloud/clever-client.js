@@ -1,4 +1,3 @@
-import OAuth from 'oauth-1.0a';
 import { fetchAccessToken as doFetchAccessToken, fetchRequestToken as doFetchRequestToken } from './api/v2/oauth.js';
 
 /**
@@ -10,12 +9,9 @@ import { fetchAccessToken as doFetchAccessToken, fetchRequestToken as doFetchReq
  * @param {string} _.consumerKey
  * @param {string} _.consumerSecret
  * @param {string} [_.tokenSecret]
- * @returns {{oauth_consumer_key: string, oauth_signature_method: string, oauth_signature: string, oauth_timestamp: number, oauth_nonce: string}}
+ * @returns {{oauth_consumer_key: string, oauth_signature_method: string, oauth_signature: string}}
  */
 export function getOauthParams({ consumerKey, consumerSecret, tokenSecret = '' }) {
-  // We need this for getNonce()
-  // eslint-disable-next-line camelcase
-  OAuth.prototype.nonce_length = 32;
   return {
     // eslint-disable-next-line camelcase
     oauth_consumer_key: consumerKey,
@@ -23,10 +19,6 @@ export function getOauthParams({ consumerKey, consumerSecret, tokenSecret = '' }
     oauth_signature_method: 'PLAINTEXT',
     // eslint-disable-next-line camelcase
     oauth_signature: consumerSecret + '&' + tokenSecret,
-    // eslint-disable-next-line camelcase
-    oauth_timestamp: OAuth.prototype.getTimeStamp(),
-    // eslint-disable-next-line camelcase
-    oauth_nonce: OAuth.prototype.getNonce(),
   };
 }
 
