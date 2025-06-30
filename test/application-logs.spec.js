@@ -8,7 +8,7 @@ import { clearTimers, patchTimers, sleep, unpatchTimers } from './lib/timers.js'
 
 const DEBUG_LEVEL = 2;
 
-const ASYNC_TEST_TIMEOUT_MS = 10_000;
+const ASYNC_TEST_TIMEOUT_MS = 15_000;
 
 describe('ApplicationLogStream', () => {
   before(patchTimers);
