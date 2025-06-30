@@ -1,5 +1,12 @@
 # Clever Client changelog
 
+## [11.0.1](https://github.com/CleverCloud/clever-client.js/compare/11.0.0...11.0.1) (2025-06-30)
+
+
+### 🐛 Bug Fixes
+
+* fix plaintext OAuth for old logs and event API ([1c2c7d3](https://github.com/CleverCloud/clever-client.js/commit/1c2c7d3d004e78a6a1448aade1aec2f9b49b08bb))
+
 ## [11.0.0](https://github.com/CleverCloud/clever-client.js/compare/10.1.0...11.0.0) (2025-06-30)
 
 
