@@ -1,5 +1,26 @@
 # Clever Client changelog
 
+## [11.0.0](https://github.com/CleverCloud/clever-client.js/compare/10.1.0...11.0.0) (2025-06-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* this requires Node.js 21+ if you use the event API You also need to these imports:
+    * `@clevercloud/client/esm/streams/events.browser.js`
+    * `@clevercloud/client/esm/streams/events.node.js`
+    to this:
+    * `@clevercloud/client/esm/streams/events.js`
+
+### 🚀 Features
+
+* add API call analysis scripts ([49f01da](https://github.com/CleverCloud/clever-client.js/commit/49f01da276afd1494ee5e7402dc6f0c3550d451f))
+* use OAuth plaintext instead of hmac512 and remove `oauth-1.0a` ([e2a6886](https://github.com/CleverCloud/clever-client.js/commit/e2a6886c3029a7536bda4af242e4cf484b926422))
+
+
+### 🧹 Miscellaneous Chores
+
+* replace `ws` with native WebSocket support for Node.js ([e8dbfe3](https://github.com/CleverCloud/clever-client.js/commit/e8dbfe3dbf3d1190fc74a4c14a9def00f023079c))
+
 ## 10.1.0 (2025-04-04)
 
 * feat(zones): add ownerId query param (#141)
