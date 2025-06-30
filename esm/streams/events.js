@@ -125,7 +125,7 @@ export class EventsStream extends AbstractStream {
         const authMessage = JSON.stringify({
           // eslint-disable-next-line camelcase
           message_type: 'oauth',
-          authorization: requestParams.headers.Authorization,
+          authorization: requestParams.headers.authorization,
         });
         return { url, authMessage };
       });
