@@ -144,7 +144,7 @@ export class AbstractLogsStream extends AbstractStream {
         // prepare SSE URL's authorization query param
         const url = new URL(requestParams.url);
         fillUrlSearchParams(url, requestParams.queryParams);
-        const base64AuthorizationHeader = globalThis.btoa(requestParams.headers.Authorization);
+        const base64AuthorizationHeader = globalThis.btoa(requestParams.headers.authorization);
         url.searchParams.set('authorization', base64AuthorizationHeader);
         return { url: url.toString() };
       });
