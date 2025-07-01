@@ -100,7 +100,7 @@ class GetPulsarClusterCommand extends CcApiSimpleCommand {
       webTlsPort: response.web_tls_port,
       version: response.version,
       available: response.available,
-      zone: response.zone,
+      zone: response.zone.toLowerCase(),
       supportColdStorage: response.support_cold_storage,
       supportedPlans: response.supported_plans,
     };

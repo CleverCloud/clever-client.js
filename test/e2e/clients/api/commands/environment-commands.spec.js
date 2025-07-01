@@ -6,7 +6,7 @@ import { UpdateEnvironmentCommand } from '../../../../../src/clients/api/command
 import { UpdateExposedEnvironmentCommand } from '../../../../../src/clients/api/commands/environment/update-exposed-environment-command.js';
 import { e2eSupport } from '../../../../lib/e2e-support.js';
 
-describe('environment-command', function () {
+describe('environment commands', function () {
   this.timeout(10000);
   const support = e2eSupport();
 

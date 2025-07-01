@@ -53,9 +53,13 @@ export class ResourceIdResolver {
    * @returns {Promise<string>}
    */
   async resolveAddonId(addonId, requiredAddonIdType, requestConfig) {
+    if (addonId == null) {
+      return null;
+    }
+
     const resolvedAddonId = await this.#resolveAddonId(addonId, requiredAddonIdType, requestConfig);
 
-    if (addonId == null) {
+    if (resolvedAddonId == null) {
       throw new CcClientError(
         `The addon with id ${addonId} doesn't exist or you don't have access to it`,
         'CANNOT_RESOLVE_RESOURCE_ID',

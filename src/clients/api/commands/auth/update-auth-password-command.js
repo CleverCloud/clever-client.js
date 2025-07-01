@@ -2,7 +2,7 @@
  * @import { UpdateAuthPasswordCommandInput } from './update-auth-password-command.types.js';
  */
 import { put } from '../../../../lib/request/request-params-builder.js';
-import { omit, safeUrl } from '../../../../lib/utils.js';
+import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -16,7 +16,8 @@ export class UpdateAuthPasswordCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<UpdateAuthPasswordCommandInput, void>['toRequestParams']} */
   toRequestParams(params) {
     return put(safeUrl`/v2/self/change_password`, {
-      ...omit(params, 'revokeTokens'),
+      oldPassword: params.oldPassword,
+      newPassword: params.newPassword,
       dropTokens: params.revokeTokens,
     });
   }

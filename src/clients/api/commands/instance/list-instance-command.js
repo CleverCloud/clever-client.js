@@ -3,7 +3,7 @@
  */
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
-import { normalizeDate, omit, safeUrl } from '../../../../lib/utils.js';
+import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -19,9 +19,13 @@ export class ListInstanceCommand extends CcApiSimpleCommand {
     return get(
       safeUrl`/v4/orchestration/organisations/${params.ownerId}/applications/${params.applicationId}/instances`,
       new QueryParams()
-        .setParams(omit(params, 'ownerId', 'applicationId', 'since', 'until'))
-        .set('since', normalizeDate(params.since))
-        .set('until', normalizeDate(params.until)),
+        .append('since', normalizeDate(params.since))
+        .append('until', normalizeDate(params.until))
+        .append('includeState', params.includeState)
+        .append('excludeState', params.excludeState)
+        .append('deploymentId', params.deploymentId)
+        .append('limit', params.limit)
+        .append('order', params.order),
     );
   }
 

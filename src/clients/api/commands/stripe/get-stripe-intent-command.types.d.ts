@@ -1,3 +1,9 @@
-export interface GetStripeIntentCommandInput {}
+export interface GetStripeIntentCommandInput {
+  ownerId: string;
+}
 
-export interface GetStripeIntentCommandOutput {}
+export interface GetStripeIntentCommandOutput {
+  id: string;
+  clientSecret: string;
+  customer: string;
+}

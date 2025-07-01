@@ -1,6 +1,6 @@
 import { type ApplicationOrAddonId } from '../../types/cc-api.types.js';
 
-export interface DeleteTagCommandInput extends ApplicationOrAddonId & {
+export type DeleteTagCommandInput = ApplicationOrAddonId & {
   tag: string;
 };
 

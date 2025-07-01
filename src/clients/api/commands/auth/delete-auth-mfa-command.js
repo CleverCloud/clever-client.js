@@ -1,8 +1,8 @@
 /**
  * @import { DeleteAuthMfaCommandInput } from './delete-auth-mfa-command.types.js';
  */
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
+import { encodeToBase64, safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -15,6 +15,18 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 export class DeleteAuthMfaCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<DeleteAuthMfaCommandInput, void>['toRequestParams']} */
   toRequestParams(params) {
-    return delete_(safeUrl`/v2/self/mfa/${params.kind}`);
+    return {
+      method: 'DELETE',
+      url: safeUrl`/v2/self/mfa/${params.kind}`,
+      headers: new HeadersBuilder()
+        .acceptJson()
+        .withHeader('X-Clever-Password', encodeToBase64(params.password))
+        .build(),
+    };
+  }
+
+  /** @type {CcApiSimpleCommand<DeleteAuthMfaCommandInput, void>['transformCommandOutput']} */
+  transformCommandOutput() {
+    return null;
   }
 }

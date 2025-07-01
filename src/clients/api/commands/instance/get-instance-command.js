@@ -24,4 +24,11 @@ export class GetInstanceCommand extends CcApiSimpleCommand {
   isEmptyResponse(status) {
     return status === 404;
   }
+
+  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
+  getIdsToResolve() {
+    return {
+      ownerId: true,
+    };
+  }
 }

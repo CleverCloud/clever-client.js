@@ -18,7 +18,7 @@ import { GetLogDrainCommand } from './get-log-drain-command.js';
 export class CreateLogDrainCommand extends CcApiCompositeCommand {
   /** @type {CcApiCompositeCommand<CreateLogDrainCommandInput, CreateLogDrainCommandOutput>['compose']} */
   async compose(params, composer) {
-    const created = await composer.send(new InnerCreateLogDrainCommand(params));
+    const created = await composer.send(new CreateLogDrainInnerCommand(params));
 
     return composer.send(
       new GetLogDrainCommand(
@@ -37,7 +37,7 @@ export class CreateLogDrainCommand extends CcApiCompositeCommand {
  * @group LogDrain
  * @version 2
  */
-class InnerCreateLogDrainCommand extends CcApiSimpleCommand {
+class CreateLogDrainInnerCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<CreateLogDrainCommandInput, {id: string}>['toRequestParams']} */
   toRequestParams(params) {
     const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;

@@ -1,3 +1,4 @@
-export interface DeleteUserSettingCommandInput {}
-
-export interface DeleteUserSettingCommandOutput {}
+export interface DeleteUserSettingCommandInput {
+  env?: string;
+  name: string;
+}

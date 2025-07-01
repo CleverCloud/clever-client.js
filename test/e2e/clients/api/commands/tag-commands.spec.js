@@ -1,3 +1,8 @@
+import { expect } from 'chai';
+import { CreateTagCommand } from '../../../../../src/clients/api/commands/tag/create-tag-command.js';
+import { DeleteTagCommand } from '../../../../../src/clients/api/commands/tag/delete-tag-command.js';
+import { ListTagCommand } from '../../../../../src/clients/api/commands/tag/list-tag-command.js';
+import { UpdateTagCommand } from '../../../../../src/clients/api/commands/tag/update-tag-command.js';
 import { e2eSupport } from '../../../../lib/e2e-support.js';
 
 describe('tag commands', function () {
@@ -50,11 +55,11 @@ describe('tag commands', function () {
     await support.client.send(new CreateTagCommand({ applicationId: application.id, tag: 'tag-2' }));
 
     const response = await support.client.send(
-      new UpdateTagCommand({ applicationId: application.id, tags: ['tags-3', 'tags-4'] }),
+      new UpdateTagCommand({ applicationId: application.id, tags: ['tag-3', 'tag-4'] }),
     );
 
     expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder(['tag-3', 'tags-4']);
+    expect(response).to.deep.equalInAnyOrder(['tag-3', 'tag-4']);
   });
 
   it('should create addon tag', async () => {
@@ -93,9 +98,9 @@ describe('tag commands', function () {
     await support.client.send(new CreateTagCommand({ addonId: addon.id, tag: 'tag-1' }));
     await support.client.send(new CreateTagCommand({ addonId: addon.id, tag: 'tag-2' }));
 
-    const response = await support.client.send(new UpdateTagCommand({ addonId: addon.id, tags: ['tags-3', 'tags-4'] }));
+    const response = await support.client.send(new UpdateTagCommand({ addonId: addon.id, tags: ['tag-3', 'tag-4'] }));
 
     expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder(['tag-3', 'tags-4']);
+    expect(response).to.deep.equalInAnyOrder(['tag-3', 'tag-4']);
   });
 });

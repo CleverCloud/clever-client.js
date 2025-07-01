@@ -3,5 +3,5 @@ export interface GetGrafanaCommandInput {
 }
 
 export interface GetGrafanaCommandOutput {
-  is: number;
+  id: number;
 }

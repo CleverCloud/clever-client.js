@@ -31,7 +31,7 @@ export const CC_API_TOKEN_GITHUB_LINKED = globalThis.process?.env.CC_API_TOKEN_G
 const DEFAULT_CLIENT_AUTH = 'GITHUB_LINKED';
 
 // todo: remove that when ready
-const USE_OAUTH = false;
+const USE_OAUTH = true;
 const USE_LOCAL_AUTH_BACKEND = false;
 
 use(deepEqualInAnyOrder);
@@ -57,6 +57,7 @@ export function e2eSupport(debug = false) {
   let cleanupTasks = [];
 
   return {
+    isNode: IS_NODE,
     /**
      * @param {'NONE'|'GITHUB_UNLINKED'|'GITHUB_LINKED'|'DEV'} auth
      * @return {CcApiClient}
@@ -219,10 +220,10 @@ export function e2eSupport(debug = false) {
       cleanupTasks.push({ type: 'organisation', id: createdOrganisation.id });
       return createdOrganisation;
     },
-    async createTestApplication(name = 'test-application') {
+    async createTestApplication(name = 'test-application', ownerId = organisationId) {
       const application = await client.send(
         new CreateApplicationCommand({
-          ownerId: organisationId,
+          ownerId,
           name,
           zone: 'par',
           minInstances: 1,

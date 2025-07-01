@@ -4,7 +4,7 @@
 import { put } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformOauthConsumer, transformRightsForApi } from './oauth-consumer-transform.js';
+import { transformOauthConsumer, transformOauthConsumerRightsForApi } from './oauth-consumer-transform.js';
 
 /**
  *
@@ -22,7 +22,7 @@ export class UpdateOauthConsumerCommand extends CcApiSimpleCommand {
       url: params.url,
       picture: params.picture,
       baseUrl: params.baseUrl,
-      rights: transformRightsForApi(params.rights),
+      rights: transformOauthConsumerRightsForApi(params.rights),
     });
   }
 

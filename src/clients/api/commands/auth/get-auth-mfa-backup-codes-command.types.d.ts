@@ -2,10 +2,8 @@ import type { MFAKind } from './auth.types.js';
 
 export interface GetAuthMfaBackupCodesCommandInput {
   kind: MFAKind;
+  password: string;
 }
 
-export interface GetAuthMfaBackupCodesCommandOutput {
-  secret: string;
-  // transform Array<{ code: string }} into Array<string>
-  recoveryCodes: Array<string>;
-}
+// transform Array<{ code: string }} into Array<string>
+export type GetAuthMfaBackupCodesCommandOutput = Array<string>;

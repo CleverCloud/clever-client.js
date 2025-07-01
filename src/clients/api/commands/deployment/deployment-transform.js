@@ -2,6 +2,8 @@
  * @import { DeploymentLegacy, DeploymentState } from './deployment.types.js';
  */
 
+import { normalizeDate } from '../../../../lib/utils.js';
+
 /**
  * @type {Record<string, Omit<DeploymentState, 'QUEUED'>>}
  */
@@ -24,7 +26,7 @@ export function transformDeploymentLegacy(deployment, applicationId) {
     id: deployment.uuid,
     applicationId,
     index: deployment.id,
-    date: deployment.date,
+    date: normalizeDate(deployment.date),
     state: DEPLOYMENT_STATE_CONVERT_MAP[deployment.state],
     action: deployment.action,
     commit: deployment.commit,

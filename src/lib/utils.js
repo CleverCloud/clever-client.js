@@ -28,11 +28,20 @@ export function normalizeDate(date) {
   if (date == null) {
     return null;
   }
+
+  let parsedDate;
+
   if (date instanceof Date) {
-    return date.toISOString();
+    parsedDate = date;
+  } else if (typeof date === 'number') {
+    parsedDate = new Date(date);
+  } else if (typeof date === 'string') {
+    const cleanedDate = date.replace(/(.+)(\[UTC\])/g, '$1');
+    parsedDate = new Date(cleanedDate);
   }
-  if (typeof date === 'string' || typeof date === 'number') {
-    return new Date(date).toISOString();
+
+  if (parsedDate != null) {
+    return parsedDate.toISOString();
   }
 
   throw new Error(`Invalid date: ${date}`);
@@ -63,6 +72,20 @@ export function safeUrl(strings, ...values) {
   });
 
   return result;
+}
+
+/**
+ * Encodes the given string into base64, and take care of non-ASCII chars by encoding to utf8 before transforming to base64
+ * @param {string} string
+ * @return {string}
+ */
+export function encodeToBase64(string) {
+  // encode string to utf-8
+  const bytes = new TextEncoder().encode(string);
+  // convert bytes into string
+  const binString = Array.from(bytes, (byte) => String.fromCodePoint(byte)).join('');
+  // encode into base64
+  return btoa(binString);
 }
 
 /**

@@ -3,8 +3,4 @@ import { Domain } from './domain.types.js';
 
 export interface ListDomainCommandInput extends ApplicationId {}
 
-export type ListDomainCommandOutput = Array<
-  Domain & {
-    isPrimary: boolean;
-  }
->;
+export type ListDomainCommandOutput = Array<Domain>;

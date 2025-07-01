@@ -1,6 +1,7 @@
 /**
  * @import { CheckVatNumberCommandInput, CheckVatNumberCommandOutput } from './check-vat-number-command.types.js';
  */
+import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
@@ -14,11 +15,16 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 export class CheckVatNumberCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<CheckVatNumberCommandInput, CheckVatNumberCommandOutput>['toRequestParams']} */
   toRequestParams(params) {
-    return get(`/v2/vat_check`);
+    return get(`/v2/vat_check`, new QueryParams().append('country', params.country).append('vat', params.vatNumber));
   }
 
-  /** @type {CcApiSimpleCommand<CheckVatNumberCommandInput, CheckVatNumberCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<CheckVatNumberCommandInput, CheckVatNumberCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    if (response.valid) {
+      return response;
+    }
+    return {
+      valid: false,
+    };
   }
 }

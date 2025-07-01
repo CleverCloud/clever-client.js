@@ -85,7 +85,7 @@ export class HeadersBuilder {
    * @returns {HeadersBuilder}
    */
   withHeader(header, value) {
-    this.#headers.set(header, value);
+    this.#headers.append(header, value);
     return this;
   }
 

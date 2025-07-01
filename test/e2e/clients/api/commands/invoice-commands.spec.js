@@ -20,34 +20,38 @@ describe.skip('invoice commands', function () {
     await support.cleanup();
   });
 
-  const orga = 'orga_540caeb6-521c-4a19-a955-efe6da35d142';
-  const invoice = 'F20250602-015972';
+  const organisationId = 'orga_540caeb6-521c-4a19-a955-efe6da35d142';
+  const invoiceNumber = 'F20250602-015972';
 
   it('should get invoice as JSON', async () => {
-    console.log(await support.client.send(new GetInvoiceCommand({ ownerId: orga, invoiceNumber: invoice })));
+    console.log(await support.getClient('DEV').send(new GetInvoiceCommand({ ownerId: organisationId, invoiceNumber })));
   });
 
   it('should get invoice as HTML', async () => {
-    console.log(await support.client.send(new GetInvoiceHtmlCommand({ ownerId: orga, invoiceNumber: invoice })));
+    console.log(
+      await support.getClient('DEV').send(new GetInvoiceHtmlCommand({ ownerId: organisationId, invoiceNumber })),
+    );
   });
 
-  if (globalThis.process != null) {
+  if (support.isNode) {
     it('should get invoice as PDF', async () => {
-      const data = await support.client.send(new GetInvoicePdfCommand({ ownerId: orga, invoiceNumber: invoice }));
+      const data = await support
+        .getClient('DEV')
+        .send(new GetInvoicePdfCommand({ ownerId: organisationId, invoiceNumber }));
       const arrayBuffer = await data.arrayBuffer();
+      // eslint-disable-next-line no-undef
       const buffer = Buffer.from(arrayBuffer);
       (await import('node:fs')).writeFileSync('/tmp/test.pdf', buffer);
     });
   }
 
   it('should get invoice URL', async () => {
-    const url = support.client.getUrl(new GetInvoiceUrl({ ownerId: orga, invoiceNumber: invoice, format: 'pdf' }));
-    expect(url.origin).to.be.a('string');
-    expect(url.pathname).to.equal(
-      '/v4/billing/organisations/orga_540caeb6-521c-4a19-a955-efe6da35d142/invoices/F20250602-015972.pdf',
-    );
-    expect(atob(url.searchParams.get('authorization'))).to.match(/^Bearer .+/);
+    const url = support
+      .getClient('DEV')
+      .getUrl(new GetInvoiceUrl({ ownerId: organisationId, invoiceNumber, format: 'pdf' }));
 
-    console.log(url.toString());
+    expect(url.origin).to.be.a('string');
+    expect(url.pathname).to.equal(`/v4/billing/organisations/${organisationId}/invoices/${invoiceNumber}.pdf`);
+    expect(atob(url.searchParams.get('authorization'))).to.match(/^Bearer .+/);
   });
 });

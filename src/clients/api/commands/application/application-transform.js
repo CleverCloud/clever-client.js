@@ -4,7 +4,6 @@
 
 import { normalizeDate } from '../../../../lib/utils.js';
 import { toArray } from '../../../../utils/environment-utils.js';
-import { transformDomain } from '../domain/domain-transform.js';
 import { transformProductRuntimeFlavor } from '../product/product-transform.js';
 
 /**
@@ -40,7 +39,7 @@ export function transformApplication(payload) {
       url: payload.deployment.url,
       httpUrl: payload.deployment.httpUrl,
     },
-    domains: payload.vhosts?.map(transformDomain),
+    domains: payload.vhosts?.map(/** @param {any} domain */ (domain) => ({ domain: domain.fqdn })),
     creationDate: normalizeDate(payload.creationDate),
     lastDeploy: payload.last_deploy,
     archived: payload.archived,

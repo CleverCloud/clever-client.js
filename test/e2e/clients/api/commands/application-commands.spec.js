@@ -7,7 +7,7 @@ import { UndeployApplicationCommand } from '../../../../../src/clients/api/comma
 import { UpdateApplicationCommand } from '../../../../../src/clients/api/commands/application/update-application-command.js';
 import { e2eSupport } from '../../../../lib/e2e-support.js';
 
-describe('application-commands', function () {
+describe('application commands', function () {
   this.timeout(10000);
 
   const support = e2eSupport();
@@ -56,7 +56,7 @@ describe('application-commands', function () {
       new UpdateApplicationCommand({
         ownerId: support.organisationId,
         applicationId: application.id,
-        buildFlavor: 'l',
+        buildFlavor: 'L',
       }),
     );
 

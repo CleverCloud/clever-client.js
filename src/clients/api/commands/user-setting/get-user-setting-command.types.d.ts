@@ -1,3 +1,6 @@
-export interface GetUserSettingCommandInput {}
+export interface GetUserSettingCommandInput {
+  env?: string;
+  name: string;
+}
 
-export interface GetUserSettingCommandOutput {}
+export type GetUserSettingCommandOutput = string;

@@ -1,3 +1,6 @@
-export interface GetWarpTokenCommandInput {}
+export interface GetWarpTokenCommandInput {
+  ownerId: string;
+  tokenKind: 'METRICS' | 'ACCESS_LOGS';
+}
 
-export interface GetWarpTokenCommandOutput {}
+export type GetWarpTokenCommandOutput = string;

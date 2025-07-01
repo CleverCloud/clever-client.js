@@ -1,7 +1,8 @@
 /**
  * @import { GetUserSettingCommandInput, GetUserSettingCommandOutput } from './get-user-setting-command.types.js';
  */
-import { get } from '../../../../lib/request/request-params-builder.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
+import { QueryParams } from '../../../../lib/request/query-params.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
@@ -15,11 +16,21 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 export class GetUserSettingCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<GetUserSettingCommandInput, GetUserSettingCommandOutput>['toRequestParams']} */
   toRequestParams(params) {
-    return get(safeUrl`/v4/console/settings/:XXX`);
+    return {
+      method: 'GET',
+      url: safeUrl`/v4/console/settings/${params.name}`,
+      queryParams: new QueryParams().append('env', this.params.env),
+      headers: new HeadersBuilder().acceptTextPlain().acceptJson().build(),
+    };
   }
 
   /** @type {CcApiSimpleCommand<GetUserSettingCommandInput, GetUserSettingCommandOutput>['isEmptyResponse']} */
   isEmptyResponse(status) {
     return status === 404;
+  }
+
+  /** @type {CcApiSimpleCommand<GetUserSettingCommandInput, GetUserSettingCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return response.value;
   }
 }

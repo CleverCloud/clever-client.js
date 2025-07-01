@@ -1,3 +1,5 @@
+import type { MFAKind } from '../auth/auth.types.js';
+
 export interface OrganisationSummary {
   id: string;
   name: string;
@@ -79,11 +81,9 @@ export interface OrganisationMember {
   email: string;
   name: string;
   avatar: string;
-  preferredMFA: OrganisationMemberMFA;
+  preferredMFA: MFAKind;
   role: OrganisationMemberRole;
   job?: string;
 }
 
 export type OrganisationMemberRole = 'NONE' | 'ADMIN' | 'ACCOUNTING' | 'DEVELOPER' | 'MANAGER';
-
-export type OrganisationMemberMFA = 'NONE' | 'TOTP';

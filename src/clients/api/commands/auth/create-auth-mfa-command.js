@@ -1,8 +1,8 @@
 /**
  * @import { CreateAuthMfaCommandInput, CreateAuthMfaCommandOutput } from './create-auth-mfa-command.types.js';
  */
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
+import { encodeToBase64, safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -15,6 +15,13 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 export class CreateAuthMfaCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<CreateAuthMfaCommandInput, CreateAuthMfaCommandOutput>['toRequestParams']} */
   toRequestParams(params) {
-    return post(safeUrl`/v2/self/mfa/${params.kind}`);
+    return {
+      method: 'POST',
+      url: safeUrl`/v2/self/mfa/${params.kind}`,
+      headers: new HeadersBuilder()
+        .acceptJson()
+        .withHeader('X-Clever-Password', encodeToBase64(params.password))
+        .build(),
+    };
   }
 }

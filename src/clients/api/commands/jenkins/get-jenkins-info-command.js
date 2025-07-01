@@ -1,5 +1,5 @@
 /**
- * @import { GetJenkinsInfoCommandInput, GetJenkinsInfoCommandOutput, InternalGetJenkinsInfoCommandOutput, GetJenkinsUpdatesCommandOutput } from './get-jenkins-info-command.types.js';
+ * @import { GetJenkinsInfoCommandInput, GetJenkinsInfoCommandOutput, GetJenkinsInfoInnerCommandOutput, GetJenkinsUpdatesCommandOutput } from './get-jenkins-info-command.types.js';
  */
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
@@ -16,15 +16,19 @@ import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-comm
 export class GetJenkinsInfoCommand extends CcApiCompositeCommand {
   /** @type {CcApiCompositeCommand<GetJenkinsInfoCommandInput, GetJenkinsInfoCommandOutput>['compose']} */
   async compose(params, composer) {
-    return Promise.all([
-      composer.send(new InternalGetJenkinsInfoCommand(params)),
+    const [internal, updates] = await Promise.all([
+      composer.send(new GetJenkinsInfoInnerCommand(params)),
       composer.send(new GetJenkinsUpdatesCommand(params)),
-    ]).then(([internal, updates]) => ({
+    ]);
+
+    if (internal == null || updates == null) {
+      return null;
+    }
+
+    return {
       ...internal,
       updates,
-    }));
-
-    // todo: handle nulls
+    };
   }
 
   /** @type {CcApiCompositeCommand<?, ?>['getIdsToResolve']} */
@@ -37,27 +41,27 @@ export class GetJenkinsInfoCommand extends CcApiCompositeCommand {
 
 /**
  *
- * @extends {CcApiSimpleCommand<GetJenkinsInfoCommandInput, InternalGetJenkinsInfoCommandOutput>}
+ * @extends {CcApiSimpleCommand<GetJenkinsInfoCommandInput, GetJenkinsInfoInnerCommandOutput>}
  * @endpoint [GET] /v4/addon-providers/jenkins/addons/:XXX
  * @group Jenkins
  * @version 4
  */
-class InternalGetJenkinsInfoCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<GetJenkinsInfoCommandInput, InternalGetJenkinsInfoCommandOutput>['toRequestParams']} */
+class GetJenkinsInfoInnerCommand extends CcApiSimpleCommand {
+  /** @type {CcApiSimpleCommand<GetJenkinsInfoCommandInput, GetJenkinsInfoInnerCommandOutput>['toRequestParams']} */
   toRequestParams(params) {
     return get(safeUrl`/v4/addon-providers/jenkins/addons/${params.addonId}`);
   }
 
-  /** @type {CcApiSimpleCommand<GetJenkinsInfoCommandInput, InternalGetJenkinsInfoCommandOutput>['transformCommandOutput']} */
+  /** @type {CcApiSimpleCommand<GetJenkinsInfoCommandInput, GetJenkinsInfoInnerCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
     return {
       id: response.id,
-      applicationId: response.app_id,
+      addonId: response.app_id,
       plan: response.plan,
       zone: response.zone,
       creationDate: normalizeDate(response.creation_date),
-      status: response.status,
       deletionDate: normalizeDate(response.deletion_date),
+      status: response.status,
       host: response.host,
       user: response.user,
       password: response.password,

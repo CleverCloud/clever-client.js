@@ -4,7 +4,7 @@ import { GetGithubUsernameCommand } from '../../../../../src/clients/api/command
 import { ListGithubApplicationCommand } from '../../../../../src/clients/api/commands/github/list-github-application-command.js';
 import { e2eSupport } from '../../../../lib/e2e-support.js';
 
-describe('github-command', function () {
+describe('github commands', function () {
   this.timeout(10000);
 
   const support = e2eSupport();

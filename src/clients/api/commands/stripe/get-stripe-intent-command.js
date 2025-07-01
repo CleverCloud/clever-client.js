@@ -15,11 +15,20 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 export class GetStripeIntentCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<GetStripeIntentCommandInput, GetStripeIntentCommandOutput>['toRequestParams']} */
   toRequestParams(params) {
-    return get(safeUrl`/v4/billing/organisations/:XXX/payments/stripe/intent`);
+    return get(safeUrl`/v4/billing/organisations/${params.ownerId}/payments/stripe/intent`);
   }
 
   /** @type {CcApiSimpleCommand<GetStripeIntentCommandInput, GetStripeIntentCommandOutput>['isEmptyResponse']} */
   isEmptyResponse(status) {
     return status === 404;
+  }
+
+  /** @type {CcApiSimpleCommand<GetStripeIntentCommandInput, GetStripeIntentCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return {
+      id: response.id,
+      clientSecret: response.clientSecret,
+      customer: response.customer,
+    };
   }
 }

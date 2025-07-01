@@ -1,39 +1,37 @@
+import { expect } from 'chai';
 import { CreateLogDrainCommand } from '../../../../../src/clients/api/commands/log-drain/create-log-drain-command.js';
 import { DeleteLogDrainCommand } from '../../../../../src/clients/api/commands/log-drain/delete-log-drain-command.js';
+import { GetLogDrainCommand } from '../../../../../src/clients/api/commands/log-drain/get-log-drain-command.js';
 import { ListLogDrainCommand } from '../../../../../src/clients/api/commands/log-drain/list-log-drain-command.js';
 import { UpdateLogDrainCommand } from '../../../../../src/clients/api/commands/log-drain/update-log-drain-command.js';
-import { getCcApiClient } from '../../../../lib/e2e-support.js';
+import { e2eSupport } from '../../../../lib/e2e-support.js';
 
-let currentApplicationId = 'app_b75977aa-563f-40fd-a592-224a5f6afbd6';
-let currentAddonId = 'addon_5b4a7c43-4b84-45e6-837c-153308182bf1';
+describe('log-drain commands', function () {
+  this.timeout(100000);
 
-describe('log-drain-command', function () {
-  this.timeout(10000);
+  const support = e2eSupport();
 
-  it('should cleanup', async () => {
-    const drains = await getCcApiClient().send(new ListLogDrainCommand({ addonId: currentAddonId }));
-    for (let { id } of drains) {
-      await getCcApiClient().send(
-        new DeleteLogDrainCommand({
-          addonId: currentAddonId,
-          drainId: id,
-        }),
-      );
-    }
+  before(async () => {
+    await support.prepare();
   });
 
-  it('should work', async () => {
-    console.log('list');
-    console.log(await getCcApiClient().send(new ListLogDrainCommand({ addonId: currentAddonId })));
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('create');
-    const drain = await getCcApiClient().send(
+  after(async () => {
+    await support.cleanup();
+  });
+
+  afterEach(async () => {
+    await support.deleteApplications();
+  });
+
+  it('should create log drain', async () => {
+    const application = await support.createTestApplication();
+
+    const response = await support.client.send(
       new CreateLogDrainCommand({
-        addonId: currentAddonId,
+        applicationId: application.id,
         target: {
           type: 'HTTP',
-          url: 'http://example.com',
+          url: 'https://example.com',
           credentials: {
             username: 'username',
             password: 'password',
@@ -41,53 +39,147 @@ describe('log-drain-command', function () {
         },
       }),
     );
-    console.log(drain);
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('----------------------------------------------------------------------------------------');
-    console.log(await getCcApiClient().send(new ListLogDrainCommand({ addonId: currentAddonId })));
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('update');
-    console.log(
-      await getCcApiClient().send(
-        new UpdateLogDrainCommand({
-          addonId: currentAddonId,
-          drainId: drain.id,
-          state: 'DISABLED',
-        }),
-      ),
+
+    expect(response.id).to.be.a('string');
+    expect(response.applicationId).to.equal(application.id);
+    expect(response.createdAt).to.equal(new Date(response.createdAt).toISOString());
+    expect(response.lastEdit).to.equal(new Date(response.lastEdit).toISOString());
+    expect(response.state).to.equal('ENABLED');
+    expect(response.token).to.be.a('string');
+    expect(response.target).to.deep.equal({
+      type: 'HTTP',
+      url: 'https://example.com',
+      credentials: {
+        username: 'username',
+        password: 'password',
+      },
+    });
+  });
+
+  it('should delete log drain', async () => {
+    const application = await support.createTestApplication();
+    const drain = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        target: {
+          type: 'HTTP',
+          url: 'https://example.com',
+          credentials: {
+            username: 'username',
+            password: 'password',
+          },
+        },
+      }),
     );
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('----------------------------------------------------------------------------------------');
-    console.log(await getCcApiClient().send(new ListLogDrainCommand({ addonId: currentAddonId })));
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('update');
-    console.log(
-      await getCcApiClient().send(
-        new UpdateLogDrainCommand({
-          addonId: currentAddonId,
-          drainId: drain.id,
-          state: 'ENABLED',
-        }),
-      ),
+
+    const response = await support.client.send(
+      new DeleteLogDrainCommand({ applicationId: application.id, drainId: drain.id }),
     );
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('----------------------------------------------------------------------------------------');
-    console.log(await getCcApiClient().send(new ListLogDrainCommand({ addonId: currentAddonId })));
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('delete');
-    console.log(
-      await getCcApiClient().send(
-        new DeleteLogDrainCommand({
-          addonId: currentAddonId,
-          drainId: drain.id,
-        }),
-      ),
+
+    expect(response).to.be.null;
+  });
+
+  it('should get log drain', async () => {
+    const application = await support.createTestApplication();
+    const drain = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        target: {
+          type: 'HTTP',
+          url: 'https://example.com',
+          credentials: {
+            username: 'username',
+            password: 'password',
+          },
+        },
+      }),
     );
-    console.log('----------------------------------------------------------------------------------------');
-    console.log('----------------------------------------------------------------------------------------');
-    console.log(await getCcApiClient().send(new ListLogDrainCommand({ addonId: currentAddonId })));
+
+    const response = await support.client.send(
+      new GetLogDrainCommand({ applicationId: application.id, drainId: drain.id }),
+    );
+
+    expect(response.id).to.be.a('string');
+    expect(response.applicationId).to.equal(application.id);
+    expect(response.createdAt).to.equal(new Date(response.createdAt).toISOString());
+    expect(response.lastEdit).to.equal(new Date(response.lastEdit).toISOString());
+    expect(response.state).to.equal('ENABLED');
+    expect(response.token).to.be.a('string');
+    expect(response.target).to.deep.equal({
+      type: 'HTTP',
+      url: 'https://example.com',
+      credentials: {
+        username: 'username',
+        password: 'password',
+      },
+    });
+  });
+
+  it('should list log drain', async () => {
+    const application = await support.createTestApplication();
+    const drain1 = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        target: {
+          type: 'HTTP',
+          url: 'https://example.com',
+          credentials: {
+            username: 'username',
+            password: 'password',
+          },
+        },
+      }),
+    );
+    const drain2 = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        target: {
+          type: 'UDPSyslog',
+          url: 'https://example.com',
+        },
+      }),
+    );
+
+    const response = await support.client.send(new ListLogDrainCommand({ applicationId: application.id }));
+
+    expect(response).to.be.an('array');
+    expect(response).to.have.lengthOf(2);
+    expect(response.map((r) => r.id)).to.deep.equalInAnyOrder([drain1.id, drain2.id]);
+  });
+
+  it('should update log drain', async () => {
+    const application = await support.createTestApplication();
+    const drain = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        target: {
+          type: 'HTTP',
+          url: 'https://example.com',
+          credentials: {
+            username: 'username',
+            password: 'password',
+          },
+        },
+      }),
+    );
+
+    const response = await support.client.send(
+      new UpdateLogDrainCommand({ applicationId: application.id, drainId: drain.id, state: 'DISABLED' }),
+    );
+
+    expect(response.id).to.be.a('string');
+    expect(response.applicationId).to.equal(application.id);
+    expect(response.createdAt).to.equal(new Date(response.createdAt).toISOString());
+    expect(response.lastEdit).to.equal(new Date(response.lastEdit).toISOString());
+    expect(response.state).to.equal('DISABLED');
+    expect(response.token).to.be.a('string');
+    expect(response.target).to.deep.equal({
+      type: 'HTTP',
+      url: 'https://example.com',
+      credentials: {
+        username: 'username',
+        password: 'password',
+      },
+    });
   });
 });

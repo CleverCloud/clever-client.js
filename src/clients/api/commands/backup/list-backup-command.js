@@ -4,6 +4,7 @@
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { transformBackup } from './backup-transform.js';
 
 /**
  *
@@ -30,17 +31,7 @@ export class ListBackupCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<ListBackupCommandInput, ListBackupCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return response.map(
-      /** @param {any} backup */ (backup) => ({
-        backupId: backup.backup_id,
-        entityId: backup.entity_id,
-        status: backup.status,
-        creationDate: new Date(backup.creation_date).toISOString(),
-        deleteAt: new Date(backup.delete_at).toISOString(),
-        filename: backup.filename,
-        downloadUrl: backup.download_url,
-      }),
-    );
+    return response.map(transformBackup);
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

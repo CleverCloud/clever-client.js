@@ -1,11 +1,13 @@
+import { expect } from 'chai';
 import { CreateDomainCommand } from '../../../../../src/clients/api/commands/domain/create-domain-command.js';
 import { DeleteDomainCommand } from '../../../../../src/clients/api/commands/domain/delete-domain-command.js';
+import { GetPrimaryDomainCommand } from '../../../../../src/clients/api/commands/domain/get-primary-domain-command.js';
 import { ListDomainCommand } from '../../../../../src/clients/api/commands/domain/list-domain-command.js';
 import { SetPrimaryDomainCommand } from '../../../../../src/clients/api/commands/domain/set-primary-domain-command.js';
 import { UnsetPrimaryDomainCommand } from '../../../../../src/clients/api/commands/domain/unset-primary-domain-command.js';
 import { e2eSupport } from '../../../../lib/e2e-support.js';
 
-describe('list-domain-command', function () {
+describe('domain commands', function () {
   this.timeout(10000);
 
   const support = e2eSupport();
@@ -22,67 +24,129 @@ describe('list-domain-command', function () {
     await support.deleteApplications();
   });
 
-  it('should list domains', async () => {
-    // todo: write assertions and split into multiple tests ?
-
+  it('should create domain', async () => {
     const application = await support.createTestApplication();
 
-    let domains = await support.client.send(
+    const response = await support.client.send(
+      new CreateDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
+    );
+
+    expect(response).to.be.null;
+  });
+
+  it('should delete domain', async () => {
+    const application = await support.createTestApplication();
+    await support.client.send(
+      new CreateDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
+    );
+
+    const response = await support.client.send(
+      new DeleteDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
+    );
+
+    expect(response).to.be.null;
+  });
+
+  it('should get primary domain', async () => {
+    const application = await support.createTestApplication();
+    await support.client.send(
+      new CreateDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
+    );
+    await support.client.send(
+      new SetPrimaryDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
+    );
+
+    const response = await support.client.send(
+      new GetPrimaryDomainCommand({
+        applicationId: application.id,
+      }),
+    );
+
+    expect(response.isPrimary).to.equal(true);
+    expect(response.domain).to.equal('foo.com');
+  });
+
+  it('should list domains', async () => {
+    const application = await support.createTestApplication();
+    await support.client.send(
+      new CreateDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
+    );
+
+    const response = await support.client.send(
       new ListDomainCommand({
         applicationId: application.id,
       }),
     );
-    console.log(domains);
 
-    const notPrimaryDomain = domains.find((domain) => domain.isPrimary === false);
+    expect(response).to.be.an('array');
+    expect(response).to.have.lengthOf(2);
+    expect(response).to.deep.equalInAnyOrder([
+      {
+        domain: `app-${application.id.replace('app_', '')}.cleverapps.io`,
+        isPrimary: false,
+      },
+      { domain: 'foo.com', isPrimary: false },
+    ]);
+  });
 
-    console.log('set primary domain');
+  it('should set primary domain', async () => {
+    const application = await support.createTestApplication();
     await support.client.send(
-      new SetPrimaryDomainCommand({ applicationId: application.id, domain: notPrimaryDomain.domain }),
-    );
-    console.log(
-      await support.client.send(
-        new ListDomainCommand({
-          applicationId: application.id,
-        }),
-      ),
+      new CreateDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
     );
 
-    console.log('unsetting primary domain');
-    await support.client.send(new UnsetPrimaryDomainCommand({ applicationId: application.id }));
-
-    console.log(
-      await support.client.send(
-        new ListDomainCommand({
-          applicationId: application.id,
-        }),
-      ),
+    const response = await support.client.send(
+      new SetPrimaryDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
     );
 
-    console.log('creating domain');
+    expect(response).to.be.null;
+  });
+
+  it('should unset primary domain', async () => {
+    const application = await support.createTestApplication();
     await support.client.send(
-      new CreateDomainCommand({ applicationId: application.id, domain: '*.example.com/coucou' }),
+      new CreateDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
     );
-
-    console.log(
-      await support.client.send(
-        new ListDomainCommand({
-          applicationId: application.id,
-        }),
-      ),
-    );
-
-    console.log('deleting domain');
     await support.client.send(
-      new DeleteDomainCommand({ applicationId: application.id, domain: '*.example.com/coucou' }),
+      new SetPrimaryDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
     );
 
-    console.log(
-      await support.client.send(
-        new ListDomainCommand({
-          applicationId: application.id,
-        }),
-      ),
+    const response = await support.client.send(
+      new UnsetPrimaryDomainCommand({
+        applicationId: application.id,
+      }),
     );
+
+    expect(response).to.be.null;
   });
 });

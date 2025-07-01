@@ -26,7 +26,7 @@ export class GetPrimaryDomainCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<GetPrimaryDomainCommandInput, GetPrimaryDomainCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return transformDomain(response);
+    return transformDomain(response, true);
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

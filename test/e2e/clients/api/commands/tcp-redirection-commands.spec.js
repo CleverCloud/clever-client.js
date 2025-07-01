@@ -1,7 +1,11 @@
+import { expect } from 'chai';
+import { CreateTcpRedirectionCommand } from '../../../../../src/clients/api/commands/tcp-redirection/create-tcp-redirection-command.js';
+import { DeleteTcpRedirectionCommand } from '../../../../../src/clients/api/commands/tcp-redirection/delete-tcp-redirection-command.js';
+import { ListTcpRedirectionCommand } from '../../../../../src/clients/api/commands/tcp-redirection/list-tcp-redirection-command.js';
 import { ListTcpRedirectionNamespaceCommand } from '../../../../../src/clients/api/commands/tcp-redirection/list-tcp-redirection-namespace-command.js';
 import { e2eSupport } from '../../../../lib/e2e-support.js';
 
-describe('tag commands', function () {
+describe('tcp redirection commands', function () {
   this.timeout(10000);
 
   const support = e2eSupport(false);
@@ -18,39 +22,43 @@ describe('tag commands', function () {
     const application = await support.createTestApplication();
 
     const response = await support.client.send(
-      new CreateTcpRedirectionCommand({ applicationId: application.id, namespace: 'default', port: 6666 }),
+      new CreateTcpRedirectionCommand({ applicationId: application.id, namespace: 'default' }),
     );
 
-    console.log(response);
-
     expect(response.namespace).to.equal('default');
-    expect(response.port).to.equal(6666);
+    expect(response.port).to.be.a('number');
   });
 
   it('should list tcp redirections', async () => {
     const application = await support.createTestApplication();
-    await support.client.send(
-      new CreateTcpRedirectionCommand({ applicationId: application.id, namespace: 'default', port: 6666 }),
+    const tcpRedirection1 = await support.client.send(
+      new CreateTcpRedirectionCommand({ applicationId: application.id, namespace: 'default' }),
     );
-    await support.client.send(
-      new CreateTcpRedirectionCommand({ applicationId: application.id, namespace: 'cleverapps', port: 6667 }),
+    const tcpRedirection2 = await support.client.send(
+      new CreateTcpRedirectionCommand({ applicationId: application.id, namespace: 'cleverapps' }),
     );
 
     const response = await support.client.send(new ListTcpRedirectionCommand({ applicationId: application.id }));
 
-    console.log(response);
-
     expect(response).to.have.lengthOf(2);
+    expect(response).to.deep.equalInAnyOrder([
+      { namespace: 'default', port: tcpRedirection1.port },
+      { namespace: 'cleverapps', port: tcpRedirection2.port },
+    ]);
   });
 
   it('should delete tcp redirection', async () => {
     const application = await support.createTestApplication();
-    await support.client.send(
-      new CreateTcpRedirectionCommand({ applicationId: application.id, namespace: 'default', port: 6666 }),
+    const tcpRedirection = await support.client.send(
+      new CreateTcpRedirectionCommand({ applicationId: application.id, namespace: 'default' }),
     );
 
     const response = await support.client.send(
-      new DeleteTcpRedirection({ applicationId: application.id, namespace: 'default', port: 6666 }),
+      new DeleteTcpRedirectionCommand({
+        applicationId: application.id,
+        namespace: 'default',
+        port: tcpRedirection.port,
+      }),
     );
 
     console.log(response);
@@ -64,6 +72,6 @@ describe('tag commands', function () {
     );
 
     expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder(['default', 'cleverapps']);
+    expect(response).to.deep.equalInAnyOrder([{ namespace: 'cleverapps' }, { namespace: 'default' }]);
   });
 });

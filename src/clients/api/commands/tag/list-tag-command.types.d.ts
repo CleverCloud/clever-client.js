@@ -1,5 +1,5 @@
-import { AddonId } from '../../types/cc-api.types.js';
+import { type ApplicationOrAddonId } from '../../types/cc-api.types.js';
 
-export interface ListTagCommandInput extends AddonId {}
+export type ListTagCommandInput = ApplicationOrAddonId;
 
-export interface ListTagCommandOutput {}
+export type ListTagCommandOutput = Array<string>;

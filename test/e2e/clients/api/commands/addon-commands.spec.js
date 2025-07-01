@@ -4,7 +4,7 @@ import { GetAddonCommand } from '../../../../../src/clients/api/commands/addon/g
 import { GetAddonSsoCommand } from '../../../../../src/clients/api/commands/addon/get-addon-sso-command.js';
 import { e2eSupport } from '../../../../lib/e2e-support.js';
 
-describe('addon-commands', function () {
+describe('addon commands', function () {
   this.timeout(10000);
 
   const support = e2eSupport();

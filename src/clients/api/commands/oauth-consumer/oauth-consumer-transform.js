@@ -1,41 +1,48 @@
 /**
- * @import { OauthConsumer, AccessRights, ManageRights } from './oauth-consumer.types.js'
+ * @import { OauthConsumer, AccessRights, ManageRights, OauthConsumerRights } from './oauth-consumer.types.js'
  */
 
 /**
- *
- * @param {any} response
+ * @param {any} payload
  * @returns {OauthConsumer}
  */
-export function transformOauthConsumer(response) {
+export function transformOauthConsumer(payload) {
   return {
-    key: response.key,
-    name: response.name,
-    description: response.description,
-    url: response.url,
-    picture: response.picture,
-    baseUrl: response.baseUrl,
-    rights: {
-      almighty: response.rights.almighty,
-      accessOrganisations: response.rights.access_organisations,
-      accessOrganisationsBills: response.rights.access_organisations_bills,
-      accessOrganisationsCreditCount: response.rights.access_organisations_credit_count,
-      accessOrganisationsConsumptionStatistics: response.rights.access_organisations_consumption_statistics,
-      accessPersonalInformation: response.rights.access_personal_information,
-      manageOrganisations: response.rights.manage_organisations,
-      manageOrganisationsServices: response.rights.manage_organisations_services,
-      manageOrganisationsApplications: response.rights.manage_organisations_applications,
-      manageOrganisationsMembers: response.rights.manage_organisations_members,
-      managePersonalInformation: response.rights.manage_personal_information,
-      manageSshKeys: response.rights.manage_ssh_keys,
-    },
+    key: payload.key,
+    name: payload.name,
+    description: payload.description,
+    url: payload.url,
+    picture: payload.picture,
+    baseUrl: payload.baseUrl,
+    rights: transformOauthConsumerRights(payload.rights),
+  };
+}
+
+/**
+ * @param {any} payload
+ * @returns {Record<OauthConsumerRights, boolean>}
+ */
+export function transformOauthConsumerRights(payload) {
+  return {
+    almighty: payload.almighty,
+    accessOrganisations: payload.access_organisations,
+    accessOrganisationsBills: payload.access_organisations_bills,
+    accessOrganisationsCreditCount: payload.access_organisations_credit_count,
+    accessOrganisationsConsumptionStatistics: payload.access_organisations_consumption_statistics,
+    accessPersonalInformation: payload.access_personal_information,
+    manageOrganisations: payload.manage_organisations,
+    manageOrganisationsServices: payload.manage_organisations_services,
+    manageOrganisationsApplications: payload.manage_organisations_applications,
+    manageOrganisationsMembers: payload.manage_organisations_members,
+    managePersonalInformation: payload.manage_personal_information,
+    manageSshKeys: payload.manage_ssh_keys,
   };
 }
 
 /**
  * @param {Record<AccessRights | ManageRights, boolean>} rights
  */
-export function transformRightsForApi(rights) {
+export function transformOauthConsumerRightsForApi(rights) {
   return {
     // eslint-disable-next-line camelcase
     access_organisations: rights.accessOrganisations,
