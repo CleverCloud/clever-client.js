@@ -89,6 +89,27 @@ export function encodeToBase64(string) {
 }
 
 /**
+ * @param {Array<T>} array
+ * @param {keyof T} key
+ * @return {Array<T>}
+ * @template {object} T
+ */
+export function sortBy(array, key) {
+  return [...array].sort((a, b) => {
+    const first = a[key];
+    const second = b[key];
+    if (first < second) {
+      return -1;
+    }
+    if (first > second) {
+      return 1;
+    }
+
+    return 0;
+  });
+}
+
+/**
  * @param {?|null} value
  * @returns {string}
  */

@@ -18,14 +18,9 @@ export class ListAddonProviderPlanCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/addonproviders/${params.addonProviderId}/plans`);
   }
 
-  /** @type {CcApiSimpleCommand<ListAddonProviderPlanCommandInput, ListAddonProviderPlanCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListAddonProviderPlanCommandInput, ListAddonProviderPlanCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

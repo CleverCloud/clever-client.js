@@ -58,16 +58,9 @@ export class SimpleCommand extends AbstractCommand {
   /**
    * @param {number} _status
    * @param {any} _body
-   * @returns {boolean}
+   * @returns {{isEmpty: boolean, emptyValue?: any}|null}
    */
-  isEmptyResponse(_status, _body) {
-    return false;
-  }
-
-  /**
-   * @returns {CommandOutput}
-   */
-  getEmptyResponse() {
+  getEmptyResponsePolicy(_status, _body) {
     return null;
   }
 

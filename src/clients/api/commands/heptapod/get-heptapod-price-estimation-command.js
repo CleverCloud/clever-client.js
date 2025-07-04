@@ -18,9 +18,9 @@ export class GetHeptapodPriceEstimationCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/saas/heptapod/${params.ownerId}/heptapod.host/price-prevision`);
   }
 
-  /** @type {CcApiSimpleCommand<GetHeptapodPriceEstimationCommandInput, GetHeptapodPriceEstimationCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetHeptapodPriceEstimationCommandInput, GetHeptapodPriceEstimationCommandOutput>['transformCommandOutput']} */

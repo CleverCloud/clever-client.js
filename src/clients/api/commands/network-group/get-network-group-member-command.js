@@ -20,8 +20,8 @@ export class GetNetworkGroupMemberCommand extends CcApiSimpleCommand {
     );
   }
 
-  /** @type {CcApiSimpleCommand<GetNetworkGroupMemberCommandInput, GetNetworkGroupMemberCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 }

@@ -19,9 +19,9 @@ export class GetPrimaryDomainCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/vhosts/favourite`);
   }
 
-  /** @type {CcApiSimpleCommand<GetPrimaryDomainCommandInput, GetPrimaryDomainCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetPrimaryDomainCommandInput, GetPrimaryDomainCommandOutput>['transformCommandOutput']} */

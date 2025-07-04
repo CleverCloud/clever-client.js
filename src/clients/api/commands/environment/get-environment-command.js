@@ -6,7 +6,7 @@
  * @import { EnvironmentVariable } from '../../../../utils/environment.types.js'
  */
 import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
+import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -33,13 +33,13 @@ export class GetEnvironmentCommand extends CcApiCompositeCommand {
 
       /** @type {GetEnvironmentCommandOutput} */
       const result = {
-        environment: responses[0] ?? [],
+        environment: sortBy(responses[0] ?? [], 'name'),
       };
       if (params.includeLinkedApplications) {
-        result.linkedApplicationsEnvironment = responses[1];
+        result.linkedApplicationsEnvironment = sortBy(responses[1], 'applicationName');
       }
       if (params.includeLinkedAddons) {
-        result.linkedAddonsEnvironment = responses[2];
+        result.linkedAddonsEnvironment = sortBy(responses[2], 'addonName');
       }
 
       return result;
@@ -47,7 +47,7 @@ export class GetEnvironmentCommand extends CcApiCompositeCommand {
 
     if ('addonId' in params) {
       const environment = await composer.send(new GetAddonEnvironmentCommand(params));
-      return { environment };
+      return { environment: sortBy(environment ?? [], 'name') };
     }
 
     throw new Error('Invalid params');
@@ -76,11 +76,9 @@ class GetApplicationEnvironmentCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/env`);
   }
 
-  /**
-   * @param {number} status
-   */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
@@ -106,12 +104,9 @@ class GetAddonEnvironmentCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}/env`);
   }
 
-  /**
-   * @param {number} status
-   * @param {any} _body
-   */
-  isEmptyResponse(status, _body) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
@@ -138,12 +133,9 @@ class GetLinkedApplicationEnvironmentCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/dependencies/env`);
   }
 
-  /**
-   * @param {number} status
-   * @param {any} _body
-   */
-  isEmptyResponse(status, _body) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /**
@@ -181,12 +173,9 @@ class GetLinkedAddonEnvironmentCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/addons/env`);
   }
 
-  /**
-   * @param {number} status
-   * @param {any} _body
-   */
-  isEmptyResponse(status, _body) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /**

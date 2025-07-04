@@ -28,13 +28,6 @@ export class GetApplicationCommand extends CcApiCompositeCommand {
     }
     return application;
   }
-
-  /** @type {CcApiCompositeCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
-    return {
-      ownerId: true,
-    };
-  }
 }
 
 /**
@@ -50,13 +43,20 @@ export class GetApplicationInnerCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}`);
   }
 
-  /** @type {CcApiSimpleCommand<GetApplicationCommandInput, GetApplicationCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetApplicationCommandInput, GetApplicationCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
     return transformApplication(response);
+  }
+
+  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
+  getIdsToResolve() {
+    return {
+      ownerId: true,
+    };
   }
 }

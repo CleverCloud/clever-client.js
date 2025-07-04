@@ -24,13 +24,8 @@ export class ListPaymentMethodCommand extends CcApiSimpleCommand {
     return response.map(transformPaymentMethod);
   }
 
-  /** @type {CcApiSimpleCommand<ListPaymentMethodCommandInput, ListPaymentMethodCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListPaymentMethodCommandInput, ListPaymentMethodCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 }

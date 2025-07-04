@@ -6,7 +6,6 @@
  * @import { CcApiAuth } from '../../src/clients/api/types/cc-api.types.js'
  */
 import { use } from 'chai';
-import deepEqualInAnyOrder from 'deep-equal-in-any-order';
 import { CcApiClient } from '../../src/clients/api/cc-api-client.js';
 import { CreateAddonCommand } from '../../src/clients/api/commands/addon/create-addon-command.js';
 import { DeleteAddonCommand } from '../../src/clients/api/commands/addon/delete-addon-command.js';
@@ -24,6 +23,7 @@ import { CreateOrganisationCommand } from '../../src/clients/api/commands/organi
 import { DeleteOrganisationCommand } from '../../src/clients/api/commands/organisation/delete-organisation-command.js';
 import { GetOrganisationCommand } from '../../src/clients/api/commands/organisation/get-organisation-command.js';
 import { GetProfileCommand } from '../../src/clients/api/commands/profile/get-profile-command.js';
+import { deepEqualInAnyOrder } from './deep-equal-in-any-order.js';
 
 /**
  * @typedef Auth
@@ -355,7 +355,7 @@ function createCcApiClient(auth, debug) {
  * @param {Auth} auth
  * @returns {string|null}
  */
-function getBaseUrl(auth) {
+export function getBaseUrl(auth) {
   if (IS_NODE) {
     if (USE_LOCAL_AUTH_BACKEND) {
       return 'http://localhost:8080';

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { normalizeDate, omit, randomUUID, safeUrl, toArray } from '../../../src/lib/utils.js';
+import { normalizeDate, omit, randomUUID, safeUrl, sortBy, toArray } from '../../../src/lib/utils.js';
 
 describe('Utils', () => {
   describe('omit', () => {
@@ -99,5 +99,31 @@ describe('Utils', () => {
     expect(await randomUUID()).to.match(
       /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/,
     );
+  });
+
+  describe('sortBy', () => {
+    it('should sort by string property', () => {
+      const result = sortBy([{ prop: 'b' }, { prop: 'a' }], 'prop');
+      expect(result).to.deep.equal([{ prop: 'a' }, { prop: 'b' }]);
+    });
+
+    it('should sort by number property', () => {
+      const result = sortBy([{ prop: 2 }, { prop: 1 }], 'prop');
+      expect(result).to.deep.equal([{ prop: 1 }, { prop: 2 }]);
+    });
+
+    it('should sort by date iso', () => {
+      const result = sortBy(
+        [
+          { prop: new Date('2025-07-28T09:50:02.175Z').toISOString() },
+          { prop: new Date('2023-07-28T09:50:02.175Z').toISOString() },
+        ],
+        'prop',
+      );
+      expect(result).to.deep.equal([
+        { prop: new Date('2023-07-28T09:50:02.175Z').toISOString() },
+        { prop: new Date('2025-07-28T09:50:02.175Z').toISOString() },
+      ]);
+    });
   });
 });

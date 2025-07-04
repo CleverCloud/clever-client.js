@@ -2,6 +2,8 @@
  * @import { AddonProvider, AddonProviderFull, AddonProviderPlan, AddonProviderFeature, AddonProviderPlanFeature } from './addon-provider.types.js';
  */
 
+import { sortBy } from '../../../../lib/utils.js';
+
 /**
  * @param {any} payload
  * @returns {AddonProviderFull}
@@ -9,12 +11,8 @@
 export function transformAddonProviderFull(payload) {
   return {
     ...transformAddonProvider(payload),
-    plans: payload.plans.map(transformAddonProviderPlan).sort(
-      /** @param {AddonProviderPlan} a
-       @param {AddonProviderPlan} b
-       */ (a, b) => a.price - b.price,
-    ),
-    features: payload.features.map(transformAddonProviderFeature),
+    plans: sortBy(payload.plans.map(transformAddonProviderPlan), 'price'),
+    features: sortBy(payload.features.map(transformAddonProviderFeature), 'name'),
   };
 }
 
@@ -53,7 +51,7 @@ export function transformAddonProviderPlan(payload) {
     slug: payload.slug,
     zones: payload.zones,
     priceId: payload.price_id?.toLowerCase(),
-    features: payload.features.map(transformAddonProviderPlanFeature),
+    features: sortBy(payload.features.map(transformAddonProviderPlanFeature), 'name'),
   };
 }
 

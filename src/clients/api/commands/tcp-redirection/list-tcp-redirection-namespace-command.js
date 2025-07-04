@@ -18,13 +18,8 @@ export class ListTcpRedirectionNamespaceCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/namespaces`);
   }
 
-  /** @type {CcApiSimpleCommand<ListTcpRedirectionNamespaceCommandInput, ListTcpRedirectionNamespaceCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListTcpRedirectionNamespaceCommandInput, ListTcpRedirectionNamespaceCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 }

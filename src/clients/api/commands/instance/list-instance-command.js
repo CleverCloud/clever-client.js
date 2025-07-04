@@ -29,14 +29,9 @@ export class ListInstanceCommand extends CcApiSimpleCommand {
     );
   }
 
-  /** @type {CcApiSimpleCommand<ListInstanceCommandInput, ListInstanceCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListInstanceCommandInput, ListInstanceCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

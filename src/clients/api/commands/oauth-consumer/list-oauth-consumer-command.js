@@ -54,13 +54,8 @@ class ListOauthConsumerInnerCommand extends CcApiSimpleCommand {
     return response.map(transformOauthConsumer);
   }
 
-  /** @type {CcApiSimpleCommand<ListOauthConsumerCommandInput, ListOauthConsumerCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListOauthConsumerCommandInput, ListOauthConsumerCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 }

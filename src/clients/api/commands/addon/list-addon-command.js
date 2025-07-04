@@ -19,14 +19,9 @@ export class ListAddonCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/addons`);
   }
 
-  /** @type {CcApiSimpleCommand<ListAddonCommandInput, ListAddonCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListAddonCommandInput, ListAddonCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   /** @type {CcApiSimpleCommand<ListAddonCommandInput, ListAddonCommandOutput>['transformCommandOutput']} */

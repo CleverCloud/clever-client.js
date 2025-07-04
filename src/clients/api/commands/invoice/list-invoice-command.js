@@ -26,14 +26,9 @@ export class ListInvoiceCommand extends CcApiSimpleCommand {
     );
   }
 
-  /** @type {CcApiSimpleCommand<ListInvoiceCommandInput, ListInvoiceCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListInvoiceCommandInput, ListInvoiceCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   /** @type {CcApiSimpleCommand<ListInvoiceCommandInput, ListInvoiceCommandOutput>['transformCommandOutput']} */

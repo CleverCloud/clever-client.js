@@ -24,14 +24,9 @@ export class ListAddonProviderFeatureCommand extends CcApiSimpleCommand {
     return response.map(transformAddonProviderFeature);
   }
 
-  /** @type {CcApiSimpleCommand<ListAddonProviderFeatureCommandInput, ListAddonProviderFeatureCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListAddonProviderFeatureCommandInput, ListAddonProviderFeatureCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

@@ -19,9 +19,9 @@ export class GetMatomoInfoCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v4/addon-providers/addon-matomo/addons/${params.addonId}`);
   }
 
-  /** @type {CcApiSimpleCommand<GetMatomoInfoCommandInput, GetMatomoInfoCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

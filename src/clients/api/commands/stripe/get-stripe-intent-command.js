@@ -18,9 +18,9 @@ export class GetStripeIntentCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v4/billing/organisations/${params.ownerId}/payments/stripe/intent`);
   }
 
-  /** @type {CcApiSimpleCommand<GetStripeIntentCommandInput, GetStripeIntentCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetStripeIntentCommandInput, GetStripeIntentCommandOutput>['transformCommandOutput']} */

@@ -2,7 +2,6 @@
  * @import { Endpoint, QueryParam, PathParam, EndpointType, EndpointResponse } from './endpoint.types.js'
  * @import { OpenAPI } from '@scalar/openapi-types'
  * @import { OpenAPIV3 } from '@scalar/openapi-types'
- * @import { DereferenceResult } from '@scalar/openapi-parser'
  */
 import { dereference } from '@scalar/openapi-parser';
 
@@ -12,7 +11,7 @@ import { dereference } from '@scalar/openapi-parser';
  * @returns {Promise<Record<string, Endpoint>>}
  */
 export async function parseEndpoints(openapiObject, pathPrefix) {
-  /** @type {DereferenceResult} */
+  /** @type {{specification?: OpenAPI.Document, schema?: OpenAPI.Document}} */
   const dereferenced = await dereference(openapiObject, { throwOnError: false });
 
   /** @type {Record<string, Endpoint>} */

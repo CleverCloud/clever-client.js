@@ -24,8 +24,8 @@ export class GetOrganisationCommand extends CcApiSimpleCommand {
     return transformOrganisation(response);
   }
 
-  /** @type {CcApiSimpleCommand<GetOrganisationCommandInput, GetOrganisationCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 }

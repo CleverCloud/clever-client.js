@@ -23,6 +23,11 @@ export class DeleteTagCommand extends CcApiSimpleCommand {
     return delete_(safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}/tags/${params.tag}`);
   }
 
+  /** @type {CcApiSimpleCommand<DeleteTagCommandInput, DeleteTagCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return response.sort();
+  }
+
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
   getIdsToResolve() {
     return {

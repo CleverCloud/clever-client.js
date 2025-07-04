@@ -24,9 +24,9 @@ export class GetUserSettingCommand extends CcApiSimpleCommand {
     };
   }
 
-  /** @type {CcApiSimpleCommand<GetUserSettingCommandInput, GetUserSettingCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetUserSettingCommandInput, GetUserSettingCommandOutput>['transformCommandOutput']} */

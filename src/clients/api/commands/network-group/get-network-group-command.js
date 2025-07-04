@@ -18,8 +18,8 @@ export class GetNetworkGroupCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v4/networkgroups/organisations/${params.ownerId}/networkgroups/${params.networkGroupId}`);
   }
 
-  /** @type {CcApiSimpleCommand<GetNetworkGroupCommandInput, GetNetworkGroupCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 }

@@ -18,13 +18,8 @@ export class ListNetworkGroupCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v4/networkgroups/organisations/${params.ownerId}/networkgroups`);
   }
 
-  /** @type {CcApiSimpleCommand<ListNetworkGroupCommandInput, ListNetworkGroupCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListNetworkGroupCommandInput, ListNetworkGroupCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 }

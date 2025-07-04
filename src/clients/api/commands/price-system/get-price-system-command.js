@@ -28,8 +28,8 @@ export class GetPriceSystemCommand extends CcApiSimpleCommand {
     return transformPriceSystem(response);
   }
 
-  /** @type {CcApiSimpleCommand<GetPriceSystemCommandInput, GetPriceSystemCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 }

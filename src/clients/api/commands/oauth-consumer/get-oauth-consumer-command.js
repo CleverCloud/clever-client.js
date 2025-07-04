@@ -60,9 +60,9 @@ class GetOauthConsumerInnerCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/consumers/${params.oauthConsumerKey}`);
   }
 
-  /** @type {CcApiSimpleCommand<GetOauthConsumerCommandInput, OauthConsumer>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetOauthConsumerCommandInput, OauthConsumer>['transformCommandOutput']} */

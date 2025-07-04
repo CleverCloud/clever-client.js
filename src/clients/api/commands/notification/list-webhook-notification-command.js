@@ -18,13 +18,8 @@ export class ListWebhookNotificationCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/notifications/webhooks/${params.ownerId}`);
   }
 
-  /** @type {CcApiSimpleCommand<ListWebhookNotificationCommandInput, ListWebhookNotificationCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListWebhookNotificationCommandInput, ListWebhookNotificationCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 }

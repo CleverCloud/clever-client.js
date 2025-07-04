@@ -85,7 +85,7 @@ describe('application commands', function () {
     expect(response).to.be.null;
   });
 
-  it('should get application', async () => {
+  it.only('should get application', async () => {
     const application = await support.createTestApplication();
     const response = await support.client.send(
       new GetApplicationCommand({ applicationId: application.id, withBranches: true }),

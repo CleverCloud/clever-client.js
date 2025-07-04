@@ -50,14 +50,9 @@ class ListDomainInnerCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/vhosts`);
   }
 
-  /** @type {CcApiSimpleCommand<ListDomainCommandInput, Array<Domain>>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListDomainCommandInput, Array<Domain>>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   /** @type {CcApiSimpleCommand<ListDomainCommandInput, Array<Domain>>['transformCommandOutput']} */

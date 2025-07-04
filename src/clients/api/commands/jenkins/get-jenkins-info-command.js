@@ -2,7 +2,7 @@
  * @import { GetJenkinsInfoCommandInput, GetJenkinsInfoCommandOutput, GetJenkinsInfoInnerCommandOutput, GetJenkinsUpdatesCommandOutput } from './get-jenkins-info-command.types.js';
  */
 import { get } from '../../../../lib/request/request-params-builder.js';
-import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
+import { normalizeDate, safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -69,7 +69,7 @@ class GetJenkinsInfoInnerCommand extends CcApiSimpleCommand {
       artifactoryUrl: response.artifactory_url,
       artifactoryUser: response.artifactory_user,
       artifactoryPassword: response.artifactory_password,
-      features: response.features,
+      features: sortBy(response.features, 'name'),
     };
   }
 }

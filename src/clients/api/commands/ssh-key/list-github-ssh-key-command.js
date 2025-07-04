@@ -17,13 +17,8 @@ export class ListGithubSshKeyCommand extends CcApiSimpleCommand {
     return get(`/v2/github/keys`);
   }
 
-  /** @type {CcApiSimpleCommand<void, ListGithubSshKeyCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status, body) {
-    return status === 400 && body.id === 7301;
-  }
-
-  /** @type {CcApiSimpleCommand<void, ListGithubSshKeyCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status, body) {
+    return { isEmpty: status === 404 && body?.id === 7301, emptyValue: [] };
   }
 }

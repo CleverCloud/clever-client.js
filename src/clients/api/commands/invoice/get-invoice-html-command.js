@@ -22,8 +22,8 @@ export class GetInvoiceHtmlCommand extends CcApiSimpleCommand {
     };
   }
 
-  /** @type {CcApiSimpleCommand<GetInvoiceHtmlCommandInput, GetInvoiceHtmlCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 }

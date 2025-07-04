@@ -2,7 +2,7 @@
  * @import { DeleteEnvironmentVariableCommandInput, DeleteEnvironmentVariableCommandOutput } from './delete-environment-variable-command.types.js';
  */
 import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
+import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -22,7 +22,7 @@ export class DeleteEnvironmentVariableCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<DeleteEnvironmentVariableCommandInput, DeleteEnvironmentVariableCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return response.env;
+    return sortBy(response.env, 'name');
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

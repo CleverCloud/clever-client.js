@@ -24,8 +24,8 @@ export class ListOrganisationMemberCommand extends CcApiSimpleCommand {
     return response.map(transformOrganisationMember);
   }
 
-  /** @type {CcApiSimpleCommand<ListOrganisationMemberCommandInput, ListOrganisationMemberCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 }

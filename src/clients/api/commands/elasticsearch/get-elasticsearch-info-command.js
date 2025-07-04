@@ -2,7 +2,7 @@
  * @import { GetElasticsearchInfoCommandInput, GetElasticsearchInfoCommandOutput } from './get-elasticsearch-info-command.types.js';
  */
 import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
+import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -18,9 +18,9 @@ export class GetElasticsearchInfoCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/providers/es-addon/${params.addonId}`);
   }
 
-  /** @type {CcApiSimpleCommand<GetElasticsearchInfoCommandInput, GetElasticsearchInfoCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetElasticsearchInfoCommandInput, GetElasticsearchInfoCommandOutput>['transformCommandOutput']} */
@@ -47,8 +47,8 @@ export class GetElasticsearchInfoCommand extends CcApiSimpleCommand {
       },
       kibanaApplication: response.kibana_application,
       apmApplication: response.apm_application,
-      services: response.services,
-      features: response.features,
+      services: sortBy(response.services, 'name'),
+      features: sortBy(response.features, 'name'),
     };
   }
 

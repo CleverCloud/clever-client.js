@@ -24,14 +24,9 @@ export class ListMigrationCommand extends CcApiSimpleCommand {
     return response.map(transformMigration);
   }
 
-  /** @type {CcApiSimpleCommand<ListMigrationCommandInput, ListMigrationCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListMigrationCommandInput, ListMigrationCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

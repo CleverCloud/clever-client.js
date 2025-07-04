@@ -16,9 +16,4 @@ export class RequestProfileEmailConfirmationCommand extends CcApiSimpleCommand {
   toRequestParams() {
     return get(`/v2/self/confirmation_email`);
   }
-
-  /** @type {CcApiSimpleCommand<void, RequestProfileEmailConfirmationCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
 }

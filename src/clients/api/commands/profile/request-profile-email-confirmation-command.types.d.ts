@@ -1,3 +1,1 @@
-export interface RequestProfileEmailConfirmationCommandInput {}
-
 export interface RequestProfileEmailConfirmationCommandOutput {}

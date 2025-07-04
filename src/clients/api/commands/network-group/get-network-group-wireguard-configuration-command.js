@@ -20,8 +20,8 @@ export class GetNetworkGroupWireguardConfigurationCommand extends CcApiSimpleCom
     );
   }
 
-  /** @type {CcApiSimpleCommand<GetNetworkGroupWireguardConfigurationCommandInput, GetNetworkGroupWireguardConfigurationCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 }

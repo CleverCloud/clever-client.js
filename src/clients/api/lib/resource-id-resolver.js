@@ -9,7 +9,7 @@ import { CcClientError } from '../../../lib/error/cc-client-errors.js';
 import { GetOrganisationSummariesCommand } from '../commands/organisation/get-organisation-summaries-command.js';
 
 /**
- *
+ * Utility to resolve resource Ids
  */
 export class ResourceIdResolver {
   /** @type {CcApiClient} */
@@ -137,7 +137,7 @@ export class ResourceIdResolver {
       };
     }
 
-    throw new CcClientError(`Cannot resolve ownerId from unsupported resource`, 'CANNOT_RESOLVE_OWNER_ID');
+    throw new CcClientError(`Cannot resolve ownerId from unsupported resource`, 'CANNOT_RESOLVE_RESOURCE_ID');
   }
 
   /**

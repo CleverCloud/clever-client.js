@@ -18,9 +18,9 @@ export class GetAddonSsoCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}/sso`);
   }
 
-  /** @type {CcApiSimpleCommand<GetAddonSsoCommandInput, GetAddonSsoCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetAddonSsoCommandInput, GetAddonSsoCommandOutput>['transformCommandOutput']} */

@@ -2,7 +2,7 @@
  * @import { Application } from './application.types.js';
  */
 
-import { normalizeDate } from '../../../../lib/utils.js';
+import { normalizeDate, sortBy } from '../../../../lib/utils.js';
 import { toArray } from '../../../../utils/environment-utils.js';
 import { transformProductRuntimeFlavor } from '../product/product-transform.js';
 
@@ -28,8 +28,8 @@ export function transformApplication(payload) {
       maxAllowedInstances: payload.instance.maxAllowedInstances,
       minFlavor: transformProductRuntimeFlavor(payload.instance.minFlavor),
       maxFlavor: transformProductRuntimeFlavor(payload.instance.maxFlavor),
-      flavors: payload.instance.flavors.map(transformProductRuntimeFlavor),
-      defaultEnvironment: toArray(payload.instance.defaultEnv),
+      flavors: sortBy(payload.instance.flavors.map(transformProductRuntimeFlavor), 'price'),
+      defaultEnvironment: sortBy(toArray(payload.instance.defaultEnv), 'name'),
       lifetime: payload.instance.lifetime,
     },
     deployment: {
@@ -39,7 +39,10 @@ export function transformApplication(payload) {
       url: payload.deployment.url,
       httpUrl: payload.deployment.httpUrl,
     },
-    domains: payload.vhosts?.map(/** @param {any} domain */ (domain) => ({ domain: domain.fqdn })),
+    domains: sortBy(
+      payload.vhosts?.map(/** @param {any} domain */ (domain) => ({ domain: domain.fqdn })),
+      'domain',
+    ),
     creationDate: normalizeDate(payload.creationDate),
     lastDeploy: payload.last_deploy,
     archived: payload.archived,
@@ -53,10 +56,10 @@ export function transformApplication(payload) {
     commitId: payload.commitId,
     appliance: payload.appliance,
     branch: payload.branch,
-    branches: payload.branches,
+    branches: payload.branches?.sort(),
     forceHttps: payload.forceHttps === 'ENABLED',
     // renamed from env
-    environment: payload.env,
+    environment: sortBy(payload.env, 'name'),
   };
 
   if (isGithubApplication(payload)) {

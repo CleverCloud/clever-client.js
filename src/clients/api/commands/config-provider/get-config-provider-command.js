@@ -2,7 +2,7 @@
  * @import { GetConfigProviderCommandInput, GetConfigProviderCommandOutput } from './get-config-provider-command.types.js';
  */
 import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
+import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -18,9 +18,14 @@ export class GetConfigProviderCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v4/addon-providers/config-provider/addons/${params.addonId}/env`);
   }
 
-  /** @type {CcApiSimpleCommand<GetConfigProviderCommandInput, GetConfigProviderCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<GetConfigProviderCommandInput, GetConfigProviderCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return sortBy(response, 'name');
+  }
+
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

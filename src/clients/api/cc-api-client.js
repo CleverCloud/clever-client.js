@@ -8,6 +8,8 @@
 import { CcAuthApiToken } from '../../lib/auth/cc-auth-api-token.js';
 import { CcAuthOauthV1Plaintext } from '../../lib/auth/cc-auth-oauth-v1-plaintext.js';
 import { CcClient } from '../../lib/cc-client.js';
+import { SimpleCommand } from '../../lib/command/command.js';
+import { CcClientError } from '../../lib/error/cc-client-errors.js';
 import { omit } from '../../lib/utils.js';
 import { ResourceIdResolver } from './lib/resource-id-resolver.js';
 import { MemoryStore } from './lib/store/memory-store.js';
@@ -72,6 +74,21 @@ export class CcApiClient extends CcClient {
     }
 
     return { ...command.params, ...resolvedIds };
+  }
+
+  /** @type {CcClient<CcApiType>['send']} */
+  async send(command, requestConfig) {
+    try {
+      return await super.send(command, requestConfig);
+    } catch (e) {
+      if (command instanceof SimpleCommand && e instanceof CcClientError && e.code === 'CANNOT_RESOLVE_RESOURCE_ID') {
+        const emptyResponsePolicy = command.getEmptyResponsePolicy(404);
+        if (emptyResponsePolicy?.isEmpty) {
+          return emptyResponsePolicy.emptyValue ?? null;
+        }
+      }
+      throw e;
+    }
   }
 }
 

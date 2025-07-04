@@ -21,9 +21,9 @@ export class GetDeploymentCommand extends CcApiSimpleCommand {
     );
   }
 
-  /** @type {CcApiSimpleCommand<GetDeploymentCommandInput, GetDeploymentCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
@@ -50,9 +50,9 @@ export class GetDeploymentCommandLegacy extends CcApiSimpleCommand {
     );
   }
 
-  /** @type {CcApiSimpleCommand<GetDeploymentCommandInput, GetDeploymentCommandOutputLegacy>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetDeploymentCommandInput, GetDeploymentCommandOutputLegacy>['transformCommandOutput']} */

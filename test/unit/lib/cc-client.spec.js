@@ -307,11 +307,10 @@ describe('clever-client', () => {
       expect(spy.firstCall.args[0].request.url).to.equal(`${apiMockCtrl.mockClient.baseUrl}/path/subPath`);
     });
 
-    it('should return `command.getEmptyResponse` when `getEmptyResponse.isEmptyResponse` returns true', async () => {
+    it('should return `command.getEmptyResponse` when `getEmptyResponse.getEmptyResponsePolicy` returns an empty response', async () => {
       const spy = spyMethod(client, 'send');
       const command = simpleCommand(get('/path/subPath'));
-      hanbi.stubMethod(command, 'isEmptyResponse').returns(true);
-      hanbi.stubMethod(command, 'getEmptyResponse').returns('empty response');
+      hanbi.stubMethod(command, 'getEmptyResponsePolicy').returns({ isEmpty: true, emptyValue: 'empty response' });
 
       await apiMockCtrl
         .mock()

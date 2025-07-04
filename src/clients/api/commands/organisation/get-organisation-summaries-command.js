@@ -3,6 +3,7 @@
  * @import { OrganisationSummary } from './organisation.types.js'
  */
 import { get } from '../../../../lib/request/request-params-builder.js';
+import { sortBy } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -20,11 +21,12 @@ export class GetOrganisationSummariesCommand extends CcApiSimpleCommand {
   transformCommandOutput(response) {
     const userId = response.user.id;
 
-    return [
-      { ...response.user, isPersonal: true },
-      ...(response.organisations
+    /** @type {Array<OrganisationSummary>} */
+    const organisations =
+      response.organisations
         ?.filter((/** @type {OrganisationSummary} */ organisations) => organisations.id !== userId)
-        .map((/** @type {OrganisationSummary} */ organisation) => ({ ...organisation, isPersonal: false })) ?? []),
-    ];
+        .map((/** @type {OrganisationSummary} */ organisation) => ({ ...organisation, isPersonal: false })) ?? [];
+
+    return [{ ...response.user, isPersonal: true }, ...sortBy(organisations, 'name')];
   }
 }

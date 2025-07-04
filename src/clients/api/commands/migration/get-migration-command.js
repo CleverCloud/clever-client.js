@@ -24,9 +24,9 @@ export class GetMigrationCommand extends CcApiSimpleCommand {
     return transformMigration(response);
   }
 
-  /** @type {CcApiSimpleCommand<GetMigrationCommandInput, GetMigrationCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

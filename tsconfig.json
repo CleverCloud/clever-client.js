@@ -1,5 +1,5 @@
 {
-  "include": ["esm/**/*", "src/**/*", "tasks/endpoints-*.js", "tasks/lib/api-analyze.js", "test/**/*.js"],
+  "include": ["esm/**/*", "src/**/*", "tasks/endpoints-*.js", "tasks/lib/api-analyze.js", "test/**/*"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ES2022",

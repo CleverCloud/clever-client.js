@@ -18,9 +18,14 @@ export class GetApplicationBranchesCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/branches`);
   }
 
-  /** @type {CcApiSimpleCommand<GetApplicationBranchesCommandInput, GetApplicationBranchesCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<GetApplicationBranchesCommandInput, GetApplicationBranchesCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return response.sort();
+  }
+
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

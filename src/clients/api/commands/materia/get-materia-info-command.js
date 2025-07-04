@@ -18,9 +18,9 @@ export class GetMateriaInfoCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v4/materia/organisations/${params.ownerId}/materia/databases/${params.addonId}`);
   }
 
-  /** @type {CcApiSimpleCommand<GetMateriaInfoCommandInput, GetMateriaInfoCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

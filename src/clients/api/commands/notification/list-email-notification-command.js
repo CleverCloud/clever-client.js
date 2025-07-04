@@ -18,13 +18,8 @@ export class ListEmailNotificationCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/notifications/emailhooks/${params.ownerId}`);
   }
 
-  /** @type {CcApiSimpleCommand<ListEmailNotificationCommandInput, ListEmailNotificationCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListEmailNotificationCommandInput, ListEmailNotificationCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 }

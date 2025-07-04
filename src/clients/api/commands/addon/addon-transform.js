@@ -19,6 +19,6 @@ export function transformAddon(payload) {
     provider: payload.provider,
     plan: transformAddonProviderPlan(payload.plan),
     creationDate: normalizeDate(payload.creationDate),
-    configKeys: payload.configKeys,
+    configKeys: payload.configKeys.sort(),
   };
 }

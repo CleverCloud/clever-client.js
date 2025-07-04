@@ -22,8 +22,8 @@ export class GetInvoicePdfCommand extends CcApiSimpleCommand {
     };
   }
 
-  /** @type {CcApiSimpleCommand<GetInvoicePdfCommandInput, GetInvoicePdfCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 }

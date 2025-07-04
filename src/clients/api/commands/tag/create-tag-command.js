@@ -21,6 +21,11 @@ export class CreateTagCommand extends CcApiSimpleCommand {
     return put(safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}/tags/${params.tag}`);
   }
 
+  /** @type {CcApiSimpleCommand<CreateTagCommandInput, CreateTagCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return response.sort();
+  }
+
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
   getIdsToResolve() {
     return {

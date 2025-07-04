@@ -19,14 +19,9 @@ export class ListBackupCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/backups/${params.ownerId}/${params.addonId}`);
   }
 
-  /** @type {CcApiSimpleCommand<ListBackupCommandInput, ListBackupCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListBackupCommandInput, ListBackupCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   /** @type {CcApiSimpleCommand<ListBackupCommandInput, ListBackupCommandOutput>['transformCommandOutput']} */

@@ -51,9 +51,9 @@ class GetPulsarInfoInnerCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v4/addon-providers/addon-pulsar/addons/${params.addonId}`);
   }
 
-  /** @type {CcApiSimpleCommand<GetPulsarInfoCommandInput, GetPulsarInfoInnerCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetPulsarInfoCommandInput, GetPulsarInfoInnerCommandOutput>['transformCommandOutput']} */

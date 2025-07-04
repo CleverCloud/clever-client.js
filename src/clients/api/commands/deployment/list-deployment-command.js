@@ -45,14 +45,9 @@ class ListOrganisationDeploymentCommand extends CcApiSimpleCommand {
     );
   }
 
-  /** @type {CcApiSimpleCommand<ListOrganisationDeploymentCommandInput, Array<DeploymentLegacy>>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListOrganisationDeploymentCommandInput, Array<DeploymentLegacy>>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 }
 
@@ -77,14 +72,9 @@ class ListApplicationDeploymentCommand extends CcApiSimpleCommand {
     return response.map(/** @param {any} o */ (o) => transformDeploymentLegacy(o, this.params.applicationId));
   }
 
-  /** @type {CcApiSimpleCommand<ListApplicationDeploymentCommandInput, Array<DeploymentLegacy>>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListApplicationDeploymentCommandInput, Array<DeploymentLegacy>>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

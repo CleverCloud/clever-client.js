@@ -2,7 +2,8 @@
  * @import { GetExposedEnvironmentCommandInput, GetExposedEnvironmentCommandOutput } from './get-exposed-environment-command.types.js';
  */
 import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
+import { safeUrl, sortBy } from '../../../../lib/utils.js';
+import { toArray } from '../../../../utils/environment-utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -18,14 +19,14 @@ export class GetExposedEnvironmentCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/exposed_env`);
   }
 
-  /** @type {CcApiSimpleCommand<GetExposedEnvironmentCommandInput, GetExposedEnvironmentCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetExposedEnvironmentCommandInput, GetExposedEnvironmentCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return Object.entries(response).map(([name, value]) => ({ name, value }));
+    return sortBy(toArray(response), 'name');
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

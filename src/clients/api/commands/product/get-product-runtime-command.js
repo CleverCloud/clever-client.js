@@ -19,9 +19,9 @@ export class GetProductRuntimeCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v2/products/instances/${params.type}-${params.version}`);
   }
 
-  /** @type {CcApiSimpleCommand<GetProductRuntimeCommandInput, GetProductRuntimeCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<GetProductRuntimeCommandInput, GetProductRuntimeCommandOutput>['transformCommandOutput']} */

@@ -2,7 +2,7 @@
  * @import { GetLoadBalancerInfoCommandInput, GetLoadBalancerInfoCommandOutput } from './get-load-balancer-info-command.types.js';
  */
 import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
+import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import { transformLoadBalancer } from './load-balancer-transform.js';
 
@@ -30,12 +30,12 @@ export class GetLoadBalancerInfoCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<GetLoadBalancerInfoCommandInput, GetLoadBalancerInfoCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return response.map(transformLoadBalancer);
+    return sortBy(response.map(transformLoadBalancer), 'id');
   }
 
-  /** @type {CcApiSimpleCommand<GetLoadBalancerInfoCommandInput, GetLoadBalancerInfoCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404 };
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

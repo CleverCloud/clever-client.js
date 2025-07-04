@@ -176,8 +176,10 @@ export class CcClient {
     }
 
     // special case for null response
-    if (command.isEmptyResponse(response.status, response.body)) {
-      return command.getEmptyResponse();
+
+    const emptyResponsePolicy = command.getEmptyResponsePolicy(response.status, response.body);
+    if (emptyResponsePolicy?.isEmpty) {
+      return emptyResponsePolicy.emptyValue ?? null;
     }
 
     // handle http errors

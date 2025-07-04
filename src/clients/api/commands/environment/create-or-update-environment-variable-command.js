@@ -2,7 +2,7 @@
  * @import { CreateOrUpdateEnvironmentVariableCommandInput, CreateOrUpdateEnvironmentVariableCommandOutput } from './create-or-update-environment-variable-command.types.js';
  */
 import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
+import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -22,7 +22,7 @@ export class CreateOrUpdateEnvironmentVariableCommand extends CcApiSimpleCommand
 
   /** @type {CcApiSimpleCommand<CreateOrUpdateEnvironmentVariableCommandInput, CreateOrUpdateEnvironmentVariableCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return response.env;
+    return sortBy(response.env, 'name');
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */

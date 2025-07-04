@@ -19,14 +19,9 @@ export class ListUnpaidInvoiceCommand extends CcApiSimpleCommand {
     return get(safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/unpaid`);
   }
 
-  /** @type {CcApiSimpleCommand<ListUnpaidInvoiceCommandInput, ListUnpaidInvoiceCommandOutput>['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
-  }
-
-  /** @type {CcApiSimpleCommand<ListUnpaidInvoiceCommandInput, ListUnpaidInvoiceCommandOutput>['getEmptyResponse']} */
-  getEmptyResponse() {
-    return [];
+  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
+  getEmptyResponsePolicy(status) {
+    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   /** @type {CcApiSimpleCommand<ListUnpaidInvoiceCommandInput, ListUnpaidInvoiceCommandOutput>['transformCommandOutput']} */
