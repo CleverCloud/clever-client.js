@@ -3,7 +3,7 @@
  */
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
+import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -21,8 +21,8 @@ export class ListLogCommand extends CcApiSimpleCommand {
       new QueryParams()
         .set('limit', params.limit)
         .set('order', params.order)
-        .set('after', params.since)
-        .set('before', params.until)
+        .set('after', normalizeDate(params.since))
+        .set('before', normalizeDate(params.until))
         .set('deployment_id', params.deploymentId)
         .set('filter', params.filter),
     );

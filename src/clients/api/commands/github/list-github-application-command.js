@@ -17,6 +17,21 @@ export class ListGithubApplicationCommand extends CcApiSimpleCommand {
     return get(`/v2/github/applications`);
   }
 
+  /** @type {CcApiSimpleCommand<void, ListGithubApplicationCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return response.map(
+      /** @param {any} payload*/ (payload) => ({
+        id: payload.id,
+        owner: payload.owner,
+        name: payload.name,
+        description: payload.description,
+        gitUrl: payload.gitUrl,
+        defaultBranch: payload.defaultBranch,
+        private: payload.priv,
+      }),
+    );
+  }
+
   /** @type {CcApiSimpleCommand<void, ListGithubApplicationCommandOutput>['isEmptyResponse']} */
   isEmptyResponse(status) {
     return status === 404;

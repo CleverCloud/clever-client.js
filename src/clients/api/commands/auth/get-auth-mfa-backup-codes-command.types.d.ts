@@ -5,5 +5,5 @@ export interface GetAuthMfaBackupCodesCommandInput {
   password: string;
 }
 
-// transform Array<{ code: string }} into Array<string>
+// transformed from Array<{ code: string }>
 export type GetAuthMfaBackupCodesCommandOutput = Array<string>;

@@ -4,6 +4,7 @@
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { transformAddonProviderFull } from './addon-provider-transform.js';
 
 /**
  *
@@ -41,5 +42,10 @@ export class CreateAddonProviderCommand extends CcApiSimpleCommand {
     };
 
     return post(safeUrl`/v2/organisations/${params.ownerId}/addonproviders`, body);
+  }
+
+  /** @type {CcApiSimpleCommand<CreateAddonProviderCommandInput, CreateAddonProviderCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return transformAddonProviderFull(response);
   }
 }

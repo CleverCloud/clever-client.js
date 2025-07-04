@@ -4,15 +4,15 @@
 
 /**
  *
- * @param {any} response
- * @return {PaymentMethod}
+ * @param {any} payload
+ * @returns {PaymentMethod}
  */
-export function transformPaymentMethod(response) {
+export function transformPaymentMethod(payload) {
   return {
-    ownerId: response.ownerId,
-    type: response.type,
-    token: response.token,
-    primary: response.isDefault,
-    number: response.number,
+    ownerId: payload.ownerId,
+    type: payload.type,
+    token: payload.token,
+    primary: payload.isDefault,
+    number: payload.number,
   };
 }

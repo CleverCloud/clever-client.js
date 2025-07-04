@@ -6,12 +6,12 @@ import { e2eSupport } from '../../../../lib/e2e-support.js';
 describe('backup commands', function () {
   this.timeout(10000);
 
-  const support = e2eSupport();
+  const support = e2eSupport({ auth: 'DEV' });
 
   it('should list backups', async () => {
-    const response = await support
-      .getClient('DEV')
-      .send(new ListBackupCommand({ addonId: 'addon_5b4a7c43-4b84-45e6-837c-153308182bf1' }));
+    const response = await support.client.send(
+      new ListBackupCommand({ addonId: 'addon_5b4a7c43-4b84-45e6-837c-153308182bf1' }),
+    );
 
     expect(response).to.be.an('array');
     expect(response[0].backupId).to.be.a('string');

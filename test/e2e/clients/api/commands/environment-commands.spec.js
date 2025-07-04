@@ -1,13 +1,17 @@
+import { expect } from 'chai';
+import { UpdateConfigProviderCommand } from '../../../../../src/clients/api/commands/config-provider/update-config-provider-command.js';
 import { CreateOrUpdateEnvironmentVariableCommand } from '../../../../../src/clients/api/commands/environment/create-or-update-environment-variable-command.js';
 import { DeleteEnvironmentVariableCommand } from '../../../../../src/clients/api/commands/environment/delete-environment-variable-command.js';
 import { GetEnvironmentCommand } from '../../../../../src/clients/api/commands/environment/get-environment-command.js';
 import { GetExposedEnvironmentCommand } from '../../../../../src/clients/api/commands/environment/get-exposed-environment-command.js';
 import { UpdateEnvironmentCommand } from '../../../../../src/clients/api/commands/environment/update-environment-command.js';
 import { UpdateExposedEnvironmentCommand } from '../../../../../src/clients/api/commands/environment/update-exposed-environment-command.js';
+import { AddLinkCommand } from '../../../../../src/clients/api/commands/link/add-link-command.js';
 import { e2eSupport } from '../../../../lib/e2e-support.js';
 
 describe('environment commands', function () {
   this.timeout(10000);
+
   const support = e2eSupport();
 
   before(async () => {
@@ -22,116 +26,236 @@ describe('environment commands', function () {
     await Promise.all([support.deleteApplications(), support.deleteAddons()]);
   });
 
-  it('app environment', async () => {
-    const application = await support.createTestApplication();
-
-    const initialEnvironment = await support.client.send(new GetEnvironmentCommand({ applicationId: application.id }));
-    console.log(initialEnvironment);
-    console.log(
-      await support.client.send(
-        new GetEnvironmentCommand({
-          applicationId: application.id,
-          includeLinkedAddons: true,
-          includeLinkedApplications: true,
-        }),
-      ),
-    );
-
-    console.log(
-      await support.client.send(
-        new CreateOrUpdateEnvironmentVariableCommand({
-          applicationId: application.id,
-          name: 'MY_NEW_VAR',
-          value: 'my-new-value',
-        }),
-      ),
-    );
-
-    console.log(await support.client.send(new GetEnvironmentCommand({ applicationId: application.id })));
-
-    console.log(
-      await support.client.send(
-        new CreateOrUpdateEnvironmentVariableCommand({
-          applicationId: application.id,
-          name: 'MY_NEW_VAR',
-          value: 'my-updated-value',
-        }),
-      ),
-    );
-
-    console.log(await support.client.send(new GetEnvironmentCommand({ applicationId: application.id })));
-
-    console.log(
-      await support.client.send(
-        new DeleteEnvironmentVariableCommand({
-          applicationId: application.id,
-          name: 'MY_NEW_VAR',
-        }),
-      ),
-    );
-
-    console.log(await support.client.send(new GetEnvironmentCommand({ applicationId: application.id })));
-
-    console.log(
+  describe('application environment', () => {
+    it('should create or update environment variable', async () => {
+      const application = await support.createTestApplication();
       await support.client.send(
         new UpdateEnvironmentCommand({
           applicationId: application.id,
           environment: [
-            { name: 'MY_VAR_1', value: 'hello' },
-            { name: 'MY_VAR_2', value: 'world' },
+            { name: 'FOO', value: 'bar' },
+            { name: 'BAR', value: 'bar' },
           ],
         }),
-      ),
-    );
+      );
 
-    console.log(await support.client.send(new GetEnvironmentCommand({ applicationId: application.id })));
+      const response = await support.client.send(
+        new CreateOrUpdateEnvironmentVariableCommand({
+          applicationId: application.id,
+          name: 'FOO',
+          value: 'baz',
+        }),
+      );
 
-    console.log(
+      expect(response).to.deep.equalInAnyOrder([
+        { name: 'FOO', value: 'baz' },
+        { name: 'BAR', value: 'bar' },
+      ]);
+    });
+
+    it('should delete environment variable', async () => {
+      const application = await support.createTestApplication();
       await support.client.send(
         new UpdateEnvironmentCommand({
           applicationId: application.id,
-          environment: initialEnvironment.environment,
+          environment: [
+            { name: 'FOO', value: 'bar' },
+            { name: 'BAR', value: 'bar' },
+          ],
         }),
-      ),
-    );
+      );
 
-    console.log(await support.client.send(new GetEnvironmentCommand({ applicationId: application.id })));
-  });
+      const response = await support.client.send(
+        new DeleteEnvironmentVariableCommand({
+          applicationId: application.id,
+          name: 'FOO',
+        }),
+      );
 
-  it('addon environment', async () => {
-    const addon = await support.createTestAddon();
+      expect(response).to.deep.equalInAnyOrder([{ name: 'BAR', value: 'bar' }]);
+    });
 
-    console.log(await support.client.send(new GetEnvironmentCommand({ addonId: addon.id })));
-  });
+    it('should get environment', async () => {
+      const application = await support.createTestApplication();
+      await support.client.send(
+        new UpdateEnvironmentCommand({
+          applicationId: application.id,
+          environment: [
+            { name: 'FOO', value: 'bar' },
+            { name: 'BAR', value: 'bar' },
+          ],
+        }),
+      );
 
-  it('exposed environment', async () => {
-    const application = await support.createTestApplication();
+      const response = await support.client.send(new GetEnvironmentCommand({ applicationId: application.id }));
 
-    const initialEnvironment = await support.client.send(
-      new GetExposedEnvironmentCommand({ applicationId: application.id }),
-    );
-    console.log(initialEnvironment);
+      expect(response).to.deep.equalInAnyOrder({
+        environment: [
+          { name: 'FOO', value: 'bar' },
+          { name: 'BAR', value: 'bar' },
+        ],
+      });
+    });
 
-    console.log(
+    it('should get environment with linked application and addon', async () => {
+      const [application1, application2, addon] = await Promise.all([
+        support.createTestApplication(),
+        support.createTestApplication(),
+        support.createTestAddon(),
+      ]);
+      await Promise.all([
+        support.client.send(
+          new UpdateConfigProviderCommand({
+            addonId: addon.id,
+            environment: [
+              { name: 'ADDON_FOO', value: 'addon foo' },
+              { name: 'ADDON_BAR', value: 'addon bar' },
+            ],
+          }),
+        ),
+        support.client.send(
+          new UpdateEnvironmentCommand({
+            applicationId: application1.id,
+            environment: [
+              { name: 'APP1_FOO', value: 'app1 foo' },
+              { name: 'APP1_BAR', value: 'app1 bar' },
+            ],
+          }),
+        ),
+        support.client.send(
+          new UpdateExposedEnvironmentCommand({
+            applicationId: application2.id,
+            environment: [
+              { name: 'APP2_FOO', value: 'app2 foo' },
+              { name: 'APP2_BAR', value: 'app2 bar' },
+            ],
+          }),
+        ),
+      ]);
+      await Promise.all([
+        await support.client.send(
+          new AddLinkCommand({ applicationId: application1.id, targetApplicationId: application2.id }),
+        ),
+        await support.client.send(new AddLinkCommand({ applicationId: application1.id, targetAddonId: addon.id })),
+      ]);
+
+      const response = await support.client.send(
+        new GetEnvironmentCommand({
+          applicationId: application1.id,
+          includeLinkedAddons: true,
+          includeLinkedApplications: true,
+        }),
+      );
+
+      expect(response).to.deep.equalInAnyOrder({
+        environment: [
+          { name: 'APP1_FOO', value: 'app1 foo' },
+          { name: 'APP1_BAR', value: 'app1 bar' },
+        ],
+        linkedApplicationsEnvironment: [
+          {
+            applicationId: application2.id,
+            applicationName: application2.name,
+            environment: [
+              { name: 'APP2_FOO', value: 'app2 foo' },
+              { name: 'APP2_BAR', value: 'app2 bar' },
+            ],
+          },
+        ],
+        linkedAddonsEnvironment: [
+          {
+            addonId: addon.id,
+            addonName: addon.name,
+            addonProviderId: addon.provider.id,
+            environment: [
+              { name: 'ADDON_FOO', value: 'addon foo' },
+              { name: 'ADDON_BAR', value: 'addon bar' },
+            ],
+          },
+        ],
+      });
+    });
+
+    it('should get exposed environment', async () => {
+      const application = await support.createTestApplication();
       await support.client.send(
         new UpdateExposedEnvironmentCommand({
           applicationId: application.id,
-          environment: [{ name: 'test', value: 'test' }],
+          environment: [
+            { name: 'FOO', value: 'foo' },
+            { name: 'BAR', value: 'bar' },
+          ],
         }),
-      ),
-    );
+      );
 
-    console.log(await support.client.send(new GetExposedEnvironmentCommand({ applicationId: application.id })));
+      const response = await support.client.send(new GetExposedEnvironmentCommand({ applicationId: application.id }));
 
-    console.log(
-      await support.client.send(
+      expect(response).to.deep.equalInAnyOrder([
+        { name: 'FOO', value: 'foo' },
+        { name: 'BAR', value: 'bar' },
+      ]);
+    });
+
+    it('should update exposed environment', async () => {
+      const application = await support.createTestApplication();
+
+      const response = await support.client.send(
         new UpdateExposedEnvironmentCommand({
           applicationId: application.id,
-          environment: initialEnvironment,
+          environment: [
+            { name: 'FOO', value: 'foo' },
+            { name: 'BAR', value: 'bar' },
+          ],
         }),
-      ),
-    );
+      );
 
-    console.log(await support.client.send(new GetExposedEnvironmentCommand({ applicationId: application.id })));
+      expect(response).to.be.null;
+    });
+
+    it('should update environment', async () => {
+      const application = await support.createTestApplication();
+      await support.client.send(
+        new UpdateEnvironmentCommand({
+          applicationId: application.id,
+          environment: [
+            { name: 'FOO', value: 'bar' },
+            { name: 'BAR', value: 'bar' },
+          ],
+        }),
+      );
+
+      const response = await support.client.send(
+        new UpdateEnvironmentCommand({
+          applicationId: application.id,
+          environment: [{ name: 'FOO', value: 'FOO BAR' }],
+        }),
+      );
+
+      expect(response).to.deep.equalInAnyOrder([{ name: 'FOO', value: 'FOO BAR' }]);
+    });
+  });
+
+  describe('addon environment', () => {
+    it('should get environment', async () => {
+      const addon = await support.createTestAddon();
+      await support.client.send(
+        new UpdateConfigProviderCommand({
+          addonId: addon.id,
+          environment: [
+            { name: 'ADDON_FOO', value: 'addon foo' },
+            { name: 'ADDON_BAR', value: 'addon bar' },
+          ],
+        }),
+      );
+
+      const response = await support.client.send(new GetEnvironmentCommand({ addonId: addon.id }));
+
+      expect(response).to.deep.equalInAnyOrder({
+        environment: [
+          { name: 'ADDON_FOO', value: 'addon foo' },
+          { name: 'ADDON_BAR', value: 'addon bar' },
+        ],
+      });
+    });
   });
 });

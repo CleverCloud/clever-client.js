@@ -1,12 +1,42 @@
+import { expect } from 'chai';
 import { GetMateriaInfoCommand } from '../../../../../src/clients/api/commands/materia/get-materia-info-command.js';
-import { getCcApiClient } from '../../../../lib/e2e-support.js';
+import { e2eSupport } from '../../../../lib/e2e-support.js';
 
-let currentAddonId = 'addon_39eaf2e0-8784-49a9-bf6a-e1e7ee111573';
-
-describe('materia-command', function () {
+describe('materia commands', function () {
   this.timeout(10000);
 
-  it('should work', async () => {
-    console.log(await getCcApiClient().send(new GetMateriaInfoCommand({ addonId: currentAddonId })));
+  const support = e2eSupport();
+
+  before(async () => {
+    await support.prepare();
+  });
+
+  after(async () => {
+    await support.cleanup();
+  });
+
+  afterEach(async () => {
+    await support.deleteAddons();
+  });
+
+  it('should get materia info', async () => {
+    const addon = await support.createTestAddon({
+      name: 'test-kv-addon',
+      providerId: 'kv',
+      planId: 'plan_53a1728d-4b9e-4254-94c4-b19163af587b',
+    });
+
+    const response = await support.client.send(new GetMateriaInfoCommand({ addonId: addon.id }));
+
+    expect(response.id).to.equal(addon.realId);
+    expect(response.clusterId).to.be.a('string');
+    expect(response.ownerId).to.equal(support.organisationId);
+    expect(response.kind).to.equal('KV');
+    expect(response.plan).to.be.a('string');
+    expect(response.host).to.be.a('string');
+    expect(response.port).to.be.a('number');
+    expect(response.token).to.be.a('string');
+    expect(response.tokenId).to.be.a('string');
+    expect(response.status).to.be.a('string');
   });
 });

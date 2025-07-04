@@ -9,8 +9,7 @@ import { CcHttpError } from './cc-client-errors.js';
  */
 export function handleHttpErrors(response) {
   if (response.status >= 400) {
-    const responseBody = response.body;
-    const errorMessage = getErrorMessage(responseBody);
+    const errorMessage = getErrorMessage(response);
     // todo: should be done by debug logger ?
     console.log(response);
     throw new CcHttpError(errorMessage, response);
@@ -26,20 +25,19 @@ export function handleHttpErrors(response) {
 //  Can we do a best effort on trying to normalize it on client side?
 
 /**
- *
- * @param {null|string|{message?: string, error?: string}} responseBody
+ * @param {CcResponse<?>} response
  * @returns {string}
  */
-function getErrorMessage(responseBody) {
-  if (typeof responseBody === 'string') {
-    return responseBody;
+function getErrorMessage(response) {
+  if (typeof response.body === 'string') {
+    return response.body;
   }
-  if (typeof responseBody?.message === 'string') {
-    return responseBody.message;
+  if (typeof response.body?.message === 'string') {
+    return response.body.message;
   }
-  if (typeof responseBody?.error === 'string') {
-    return responseBody.error;
+  if (typeof response.body?.error === 'string') {
+    return response.body.error;
   }
 
-  return 'Unknown error';
+  return `Error ${response.status}`;
 }

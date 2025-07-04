@@ -3,7 +3,9 @@ export interface LogDrain {
   // renamed from appId
   applicationId: string;
   target: LogDrainTarget;
+  // converted to iso date
   createdAt: string;
+  // converted to iso date
   lastEdit: string;
   token: string;
   state: LogDrainState;

@@ -13,7 +13,7 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
  */
 export class RequestProfileEmailConfirmationCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<void, RequestProfileEmailConfirmationCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+  toRequestParams() {
     return get(`/v2/self/confirmation_email`);
   }
 

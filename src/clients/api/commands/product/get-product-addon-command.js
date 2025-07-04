@@ -4,7 +4,7 @@
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformAddonProvider } from '../addon-provider/addon-provider-transform.js';
+import { transformAddonProviderFull } from '../addon-provider/addon-provider-transform.js';
 import { GetProductAddonVersionsCommand } from './get-product-addon-versions-command.js';
 
 /**
@@ -54,6 +54,6 @@ class GetProductAddonInnerCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<GetProductAddonCommandInput, GetProductAddonCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return transformAddonProvider(response);
+    return transformAddonProviderFull(response);
   }
 }

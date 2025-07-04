@@ -1,3 +1,5 @@
-export interface DeleteAddonProviderFeatureCommandInput {}
+import type { AddonProviderId } from '../../types/cc-api.types.js';
 
-export interface DeleteAddonProviderFeatureCommandOutput {}
+export interface DeleteAddonProviderFeatureCommandInput extends AddonProviderId {
+  name: string;
+}

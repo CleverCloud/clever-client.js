@@ -5,7 +5,7 @@ export interface CreateAddonProviderPlanCommandInput extends AddonProviderId {
   name: string;
   slug: string;
   price: number;
-  features: Array<{
+  features?: Array<{
     name: string;
     type: AddonProviderFeatureType;
     value: string;

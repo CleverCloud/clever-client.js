@@ -10,7 +10,7 @@ import { ListNetworkGroupCommand } from '../../../../../src/clients/api/commands
 import { generateExternalMemberId } from '../../../../../src/clients/api/commands/network-group/network-group-utils.js';
 import { e2eSupport } from '../../../../lib/e2e-support.js';
 
-describe('network-group-commands', function () {
+describe('network-group commands', function () {
   this.timeout(10000);
 
   const support = e2eSupport();
@@ -24,8 +24,7 @@ describe('network-group-commands', function () {
   });
 
   afterEach(async () => {
-    await support.deleteApplications();
-    await support.deleteNetworkGroups();
+    await Promise.all([support.deleteApplications(), support.deleteNetworkGroups()]);
   });
 
   it('should get network group', async () => {

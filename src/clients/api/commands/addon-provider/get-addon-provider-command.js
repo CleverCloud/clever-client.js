@@ -4,6 +4,7 @@
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { transformAddonProvider } from './addon-provider-transform.js';
 
 /**
  *
@@ -15,7 +16,12 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 export class GetAddonProviderCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<GetAddonProviderCommandInput, GetAddonProviderCommandOutput>['toRequestParams']} */
   toRequestParams(params) {
-    return get(safeUrl`/v2/organisations/:XXX/addonproviders/:XXX`);
+    return get(safeUrl`/v2/organisations/${params.ownerId}/addonproviders/${params.addonProviderId}`);
+  }
+
+  /** @type {CcApiSimpleCommand<GetAddonProviderCommandInput, GetAddonProviderCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return transformAddonProvider(response);
   }
 
   /** @type {CcApiSimpleCommand<GetAddonProviderCommandInput, GetAddonProviderCommandOutput>['isEmptyResponse']} */

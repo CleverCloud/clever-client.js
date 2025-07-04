@@ -3,8 +3,8 @@ import type { AddonId } from '../../types/cc-api.types.js';
 export interface ListLogCommandInput extends AddonId {
   limit?: number;
   order?: 'ASC' | 'DESC';
-  since?: string;
-  until?: string;
+  since?: Date | string | number;
+  until?: Date | string | number;
   filter?: string;
   deploymentId?: string;
 }

@@ -1,11 +1,11 @@
 /**
- * @import { ListLinkCommandInput, ListLinkCommandOutput, ListApplicationLinkCommandInput, ListAddonLinkCommandInput, LinkToApplication, LinkToAddon } from './list-link-command.types.js';
+ * @import { ListLinkCommandInput, ListLinkCommandOutput, ListApplicationLinkCommandInput, ListAddonLinkCommandInput } from './list-link-command.types.js';
+ * @import { LinkToApplication, LinkToAddon } from './link.types.js';
  */
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformAddon } from '../addon/addon-transform.js';
-import { transformApplication } from '../application/application-transform.js';
+import { transformLinkToAddon, transformLinkToApplication } from './link-transform.js';
 
 /**
  *
@@ -52,12 +52,7 @@ class ListApplicationToApplicationLinkCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<ListApplicationLinkCommandInput, Array<LinkToApplication>>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return response.map(
-      /** @param {any} application */ (application) => ({
-        type: 'application',
-        application: transformApplication(application),
-      }),
-    );
+    return response.map(transformLinkToApplication);
   }
 }
 
@@ -76,12 +71,7 @@ class ListApplicationToAddonLinkCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<ListApplicationLinkCommandInput, Array<LinkToAddon>>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return response.map(
-      /** @param {any} addon */ (addon) => ({
-        type: 'addon',
-        addon: transformAddon(addon),
-      }),
-    );
+    return response.map(transformLinkToAddon);
   }
 }
 
@@ -107,11 +97,6 @@ class ListAddonToApplicationLinkCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<ListAddonLinkCommandInput, Array<LinkToApplication>>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return response.map(
-      /** @param {any} application */ (application) => ({
-        type: 'application',
-        application: transformApplication(application),
-      }),
-    );
+    return response.map(transformLinkToApplication);
   }
 }

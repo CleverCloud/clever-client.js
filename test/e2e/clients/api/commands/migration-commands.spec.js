@@ -6,7 +6,7 @@ import { ListMigrationPreorderCommand } from '../../../../../src/clients/api/com
 import { StartMigrationCommand } from '../../../../../src/clients/api/commands/migration/start-migration-command.js';
 import { e2eSupport } from '../../../../lib/e2e-support.js';
 
-describe('migration-commands', function () {
+describe('migration commands', function () {
   this.timeout(10000);
 
   const support = e2eSupport();
@@ -24,7 +24,10 @@ describe('migration-commands', function () {
   });
 
   it('should get migration', async () => {
-    const addon = await support.createTestAddon();
+    const addon = await support.createTestAddon({
+      providerId: 'mysql-addon',
+      planId: 'plan_bf78ef5b-aedd-4024-973a-c2ff45541b88', //DEV plan
+    });
     const createdMigration = await support.client.send(
       new StartMigrationCommand({
         addonId: addon.id,
@@ -56,7 +59,10 @@ describe('migration-commands', function () {
   });
 
   it('should list migrations', async () => {
-    const addon = await support.createTestAddon();
+    const addon = await support.createTestAddon({
+      providerId: 'mysql-addon',
+      planId: 'plan_bf78ef5b-aedd-4024-973a-c2ff45541b88', //DEV plan
+    });
     const createdMigration = await support.client.send(
       new StartMigrationCommand({
         addonId: addon.id,
@@ -77,7 +83,10 @@ describe('migration-commands', function () {
   });
 
   it('should list migrations empty', async () => {
-    const addon = await support.createTestAddon();
+    const addon = await support.createTestAddon({
+      providerId: 'mysql-addon',
+      planId: 'plan_bf78ef5b-aedd-4024-973a-c2ff45541b88', //DEV plan
+    });
 
     const response = await support.client.send(
       new ListMigrationCommand({
@@ -89,7 +98,10 @@ describe('migration-commands', function () {
   });
 
   it('should list migration preorders', async () => {
-    const addon = await support.createTestAddon();
+    const addon = await support.createTestAddon({
+      providerId: 'mysql-addon',
+      planId: 'plan_bf78ef5b-aedd-4024-973a-c2ff45541b88', //DEV plan
+    });
 
     const response = await support.client.send(
       new ListMigrationPreorderCommand({
@@ -102,7 +114,10 @@ describe('migration-commands', function () {
   });
 
   it('should start migration', async () => {
-    const addon = await support.createTestAddon();
+    const addon = await support.createTestAddon({
+      providerId: 'mysql-addon',
+      planId: 'plan_bf78ef5b-aedd-4024-973a-c2ff45541b88', //DEV plan
+    });
 
     const result = await support.client.send(
       new StartMigrationCommand({
@@ -118,7 +133,10 @@ describe('migration-commands', function () {
   });
 
   it('should cancel migration', async () => {
-    const addon = await support.createTestAddon();
+    const addon = await support.createTestAddon({
+      providerId: 'mysql-addon',
+      planId: 'plan_bf78ef5b-aedd-4024-973a-c2ff45541b88', //DEV plan
+    });
     const migration = await support.client.send(
       new StartMigrationCommand({
         addonId: addon.id,

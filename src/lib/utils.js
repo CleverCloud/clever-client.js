@@ -22,7 +22,7 @@ export function toArray(value) {
 
 /**
  * @param {Date|string|number} date
- * @return {string|null}
+ * @returns {string|null}
  */
 export function normalizeDate(date) {
   if (date == null) {
@@ -62,7 +62,7 @@ export async function randomUUID() {
  *
  * @param {TemplateStringsArray} strings
  * @param {Array<?>} values
- * @return {string}
+ * @returns {string}
  */
 export function safeUrl(strings, ...values) {
   let result = '';
@@ -77,7 +77,7 @@ export function safeUrl(strings, ...values) {
 /**
  * Encodes the given string into base64, and take care of non-ASCII chars by encoding to utf8 before transforming to base64
  * @param {string} string
- * @return {string}
+ * @returns {string}
  */
 export function encodeToBase64(string) {
   // encode string to utf-8
@@ -90,7 +90,7 @@ export function encodeToBase64(string) {
 
 /**
  * @param {?|null} value
- * @return {string}
+ * @returns {string}
  */
 function encode(value) {
   if (value == null) {

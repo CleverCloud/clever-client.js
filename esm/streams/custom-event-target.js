@@ -5,7 +5,7 @@ export class CustomEventTarget extends EventTarget {
    * @param {string} type
    * @param {EventListenerOrEventListenerObject} callback
    * @param {AddEventListenerOptions | boolean} [options]
-   * @return {this}
+   * @returns {this}
    */
   on(type, callback, options) {
     this.addEventListener(type, callback, options);

@@ -1,4 +1,4 @@
-import type { AddonProvider } from '../addon-provider/addon-provider.types.js';
+import type { AddonProviderFull } from '../addon-provider/addon-provider.types.js';
 
 export interface ProductRuntime {
   type: string;
@@ -47,7 +47,7 @@ export interface ProductRuntimeFlavor {
   memFactor: number;
 }
 
-export interface ProductAddon extends AddonProvider {
+export interface ProductAddon extends AddonProviderFull {
   versions?: ProductAddonVersions;
 }
 

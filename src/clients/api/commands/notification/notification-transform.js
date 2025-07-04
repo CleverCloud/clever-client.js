@@ -4,15 +4,15 @@
 
 /**
  *
- * @param {any} response
+ * @param {any} payload
  * @returns {EmailNotification}
  */
-export function transformEmailNotification(response) {
+export function transformEmailNotification(payload) {
   return {
-    id: response.id,
-    ownerId: response.ownerId,
-    name: response.name,
-    targets: response.notified?.map(
+    id: payload.id,
+    ownerId: payload.ownerId,
+    name: payload.name,
+    targets: payload.notified?.map(
       /** @param {any} n */ (n) => {
         switch (n.type) {
           case 'email':
@@ -31,8 +31,8 @@ export function transformEmailNotification(response) {
         }
       },
     ),
-    events: response.events,
-    scope: response.scope,
-    createdAt: response.createdAt,
+    events: payload.events,
+    scope: payload.scope,
+    createdAt: payload.createdAt,
   };
 }

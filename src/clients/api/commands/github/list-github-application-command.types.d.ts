@@ -1,11 +1,3 @@
-export type ListGithubApplicationCommandOutput = Array<GithubApplication>;
+import type { GithubApplication } from './github.types.js';
 
-export interface GithubApplication {
-  id: string;
-  owner: string;
-  name: string;
-  description: string;
-  gitUrl: string;
-  defaultBranch: string;
-  priv: boolean;
-}
+export type ListGithubApplicationCommandOutput = Array<GithubApplication>;

@@ -13,7 +13,7 @@ export const ERROR_TYPES = {
 /**
  * @param {Orga} orga
  * @param {Array<PaymentMethod>} paymentMethodList
- * @return {null|number}
+ * @returns {null|number}
  */
 export function getOrgaPaymentMethodsError(orga, paymentMethodList) {
   // Trusted orgas are OK
@@ -46,7 +46,7 @@ export function getOrgaPaymentMethodsError(orga, paymentMethodList) {
 /**
  * @param {{ orga: Orga, paymentMethods: Array<PaymentMethod> }} personal
  * @param {Array<{ orga: Orga, paymentMethods: Array<PaymentMethod> }>} otherOrgaList
- * @return {Array<PaymentMethodError>}
+ * @returns {Array<PaymentMethodError>}
  */
 export function getAllOrgaPaymentMethodsErrors(personal, otherOrgaList = []) {
   // If the user only has a personal orga, we display the errors of the personal orga

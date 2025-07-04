@@ -11,7 +11,7 @@ import { e2eSupport } from '../../../../lib/e2e-support.js';
 describe('profile commands', function () {
   this.timeout(10000);
 
-  const support = e2eSupport(true);
+  const support = e2eSupport();
 
   before(async () => {
     await support.prepare();
@@ -24,13 +24,11 @@ describe('profile commands', function () {
   it('should get profile linked', async () => {
     const response = await support.client.send(new GetProfileCommand());
 
-    console.log(response);
-
     expect(response.id).to.equal(support.userId);
     expect(response.isLinkedToGitHub).to.equal(true);
   });
 
-  it('should get profile unlinked', async () => {
+  it('should get profile when account is not linked to github', async () => {
     const response = await support.getClient('GITHUB_UNLINKED').send(new GetProfileCommand());
 
     expect(response.isLinkedToGitHub).to.equal(false);
@@ -107,8 +105,6 @@ describe('profile commands', function () {
   it('should list email addresses', async () => {
     const response = await support.client.send(new ListProfileEmailAddressCommand());
 
-    console.log(response);
-
     expect(response.primaryAddress).not.to.be.null;
     expect(response.primaryAddress.address).to.be.a('string');
     expect(response.primaryAddress.verified).to.equal(true);
@@ -124,8 +120,6 @@ describe('profile commands', function () {
       }),
     );
 
-    console.log(response);
-
     expect(response).to.be.null;
   });
 
@@ -137,8 +131,6 @@ describe('profile commands', function () {
       }),
     );
 
-    console.log(response);
-
     expect(response).to.be.null;
   });
 
@@ -149,8 +141,6 @@ describe('profile commands', function () {
         address: 'frontend-ci+github@clever-cloud.com',
       }),
     );
-
-    console.log(response);
 
     expect(response).to.be.null;
   });

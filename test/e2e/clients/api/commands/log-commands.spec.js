@@ -10,16 +10,12 @@ const addon = {
 describe('log commands', function () {
   this.timeout(10000);
 
-  const support = e2eSupport();
+  const support = e2eSupport({ auth: 'DEV' });
 
   it('should list addon log', async () => {
     // const addon = await support.createTestAddon();
 
-    const response = await support.getClient('DEV').send(
-      new ListLogCommand({
-        addonId: addon.id,
-      }),
-    );
+    const response = await support.client.send(new ListLogCommand({ addonId: addon.id }));
 
     expect(response).to.be.an('array');
     expect(response[0].id).to.be.a('string');
@@ -37,7 +33,7 @@ describe('log commands', function () {
   it('should list addon log with options', async () => {
     // const addon = await support.createTestAddon();
 
-    const response = await support.getClient('DEV').send(
+    const response = await support.client.send(
       new ListLogCommand({
         addonId: addon.id,
         deploymentId: 'deployment_21a2898d-2884-4eca-9dbb-99714b91d188',

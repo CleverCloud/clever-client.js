@@ -108,7 +108,7 @@ describe('clever-client', () => {
   /**
    * @param {Omit<CcClientConfig, 'baseUrl'>} [config]
    * @param {CcAuth|null} [auth]
-   * @return {SpiedClient}
+   * @returns {SpiedClient}
    */
   function createClient(config, auth) {
     return new SpiedClient({ ...config, baseUrl: apiMockCtrl.mockClient.baseUrl }, auth);

@@ -11,10 +11,10 @@ import { ListEmailNotificationCommand } from '../../../../../src/clients/api/com
 import { ListWebhookNotificationCommand } from '../../../../../src/clients/api/commands/notification/list-webhook-notification-command.js';
 import { e2eSupport } from '../../../../lib/e2e-support.js';
 
-describe('notification-commands', function () {
+describe('notification commands', function () {
   this.timeout(10000);
 
-  const support = e2eSupport(true);
+  const support = e2eSupport();
 
   before(async () => {
     await support.prepare();

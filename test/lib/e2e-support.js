@@ -25,9 +25,15 @@ import { DeleteOrganisationCommand } from '../../src/clients/api/commands/organi
 import { GetOrganisationCommand } from '../../src/clients/api/commands/organisation/get-organisation-command.js';
 import { GetProfileCommand } from '../../src/clients/api/commands/profile/get-profile-command.js';
 
+/**
+ * @typedef Auth
+ * @type {'GITHUB_UNLINKED'|'GITHUB_LINKED'|'DEV'}
+ */
+
 const IS_NODE = globalThis.process != null;
 export const CC_API_TOKEN_GITHUB_UNLINKED = globalThis.process?.env.CC_API_TOKEN_GITHUB_UNLINKED;
 export const CC_API_TOKEN_GITHUB_LINKED = globalThis.process?.env.CC_API_TOKEN_GITHUB_LINKED;
+/** @type {Auth} */
 const DEFAULT_CLIENT_AUTH = 'GITHUB_LINKED';
 
 // todo: remove that when ready
@@ -37,17 +43,15 @@ const USE_LOCAL_AUTH_BACKEND = false;
 use(deepEqualInAnyOrder);
 
 /**
- * @param {boolean} [debug=false]
+ * @param {{auth?: Auth, debug?: boolean }} [config]
  */
-export function e2eSupport(debug = false) {
-  const clients = {
-    NONE: createCcApiClient('NONE', debug),
-    DEV: createCcApiClient('DEV', debug),
-    GITHUB_UNLINKED: createCcApiClient('GITHUB_UNLINKED', debug),
-    GITHUB_LINKED: createCcApiClient('GITHUB_LINKED', debug),
+export function e2eSupport(config) {
+  const conf = {
+    ...{ auth: DEFAULT_CLIENT_AUTH, debug: false },
+    ...(config ?? {}),
   };
 
-  const client = clients[DEFAULT_CLIENT_AUTH];
+  const client = createCcApiClient(conf.auth, conf.debug);
   /** @type {string} */
   let organisationId;
   /** @type {string} */
@@ -59,11 +63,11 @@ export function e2eSupport(debug = false) {
   return {
     isNode: IS_NODE,
     /**
-     * @param {'NONE'|'GITHUB_UNLINKED'|'GITHUB_LINKED'|'DEV'} auth
-     * @return {CcApiClient}
+     * @param {Auth} auth
+     * @returns {CcApiClient}
      */
     getClient(auth) {
-      return clients[auth];
+      return createCcApiClient(auth, conf.debug);
     },
     get client() {
       return client;
@@ -250,20 +254,32 @@ export function e2eSupport(debug = false) {
       return application;
     },
     /**
-     * @param {CreateAddonCommandInput} [addon]
+     * @param {Partial<CreateAddonCommandInput>} [addon]
      * @returns {Promise<Addon>}
      */
     async createTestAddon(addon) {
       let createdAddon = await client.send(
         new CreateAddonCommand(
-          addon ?? {
-            ownerId: organisationId,
-            name: 'test-addon',
-            providerId: 'mysql-addon',
-            planId: 'plan_bf78ef5b-aedd-4024-973a-c2ff45541b88', //DEV plan
-            zone: 'par',
-            options: {},
-          },
+          addon
+            ? {
+                ...{
+                  ownerId: organisationId,
+                  name: 'test-addon',
+                  providerId: 'config-provider',
+                  planId: 'plan_5d8e9596-dd73-4b73-84d9-e165372c5324',
+                  zone: 'par',
+                  options: {},
+                },
+                ...addon,
+              }
+            : {
+                ownerId: organisationId,
+                name: 'test-addon',
+                providerId: 'config-provider',
+                planId: 'plan_5d8e9596-dd73-4b73-84d9-e165372c5324',
+                zone: 'par',
+                options: {},
+              },
         ),
       );
       cleanupTasks.push({ type: 'addon', id: createdAddon.id });
@@ -321,7 +337,7 @@ export function e2eSupport(debug = false) {
 }
 
 /**
- * @param {'NONE'|'GITHUB_UNLINKED'|'GITHUB_LINKED'|'DEV'} auth
+ * @param {Auth} auth
  * @param {boolean} debug
  * @returns {CcApiClient}
  */
@@ -336,7 +352,7 @@ function createCcApiClient(auth, debug) {
 }
 
 /**
- * @param {'NONE'|'GITHUB_UNLINKED'|'GITHUB_LINKED'|'DEV'} auth
+ * @param {Auth} auth
  * @returns {string|null}
  */
 function getBaseUrl(auth) {
@@ -348,8 +364,6 @@ function getBaseUrl(auth) {
   }
   // if running in browser, we use the proxified URLs
   switch (auth) {
-    case 'NONE':
-      return '/cc-api-none';
     case 'GITHUB_UNLINKED':
       return '/cc-api-github-unlinked';
     case 'GITHUB_LINKED':
@@ -358,11 +372,11 @@ function getBaseUrl(auth) {
 }
 
 /**
- * @param {'NONE'|'GITHUB_UNLINKED'|'GITHUB_LINKED'|'DEV'} auth
+ * @param {Auth} auth
  * @returns {CcApiAuth}
  */
 function getAuthMethod(auth) {
-  if (!IS_NODE || auth === 'NONE') {
+  if (!IS_NODE) {
     return null;
   }
 

@@ -1,6 +1,6 @@
 export interface PriceSystem {
   // renamed from zone_id
-  zoneId?: string;
+  zone?: string;
   currency: string;
   runtime: Array<RuntimePricePolicy>;
   countable: Array<CountablePricePolicy>;

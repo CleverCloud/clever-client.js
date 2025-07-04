@@ -3,14 +3,14 @@
  */
 
 /**
- * @param {any} response
+ * @param {any} payload
  * @returns {PriceSystem}
  */
-export function transformPriceSystem(response) {
+export function transformPriceSystem(payload) {
   return {
-    zoneId: response.zone_id,
-    currency: response.currency,
-    runtime: response.runtime.map(
+    zone: payload.zone_id,
+    currency: payload.currency,
+    runtime: payload.runtime.map(
       /** @param {any} r */ (r) => ({
         id: r.runtime_policy_id,
         source: r.source,
@@ -20,7 +20,7 @@ export function transformPriceSystem(response) {
         priceId: r.slug_id.toLowerCase(),
       }),
     ),
-    countable: response.countable.map(
+    countable: payload.countable.map(
       /** @param {any} c */ (c) => ({
         id: c.countable_policy_id,
         service: c.service,

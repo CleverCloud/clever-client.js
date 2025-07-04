@@ -3,7 +3,7 @@
  */
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformAddonProvider } from '../addon-provider/addon-provider-transform.js';
+import { transformAddonProviderFull } from '../addon-provider/addon-provider-transform.js';
 import { GetProductAddonVersionsCommand } from './get-product-addon-versions-command.js';
 
 /**
@@ -38,7 +38,7 @@ export class ListProductAddonCommand extends CcApiCompositeCommand {
  * @group Product
  * @version 2
  */
-export class ListProductAddonInnerCommand extends CcApiSimpleCommand {
+class ListProductAddonInnerCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<void, ListProductAddonCommandOutput>['toRequestParams']} */
   toRequestParams() {
     return get(`/v2/products/addonproviders`);
@@ -46,7 +46,7 @@ export class ListProductAddonInnerCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<void, ListProductAddonCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return response.map(transformAddonProvider);
+    return response.map(transformAddonProviderFull);
   }
 
   isAuthRequired() {

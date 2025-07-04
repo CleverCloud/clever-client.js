@@ -14,7 +14,7 @@ import { isTestDomain } from './domains.js';
  * @param {DomainDiagInfo} domainInfo
  * @param {ResolveDnsResult|null} resolveDnsResult
  * @param {LoadBalancerDnsConfig|null} loadBalancerDnsConfig
- * @return {DomainDiag}
+ * @returns {DomainDiag}
  */
 export function diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig) {
   if (isTestDomain(domainInfo.hostname)) {

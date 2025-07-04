@@ -90,7 +90,6 @@ describe('application commands', function () {
     const response = await support.client.send(
       new GetApplicationCommand({ applicationId: application.id, withBranches: true }),
     );
-    console.log('response', response);
 
     expect(response).to.deep.equalInAnyOrder(application);
   });

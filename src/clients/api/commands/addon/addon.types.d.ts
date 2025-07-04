@@ -1,4 +1,4 @@
-import type { AddonProvider, AddonProviderPlan } from '../addon-provider/addon-provider.types.js';
+import type { AddonProviderFull, AddonProviderPlan } from '../addon-provider/addon-provider.types.js';
 
 export interface Addon {
   id: string;
@@ -7,7 +7,7 @@ export interface Addon {
   // renamed from region
   zone: string;
   zoneId: string;
-  provider: AddonProvider;
+  provider: AddonProviderFull;
   plan: AddonProviderPlan;
   // transformed from number to date iso string
   creationDate: string;

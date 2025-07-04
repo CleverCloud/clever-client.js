@@ -21,14 +21,7 @@ describe('config-provider commands', function () {
   });
 
   it('should get config provider empty', async () => {
-    const addon = await support.createTestAddon({
-      ownerId: support.organisationId,
-      name: 'test-config-provider',
-      providerId: 'config-provider',
-      planId: 'plan_5d8e9596-dd73-4b73-84d9-e165372c5324',
-      zone: 'par',
-      options: {},
-    });
+    const addon = await support.createTestAddon();
 
     const response = await support.client.send(new GetConfigProviderCommand({ addonId: addon.id }));
 
@@ -37,14 +30,7 @@ describe('config-provider commands', function () {
   });
 
   it('should get config provider', async () => {
-    const addon = await support.createTestAddon({
-      ownerId: support.organisationId,
-      name: 'test-config-provider',
-      providerId: 'config-provider',
-      planId: 'plan_5d8e9596-dd73-4b73-84d9-e165372c5324',
-      zone: 'par',
-      options: {},
-    });
+    const addon = await support.createTestAddon();
     await support.client.send(
       new UpdateConfigProviderCommand({
         addonId: addon.id,
@@ -66,14 +52,7 @@ describe('config-provider commands', function () {
   });
 
   it('should update config provider', async () => {
-    const addon = await support.createTestAddon({
-      ownerId: support.organisationId,
-      name: 'test-config-provider',
-      providerId: 'config-provider',
-      planId: 'plan_5d8e9596-dd73-4b73-84d9-e165372c5324',
-      zone: 'par',
-      options: {},
-    });
+    const addon = await support.createTestAddon();
     await support.client.send(
       new UpdateConfigProviderCommand({
         addonId: addon.id,

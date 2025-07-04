@@ -6,7 +6,7 @@ import { normalizeDate, omit } from '../../../../lib/utils.js';
 
 /**
  * @param {any} payload
- * @return {LogDrain}
+ * @returns {LogDrain}
  */
 export function transformLogDrain(payload) {
   return {
@@ -23,7 +23,7 @@ export function transformLogDrain(payload) {
 
 /**
  * @param {any} payload
- * @return {LogDrainTarget}
+ * @returns {LogDrainTarget}
  */
 export function transformLogDrainTarget(payload) {
   // @ts-ignore

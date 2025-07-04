@@ -1,5 +1,6 @@
 /**
- * @import { GetMetricsCommandInput, GetMetricsCommandOutput, MetricKind, MetricData } from './get-metrics-command.types.js';
+ * @import { GetMetricsCommandInput, GetMetricsCommandOutput, } from './get-metrics-command.types.js';
+ * @import { MetricKind, MetricData } from './metrics.types.js';
  */
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';

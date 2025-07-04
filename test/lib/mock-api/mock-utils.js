@@ -4,7 +4,7 @@
 
 /**
  * @param {MockRequest} request
- * @return {string}
+ * @returns {string}
  */
 export function createRequestKey(request) {
   return [request.method.toLowerCase(), normalizePath(request.path).pathname].join('-');

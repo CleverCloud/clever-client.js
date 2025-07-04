@@ -20,7 +20,7 @@ const CSV_HEADER = [
 
 /**
  * @param {string} path
- * @return {Map<string, CommandDetail>}
+ * @returns {Map<string, CommandDetail>}
  */
 export function parseCommandsList(path) {
   const csv = fs.readFileSync(path).toString();
@@ -94,7 +94,7 @@ export function storeCommandsList(path, commands) {
 
 /**
  * @param {Map<EndpointsSource, Array<Endpoint>>} endpointsBySource
- * @return {Map<string, Array<{source: EndpointsSource, endpoint: Endpoint}>>}
+ * @returns {Map<string, Array<{source: EndpointsSource, endpoint: Endpoint}>>}
  */
 export function flattenEndpointsBySourceTarget(endpointsBySource) {
   /** @type {Map<string, Array<{source: EndpointsSource, endpoint: Endpoint}>>} */

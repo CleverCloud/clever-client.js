@@ -12,7 +12,7 @@ import { e2eSupport } from '../../../../lib/e2e-support.js';
 describe('oauth consumers commands', function () {
   this.timeout(10000);
 
-  const support = e2eSupport(false);
+  const support = e2eSupport();
 
   before(async () => {
     await support.prepare();

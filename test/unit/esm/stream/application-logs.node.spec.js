@@ -21,7 +21,7 @@ import { clearTimers, patchTimers, sleep, unpatchTimers } from '../../../lib/tim
 const DEBUG_LEVEL = 2;
 const ASYNC_TEST_TIMEOUT_MS = 15_000;
 
-describe.skip('ApplicationLogStream', function () {
+describe('ApplicationLogStream', function () {
   this.timeout(60000);
 
   before(patchTimers);
@@ -624,17 +624,17 @@ async function expectCounts(callbacks, counts) {
   while (shouldContinue) {
     const now = new Date().getTime();
     if (now > limit) {
-      const countDetails = Object.fromEntries(Object.entries(callbacks).map(([name, cb]) => [name, cb.count]));
+      const countDetails = Object.fromEntries(Object.entries(callbacks).map(([name, cb]) => [name, cb.callCount]));
       throw new Error('Timeout error on "expectCounts": ' + JSON.stringify(countDetails));
     }
 
     shouldContinue = Object.entries(counts).some(([name, expectedCount]) => {
       const callbackName = /** @type {keyof Callbacks} */ (name);
       const callback = callbacks[callbackName];
-      if (callback.count > expectedCount) {
-        throw new Error(`Callback "${name}" was called ${callback.count} times instead of ${expectedCount}`);
+      if (callback.callCount > expectedCount) {
+        throw new Error(`Callback "${name}" was called ${callback.callCount} times instead of ${expectedCount}`);
       }
-      return callback.count !== expectedCount;
+      return callback.callCount !== expectedCount;
     });
 
     if (shouldContinue) {

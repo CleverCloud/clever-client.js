@@ -9,6 +9,7 @@ import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-comm
  *
  * @extends {CcApiCompositeCommand<AddLinkCommandInput, void>}
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
+ * @endpoint [POST] /v2/organisations/:XXX/applications/:XXX/addons
  * @group Link
  * @version 2
  */

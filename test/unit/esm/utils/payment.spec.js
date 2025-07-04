@@ -1,5 +1,5 @@
 /**
- * @import {PaymentMethod, Orga} from '../../../esm/utils/payments.types.js'
+ * @import {PaymentMethod, Orga} from '../../../../esm/utils/payments.types.js'
  */
 import { expect } from 'chai';
 import {

@@ -7,6 +7,9 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
  * @extends {CcApiSimpleCommand<void, GetOrganisationSummariesCommandOutput>}
+ * @endpoint [GET] /v2/summary
+ * @group Organisation
+ * @version 2
  */
 export class GetOrganisationSummariesCommand extends CcApiSimpleCommand {
   toRequestParams() {

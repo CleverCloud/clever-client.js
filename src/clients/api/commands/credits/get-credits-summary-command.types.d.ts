@@ -1,9 +1,7 @@
+import type { Credits } from './credits.types.js';
+
 export interface GetCreditsSummaryCommandInput {
   ownerId: string;
 }
 
-export interface GetCreditsSummaryCommandOutput {
-  prepaidCredit: number;
-  freeCredit: number;
-  currency: string;
-}
+export type GetCreditsSummaryCommandOutput = Credits;

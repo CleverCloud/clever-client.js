@@ -10,7 +10,7 @@ const SSH_KEY = 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFKttpn0/QsZEPeH+MsCNvWPakM
 describe('ssh-key commands', function () {
   this.timeout(10000);
 
-  const support = e2eSupport(false);
+  const support = e2eSupport();
 
   before(async () => {
     await support.prepare();

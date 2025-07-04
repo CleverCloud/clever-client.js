@@ -6,8 +6,6 @@ import { get } from '../../../../lib/request/request-params-builder.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
- * This endpoint is for internal use only for now, it may be removed at anytime without warnings.
- *
  * @extends {CcApiSimpleCommand<void, GetProductElasticsearchInfoCommandOutput>}
  * @endpoint [GET] /v2/providers/es-addon/tmp/services-flavors
  * @group Product

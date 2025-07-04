@@ -50,9 +50,6 @@ interface ApplicationOauthAppGithub {
   id: string;
 }
 
-/**
- * @internal
- */
-export interface CreateApplicationInternalCommandInput extends Omit<CreateApplicationCommandInput, 'instance'> {
+export interface CreateApplicationInnerCommandInput extends Omit<CreateApplicationCommandInput, 'instance'> {
   instance: ApplicationInstance;
 }

@@ -124,6 +124,10 @@ async function getResponseBody(fetchResponse) {
     return null;
   }
 
+  if (fetchResponse.headers.get('content-length') === '0') {
+    return null;
+  }
+
   const responseContentType = getContentType(fetchResponse.headers);
   if (responseContentType === JSON_TYPE) {
     return fetchResponse.json();
@@ -143,6 +147,6 @@ async function getResponseBody(fetchResponse) {
  * @returns {string|null}
  */
 function getContentType(headers) {
-  const contentType = headers.get('Content-Type');
+  const contentType = headers.get('content-type');
   return contentType != null ? contentType.split(';')[0] : contentType;
 }

@@ -2,7 +2,8 @@
  * @import { GetMatomoInfoCommandInput, GetMatomoInfoCommandOutput } from './get-matomo-info-command.types.js';
  */
 import { get } from '../../../../lib/request/request-params-builder.js';
-import { omit, safeUrl } from '../../../../lib/utils.js';
+import { safeUrl } from '../../../../lib/utils.js';
+import { toArray } from '../../../../utils/environment-utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
@@ -32,10 +33,18 @@ export class GetMatomoInfoCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<GetMatomoInfoCommandInput, GetMatomoInfoCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    // @ts-ignore
     return {
-      ...omit(response, 'envVars'),
-      environment: Object.entries(response.envVars).map(([name, value]) => ({ name, value })),
+      id: response.resourceId,
+      addonId: response.addonId,
+      name: response.name,
+      ownerId: response.ownerId,
+      plan: response.plan,
+      version: response.version,
+      phpVersion: response.phpVersion,
+      accessUrl: response.accessUrl,
+      availableVersions: response.availableVersions,
+      resources: response.resources,
+      environment: toArray(response.envVars),
     };
   }
 }

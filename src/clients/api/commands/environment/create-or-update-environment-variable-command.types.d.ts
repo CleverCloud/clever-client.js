@@ -1,3 +1,4 @@
+import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
 import { ApplicationId } from '../../types/cc-api.types.js';
 
 export interface CreateOrUpdateEnvironmentVariableCommandInput extends ApplicationId {
@@ -5,4 +6,4 @@ export interface CreateOrUpdateEnvironmentVariableCommandInput extends Applicati
   value: string;
 }
 
-export interface CreateOrUpdateEnvironmentVariableCommandOutput {}
+export type CreateOrUpdateEnvironmentVariableCommandOutput = Array<EnvironmentVariable>;

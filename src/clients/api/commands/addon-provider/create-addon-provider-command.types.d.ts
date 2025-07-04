@@ -1,4 +1,4 @@
-import type { AddonProvider } from './addon-provider.types.js';
+import type { AddonProviderFull } from './addon-provider.types.js';
 
 export interface CreateAddonProviderCommandInput {
   ownerId: string;
@@ -27,4 +27,4 @@ export interface CreateAddonProviderCommandInput {
   };
 }
 
-export type CreateAddonProviderCommandOutput = AddonProvider;
+export type CreateAddonProviderCommandOutput = AddonProviderFull;

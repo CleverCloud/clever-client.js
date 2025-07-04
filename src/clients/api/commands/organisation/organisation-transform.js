@@ -4,46 +4,46 @@
 
 /**
  *
- * @param {any} response
+ * @param {any} payload
  * @returns {Organisation}
  */
-export function transformOrganisation(response) {
+export function transformOrganisation(payload) {
   return {
-    id: response.id,
-    name: response.name,
-    description: response.description,
+    id: payload.id,
+    name: payload.name,
+    description: payload.description,
     // transform billingEmail to billingEmailAddress
-    billingEmailAddress: response.billingEmail,
-    address: response.address,
-    city: response.city,
-    zipcode: response.zipcode,
-    country: response.country,
-    company: response.company,
-    VAT: response.VAT,
-    avatar: response.avatar,
-    vatState: response.vatState,
-    customerFullName: response.customerFullName,
-    canPay: response.canPay,
-    cleverEnterprise: response.cleverEnterprise,
-    emergencyNumber: response.emergencyNumber,
-    canSEPA: response.canSEPA,
-    isTrusted: response.isTrusted,
+    billingEmailAddress: payload.billingEmail,
+    address: payload.address,
+    city: payload.city,
+    zipcode: payload.zipcode,
+    country: payload.country,
+    company: payload.company,
+    VAT: payload.VAT,
+    avatar: payload.avatar,
+    vatState: payload.vatState,
+    customerFullName: payload.customerFullName,
+    canPay: payload.canPay,
+    cleverEnterprise: payload.cleverEnterprise,
+    emergencyNumber: payload.emergencyNumber,
+    canSEPA: payload.canSEPA,
+    isTrusted: payload.isTrusted,
   };
 }
 
 /**
  *
- * @param {any} response
+ * @param {any} payload
  * @returns {OrganisationMember}
  */
-export function transformOrganisationMember(response) {
+export function transformOrganisationMember(payload) {
   return {
-    id: response.member.id,
-    email: response.member.email,
-    name: response.member.name,
-    avatar: response.member.avatar,
-    preferredMFA: response.member.preferredMFA,
-    role: response.role,
-    job: response.job,
+    id: payload.member.id,
+    email: payload.member.email,
+    name: payload.member.name,
+    avatar: payload.member.avatar,
+    preferredMFA: payload.member.preferredMFA,
+    role: payload.role,
+    job: payload.job,
   };
 }

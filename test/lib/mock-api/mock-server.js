@@ -122,7 +122,7 @@ class Model {
    * @param {string} path
    * @param {Record<string, OneOrMany<string>>} headers
    * @param {any} body
-   * @return {MockCall}
+   * @returns {MockCall}
    */
   registerCall(method, path, headers, body) {
     const normalizedPath = normalizePath(path);

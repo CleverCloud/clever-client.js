@@ -28,7 +28,7 @@ export class Polling {
   }
 
   /**
-   * @return {boolean} Whether the polling process is running
+   * @returns {boolean} Whether the polling process is running
    */
   get running() {
     return this._running;
@@ -36,7 +36,7 @@ export class Polling {
 
   /**
    * Starts the polling process. If it was already running, we force stopping it before.
-   * @return {Promise<T>}
+   * @returns {Promise<T>}
    * @throws {Error} if interrupted or if timeout
    */
   start() {
@@ -122,7 +122,7 @@ class SingleTimer {
   }
 
   /**
-   * @return {number|null} The id of the running timer. `null` if none is running.
+   * @returns {number|null} The id of the running timer. `null` if none is running.
    */
   get id() {
     return this._id;
@@ -136,7 +136,7 @@ class SingleTimer {
    * @param {() => any} callback The function to call when the timer elapses.
    * @param {number} [delay=1] The number of milliseconds to wait before calling the `callback`.
    * @param {Array<any>} [args] Optional arguments to pass when the `callback` is called.
-   * @return {number}
+   * @returns {number}
    */
   set(callback, delay, ...args) {
     // force stopping current timeout if any

@@ -1,5 +1,5 @@
 /**
- * @import { ResolveDnsResult } from '../../../esm/utils/diag-domain-config.types.js'
+ * @import { ResolveDnsResult } from '../../../../esm/utils/diag-domain-config.types.js'
  */
 import { expect } from 'chai';
 import { diagDomainConfig } from '../../../../esm/utils/diag-domain-config.js';

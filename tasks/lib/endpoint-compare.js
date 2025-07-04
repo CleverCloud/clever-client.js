@@ -8,7 +8,7 @@ import { isIgnored } from './endpoint-ignore.js';
  * @param {EndpointsSource} source
  * @param {Record<string, Endpoint>} before
  * @param {Record<string, Endpoint>} after
- * @return {OpenapiDiff}
+ * @returns {OpenapiDiff}
  */
 export function compareEndpoints(source, before, after) {
   const endpointsBefore = Object.values(before).filter((endpoint) => !isIgnored(source, endpoint));

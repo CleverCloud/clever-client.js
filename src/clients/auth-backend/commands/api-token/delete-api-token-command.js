@@ -13,7 +13,7 @@ import { AuthBackendCommand } from '../../lib/auth-backend-command.js';
  */
 export class DeleteApiTokenCommand extends AuthBackendCommand {
   /** @type {AuthBackendCommand<DeleteApiTokenCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+  toRequestParams() {
     return delete_(safeUrl`/api-tokens/:XXX`);
   }
 }

@@ -16,7 +16,7 @@ import { e2eSupport } from '../../../../lib/e2e-support.js';
 describe('organisation commands', function () {
   this.timeout(10000);
 
-  const support = e2eSupport(false);
+  const support = e2eSupport();
 
   before(async () => {
     await support.prepare();
@@ -41,7 +41,26 @@ describe('organisation commands', function () {
       country: 'FR',
     });
 
-    console.log(response);
+    expect(response.id).to.be.a('string');
+    expect(response.id).to.match(/^orga_.+/);
+    expect(response.name).to.equal('name');
+    expect(response.description).to.equal('description');
+    expect(response).to.ownProperty('billingEmailAddress');
+    expect(response.address).to.equal('address');
+    expect(response.city).to.equal('city');
+    expect(response.zipcode).to.equal('zipcode');
+    expect(response.country).to.equal('FRANCE');
+    expect(response).to.ownProperty('company');
+    expect(response).to.ownProperty('VAT');
+    expect(response).to.ownProperty('avatar');
+    expect(response.vatState).to.be.a('string');
+    expect(response.customerFullName).to.be.a('string');
+    expect(response.customerFullName).to.equal('customerFullName');
+    expect(response.canPay).to.be.a('boolean');
+    expect(response.cleverEnterprise).to.be.a('boolean');
+    expect(response).to.ownProperty('emergencyNumber');
+    expect(response.canSEPA).to.be.a('boolean');
+    expect(response.isTrusted).to.be.a('boolean');
   });
 
   it('should delete organisation', async () => {
@@ -80,7 +99,25 @@ describe('organisation commands', function () {
       }),
     );
 
-    console.log(response);
+    expect(response.id).to.equal(organisation.id);
+    expect(response.name).to.equal('name');
+    expect(response.description).to.equal('updated description');
+    expect(response).to.ownProperty('billingEmailAddress');
+    expect(response.address).to.equal('address');
+    expect(response.city).to.equal('city');
+    expect(response.zipcode).to.equal('zipcode');
+    expect(response.country).to.equal('FRANCE');
+    expect(response).to.ownProperty('company');
+    expect(response).to.ownProperty('VAT');
+    expect(response).to.ownProperty('avatar');
+    expect(response.vatState).to.be.a('string');
+    expect(response.customerFullName).to.be.a('string');
+    expect(response.customerFullName).to.equal('customerFullName');
+    expect(response.canPay).to.be.a('boolean');
+    expect(response.cleverEnterprise).to.be.a('boolean');
+    expect(response).to.ownProperty('emergencyNumber');
+    expect(response.canSEPA).to.be.a('boolean');
+    expect(response.isTrusted).to.be.a('boolean');
   });
 
   it('should get organisation', async () => {
@@ -100,7 +137,25 @@ describe('organisation commands', function () {
       }),
     );
 
-    console.log(response);
+    expect(response.id).to.equal(organisation.id);
+    expect(response.name).to.equal('name');
+    expect(response.description).to.equal('description');
+    expect(response).to.ownProperty('billingEmailAddress');
+    expect(response.address).to.equal('address');
+    expect(response.city).to.equal('city');
+    expect(response.zipcode).to.equal('zipcode');
+    expect(response.country).to.equal('FRANCE');
+    expect(response).to.ownProperty('company');
+    expect(response).to.ownProperty('VAT');
+    expect(response).to.ownProperty('avatar');
+    expect(response.vatState).to.be.a('string');
+    expect(response.customerFullName).to.be.a('string');
+    expect(response.customerFullName).to.equal('customerFullName');
+    expect(response.canPay).to.be.a('boolean');
+    expect(response.cleverEnterprise).to.be.a('boolean');
+    expect(response).to.ownProperty('emergencyNumber');
+    expect(response.canSEPA).to.be.a('boolean');
+    expect(response.isTrusted).to.be.a('boolean');
   });
 
   it('should list organisations without personal organisation', async () => {

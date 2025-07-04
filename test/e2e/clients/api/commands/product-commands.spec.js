@@ -9,7 +9,7 @@ import { e2eSupport } from '../../../../lib/e2e-support.js';
 describe('product commands', function () {
   this.timeout(10000);
 
-  const support = e2eSupport(false);
+  const support = e2eSupport();
 
   before(async () => {
     await support.prepare();
@@ -22,13 +22,13 @@ describe('product commands', function () {
   afterEach(async () => {});
 
   it('should list runtimes', async () => {
-    const response = await support.getClient('NONE').send(new ListProductRuntimeCommand());
+    const response = await support.client.send(new ListProductRuntimeCommand());
 
     console.log(JSON.stringify(response, null, 2));
   });
 
   it('should get runtime', async () => {
-    const runtimes = await support.getClient('NONE').send(new ListProductRuntimeCommand());
+    const runtimes = await support.client.send(new ListProductRuntimeCommand());
 
     const response = await support.client.send(
       new GetProductRuntimeCommand({ type: runtimes[0].type, version: runtimes[0].version }),
@@ -37,12 +37,12 @@ describe('product commands', function () {
   });
 
   it('should list addons without versions', async () => {
-    const response = await support.getClient('NONE').send(new ListProductAddonCommand({ withVersions: false }));
+    const response = await support.client.send(new ListProductAddonCommand({ withVersions: false }));
     console.log(JSON.stringify(response, null, 2));
   });
 
   it('should list addons with versions', async () => {
-    const response = await support.getClient('NONE').send(new ListProductAddonCommand({ withVersions: true }));
+    const response = await support.client.send(new ListProductAddonCommand({ withVersions: true }));
     console.log(JSON.stringify(response, null, 2));
   });
 

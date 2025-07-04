@@ -4,16 +4,16 @@
 import { normalizeDate, omit } from '../../../../lib/utils.js';
 
 /**
- * @param {any} response
+ * @param {any} payload
  * @returns {Migration}
  */
-export function transformMigration(response) {
+export function transformMigration(payload) {
   // @ts-ignore
   return {
-    ...omit(response, 'migrationId'),
-    id: response.migrationId,
-    requestDate: normalizeDate(response.requestDate),
-    steps: response.steps.map(
+    ...omit(payload, 'migrationId'),
+    id: payload.migrationId,
+    requestDate: normalizeDate(payload.requestDate),
+    steps: payload.steps.map(
       /** @param {MigrationStep} step */ (step) => ({
         ...step,
         startDate: normalizeDate(step.startDate),

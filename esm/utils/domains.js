@@ -6,7 +6,7 @@
  * Extracts `hostname`, `pathname`, `isWildcard` from a given `domain`
  *
  * @param {string} domain
- * @return {{ hostname: string, pathname: string, isWildcard: boolean }}
+ * @returns {{ hostname: string, pathname: string, isWildcard: boolean }}
  */
 export function parseDomain(domain) {
   const domainWithHttp = domain.match(/^https?:\/\//) != null ? domain : 'https://' + domain;
@@ -74,7 +74,7 @@ export function getDomainUrl(hostname, pathPrefix, isWildcard, isHttpOnly) {
 
 /**
  * @param {string} hostname
- * @return {boolean}
+ * @returns {boolean}
  */
 export function isTestDomain(hostname) {
   return hostname.endsWith('cleverapps.io');
@@ -85,7 +85,7 @@ export function isTestDomain(hostname) {
  * For instance `subdomain.main.cleverapps.io` is HTTP only.
  *
  * @param {string} domain
- * @return {boolean} whether the domain is a `cleverapps.io` is HTTP only or not
+ * @returns {boolean} whether the domain is a `cleverapps.io` is HTTP only or not
  */
 export function isTestDomainWithSubdomain(domain) {
   return isTestDomain(domain) && domain.split('.').length > 3;

@@ -1,6 +1,22 @@
 /**
- * @import { AddonProvider, AddonProviderPlan, AddonProviderFeature } from './addon-provider.types.js';
+ * @import { AddonProvider, AddonProviderFull, AddonProviderPlan, AddonProviderFeature, AddonProviderPlanFeature } from './addon-provider.types.js';
  */
+
+/**
+ * @param {any} payload
+ * @returns {AddonProviderFull}
+ */
+export function transformAddonProviderFull(payload) {
+  return {
+    ...transformAddonProvider(payload),
+    plans: payload.plans.map(transformAddonProviderPlan).sort(
+      /** @param {AddonProviderPlan} a
+       @param {AddonProviderPlan} b
+       */ (a, b) => a.price - b.price,
+    ),
+    features: payload.features.map(transformAddonProviderFeature),
+  };
+}
 
 /**
  * @param {any} payload
@@ -22,11 +38,6 @@ export function transformAddonProvider(payload) {
     openInNewTab: payload.openInNewTab,
     canUpgrade: payload.canUpgrade,
     zones: payload.regions,
-    plans: payload.plans.map(transformAddonProviderPlan).sort(
-      /** @param {AddonProviderPlan} a
-       @param {AddonProviderPlan} b
-       */ (a, b) => a.price - b.price,
-    ),
   };
 }
 
@@ -42,7 +53,20 @@ export function transformAddonProviderPlan(payload) {
     slug: payload.slug,
     zones: payload.zones,
     priceId: payload.price_id?.toLowerCase(),
-    features: payload.features.map(transformAddonProviderFeature),
+    features: payload.features.map(transformAddonProviderPlanFeature),
+  };
+}
+
+/**
+ * @param {any} payload
+ * @returns {AddonProviderPlanFeature}
+ */
+export function transformAddonProviderPlanFeature(payload) {
+  return {
+    ...transformAddonProviderFeature(payload),
+    value: payload.value,
+    // fallback to value when null
+    computableValue: payload.computable_value ?? payload.value,
   };
 }
 
@@ -54,9 +78,6 @@ export function transformAddonProviderFeature(payload) {
   return {
     name: payload.name,
     type: payload.type,
-    value: payload.value,
-    // fallback to value when null
-    computableValue: payload.computable_value ?? payload.value,
     //fallback to name when null
     nameCode: payload.name_code ?? payload.name,
   };

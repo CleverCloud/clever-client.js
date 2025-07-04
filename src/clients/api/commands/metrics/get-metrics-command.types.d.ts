@@ -1,4 +1,5 @@
 import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
+import type { MetricKind, Metrics } from './metrics.types.js';
 
 export type GetMetricsCommandInput = ApplicationOrAddonId & {
   metrics?: Array<MetricKind>;
@@ -8,13 +9,4 @@ export type GetMetricsCommandInput = ApplicationOrAddonId & {
   fill?: boolean;
 };
 
-export type GetMetricsCommandOutput = {
-  [p in MetricKind]?: Array<MetricData>;
-};
-
-export type MetricKind = 'cpu' | 'mem' | 'load1';
-
-export interface MetricData {
-  timestamp: number;
-  value: number;
-}
+export type GetMetricsCommandOutput = Metrics;

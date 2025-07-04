@@ -4,6 +4,7 @@
 import { put } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { transformInvoice } from '../invoice/invoice-transform.js';
 
 /**
  *
@@ -18,5 +19,10 @@ export class AuthorizeStripeCommand extends CcApiSimpleCommand {
     return put(
       safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/${params.invoiceNumber}/payments/stripe/${params.intentId}`,
     );
+  }
+
+  /** @type {CcApiSimpleCommand<AuthorizeStripeCommandInput, AuthorizeStripeCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return transformInvoice(response);
   }
 }

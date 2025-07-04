@@ -1,6 +1,6 @@
 /**
  * @import { CreatePersonalSshKeyCommandInput, CreatePersonalSshKeyCommandOutput } from './create-personal-ssh-key-command.types.js';
- * @import { PersonalSshKey } from './ssh-key.types.js';
+ * @import { SshKey } from './ssh-key.types.js';
  */
 import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
@@ -19,7 +19,7 @@ export class CreatePersonalSshKeyCommand extends CcApiCompositeCommand {
   async compose(params, composer) {
     await composer.send(new CreatePersonalSshKeyInnerCommand(params));
     const keys = await composer.send(new ListPersonalSshKeyCommand());
-    return keys.find(/** @param {PersonalSshKey} key */ (key) => key.name === params.name);
+    return keys.find(/** @param {SshKey} key */ (key) => key.name === params.name);
   }
 }
 

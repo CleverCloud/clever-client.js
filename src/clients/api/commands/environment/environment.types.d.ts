@@ -7,14 +7,14 @@ export interface GetEnvironmentCommandOutput {
 }
 
 export interface LinkedApplicationEnvironment {
-  environment: Array<EnvironmentVariable>;
   applicationId: string;
   applicationName: string;
+  environment: Array<EnvironmentVariable>;
 }
 
 export interface LinkedAddonEnvironment {
-  environment: Array<EnvironmentVariable>;
-  addonProviderId: string;
   addonId: string;
   addonName: string;
+  addonProviderId: string;
+  environment: Array<EnvironmentVariable>;
 }
