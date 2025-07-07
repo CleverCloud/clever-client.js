@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { toMicroIsoString, toMicroTimestamp } from '../esm/utils/date.js';
+import { toMicroIsoString, toMicroTimestamp } from '../../../../esm/utils/date.js';
 
 describe('date#toMicroIsoString()', () => {
   it('from timestamp without microseconds precision', () => {

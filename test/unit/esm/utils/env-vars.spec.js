@@ -10,7 +10,7 @@ import {
   toNameEqualsValueString,
   toNameValueObject,
   validateName,
-} from '../esm/utils/env-vars.js';
+} from '../../../../esm/utils/env-vars.js';
 
 describe('validateName()', () => {
   it('OK (classic bash/linux)', () => {
@@ -538,8 +538,7 @@ describe('parseRawJson()', () => {
 
 describe('toJson()', () => {
   it('no vars', () => {
-    const variables = [];
-    expect(toJson(variables)).to.equal('[]');
+    expect(toJson([])).to.equal('[]');
   });
 
   it('simple var', () => {

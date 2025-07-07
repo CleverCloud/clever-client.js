@@ -1,21 +1,35 @@
+/**
+ * @import { Stub } from 'hanbi';
+ */
 import { expect } from 'chai';
-import findFreePorts from 'find-free-ports';
-import { ApplicationLogStream } from '../esm/streams/application-logs.js';
-import { HttpError, NetworkError, ServerError } from '../esm/streams/clever-cloud-sse.js';
-import { createStub } from './lib/stub.js';
-import { TestSseServer } from './lib/test-sse-server.js';
-import { clearTimers, patchTimers, sleep, unpatchTimers } from './lib/timers.js';
+import { findFreePorts } from 'find-free-ports';
+import { ApplicationLogStream } from '../../../../esm/streams/application-logs.js';
+import { HttpError, NetworkError, ServerError } from '../../../../esm/streams/clever-cloud-sse.js';
+import { createStub } from '../../../lib/stub.js';
+import { TestSseServer } from '../../../lib/test-sse-server.js';
+import { clearTimers, patchTimers, sleep, unpatchTimers } from '../../../lib/timers.js';
+
+/**
+ * @typedef {object} Callbacks
+ * @property {Stub<?>} onOpen
+ * @property {Stub<(evt: {error: any}) => void>} onError
+ * @property {Stub<?>} onLog
+ * @property {Stub<?>} onSuccess
+ * @property {Stub<?>} onFailure
+ */
 
 const DEBUG_LEVEL = 2;
-
 const ASYNC_TEST_TIMEOUT_MS = 15_000;
 
-describe('ApplicationLogStream', () => {
+describe('ApplicationLogStream', function () {
+  this.timeout(60000);
+
   before(patchTimers);
   after(unpatchTimers);
 
   /** @type {TestSseServer} */
   let sseServer;
+  /** @type {ApplicationLogStream} */
   let appLogs;
 
   // Prepare a test SSE server instance for each test
@@ -81,11 +95,11 @@ describe('ApplicationLogStream', () => {
         tokens: null,
         ownerId: 'ownerId',
         appId: 'appId',
-        fields: ['aaa', 'bbb', 'ccc'],
+        field: ['aaa', 'bbb', 'ccc'],
       });
       const url = appsLogs.getUrl().toString();
       expect(url).to.equal(
-        `${sseServer.getUrl()}/v4/logs/organisations/ownerId/applications/appId/logs?fields=aaa&fields=bbb&fields=ccc`,
+        `${sseServer.getUrl()}/v4/logs/organisations/ownerId/applications/appId/logs?field=aaa&field=bbb&field=ccc`,
       );
     });
 
@@ -104,6 +118,7 @@ describe('ApplicationLogStream', () => {
   });
 
   describe('no retry', () => {
+    /** @type {Callbacks} */
     let callbacks;
 
     // Prepare an ApplicationLogStream instance with stubbed callbacks for each test
@@ -141,9 +156,9 @@ describe('ApplicationLogStream', () => {
       await sseServer.acceptRequest();
       await sseServer.sendHeartbeats(2, 1000);
 
-      appLogs.close('the reason');
+      appLogs.close({ type: 'the reason' });
       await expectCounts(callbacks, { onOpen: 1, onError: 0, onLog: 0, onSuccess: 1, onFailure: 0 });
-      expect(callbacks.onSuccess.getCall(0).args[0]).to.deep.equal('the reason');
+      expect(callbacks.onSuccess.getCall(0).args[0]).to.deep.equal({ type: 'the reason' });
     });
 
     it('Pause log stream should not timeout', async () => {
@@ -303,6 +318,7 @@ describe('ApplicationLogStream', () => {
   });
 
   describe('2 retry max', () => {
+    /** @type {Callbacks} */
     let callbacks;
 
     // Prepare an ApplicationLogStream instance with stubbed callbacks and an auto retry (max 2) for each test
@@ -544,7 +560,12 @@ describe('ApplicationLogStream', () => {
   });
 });
 
-// Set up a ApplicationLogStream with a series of stubbed callbacks
+/**
+ * Set up an ApplicationLogStream with a series of stubbed callbacks
+ * @param {string} url
+ * @param options
+ * @returns {{appLogs: ApplicationLogStream, callbacks: Callbacks}}
+ */
 function createApplicationLogStream(url, options = {}) {
   const appLogs = new ApplicationLogStream({
     apiHost: url,
@@ -588,8 +609,13 @@ function createApplicationLogStream(url, options = {}) {
   };
 }
 
-// Give it an object of named stubbed callbacks and wait for the given expected count of calls
-// Fails if timeoutLimit it reached
+/**
+ * Give it an object of named stubbed callbacks and wait for the given expected count of calls
+ * Fails if timeoutLimit it reached
+ * @param {Callbacks} callbacks
+ * @param {Record<keyof Callbacks, number>} counts
+ * @returns {Promise<void>}
+ */
 async function expectCounts(callbacks, counts) {
   const limit = new Date().getTime() + ASYNC_TEST_TIMEOUT_MS;
 
@@ -603,10 +629,12 @@ async function expectCounts(callbacks, counts) {
     }
 
     shouldContinue = Object.entries(counts).some(([name, expectedCount]) => {
-      if (callbacks[name].callCount > expectedCount) {
-        throw new Error(`Callback "${name}" was called ${callbacks[name].callCount} times instead of ${expectedCount}`);
+      const callbackName = /** @type {keyof Callbacks} */ (name);
+      const callback = callbacks[callbackName];
+      if (callback.callCount > expectedCount) {
+        throw new Error(`Callback "${name}" was called ${callback.callCount} times instead of ${expectedCount}`);
       }
-      return callbacks[name].callCount !== expectedCount;
+      return callback.callCount !== expectedCount;
     });
 
     if (shouldContinue) {
@@ -615,6 +643,11 @@ async function expectCounts(callbacks, counts) {
   }
 }
 
+/**
+ * @param {any} error
+ * @param {any} theClass
+ * @param {object} properties
+ */
 function expectError(error, theClass, properties = {}) {
   expect(error).to.be.instanceof(theClass);
   for (const [name, value] of Object.entries(properties)) {
