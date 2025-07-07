@@ -1,9 +1,8 @@
-import { expect } from 'chai';
-import { diagDomainConfig } from '../esm/utils/diag-domain-config.js';
-
 /**
- * @typedef {import('../esm/utils/diag-domain-config.types.js').ResolveDnsResult} ResolveDnsResult
+ * @import { ResolveDnsResult } from '../../../../esm/utils/diag-domain-config.types.js'
  */
+import { expect } from 'chai';
+import { diagDomainConfig } from '../../../../esm/utils/diag-domain-config.js';
 
 const HOSTNAME_EXAMPLE = 'example.com';
 const HOSTNAME_TESTONLY = 'app-f6ed4d4f-9668-4a03-a6fd-b297c15fc825.cleverapps.io';

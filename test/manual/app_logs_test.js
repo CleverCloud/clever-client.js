@@ -1,4 +1,4 @@
-import { ApplicationLogStream } from '../esm/streams/application-logs.js';
+import { ApplicationLogStream } from '../../esm/streams/application-logs.js';
 
 const ownerId = process.env.OWNER_ID;
 const appId = process.env.APP_ID;
@@ -34,7 +34,7 @@ const logStream = new ApplicationLogStream({
 
 logStream
   .on('open', (event) => console.debug('stream opened!', event))
-  .on('error', (event) => console.log('RETRYABLE_ERROR', event.error))
+  .on('error', /** @param {Event & {error?: any}} event */ (event) => console.log('RETRYABLE_ERROR', event.error))
   .onLog((log) => console.log(log.date, log.message));
 
 logStream
@@ -58,7 +58,7 @@ setTimeout(() => {
 }, 5000);
 
 setTimeout(() => {
-  logStream.close('END');
+  logStream.close({ type: 'END' });
 }, 7000);
 
 //.pause() // abort controller -> keep start() promise
