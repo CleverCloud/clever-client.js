@@ -7,11 +7,7 @@ import {
   isTestDomainWithSubdomain,
   parseDomain,
   sortDomains,
-} from '../esm/utils/domains.js';
-
-/**
- * @typedef {import('../esm/utils/diag-domain-config.types.js').DomainInfo} DomainInfo
- */
+} from '../../../../esm/utils/domains.js';
 
 describe('domains', () => {
   describe('parseDomain()', () => {

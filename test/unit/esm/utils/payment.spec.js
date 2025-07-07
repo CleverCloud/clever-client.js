@@ -1,24 +1,18 @@
+/**
+ * @import {PaymentMethod, Orga} from '../../../../esm/utils/payments.types.js'
+ */
 import { expect } from 'chai';
-import { ERROR_TYPES, getAllOrgaPaymentMethodsErrors, getOrgaPaymentMethodsError } from '../esm/utils/payment.js';
+import {
+  ERROR_TYPES,
+  getAllOrgaPaymentMethodsErrors,
+  getOrgaPaymentMethodsError,
+} from '../../../../esm/utils/payment.js';
 
+/** @type {Orga} */
 const simpleOrga = {
   id: 'orga_???',
   name: '???',
-  description: '???',
-  billingEmail: '???@???.com',
-  address: '???',
-  city: '???',
-  zipcode: '???',
-  country: '???',
-  company: '???',
-  VAT: '???',
-  avatar: 'https://example.com',
-  vatState: 'VALID',
-  customerFullName: '???',
-  canPay: false,
   cleverEnterprise: false,
-  emergencyNumber: null,
-  canSEPA: false,
   isTrusted: false,
 };
 const simpleOrgaFoo = { ...simpleOrga, id: 'orga_foo' };
@@ -27,30 +21,20 @@ const premiumOrga = { ...simpleOrga, cleverEnterprise: true };
 const trustedOrga = { ...simpleOrga, isTrusted: true };
 const premiumAndTrustedOrga = { ...simpleOrga, cleverEnterprise: true, isTrusted: true };
 
+/** @type {PaymentMethod} */
 const simpleCard = {
-  ownerId: 'orga_???',
   type: 'CREDITCARD',
-  token: '???',
   isDefault: false,
-  number: '???',
-  holderName: null,
-  expirationDate: '20??-??-??',
   isExpired: false,
-  cardType: '???',
 };
 const simpleDefaultCard = { ...simpleCard, isDefault: true };
 const expiredDefaultCard = { ...simpleCard, isExpired: true, isDefault: true };
 
+/** @type {PaymentMethod} */
 const simpleSepa = {
-  ownerId: 'orga_???',
   type: 'SEPA_DEBIT',
-  token: '???',
   isDefault: false,
-  number: '???',
-  bankCode: '???',
-  branchCode: '???',
-  country: '??',
-  fingerprint: '???',
+  isExpired: false,
 };
 const simpleDefaultSepa = { ...simpleSepa, isDefault: true };
 
