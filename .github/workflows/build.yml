@@ -34,9 +34,9 @@ jobs:
         run: npm run format:check
 
       - name: '[Unit tests] Browser tests'
-        run: npm run test-wtr
+        run: npm run test:unit:browser
       - name: '[Unit tests] Node tests'
-        run: npm run test-mocha
+        run: npm run test:unit:node
 
       - name: '[Build] Generate client'
         run: npm run generate-client

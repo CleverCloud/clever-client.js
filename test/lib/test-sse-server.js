@@ -1,7 +1,10 @@
-import http from 'http';
+import http from 'node:http';
 import { sleep } from './timers.js';
 
 export class TestSseServer {
+  /**
+   * @param {number} port
+   */
   constructor(port) {
     this._alive = false;
     this._port = port;
@@ -39,6 +42,10 @@ export class TestSseServer {
     delete this._response;
   }
 
+  /**
+   * @param {string} header
+   * @returns {Promise<string|Array<string>>}
+   */
   async getRequestHeader(header) {
     while (this._request == null && this._alive) {
       await sleep(100);
@@ -46,13 +53,23 @@ export class TestSseServer {
     return this._request.headers[header];
   }
 
+  /**
+   * @param {string} name
+   * @returns {Promise<string>}
+   */
   async getQueryParam(name) {
     while (this._request == null && this._alive) {
       await sleep(100);
     }
-    return new URL(this._request.url, `http://localhost:${this._port}`).searchParams.get(name);
+    return new URL(this._request.url, this.getUrl()).searchParams.get(name);
   }
 
+  /**
+   * @param {number} status
+   * @param {Record<string, string>} headers
+   * @param {string} [body]
+   * @returns {Promise<void>}
+   */
   async handleRequest(status, headers, body) {
     while (this._response == null && this._alive) {
       await sleep(100);
@@ -72,6 +89,11 @@ export class TestSseServer {
     });
   }
 
+  /**
+   * @param {number} status
+   * @param {object} [bodyObject]
+   * @returns {Promise<void>}
+   */
   async rejectRequest(status, bodyObject) {
     const headers = bodyObject != null ? { 'content-type': 'application/json' } : {};
     const body = bodyObject != null ? JSON.stringify(bodyObject) : '';
@@ -122,6 +144,13 @@ export class TestSseServer {
     return this.rejectRequest(500);
   }
 
+  /**
+   * @param {object} object
+   * @param {string} [object.id]
+   * @param {string} [object.event]
+   * @param {any} [object.data]
+   * @returns {Promise<void>}
+   */
   async sendEvent({ id, event = 'message', data }) {
     while (this._response == null && this._alive) {
       await sleep(100);
@@ -147,6 +176,11 @@ export class TestSseServer {
     this._response.write('\n');
   }
 
+  /**
+   * @param {number} count
+   * @param {number} delay
+   * @returns {Promise<void>}
+   */
   async sendHeartbeats(count, delay) {
     for (let i = 0; i < count; i++) {
       await sleep(delay);
@@ -154,6 +188,10 @@ export class TestSseServer {
     }
   }
 
+  /**
+   * @param {string} id
+   * @returns {Promise<void>}
+   */
   async sendLog(id) {
     return this.sendEvent({
       id,
@@ -162,6 +200,11 @@ export class TestSseServer {
     });
   }
 
+  /**
+   * @param {Array<string>} ids
+   * @param {number} delay
+   * @returns {Promise<void>}
+   */
   async sendLogs(ids, delay) {
     for (const id of ids) {
       await sleep(delay);
