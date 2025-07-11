@@ -33,7 +33,7 @@ function hasInputParams(endpoint) {
 /**
  * @param {string} target
  * @param {boolean} composite
- * @return {{className: string, classImport: string}}
+ * @returns {{className: string, classImport: string}}
  */
 function getBaseCommand(target, composite) {
   if (target === 'api') {
