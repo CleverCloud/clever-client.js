@@ -5,9 +5,15 @@ const globalClearTimeout = globalThis.clearTimeout;
 const globalSetInterval = globalThis.setInterval;
 const globalClearInterval = globalThis.clearInterval;
 
+/** @type {Map<NodeJS.Timeout|number|string, string>} */
 const timeoutIds = new Map();
+/** @type {Set<NodeJS.Timeout|number|string>} */
 const intervalIds = new Set();
 
+/**
+ * @param {number} delay
+ * @returns {Promise<void>}
+ */
 export function sleep(delay) {
   return new Promise((resolve) => {
     globalSetTimeout(resolve, delay);
@@ -24,6 +30,7 @@ export function patchTimers() {
   timeoutIds.clear();
   intervalIds.clear();
 
+  // @ts-ignore
   globalThis.setTimeout = (callback, delay) => {
     // Not sure why but some tests had a residual setTimeout of one second at the end
     // We can ignore those
@@ -44,6 +51,7 @@ export function patchTimers() {
     return globalClearTimeout(id);
   };
 
+  // @ts-ignore
   globalThis.setInterval = (callback, delay) => {
     const id = globalSetInterval(() => {
       return callback();
@@ -58,6 +66,10 @@ export function patchTimers() {
   };
 }
 
+/**
+ * @param {string} path
+ * @returns {boolean}
+ */
 function isCallInsidePath(path) {
   const err = new Error();
   const stackLines = err.stack.split('\n');
@@ -74,6 +86,7 @@ export function clearTimers() {
 
   if (timeoutsCount > 0 || intervalsCount > 0) {
     for (const id of timeoutIds) {
+      // @ts-ignore
       globalClearTimeout(id);
     }
     timeoutIds.clear();
@@ -100,11 +113,4 @@ export function unpatchTimers() {
   globalThis.clearTimeout = globalClearTimeout;
   globalThis.setInterval = globalSetInterval;
   globalThis.clearInterval = globalClearInterval;
-}
-
-export function withTimeout(asyncTestFunction, timeoutLimit = 3_000) {
-  return async function () {
-    this.timeout(timeoutLimit);
-    return asyncTestFunction();
-  };
 }
