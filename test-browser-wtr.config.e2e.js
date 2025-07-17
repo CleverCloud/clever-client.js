@@ -9,20 +9,14 @@ export default {
   ...defaultConfig(['test/e2e/**/*.spec.js']),
   middleware: [
     async (ctx, next) => {
-      // only for api-tokens creation, we want to rewrite the request body to include the right password and mfaCode.
-      const match = ctx.request.url.match(/\/cc-api-bridge-(.+)-none\/api-tokens/);
-      if (match != null) {
-        const userId = match[1];
-        const user = getE2eUser(userId);
-        const rawBody = await getRawBody(ctx.req);
-        const body = JSON.parse(rawBody);
-
-        body.email = user.email;
-        body.password = user.password;
-        body.mfaCode = TOTP.generate(user.totpSecret).otp;
-
-        // we set the `newBody` custom prop on request so that we can use it in proxy
-        ctx.req.newBody = JSON.stringify(body);
+      const rewrite = [rewriteApiBridgeCreateToken];
+      for (const r of rewrite) {
+        if (r.match(ctx.request.url)) {
+          const newBody = r.newBody(await getRawBody(ctx.req), ctx.request.url);
+          // we set the `newBody` custom prop on request so that we can use it in proxy
+          ctx.req.newBody = JSON.stringify(newBody);
+          break;
+        }
       }
       await next();
     },
@@ -89,3 +83,18 @@ function getRawBody(req) {
     req.on('error', reject);
   });
 }
+
+const rewriteApiBridgeCreateToken = {
+  match(url) {
+    return url.match(/\/cc-api-bridge-(.+)-none\/api-tokens/) != null;
+  },
+  newBody(body, url) {
+    const match = url.match(/\/cc-api-bridge-(.+)-none\/api-tokens/);
+    const userId = match[1];
+    const user = getE2eUser(userId);
+    body.email = user.email;
+    body.password = user.password;
+    body.mfaCode = TOTP.generate(user.totpSecret).otp;
+    return body;
+  },
+};
