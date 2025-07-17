@@ -1,0 +1,494 @@
+{
+  "openapi": "3.0.1",
+  "paths": {
+    "/backups/{ownerId}/{ref}": {
+      "get": {
+        "operationId": "getBackupsForRef",
+        "x-service": "backups",
+        "x-function": "getBackups",
+        "parameters": [
+          {
+            "name": "ownerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/metrics/read/{orgaId}": {
+      "get": {
+        "operationId": "getMetricsToken",
+        "x-service": "metrics",
+        "x-function": "getToken",
+        "parameters": [
+          {
+            "name": "orgaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/w10tokens/accessLogs/read/{orgaId}": {
+      "get": {
+        "operationId": "getWarp10AccessLogsToken",
+        "x-service": "warp10",
+        "x-function": "getWarp10AccessLogsToken",
+        "parameters": [
+          {
+            "name": "orgaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "operationId": "createUserFromForm",
+        "x-service": "user",
+        "x-function": "create",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "invitationKey": {
+                    "type": "string"
+                  },
+                  "addonBetaInvitationKey": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "pass": {
+                    "type": "string"
+                  },
+                  "url_next": {
+                    "type": "string"
+                  },
+                  "terms": {
+                    "type": "string"
+                  },
+                  "subscription_source": {
+                    "type": "string"
+                  },
+                  "clever_flavor": {
+                    "type": "string"
+                  },
+                  "oauth_token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/logs/{appId}": {
+      "get": {
+        "operationId": "getOldLogs",
+        "x-service": "log",
+        "x-function": "getOldLogs",
+        "parameters": [
+          { "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "limit", "in": "query", "schema": { "type": "string" } },
+          { "name": "order", "in": "query", "schema": { "type": "string" } },
+          { "name": "after", "in": "query", "schema": { "type": "string" } },
+          { "name": "since", "in": "query", "schema": { "type": "string" } },
+          { "name": "before", "in": "query", "schema": { "type": "string" } },
+          { "name": "filter", "in": "query", "schema": { "type": "string" } },
+          { "name": "deployment_id", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/logs/{appId}/drains": {
+      "get": {
+        "operationId": "getDrains",
+        "x-service": "log",
+        "x-function": "getDrains",
+        "parameters": [{ "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createDrain",
+        "x-service": "log",
+        "x-function": "createDrain",
+        "parameters": [{ "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/logs/{appId}/drains/{drainId}": {
+      "delete": {
+        "operationId": "deleteDrain",
+        "x-service": "log",
+        "x-function": "deleteDrain",
+        "parameters": [
+          { "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "drainId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/logs/{appId}/drains/{drainId}/state": {
+      "put": {
+        "operationId": "updateDrainState",
+        "x-service": "log",
+        "x-function": "updateDrainState",
+        "parameters": [
+          { "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "drainId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/notifications/webhooks/{ownerId}": {
+      "post": {
+        "description": "create a hook for notifications",
+        "operationId": "createWebhook",
+        "x-service": "notification",
+        "x-function": "createWebhook",
+        "parameters": [{ "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "list created hooks",
+        "operationId": "getWebhooks",
+        "x-service": "notification",
+        "x-function": "getWebhooks",
+        "parameters": [{ "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/notifications/webhooks/{ownerId}/{id}": {
+      "put": {
+        "description": "edit a hook",
+        "operationId": "editWebhook",
+        "x-service": "notification",
+        "x-function": "editWebhook",
+        "parameters": [
+          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "delete a hook",
+        "operationId": "deleteWebhook",
+        "x-service": "notification",
+        "x-function": "deleteWebhook",
+        "parameters": [
+          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/notifications/emailhooks/{ownerId}": {
+      "post": {
+        "description": "create a hook for e-mail notifications",
+        "operationId": "createEmailhook",
+        "x-service": "notification",
+        "x-function": "createEmailhook",
+        "parameters": [{ "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "list created e-mail hooks",
+        "operationId": "getEmailhooks",
+        "x-service": "notification",
+        "x-function": "getEmailhooks",
+        "parameters": [{ "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/notifications/emailhooks/{ownerId}/{id}": {
+      "put": {
+        "description": "edit a e-mail hook",
+        "operationId": "editEmailhook",
+        "x-service": "notification",
+        "x-function": "editEmailhook",
+        "parameters": [
+          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "delete a e-mail hook",
+        "operationId": "deleteEmailhook",
+        "x-service": "notification",
+        "x-function": "deleteEmailhook",
+        "parameters": [
+          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/notifications/info/events": {
+      "get": {
+        "operationId": "getAvailableEvents",
+        "x-service": "notification",
+        "x-function": "getAvailableEvents",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/notifications/info/webhookformats": {
+      "get": {
+        "operationId": "getWebhookFormats",
+        "x-service": "notification",
+        "x-function": "getWebhookFormats",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/providers/{providerId}/{addonId}": {
+      "get": {
+        "operationId": "getAddon",
+        "x-service": "providers",
+        "x-function": "getAddon",
+        "parameters": [
+          { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/providers/es-addon/tmp/services-flavors": {
+      "get": {
+        "operationId": "getEsOptionsFlavors",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "providers",
+        "x-function": "getEsOptionsFlavors"
+      }
+    },
+    "/saas/heptapod/{id}/heptapod.host/price-prevision": {
+      "get": {
+        "operationId": "getHeptapodPricePrevision",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "saas",
+        "x-function": "getHeptapodPricePrevision"
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

@@ -1,6 +1,6 @@
-import { globbySync } from 'globby';
 import path from 'node:path';
 import { styleText } from 'node:util';
+import { globSync } from 'tinyglobby';
 import { getApiCalls, sortAndGroupByCall } from './lib/api-analyze.js';
 
 /**
@@ -146,7 +146,7 @@ try {
 
 const apiCalls = args.input.flatMap((input) => {
   const projectDir = path.relative(process.cwd(), input);
-  return getApiCalls(projectDir, globbySync(projectDir + '/src/**/*.js'));
+  return getApiCalls(projectDir, globSync(projectDir + '/src/**/*.js'));
 });
 
 let filteredApiCalls = args.withLegacyClient ? apiCalls.filter((apiCall) => apiCall.withLegacyClient) : apiCalls;
