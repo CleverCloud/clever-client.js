@@ -30,6 +30,8 @@ jobs:
         run: npm run lint
       - name: '[Code quality] Check types'
         run: npm run typecheck
+      - name: '[Code quality] Check format'
+        run: npm run format:check
 
       - name: '[Unit tests] Browser tests'
         run: npm run test-wtr
