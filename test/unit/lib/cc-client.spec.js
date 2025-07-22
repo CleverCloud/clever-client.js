@@ -357,7 +357,10 @@ describe('clever-client', () => {
     it('should throw `CcHttpError` when API returns error status', async () => {
       const command = simpleCommand(get('/path/subPath'));
 
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 500, body: 'A server error occurred' });
+      await apiMockCtrl
+        .mock()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 500, body: 'A server error occurred' });
 
       await expectPromiseThrows(client.send(command), (err) => {
         expect(err).to.be.instanceOf(CcHttpError);
@@ -371,7 +374,10 @@ describe('clever-client', () => {
       const client = createClient({ hooks: { onError: spy.handler } });
       const command = simpleCommand(get('/path/subPath'));
 
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 500, body: 'A server error occurred' });
+      await apiMockCtrl
+        .mock()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 500, body: 'A server error occurred' });
 
       await expectPromiseThrows(client.send(command), (err) => {
         expect(spy.callCount).to.equal(1);

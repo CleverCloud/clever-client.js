@@ -423,7 +423,10 @@ describe('request', () => {
       });
 
       const newResponseBody = { data: 'fresh new test response' };
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: newResponseBody });
+      await apiMockCtrl
+        .mock()
+        .when({ method: 'GET', path: '/api/test' })
+        .respond({ status: 200, body: newResponseBody });
       const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
 
       const response = await sendRequest({
