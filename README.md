@@ -1,4 +1,6 @@
-# JavaScript REST client and utils for Clever Cloud's API 
+# JavaScript REST client and utils for Clever Cloud's API
+
+> 🚧 **New Client Documentation Available**: For the new command-pattern client (beta), see [NEW_CLIENT.md](NEW_CLIENT.md) 
 
 ## What is this?
 
