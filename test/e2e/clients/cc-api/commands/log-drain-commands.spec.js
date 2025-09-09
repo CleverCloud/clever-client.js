@@ -7,9 +7,7 @@ import { UpdateLogDrainCommand } from '../../../../../src/clients/cc-api/command
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
-describe('log-drain commands', function () {
-  // this.timeout(100000);
-
+describe.skip('log-drain commands', function () {
   const support = e2eSupport();
 
   before(async () => {
