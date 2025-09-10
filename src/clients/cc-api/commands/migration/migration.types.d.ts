@@ -1,0 +1,47 @@
+export interface Migration {
+  id: string;
+  requestDate: string;
+  steps: Array<MigrationStep>;
+  status: MigrationStatus;
+}
+
+export interface MigrationStep {
+  value: MigrationStepType;
+  status: MigrationStatus;
+  startDate: string;
+  endDate?: string;
+  message?: string;
+}
+
+export type MigrationStepType =
+  | 'RETRIEVE_ADDON'
+  | 'RETRIEVE_ADDON_DEPLOYMENT'
+  | 'CHECK_NO_MIGRATION_ALREADY_RUNNING_FOR_ADDON'
+  | 'RETRIEVE_SOURCE_CLUSTER'
+  | 'RETRIEVE_TARGET_CLUSTER'
+  | 'REMOVE_EDIT_RIGHT'
+  | 'MANAGE_ACTIVE_EXTENSIONS'
+  | 'ENABLE_EDIT_RIGHT'
+  | 'CHANGE_ADDON_QUOTA'
+  | 'RETRIEVE_LOGSCOLLECTOR'
+  | 'RETRIEVE_NEXT_AVAILABLE_PORT'
+  | 'CREATE_ADDON_ON_TARGET_CLUSTER'
+  | 'ASK_MIGRATION_INSTANCE_BOOT'
+  | 'QUEUE_MIGRATION_INSTANCE_BOOT'
+  | 'DEPLOY_MIGRATION_INSTANCE'
+  | 'PREPARE_MIGRATION'
+  | 'DUMP_AND_RESTORE'
+  | 'REMOVE_ADDON_FROM_SOURCE_CLUSTER'
+  | 'REMOVE_ADDON_FROM_TARGET_CLUSTER'
+  | 'RETRIEVE_SOURCE_INSTANCE'
+  | 'RETRIEVE_MIGRATION_INSTANCE'
+  | 'STOP_MIGRATION_INSTANCE'
+  | 'STOP_SOURCE_INSTANCE'
+  | 'UPDATE_REVERSE_PROXIES'
+  | 'UPDATE_DNS'
+  | 'UPDATE_MONITORING'
+  | 'UPDATE_ADDON'
+  | 'LOCK_PORT'
+  | 'UNLOCK_PORT';
+
+export type MigrationStatus = 'ABORTED' | 'RUNNING' | 'FAILED' | 'RECOVERING' | 'RECOVERED' | 'OK';

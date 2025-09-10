@@ -16,26 +16,80 @@
     "client"
   ],
   "files": [
-    "/esm/"
+    "esm/",
+    "!esm/**/*.types.d.ts",
+    "src/",
+    "!src/**/*.types.d.ts",
+    "dist/"
   ],
   "engines": {
     "node": "22"
   },
+  "exports": {
+    "./cc-api-client.js": {
+      "types": "./dist/types/src/clients/cc-api/cc-api-client.d.ts",
+      "default": "./src/clients/cc-api/cc-api-client.js"
+    },
+    "./cc-api-commands/*": {
+      "types": "./dist/types/src/clients/cc-api/commands/*",
+      "default": "./src/clients/cc-api/commands/*"
+    },
+    "./cc-api-local-storage-store.js": {
+      "types": "./dist/types/src/clients/cc-api/lib/store/local-storage-store.d.ts",
+      "browser": "./src/clients/cc-api/lib/store/local-storage-store.js"
+    },
+    "./cc-api-file-store.js": {
+      "types": "./dist/types/src/clients/cc-api/lib/store/file-store.d.ts",
+      "node": "./src/clients/cc-api/lib/store/file-store.js"
+    },
+    "./cc-api-bridge-client.js": {
+      "types": "./dist/types/src/clients/cc-api-bridge/cc-api-bridge-client.d.ts",
+      "default": "./src/clients/cc-api-bridge/cc-api-bridge-client.js"
+    },
+    "./cc-api-bridge-commands/*": {
+      "types": "./dist/types/src/clients/cc-api-bridge/commands/*",
+      "default": "./src/clients/cc-api-bridge/commands/*"
+    },
+    "./redis-http-client.js": {
+      "types": "./dist/types/src/clients/redis-http/redis-http-client.d.ts",
+      "default": "./src/clients/redis-http/redis-http-client.js"
+    },
+    "./redis-http-commands/*": {
+      "types": "./dist/types/src/clients/redis-http/commands/*",
+      "default": "./src/clients/redis-http/commands/*"
+    },
+    "./utils/*": {
+      "types": "./dist/types/src/utils/*",
+      "default": "./src/utils/*"
+    },
+    "./esm/*": {
+      "types": "./dist/types/esm/*",
+      "default": "./esm/*"
+    }
+  },
   "scripts": {
     "api-usage-analyze": "node tasks/api-usage-analyze.js -i ../console3 -i ../clever-components -i ../clever-tools",
-    "clean-cache": "node tasks/clean-cache.cjs",
+    "build": "rollup -c",
+    "endpoints-analyze": "node tasks/endpoints-analyze.js",
+    "endpoints-generate": "node tasks/endpoints-generate.js",
+    "endpoints-list": "node tasks/endpoints-list.js",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "generate-client": "npm run clean-cache && npm run generate-client-from-openapi",
-    "generate-client-from-openapi": "node tasks/generate-client.cjs",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "prepack:dev": "npm run generate-client",
-    "prepack:prod": "npm run format:check && npm run lint && npm run typecheck && npm run test-wtr && npm run generate-client",
+    "prepack:dev": "npm run build",
+    "prepack:prod": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build",
     "prepack": "[ \"$DEV\" == \"true\" ] && npm run prepack:dev || npm run prepack:prod",
-    "test-wtr": "web-test-runner",
-    "test-wtr:watch": "web-test-runner --watch",
-    "test-mocha": "mocha -t 60000 test/application-logs.spec.js",
+    "test": "npm run test:unit",
+    "test:unit": "npm run test:unit:browser && npm run test:unit:node",
+    "test:unit:watch": "npm run test:unit:browser:watch && npm run test:unit:node:watch",
+    "test:unit:browser": "web-test-runner --config test-browser-wtr.config.unit.js",
+    "test:unit:browser:watch": "web-test-runner --config test-browser-wtr.config.unit.js --watch",
+    "test:unit:node": "mocha --config test-node-mocha.config.unit.cjs",
+    "test:unit:node:watch": "mocha --config test-node-mocha.config.unit.cjs --parallel --watch",
+    "test:e2e": "npm run test:e2e:browser && npm run test:e2e:node",
+    "test:e2e:browser": "web-test-runner --config test-browser-wtr.config.e2e.js",
+    "test:e2e:node": "mocha --config test-node-mocha.config.e2e.cjs",
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
@@ -45,36 +99,47 @@
     "eventsource": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/parser": "^7.27.0",
-    "@babel/traverse": "^7.27.0",
-    "@babel/types": "^7.27.0",
-    "@commitlint/cli": "^19.8.0",
-    "@commitlint/config-conventional": "^19.8.0",
-    "@eslint/compat": "^1.2.7",
-    "@esm-bundle/chai": "^4.3.3",
+    "@babel/parser": "^7.28.0",
+    "@babel/traverse": "^7.28.0",
+    "@babel/types": "^7.28.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@eslint/compat": "^1.3.1",
+    "@fastify/cors": "^11.0.1",
+    "@inquirer/prompts": "^7.6.0",
+    "@rollup-extras/plugin-clean": "^1.3.9",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@scalar/openapi-parser": "^0.18.1",
+    "@scalar/openapi-types": "^0.3.5",
+    "@scalar/types": "^0.2.7",
     "@types/babel__traverse": "^7.20.7",
+    "@types/chai": "^5.2.2",
     "@types/component-emitter": "^1.2.14",
     "@types/eventsource": "^1.1.15",
-    "@web/test-runner": "^0.18.1",
-    "@web/test-runner-mocha": "^0.9.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/mocha": "^10.0.10",
+    "@web/test-runner": "^0.20.2",
     "babel-plugin-dynamic-import-node": "^2.3.3",
-    "chai": "^4.3.10",
-    "del": "^6.0.0",
-    "eslint": "^9.15.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-n": "^17.16.2",
+    "chai": "^5.2.0",
+    "change-case": "^5.4.4",
+    "eslint": "^9.30.1",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-n": "^17.21.0",
+    "fastify": "^5.4.0",
     "find-free-ports": "^3.1.1",
-    "fs-extra": "^9.1.0",
-    "globals": "^16.0.0",
-    "globby": "^14.0.2",
-    "hanbi": "^1.0.1",
-    "lodash": "^4.17.21",
-    "mocha": "^10.2.0",
-    "prettier": "^3.5.3",
+    "fs-extra": "^11.3.0",
+    "globals": "^16.3.0",
+    "hanbi": "^2.0.0",
+    "koa-proxies": "^0.12.4",
+    "mocha": "^11.7.1",
+    "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.1.0",
-    "superagent": "^6.1.0",
-    "typescript": "^5.7.3"
+    "rollup-plugin-dts": "^6.2.1",
+    "safe-stringify": "^1.2.0",
+    "tinyglobby": "^0.2.14",
+    "totp-generator": "^1.0.0",
+    "typescript": "^5.8.3"
   },
   "volta": {
     "node": "22.7.0"

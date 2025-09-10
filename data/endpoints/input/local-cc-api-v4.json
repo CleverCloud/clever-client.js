@@ -1,0 +1,482 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "url": "https://api.clever-cloud.com/v4",
+      "description": "The production API server (v4)"
+    }
+  ],
+  "paths": {
+    "/addon-providers/{providerId}": {
+      "get": {
+        "operationId": "getAddonProvider",
+        "parameters": [{ "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "addon-providers",
+        "x-function": "getAddonProvider"
+      }
+    },
+    "/addon-providers/{providerId}/addons/{addonId}": {
+      "get": {
+        "operationId": "getAddon",
+        "parameters": [
+          { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "addon-providers",
+        "x-function": "getAddon"
+      }
+    },
+    "/addon-providers/jenkins/addons/{addonId}/updates": {
+      "get": {
+        "operationId": "getJenkinsUpdates",
+        "parameters": [{ "name": "addonId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "addon-providers",
+        "x-function": "getJenkinsUpdates"
+      }
+    },
+    "/addon-providers/{providerId}/clusters/{clusterId}": {
+      "get": {
+        "operationId": "getCluster",
+        "parameters": [
+          { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "clusterId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "addon-providers",
+        "x-function": "getCluster"
+      }
+    },
+    "/billing/organisations/{id}/invoices": {
+      "get": {
+        "operationId": "getAllInvoices",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "since", "in": "query", "required": false, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getAllInvoices"
+      }
+    },
+    "/billing/organisations/{id}/invoices/unpaid": {
+      "get": {
+        "operationId": "getAllUnpaidInvoices",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getAllUnpaidInvoices"
+      }
+    },
+    "/billing/organisations/{id}/invoices/{invoiceNumber}{type}": {
+      "get": {
+        "operationId": "getInvoice",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "invoiceNumber", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "type", "in": "path", "required": false, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getInvoice"
+      }
+    },
+    "/billing/organisations/{id}/payments/methods": {
+      "get": {
+        "operationId": "getPaymentMethods",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getPaymentMethods"
+      },
+      "post": {
+        "operationId": "createPaymentMethod",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "createPaymentMethod"
+      }
+    },
+    "/billing/organisations/{id}/payments/methods/default": {
+      "put": {
+        "operationId": "setDefaultPaymentMethod",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "setDefaultPaymentMethod"
+      }
+    },
+    "/billing/organisations/{id}/payments/methods/{methodId}": {
+      "delete": {
+        "operationId": "deletePaymentMethod",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "methodId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "deletePaymentMethod"
+      }
+    },
+    "/billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal": {
+      "post": {
+        "operationId": "initPaypalPayment",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "invoiceNumber", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "initPaypalPayment"
+      }
+    },
+    "/billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal/{payerId}": {
+      "put": {
+        "operationId": "authorizePaypalPayment",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "invoiceNumber", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "payerId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "authorizePaypalPayment"
+      }
+    },
+    "/billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe": {
+      "post": {
+        "operationId": "initStripePayment",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "invoiceNumber", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "initStripePayment"
+      }
+    },
+    "/billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe/{paymentId}": {
+      "put": {
+        "operationId": "authorizeStripePayment",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "invoiceNumber", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "paymentId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "authorizeStripePayment"
+      }
+    },
+    "/billing/organisations/{id}/payments/stripe/intent": {
+      "get": {
+        "operationId": "getStripePaymentIntent",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "type", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getStripePaymentIntent"
+      }
+    },
+    "/billing/organisations/{id}/credits/summary": {
+      "get": {
+        "operationId": "getCreditsSummary",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getCreditsSummary"
+      }
+    },
+    "/billing/organisations/{owner_id}/price-system": {
+      "get": {
+        "operationId": "getOrganisationPriceSystem",
+        "parameters": [
+          { "name": "owner_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "zone_id", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getOrganisationPriceSystem"
+      }
+    },
+    "/materia/organisations/{ownerId}/materia/databases/{id}": {
+      "get": {
+        "operationId": "getMateriaKvInfo",
+        "parameters": [
+          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "materia",
+        "x-function": "getMateriaKvInfo"
+      }
+    },
+    "/load-balancers/organisations/{ownerId}/applications/{appId}/load-balancers/default": {
+      "get": {
+        "operationId": "getDefaultLoadBalancersDnsInfo",
+        "parameters": [
+          { "name": "ownerId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "appId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "loadBalancers",
+        "x-function": "getDefaultLoadBalancersDnsInfo"
+      }
+    },
+    "/billing/price-system": {
+      "get": {
+        "operationId": "getPriceSystem",
+        "parameters": [
+          { "name": "zone_id", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "currency", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "billing",
+        "x-function": "getPriceSystem"
+      }
+    },
+    "/saas/grafana/{id}": {
+      "get": {
+        "operationId": "getGrafanaOrganisation",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "saas",
+        "x-function": "getGrafanaOrganisation"
+      },
+      "post": {
+        "operationId": "createGrafanaOrganisation",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-function": "createGrafanaOrganisation",
+        "x-service": "saas"
+      },
+      "delete": {
+        "operationId": "deleteGrafanaOrganisation",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-function": "deleteGrafanaOrganisation",
+        "x-service": "saas"
+      }
+    },
+    "/saas/grafana/{id}/reset": {
+      "post": {
+        "operationId": "resetGrafanaOrganisation",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-function": "resetGrafanaOrganisation",
+        "x-service": "saas"
+      }
+    },
+    "/stats/organisations/{ownerId}/requests": {
+      "get": {
+        "operationId": "fetchHeatmapPoints",
+        "parameters": [
+          {
+            "name": "ownerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "application",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-service": "stats",
+        "x-function": "fetchHeatmapPoints"
+      }
+    }
+  },
+  "components": {}
+}

@@ -1,19 +1,22 @@
 {
-  "include": ["esm/**/*", "tasks/lib/api-analyze.js"],
+  "include": ["esm/**/*", "src/**/*", "tasks/endpoints-*.js", "tasks/lib/api-analyze.js", "test/**/*"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "nodenext",
+    "module": "NodeNext",
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": false,
     "noUncheckedIndexedAccess": false,
     "noImplicitOverride": false,
     "noPropertyAccessFromIndexSignature": false,
     "allowUnusedLabels": false,
-    "allowUnreachableCode": false
+    "allowUnreachableCode": false,
+    "useUnknownInCatchVariables": false
   }
 }
