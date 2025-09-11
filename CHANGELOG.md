@@ -1,5 +1,21 @@
 # Clever Client changelog
 
+## [11.1.0](https://github.com/CleverCloud/clever-client.js/compare/11.0.1...11.1.0) (2025-09-10)
+
+
+### 🚀 Features
+
+* implement base client library ([46bde34](https://github.com/CleverCloud/clever-client.js/commit/46bde344e4d25094617834be871e145c2b06f60d))
+* implement cc-api client ([dfb9d91](https://github.com/CleverCloud/clever-client.js/commit/dfb9d91c7ad1bbf39e2d19d916b3aa378cc9f96a))
+* implement cc-api-bridge client ([7f6342d](https://github.com/CleverCloud/clever-client.js/commit/7f6342ddfc66922e4256d0a9911c2af5d35cddc0))
+* implement redis-http client ([f83ebcf](https://github.com/CleverCloud/clever-client.js/commit/f83ebcfecb44f41f440c76cf5fc0e68b40d12c17))
+
+
+### 🐛 Bug Fixes
+
+* fix some types ([884a1e4](https://github.com/CleverCloud/clever-client.js/commit/884a1e4e31c77be032e89d5bc72f3432cf9ec2d8))
+* **legacy:** make the id param optional when handling /self and /organisations/:XXX ([1734ef0](https://github.com/CleverCloud/clever-client.js/commit/1734ef0c263a742cfce656024bb4b138c196391f))
+
 ## [11.0.1](https://github.com/CleverCloud/clever-client.js/compare/11.0.0...11.0.1) (2025-06-30)
 
 
