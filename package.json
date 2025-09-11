@@ -23,7 +23,7 @@
     "dist/"
   ],
   "engines": {
-    "node": "22"
+    "node": ">=22"
   },
   "exports": {
     "./cc-api-client.js": {
