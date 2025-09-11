@@ -1,5 +1,12 @@
 # Clever Client changelog
 
+## [11.1.1](https://github.com/CleverCloud/clever-client.js/compare/11.1.0...11.1.1) (2025-09-11)
+
+
+### 🐛 Bug Fixes
+
+* set required node version to `&gt;=22` ([4e8c395](https://github.com/CleverCloud/clever-client.js/commit/4e8c3955dc6a5c3c75bc2be63f9a10a408d377e5))
+
 ## [11.1.0](https://github.com/CleverCloud/clever-client.js/compare/11.0.1...11.1.0) (2025-09-10)
 
 
