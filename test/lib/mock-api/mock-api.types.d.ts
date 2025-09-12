@@ -18,6 +18,8 @@ export interface Mock {
   throttle?: number;
 }
 
+export type MockResponse = MockHttpResponse | MockSseResponse;
+
 /**
  * Defines the request pattern that a mock should match.
  * Used to identify which requests should be handled by a specific mock.
@@ -45,11 +47,35 @@ export interface MockRequest {
  *   body: { id: 'app_123', name: 'My App' }
  * };
  */
-export interface MockResponse {
+export interface MockHttpResponse {
   /** HTTP status code to return */
   status: number;
   /** Optional response body (can be any JSON-serializable value) */
   body?: any;
+}
+
+/**
+ * Mock response configuration for Server-Sent Events (SSE) streams.
+ * Defines the events to stream and timing between events.
+ *
+ * @example
+ * {
+ *   status: 200,
+ *   events: [
+ *     { type: 'message', event: 'DATA', data: 'hello' },
+ *     { type: 'message', event: 'END_OF_STREAM' },
+ *     { type: 'close' }
+ *   ],
+ *   delayBetween: 50
+ * }
+ */
+export interface MockSseResponse {
+  /** HTTP status code to return */
+  status: number;
+  /** Array of SSE events to stream */
+  events: Array<MockSseEvent>;
+  /** Delay in milliseconds between each event */
+  delayBetween: number;
 }
 
 /**
@@ -92,3 +118,40 @@ export interface MockCall<T = any> {
  * @template T - The type of the value(s)
  */
 export type OneOrMany<T> = T | Array<T>;
+
+/**
+ * Configuration for a Server-Sent Events message.
+ * Defines the event type, data payload, and optional metadata.
+ */
+export interface MockSseMessage {
+  /** The event type name */
+  event: string;
+  /** Unique identifier for the message (auto-generated if not provided) */
+  id?: string;
+  /** The data payload of the message (will be JSON.stringify'd if object) */
+  data?: string | number | boolean | object;
+  /** Retry timeout in milliseconds for reconnection */
+  retry?: number;
+}
+
+/**
+ * Union type for all possible SSE events that can be streamed.
+ * Supports both message events with data and close events to terminate the stream.
+ */
+export type MockSseEvent = MockSseEventMessage | MockSseEventClose;
+
+/**
+ * SSE message event that sends data to the client.
+ * Extends MockSseMessage with a fixed type of 'message'.
+ */
+export interface MockSseEventMessage extends MockSseMessage {
+  type: 'message';
+}
+
+/**
+ * SSE close event that terminates the connection.
+ * Simulates the server closing the connection.
+ */
+export interface MockSseEventClose {
+  type: 'close';
+}
