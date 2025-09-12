@@ -1,19 +1,16 @@
 // This code is adapted from https://github.com/Azure/fetch-event-source
 // MIT License Copyright (c) Microsoft Corporation.
 
-import { readBytes } from './sse-parse.js';
+import { readBytes } from '../../src/lib/stream/sse-parse.js';
 
 /**
  * @typedef {import('./streams.types.js').SseMessage} SseMessage
+ * @typedef {import('./streams.types.js').SseFetchEventSourceParams} SseFetchEventSourceParams
  */
 
 export const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
 export const JSON_CONTENT_TYPE = 'application/json';
 const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
-
-/**
- * @typedef {import('./streams.types.js').SseFetchEventSourceParams} SseFetchEventSourceParams
- */
 
 /**
  * Native implementation of an SSE

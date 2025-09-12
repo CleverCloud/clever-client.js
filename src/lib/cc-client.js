@@ -2,6 +2,9 @@
  * @import { CcAuth } from './auth/cc-auth.js'
  * @import { Command } from '../types/command.types.js'
  * @import { SimpleCommand } from './command/command.js'
+ * @import { CcStream } from './stream/cc-stream.js'
+ * @import { CcStreamConfig, CcStreamConfigPartial } from './stream/cc-stream.types.js'
+ * @import { StreamCommand } from './stream/stream-command.js'
  * @import { GetUrl } from './get-url.js'
  * @import { CcClientConfig, CcClientHooks } from '../types/client.types.js'
  * @import { CcRequest, CcRequestParams, CcRequestConfig, CcRequestConfigPartial, CcResponse, HttpMethod } from '../types/request.types.js'
@@ -23,16 +26,29 @@ const DEFAULT_REQUEST_CONFIG = {
 const DEFAULT_REQUEST_PARAMS = {
   method: 'GET',
 };
+/** @type {CcStreamConfig} */
+const DEFAULT_STREAM_CONFIG = {
+  retry: {
+    backoffFactor: 1.25,
+    initRetryTimeout: 1_000,
+    maxRetryCount: Infinity,
+  },
+  // The default Clever Cloud heartbeat period is 2 seconds. We add 500ms to handle potential latency.
+  heartbeatPeriod: 2_000 + 500,
+  healthcheckInterval: 1_000,
+  debug: false,
+};
 
 /**
  * CcClient is the main client class for interacting with the Clever Cloud API.
- * It handles HTTP requests, authentication, and response processing.
+ * It handles HTTP requests, authentication, response processing, and real-time streaming.
  *
  * @template {string} Api - The API type this client targets (e.g., 'cc-api', 'cc-api-bridge')
  *
  * @description
  * The CcClient class provides methods to:
  * - Send commands to the API (both simple and composite)
+ * - Create and manage real-time streams (Server-Sent Events)
  * - Handle request/response lifecycle
  * - Manage authentication
  * - Transform request parameters and responses
@@ -43,7 +59,12 @@ const DEFAULT_REQUEST_PARAMS = {
  * // Create client configuration
  * const config = {
  *   baseUrl: 'https://api.clever-cloud.com',
- *   defaultRequestConfig: { timeout: 5000 }
+ *   defaultRequestConfig: { timeout: 5000 },
+ *   defaultStreamsConfig: {
+ *     retry: { maxRetryCount: 5, initRetryTimeout: 1000, backoffFactor: 1.25 },
+ *     heartbeatPeriod: 2000,
+ *     healthcheckInterval: 1000
+ *   }
  * };
  *
  * // Initialize authentication and client
@@ -53,6 +74,12 @@ const DEFAULT_REQUEST_PARAMS = {
  * // Send a command
  * const command = new SimpleCommand();
  * const result = await client.send(command);
+ *
+ * // Create a stream for real-time data
+ * const streamCommand = new StreamCommand();
+ * const stream = await client.stream(streamCommand);
+ * stream.onLog(log => console.log('Received log:', log));
+ * await stream.start();
  * ```
  */
 export class CcClient {
@@ -66,6 +93,11 @@ export class CcClient {
    * @type {CcRequestConfig}
    */
   #defaultRequestsConfig;
+  /**
+   * Default configuration for all streams created by this client
+   * @type {CcStreamConfig}
+   */
+  #defaultStreamsConfig;
   /**
    * Client hooks for request/response lifecycle
    * @type {CcClientHooks}
@@ -86,6 +118,7 @@ export class CcClient {
   constructor(config, auth) {
     this.#baseUrl = config.baseUrl;
     this.#defaultRequestsConfig = mergeRequestConfig(DEFAULT_REQUEST_CONFIG, config.defaultRequestConfig);
+    this.#defaultStreamsConfig = mergeStreamConfig(DEFAULT_STREAM_CONFIG, config.defaultStreamConfig);
     this.#hooks = config.hooks ?? {};
     this.#auth = auth;
   }
@@ -139,6 +172,25 @@ export class CcClient {
   }
 
   /**
+   * Creates and returns a stream based on the provided command.
+   *
+   * @param {StreamCommand<Api, CommandInput, Stream>} command - The stream command to execute
+   * @param {CcStreamConfigPartial & CcRequestConfigPartial} [requestAndStreamConfig] - Optional stream and request configuration that overrides the default
+   * @returns {Promise<Stream>} A promise that resolves to the created stream
+   * @template CommandInput - The type of the command input parameters
+   * @template {CcStream} Stream - The type of the output stream
+   */
+  async stream(command, requestAndStreamConfig) {
+    const transformedParams = await this._transformStreamParams(command, requestAndStreamConfig);
+
+    const streamConfigWithDefaults = mergeStreamConfig(this.#defaultStreamsConfig, requestAndStreamConfig);
+    return command.createStream(async () => {
+      const preparedRequestParams = await command.toRequestParams(transformedParams);
+      return this._prepareRequest(preparedRequestParams, requestAndStreamConfig);
+    }, streamConfigWithDefaults);
+  }
+
+  /**
    * Transforms command parameters before sending the request
    *
    * @param {Command<Api, ?, ?>} command - The command whose parameters need transformation
@@ -147,6 +199,18 @@ export class CcClient {
    * @protected
    */
   async _transformCommandParams(command, _requestConfig) {
+    return command.params;
+  }
+
+  /**
+   * Transforms stream command parameters before creating the stream
+   *
+   * @param {StreamCommand<Api, ?, ?>} command - The stream command whose parameters need transformation
+   * @param {CcRequestConfigPartial} [_requestConfig] - Optional request configuration
+   * @returns {Promise<any>} The transformed parameters
+   * @protected
+   */
+  async _transformStreamParams(command, _requestConfig) {
     return command.params;
   }
 
@@ -245,4 +309,20 @@ export class CcClient {
 
     return command.transformCommandOutput(response.body);
   }
+}
+
+/**
+ * @param {CcStreamConfig} baseConfig
+ * @param {CcStreamConfigPartial|null} config
+ * @return {CcStreamConfig}
+ */
+function mergeStreamConfig(baseConfig, config) {
+  /** @type {CcStreamConfigPartial} */
+  const overrideConfig = config ?? {};
+
+  return {
+    ...baseConfig,
+    ...overrideConfig,
+    retry: { ...baseConfig.retry, ...(overrideConfig?.retry ?? {}) },
+  };
 }

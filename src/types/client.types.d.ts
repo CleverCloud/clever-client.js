@@ -1,3 +1,4 @@
+import type { CcStreamConfigPartial } from '../lib/stream/cc-stream.types.js';
 import type { OnErrorHook, OnRequestHook, OnResponseHook } from './hook.types.js';
 import type { CcRequestConfigPartial } from './request.types.js';
 
@@ -18,6 +19,12 @@ export type CcClientConfig = {
    * Individual requests can override these settings.
    */
   defaultRequestConfig?: CcRequestConfigPartial;
+
+  /**
+   * Default configuration applied to all streams created by the client.
+   * Individual streams can override these settings.
+   */
+  defaultStreamConfig?: CcStreamConfigPartial;
 
   /**
    * Optional hooks for customising client behaviour.

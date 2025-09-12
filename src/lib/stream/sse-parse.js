@@ -2,7 +2,7 @@
 // MIT License Copyright (c) Microsoft Corporation.
 
 /**
- * @typedef {import('./streams.types.js').SseMessage} SseMessage
+ * @import { SseMessage } from './sse.types.js'
  */
 
 const CONTROL_CHARS = {
@@ -191,9 +191,11 @@ export function getMessages(onMessage) {
 }
 
 /**
- * @param {Uint8Array} a
- * @param {Uint8Array} b
- * @returns {Uint8Array}
+ * Concatenates two Uint8Array buffers into a single buffer.
+ *
+ * @param {Uint8Array} a - The first buffer
+ * @param {Uint8Array} b - The second buffer
+ * @returns {Uint8Array} A new buffer containing the concatenated data
  */
 function concat(a, b) {
   const res = new Uint8Array(a.length + b.length);
@@ -203,7 +205,11 @@ function concat(a, b) {
 }
 
 /**
- * @returns {SseMessage}
+ * Creates a new empty SSE message object with default values.
+ * All fields are initialized according to the SSE specification to ensure
+ * consistent object shapes for JavaScript engine optimization.
+ *
+ * @returns {SseMessage} A new empty SSE message
  */
 function newMessage() {
   // data, event, and id must be initialized to empty strings:
