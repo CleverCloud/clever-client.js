@@ -47,6 +47,7 @@ use(deepEqualInAnyOrder);
 export const STATIC_MYSQL_ADDON_ID = 'addon_2066c7dd-5891-420a-ae3c-2334405c3bf1';
 export const STATIC_INVOICE_ID = 'F20250718-021327';
 export const STATIC_ORGANISATION_ID = 'orga_3659ccc6-1b06-4393-83d6-52dc3d72416d';
+export const STATIC_LOGS_APPLICATION = 'app_1f5472ee-d87f-495e-9a76-24028e3624eb';
 
 /**
  * @param {{user?: E2eUserName, auth?: Auth, debug?: boolean }} [config]
