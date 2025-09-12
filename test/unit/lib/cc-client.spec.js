@@ -15,6 +15,8 @@ import { GetUrl } from '../../../src/lib/get-url.js';
 import { HeadersBuilder } from '../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../src/lib/request/query-params.js';
 import { get, post } from '../../../src/lib/request/request-params-builder.js';
+import { CcStream } from '../../../src/lib/stream/cc-stream.js';
+import { StreamCommand } from '../../../src/lib/stream/stream-command.js';
 import { expectPromiseThrows } from '../../lib/expect-utils.js';
 import { mockTestHooks } from '../../lib/mock-api/support/mock-test-hooks.js';
 
@@ -35,6 +37,17 @@ export class TestCompositeCommand extends CompositeCommand {}
  * @abstract
  */
 export class TestGetUrl extends GetUrl {}
+
+/**
+ * @extends {StreamCommand<'test', any, CcStream>}
+ * @abstract
+ */
+export class TestStreamCommand extends StreamCommand {
+  /** @type {StreamCommand<'test', any, CcStream>['createStream']} */
+  createStream(requestFactory, config) {
+    return new CcStream(requestFactory, config);
+  }
+}
 
 /**
  * @param {Partial<CcRequestParams>} requestsParams
@@ -72,6 +85,18 @@ function getUrl(result) {
 }
 
 /**
+ * @param {Partial<CcRequestParams>} requestsParams
+ * @returns {TestStreamCommand}
+ */
+function streamCommand(requestsParams) {
+  return new (class MyCommand extends TestStreamCommand {
+    toRequestParams() {
+      return requestsParams;
+    }
+  })();
+}
+
+/**
  * This client is here just to make all protected methods public so that hanbi can mock or spy those methods.
  * @extends {CcClient<'test'>}
  */
@@ -79,6 +104,10 @@ class SpiedClient extends CcClient {
   /** @type {CcClient<'test'>['_transformCommandParams']} */
   async _transformCommandParams(command, _requestConfig) {
     return super._transformCommandParams(command, _requestConfig);
+  }
+  /** @type {CcClient<'test'>['_transformStreamParams']} */
+  async _transformStreamParams(command, _requestConfig) {
+    return super._transformStreamParams(command, _requestConfig);
   }
   /** @type {CcClient<'test'>['_compose']} */
   async _compose(command, requestConfig) {
@@ -103,6 +132,8 @@ describe('clever-client', () => {
   let client;
   /** @type {MockCtrl} */
   let apiMockCtrl;
+  /** @type {() => void} */
+  let closeStream;
 
   const hooks = mockTestHooks();
 
@@ -115,6 +146,17 @@ describe('clever-client', () => {
     return new SpiedClient({ ...config, baseUrl: apiMockCtrl.mockClient.baseUrl }, auth);
   }
 
+  /**
+   * @param {CcStream} stream
+   */
+  function startStream(stream) {
+    const result = stream.start();
+    closeStream = () => {
+      stream.close();
+    };
+    return result;
+  }
+
   before(async () => {
     apiMockCtrl = await hooks.before();
     client = createClient();
@@ -122,6 +164,7 @@ describe('clever-client', () => {
   beforeEach(hooks.beforeEach);
   afterEach(() => {
     hanbi.restore();
+    closeStream?.();
   });
   after(hooks.after);
 
@@ -475,6 +518,110 @@ describe('clever-client', () => {
 
       expect(spy.callCount).to.equal(1);
       expect(url.toString()).to.equal(`${apiMockCtrl.mockClient.baseUrl}/example?auth=token`);
+    });
+  });
+
+  describe('stream', () => {
+    it('should call `_transformStreamParams` method with right params', async () => {
+      client = createClient({
+        defaultRequestConfig: {
+          cors: false,
+          timeout: 10,
+        },
+      });
+      const spy = hanbi.stubMethod(client, '_transformStreamParams').passThrough();
+      const command = streamCommand({ url: '/path/subPath' });
+
+      await client.stream(command, {
+        debug: true,
+        cors: true,
+      });
+
+      expect(spy.callCount).to.equal(1);
+      expect(spy.firstCall.args[0]).to.equal(command);
+      expect(spy.firstCall.args[1].debug).to.equal(true);
+      expect(spy.firstCall.args[1].cors).to.equal(true);
+    });
+
+    it('should call `createStream` method with right params', async () => {
+      client = createClient({
+        defaultRequestConfig: {
+          cors: true,
+          timeout: 10,
+        },
+        defaultStreamConfig: {
+          healthcheckInterval: 10,
+          retry: {
+            backoffFactor: 10,
+            maxRetryCount: 10,
+          },
+        },
+      });
+      const command = streamCommand({ url: '/path/subPath' });
+      const spy = hanbi.stubMethod(command, 'createStream').passThrough();
+
+      await client.stream(command, {
+        debug: true,
+        cors: false,
+        retry: { maxRetryCount: 100 },
+      });
+
+      expect(spy.callCount).to.equal(1);
+      expect(spy.firstCall.args[1].retry.maxRetryCount).to.equal(100); // command config
+      expect(spy.firstCall.args[1].retry.backoffFactor).to.equal(10); // client config
+      expect(spy.firstCall.args[1].retry.initRetryTimeout).to.equal(1_000); // default config
+      expect(spy.firstCall.args[1].debug).to.equal(true); // command config
+      expect(spy.firstCall.args[1].healthcheckInterval).to.equal(10); // client config
+      expect(spy.firstCall.args[1].heartbeatPeriod).to.equal(2_500); // default config
+    });
+
+    it('should call `command.toRequestParams` method with right params', async () => {
+      hanbi.stubMethod(client, '_transformStreamParams').returns(Promise.resolve({ param: 'param' }));
+      const command = streamCommand({ url: '/path/subPath' });
+      const spy = hanbi.stubMethod(command, 'toRequestParams').passThrough();
+
+      const stream = await client.stream(command);
+      expect(spy.callCount).to.equal(0);
+
+      await apiMockCtrl
+        .mock()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({
+          status: 200,
+          events: [{ type: 'message', event: 'END_OF_STREAM', data: '{"endedBy": "UNTIL_REACHED"}' }],
+        })
+        .thenCall(() => startStream(stream));
+
+      expect(spy.callCount).to.equal(1);
+      expect(spy.firstCall.args[0]).to.deep.equal({ param: 'param' });
+    });
+
+    it('should call `_prepareRequest` method with right params', async () => {
+      const command = streamCommand({ url: '/path/subPath' });
+      const spy = hanbi.stubMethod(client, '_prepareRequest').passThrough();
+
+      const stream = await client.stream(command, {
+        debug: true,
+        cors: false,
+      });
+
+      await apiMockCtrl
+        .mock()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({
+          status: 200,
+          events: [{ type: 'message', event: 'END_OF_STREAM', data: '{"endedBy": "UNTIL_REACHED"}' }],
+        })
+        .thenCall(() => startStream(stream));
+
+      expect(spy.callCount).to.equal(1);
+      expect(spy.firstCall.args[0]).to.deep.equal({
+        url: '/path/subPath',
+      });
+      expect(spy.firstCall.args[1]).to.deep.equal({
+        debug: true,
+        cors: false,
+      });
     });
   });
 

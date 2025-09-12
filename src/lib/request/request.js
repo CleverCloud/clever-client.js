@@ -1,12 +1,15 @@
 /**
  * @import { CcRequest, RequestAdapter, RequestWrapper } from '../../types/request.types.js'
+ * @import { SseMessage } from '../stream/sse.types.js'
  */
 import { CcClientError, CcRequestError } from '../error/cc-client-errors.js';
+import { readBytes } from '../stream/sse-parse.js';
 import { fetchWithTimeout } from './fetch-with-timeout.js';
 import { requestDebug } from './request-debug.js';
 import { requestWithCache } from './request-with-cache.js';
 
 const JSON_TYPE = 'application/json';
+const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
 const NETWORK_ERROR_CODES = [
   'EAI_AGAIN',
   'ENOTFOUND',
@@ -161,6 +164,10 @@ async function getResponseBody(request, fetchResponse) {
     return fetchResponse.json();
   }
 
+  if (responseContentType === EVENT_STREAM_CONTENT_TYPE) {
+    return new SseResponseBody(fetchResponse, request.signal);
+  }
+
   if (responseContentType?.startsWith('text/')) {
     return fetchResponse.text();
   }
@@ -194,10 +201,51 @@ export function isNetworkError(error) {
     if (error.message === 'Failed to fetch') {
       return true;
     }
+    if (error.message === 'network error') {
+      return true;
+    }
     if (error.message.startsWith('NetworkError')) {
       return true;
     }
   }
 
   return false;
+}
+
+export class SseResponseBody {
+  /** @type {Response} */
+  #response;
+  /** @type {AbortSignal} */
+  #signal;
+
+  /**
+   * @param {Response} response
+   * @param {AbortSignal} signal
+   */
+  constructor(response, signal) {
+    this.#response = response;
+    this.#signal = signal;
+  }
+
+  /**
+   *
+   * @param {Object} _
+   * @param {(message: SseMessage) => void} _.onMessage
+   * @param {(err: any) => void} [_.onError]
+   * @param {(reason: any) => void} [_.onClose]
+   * @return {Promise<*>}
+   */
+  async read({ onMessage, onError, onClose }) {
+    try {
+      await readBytes(this.#response.body, this.#signal, onMessage);
+      return onClose?.();
+    } catch (err) {
+      if (this.#signal.aborted) {
+        onClose?.(this.#signal.reason);
+      } else {
+        // if we haven't aborted the request ourselves:
+        onError?.(err);
+      }
+    }
+  }
 }
