@@ -44,6 +44,15 @@ export const mockApiPlugin = {
       proxy('/mock', {
         rewrite: (path) => path.replace(/^\/mock\//g, '/'),
         target: `http://localhost:${mockServer.mockPort}`,
+        events: {
+          // When mocking SSE, we can simulate the request socket close.
+          // We make sure to close the request socket when we detect the proxy socket close
+          proxyReq: (proxyReq, req) => {
+            proxyReq.on('close', () => {
+              req.socket.destroy();
+            });
+          },
+        },
       }),
     );
   },

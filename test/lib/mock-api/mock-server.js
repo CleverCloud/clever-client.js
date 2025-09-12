@@ -1,6 +1,7 @@
 import fastifyCors from '@fastify/cors';
 import Fastify from 'fastify';
 import { findFreePorts } from 'find-free-ports';
+import { randomBytes } from 'node:crypto';
 import { createRequestKey, normalizePath } from './mock-utils.js';
 
 /**
@@ -79,7 +80,39 @@ export async function startServer() {
           call.response = mock.response;
           call.matchingMockRequest = mock.request;
 
-          reply.code(mock.response.status).send(mock.response.body);
+          if ('body' in mock.response) {
+            reply.code(mock.response.status).send(mock.response.body);
+          } else if ('events' in mock.response) {
+            const delay = mock.response.delayBetween;
+            reply.raw.writeHead(mock.response.status, {
+              'Content-Type': 'text/event-stream',
+              'Cache-Control': 'no-cache',
+              Connection: 'keep-alive',
+            });
+            reply.raw.flushHeaders();
+
+            for (const mockEvent of mock.response.events) {
+              if (mockEvent.type === 'message') {
+                let eventData = '';
+                eventData += `event: ${mockEvent.event}\n`;
+                eventData += `id: ${mockEvent.id ?? randomBytes(16).toString('hex')}\n`;
+                if (mockEvent.retry != null) {
+                  eventData += `retry: ${mockEvent.retry}\n\n`;
+                }
+                eventData += `data: ${typeof mockEvent.data === 'object' ? JSON.stringify(mockEvent.data) : mockEvent.data}\n\n`;
+
+                reply.raw.write(eventData);
+              }
+
+              if (mockEvent.type === 'close') {
+                request.raw.destroy();
+                // we cannot do anything after closing the socket
+                break;
+              }
+
+              await new Promise((resolve) => setTimeout(resolve, delay));
+            }
+          }
         }
       },
     });
