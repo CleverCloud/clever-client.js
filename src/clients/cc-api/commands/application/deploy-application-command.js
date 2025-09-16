@@ -21,7 +21,7 @@ export class DeployApplicationCommand extends CcApiSimpleCommand {
       null,
       new QueryParams({
         commit: params.commit,
-        useCache: params.useCache,
+        useCache: params.useCache === false ? 'no' : null,
       }),
     );
   }
