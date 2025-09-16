@@ -1,8 +1,8 @@
 import proxy from 'koa-proxies';
 import { startServer } from '../mock-server.js';
 
-/** @type {() => void} Function to stop the mock server */
-let stopServer = () => {};
+/** @type {null|(() => Promise<void>)} Function to stop the mock server */
+let stopServer = null;
 
 /**
  * Web Test Runner plugin for integrating mock API functionality into browser tests.
@@ -60,9 +60,9 @@ export const mockApiPlugin = {
   /**
    * Stops the mock server when the Web Test Runner shuts down.
    *
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  stopServer: () => {
-    stopServer();
+  stopServer: async () => {
+    await stopServer?.();
   },
 };
