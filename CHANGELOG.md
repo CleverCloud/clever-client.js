@@ -1,5 +1,18 @@
 # Clever Client changelog
 
+## [11.2.0](https://github.com/CleverCloud/clever-client.js/compare/11.1.1...11.2.0) (2025-09-16)
+
+
+### 🚀 Features
+
+* add publicGitRepositoryUrl support ([c7d5b41](https://github.com/CleverCloud/clever-client.js/commit/c7d5b412409e127c6de13749d12ca786d72c9e4d)), closes [#166](https://github.com/CleverCloud/clever-client.js/issues/166)
+* reduce CreateApplicationCommandInput required params ([f178581](https://github.com/CleverCloud/clever-client.js/commit/f178581746e24d16f92ea4ace7d860b83954a829))
+
+
+### 🐛 Bug Fixes
+
+* correctly rebuild apps ([762e131](https://github.com/CleverCloud/clever-client.js/commit/762e131efb005a797d8695e1469a893c209d0fac))
+
 ## [11.1.1](https://github.com/CleverCloud/clever-client.js/compare/11.1.0...11.1.1) (2025-09-11)
 
 
