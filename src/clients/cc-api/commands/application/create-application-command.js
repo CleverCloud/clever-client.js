@@ -97,6 +97,7 @@ class CreateApplicationInnerCommand extends CcApiSimpleCommand {
       minInstances: params.minInstances,
       name: params.name,
       ownerId: params.ownerId,
+      publicGitRepositoryUrl: params.publicGitRepositoryUrl,
       separateBuild: params.separateBuild,
       shutdownable: params.shutdownable,
       stickySessions: params.stickySessions,

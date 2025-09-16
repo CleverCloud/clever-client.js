@@ -24,6 +24,7 @@ export interface CreateApplicationCommandInput {
   name: string;
   oauthApp?: ApplicationOauthApp;
   ownerId: string;
+  publicGitRepositoryUrl?: string;
   separateBuild?: boolean;
   shutdownable?: boolean;
   stickySessions?: boolean;
