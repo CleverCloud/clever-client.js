@@ -4,10 +4,10 @@ import type { Application, ApplicationLifetime } from './application.types.js';
 export interface CreateApplicationCommandInput {
   applianceId?: string;
   archived?: boolean;
-  branch: string;
-  buildFlavor: string;
+  branch?: string;
+  buildFlavor?: string;
   cancelOnPush?: boolean;
-  deploy: string;
+  deploy?: string;
   description?: string;
   // renamed from env and converted from Record<string, string>
   environment?: Array<EnvironmentVariable>;
@@ -17,10 +17,10 @@ export interface CreateApplicationCommandInput {
   homogeneous?: boolean;
   instance: ApplicationInstance | ApplicationInstanceSlug;
   instanceLifetime?: ApplicationLifetime;
-  maxFlavor: string;
-  maxInstances: number;
+  maxFlavor?: string;
+  maxInstances?: number;
   minFlavor: string;
-  minInstances: number;
+  minInstances?: number;
   name: string;
   oauthApp?: ApplicationOauthApp;
   ownerId: string;
@@ -29,7 +29,7 @@ export interface CreateApplicationCommandInput {
   shutdownable?: boolean;
   stickySessions?: boolean;
   tags?: Array<string>;
-  zone: string;
+  zone?: string;
 }
 
 export type CreateApplicationCommandOutput = Application;

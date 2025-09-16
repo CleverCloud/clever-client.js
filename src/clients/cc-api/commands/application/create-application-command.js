@@ -17,15 +17,37 @@ import { consolidateApplicationWithBranches } from './application-utils.js';
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/branches
  * @group Application
  * @version 2
+ *
+ * Default values:
+ * - branch: 'master'
+ * - buildFlavor: ''
+ * - deploy: 'git'
+ * - environment: []
+ * - maxInstances: 1
+ * - minInstances: 1
+ * - zone: "par"
  */
 export class CreateApplicationCommand extends CcApiCompositeCommand {
   /** @type {CcApiCompositeCommand<CreateApplicationCommandInput, CreateApplicationCommandOutput>['compose']} */
   async compose(params, composer) {
+    // Apply default values
+    /** @type {CreateApplicationCommandInput} */
+    const paramsWithDefaults = {
+      branch: 'master',
+      buildFlavor: '',
+      deploy: 'git',
+      environment: [],
+      maxInstances: 1,
+      minInstances: 1,
+      zone: 'par',
+      ...params,
+    };
+
     /** @type {CreateApplicationInnerCommandInput} */
     let innerParams;
 
-    if ('slug' in params.instance) {
-      const slug = params.instance.slug;
+    if ('slug' in paramsWithDefaults.instance) {
+      const slug = paramsWithDefaults.instance.slug;
       const runtimes = await composer.send(new ListProductRuntimeCommand());
       const runtime = runtimes
         .filter((t) => t.enabled)
@@ -44,7 +66,7 @@ export class CreateApplicationCommand extends CcApiCompositeCommand {
         );
       }
       innerParams = {
-        ...params,
+        ...paramsWithDefaults,
         instance: {
           type: runtime.type,
           version: runtime.version,
@@ -53,9 +75,17 @@ export class CreateApplicationCommand extends CcApiCompositeCommand {
       };
     } else {
       innerParams = {
-        ...params,
-        instance: params.instance,
+        ...paramsWithDefaults,
+        instance: paramsWithDefaults.instance,
       };
+    }
+
+    if (innerParams.minFlavor && !innerParams.maxFlavor) {
+      innerParams.maxFlavor = innerParams.minFlavor;
+    }
+
+    if (innerParams.buildFlavor?.length > 0) {
+      innerParams.separateBuild = true;
     }
 
     const application = await composer.send(new CreateApplicationInnerCommand(innerParams));
