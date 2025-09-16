@@ -17,7 +17,7 @@ import { createRequestKey, normalizePath } from './mock-utils.js';
  *
  * Both servers are started on automatically assigned free ports and support CORS.
  *
- * @returns {Promise<{adminPort: number, mockPort: number, stop: () => Promise<PromiseSettledResult<void>[]>}>}
+ * @returns {Promise<{adminPort: number, mockPort: number, stop: () => Promise<void>}>}
  *   Server configuration with ports and stop function
  */
 export async function startServer() {
@@ -27,7 +27,7 @@ export async function startServer() {
 
   //-- admin server ------
 
-  const adminServer = Fastify();
+  const adminServer = Fastify({ forceCloseConnections: true });
   adminServer.register(fastifyCors, {
     origin: true,
   });
@@ -60,7 +60,7 @@ export async function startServer() {
 
   //-- mock server ------
 
-  const mockServer = Fastify();
+  const mockServer = Fastify({ forceCloseConnections: true });
   mockServer.register(fastifyCors, {
     origin: true,
   });
@@ -92,7 +92,15 @@ export async function startServer() {
             });
             reply.raw.flushHeaders();
 
-            for (const mockEvent of mock.response.events) {
+            if (mock.response.events.length === 0) {
+              reply.raw.end('');
+              return;
+            }
+
+            for (let i = 0; i < mock.response.events.length; i++) {
+              const mockEvent = mock.response.events[i];
+              const isLastEvent = i === mock.response.events.length - 1;
+
               if (mockEvent.type === 'message') {
                 let eventData = '';
                 eventData += `event: ${mockEvent.event}\n`;
@@ -102,16 +110,21 @@ export async function startServer() {
                 }
                 eventData += `data: ${typeof mockEvent.data === 'object' ? JSON.stringify(mockEvent.data) : mockEvent.data}\n\n`;
 
-                reply.raw.write(eventData);
+                if (isLastEvent) {
+                  reply.raw.write(eventData);
+                } else {
+                  reply.raw.write(eventData);
+                }
               }
 
               if (mockEvent.type === 'close') {
-                request.raw.destroy();
-                // we cannot do anything after closing the socket
+                reply.raw.end();
                 break;
               }
 
-              await setTimeout(delay);
+              if (!isLastEvent) {
+                await setTimeout(delay);
+              }
             }
           }
         }
@@ -121,14 +134,16 @@ export async function startServer() {
 
   //-- start servers ------
 
-  const [adminPort, mockPort] = await findFreePorts(2, { startPort: 3000 });
-  await adminServer.listen({ port: adminPort, host: '0.0.0.0' });
-  await mockServer.listen({ port: mockPort, host: '0.0.0.0' });
+  const [adminPort, mockPort] = await findFreePorts(2);
+  await Promise.all([
+    adminServer.listen({ port: adminPort, host: '0.0.0.0' }),
+    mockServer.listen({ port: mockPort, host: '0.0.0.0' }),
+  ]);
   return {
     adminPort,
     mockPort,
-    stop: () => {
-      return Promise.all([adminServer.close(), mockServer.close()]);
+    stop: async () => {
+      await Promise.all([adminServer.close(), mockServer.close()]);
     },
   };
 }

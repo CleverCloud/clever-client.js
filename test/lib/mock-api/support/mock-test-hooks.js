@@ -4,12 +4,6 @@ import { MockCtrl } from '../mock-ctrl.js';
 /** @type {boolean} Environment detection: true if running in Node.js, false if in browser */
 const IS_NODE = globalThis.process != null;
 
-/** @type {MockCtrl} Global mock controller instance shared across test hooks */
-let mockCtrl;
-
-/** @type {() => Promise<PromiseSettledResult<void>[]>} Function to stop the mock server */
-let stopServer = () => Promise.resolve([]);
-
 /**
  * Creates test hooks for setting up and tearing down mock API infrastructure.
  *
@@ -20,10 +14,16 @@ let stopServer = () => Promise.resolve([]);
  * In browser environments, it assumes the mock server is already running and
  * connects to it via the current page's origin.
  *
- * @returns {{before: () => Promise<MockCtrl>, beforeEach: () => Promise<void>, after: () => void}}
+ * @returns {{before: () => Promise<MockCtrl>, beforeEach: () => Promise<void>, after: () => Promise<void>}}
  *   Object containing test lifecycle hooks
  */
 export function mockTestHooks() {
+  /** @type {MockCtrl} Global mock controller instance shared across test hooks */
+  let mockCtrl;
+
+  /** @type {null|(() => Promise<void>)} Function to stop the mock server */
+  let stopServer = null;
+
   return {
     /**
      * Sets up the mock API environment before tests run.
@@ -61,10 +61,10 @@ export function mockTestHooks() {
      * Cleans up the mock environment after all tests complete.
      * In Node.js environments, this stops the mock server.
      *
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    after: () => {
-      stopServer();
+    after: async () => {
+      await stopServer?.();
     },
   };
 }
