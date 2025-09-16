@@ -1,8 +1,8 @@
 import proxy from 'koa-proxies';
 import { startServer } from '../mock-server.js';
 
-/** @type {() => void} Function to stop the mock server */
-let stopServer = () => {};
+/** @type {null|(() => Promise<void>)} Function to stop the mock server */
+let stopServer = null;
 
 /**
  * Web Test Runner plugin for integrating mock API functionality into browser tests.
@@ -44,6 +44,15 @@ export const mockApiPlugin = {
       proxy('/mock', {
         rewrite: (path) => path.replace(/^\/mock\//g, '/'),
         target: `http://localhost:${mockServer.mockPort}`,
+        events: {
+          // When mocking SSE, we can simulate the request socket close.
+          // We make sure to close the request socket when we detect the proxy socket close
+          proxyReq: (proxyReq, req) => {
+            proxyReq.on('close', () => {
+              req.socket.destroy();
+            });
+          },
+        },
       }),
     );
   },
@@ -51,9 +60,9 @@ export const mockApiPlugin = {
   /**
    * Stops the mock server when the Web Test Runner shuts down.
    *
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  stopServer: () => {
-    stopServer();
+  stopServer: async () => {
+    await stopServer?.();
   },
 };

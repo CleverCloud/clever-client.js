@@ -6,10 +6,10 @@ import { EVENT_STREAM_CONTENT_TYPE, fetchEventSource, JSON_CONTENT_TYPE } from '
 /**
  * @typedef {import('./streams.types.js').RetryConfiguration} RetryConfiguration
  * @typedef {import('./streams.types.js').SseCloseReason} SseCloseReason
- * @typedef {import('./streams.types.js').SseMessage} SseMessage
  * @typedef {import('../oauth.types.js').OAuthTokens} OAuthTokens
  * @typedef {import('../utils/query-params.types.js').QueryParams} QueryParams
  * @typedef {import('../request.types.js').RequestParams} RequestParams
+ * @typedef {import('../../src/lib/stream/sse.types.js').SseMessage} SseMessage
  */
 
 /**

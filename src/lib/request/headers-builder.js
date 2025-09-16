@@ -1,6 +1,7 @@
 const JSON_MIME_TYPE = 'application/json';
 const TEXT_PLAIN_MIME_TYPE = 'text/plain';
 const TEXT_HTML_MIME_TYPE = 'text/html';
+const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
 
 /**
  * Helper to build headers
@@ -39,6 +40,13 @@ export class HeadersBuilder {
    */
   acceptTextHtml() {
     return this.accept(TEXT_HTML_MIME_TYPE);
+  }
+
+  /**
+   * @returns {HeadersBuilder}
+   */
+  acceptEventStream() {
+    return this.accept(EVENT_STREAM_CONTENT_TYPE);
   }
 
   /**

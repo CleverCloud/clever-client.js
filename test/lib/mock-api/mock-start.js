@@ -14,7 +14,7 @@ import { startServer } from './mock-server.js';
  * 3. Wraps the client in a MockCtrl for fluent API usage
  * 4. Returns both the controller and a stop function
  *
- * @returns {Promise<{stop: () => Promise<PromiseSettledResult<void>[]>, ctrl: MockCtrl}>}
+ * @returns {Promise<{stop: () => Promise<void>, ctrl: MockCtrl}>}
  *   Object containing the mock controller and server stop function
  */
 export async function mockStart() {
