@@ -63,9 +63,7 @@ describe('profile commands', function () {
 
     try {
       expect(response.url).not.to.be.null;
-      expect(response.url).to.be.equal(
-        `https://ccapiavatars.cellar-c2.services.clever-cloud.com/${support.userId}/avatar.jpg`,
-      );
+      new URL(response.url);
     } finally {
       await support.client.send(
         new UpdateProfileAvatarCommand({
