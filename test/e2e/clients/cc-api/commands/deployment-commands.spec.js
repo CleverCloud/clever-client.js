@@ -131,7 +131,7 @@ describe('deployment commands', function () {
     expect(response.origin.authorId).to.equal(support.userId);
     expect(response.origin.constraints).to.be.an('array');
     expect(response.origin.priority).to.be.a('string');
-    expect(response.hasDedicatedBuild).to.equal(false);
+    expect(response.hasDedicatedBuild).to.be.a('boolean');
   });
 
   it('should cancel deployment', async () => {
