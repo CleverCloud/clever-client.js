@@ -54,7 +54,8 @@ export const STATIC_ORGANISATION_ID = 'orga_3659ccc6-1b06-4393-83d6-52dc3d72416d
 export function e2eSupport(config) {
   const conf = merge({ user: DEFAULT_USER, auth: DEFAULT_AUTH, debug: false }, config);
   const e2eUser = getE2eUser(conf.user);
-  const client = createCcApiClient(e2eUser, conf.auth, conf.debug);
+  /** @type {CcApiClient} */
+  let client;
 
   /** @type {string} */
   let organisationId;
@@ -75,6 +76,9 @@ export function e2eSupport(config) {
       return createCcApiClient(getE2eUser(user ?? DEFAULT_USER), auth ?? DEFAULT_AUTH, conf.debug);
     },
     get client() {
+      if (client == null) {
+        client = createCcApiClient(e2eUser, conf.auth, conf.debug);
+      }
       return client;
     },
     get email() {
@@ -115,7 +119,7 @@ export function e2eSupport(config) {
       // return organisationId;
 
       // for now we use personal orga
-      const self = await client.send(new GetProfileCommand());
+      const self = await this.client.send(new GetProfileCommand());
       organisationId = self.id;
       userId = self.id;
     },
@@ -134,20 +138,20 @@ export function e2eSupport(config) {
       const organisations = cleanupTasks.filter((task) => task.type === 'organisation');
       await Promise.all(
         organisations.map((organisation) =>
-          client
+          this.client
             .send(new GetOrganisationCommand({ organisationId: organisation.id }))
-            .then((a) => a && client.send(new DeleteOrganisationCommand({ organisationId: organisation.id }))),
+            .then((a) => a && this.client.send(new DeleteOrganisationCommand({ organisationId: organisation.id }))),
         ),
       );
       cleanupTasks = cleanupTasks.filter((task) => task.type !== 'organisation');
     },
     async deleteApplications() {
-      // const applications = await client.send(new ListApplicationCommand({ ownerId: organisationId }));
+      // const applications = await this.client.send(new ListApplicationCommand({ ownerId: organisationId }));
 
       const applications = cleanupTasks.filter((task) => task.type === 'application');
       await Promise.all(
         applications.map((application) =>
-          client
+          this.client
             .send(
               new GetApplicationCommand({
                 ownerId: organisationId,
@@ -158,48 +162,51 @@ export function e2eSupport(config) {
             .then(
               (a) =>
                 a &&
-                client.send(new DeleteApplicationCommand({ ownerId: organisationId, applicationId: application.id })),
+                this.client.send(
+                  new DeleteApplicationCommand({ ownerId: organisationId, applicationId: application.id }),
+                ),
             ),
         ),
       );
       cleanupTasks = cleanupTasks.filter((task) => task.type !== 'application');
     },
     async deleteAddons() {
-      // const addons = await client.send(new ListAddonCommand({ ownerId: organisationId }));
+      // const addons = await this.client.send(new ListAddonCommand({ ownerId: organisationId }));
 
       const addons = cleanupTasks.filter((task) => task.type === 'addon');
       await Promise.all(
         addons.map((addon) =>
-          client
+          this.client
             .send(new GetAddonCommand({ ownerId: organisationId, addonId: addon.id }))
-            .then((a) => a && client.send(new DeleteAddonCommand({ ownerId: organisationId, addonId: addon.id }))),
+            .then((a) => a && this.client.send(new DeleteAddonCommand({ ownerId: organisationId, addonId: addon.id }))),
         ),
       );
       cleanupTasks = cleanupTasks.filter((task) => task.type !== 'addon');
     },
     async deleteNetworkGroups() {
-      // const networkGroups = await client.send(new ListNetworkGroupCommand({ ownerId: organisationId }));
+      // const networkGroups = await this.client.send(new ListNetworkGroupCommand({ ownerId: organisationId }));
 
       const networkGroups = cleanupTasks.filter((task) => task.type === 'ng');
       await Promise.all(
         networkGroups.map((ng) =>
-          client
+          this.client
             .send(new GetNetworkGroupCommand({ ownerId: organisationId, networkGroupId: ng.id }))
             .then(
               (a) =>
-                a && client.send(new DeleteNetworkGroupCommand({ ownerId: organisationId, networkGroupId: ng.id })),
+                a &&
+                this.client.send(new DeleteNetworkGroupCommand({ ownerId: organisationId, networkGroupId: ng.id })),
             ),
         ),
       );
       cleanupTasks = cleanupTasks.filter((task) => task.type !== 'ng');
     },
     async deleteConsumers() {
-      // const consumers = await client.send(new ListOauthConsumerCommand({ ownerId: organisationId }));
+      // const consumers = await this.client.send(new ListOauthConsumerCommand({ ownerId: organisationId }));
 
       const consumers = cleanupTasks.filter((task) => task.type === 'consumer');
       await Promise.all(
         consumers.map((consumer) =>
-          client
+          this.client
             .send(
               new GetOauthConsumerCommand({
                 ownerId: organisationId,
@@ -210,7 +217,9 @@ export function e2eSupport(config) {
             .then(
               (a) =>
                 a &&
-                client.send(new DeleteOauthConsumerCommand({ ownerId: organisationId, oauthConsumerKey: consumer.id })),
+                this.client.send(
+                  new DeleteOauthConsumerCommand({ ownerId: organisationId, oauthConsumerKey: consumer.id }),
+                ),
             ),
         ),
       );
@@ -222,7 +231,7 @@ export function e2eSupport(config) {
      * @returns {Promise<Organisation>}
      */
     async createTestOrganisation(organisation) {
-      const createdOrganisation = await client.send(
+      const createdOrganisation = await this.client.send(
         new CreateOrganisationCommand(
           organisation ?? {
             name: 'name',
@@ -239,7 +248,7 @@ export function e2eSupport(config) {
       return createdOrganisation;
     },
     async createTestApplication(name = 'test-application', ownerId = organisationId) {
-      const application = await client.send(
+      const application = await this.client.send(
         new CreateApplicationCommand({
           ownerId,
           name,
@@ -272,7 +281,7 @@ export function e2eSupport(config) {
      * @returns {Promise<Addon>}
      */
     async createTestAddon(addon) {
-      let createdAddon = await client.send(
+      let createdAddon = await this.client.send(
         new CreateAddonCommand(
           addon
             ? {
@@ -304,7 +313,7 @@ export function e2eSupport(config) {
      * @param {string} [label]
      */
     async createNetworkGroup(memberId, label) {
-      const networkGroup = await client.send(
+      const networkGroup = await this.client.send(
         new CreateNetworkGroupCommand({
           ownerId: organisationId,
           label,
@@ -323,7 +332,7 @@ export function e2eSupport(config) {
       return networkGroup;
     },
     async createTestOauthConsumer() {
-      const consumer = await client.send(
+      const consumer = await this.client.send(
         new CreateOauthConsumerCommand({
           ownerId: organisationId,
           name: 'test-consumer',
