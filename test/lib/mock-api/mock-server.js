@@ -50,9 +50,10 @@ export async function startServer() {
   });
   adminServer.setErrorHandler((error, request, reply) => {
     request.log.error(error);
-    const statusCode = error.statusCode ?? 500;
-    const code = error.code ?? 'unknown';
-    const message = error.message ?? 'Unknown error';
+    const err = /** @type {any} */ (error);
+    const statusCode = err.statusCode ?? 500;
+    const code = err.code ?? 'unknown';
+    const message = err.message ?? 'Unknown error';
     reply.status(statusCode).send({ code, message });
   });
 

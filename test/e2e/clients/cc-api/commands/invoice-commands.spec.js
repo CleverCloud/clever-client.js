@@ -54,8 +54,7 @@ describe('invoice commands', function () {
     it('should get invoice as PDF', async () => {
       const data = await support.client.send(new GetInvoicePdfCommand({ ownerId: support.userId, invoiceNumber }));
       const arrayBuffer = await data.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      (await import('node:fs')).writeFileSync('/tmp/test.pdf', buffer);
+      (await import('node:fs')).writeFileSync('/tmp/test.pdf', new DataView(arrayBuffer));
     });
   }
 
