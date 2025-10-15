@@ -11,6 +11,15 @@ import { e2eSupport } from '../e2e-support.js';
 describe('api-token commands', function () {
   const support = e2eSupport();
 
+  /** @type {null|string} */
+  let createdTokenId = null;
+
+  afterEach(async () => {
+    if (createdTokenId != null) {
+      await support.client.send(new DeleteApiTokenCommand({ apiTokenId: createdTokenId }));
+    }
+  });
+
   // we cannot split each test into multiple `it` because token creation cannot be done too fast
   it('should create, list, update, and delete api token', async () => {
     // create token
@@ -23,6 +32,7 @@ describe('api-token commands', function () {
         expirationDate: new Date(new Date().getTime() + 1000 * 60 * 2),
       }),
     );
+    createdTokenId = tokenCreated.apiTokenId;
 
     expect(tokenCreated.apiToken).to.be.a('string');
     expect(tokenCreated.apiTokenId).to.be.a('string');
@@ -67,6 +77,7 @@ describe('api-token commands', function () {
     expect(deleteResponse).to.be.null;
     const apiTokenDeleted = await getApiToken(tokenCreated.apiTokenId);
     expect(apiTokenDeleted).to.be.undefined;
+    createdTokenId = null;
   });
 
   /**
