@@ -30,7 +30,7 @@ export async function retry(fn, { interval, timeout, maxRetries, delay }) {
           return { stop: false };
         }
         return { stop: true, value: value };
-      } catch (_e) {
+      } catch {
         return { stop: false };
       }
     },

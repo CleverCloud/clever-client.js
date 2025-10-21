@@ -237,7 +237,7 @@ export function parseRawJson(rawInput = '', options = {}) {
 
   try {
     parsedInput = JSON.parse(rawInput);
-  } catch (_e) {
+  } catch {
     parsingErrors.push({ type: ERROR_TYPES.INVALID_JSON });
     return { variables: [], errors: parsingErrors };
   }

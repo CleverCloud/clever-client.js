@@ -222,7 +222,7 @@ describe('environment-utils', () => {
         expect(parseRaw(rawInput)).to.deep.equal({
           variables: [
             // AAA \" AAA
-            { name: 'NAME_A', value: `AAA \\\" AAA` }, // eslint-disable-line no-useless-escape
+            { name: 'NAME_A', value: `AAA \\" AAA` },
             // BBBB \\"BBBB\\" BBBB
             { name: 'NAME_B', value: `BBBB \\\\"BBBB\\\\" BBBB` },
             // CCCCC \\\"CCCCC\\\" CCCCC
@@ -726,7 +726,7 @@ describe('environment-utils', () => {
       // ...
       const variables = [
         // AAA \" AAA
-        { name: 'NAME_A', value: `AAA \\\" AAA` }, // eslint-disable-line no-useless-escape
+        { name: 'NAME_A', value: `AAA \\" AAA` },
         // BBBB \\"BBBB\\" BBBB
         { name: 'NAME_B', value: `BBBB \\\\"BBBB\\\\" BBBB` },
         // CCCCC \\\"CCCCC\\\" CCCCC
