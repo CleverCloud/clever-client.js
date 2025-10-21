@@ -1,6 +1,6 @@
 /**
  * @import { CcStreamRequestFactory, CcStreamConfig, CcStreamState, CcStreamCloseReason } from './cc-stream.types.js'
- * @import { SseMessage } from './sse.types.js'
+ * @import { SseMessage } from '../../types/request.types.js'
  */
 
 import { CcClientError, CcHttpError } from '../error/cc-client-errors.js';
