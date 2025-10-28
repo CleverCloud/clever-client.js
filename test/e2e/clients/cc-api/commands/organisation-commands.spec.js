@@ -260,7 +260,7 @@ describe('organisation commands', function () {
     try {
       getImage = await fetch('/avatar');
     } catch {
-      getImage = await fetch('https://www.clever-cloud.com/app/themes/Starter/assets/img/brand-assets/square-png.png');
+      getImage = await fetch('https://www.clever.cloud/app/themes/Starter/assets/img/brand-assets/square-png.png');
     }
 
     const response = await support.client.send(

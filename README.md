@@ -1,6 +1,6 @@
 # JavaScript REST client and utils for Clever Cloud's API
 
-> 🚧 **New Client Documentation Available**: For the new command-pattern client (beta), see [NEW_CLIENT.md](NEW_CLIENT.md) 
+> 🚧 **New Client Documentation Available**: For the new command-pattern client (beta), see [NEW_CLIENT.md](NEW_CLIENT.md)
 
 ## What is this?
 
@@ -13,7 +13,7 @@ First, you need to install the Node.js module:
 ```sh
 npm install @clevercloud/client
 ```
- 
+
 All API REST paths are accessible as "functions" organized in "services".
 A call to a function of a service will just prepare the HTTP request and return the request params in an object via a promise.
 It won't authenticate the request and it won't send it.
@@ -71,7 +71,7 @@ NOTE: It returns a promise, you may want to use `await` with it.
 
 ## How can I get the oAuth configuration?
 
-A general documentation is proposed on [our Website](https://www.clever-cloud.com/doc/clever-cloud-apis/cc-api/).
+A general documentation is proposed on [our Website](https://www.clever.cloud/developers/api/howto#oauth1).
 As stated in the documentation:
 
 > You need to create an oAuth consumer token in the Clever Cloud console. Click on "Create...", then on "an oauth consumer" under your organization name. All created consumers will appear under the list of applications and add-ons.
@@ -188,9 +188,9 @@ You probably don't need to but you can listen to events related to this auto ret
 ```js
 // "close" event is emitted each time a network failure is detected (or any unknown error not related to authentication)
 stream.on('close', (reason) => console.log('Stream closed because of', reason));
-// "open" event is emitted on first .open() call and each time a new open is attempted  
+// "open" event is emitted on first .open() call and each time a new open is attempted
 stream.on('open', () => console.log('Stream open...'));
-// "ping" event is emitted each time a ping is received from the source stream  
+// "ping" event is emitted each time a ping is received from the source stream
 stream.on('ping', () => console.log('Received ping'));
 ```
 
