@@ -39,4 +39,4 @@ jobs:
         run: npm ci
       - name: '[Publish] version ${{ github.ref_name }} with tag ${{ steps.npm_tag.outputs.tag }}'
         run: |
-          npm publish --access public --tag ${{ steps.npm_tag.outputs.tag }}
+          npm publish --access public --tag ${{ steps.npm_tag.outputs.tag }} --provenance
