@@ -3,6 +3,8 @@
  */
 import fs from 'fs-extra';
 import path from 'node:path';
+// todo: remove that when we use a version of Node.js >= 23.5.0 (we can ignore because the feature was backported to version 22.13.0)
+// eslint-disable-next-line n/no-unsupported-features/node-builtins
 import { styleText } from 'node:util';
 import { SOURCES, WORKING_DIR } from './lib/config.js';
 import { compareEndpoints, generateJsonReport, generateMarkdownReport } from './lib/endpoint-compare.js';

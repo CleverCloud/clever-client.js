@@ -47,7 +47,7 @@ describe('auth commands', function () {
 
   it('should confirm mfa', async () => {
     const response = await support.client.send(new CreateAuthMfaCommand({ kind: 'TOTP', password: support.password }));
-    const mfaCode = TOTP.generate(new URL(response.url).searchParams.get('secret')).otp;
+    const mfaCode = (await TOTP.generate(new URL(response.url).searchParams.get('secret'))).otp;
 
     // confirm MFA
     const confirmResponse = await support.client.send(
@@ -92,7 +92,7 @@ describe('auth commands', function () {
     const response = await support.client.send(new CreateAuthMfaCommand({ kind: 'TOTP', password: support.password }));
 
     // generate OTP
-    const mfaCode = TOTP.generate(new URL(response.url).searchParams.get('secret')).otp;
+    const mfaCode = (await TOTP.generate(new URL(response.url).searchParams.get('secret'))).otp;
 
     // confirm MFA
     await support.client.send(

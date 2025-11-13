@@ -45,7 +45,7 @@ async function loginUser(user) {
   let mfaCode;
   const requiresMfa = await oauthDance.postSessionsLogin(user.email, user.password);
   if (requiresMfa) {
-    mfaCode = TOTP.generate(user.totpSecret).otp;
+    mfaCode = (await TOTP.generate(user.totpSecret)).otp;
     await oauthDance.postSessionsMfaLogin(mfaCode);
   }
   await timers.setTimeout(1000);
