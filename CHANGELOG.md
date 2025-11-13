@@ -1,5 +1,13 @@
 # Clever Client changelog
 
+## [11.2.1](https://github.com/CleverCloud/clever-client.js/compare/11.2.0...11.2.1) (2025-11-13)
+
+
+### 🐛 Bug Fixes
+
+* add missing package-lock update ([4808b4b](https://github.com/CleverCloud/clever-client.js/commit/4808b4b004026636cedcd25fbd0b86a43fd81710))
+* **sse:** only update lastId for non-empty event IDs ([aa1fab8](https://github.com/CleverCloud/clever-client.js/commit/aa1fab88c020f85122f45cc8a1ffff8c23900393))
+
 ## [11.2.0](https://github.com/CleverCloud/clever-client.js/compare/11.1.1...11.2.0) (2025-09-16)
 
 
