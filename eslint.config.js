@@ -45,7 +45,14 @@ export default [
   // Specific rules for node esm modules
   {
     name: 'node-esm-context',
-    files: ['tasks/**/*.js', 'test-*.config.*.*js', 'test/conf/*.*js', 'test/manual/**/*.js', 'test/**/*.node.spec.js'],
+    files: [
+      'tasks/**/*.js',
+      'test-*.config.*.*js',
+      'test/conf/*.*js',
+      'test/manual/**/*.js',
+      'test/**/*.node.spec.js',
+      'test/e2e/mocha.hook.js',
+    ],
     languageOptions: {
       globals: {
         ...globals.node,

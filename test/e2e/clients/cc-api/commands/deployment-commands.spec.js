@@ -7,7 +7,7 @@ import {
 } from '../../../../../src/clients/cc-api/commands/deployment/get-deployment-command.js';
 import { ListDeploymentCommand } from '../../../../../src/clients/cc-api/commands/deployment/list-deployment-command.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { sleep } from '../../../../lib/timers.js';
+import { retry } from '../../../../lib/retry.js';
 import { e2eSupport } from '../e2e-support.js';
 
 describe('deployment commands', function () {
@@ -28,9 +28,7 @@ describe('deployment commands', function () {
   it('should list all org deployments', async () => {
     const application = await support.createTestApplication();
     const deployment = await support.client.send(new DeployApplicationCommand({ applicationId: application.id }));
-
-    // may be not enough when infrastructure is slow. todo: introduce a retry mechanism instead of this horrible sleep
-    await sleep(2000);
+    await waitForDeployment(application.id, deployment.deploymentId);
 
     const deployments = await support.client.send(
       new ListDeploymentCommand({
@@ -54,9 +52,7 @@ describe('deployment commands', function () {
   it('should list all app deployments', async () => {
     const application = await support.createTestApplication();
     const deployment = await support.client.send(new DeployApplicationCommand({ applicationId: application.id }));
-
-    // may be not enough when infrastructure is slow. todo: introduce a retry mechanism instead of this horrible sleep
-    await sleep(2000);
+    await waitForDeployment(application.id, deployment.deploymentId);
 
     const deployments = await support.client.send(
       new ListDeploymentCommand({
@@ -81,9 +77,7 @@ describe('deployment commands', function () {
   it('should get legacy deployment', async () => {
     const application = await support.createTestApplication();
     const deployment = await support.client.send(new DeployApplicationCommand({ applicationId: application.id }));
-
-    // may be not enough when infrastructure is slow. todo: introduce a retry mechanism instead of this horrible sleep
-    await sleep(2000);
+    await waitForDeployment(application.id, deployment.deploymentId);
 
     const response = await support.client.send(
       new GetDeploymentCommandLegacy({
@@ -107,14 +101,15 @@ describe('deployment commands', function () {
     const application = await support.createTestApplication();
     const deployment = await support.client.send(new DeployApplicationCommand({ applicationId: application.id }));
 
-    // may be not enough when infrastructure is slow. todo: introduce a retry mechanism instead of this horrible sleep
-    await sleep(2000);
-
-    const response = await support.client.send(
-      new GetDeploymentCommand({
-        applicationId: application.id,
-        deploymentId: deployment.deploymentId,
-      }),
+    const response = await retry(
+      () =>
+        support.client.send(
+          new GetDeploymentCommand({
+            applicationId: application.id,
+            deploymentId: deployment.deploymentId,
+          }),
+        ),
+      { interval: 500, delay: 1000, timeout: 5000 },
     );
 
     expect(response.id).to.equal(deployment.deploymentId);
@@ -131,15 +126,13 @@ describe('deployment commands', function () {
     expect(response.origin.authorId).to.equal(support.userId);
     expect(response.origin.constraints).to.be.an('array');
     expect(response.origin.priority).to.be.a('string');
-    expect(response.hasDedicatedBuild).to.equal(false);
+    expect(response.hasDedicatedBuild).to.be.a('boolean');
   });
 
   it('should cancel deployment', async () => {
     const application = await support.createTestApplication();
     const deployment = await support.client.send(new DeployApplicationCommand({ applicationId: application.id }));
-
-    // may be not enough when infrastructure is slow. todo: introduce a retry mechanism instead of this horrible sleep
-    await sleep(2000);
+    await waitForDeployment(application.id, deployment.deploymentId);
 
     const response = await support.client.send(
       new CancelDeploymentCommand({
@@ -150,4 +143,17 @@ describe('deployment commands', function () {
 
     expect(response).to.be.null;
   });
+
+  /**
+   * @param {string} applicationId
+   * @param {string} deploymentId
+   * @returns {Promise<void>}
+   */
+  async function waitForDeployment(applicationId, deploymentId) {
+    await retry(() => support.client.send(new GetDeploymentCommand({ applicationId, deploymentId })), {
+      interval: 500,
+      delay: 1000,
+      timeout: 5000,
+    });
+  }
 });

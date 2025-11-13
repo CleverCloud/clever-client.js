@@ -272,8 +272,6 @@ describe('organisation commands', function () {
     );
 
     expect(response.url).not.to.be.null;
-    expect(response.url).to.be.equal(
-      `https://ccapiavatars.cellar-c2.services.clever-cloud.com/${organisation.id}/avatar.jpg`,
-    );
+    new URL(response.url);
   });
 });

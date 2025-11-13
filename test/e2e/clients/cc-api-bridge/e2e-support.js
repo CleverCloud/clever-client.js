@@ -26,11 +26,15 @@ export function e2eSupport(config) {
     ...(config ?? {}),
   };
   const clientForCreate = createApiBridgeClient('none', conf.debug);
-  const client = createApiBridgeClient('oauth-v1', conf.debug);
+  /** @type {CcApiBridgeClient} */
+  let client;
 
   return {
     isNode: IS_NODE,
     get client() {
+      if (client == null) {
+        client = createApiBridgeClient('oauth-v1', conf.debug);
+      }
       return client;
     },
     get clientForCreate() {

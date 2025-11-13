@@ -119,8 +119,8 @@ function transformBackup(payload) {
 /**
  *
  * @extends {CcApiSimpleCommand<GetAddonDetailsInnerCommandInput, GetAddonDetailsInnerCommandOutput>}
- * @endpoint [GET] /v4/addon-providers/jenkins/addons/:XXX
- * @group Jenkins
+ * @endpoint [GET] /v4/addon-providers/:XXX/addons/:XXX
+ * @group Addon
  * @version 4
  */
 class GetAddonDetailsInnerCommand extends CcApiSimpleCommand {
@@ -139,13 +139,6 @@ class GetAddonDetailsInnerCommand extends CcApiSimpleCommand {
       user: response.user,
       password: response.password,
       database: response.database,
-    };
-  }
-
-  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
-    return {
-      addonId: 'ADDON_ID',
     };
   }
 }

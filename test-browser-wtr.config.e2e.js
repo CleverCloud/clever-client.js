@@ -5,6 +5,7 @@ import { CcAuthOauthV1Plaintext } from './src/lib/auth/cc-auth-oauth-v1-plaintex
 import { encodeToBase64 } from './src/lib/utils.js';
 import { defaultConfig } from './test/conf/test-browser-wtr.config.default.js';
 import { getAllE2eUsers, getE2eUser } from './test/lib/e2e-test-users.js';
+import { login, logout } from './test/lib/login.js';
 
 export default {
   ...defaultConfig(['test/e2e/**/*.spec.js']),
@@ -16,6 +17,12 @@ export default {
     },
   },
   testsFinishTimeout: 1000 * 60 * 10,
+  plugins: [
+    {
+      serverStart: login,
+      serverStop: logout,
+    },
+  ],
   middleware: [
     async (ctx, next) => {
       const rewrite = [rewriteCcApiChangePassword, rewriteCcApiBridgeCreateToken];
@@ -32,22 +39,13 @@ export default {
     },
     ...getAllE2eUsers().flatMap((user) => {
       return [
-        getProxy(
-          `cc-api-${user.userName}-api-token`,
-          `https://api-bridge.clever-cloud.com`,
-          user,
+        getProxy(`cc-api-${user.userName}-api-token`, `https://api-bridge.clever-cloud.com`, user, () =>
           new CcAuthApiToken(user.apiToken).getAuthorization(),
         ),
-        getProxy(
-          `cc-api-${user.userName}-oauth-v1`,
-          `https://api.clever-cloud.com`,
-          user,
+        getProxy(`cc-api-${user.userName}-oauth-v1`, `https://api.clever-cloud.com`, user, () =>
           new CcAuthOauthV1Plaintext(user.oauthTokens).getAuthorization(),
         ),
-        getProxy(
-          `cc-api-bridge-${user.userName}-oauth-v1`,
-          `https://api-bridge.clever-cloud.com`,
-          user,
+        getProxy(`cc-api-bridge-${user.userName}-oauth-v1`, `https://api-bridge.clever-cloud.com`, user, () =>
           new CcAuthOauthV1Plaintext(user.oauthTokens).getAuthorization(),
         ),
         getProxy(`cc-api-bridge-${user.userName}-none`, `https://api-bridge.clever-cloud.com`, user),
@@ -61,20 +59,22 @@ export default {
 /**
  * @param {string} pathPrefix
  * @param {string} target
- * @param {string|null} [token]
+ * @param {() => string|null} [authorizationHeader]
  * @param {E2eUser|null} [user]
  */
-function getProxy(pathPrefix, target, user, token) {
+function getProxy(pathPrefix, target, user, authorizationHeader) {
   return proxy(`/${pathPrefix}`, {
     rewrite: (path) => path.replace(new RegExp(`^\\/${pathPrefix}\\/`, 'g'), '/'),
     target,
-    headers: token == null ? null : { authorization: token },
     changeOrigin: true,
     events: {
       proxyReq: (proxyReq, req) => {
         // handle x-clever-password header (used in cc-api mfa endpoints)
         if (req.headers['x-clever-password'] != null) {
           proxyReq.setHeader('x-clever-password', encodeToBase64(user.password));
+        }
+        if (authorizationHeader != null) {
+          proxyReq.setHeader('Authorization', authorizationHeader());
         }
 
         // use the `newBody` custom prop that may have been calculated in previous middleware

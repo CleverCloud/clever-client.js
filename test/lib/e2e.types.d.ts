@@ -4,10 +4,11 @@ export type E2eUserName = 'test-user-without-github' | 'test-user-with-github';
 
 export interface E2eUser {
   userName: E2eUserName;
+  email: string;
+  password: string;
+  totpSecret?: string;
+  newTemporaryPassword?: string;
+  apiTokenId?: string;
   apiToken?: string;
   oauthTokens?: OauthTokens;
-  email?: string;
-  password?: string;
-  newTemporaryPassword?: string;
-  totpSecret?: string;
 }

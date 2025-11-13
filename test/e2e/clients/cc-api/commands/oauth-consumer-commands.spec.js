@@ -167,9 +167,8 @@ describe('oauth consumers commands', function () {
     );
 
     expect(response).to.have.lengthOf(2);
-    expect(response[0].key).to.equal(consumer1.key);
+    expect(response.map((c) => c.key)).to.deep.equalInAnyOrder([consumer1.key, consumer2.key]);
     expect(response[0].secret).to.be.a('string');
-    expect(response[1].key).to.equal(consumer2.key);
     expect(response[1].secret).to.be.a('string');
   });
 
@@ -185,9 +184,8 @@ describe('oauth consumers commands', function () {
     );
 
     expect(response).to.have.lengthOf(2);
-    expect(response[0].key).to.equal(consumer1.key);
+    expect(response.map((c) => c.key)).to.deep.equalInAnyOrder([consumer1.key, consumer2.key]);
     expect(response[0].secret).to.be.undefined;
-    expect(response[1].key).to.equal(consumer2.key);
     expect(response[1].secret).to.be.undefined;
   });
 });
