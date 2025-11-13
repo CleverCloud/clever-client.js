@@ -103,7 +103,7 @@ export class AbstractLogsStream extends AbstractStream {
   _parseLogMessage(message) {
     try {
       return JSON.parse(message.data);
-    } catch (_e) {
+    } catch {
       return null;
     }
   }

@@ -141,7 +141,7 @@ export class EventsStream extends AbstractStream {
       const event = JSON.parse(message.data);
       const data = event.data != null ? JSON.parse(event.data) : null;
       return { ...event, data };
-    } catch (_e) {
+    } catch {
       return null;
     }
   }

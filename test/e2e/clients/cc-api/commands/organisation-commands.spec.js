@@ -259,7 +259,7 @@ describe('organisation commands', function () {
     let getImage;
     try {
       getImage = await fetch('/avatar');
-    } catch (_e) {
+    } catch {
       getImage = await fetch('https://www.clever-cloud.com/app/themes/Starter/assets/img/brand-assets/square-png.png');
     }
 

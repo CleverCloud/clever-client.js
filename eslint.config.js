@@ -1,32 +1,31 @@
-import { includeIgnoreFile } from '@eslint/compat';
-import nodePlugin from 'eslint-plugin-n';
+import { cleverCloud } from '@clevercloud/eslint-config';
 import globals from 'globals';
-import path from 'node:path';
-import cleverCloudEsm from './eslint/eslint-config-clever-cloud-esm.js';
-
-const gitignorePath = path.resolve('./', '.gitignore');
 
 export default [
-  // common ignores
-  includeIgnoreFile(gitignorePath),
   {
     name: 'project-ignores',
     ignores: ['**/*.d.ts'],
   },
-  cleverCloudEsm,
-  // Allow importing dev dependencies for files that are related to build / tooling / testing
   {
-    name: 'allow-extraneous-imports',
-    files: [
-      'eslint.config.js',
-      'eslint/**/*.*js',
-      'tasks/**/*.js',
-      'rollup.config.js',
-      'test/**/*.*js',
-      'test-*.config.*.*js',
-    ],
+    ...cleverCloud.configs.browser,
+    files: ['**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: globals.browser,
+    },
+  },
+  {
+    ...cleverCloud.configs.node,
+    files: ['eslint.config.js', 'rollup.config.js', 'tasks/**/*.js', 'test-*.config.*.*js', 'test/**/*.*js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: globals.node,
+    },
     rules: {
-      'import/no-extraneous-dependencies': [
+      ...cleverCloud.configs.node.rules,
+      'import-x/no-extraneous-dependencies': [
         'off',
         { devDependencies: true, optionalDependencies: false, peerDependencies: false },
       ],
@@ -37,34 +36,7 @@ export default [
     name: 'mocha-context',
     files: ['test/**/*.js'],
     languageOptions: {
-      globals: {
-        ...globals.mocha,
-      },
-    },
-  },
-  // Specific rules for node esm modules
-  {
-    name: 'node-esm-context',
-    files: [
-      'tasks/**/*.js',
-      'test-*.config.*.*js',
-      'test/conf/*.*js',
-      'test/manual/**/*.js',
-      'test/**/*.node.spec.js',
-      'test/e2e/mocha.hook.js',
-    ],
-    languageOptions: {
-      globals: {
-        ...globals.node,
-      },
-    },
-    plugins: {
-      n: nodePlugin,
-    },
-    rules: {
-      ...nodePlugin.configs['flat/recommended-script'].rules,
-      'n/no-process-exit': 'off',
-      'n/no-extraneous-import': 'off',
+      globals: globals.mocha,
     },
   },
   // Specific rules for generated client files

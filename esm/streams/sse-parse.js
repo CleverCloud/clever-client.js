@@ -102,7 +102,6 @@ export function getLines(onLine) {
               fieldLength = position - lineStart;
             }
             break;
-          // @ts-ignore
           case CONTROL_CHARS.CarriageReturn:
             discardTrailingNewline = true;
           // eslint-disable-next-line no-fallthrough
