@@ -18,9 +18,9 @@ jobs:
 
     steps:
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: '[Prepare] Setup Node.js'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: 'package.json'
           cache: 'npm'
