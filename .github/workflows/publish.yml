@@ -23,7 +23,7 @@ jobs:
         id: npm_tag
         run: p=${{ steps.version_parse.outputs.prerelease }} && echo "tag=${p:-latest}" >> $GITHUB_OUTPUT
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.ref_name }}
       - name: '[Prepare] Setup Node.js'
