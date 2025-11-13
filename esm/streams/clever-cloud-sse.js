@@ -257,10 +257,6 @@ export default class CleverCloudSse extends CustomEventTarget {
   _onMessage(msg) {
     this._lastContact = new Date();
 
-    if (msg.id != null) {
-      this._lastId = msg.id;
-    }
-
     switch (msg.event) {
       case 'HEARTBEAT':
         return;
@@ -274,6 +270,9 @@ export default class CleverCloudSse extends CustomEventTarget {
         return;
       }
       default: {
+        if (msg.id != null && msg.id.length > 0) {
+          this._lastId = msg.id;
+        }
         try {
           const data = this.transform(msg.event, msg.data);
           /**
