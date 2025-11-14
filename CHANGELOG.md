@@ -1,5 +1,13 @@
 # Clever Client changelog
 
+## [11.3.0](https://github.com/CleverCloud/clever-client.js/compare/11.2.1...11.3.0) (2025-11-14)
+
+
+### 🚀 Features
+
+* **base-client:** add sse support ([12cd0f3](https://github.com/CleverCloud/clever-client.js/commit/12cd0f320b1effe2994898fa5db869726f38ae16))
+* **cc-api-client:** add logs stream commands ([0b9bb35](https://github.com/CleverCloud/clever-client.js/commit/0b9bb35f3d57dbc365b8db69395161f45a41b64b))
+
 ## [11.2.1](https://github.com/CleverCloud/clever-client.js/compare/11.2.0...11.2.1) (2025-11-13)
 
 
