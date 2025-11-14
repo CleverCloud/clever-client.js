@@ -266,12 +266,3 @@ logsStream.resume();
 ## License
 
 This project is licensed under the [Apache-2.0](https://spdx.org/licenses/Apache-2.0.html).
-
-We're using modified versions of projects related to SSE:
-
-* https://github.com/Azure/fetch-event-source
-* https://github.com/hperrin/fetch-event-source
-* https://github.com/gfortaine/fetch-event-source
-
-These projects are licensed under MIT license.
-

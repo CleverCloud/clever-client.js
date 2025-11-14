@@ -1,7 +1,4 @@
-// This code is adapted from https://github.com/Azure/fetch-event-source
-// MIT License Copyright (c) Microsoft Corporation.
-
-import { readBytes } from '../../src/lib/stream/sse-parse.js';
+import { events } from 'fetch-event-stream';
 
 /**
  * @typedef {import('./streams.types.js').SseMessage} SseMessage
@@ -39,7 +36,15 @@ export function fetchEventSource(
   })
     .then(async (response) => {
       await onOpen(response);
-      await readBytes(response.body, abortController.signal, onMessage);
+      const stream = events(response, abortController.signal);
+      for await (let event of stream) {
+        onMessage({
+          data: event.data,
+          event: event.event,
+          id: event.id != null ? String(event.id) : null,
+          retry: event.retry,
+        });
+      }
       return onClose?.();
     })
     .catch((err) => {

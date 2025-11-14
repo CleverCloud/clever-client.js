@@ -1,9 +1,8 @@
 /**
- * @import { CcRequest, RequestAdapter, RequestWrapper } from '../../types/request.types.js'
- * @import { SseMessage } from '../stream/sse.types.js'
+ * @import { CcRequest, RequestAdapter, RequestWrapper, SseMessage } from '../../types/request.types.js'
  */
+import { events } from 'fetch-event-stream';
 import { CcClientError, CcRequestError } from '../error/cc-client-errors.js';
-import { readBytes } from '../stream/sse-parse.js';
 import { fetchWithTimeout } from './fetch-with-timeout.js';
 import { requestDebug } from './request-debug.js';
 import { requestWithCache } from './request-with-cache.js';
@@ -237,13 +236,21 @@ export class SseResponseBody {
    */
   async read({ onMessage, onError, onClose }) {
     try {
-      await readBytes(this.#response.body, this.#signal, onMessage);
+      const stream = events(this.#response, this.#signal);
+      for await (let event of stream) {
+        onMessage({
+          data: event.data,
+          event: event.event,
+          id: event.id != null ? String(event.id) : null,
+          retry: event.retry,
+        });
+      }
       return onClose?.();
     } catch (err) {
       if (this.#signal.aborted) {
         onClose?.(this.#signal.reason);
       } else {
-        // if we haven't aborted the request ourselves:
+        // if we haven't aborted the request ourselves
         onError?.(err);
       }
     }

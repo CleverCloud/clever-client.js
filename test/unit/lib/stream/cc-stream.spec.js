@@ -391,9 +391,9 @@ describe('cc-stream', () => {
       .respond({
         status: 200,
         events: [
-          { type: 'message', event: 'EVENT', id: '001' },
-          { type: 'message', event: 'EVENT', id: '002' },
-          { type: 'message', event: 'EVENT', id: '003' },
+          { type: 'message', event: 'EVENT', id: '210041493:43875:0' },
+          { type: 'message', event: 'EVENT', id: '210041493:43875:1' },
+          { type: 'message', event: 'EVENT', id: '210041493:43875:2' },
         ],
         delayBetween: 10,
       })
@@ -409,7 +409,7 @@ describe('cc-stream', () => {
       })
       .verify((calls) => {
         expect(calls.first.headers).to.not.ownProperty('last-event-id');
-        expect(calls.last.headers['last-event-id']).to.equal('003');
+        expect(calls.last.headers['last-event-id']).to.equal('210041493:43875:2');
       });
   });
 
