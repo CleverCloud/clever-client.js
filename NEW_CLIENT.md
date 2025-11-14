@@ -7,7 +7,7 @@ The API is subject to change, and some features may not be stable. Use with caut
 
 ---
 
-A modern, comprehensive JavaScript REST client for Clever Cloud's APIs.
+A modern, comprehensive JavaScript client for Clever Cloud's APIs.
 This library provides command-pattern clients for all Clever Cloud services with built-in authentication.
 
 ## Features
@@ -15,6 +15,7 @@ This library provides command-pattern clients for all Clever Cloud services with
 - 🔐 **Multiple Authentication Methods**: OAuth v1 PLAINTEXT and API tokens
 - 🔄 **Automatic Resource Resolution**: Transparent handling of owner IDs and addon IDs
 - 🎯 **Command Pattern**: Type-safe, composable API operations
+- 🌊 **Real-time Streaming**: Server-Sent Events with auto-retry and health monitoring
 - 🌐 **Universal**: Works in both Node.js (22+) and browser environments
 - 📦 **Modular**: Import only what you need
 
@@ -29,6 +30,7 @@ npm install @clevercloud/client
 ```javascript
 import { CcApiClient } from '@clevercloud/client/cc-api-client.js';
 import { GetApplicationCommand } from '@clevercloud/client/cc-api-commands/application/get-application-command.js';
+import { StreamApplicationRuntimeLogCommand } from '@clevercloud/client/cc-api-commands/log/stream-application-runtime-log-command.js';
 
 // Create client with API token
 const client = new CcApiClient({
@@ -54,6 +56,13 @@ const client = new CcApiClient({
 // Send commands
 const app = await client.send(new GetApplicationCommand({ applicationId: 'app_123' }));
 console.log(`Application: ${app.name}`);
+
+// Create real-time streams
+const logStream = await client.stream(new StreamApplicationRuntimeLogCommand({
+  applicationId: 'app_123'
+}));
+logStream.onLog(log => console.log(log.message));
+await logStream.start();
 ```
 
 ## Available Clients
@@ -151,7 +160,7 @@ await client.send(new DeleteApplicationCommand({
 The client automatically resolves and caches resource IDs, providing two key benefits:
 
 1. **No ownerId required**: The client automatically resolves the owner ID for your resources
-2. **Flexible addon IDs**: You can pass either the addon name (`addonId`) or the real addon ID (`realAddonId`)
+2. **Flexible addon IDs**: You can pass either the addon ID or the real addon ID
 
 ```javascript
 // These all work automatically - no manual owner ID resolution needed
@@ -181,6 +190,87 @@ const client = new CcApiClient({
   resourceIdResolverStore: new FileStore('/tmp/cc-client-cache.json')
 });
 ```
+
+### Real-time Streaming
+
+The client supports real-time data streams via Server-Sent Events (SSE) for live updates like application logs, access logs, ...
+
+```javascript
+import { CcApiClient } from '@clevercloud/client/cc-api-client.js';
+import { StreamApplicationRuntimeLogCommand } from '@clevercloud/client/cc-api-commands/log/stream-application-runtime-log-command.js';
+
+// Create client
+const client = new CcApiClient({ authMethod: {/* ... */} });
+
+// Create stream without starting
+const stream = await client.stream(new StreamApplicationRuntimeLogCommand({
+  applicationId: 'app_123'
+}));
+
+// Set up event handlers before starting
+stream
+  .onOpen(() => updateUI('streaming'))
+  .onLog(log => updateUI('newLog', log))
+  .onError(error => updateUI('retryableErrorOccurred', error, stream.retryCount));
+
+// Start streaming
+stream.start()
+  .then((reason) => updateUI('streamingEnded', reason))
+  .catch((error) => handleFatalError(error));
+
+// Check stream status
+console.log(stream.state); // 'init', 'connecting', 'open', 'paused' or 'closed'
+
+// Gracefully stop the stream
+stream.stop();
+```
+
+**Key Features:**
+- **Auto-retry**: Automatic reconnection with exponential backoff
+- **Health monitoring**: Built-in connection health checks
+- **Resource ID resolution**: Same automatic resolution as regular commands
+- **Configurable**: Customisable retry behaviour and timeouts
+
+### Stream Configuration
+
+Configure streaming behaviour at the client or stream level:
+
+```javascript
+// Configure default streaming settings for all streams
+const client = new CcApiClient({
+  authMethod: { /* ... */ },
+  defaultStreamConfig: {
+    retry: {
+      maxRetryCount: 10, // Maximum retry attempts
+      initRetryTimeout: 1000, // Initial retry delay (ms)
+      backoffFactor: 1.5 // Exponential backoff multiplier
+    },
+    heartbeatPeriod: 2500, // Expected heartbeat interval (ms)
+    healthcheckInterval: 1000, // Health check frequency (ms)
+    debug: true // Enable stream debugging
+  }
+});
+
+// Override stream settings for individual streams
+const logStream = await client.stream(
+  new ApplicationLogsStreamCommand({ applicationId: 'app_123' }),
+  {
+    retry: { maxRetryCount: 5 }, // Override retry count
+    debug: false // Disable debug for this stream
+  }
+);
+```
+
+### Stream Configuration Options
+
+| Option                   | Type      | Default    | Description                                 |
+|--------------------------|-----------|------------|---------------------------------------------|
+| `retry.maxRetryCount`    | `number`  | `Infinity` | Maximum number of reconnection attempts     |
+| `retry.initRetryTimeout` | `number`  | `1000`     | Initial retry delay in milliseconds         |
+| `retry.backoffFactor`    | `number`  | `1.25`     | Exponential backoff multiplier for retries  |
+| `heartbeatPeriod`        | `number`  | `2500`     | Expected heartbeat interval in milliseconds |
+| `healthcheckInterval`    | `number`  | `1000`     | Health check frequency in milliseconds      |
+| `debug`                  | `boolean` | `false`    | Enable detailed stream debugging output     |
 
 ## Request Configuration
 
@@ -251,7 +341,7 @@ const app2 = await client.send(new GetApplicationCommand({ applicationId: 'app_1
 // Force fresh fetch and update cache
 const app3 = await client.send(
   new GetApplicationCommand({ applicationId: 'app_123' }),
-  { mode: 'reload' }
+  { cache: { mode: 'reload' } }
 );
 ```
 
@@ -278,7 +368,7 @@ The client provides comprehensive request/response debugging with security consi
 const client = new CcApiClient({
   authMethod: { /* ... */ },
   defaultRequestConfig: {
-    debug: true // Enable default debug logging
+    debug: true // Enable debug logging
   }
 });
 ```
@@ -294,7 +384,7 @@ const client = new CcApiClient({
 
 **Debug Modes:**
 - `debug: false` - No debug output
-- `debug: true` - Default JSON debug logging to console
+- `debug: true` - JSON debug logging to console
 
 ## Other Client Configuration
 

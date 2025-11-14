@@ -1,7 +1,7 @@
 /**
- * @import { CcApiCompositeCommand, CcApiSimpleCommand } from './lib/cc-api-command.js'
+ * @import { CcApiCompositeCommand, CcApiSimpleCommand, CcApiStreamCommand } from './lib/cc-api-command.js'
  * @import { CcApiType, CcApiClientConfig } from './types/cc-api.types.js'
- * @import { AddonIdResolve } from './types/resource-id-resolver.types.js';
+ * @import { IdResolve, AddonIdResolve } from './types/resource-id-resolver.types.js';
  * @import { CcAuth } from '../../lib/auth/cc-auth.js'
  * @import { CcRequestConfigPartial } from '../../types/request.types.js'
  */
@@ -70,37 +70,21 @@ export class CcApiClient extends CcClient {
    * @protected
    */
   async _transformCommandParams(command, requestConfig) {
-    /** @type {{ownerId?: string, addonId?: string}} */
-    const resolvedIds = {};
+    return this.#transformParams(command.params, command.getIdsToResolve(), requestConfig);
+  }
 
-    const idsToResolve = command.getIdsToResolve();
-
-    if (idsToResolve == null) {
-      return command.params;
-    }
-
-    if (idsToResolve.ownerId) {
-      resolvedIds.ownerId = await this.#resourceIdResolver.resolveOwnerId(command.params, requestConfig);
-    }
-
-    if (idsToResolve.addonId != null) {
-      /** @type {AddonIdResolve} */
-      const addonIdResolve =
-        typeof idsToResolve.addonId === 'string'
-          ? {
-              property: 'addonId',
-              type: idsToResolve.addonId,
-            }
-          : idsToResolve.addonId;
-
-      resolvedIds.addonId = await this.#resourceIdResolver.resolveAddonId(
-        command.params[addonIdResolve.property],
-        addonIdResolve.type,
-        requestConfig,
-      );
-    }
-
-    return { ...command.params, ...resolvedIds };
+  /**
+   * Transforms command parameters by resolving resource IDs.
+   * This method is called before sending a stream command to resolve any resource IDs
+   * (owner IDs, addon IDs) to their proper format.
+   *
+   * @param {CcApiStreamCommand<?, ?>} command - The command being sent
+   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
+   * @returns {Promise<any>} The transformed command parameters
+   * @protected
+   */
+  async _transformStreamParams(command, requestConfig) {
+    return this.#transformParams(command.params, command.getIdsToResolve(), requestConfig);
   }
 
   /**
@@ -127,6 +111,45 @@ export class CcApiClient extends CcClient {
       }
       throw e;
     }
+  }
+
+  /**
+   *
+   * @param {any} params
+   * @param {IdResolve} idsToResolve
+   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
+   * @returns {Promise<any>}
+   */
+  async #transformParams(params, idsToResolve, requestConfig) {
+    if (idsToResolve == null) {
+      return params;
+    }
+
+    /** @type {{ownerId?: string, addonId?: string}} */
+    const resolvedIds = {};
+
+    if (idsToResolve.ownerId) {
+      resolvedIds.ownerId = await this.#resourceIdResolver.resolveOwnerId(params, requestConfig);
+    }
+
+    if (idsToResolve.addonId != null) {
+      /** @type {AddonIdResolve} */
+      const addonIdResolve =
+        typeof idsToResolve.addonId === 'string'
+          ? {
+              property: 'addonId',
+              type: idsToResolve.addonId,
+            }
+          : idsToResolve.addonId;
+
+      resolvedIds.addonId = await this.#resourceIdResolver.resolveAddonId(
+        params[addonIdResolve.property],
+        addonIdResolve.type,
+        requestConfig,
+      );
+    }
+
+    return { ...params, ...resolvedIds };
   }
 }
 

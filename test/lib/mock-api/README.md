@@ -54,14 +54,27 @@ The foundational client for interacting with the mock server infrastructure.
 ```javascript
 const mockClient = new MockClient('http://localhost:3001', 'http://localhost:3000');
 
-// Configure a mock
+// Configure a regular HTTP mock
 await mockClient.mock({
   request: { method: 'GET', path: '/api/users' },
   response: { status: 200, body: [] }
 });
 
+// Configure a Server-Sent Events mock
+await mockClient.mock({
+  request: { method: 'GET', path: '/api/events' },
+  response: {
+    status: 200,
+    events: [
+      { type: 'message', event: 'DATA', data: 'hello world' },
+      { type: 'message', event: 'END_OF_STREAM' }
+    ],
+    delayBetween: 50
+  }
+});
+
 // Get call logs
-const calls = await mockClient.getCalls({ method: 'GET', path: '/api/users' });
+const calls = await mockClient.getCalls();
 ```
 
 ### MockCtrl (`mock-ctrl.js`)
@@ -81,7 +94,16 @@ await mockCtrl.mock()
   .when({ method: 'GET', path: '/api/users' })
   .respond({ status: 200, body: [] })
   .when({ method: 'POST', path: '/api/users' })
-  .respond({ status: 201, body: { id: 1 } });
+  .respond({ status: 201, body: { id: 1 } })
+  .when({ method: 'GET', path: '/api/events' })
+  .respond({
+    status: 200,
+    events: [
+      { type: 'message', event: 'DATA', data: 'hello world' },
+      { type: 'close' } // ask the server to close the SSE
+    ],
+    delayBetween: 50
+  });
 ```
 
 ### MockStub (`mock-stub.js`)
@@ -94,8 +116,8 @@ Advanced fluent API with verification capabilities and callback execution.
 - Support for single and multiple mock configurations
 - Chainable verification methods
 
-**Single Mock with Verification:**
 ```javascript
+// HTTP response verification
 const result = await mockStub
   .when({ method: 'GET', path: '/api/users' })
   .respond({ status: 200, body: [] })
@@ -105,6 +127,30 @@ const result = await mockStub
   .verify(calls => {
     expect(calls.count).toBe(1);
     expect(calls.first.method).toBe('GET');
+  });
+
+// Server-Sent Events verification
+await mockStub
+  .when({ method: 'GET', path: '/api/stream' })
+  .respond({
+    status: 200,
+    events: [
+      { type: 'message', event: 'DATA', data: 'event1' },
+      { type: 'message', event: 'DATA', data: 'event2' },
+      { type: 'close' }
+    ],
+    delayBetween: 10
+  })
+  .thenCall(async () => {
+    // Your SSE client code here - could use EventSource in browser
+    // or a streaming HTTP client in Node.js to read the events
+    await fetch('/api/stream', {
+      headers: { Accept: 'text/event-stream' }
+    });
+  })
+  .verify(calls => {
+    expect(calls.count).toBe(1);
+    expect(calls.first.headers.accept).toBe('text/event-stream');
   });
 ```
 
@@ -117,12 +163,17 @@ HTTP server implementation that handles both mock responses and admin operations
 - Provides admin API for mock management
 - Logs all incoming requests for verification
 - Supports response delays and throttling
+- Server-Sent Events (SSE) streaming with configurable events and delays
 
 **Server Endpoints:**
 - `POST /mock` - Configure a new mock response
 - `POST /calls` - Retrieve call logs for specific requests
 - `POST /reset` - Clear all mocks and call logs
 - `*` - Serve configured mock responses
+
+**SSE Event Types:**
+- `{ type: 'message', event: 'EVENT_NAME', data?: any, id?: string, retry?: number }` - Send SSE message
+- `{ type: 'close' }` - Close the connection
 
 ## Test Integration
 
@@ -154,15 +205,33 @@ describe('API Tests', () => {
     const result = await mockCtrl.mock()
       .when({ method: 'GET', path: '/api/users' })
       .respond({ status: 200, body: [] })
-      .thenCall(async () => {
-          return await fetch('/api/users').then(r => r.json());
-      })
+      .thenCall(() => fetch('/api/users').then(r => r.json()))
       .verify(calls => {
          expect(calls.count).toBe(1);
          expect(calls.first.method).toBe('GET');
       });
 
     // Your test code here
+  });
+
+  it('should handle SSE streams', async () => {
+    await mockCtrl.mock()
+      .when({ method: 'GET', path: '/api/events' })
+      .respond({
+        status: 200,
+        events: [
+          { type: 'message', event: 'DATA', data: 'event1' },
+          { type: 'message', event: 'END_OF_STREAM' }
+        ],
+        delayBetween: 10
+      });
+
+    // Your SSE client code here - use EventSource in browser or streaming client in Node.js
+    const response = await fetch(`${mockCtrl.mockClient.baseUrl}/api/events`, {
+      headers: { Accept: 'text/event-stream' }
+    });
+    
+    expect(response.headers.get('content-type')).toBe('text/event-stream');
   });
 });
 ```

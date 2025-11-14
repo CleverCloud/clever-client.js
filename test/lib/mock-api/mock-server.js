@@ -1,8 +1,9 @@
 import fastifyCors from '@fastify/cors';
 import Fastify from 'fastify';
 import { findFreePorts } from 'find-free-ports';
+import { randomBytes } from 'node:crypto';
+import { setTimeout } from 'node:timers/promises';
 import { createRequestKey, normalizePath } from './mock-utils.js';
-
 /**
  * @import {Mock, MockCall, MockRequest, OneOrMany} from './mock-api.types.js';
  */
@@ -16,7 +17,7 @@ import { createRequestKey, normalizePath } from './mock-utils.js';
  *
  * Both servers are started on automatically assigned free ports and support CORS.
  *
- * @returns {Promise<{adminPort: number, mockPort: number, stop: () => Promise<PromiseSettledResult<void>[]>}>}
+ * @returns {Promise<{adminPort: number, mockPort: number, stop: () => Promise<void>}>}
  *   Server configuration with ports and stop function
  */
 export async function startServer() {
@@ -26,7 +27,7 @@ export async function startServer() {
 
   //-- admin server ------
 
-  const adminServer = Fastify();
+  const adminServer = Fastify({ forceCloseConnections: true });
   adminServer.register(fastifyCors, {
     origin: true,
   });
@@ -59,7 +60,7 @@ export async function startServer() {
 
   //-- mock server ------
 
-  const mockServer = Fastify();
+  const mockServer = Fastify({ forceCloseConnections: true });
   mockServer.register(fastifyCors, {
     origin: true,
   });
@@ -75,12 +76,57 @@ export async function startServer() {
           reply.code(404).send();
         } else {
           if (mock.throttle != null && mock.throttle > 0) {
-            await new Promise((resolve) => setTimeout(resolve, mock.throttle));
+            await setTimeout(mock.throttle);
           }
           call.response = mock.response;
           call.matchingMockRequest = mock.request;
 
-          reply.code(mock.response.status).send(mock.response.body);
+          if ('body' in mock.response) {
+            reply.code(mock.response.status).send(mock.response.body);
+          } else if ('events' in mock.response) {
+            const delay = mock.response.delayBetween;
+            reply.raw.writeHead(mock.response.status, {
+              'Content-Type': 'text/event-stream',
+              'Cache-Control': 'no-cache',
+              Connection: 'keep-alive',
+            });
+            reply.raw.flushHeaders();
+
+            if (mock.response.events.length === 0) {
+              reply.raw.end('');
+              return;
+            }
+
+            for (let i = 0; i < mock.response.events.length; i++) {
+              const mockEvent = mock.response.events[i];
+              const isLastEvent = i === mock.response.events.length - 1;
+
+              if (mockEvent.type === 'message') {
+                let eventData = '';
+                eventData += `event: ${mockEvent.event}\n`;
+                eventData += `id: ${mockEvent.id ?? randomBytes(16).toString('hex')}\n`;
+                if (mockEvent.retry != null) {
+                  eventData += `retry: ${mockEvent.retry}\n\n`;
+                }
+                eventData += `data: ${typeof mockEvent.data === 'object' ? JSON.stringify(mockEvent.data) : mockEvent.data}\n\n`;
+
+                if (isLastEvent) {
+                  reply.raw.write(eventData);
+                } else {
+                  reply.raw.write(eventData);
+                }
+              }
+
+              if (mockEvent.type === 'close') {
+                reply.raw.end();
+                break;
+              }
+
+              if (!isLastEvent) {
+                await setTimeout(delay);
+              }
+            }
+          }
         }
       },
     });
@@ -88,14 +134,16 @@ export async function startServer() {
 
   //-- start servers ------
 
-  const [adminPort, mockPort] = await findFreePorts(2, { startPort: 3000 });
-  await adminServer.listen({ port: adminPort, host: '0.0.0.0' });
-  await mockServer.listen({ port: mockPort, host: '0.0.0.0' });
+  const [adminPort, mockPort] = await findFreePorts(2);
+  await Promise.all([
+    adminServer.listen({ port: adminPort, host: '0.0.0.0' }),
+    mockServer.listen({ port: mockPort, host: '0.0.0.0' }),
+  ]);
   return {
     adminPort,
     mockPort,
-    stop: () => {
-      return Promise.allSettled([adminServer.close(), mockServer.close()]);
+    stop: async () => {
+      await Promise.all([adminServer.close(), mockServer.close()]);
     },
   };
 }
