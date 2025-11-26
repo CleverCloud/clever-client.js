@@ -1,5 +1,5 @@
 import { ApplicationId } from '../../types/cc-api.types.js';
 
-export type DeleteLogDrainCommandInput = ApplicationId & {
+export type DisableLogDrainCommandInput = ApplicationId & {
   drainId: string;
 };

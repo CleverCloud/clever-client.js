@@ -1,6 +1,7 @@
 /**
  * @import { ListLogDrainCommandInput, ListLogDrainCommandOutput } from './list-log-drain-command.types.js';
  */
+import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
@@ -9,16 +10,20 @@ import { transformLogDrain } from './log-drain-transform.js';
 /**
  *
  * @extends {CcApiSimpleCommand<ListLogDrainCommandInput, ListLogDrainCommandOutput>}
- * @endpoint [GET] /v2/logs/:XXX/drains
+ * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains
  * @group LogDrain
- * @version 2
+ * @version 4
  */
 export class ListLogDrainCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<ListLogDrainCommandInput, ListLogDrainCommandOutput>['toRequestParams']} */
   toRequestParams(params) {
-    const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;
-
-    return get(safeUrl`/v2/logs/${resourceId}/drains`);
+    return get(
+      safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains`,
+      new QueryParams()
+        .set('status', params.status)
+        .set('executionStatus', params.executionStatus)
+        .set('executionStatusNotIn', params.executionStatusNotIn),
+    );
   }
 
   /** @type {CcApiSimpleCommand<ListLogDrainCommandInput, ListLogDrainCommandOutput>['transformCommandOutput']} */
@@ -34,7 +39,7 @@ export class ListLogDrainCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
   getIdsToResolve() {
     return {
-      addonId: 'ADDON_ID',
+      ownerId: true,
     };
   }
 }

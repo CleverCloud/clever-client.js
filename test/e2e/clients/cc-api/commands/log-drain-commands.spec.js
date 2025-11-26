@@ -1,9 +1,11 @@
 import { expect } from 'chai';
 import { CreateLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/create-log-drain-command.js';
 import { DeleteLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/delete-log-drain-command.js';
+import { DisableLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/disable-log-drain-command.js';
+import { EnableLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/enable-log-drain-command.js';
 import { GetLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/get-log-drain-command.js';
 import { ListLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/list-log-drain-command.js';
-import { UpdateLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/update-log-drain-command.js';
+import { ResetLogDrainCursorCommand } from '../../../../../src/clients/cc-api/commands/log-drain/reset-log-drain-cursor-command.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
@@ -146,7 +148,7 @@ describe.skip('log-drain commands', function () {
     expect(response.map((r) => r.id)).to.deep.equalInAnyOrder([drain1.id, drain2.id]);
   });
 
-  it('should update log drain', async () => {
+  it('should disable log drain', async () => {
     const application = await support.createTestApplication();
     const drain = await support.client.send(
       new CreateLogDrainCommand({
@@ -163,14 +165,41 @@ describe.skip('log-drain commands', function () {
     );
 
     const response = await support.client.send(
-      new UpdateLogDrainCommand({ applicationId: application.id, drainId: drain.id, state: 'DISABLED' }),
+      new DisableLogDrainCommand({ applicationId: application.id, drainId: drain.id }),
+    );
+
+    expect(response).to.be.null;
+  });
+
+  it('should enable log drain', async () => {
+    const application = await support.createTestApplication();
+    const drain = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        target: {
+          type: 'HTTP',
+          url: 'https://example.com',
+          credentials: {
+            username: 'username',
+            password: 'password',
+          },
+        },
+      }),
+    );
+
+    // First disable it
+    await support.client.send(new DisableLogDrainCommand({ applicationId: application.id, drainId: drain.id }));
+
+    // Then enable it
+    const response = await support.client.send(
+      new EnableLogDrainCommand({ applicationId: application.id, drainId: drain.id }),
     );
 
     expect(response.id).to.be.a('string');
     expect(response.applicationId).to.equal(application.id);
     checkDateFormat(response.createdAt);
     checkDateFormat(response.lastEdit);
-    expect(response.state).to.equal('DISABLED');
+    expect(response.state).to.equal('ENABLED');
     expect(response.token).to.be.a('string');
     expect(response.target).to.deep.equal({
       type: 'HTTP',
@@ -180,5 +209,28 @@ describe.skip('log-drain commands', function () {
         password: 'password',
       },
     });
+  });
+
+  it('should reset log drain cursor', async () => {
+    const application = await support.createTestApplication();
+    const drain = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        target: {
+          type: 'HTTP',
+          url: 'https://example.com',
+          credentials: {
+            username: 'username',
+            password: 'password',
+          },
+        },
+      }),
+    );
+
+    const response = await support.client.send(
+      new ResetLogDrainCursorCommand({ applicationId: application.id, drainId: drain.id }),
+    );
+
+    expect(response).to.be.null;
   });
 });

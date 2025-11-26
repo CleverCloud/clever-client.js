@@ -10,10 +10,10 @@ import { GetLogDrainCommand } from './get-log-drain-command.js';
 /**
  *
  * @extends {CcApiCompositeCommand<CreateLogDrainCommandInput, CreateLogDrainCommandOutput>}
- * @endpoint [POST] /v2/logs/:XXX/drains
- * @endpoint [GET] /v2/logs/:XXX/drains/:XXX
+ * @endpoint [POST] /v4/drains/organisations/:XXX/applications/:XXX/drains
+ * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
  * @group LogDrain
- * @version 2
+ * @version 4
  */
 export class CreateLogDrainCommand extends CcApiCompositeCommand {
   /** @type {CcApiCompositeCommand<CreateLogDrainCommandInput, CreateLogDrainCommandOutput>['compose']} */
@@ -21,11 +21,11 @@ export class CreateLogDrainCommand extends CcApiCompositeCommand {
     const created = await composer.send(new CreateLogDrainInnerCommand(params));
 
     return composer.send(
-      new GetLogDrainCommand(
-        'applicationId' in params
-          ? { applicationId: params.applicationId, drainId: created.id }
-          : { addonId: params.addonId, drainId: created.id },
-      ),
+      new GetLogDrainCommand({
+        applicationId: params.applicationId,
+        ownerId: params.ownerId,
+        drainId: created.id,
+      }),
     );
   }
 }
@@ -33,16 +33,17 @@ export class CreateLogDrainCommand extends CcApiCompositeCommand {
 /**
  *
  * @extends {CcApiSimpleCommand<CreateLogDrainCommandInput, {id: string}>}
- * @endpoint [POST] /v2/logs/:XXX/drains
+ * @endpoint [POST] /v4/drains/organisations/:XXX/applications/:XXX/drains
  * @group LogDrain
- * @version 2
+ * @version 4
  */
 class CreateLogDrainInnerCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<CreateLogDrainCommandInput, {id: string}>['toRequestParams']} */
   toRequestParams(params) {
-    const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;
-
-    return post(safeUrl`/v2/logs/${resourceId}/drains`, this.#getBody(params.target));
+    return post(
+      safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains`,
+      this.#getBody(params.target),
+    );
   }
 
   /** @type {CcApiSimpleCommand<CreateLogDrainCommandInput, {id: string}>['transformCommandOutput']} */
@@ -53,7 +54,7 @@ class CreateLogDrainInnerCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
   getIdsToResolve() {
     return {
-      addonId: 'ADDON_ID',
+      ownerId: true,
     };
   }
 
