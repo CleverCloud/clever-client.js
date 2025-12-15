@@ -1,5 +1,13 @@
 # Clever Client changelog
 
+## [11.4.0](https://github.com/CleverCloud/clever-client.js/compare/11.3.0...11.4.0) (2025-12-15)
+
+
+### 🚀 Features
+
+* **cc-api/commands:** add `GetZoneCommand` ([c16a46b](https://github.com/CleverCloud/clever-client.js/commit/c16a46b5a7f568120d04e83190fcb4b58d9cebd7))
+* **esm/api/v4/product:** add optional `ownerId` queryParam to `getZone` ([a0325b6](https://github.com/CleverCloud/clever-client.js/commit/a0325b6a74f999315d565128da4668a17e8922f0))
+
 ## [11.3.0](https://github.com/CleverCloud/clever-client.js/compare/11.2.1...11.3.0) (2025-11-14)
 
 
