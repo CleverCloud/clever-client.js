@@ -5,6 +5,7 @@ import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { sortBy } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { transformZone } from './zone-transform.js';
 
 /**
  *
@@ -27,22 +28,6 @@ export class ListZoneCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<ListZoneCommandInput, ListZoneCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return sortBy(
-      response.map(
-        /** @param {any} payload */ (payload) => ({
-          id: payload.id,
-          name: payload.name,
-          country: payload.country,
-          countryCode: payload.countryCode,
-          city: payload.city,
-          displayName: payload.displayName,
-          lat: payload.lat,
-          lon: payload.lon,
-          outboundIPs: payload.outboundIPs?.sort() ?? [],
-          tags: payload?.tags.sort() ?? [],
-        }),
-      ),
-      'name',
-    );
+    return sortBy(response.map(transformZone), 'name');
   }
 }

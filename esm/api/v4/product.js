@@ -40,6 +40,7 @@ export function listZones(params) {
  * GET /products/zones/{zoneName}
  * @param {Object} params
  * @param {String} params.zoneName
+ * @param {String} [params.ownerId]
  * @returns {Promise<RequestParams>}
  */
 export function getZone(params) {
@@ -48,7 +49,7 @@ export function getZone(params) {
     method: 'get',
     url: `/v4/products/zones/${params.zoneName}`,
     headers: { Accept: 'application/json' },
-    // no query params
+    queryParams: pickNonNull(params, ['ownerId']),
     // no body
   });
 }
