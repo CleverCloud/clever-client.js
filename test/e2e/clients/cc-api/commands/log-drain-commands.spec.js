@@ -1,13 +1,14 @@
 import { expect } from 'chai';
 import { CreateLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/create-log-drain-command.js';
 import { DeleteLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/delete-log-drain-command.js';
+import { DisableLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/disable-log-drain-command.js';
+import { EnableLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/enable-log-drain-command.js';
 import { GetLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/get-log-drain-command.js';
 import { ListLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/list-log-drain-command.js';
-import { UpdateLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/update-log-drain-command.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
-describe.skip('log-drain commands', function () {
+describe('log-drain commands', function () {
   const support = e2eSupport();
 
   before(async () => {
@@ -28,6 +29,7 @@ describe.skip('log-drain commands', function () {
     const response = await support.client.send(
       new CreateLogDrainCommand({
         applicationId: application.id,
+        kind: 'LOG',
         target: {
           type: 'HTTP',
           url: 'https://example.com',
@@ -44,15 +46,13 @@ describe.skip('log-drain commands', function () {
     checkDateFormat(response.createdAt);
     checkDateFormat(response.lastEdit);
     expect(response.state).to.equal('ENABLED');
-    expect(response.token).to.be.a('string');
-    expect(response.target).to.deep.equal({
-      type: 'HTTP',
-      url: 'https://example.com',
-      credentials: {
-        username: 'username',
-        password: 'password',
-      },
-    });
+    expect(response.target.type).to.equal('HTTP');
+    expect(response.target.url).to.equal('https://example.com');
+    if (response.target.type === 'HTTP' || response.target.type === 'ElasticSearch') {
+      expect(response.target.credentials).to.be.an('object');
+      expect(response.target.credentials.username).to.equal('username');
+      expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
+    }
   });
 
   it('should delete log drain', async () => {
@@ -60,6 +60,7 @@ describe.skip('log-drain commands', function () {
     const drain = await support.client.send(
       new CreateLogDrainCommand({
         applicationId: application.id,
+        kind: 'LOG',
         target: {
           type: 'HTTP',
           url: 'https://example.com',
@@ -75,7 +76,12 @@ describe.skip('log-drain commands', function () {
       new DeleteLogDrainCommand({ applicationId: application.id, drainId: drain.id }),
     );
 
-    expect(response).to.be.null;
+    expect(response.id).to.equal(drain.id);
+    expect(response.applicationId).to.equal(application.id);
+    checkDateFormat(response.createdAt);
+    checkDateFormat(response.lastEdit);
+    expect(response.state).to.be.a('string');
+    expect(response.target).to.be.an('object');
   });
 
   it('should get log drain', async () => {
@@ -83,6 +89,7 @@ describe.skip('log-drain commands', function () {
     const drain = await support.client.send(
       new CreateLogDrainCommand({
         applicationId: application.id,
+        kind: 'LOG',
         target: {
           type: 'HTTP',
           url: 'https://example.com',
@@ -103,15 +110,13 @@ describe.skip('log-drain commands', function () {
     checkDateFormat(response.createdAt);
     checkDateFormat(response.lastEdit);
     expect(response.state).to.equal('ENABLED');
-    expect(response.token).to.be.a('string');
-    expect(response.target).to.deep.equal({
-      type: 'HTTP',
-      url: 'https://example.com',
-      credentials: {
-        username: 'username',
-        password: 'password',
-      },
-    });
+    expect(response.target.type).to.equal('HTTP');
+    expect(response.target.url).to.equal('https://example.com');
+    if (response.target.type === 'HTTP' || response.target.type === 'ElasticSearch') {
+      expect(response.target.credentials).to.be.an('object');
+      expect(response.target.credentials.username).to.equal('username');
+      expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
+    }
   });
 
   it('should list log drain', async () => {
@@ -119,6 +124,7 @@ describe.skip('log-drain commands', function () {
     const drain1 = await support.client.send(
       new CreateLogDrainCommand({
         applicationId: application.id,
+        kind: 'LOG',
         target: {
           type: 'HTTP',
           url: 'https://example.com',
@@ -132,6 +138,7 @@ describe.skip('log-drain commands', function () {
     const drain2 = await support.client.send(
       new CreateLogDrainCommand({
         applicationId: application.id,
+        kind: 'LOG',
         target: {
           type: 'UDPSyslog',
           url: 'https://example.com',
@@ -146,11 +153,12 @@ describe.skip('log-drain commands', function () {
     expect(response.map((r) => r.id)).to.deep.equalInAnyOrder([drain1.id, drain2.id]);
   });
 
-  it('should update log drain', async () => {
+  it('should disable log drain', async () => {
     const application = await support.createTestApplication();
     const drain = await support.client.send(
       new CreateLogDrainCommand({
         applicationId: application.id,
+        kind: 'LOG',
         target: {
           type: 'HTTP',
           url: 'https://example.com',
@@ -163,7 +171,7 @@ describe.skip('log-drain commands', function () {
     );
 
     const response = await support.client.send(
-      new UpdateLogDrainCommand({ applicationId: application.id, drainId: drain.id, state: 'DISABLED' }),
+      new DisableLogDrainCommand({ applicationId: application.id, drainId: drain.id }),
     );
 
     expect(response.id).to.be.a('string');
@@ -171,14 +179,87 @@ describe.skip('log-drain commands', function () {
     checkDateFormat(response.createdAt);
     checkDateFormat(response.lastEdit);
     expect(response.state).to.equal('DISABLED');
-    expect(response.token).to.be.a('string');
+    expect(response.target).to.be.an('object');
+  });
+
+  it('should enable log drain', async () => {
+    const application = await support.createTestApplication();
+    const drain = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        kind: 'LOG',
+        target: {
+          type: 'HTTP',
+          url: 'https://example.com',
+          credentials: {
+            username: 'username',
+            password: 'password',
+          },
+        },
+      }),
+    );
+
+    // First disable it
+    await support.client.send(new DisableLogDrainCommand({ applicationId: application.id, drainId: drain.id }));
+
+    // Then enable it
+    const response = await support.client.send(
+      new EnableLogDrainCommand({ applicationId: application.id, drainId: drain.id }),
+    );
+
+    expect(response.id).to.be.a('string');
+    expect(response.applicationId).to.equal(application.id);
+    checkDateFormat(response.createdAt);
+    checkDateFormat(response.lastEdit);
+    expect(response.state).to.equal('ENABLED');
+    expect(response.target.type).to.equal('HTTP');
+    expect(response.target.url).to.equal('https://example.com');
+    if (response.target.type === 'HTTP' || response.target.type === 'ElasticSearch') {
+      expect(response.target.credentials).to.be.an('object');
+      expect(response.target.credentials.username).to.equal('username');
+      expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
+    }
+  });
+
+  it('should create log drain with ACCESSLOG kind', async () => {
+    const application = await support.createTestApplication();
+
+    const response = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        kind: 'ACCESSLOG',
+        target: {
+          type: 'HTTP',
+          url: 'https://example.com',
+        },
+      }),
+    );
+
+    expect(response.id).to.be.a('string');
+    expect(response.applicationId).to.equal(application.id);
+    expect(response.state).to.equal('ENABLED');
     expect(response.target).to.deep.equal({
       type: 'HTTP',
       url: 'https://example.com',
-      credentials: {
-        username: 'username',
-        password: 'password',
-      },
     });
+  });
+
+  it('should create log drain with AUDITLOG kind', async () => {
+    const application = await support.createTestApplication();
+
+    const response = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        kind: 'AUDITLOG',
+        target: {
+          type: 'HTTP',
+          url: 'https://example.com',
+        },
+      }),
+    );
+
+    expect(response.id).to.be.a('string');
+    expect(response.applicationId).to.equal(application.id);
+    expect(response.state).to.equal('ENABLED');
   });
 });

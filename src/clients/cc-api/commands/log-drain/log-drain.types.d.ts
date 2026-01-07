@@ -1,18 +1,22 @@
 export interface LogDrain {
   id: string;
-  // renamed from appId
+  // renamed from resourceId
   applicationId: string;
   target: LogDrainTarget;
-  // converted to iso date
+  kind?: LogDrainKind;
+  // converted to iso date from status.date
   createdAt: string;
-  // converted to iso date
+  // converted to iso date from status.date
   lastEdit: string;
-  token: string;
+  // from status.status
   state: LogDrainState;
+  // from status.authorId
   updatedBy?: string;
 }
 
-export type LogDrainState = 'ENABLED' | 'DISABLED' | 'TO_DELETE' | 'DELETED';
+export type LogDrainState = 'CREATED' | 'ENABLED' | 'ENABLING' | 'DISABLING' | 'DISABLED' | 'DELETED';
+
+export type LogDrainKind = 'LOG' | 'ACCESSLOG' | 'AUDITLOG';
 
 export type LogDrainTarget =
   | HttpDrainTarget

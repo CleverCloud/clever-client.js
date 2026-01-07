@@ -5,44 +5,38 @@
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { GetLogDrainCommand } from './get-log-drain-command.js';
+import { waitForLogDrainEnabled } from './log-drain-utils.js';
 
 /**
  *
  * @extends {CcApiCompositeCommand<CreateLogDrainCommandInput, CreateLogDrainCommandOutput>}
- * @endpoint [POST] /v2/logs/:XXX/drains
- * @endpoint [GET] /v2/logs/:XXX/drains/:XXX
+ * @endpoint [POST] /v4/drains/organisations/:XXX/applications/:XXX/drains
+ * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX (polling)
  * @group LogDrain
- * @version 2
+ * @version 4
  */
 export class CreateLogDrainCommand extends CcApiCompositeCommand {
   /** @type {CcApiCompositeCommand<CreateLogDrainCommandInput, CreateLogDrainCommandOutput>['compose']} */
   async compose(params, composer) {
     const created = await composer.send(new CreateLogDrainInnerCommand(params));
-
-    return composer.send(
-      new GetLogDrainCommand(
-        'applicationId' in params
-          ? { applicationId: params.applicationId, drainId: created.id }
-          : { addonId: params.addonId, drainId: created.id },
-      ),
-    );
+    return waitForLogDrainEnabled(composer, params.ownerId, params.applicationId, created.id);
   }
 }
 
 /**
  *
  * @extends {CcApiSimpleCommand<CreateLogDrainCommandInput, {id: string}>}
- * @endpoint [POST] /v2/logs/:XXX/drains
+ * @endpoint [POST] /v4/drains/organisations/:XXX/applications/:XXX/drains
  * @group LogDrain
- * @version 2
+ * @version 4
  */
 class CreateLogDrainInnerCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<CreateLogDrainCommandInput, {id: string}>['toRequestParams']} */
   toRequestParams(params) {
-    const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;
-
-    return post(safeUrl`/v2/logs/${resourceId}/drains`, this.#getBody(params.target));
+    return post(
+      safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains`,
+      this.#getBody(params.target, params.kind),
+    );
   }
 
   /** @type {CcApiSimpleCommand<CreateLogDrainCommandInput, {id: string}>['transformCommandOutput']} */
@@ -53,36 +47,68 @@ class CreateLogDrainInnerCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
   getIdsToResolve() {
     return {
-      addonId: 'ADDON_ID',
+      ownerId: true,
     };
   }
 
   /**
    * @param {LogDrainTarget} drain
+   * @param {string} kind - The kind of logs to drain ('LOG', 'ACCESSLOG', or 'AUDITLOG')
    */
-  #getBody(drain) {
+  #getBody(drain, kind) {
     /** @type {any} */
     const body = {
-      url: drain.url,
-      drainType: drain.type,
+      kind,
+      recipient: {
+        type: this.#mapDrainType(drain.type),
+        url: drain.url,
+      },
     };
 
+    // HTTP and ElasticSearch: credentials
     if (drain.type === 'HTTP' || drain.type === 'ElasticSearch') {
       if (drain.credentials != null) {
-        body.credentials = drain.credentials;
+        body.recipient.username = drain.credentials.username;
+        body.recipient.password = drain.credentials.password;
       }
     }
 
+    // ElasticSearch: index (renamed from indexPrefix)
     if (drain.type === 'ElasticSearch') {
       if (drain.indexPrefix != null) {
-        body.indexPrefix = drain.indexPrefix;
+        body.recipient.index = drain.indexPrefix;
       }
     }
 
+    // NewRelic: apiKey
     if (drain.type === 'NewRelicHTTP') {
-      body.apiKey = drain.apiKey;
+      body.recipient.apiKey = drain.apiKey;
+    }
+
+    // Syslog: RFC 5424 structured data parameters
+    if (drain.type === 'TCPSyslog' || drain.type === 'UDPSyslog') {
+      if (drain.structuredDataParameters != null) {
+        body.recipient.rfc5424StructuredDataParameters = drain.structuredDataParameters;
+      }
     }
 
     return body;
+  }
+
+  /**
+   * Map client drain types to API codes
+   * @param {LogDrainTarget['type']} clientType
+   * @returns {string}
+   */
+  #mapDrainType(clientType) {
+    const mapping = {
+      HTTP: 'RAW_HTTP',
+      DatadogHTTP: 'DATADOG',
+      NewRelicHTTP: 'NEWRELIC',
+      TCPSyslog: 'SYSLOG_TCP',
+      UDPSyslog: 'SYSLOG_UDP',
+      ElasticSearch: 'ELASTICSEARCH',
+    };
+    return mapping[clientType] || clientType;
   }
 }

@@ -14,6 +14,8 @@ import { GetAddonCommand } from '../../../../src/clients/cc-api/commands/addon/g
 import { CreateApplicationCommand } from '../../../../src/clients/cc-api/commands/application/create-application-command.js';
 import { DeleteApplicationCommand } from '../../../../src/clients/cc-api/commands/application/delete-application-command.js';
 import { GetApplicationCommand } from '../../../../src/clients/cc-api/commands/application/get-application-command.js';
+import { DeleteLogDrainCommand } from '../../../../src/clients/cc-api/commands/log-drain/delete-log-drain-command.js';
+import { ListLogDrainCommand } from '../../../../src/clients/cc-api/commands/log-drain/list-log-drain-command.js';
 import { CreateNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/create-network-group-command.js';
 import { DeleteNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/delete-network-group-command.js';
 import { GetNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/get-network-group-command.js';
@@ -62,7 +64,7 @@ export function e2eSupport(config) {
   let organisationId;
   /** @type {string} */
   let userId;
-  /** @type {Array<{type: 'application'|'addon'|'ng'|'consumer'|'organisation', id: string}>} */
+  /** @type {Array<{type: 'application'|'addon'|'ng'|'consumer'|'organisation'|'drain', id: string, applicationId?: string}>} */
   let cleanupTasks = [];
 
   return {
@@ -125,6 +127,9 @@ export function e2eSupport(config) {
       userId = self.id;
     },
     async cleanup() {
+      // Delete log drains first, before applications
+      await this.deleteLogDrains();
+
       await Promise.all([
         this.deleteOrganisations(),
         this.deleteApplications(),
@@ -145,6 +150,24 @@ export function e2eSupport(config) {
         ),
       );
       cleanupTasks = cleanupTasks.filter((task) => task.type !== 'organisation');
+    },
+    async deleteLogDrains() {
+      const applications = cleanupTasks.filter((task) => task.type === 'application');
+
+      for (const application of applications) {
+        const drains = await this.client.send(new ListLogDrainCommand({ applicationId: application.id }));
+
+        await Promise.all(
+          drains.map((drain) =>
+            this.client.send(
+              new DeleteLogDrainCommand({
+                applicationId: application.id,
+                drainId: drain.id,
+              }),
+            ),
+          ),
+        );
+      }
     },
     async deleteApplications() {
       // const applications = await this.client.send(new ListApplicationCommand({ ownerId: organisationId }));

@@ -11,13 +11,13 @@ import { normalizeDate } from '../../../../lib/utils.js';
 export function transformLogDrain(payload) {
   return {
     id: payload.id,
-    applicationId: payload.appId,
-    createdAt: normalizeDate(payload.createdAt),
-    lastEdit: normalizeDate(payload.lastEdit),
-    state: payload.state,
-    token: payload.token,
-    updatedBy: payload.updatedBy,
-    target: transformLogDrainTarget(payload.target),
+    applicationId: payload.resourceId,
+    createdAt: normalizeDate(payload.status.date),
+    lastEdit: normalizeDate(payload.status.date),
+    state: payload.status.status,
+    updatedBy: payload.status.authorId,
+    kind: payload.kind,
+    target: transformLogDrainTarget(payload.recipient),
   };
 }
 
@@ -26,40 +26,69 @@ export function transformLogDrain(payload) {
  * @returns {LogDrainTarget}
  */
 export function transformLogDrainTarget(payload) {
-  const type = payload.drainType;
+  // payload is the recipient object from the v4 API response
+  const type = payload.type;
 
   switch (type) {
-    case 'HTTP':
-      return {
+    case 'RAW_HTTP': {
+      /** @type {any} */
+      const target = {
         type: 'HTTP',
         url: payload.url,
-        credentials: payload.credentials,
       };
-    case 'TCPSyslog':
-      return {
+      if (payload.username) {
+        target.credentials = {
+          username: payload.username,
+          password: payload.password,
+        };
+      }
+      return target;
+    }
+    case 'SYSLOG_TCP': {
+      /** @type {any} */
+      const target = {
         type: 'TCPSyslog',
         url: payload.url,
-        structuredDataParameters: payload.structuredDataParameters,
       };
-    case 'UDPSyslog':
-      return {
+      if (payload.rfc5424StructuredDataParameters) {
+        target.structuredDataParameters = payload.rfc5424StructuredDataParameters;
+      }
+      return target;
+    }
+    case 'SYSLOG_UDP': {
+      /** @type {any} */
+      const target = {
         type: 'UDPSyslog',
         url: payload.url,
-        structuredDataParameters: payload.structuredDataParameters,
       };
-    case 'DatadogHTTP':
+      if (payload.rfc5424StructuredDataParameters) {
+        target.structuredDataParameters = payload.rfc5424StructuredDataParameters;
+      }
+      return target;
+    }
+    case 'DATADOG':
       return {
         type: 'DatadogHTTP',
         url: payload.url,
       };
-    case 'ElasticSearch':
-      return {
+    case 'ELASTICSEARCH': {
+      /** @type {any} */
+      const target = {
         type: 'ElasticSearch',
         url: payload.url,
-        credentials: payload.credentials,
-        indexPrefix: payload.indexPrefix,
       };
-    case 'NewRelicHTTP':
+      if (payload.username) {
+        target.credentials = {
+          username: payload.username,
+          password: payload.password,
+        };
+      }
+      if (payload.index) {
+        target.indexPrefix = payload.index;
+      }
+      return target;
+    }
+    case 'NEWRELIC':
       return {
         type: 'NewRelicHTTP',
         url: payload.url,

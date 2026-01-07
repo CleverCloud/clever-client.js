@@ -1,29 +1,55 @@
 /**
- * @import { DeleteLogDrainCommandInput } from './delete-log-drain-command.types.js';
+ * @import { DeleteLogDrainCommandInput, DeleteLogDrainCommandOutput } from './delete-log-drain-command.types.js';
  */
 import { delete_ } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { GetLogDrainCommand } from './get-log-drain-command.js';
+
+/**
+ *
+ * @extends {CcApiCompositeCommand<DeleteLogDrainCommandInput, DeleteLogDrainCommandOutput>}
+ * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
+ * @endpoint [DELETE] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
+ * @group LogDrain
+ * @version 4
+ */
+export class DeleteLogDrainCommand extends CcApiCompositeCommand {
+  /** @type {CcApiCompositeCommand<DeleteLogDrainCommandInput, DeleteLogDrainCommandOutput>['compose']} */
+  async compose(params, composer) {
+    // Fetch the drain before deleting so we can return it
+    const drain = await composer.send(new GetLogDrainCommand(params));
+
+    await composer.send(new DeleteLogDrainInnerCommand(params));
+
+    return drain;
+  }
+}
 
 /**
  *
  * @extends {CcApiSimpleCommand<DeleteLogDrainCommandInput, void>}
- * @endpoint [DELETE] /v2/logs/:XXX/drains/:XXX
+ * @endpoint [DELETE] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
  * @group LogDrain
- * @version 2
+ * @version 4
  */
-export class DeleteLogDrainCommand extends CcApiSimpleCommand {
+class DeleteLogDrainInnerCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<DeleteLogDrainCommandInput, void>['toRequestParams']} */
   toRequestParams(params) {
-    const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;
+    return delete_(
+      safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains/${params.drainId}`,
+    );
+  }
 
-    return delete_(safeUrl`/v2/logs/${resourceId}/drains/${params.drainId}`);
+  /** @type {CcApiSimpleCommand<DeleteLogDrainCommandInput, void>['transformCommandOutput']} */
+  transformCommandOutput() {
+    return null;
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
   getIdsToResolve() {
     return {
-      addonId: 'ADDON_ID',
+      ownerId: true,
     };
   }
 }
