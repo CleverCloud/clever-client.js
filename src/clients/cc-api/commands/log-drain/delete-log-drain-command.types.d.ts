@@ -1,8 +1,7 @@
 import { ApplicationId } from '../../types/cc-api.types.js';
-import type { LogDrain } from './log-drain.types.js';
 
 export type DeleteLogDrainCommandInput = ApplicationId & {
   drainId: string;
 };
 
-export type DeleteLogDrainCommandOutput = LogDrain;
+export type DeleteLogDrainCommandOutput = void;

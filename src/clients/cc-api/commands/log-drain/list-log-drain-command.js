@@ -28,7 +28,7 @@ export class ListLogDrainCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<ListLogDrainCommandInput, ListLogDrainCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
-    return sortBy(response.map(transformLogDrain), { key: 'createdAt', order: 'desc' });
+    return sortBy(response.map(transformLogDrain), { key: 'updatedAt', order: 'desc' });
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */

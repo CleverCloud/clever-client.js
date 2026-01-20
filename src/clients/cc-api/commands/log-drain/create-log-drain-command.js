@@ -1,6 +1,6 @@
 /**
  * @import { CreateLogDrainCommandInput, CreateLogDrainCommandOutput } from './create-log-drain-command.types.js';
- * @import { LogDrainTarget } from './log-drain.types.js';
+ * @import { LogDrainTarget, LogDrainKind } from './log-drain.types.js';
  */
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
@@ -11,7 +11,7 @@ import { waitForLogDrainEnabled } from './log-drain-utils.js';
  *
  * @extends {CcApiCompositeCommand<CreateLogDrainCommandInput, CreateLogDrainCommandOutput>}
  * @endpoint [POST] /v4/drains/organisations/:XXX/applications/:XXX/drains
- * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX (polling)
+ * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
  * @group LogDrain
  * @version 4
  */
@@ -53,62 +53,45 @@ class CreateLogDrainInnerCommand extends CcApiSimpleCommand {
 
   /**
    * @param {LogDrainTarget} drain
-   * @param {string} kind - The kind of logs to drain ('LOG', 'ACCESSLOG', or 'AUDITLOG')
+   * @param {LogDrainKind} kind
    */
   #getBody(drain, kind) {
     /** @type {any} */
     const body = {
       kind,
       recipient: {
-        type: this.#mapDrainType(drain.type),
+        type: drain.type,
         url: drain.url,
       },
     };
 
-    // HTTP and ElasticSearch: credentials
-    if (drain.type === 'HTTP' || drain.type === 'ElasticSearch') {
+    // RAW_HTTP and ELASTICSEARCH: credentials
+    if (drain.type === 'RAW_HTTP' || drain.type === 'ELASTICSEARCH') {
       if (drain.credentials != null) {
         body.recipient.username = drain.credentials.username;
         body.recipient.password = drain.credentials.password;
       }
     }
 
-    // ElasticSearch: index (renamed from indexPrefix)
-    if (drain.type === 'ElasticSearch') {
+    // ELASTICSEARCH: index (renamed from indexPrefix)
+    if (drain.type === 'ELASTICSEARCH') {
       if (drain.indexPrefix != null) {
         body.recipient.index = drain.indexPrefix;
       }
     }
 
-    // NewRelic: apiKey
-    if (drain.type === 'NewRelicHTTP') {
+    // NEWRELIC: apiKey
+    if (drain.type === 'NEWRELIC') {
       body.recipient.apiKey = drain.apiKey;
     }
 
     // Syslog: RFC 5424 structured data parameters
-    if (drain.type === 'TCPSyslog' || drain.type === 'UDPSyslog') {
+    if (drain.type === 'SYSLOG_TCP' || drain.type === 'SYSLOG_UDP') {
       if (drain.structuredDataParameters != null) {
         body.recipient.rfc5424StructuredDataParameters = drain.structuredDataParameters;
       }
     }
 
     return body;
-  }
-
-  /**
-   * Map client drain types to API codes
-   * @param {LogDrainTarget['type']} clientType
-   * @returns {string}
-   */
-  #mapDrainType(clientType) {
-    const mapping = {
-      HTTP: 'RAW_HTTP',
-      DatadogHTTP: 'DATADOG',
-      NewRelicHTTP: 'NEWRELIC',
-      TCPSyslog: 'SYSLOG_TCP',
-      UDPSyslog: 'SYSLOG_UDP',
-      ElasticSearch: 'ELASTICSEARCH',
-    };
-    return mapping[clientType] || clientType;
   }
 }

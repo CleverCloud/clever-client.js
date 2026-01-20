@@ -31,7 +31,7 @@ describe('log-drain commands', function () {
         applicationId: application.id,
         kind: 'LOG',
         target: {
-          type: 'HTTP',
+          type: 'RAW_HTTP',
           url: 'https://example.com',
           credentials: {
             username: 'username',
@@ -43,12 +43,11 @@ describe('log-drain commands', function () {
 
     expect(response.id).to.be.a('string');
     expect(response.applicationId).to.equal(application.id);
-    checkDateFormat(response.createdAt);
-    checkDateFormat(response.lastEdit);
-    expect(response.state).to.equal('ENABLED');
-    expect(response.target.type).to.equal('HTTP');
+    checkDateFormat(response.updatedAt);
+    expect(response.status).to.equal('ENABLED');
+    expect(response.target.type).to.equal('RAW_HTTP');
     expect(response.target.url).to.equal('https://example.com');
-    if (response.target.type === 'HTTP' || response.target.type === 'ElasticSearch') {
+    if (response.target.type === 'RAW_HTTP' || response.target.type === 'ELASTICSEARCH') {
       expect(response.target.credentials).to.be.an('object');
       expect(response.target.credentials.username).to.equal('username');
       expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
@@ -62,7 +61,7 @@ describe('log-drain commands', function () {
         applicationId: application.id,
         kind: 'LOG',
         target: {
-          type: 'HTTP',
+          type: 'RAW_HTTP',
           url: 'https://example.com',
           credentials: {
             username: 'username',
@@ -72,16 +71,11 @@ describe('log-drain commands', function () {
       }),
     );
 
-    const response = await support.client.send(
-      new DeleteLogDrainCommand({ applicationId: application.id, drainId: drain.id }),
-    );
+    await support.client.send(new DeleteLogDrainCommand({ applicationId: application.id, drainId: drain.id }));
 
-    expect(response.id).to.equal(drain.id);
-    expect(response.applicationId).to.equal(application.id);
-    checkDateFormat(response.createdAt);
-    checkDateFormat(response.lastEdit);
-    expect(response.state).to.be.a('string');
-    expect(response.target).to.be.an('object');
+    // Verify the drain was deleted by checking it no longer exists
+    const drains = await support.client.send(new ListLogDrainCommand({ applicationId: application.id }));
+    expect(drains.find((d) => d.id === drain.id)).to.be.undefined;
   });
 
   it('should get log drain', async () => {
@@ -91,7 +85,7 @@ describe('log-drain commands', function () {
         applicationId: application.id,
         kind: 'LOG',
         target: {
-          type: 'HTTP',
+          type: 'RAW_HTTP',
           url: 'https://example.com',
           credentials: {
             username: 'username',
@@ -107,12 +101,11 @@ describe('log-drain commands', function () {
 
     expect(response.id).to.be.a('string');
     expect(response.applicationId).to.equal(application.id);
-    checkDateFormat(response.createdAt);
-    checkDateFormat(response.lastEdit);
-    expect(response.state).to.equal('ENABLED');
-    expect(response.target.type).to.equal('HTTP');
+    checkDateFormat(response.updatedAt);
+    expect(response.status).to.equal('ENABLED');
+    expect(response.target.type).to.equal('RAW_HTTP');
     expect(response.target.url).to.equal('https://example.com');
-    if (response.target.type === 'HTTP' || response.target.type === 'ElasticSearch') {
+    if (response.target.type === 'RAW_HTTP' || response.target.type === 'ELASTICSEARCH') {
       expect(response.target.credentials).to.be.an('object');
       expect(response.target.credentials.username).to.equal('username');
       expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
@@ -126,7 +119,7 @@ describe('log-drain commands', function () {
         applicationId: application.id,
         kind: 'LOG',
         target: {
-          type: 'HTTP',
+          type: 'RAW_HTTP',
           url: 'https://example.com',
           credentials: {
             username: 'username',
@@ -140,7 +133,7 @@ describe('log-drain commands', function () {
         applicationId: application.id,
         kind: 'LOG',
         target: {
-          type: 'UDPSyslog',
+          type: 'SYSLOG_UDP',
           url: 'https://example.com',
         },
       }),
@@ -160,7 +153,7 @@ describe('log-drain commands', function () {
         applicationId: application.id,
         kind: 'LOG',
         target: {
-          type: 'HTTP',
+          type: 'RAW_HTTP',
           url: 'https://example.com',
           credentials: {
             username: 'username',
@@ -176,9 +169,8 @@ describe('log-drain commands', function () {
 
     expect(response.id).to.be.a('string');
     expect(response.applicationId).to.equal(application.id);
-    checkDateFormat(response.createdAt);
-    checkDateFormat(response.lastEdit);
-    expect(response.state).to.equal('DISABLED');
+    checkDateFormat(response.updatedAt);
+    expect(response.status).to.equal('DISABLED');
     expect(response.target).to.be.an('object');
   });
 
@@ -189,7 +181,7 @@ describe('log-drain commands', function () {
         applicationId: application.id,
         kind: 'LOG',
         target: {
-          type: 'HTTP',
+          type: 'RAW_HTTP',
           url: 'https://example.com',
           credentials: {
             username: 'username',
@@ -209,12 +201,11 @@ describe('log-drain commands', function () {
 
     expect(response.id).to.be.a('string');
     expect(response.applicationId).to.equal(application.id);
-    checkDateFormat(response.createdAt);
-    checkDateFormat(response.lastEdit);
-    expect(response.state).to.equal('ENABLED');
-    expect(response.target.type).to.equal('HTTP');
+    checkDateFormat(response.updatedAt);
+    expect(response.status).to.equal('ENABLED');
+    expect(response.target.type).to.equal('RAW_HTTP');
     expect(response.target.url).to.equal('https://example.com');
-    if (response.target.type === 'HTTP' || response.target.type === 'ElasticSearch') {
+    if (response.target.type === 'RAW_HTTP' || response.target.type === 'ELASTICSEARCH') {
       expect(response.target.credentials).to.be.an('object');
       expect(response.target.credentials.username).to.equal('username');
       expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
@@ -229,7 +220,7 @@ describe('log-drain commands', function () {
         applicationId: application.id,
         kind: 'ACCESSLOG',
         target: {
-          type: 'HTTP',
+          type: 'RAW_HTTP',
           url: 'https://example.com',
         },
       }),
@@ -237,9 +228,9 @@ describe('log-drain commands', function () {
 
     expect(response.id).to.be.a('string');
     expect(response.applicationId).to.equal(application.id);
-    expect(response.state).to.equal('ENABLED');
+    expect(response.status).to.equal('ENABLED');
     expect(response.target).to.deep.equal({
-      type: 'HTTP',
+      type: 'RAW_HTTP',
       url: 'https://example.com',
     });
   });
@@ -252,7 +243,7 @@ describe('log-drain commands', function () {
         applicationId: application.id,
         kind: 'AUDITLOG',
         target: {
-          type: 'HTTP',
+          type: 'RAW_HTTP',
           url: 'https://example.com',
         },
       }),
@@ -260,6 +251,6 @@ describe('log-drain commands', function () {
 
     expect(response.id).to.be.a('string');
     expect(response.applicationId).to.equal(application.id);
-    expect(response.state).to.equal('ENABLED');
+    expect(response.status).to.equal('ENABLED');
   });
 });

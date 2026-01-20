@@ -1,6 +1,6 @@
 /**
  * @import { LogDrain } from './log-drain.types.js'
- * @import { CcApiType, CcApiCommand } from '../../types/cc-api.types.js'
+ * @import { CcApiType } from '../../types/cc-api.types.js'
  * @import { Composer } from '../../../../types/command.types.js'
  */
 import { isTimeoutError, Polling } from '../../../../utils/polling.js';
@@ -34,35 +34,6 @@ export async function waitForLogDrainDisabled(composer, ownerId, applicationId, 
 }
 
 /**
- * Wait for a log drain to be deleted (no longer exists)
- * @param {Composer<CcApiType>} composer
- * @param {string} ownerId
- * @param {string} applicationId
- * @param {string} drainId
- * @returns {Promise<void>}
- */
-export async function waitForLogDrainDeletion(composer, ownerId, applicationId, drainId) {
-  const polling = new Polling(
-    async () => {
-      const result = await composer.send(new GetLogDrainCommand({ ownerId, applicationId, drainId }));
-      return { stop: result == null };
-    },
-    POLLING_INTERVAL_MS,
-    POLLING_TIMEOUT_MS,
-  );
-
-  try {
-    await polling.start();
-  } catch (e) {
-    if (isTimeoutError(e)) {
-      throw new Error('Log drain deletion has been requested but is not deleted yet');
-    } else {
-      throw e;
-    }
-  }
-}
-
-/**
  * Wait for a log drain to reach a specific state
  * @param {Composer<CcApiType>} composer
  * @param {string} ownerId
@@ -79,7 +50,7 @@ async function waitForState(composer, ownerId, applicationId, drainId, targetSta
       if (result == null) {
         return { stop: false };
       }
-      if (result.state === targetState) {
+      if (result.status === targetState) {
         return { stop: true, value: result };
       }
       return { stop: false };

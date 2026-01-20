@@ -3,32 +3,40 @@ export interface LogDrain {
   // renamed from resourceId
   applicationId: string;
   target: LogDrainTarget;
-  kind?: LogDrainKind;
-  // converted to iso date from status.date
-  createdAt: string;
-  // converted to iso date from status.date
-  lastEdit: string;
-  // from status.status
-  state: LogDrainState;
-  // from status.authorId
-  updatedBy?: string;
+  kind: LogDrainKind;
+  // renamed from status.date (Converted ISO date when the drain's current status was set)
+  updatedAt: string;
+  // renamed from status.status
+  status: LogDrainStatus;
+  // renamed from status.authorId
+  updatedBy: string;
+  execution: {
+    status: LogDrainExecutionStatus;
+    lastError: string;
+  };
+  backlog: {
+    msgRateOut: number;
+    msgBacklog: number;
+  };
 }
 
-export type LogDrainState = 'CREATED' | 'ENABLED' | 'ENABLING' | 'DISABLING' | 'DISABLED' | 'DELETED';
+export type LogDrainStatus = 'CREATED' | 'ENABLED' | 'ENABLING' | 'DISABLING' | 'DISABLED' | 'DELETED';
+
+export type LogDrainExecutionStatus = 'RUNNING' | 'RETRYING' | 'NOT_RUNNING';
 
 export type LogDrainKind = 'LOG' | 'ACCESSLOG' | 'AUDITLOG';
 
 export type LogDrainTarget =
-  | HttpDrainTarget
+  | RawHttpDrainTarget
   | SyslogTcpDrainTarget
   | SyslogUdpDrainTarget
-  | DatadogHttpDrainTarget
-  | ElasticSearchDrainTarget
-  | NewRelicHttpDrainTarget;
+  | DatadogDrainTarget
+  | ElasticsearchDrainTarget
+  | NewrelicDrainTarget;
 
-export interface HttpDrainTarget {
-  // renamed from drainType
-  type: 'HTTP';
+// renamed from HttpDrainTarget
+export interface RawHttpDrainTarget {
+  type: 'RAW_HTTP';
   url: string;
   credentials?: {
     username: string;
@@ -36,27 +44,31 @@ export interface HttpDrainTarget {
   };
 }
 
+// renamed from SyslogTcpDrainTarget (type changed from 'TCPSyslog')
 export interface SyslogTcpDrainTarget {
-  type: 'TCPSyslog';
+  type: 'SYSLOG_TCP';
   url: string;
   // RFC 5424
   structuredDataParameters?: string;
 }
 
+// renamed from SyslogUdpDrainTarget (type changed from 'UDPSyslog')
 export interface SyslogUdpDrainTarget {
-  type: 'UDPSyslog';
+  type: 'SYSLOG_UDP';
   url: string;
   // RFC 5424
   structuredDataParameters?: string;
 }
 
-export interface DatadogHttpDrainTarget {
-  type: 'DatadogHTTP';
+// renamed from DatadogHttpDrainTarget
+export interface DatadogDrainTarget {
+  type: 'DATADOG';
   url: string;
 }
 
-export interface ElasticSearchDrainTarget {
-  type: 'ElasticSearch';
+// renamed from ElasticSearchDrainTarget
+export interface ElasticsearchDrainTarget {
+  type: 'ELASTICSEARCH';
   url: string;
   credentials?: {
     username: string;
@@ -65,8 +77,9 @@ export interface ElasticSearchDrainTarget {
   indexPrefix?: string;
 }
 
-export interface NewRelicHttpDrainTarget {
-  type: 'NewRelicHTTP';
+// renamed from NewRelicHttpDrainTarget
+export interface NewrelicDrainTarget {
+  type: 'NEWRELIC';
   url: string;
   apiKey: string;
 }

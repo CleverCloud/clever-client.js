@@ -10,7 +10,7 @@ import { waitForLogDrainDisabled } from './log-drain-utils.js';
  *
  * @extends {CcApiCompositeCommand<DisableLogDrainCommandInput, DisableLogDrainCommandOutput>}
  * @endpoint [PUT] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX/disable
- * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX (polling)
+ * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
  * @group LogDrain
  * @version 4
  */
