@@ -1,14 +1,10 @@
 export interface LogDrain {
   id: string;
-  // renamed from resourceId
   applicationId: string;
   target: LogDrainTarget;
   kind: LogDrainKind;
-  // renamed from status.date (Converted ISO date when the drain's current status was set)
   updatedAt: string;
-  // renamed from status.status
   status: LogDrainStatus;
-  // renamed from status.authorId
   updatedBy: string;
   execution: {
     status: LogDrainExecutionStatus;
@@ -34,7 +30,6 @@ export type LogDrainTarget =
   | ElasticsearchDrainTarget
   | NewrelicDrainTarget;
 
-// renamed from HttpDrainTarget
 export interface RawHttpDrainTarget {
   type: 'RAW_HTTP';
   url: string;
@@ -44,7 +39,6 @@ export interface RawHttpDrainTarget {
   };
 }
 
-// renamed from SyslogTcpDrainTarget (type changed from 'TCPSyslog')
 export interface SyslogTcpDrainTarget {
   type: 'SYSLOG_TCP';
   url: string;
@@ -52,7 +46,6 @@ export interface SyslogTcpDrainTarget {
   structuredDataParameters?: string;
 }
 
-// renamed from SyslogUdpDrainTarget (type changed from 'UDPSyslog')
 export interface SyslogUdpDrainTarget {
   type: 'SYSLOG_UDP';
   url: string;
@@ -60,13 +53,11 @@ export interface SyslogUdpDrainTarget {
   structuredDataParameters?: string;
 }
 
-// renamed from DatadogHttpDrainTarget
 export interface DatadogDrainTarget {
   type: 'DATADOG';
   url: string;
 }
 
-// renamed from ElasticSearchDrainTarget
 export interface ElasticsearchDrainTarget {
   type: 'ELASTICSEARCH';
   url: string;
@@ -77,7 +68,6 @@ export interface ElasticsearchDrainTarget {
   indexPrefix?: string;
 }
 
-// renamed from NewRelicHttpDrainTarget
 export interface NewrelicDrainTarget {
   type: 'NEWRELIC';
   url: string;

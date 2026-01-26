@@ -47,7 +47,7 @@ describe('log-drain commands', function () {
     expect(response.status).to.equal('ENABLED');
     expect(response.target.type).to.equal('RAW_HTTP');
     expect(response.target.url).to.equal('https://example.com');
-    if (response.target.type === 'RAW_HTTP' || response.target.type === 'ELASTICSEARCH') {
+    if (response.target.type === 'RAW_HTTP') {
       expect(response.target.credentials).to.be.an('object');
       expect(response.target.credentials.username).to.equal('username');
       expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
@@ -105,7 +105,7 @@ describe('log-drain commands', function () {
     expect(response.status).to.equal('ENABLED');
     expect(response.target.type).to.equal('RAW_HTTP');
     expect(response.target.url).to.equal('https://example.com');
-    if (response.target.type === 'RAW_HTTP' || response.target.type === 'ELASTICSEARCH') {
+    if (response.target.type === 'RAW_HTTP') {
       expect(response.target.credentials).to.be.an('object');
       expect(response.target.credentials.username).to.equal('username');
       expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
@@ -205,7 +205,7 @@ describe('log-drain commands', function () {
     expect(response.status).to.equal('ENABLED');
     expect(response.target.type).to.equal('RAW_HTTP');
     expect(response.target.url).to.equal('https://example.com');
-    if (response.target.type === 'RAW_HTTP' || response.target.type === 'ELASTICSEARCH') {
+    if (response.target.type === 'RAW_HTTP') {
       expect(response.target.credentials).to.be.an('object');
       expect(response.target.credentials.username).to.equal('username');
       expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
