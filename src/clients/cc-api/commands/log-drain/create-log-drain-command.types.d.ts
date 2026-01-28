@@ -1,6 +1,8 @@
-import type { LogDrain, LogDrainTarget } from './log-drain.types.js';
+import { ApplicationId } from '../../types/cc-api.types.js';
+import type { LogDrain, LogDrainKind, LogDrainTarget } from './log-drain.types.js';
 
-export type CreateLogDrainCommandInput = ({ applicationId: string } | { addonId: string }) & {
+export type CreateLogDrainCommandInput = ApplicationId & {
+  kind: LogDrainKind;
   target: LogDrainTarget;
 };
 

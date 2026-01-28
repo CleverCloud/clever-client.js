@@ -8,22 +8,27 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 /**
  *
  * @extends {CcApiSimpleCommand<DeleteLogDrainCommandInput, void>}
- * @endpoint [DELETE] /v2/logs/:XXX/drains/:XXX
+ * @endpoint [DELETE] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
  * @group LogDrain
- * @version 2
+ * @version 4
  */
 export class DeleteLogDrainCommand extends CcApiSimpleCommand {
   /** @type {CcApiSimpleCommand<DeleteLogDrainCommandInput, void>['toRequestParams']} */
   toRequestParams(params) {
-    const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;
+    return delete_(
+      safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains/${params.drainId}`,
+    );
+  }
 
-    return delete_(safeUrl`/v2/logs/${resourceId}/drains/${params.drainId}`);
+  /** @type {CcApiSimpleCommand<DeleteLogDrainCommandInput, void>['transformCommandOutput']} */
+  transformCommandOutput() {
+    return null;
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
   getIdsToResolve() {
     return {
-      addonId: 'ADDON_ID',
+      ownerId: true,
     };
   }
 }

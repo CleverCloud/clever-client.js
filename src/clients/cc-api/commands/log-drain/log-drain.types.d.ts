@@ -1,30 +1,37 @@
 export interface LogDrain {
   id: string;
-  // renamed from appId
   applicationId: string;
   target: LogDrainTarget;
-  // converted to iso date
-  createdAt: string;
-  // converted to iso date
-  lastEdit: string;
-  token: string;
-  state: LogDrainState;
-  updatedBy?: string;
+  kind: LogDrainKind;
+  updatedAt: string;
+  status: LogDrainStatus;
+  updatedBy: string;
+  execution: {
+    status: LogDrainExecutionStatus;
+    lastError: string;
+  };
+  backlog: {
+    msgRateOut: number;
+    msgBacklog: number;
+  };
 }
 
-export type LogDrainState = 'ENABLED' | 'DISABLED' | 'TO_DELETE' | 'DELETED';
+export type LogDrainStatus = 'CREATED' | 'ENABLED' | 'ENABLING' | 'DISABLING' | 'DISABLED' | 'DELETED';
+
+export type LogDrainExecutionStatus = 'RUNNING' | 'RETRYING' | 'NOT_RUNNING';
+
+export type LogDrainKind = 'LOG' | 'ACCESSLOG' | 'AUDITLOG';
 
 export type LogDrainTarget =
-  | HttpDrainTarget
+  | RawHttpDrainTarget
   | SyslogTcpDrainTarget
   | SyslogUdpDrainTarget
-  | DatadogHttpDrainTarget
-  | ElasticSearchDrainTarget
-  | NewRelicHttpDrainTarget;
+  | DatadogDrainTarget
+  | ElasticsearchDrainTarget
+  | NewrelicDrainTarget;
 
-export interface HttpDrainTarget {
-  // renamed from drainType
-  type: 'HTTP';
+export interface RawHttpDrainTarget {
+  type: 'RAW_HTTP';
   url: string;
   credentials?: {
     username: string;
@@ -33,26 +40,26 @@ export interface HttpDrainTarget {
 }
 
 export interface SyslogTcpDrainTarget {
-  type: 'TCPSyslog';
+  type: 'SYSLOG_TCP';
   url: string;
   // RFC 5424
   structuredDataParameters?: string;
 }
 
 export interface SyslogUdpDrainTarget {
-  type: 'UDPSyslog';
+  type: 'SYSLOG_UDP';
   url: string;
   // RFC 5424
   structuredDataParameters?: string;
 }
 
-export interface DatadogHttpDrainTarget {
-  type: 'DatadogHTTP';
+export interface DatadogDrainTarget {
+  type: 'DATADOG';
   url: string;
 }
 
-export interface ElasticSearchDrainTarget {
-  type: 'ElasticSearch';
+export interface ElasticsearchDrainTarget {
+  type: 'ELASTICSEARCH';
   url: string;
   credentials?: {
     username: string;
@@ -61,8 +68,8 @@ export interface ElasticSearchDrainTarget {
   indexPrefix?: string;
 }
 
-export interface NewRelicHttpDrainTarget {
-  type: 'NewRelicHTTP';
+export interface NewrelicDrainTarget {
+  type: 'NEWRELIC';
   url: string;
   apiKey: string;
 }
