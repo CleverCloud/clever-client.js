@@ -62,7 +62,7 @@ export function e2eSupport(config) {
   let organisationId;
   /** @type {string} */
   let userId;
-  /** @type {Array<{type: 'application'|'addon'|'ng'|'consumer'|'organisation', id: string}>} */
+  /** @type {Array<{type: 'application'|'addon'|'ng'|'consumer'|'organisation'|'drain', id: string, applicationId?: string}>} */
   let cleanupTasks = [];
 
   return {
@@ -150,6 +150,7 @@ export function e2eSupport(config) {
       // const applications = await this.client.send(new ListApplicationCommand({ ownerId: organisationId }));
 
       const applications = cleanupTasks.filter((task) => task.type === 'application');
+
       await Promise.all(
         applications.map((application) =>
           this.client

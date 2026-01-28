@@ -1,3 +1,5 @@
-export type DeleteLogDrainCommandInput = ({ applicationId: string } | { addonId: string }) & {
+import { ApplicationId } from '../../types/cc-api.types.js';
+
+export type DeleteLogDrainCommandInput = ApplicationId & {
   drainId: string;
 };
