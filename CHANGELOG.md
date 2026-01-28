@@ -1,5 +1,13 @@
 # Clever Client changelog
 
+## [11.4.1](https://github.com/CleverCloud/clever-client.js/compare/11.4.0...11.4.1) (2026-01-28)
+
+
+### 🐛 Bug Fixes
+
+* feedback Pierre ([08f1b60](https://github.com/CleverCloud/clever-client.js/commit/08f1b605565af71332c9ac2267dfe519b04b2e40))
+* feedback Pierre 2 ([ab8af5f](https://github.com/CleverCloud/clever-client.js/commit/ab8af5f168ced2a6ffd34ef6d9ce09c3632c3fa0))
+
 ## [11.4.0](https://github.com/CleverCloud/clever-client.js/compare/11.3.0...11.4.0) (2025-12-15)
 
 
