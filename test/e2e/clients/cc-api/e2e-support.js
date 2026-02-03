@@ -14,6 +14,8 @@ import { GetAddonCommand } from '../../../../src/clients/cc-api/commands/addon/g
 import { CreateApplicationCommand } from '../../../../src/clients/cc-api/commands/application/create-application-command.js';
 import { DeleteApplicationCommand } from '../../../../src/clients/cc-api/commands/application/delete-application-command.js';
 import { GetApplicationCommand } from '../../../../src/clients/cc-api/commands/application/get-application-command.js';
+import { DeleteLogDrainCommand } from '../../../../src/clients/cc-api/commands/log-drain/delete-log-drain-command.js';
+import { ListLogDrainCommand } from '../../../../src/clients/cc-api/commands/log-drain/list-log-drain-command.js';
 import { CreateNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/create-network-group-command.js';
 import { DeleteNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/delete-network-group-command.js';
 import { GetNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/get-network-group-command.js';
@@ -161,13 +163,30 @@ export function e2eSupport(config) {
                 withBranches: false,
               }),
             )
-            .then(
-              (a) =>
-                a &&
-                this.client.send(
+            .then(async (application) => {
+              if (application != null) {
+                const drains = await this.client.send(
+                  new ListLogDrainCommand({ ownerId: organisationId, applicationId: application.id }),
+                );
+                if (drains.length > 0) {
+                  await Promise.all(
+                    drains.map((drain) =>
+                      this.client.send(
+                        new DeleteLogDrainCommand({
+                          ownerId: organisationId,
+                          applicationId: application.id,
+                          drainId: drain.id,
+                        }),
+                      ),
+                    ),
+                  );
+                }
+
+                await this.client.send(
                   new DeleteApplicationCommand({ ownerId: organisationId, applicationId: application.id }),
-                ),
-            ),
+                );
+              }
+            }),
         ),
       );
       cleanupTasks = cleanupTasks.filter((task) => task.type !== 'application');
