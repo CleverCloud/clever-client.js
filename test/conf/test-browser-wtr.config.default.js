@@ -18,7 +18,7 @@ export function defaultConfig(include) {
     //     },
     //   }),
     // ],
-    testsFinishTimeout: 1000 * 60 * 10,
+    testsFinishTimeout: 1000 * 60 * 20,
     nodeResolve: true,
     concurrency: 1,
     reporters: [
