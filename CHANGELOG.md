@@ -1,5 +1,12 @@
 # Clever Client changelog
 
+## [11.4.1](https://github.com/CleverCloud/clever-client.js/compare/11.4.0...11.4.1) (2026-02-10)
+
+
+### 🐛 Bug Fixes
+
+* **deployment:** deployment commit id can be undefined ([e29eee3](https://github.com/CleverCloud/clever-client.js/commit/e29eee389927ad365791212abf32521be9fb83b0))
+
 ## [11.4.0](https://github.com/CleverCloud/clever-client.js/compare/11.3.0...11.4.0) (2025-12-15)
 
 
