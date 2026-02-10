@@ -6,7 +6,7 @@ export interface Deployment {
   state: DeploymentState;
   steps: Array<DeploymentStep>;
   version: {
-    commitId: string;
+    commitId?: string;
   };
   origin: {
     action: DeploymentAction;
