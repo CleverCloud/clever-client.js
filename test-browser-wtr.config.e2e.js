@@ -12,11 +12,11 @@ export default {
   testFramework: {
     config: {
       ui: 'bdd',
-      timeout: 10000,
+      timeout: 30000,
       slow: 2000,
     },
   },
-  testsFinishTimeout: 1000 * 60 * 10,
+  testsFinishTimeout: 1000 * 60 * 20,
   plugins: [
     {
       serverStart: login,

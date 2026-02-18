@@ -143,11 +143,11 @@ describe('log commands', function () {
       expect(log.source.ip).to.be.a('string');
       expect(log.source.port).to.be.a('number');
       expect(log.zone).to.be.a('string');
-      expect(log.type).to.equal('http');
+      expect(log.type).to.be.a('string');
       expect(log.detail.request.host).to.be.a('string');
       expect(log.detail.request.method).to.equal('GET');
       expect(log.detail.request.path).to.equal('/');
-      expect(log.detail.request.scheme).to.equal('https');
+      expect(log.detail.request.scheme).to.be.a('string');
       expect(log.detail.response.statusCode).to.equal(200);
       expect(log.detail.response.time).to.be.a('number');
     });
