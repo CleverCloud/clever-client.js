@@ -1,5 +1,14 @@
 # Clever Client changelog
 
+## [11.4.1](https://github.com/CleverCloud/clever-client.js/compare/11.4.0...11.4.1) (2026-02-18)
+
+
+### 🐛 Bug Fixes
+
+* **deployment:** deployment commit id can be undefined ([e29eee3](https://github.com/CleverCloud/clever-client.js/commit/e29eee389927ad365791212abf32521be9fb83b0))
+* **e2e:** increase timeouts to handle slow API responses ([c52ffd6](https://github.com/CleverCloud/clever-client.js/commit/c52ffd6193712d020298fa3eeb1609f5333814ee))
+* **e2e:** use Promise.allSettled in cleanup to prevent early abort ([37c49fb](https://github.com/CleverCloud/clever-client.js/commit/37c49fb29beab7bc4d43cd3034c3ca659320b7dc))
+
 ## [11.4.0](https://github.com/CleverCloud/clever-client.js/compare/11.3.0...11.4.0) (2025-12-15)
 
 
