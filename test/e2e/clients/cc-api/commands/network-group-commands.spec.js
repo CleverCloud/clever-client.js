@@ -6,6 +6,7 @@ import { DeleteNetworkGroupExternalPeerCommand } from '../../../../../src/client
 import { DeleteNetworkGroupMemberCommand } from '../../../../../src/clients/cc-api/commands/network-group/delete-network-group-member-command.js';
 import { GetNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/get-network-group-command.js';
 import { GetNetworkGroupWireguardConfigurationCommand } from '../../../../../src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.js';
+import { GetNetworkGroupWireguardConfigurationUrlCommand } from '../../../../../src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-url-command.js';
 import { ListNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/list-network-group-command.js';
 import { generateExternalMemberId } from '../../../../../src/clients/cc-api/commands/network-group/network-group-utils.js';
 import { SearchNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/search-network-group-command.js';
@@ -225,6 +226,41 @@ describe('network-group commands', function () {
     expect(response.ngId).to.equal(createdNetworkGroup.id);
     expect(response.peerId).to.equal(externalPeer.id);
     expect(response.version).to.be.a('number');
+  });
+
+  it('should get network group peer wireguard config url', async () => {
+    const createdNetworkGroup = await support.createNetworkGroup();
+    const member = await support.client.send(
+      new CreateNetworkGroupMemberCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        memberId: await generateExternalMemberId(),
+        label: 'label',
+      }),
+    );
+    const externalPeer = await support.client.send(
+      new CreateNetworkGroupExternalPeerCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        parentMember: member.id,
+        label: 'label',
+        peerRole: 'CLIENT',
+        publicKey: 'publicKey',
+      }),
+    );
+
+    const response = await support.client.send(
+      new GetNetworkGroupWireguardConfigurationUrlCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        peerId: externalPeer.id,
+      }),
+    );
+
+    expect(response.url).to.be.a('string');
+    expect(() => new URL(response.url)).to.not.throw();
+    expect(response.url).to.include(createdNetworkGroup.id);
+    expect(response.url).to.include(externalPeer.id);
   });
 
   it('should search network groups', async () => {
