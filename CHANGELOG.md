@@ -1,5 +1,12 @@
 # Clever Client changelog
 
+## [11.5.0](https://github.com/CleverCloud/clever-client.js/compare/11.4.1...11.5.0) (2026-03-05)
+
+
+### 🚀 Features
+
+* **cc-api:** add `GetNetworkGroupWireguardConfigurationUrlCommand` ([22374c9](https://github.com/CleverCloud/clever-client.js/commit/22374c94b183a3880006f5b0f007d8b8a79e06c7))
+
 ## [11.4.1](https://github.com/CleverCloud/clever-client.js/compare/11.4.0...11.4.1) (2026-02-18)
 
 
