@@ -1,22 +1,22 @@
 import { expect } from 'chai';
 import { GetMatomoInfoCommand } from '../../../../../src/clients/cc-api/commands/matomo/get-matomo-info-command.js';
+import { RebootMatomoCommand } from '../../../../../src/clients/cc-api/commands/matomo/reboot-matomo-command.js';
+import { RebuildMatomoCommand } from '../../../../../src/clients/cc-api/commands/matomo/rebuild-matomo-command.js';
 import { e2eSupport } from '../e2e-support.js';
 
-// cannot be automatised because addon deletion just after creation is not supported by the platform
-// todo: find a way to wait for addon to be ready for deletion
-describe.skip('matomo commands', function () {
+describe('matomo commands', function () {
   const support = e2eSupport();
 
   before(async () => {
     await support.prepare();
   });
 
-  after(async () => {
-    await support.cleanup();
-  });
-
   afterEach(async () => {
     await support.deleteAddons();
+  });
+
+  after(async () => {
+    await support.cleanup();
   });
 
   it('should get matomo info', async () => {
@@ -25,7 +25,6 @@ describe.skip('matomo commands', function () {
       providerId: 'addon-matomo',
       planId: 'plan_87283ba6-617c-420d-8e37-3350a2fcdd66',
     });
-
     const response = await support.client.send(new GetMatomoInfoCommand({ addonId: addon.id }));
 
     expect(response.id).to.equal(addon.realId);
@@ -40,6 +39,29 @@ describe.skip('matomo commands', function () {
     expect(response.resources.entrypoint).to.be.a('string');
     expect(response.resources.mysqlId).to.be.a('string');
     expect(response.resources.redisId).to.be.a('string');
+    expect(response.resources.kvId == null || typeof response.resources.kvId === 'string').to.be.true;
     expect(response.environment).to.be.a('array');
+  });
+
+  it('should reboot matomo', async () => {
+    const addon = await support.createTestAddon({
+      name: 'test-matomo-addon',
+      providerId: 'addon-matomo',
+      planId: 'plan_87283ba6-617c-420d-8e37-3350a2fcdd66',
+    });
+    const response = await support.client.send(new RebootMatomoCommand({ addonId: addon.id }));
+
+    expect(response).to.be.null;
+  });
+
+  it('should rebuild matomo', async () => {
+    const addon = await support.createTestAddon({
+      name: 'test-matomo-addon',
+      providerId: 'addon-matomo',
+      planId: 'plan_87283ba6-617c-420d-8e37-3350a2fcdd66',
+    });
+    const response = await support.client.send(new RebuildMatomoCommand({ addonId: addon.id }));
+
+    expect(response).to.be.null;
   });
 });
