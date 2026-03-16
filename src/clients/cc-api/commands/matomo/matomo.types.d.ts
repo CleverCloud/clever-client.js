@@ -15,6 +15,7 @@ export interface MatomoInfo {
     entrypoint: string;
     mysqlId: string;
     redisId: string;
+    kvId?: string;
   };
   // renamed from envVars. transformed from Record<string, string> to Array<EnvironmentVariable>
   environment: Array<EnvironmentVariable>;
