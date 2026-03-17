@@ -255,7 +255,7 @@ export function getNetworkGroupWireGuardConfiguration(params) {
   return Promise.resolve({
     method: 'get',
     url: `/v4/networkgroups/organisations/${params.ownerId}/networkgroups/${params.networkGroupId}/peers/${params.peerId}/wireguard/configuration`,
-    headers: { Accept: 'application/json' },
+    headers: { Accept: 'text/plain' },
     // no query params
     // no body
   });

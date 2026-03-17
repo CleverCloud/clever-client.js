@@ -223,9 +223,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response.ngId).to.equal(createdNetworkGroup.id);
-    expect(response.peerId).to.equal(externalPeer.id);
-    expect(response.version).to.be.a('number');
+    expect(response).to.be.a('string');
   });
 
   it('should get network group peer wireguard config url', async () => {
