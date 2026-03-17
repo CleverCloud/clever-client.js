@@ -1,5 +1,16 @@
 # Clever Client changelog
 
+## [12.0.0](https://github.com/CleverCloud/clever-client.js/compare/11.5.0...12.0.0) (2026-03-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **network-group:** use text/plain Accept header for WireGuard configuration endpoint
+
+### 🐛 Bug Fixes
+
+* **network-group:** use text/plain Accept header for WireGuard configuration endpoint ([9ac9354](https://github.com/CleverCloud/clever-client.js/commit/9ac9354ddd993ac0872c13da04e0fc2023e1453e))
+
 ## [11.5.0](https://github.com/CleverCloud/clever-client.js/compare/11.4.1...11.5.0) (2026-03-05)
 
 
