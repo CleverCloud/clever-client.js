@@ -4,16 +4,4 @@ export interface GetNetworkGroupWireguardConfigurationCommandInput {
   peerId: string;
 }
 
-export interface GetNetworkGroupWireguardConfigurationCommandOutput {
-  ngId: string;
-  peerId: string;
-  peers: [
-    {
-      peer_id: string;
-      peer_ip: string;
-      peer_hostname: string;
-    },
-  ];
-  configuration: string;
-  version: number;
-}
+export type GetNetworkGroupWireguardConfigurationCommandOutput = string;
