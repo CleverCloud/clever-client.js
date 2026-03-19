@@ -24,7 +24,7 @@ export class EventsStream extends AbstractStream {
   /**
    * @param {Object} options
    * @param {String} options.apiHost
-   * @param {OAuthTokens} options.tokens
+   * @param {OAuthTokens | (() => OAuthTokens)} options.tokens
    * @param {String} [options.appId]
    */
   constructor({ apiHost, tokens, appId }) {
@@ -114,7 +114,7 @@ export class EventsStream extends AbstractStream {
       url: '/v2/events/',
     })
       .then(prefixUrl(this.apiHost))
-      .then(addOauthHeader(this.tokens))
+      .then(addOauthHeader(typeof this.tokens === 'function' ? this.tokens() : this.tokens))
       .then((requestParams) => {
         // prepare WebSocket URL from URL used for signature
         const urlObj = new URL(requestParams.url);

@@ -7,7 +7,8 @@ import EventEmitter from 'component-emitter';
 const BACKOFF_FACTOR = 1.25;
 const INIT_RETRY_TIMEOUT = 1500;
 const MAX_RETRY_COUNT = Infinity;
-const PING_TIMEOUT_FACTOR = 1.25;
+const MAX_BACKOFF_DELAY = 30000;
+const PING_TIMEOUT_FACTOR = 3.0;
 
 export const AUTHENTICATION_REASON = {
   type: 'close',
@@ -87,7 +88,7 @@ export class AbstractStream extends EventEmitter {
     this._closeSource();
     // Always clear all timeouts
     clearTimeout(this._pingTimeoutId);
-    clearTimeout(this._autoRetry.timeoutId);
+    clearTimeout(this._autoRetry?.timeoutId);
     this.emit('close', reason);
   }
 
@@ -126,9 +127,12 @@ export class AbstractStream extends EventEmitter {
       this._autoRetry.counter = 0;
     }
     clearTimeout(this._pingTimeoutId);
-    this._pingTimeoutId = setTimeout(() => {
-      this._onError(new PingError('Stream failed to send ping within timeframe'));
-    }, delay * PING_TIMEOUT_FACTOR);
+    this._pingTimeoutId = setTimeout(
+      () => {
+        this._onError(new PingError('Stream failed to send ping within timeframe'));
+      },
+      delay * (this._autoRetry?.pingTimeoutFactor ?? PING_TIMEOUT_FACTOR),
+    );
   }
 
   /**
@@ -154,8 +158,11 @@ export class AbstractStream extends EventEmitter {
         return this.emit('error', new Error(`Stream connection failed ${this._autoRetry.maxRetryCount} times!`));
       }
 
-      const exponentialBackoffDelay =
-        this._autoRetry.initRetryTimeout * this._autoRetry.backoffFactor ** this._autoRetry.counter;
+      const baseDelay = Math.min(
+        this._autoRetry.initRetryTimeout * this._autoRetry.backoffFactor ** this._autoRetry.counter,
+        MAX_BACKOFF_DELAY,
+      );
+      const exponentialBackoffDelay = baseDelay * (0.75 + Math.random() * 0.5); // ±25% jitter
       this._autoRetry.timeoutId = setTimeout(() => {
         this.emit('open');
         this._openSource().catch((error) => this._onError(error));
