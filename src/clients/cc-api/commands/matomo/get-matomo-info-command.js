@@ -9,7 +9,7 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 /**
  *
  * @extends {CcApiSimpleCommand<GetMatomoInfoCommandInput, GetMatomoInfoCommandOutput>}
- * @endpoint [GET] /v4/addon-providers/:XXX/addons/:XXX
+ * @endpoint [GET] /v4/addon-providers/addon-matomo/addons/:XXX
  * @group Matomo
  * @version 4
  */
@@ -42,7 +42,7 @@ export class GetMatomoInfoCommand extends CcApiSimpleCommand {
       version: response.version,
       phpVersion: response.phpVersion,
       accessUrl: response.accessUrl,
-      availableVersions: response.availableVersions?.sort(),
+      availableVersions: response.availableVersions,
       resources: response.resources,
       environment: sortBy(toArray(response.envVars), 'name'),
     };

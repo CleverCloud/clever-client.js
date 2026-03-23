@@ -1,22 +1,18 @@
 import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
 
-export interface MatomoInfo {
-  // renamed from resourceId
+export interface MetabaseInfo {
   id: string;
   addonId: string;
   name: string;
   ownerId: string;
-  plan: 'BETA';
+  plan: string;
   version: string;
-  phpVersion: string;
+  javaVersion: string;
   accessUrl: string;
   availableVersions: Array<string>;
   resources: {
     entrypoint: string;
-    mysqlId: string;
-    redisId: string;
-    kvId?: string;
+    pgsqlId: string | null;
   };
-  // renamed from envVars. transformed from Record<string, string> to Array<EnvironmentVariable>
   environment: Array<EnvironmentVariable>;
 }
