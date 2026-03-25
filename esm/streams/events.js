@@ -118,7 +118,7 @@ export class EventsStream extends AbstractStream {
       .then((requestParams) => {
         // prepare WebSocket URL from URL used for signature
         const urlObj = new URL(requestParams.url);
-        urlObj.protocol = 'wss:';
+        urlObj.protocol = urlObj.protocol === 'http:' ? 'ws:' : 'wss:';
         urlObj.pathname = urlObj.pathname + 'event-socket';
         const url = urlObj.toString();
         // prepare message to auth WebSocket
