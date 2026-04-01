@@ -1,5 +1,22 @@
 # Clever Client changelog
 
+## [12.1.0](https://github.com/CleverCloud/clever-client.js/compare/12.0.0...12.1.0) (2026-04-01)
+
+
+### 🚀 Features
+
+* **keycloak:** add keycloak commands ([a51a193](https://github.com/CleverCloud/clever-client.js/commit/a51a193bc9fc01f2304f72c6fa615b58289d3768)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
+* **matomo:** add `RebootMatomoCommand` & `RebuildMatomoCommand` ([e27a368](https://github.com/CleverCloud/clever-client.js/commit/e27a3683f4d6cee00882b46bef7934aa9663de6e)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
+* **matomo:** add `resouce.kvId` to `GetMatomoInfoCommand` output ([a48b8d0](https://github.com/CleverCloud/clever-client.js/commit/a48b8d0f577a5204b4944d470d91c75e4a681169))
+* **metabase:** add commands ([106437b](https://github.com/CleverCloud/clever-client.js/commit/106437b974dda4eeda596c2ecb60ab6b6e775689)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
+* **otoroshi:** add commands ([bac615d](https://github.com/CleverCloud/clever-client.js/commit/bac615d076c869b7accefc455e241b1a2bc19943)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
+
+
+### 🐛 Bug Fixes
+
+* **events:** use ws:// when API host is http:// (dev mode support) ([ced37b3](https://github.com/CleverCloud/clever-client.js/commit/ced37b35f7eaa99697aabaff3fde31da1f457f49))
+* **GetMatomoInfoCommand:** stop sorting available versions ([57fbc9e](https://github.com/CleverCloud/clever-client.js/commit/57fbc9e5476a4c8203c2d3face0a86a71bf2e7d2))
+
 ## [12.0.0](https://github.com/CleverCloud/clever-client.js/compare/11.5.0...12.0.0) (2026-03-17)
 
 
