@@ -2,6 +2,7 @@
  * @import { NetworkGroup, NetworkGroupMember, NetworkGroupPeer } from './network-group.types.js'
  * @import { CcApiType, CcApiCommand } from '../../types/cc-api.types.js'
  * @import { Composer } from '../../../../types/command.types.js'
+ * @import { Addon } from '../addon/addon.types.js'
  */
 import { randomUUID } from '../../../../lib/utils.js';
 import { isTimeoutError, Polling } from '../../../../utils/polling.js';
@@ -146,6 +147,32 @@ function getKind(memberId) {
     return 'EXTERNAL';
   }
   throw new Error(`Invalid member id "${memberId}". Member id must be "addon_xxx", "app_xxx" or "external_xxx"`);
+}
+
+/**
+ * The set of addon provider IDs that are valid network group member candidates.
+ *
+ * @type {Set<string>}
+ */
+export const NETWORK_GROUP_SUPPORTED_ADDON_PROVIDER_IDS = new Set([
+  'es-addon',
+  'mongodb-addon',
+  'mysql-addon',
+  'postgresql-addon',
+  'redis-addon',
+]);
+
+/**
+ * Returns true if the given addon is a valid network group member candidate.
+ * An addon is a valid candidate if:
+ * - Its provider ID is in NETWORK_GROUP_SUPPORTED_ADDON_PROVIDER_IDS
+ * - Its plan slug is not "dev"
+ *
+ * @param {Addon} addon
+ * @returns {boolean}
+ */
+export function isNetworkGroupAddonCandidate(addon) {
+  return NETWORK_GROUP_SUPPORTED_ADDON_PROVIDER_IDS.has(addon.provider.id) && addon.plan.slug !== 'dev';
 }
 
 /**
