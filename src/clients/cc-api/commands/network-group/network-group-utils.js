@@ -98,7 +98,7 @@ export async function waitForNetworkGroupPeerDeletion(composer, ownerId, network
  *
  * @param {string} ngId The Network Group ID
  * @param {string} memberId The member ID
- * @returns {Object}
+ * @returns {Omit<NetworkGroupMember, 'label'>}
  */
 export function constructNetworkGroupMember(ngId, memberId) {
   return {
@@ -140,39 +140,48 @@ function getKind(memberId) {
   if (memberId.startsWith('app_')) {
     return 'APPLICATION';
   }
-  if (memberId.startsWith('addon_')) {
-    return 'ADDON';
-  }
   if (memberId.startsWith('external_')) {
     return 'EXTERNAL';
   }
-  throw new Error(`Invalid member id "${memberId}". Member id must be "addon_xxx", "app_xxx" or "external_xxx"`);
+  for (const realIdPrefix of NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS.values()) {
+    if (memberId.startsWith(realIdPrefix)) {
+      return 'ADDON';
+    }
+  }
+  const validPrefixes = [...NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS.values(), 'app_', 'external_']
+    .map((p) => `"${p}xxx"`)
+    .join(', ');
+  throw new Error(`Invalid member id "${memberId}". Member id must start with one of: ${validPrefixes}`);
 }
 
 /**
- * The set of addon provider IDs that are valid network group member candidates.
+ * Maps each supported addon provider ID to the realId prefix used by the Clever Cloud API.
+ * Both facts (supported providers and their realId prefixes) are kept here to prevent drift.
  *
- * @type {Set<string>}
+ * key   — provider ID (e.g. 'postgresql-addon')
+ * value — realId prefix (e.g. 'postgresql_')
+ *
+ * @type {Map<string, string>}
  */
-export const NETWORK_GROUP_SUPPORTED_ADDON_PROVIDER_IDS = new Set([
-  'es-addon',
-  'mongodb-addon',
-  'mysql-addon',
-  'postgresql-addon',
-  'redis-addon',
+export const NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS = new Map([
+  ['es-addon', 'elasticsearch_'],
+  ['mongodb-addon', 'mongodb_'],
+  ['mysql-addon', 'mysql_'],
+  ['postgresql-addon', 'postgresql_'],
+  ['redis-addon', 'redis_'],
 ]);
 
 /**
  * Returns true if the given addon is a valid network group member candidate.
  * An addon is a valid candidate if:
- * - Its provider ID is in NETWORK_GROUP_SUPPORTED_ADDON_PROVIDER_IDS
+ * - Its provider ID is in NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS
  * - Its plan slug is not "dev"
  *
  * @param {Addon} addon
  * @returns {boolean}
  */
 export function isNetworkGroupAddonCandidate(addon) {
-  return NETWORK_GROUP_SUPPORTED_ADDON_PROVIDER_IDS.has(addon.provider.id) && addon.plan.slug !== 'dev';
+  return NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS.has(addon.provider.id) && addon.plan.slug !== 'dev';
 }
 
 /**
