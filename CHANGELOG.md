@@ -1,5 +1,12 @@
 # Clever Client changelog
 
+## [12.2.0](https://github.com/CleverCloud/clever-client.js/compare/12.1.0...12.2.0) (2026-04-22)
+
+
+### 🚀 Features
+
+* **network-groups:** add helpers to filter out unsupported add-ons ([11cda0e](https://github.com/CleverCloud/clever-client.js/commit/11cda0eabbb574148fcf0dde77cf108955629271))
+
 ## [12.1.0](https://github.com/CleverCloud/clever-client.js/compare/12.0.0...12.1.0) (2026-04-01)
 
 
