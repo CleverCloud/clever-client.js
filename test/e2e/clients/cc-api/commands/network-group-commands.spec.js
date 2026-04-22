@@ -24,7 +24,7 @@ describe('network-group commands', function () {
   });
 
   afterEach(async () => {
-    await Promise.all([support.deleteApplications(), support.deleteNetworkGroups()]);
+    await Promise.all([support.deleteApplications(), support.deleteAddons(), support.deleteNetworkGroups()]);
   });
 
   it('should get network group', async () => {
@@ -322,5 +322,220 @@ describe('network-group commands', function () {
     );
 
     expect(response).to.have.lengthOf(2);
+  });
+
+  it('should create network group member with es-addon addon', async () => {
+    const addon = await support.createTestAddon({
+      providerId: 'es-addon',
+      planId: 'plan_0e0bc5ea-ba21-41e8-865b-1ed48e0163ca',
+      zone: 'par',
+      name: 'test-ng-es-addon',
+    });
+    const createdNetworkGroup = await support.createNetworkGroup();
+
+    const response = await support.client.send(
+      new CreateNetworkGroupMemberCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        memberId: addon.realId,
+        label: 'label',
+      }),
+    );
+
+    expect(response.id).to.equal(addon.realId);
+    expect(response.kind).to.equal('ADDON');
+    expect(response.label).to.equal('label');
+  });
+
+  it('should delete network group member with es-addon addon', async () => {
+    const addon = await support.createTestAddon({
+      providerId: 'es-addon',
+      planId: 'plan_0e0bc5ea-ba21-41e8-865b-1ed48e0163ca',
+      zone: 'par',
+      name: 'test-ng-es-addon',
+    });
+    const createdNetworkGroup = await support.createNetworkGroup(addon.realId);
+
+    const response = await support.client.send(
+      new DeleteNetworkGroupMemberCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        memberId: addon.realId,
+      }),
+    );
+
+    expect(response).to.be.null;
+  });
+
+  it('should create network group member with mongodb-addon addon', async () => {
+    const addon = await support.createTestAddon({
+      providerId: 'mongodb-addon',
+      planId: 'plan_b53983a2-63d3-472d-8c98-f1bdea682912',
+      zone: 'par',
+      name: 'test-ng-mongodb-addon',
+    });
+    const createdNetworkGroup = await support.createNetworkGroup();
+
+    const response = await support.client.send(
+      new CreateNetworkGroupMemberCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        memberId: addon.realId,
+        label: 'label',
+      }),
+    );
+
+    expect(response.id).to.equal(addon.realId);
+    expect(response.kind).to.equal('ADDON');
+    expect(response.label).to.equal('label');
+  });
+
+  it('should delete network group member with mongodb-addon addon', async () => {
+    const addon = await support.createTestAddon({
+      providerId: 'mongodb-addon',
+      planId: 'plan_b53983a2-63d3-472d-8c98-f1bdea682912',
+      zone: 'par',
+      name: 'test-ng-mongodb-addon',
+    });
+    const createdNetworkGroup = await support.createNetworkGroup(addon.realId);
+
+    const response = await support.client.send(
+      new DeleteNetworkGroupMemberCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        memberId: addon.realId,
+      }),
+    );
+
+    expect(response).to.be.null;
+  });
+
+  it('should create network group member with mysql-addon addon', async () => {
+    const addon = await support.createTestAddon({
+      providerId: 'mysql-addon',
+      planId: 'plan_7ab494e2-c319-4330-8170-35d78738c1ee',
+      zone: 'par',
+      name: 'test-ng-mysql-addon',
+    });
+    const createdNetworkGroup = await support.createNetworkGroup();
+
+    const response = await support.client.send(
+      new CreateNetworkGroupMemberCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        memberId: addon.realId,
+        label: 'label',
+      }),
+    );
+
+    expect(response.id).to.equal(addon.realId);
+    expect(response.kind).to.equal('ADDON');
+    expect(response.label).to.equal('label');
+  });
+
+  it('should delete network group member with mysql-addon addon', async () => {
+    const addon = await support.createTestAddon({
+      providerId: 'mysql-addon',
+      planId: 'plan_7ab494e2-c319-4330-8170-35d78738c1ee',
+      zone: 'par',
+      name: 'test-ng-mysql-addon',
+    });
+    const createdNetworkGroup = await support.createNetworkGroup(addon.realId);
+
+    const response = await support.client.send(
+      new DeleteNetworkGroupMemberCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        memberId: addon.realId,
+      }),
+    );
+
+    expect(response).to.be.null;
+  });
+
+  it('should create network group member with postgresql-addon addon', async () => {
+    const addon = await support.createTestAddon({
+      providerId: 'postgresql-addon',
+      planId: 'plan_c32d00fb-6c06-48a9-a0a3-9d808937ec68',
+      zone: 'par',
+      name: 'test-ng-postgresql-addon',
+    });
+    const createdNetworkGroup = await support.createNetworkGroup();
+
+    const response = await support.client.send(
+      new CreateNetworkGroupMemberCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        memberId: addon.realId,
+        label: 'label',
+      }),
+    );
+
+    expect(response.id).to.equal(addon.realId);
+    expect(response.kind).to.equal('ADDON');
+    expect(response.label).to.equal('label');
+  });
+
+  it('should delete network group member with postgresql-addon addon', async () => {
+    const addon = await support.createTestAddon({
+      providerId: 'postgresql-addon',
+      planId: 'plan_c32d00fb-6c06-48a9-a0a3-9d808937ec68',
+      zone: 'par',
+      name: 'test-ng-postgresql-addon',
+    });
+    const createdNetworkGroup = await support.createNetworkGroup(addon.realId);
+
+    const response = await support.client.send(
+      new DeleteNetworkGroupMemberCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        memberId: addon.realId,
+      }),
+    );
+
+    expect(response).to.be.null;
+  });
+
+  it('should create network group member with redis-addon addon', async () => {
+    const addon = await support.createTestAddon({
+      providerId: 'redis-addon',
+      planId: 'plan_c62dd71e-15c3-483e-879d-75e4c836e21e',
+      zone: 'par',
+      name: 'test-ng-redis-addon',
+    });
+    const createdNetworkGroup = await support.createNetworkGroup();
+
+    const response = await support.client.send(
+      new CreateNetworkGroupMemberCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        memberId: addon.realId,
+        label: 'label',
+      }),
+    );
+
+    expect(response.id).to.equal(addon.realId);
+    expect(response.kind).to.equal('ADDON');
+    expect(response.label).to.equal('label');
+  });
+
+  it('should delete network group member with redis-addon addon', async () => {
+    const addon = await support.createTestAddon({
+      providerId: 'redis-addon',
+      planId: 'plan_c62dd71e-15c3-483e-879d-75e4c836e21e',
+      zone: 'par',
+      name: 'test-ng-redis-addon',
+    });
+    const createdNetworkGroup = await support.createNetworkGroup(addon.realId);
+
+    const response = await support.client.send(
+      new DeleteNetworkGroupMemberCommand({
+        ownerId: support.organisationId,
+        networkGroupId: createdNetworkGroup.id,
+        memberId: addon.realId,
+      }),
+    );
+
+    expect(response).to.be.null;
   });
 });
