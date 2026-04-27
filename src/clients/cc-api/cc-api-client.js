@@ -60,6 +60,16 @@ export class CcApiClient extends CcClient {
   }
 
   /**
+   * Resource ID resolver used by this client.
+   * Exposes helpers to resolve owner IDs and translate between addonId and realAddonId.
+   *
+   * @returns {ResourceIdResolver}
+   */
+  get resourceIdResolver() {
+    return this.#resourceIdResolver;
+  }
+
+  /**
    * Transforms command parameters by resolving resource IDs.
    * This method is called before sending a command to resolve any resource IDs
    * (owner IDs, addon IDs) to their proper format.

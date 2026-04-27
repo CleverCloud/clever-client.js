@@ -168,6 +168,22 @@ await client.send(new GetApplicationCommand({ applicationId: 'application_id' })
 await client.send(new GetAddonCommand({ addonId: 'addon_id_or_real_id' }));
 ```
 
+#### Using the resolver directly
+
+If you need to resolve IDs yourself (e.g. get the real addon ID, or find the owner of a resource), you can access the resolver directly on the client:
+
+```javascript
+// Translate an addon ID to its real ID (or the reverse)
+const realAddonId = await client.resourceIdResolver.resolveAddonId('addon_xxx', 'REAL_ADDON_ID');
+const addonId = await client.resourceIdResolver.resolveAddonId('postgresql_xxx', 'ADDON_ID');
+
+// Resolve the owner ID of any resource
+const ownerId = await client.resourceIdResolver.resolveOwnerId({ applicationId: 'app_xxx' });
+const ownerId2 = await client.resourceIdResolver.resolveOwnerId({ addonId: 'addon_xxx' });
+```
+
+If the resource cannot be found, these methods throw a `CcClientError` with code `CANNOT_RESOLVE_RESOURCE_ID`.
+
 ### Persistent Storage for ID Resolution
 
 By default, resource ID caching is stored in memory. You can configure persistent storage for ID caching:
