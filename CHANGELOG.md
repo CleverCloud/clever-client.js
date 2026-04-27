@@ -1,5 +1,17 @@
 # Clever Client changelog
 
+## [12.3.0](https://github.com/CleverCloud/clever-client.js/compare/12.2.0...12.3.0) (2026-04-27)
+
+
+### 🚀 Features
+
+* **cc-api-client:** expose resourceIdResolver as a public getter ([7d27bea](https://github.com/CleverCloud/clever-client.js/commit/7d27bea4e4b00fbf9dfbce8fb26691e13ac1e189))
+
+
+### 🐛 Bug Fixes
+
+* **network-group:** allow using `realId` to add addons as members ([1ddf53a](https://github.com/CleverCloud/clever-client.js/commit/1ddf53a5839768e92e36c174f907bc7558765648)), closes [#204](https://github.com/CleverCloud/clever-client.js/issues/204)
+
 ## [12.2.0](https://github.com/CleverCloud/clever-client.js/compare/12.1.0...12.2.0) (2026-04-22)
 
 
