@@ -21,7 +21,7 @@ export function transformApplicationInstance(payload) {
     state: payload.state,
     hypervisorId: payload.hypervisorId,
     creationDate: normalizeDate(payload.creationDate),
-    deletionDate: normalizeDate(payload.creationDate),
+    deletionDate: normalizeDate(payload.deletionDate),
     network: payload.network,
     isBuildVm: payload.isBuildVm,
   };
