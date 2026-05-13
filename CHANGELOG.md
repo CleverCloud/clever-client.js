@@ -1,5 +1,13 @@
 # Clever Client changelog
 
+## [12.3.1](https://github.com/CleverCloud/clever-client.js/compare/12.3.0...12.3.1) (2026-05-13)
+
+
+### 🐛 Bug Fixes
+
+* **application-commands:** support `ftp` applications ([c43d119](https://github.com/CleverCloud/clever-client.js/commit/c43d119a7aed8383311e7c7b05748424d372de3b)), closes [#209](https://github.com/CleverCloud/clever-client.js/issues/209)
+* **cc-api-client:** use deletionDate from payload for instance deletionDate ([d4d5ddd](https://github.com/CleverCloud/clever-client.js/commit/d4d5ddddbcde48a2f32a48ea140f63a4a9fe4b7a))
+
 ## [12.3.0](https://github.com/CleverCloud/clever-client.js/compare/12.2.0...12.3.0) (2026-04-27)
 
 
