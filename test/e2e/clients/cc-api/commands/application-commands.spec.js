@@ -110,4 +110,32 @@ describe('application commands', function () {
 
     expect(response).to.have.length(0);
   });
+
+  it('should create FTP application', async () => {
+    const application = await support.createFtpApplication();
+
+    expect(application.id).to.match(/app_.+/);
+    expect(application.ownerId).to.equal(support.organisationId);
+    expect(application.deployment.type).to.equal('FTP');
+  });
+
+  it('should get FTP application', async () => {
+    const application = await support.createFtpApplication();
+    const response = await support.client.send(
+      new GetApplicationCommand({ applicationId: application.id, withBranches: false }),
+    );
+
+    expect(response.id).to.equal(application.id);
+    expect(response.deployment.type).to.equal('FTP');
+  });
+
+  it('should list FTP application', async () => {
+    const application = await support.createFtpApplication();
+    const response = await support.client.send(
+      new ListApplicationCommand({ ownerId: support.organisationId, withBranches: false }),
+    );
+
+    expect(response.map((a) => a.id)).to.include(application.id);
+    expect(response.find((a) => a.id === application.id)?.deployment.type).to.equal('FTP');
+  });
 });
