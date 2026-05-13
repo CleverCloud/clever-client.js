@@ -28,7 +28,7 @@ export interface Application {
     type: ApplicationDeploymentType;
     repoState: ApplicationRepositoryState;
     url: string;
-    httpUrl: string;
+    httpUrl?: string;
   };
   // renamed from vhosts
   domains: Array<Domain>;

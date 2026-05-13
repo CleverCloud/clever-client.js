@@ -78,5 +78,5 @@ export function transformApplication(payload) {
  * @returns {boolean}
  */
 export function isGithubApplication(payload) {
-  return payload.deployment.httpUrl.startsWith('https://github.com');
+  return payload.deployment.httpUrl?.startsWith('https://github.com') ?? false;
 }

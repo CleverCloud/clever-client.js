@@ -297,6 +297,24 @@ export function e2eSupport(config) {
 
       return application;
     },
+    async createFtpApplication(name = 'test-application-ftp', ownerId = organisationId) {
+      const application = await this.client.send(
+        new CreateApplicationCommand({
+          ownerId,
+          name,
+          zone: 'par',
+          minInstances: 1,
+          maxInstances: 1,
+          minFlavor: 'xs',
+          maxFlavor: 'xs',
+          buildFlavor: 's',
+          instance: { slug: 'php' },
+          deploy: 'ftp',
+        }),
+      );
+      cleanupTasks.push({ type: 'application', id: application.id });
+      return application;
+    },
     /**
      * @param {Partial<CreateAddonCommandInput>} [addon]
      * @returns {Promise<Addon>}
