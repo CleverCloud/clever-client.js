@@ -451,6 +451,60 @@ describe('request', () => {
     });
   });
 
+  describe('dedupe', () => {
+    it('concurrent same request should make only 1 fetch call', async () => {
+      const responseBody = { data: 'test response' };
+      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+
+      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+
+      const [result1, result2] = await Promise.all([
+        sendRequest({ url: '/api/test' }),
+        sendRequest({ url: '/api/test' }),
+      ]);
+
+      expect(spy.callCount).to.equal(1);
+      expect(result1.body).to.deep.equal(responseBody);
+      expect(result2.body).to.deep.equal(responseBody);
+    });
+
+    it('concurrent different requests should make 2 fetch calls', async () => {
+      const response1Body = { data: 'response 1' };
+      const response2Body = { data: 'response 2' };
+      await apiMockCtrl
+        .mock()
+        .when({ method: 'GET', path: '/api/test1' })
+        .respond({ status: 200, body: response1Body })
+        .when({ method: 'GET', path: '/api/test2' })
+        .respond({ status: 200, body: response2Body });
+
+      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+
+      const [result1, result2] = await Promise.all([
+        sendRequest({ url: '/api/test1' }),
+        sendRequest({ url: '/api/test2' }),
+      ]);
+
+      expect(spy.callCount).to.equal(2);
+      expect(result1.body).to.deep.equal(response1Body);
+      expect(result2.body).to.deep.equal(response2Body);
+    });
+
+    it('sequential same request should make 2 fetch calls (dedupe only applies while pending)', async () => {
+      const responseBody = { data: 'test response' };
+      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+
+      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+
+      const result1 = await sendRequest({ url: '/api/test' });
+      const result2 = await sendRequest({ url: '/api/test' });
+
+      expect(spy.callCount).to.equal(2);
+      expect(result1.body).to.deep.equal(responseBody);
+      expect(result2.body).to.deep.equal(responseBody);
+    });
+  });
+
   describe('timeout', () => {
     it('should timeout', async function () {
       this.timeout(50);
