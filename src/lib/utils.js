@@ -1,5 +1,5 @@
 /**
- * @import { CcRequestConfig, CcRequestConfigPartial, RequestCachePolicy } from '../types/request.types.js'
+ * @import { CcRequestConfig, CcRequestConfigPartial, CcRequestParams, RequestCachePolicy } from '../types/request.types.js'
  */
 
 /**
@@ -337,6 +337,20 @@ export class Deferred {
   get reject() {
     return this.#reject;
   }
+}
+
+/**
+ * @param {Partial<CcRequestParams>} requestParams
+ * @returns {string}
+ */
+export function calculateCacheKey(requestParams) {
+  const cacheParams = [
+    requestParams.url,
+    requestParams.queryParams?.entries(),
+    requestParams.headers?.get('accept'),
+    requestParams.headers?.get('authorization'),
+  ];
+  return JSON.stringify(cacheParams);
 }
 
 /**
