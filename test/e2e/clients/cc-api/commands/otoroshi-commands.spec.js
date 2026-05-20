@@ -50,7 +50,6 @@ describe('otoroshi commands', function () {
     expect(response.initialCredentials.user).to.be.a('string');
     expect(response.initialCredentials.password).to.be.a('string');
     expect(response.features).to.be.an('object');
-    expect(response.environment).to.be.an('array');
   });
 
   it('should reboot otoroshi', async () => {
@@ -103,7 +102,6 @@ describe('otoroshi commands', function () {
 
     expect(response.id).to.equal(addon.realId);
     expect(response.version).to.be.a('string');
-    expect(response.environment).to.be.an('array');
   });
 
   it('should create otoroshi network group', async () => {

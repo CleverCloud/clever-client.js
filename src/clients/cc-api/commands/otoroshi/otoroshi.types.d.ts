@@ -1,5 +1,3 @@
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
-
 export interface OtoroshiInfo {
   id: string;
   addonId: string;
@@ -24,10 +22,10 @@ export interface OtoroshiInfo {
     user: string;
     secret: string;
     openapi: string;
+    swaggerUrl: string;
   };
   initialCredentials: {
     user: string;
     password: string;
   };
-  environment: Array<EnvironmentVariable>;
 }
