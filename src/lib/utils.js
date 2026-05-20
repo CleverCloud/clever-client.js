@@ -346,7 +346,7 @@ export class Deferred {
 export function calculateCacheKey(requestParams) {
   const cacheParams = [
     requestParams.url,
-    requestParams.queryParams?.entries(),
+    requestParams.queryParams?.toObject(),
     requestParams.headers?.get('accept'),
     requestParams.headers?.get('authorization'),
   ];

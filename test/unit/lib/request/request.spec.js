@@ -449,6 +449,60 @@ describe('request', () => {
       expect(spy.callCount).to.equal(0);
       expect(response2.body).to.deep.equal(newResponseBody);
     });
+
+    it('should NOT share cache between different query params', async () => {
+      const responseBody = { data: 'response' };
+      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+
+      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+
+      const result1 = await sendRequest({
+        method: 'GET',
+        url: `/api/test`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        queryParams: new QueryParams().set('page', 'a'),
+        cache: { ttl: 1000 },
+      });
+
+      const result2 = await sendRequest({
+        method: 'GET',
+        url: `/api/test`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        queryParams: new QueryParams().set('page', 'b'),
+        cache: { ttl: 1000 },
+      });
+
+      // Each unique query param set should hit the network independently
+      expect(spy.callCount).to.equal(2);
+      expect(result1.body).to.deep.equal(responseBody);
+      expect(result2.body).to.deep.equal(responseBody);
+    });
+
+    it('should share cache for same query params', async () => {
+      const responseBody = { data: 'cached' };
+      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+
+      await sendRequest({
+        method: 'GET',
+        url: `/api/test`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        queryParams: new QueryParams().set('page', '1'),
+        cache: { ttl: 1000 },
+      });
+
+      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+
+      const response = await sendRequest({
+        method: 'GET',
+        url: `/api/test`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        queryParams: new QueryParams().set('page', '1'),
+        cache: { ttl: 1000 },
+      });
+
+      expect(spy.callCount).to.equal(0);
+      expect(response.body).to.deep.equal(responseBody);
+    });
   });
 
   describe('dedupe', () => {
@@ -500,6 +554,39 @@ describe('request', () => {
       const result2 = await sendRequest({ url: '/api/test' });
 
       expect(spy.callCount).to.equal(2);
+      expect(result1.body).to.deep.equal(responseBody);
+      expect(result2.body).to.deep.equal(responseBody);
+    });
+
+    it('concurrent requests with different query params should make separate fetch calls', async () => {
+      const responseBody = { data: 'response' };
+      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+
+      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+
+      const [result1, result2] = await Promise.all([
+        sendRequest({ url: '/api/test', queryParams: new QueryParams().set('page', 'a') }),
+        sendRequest({ url: '/api/test', queryParams: new QueryParams().set('page', 'b') }),
+      ]);
+
+      // Different query params should NOT be deduplicated together
+      expect(spy.callCount).to.equal(2);
+      expect(result1.body).to.deep.equal(responseBody);
+      expect(result2.body).to.deep.equal(responseBody);
+    });
+
+    it('concurrent requests with same query params should be deduplicated to a single fetch', async () => {
+      const responseBody = { data: 'deduped' };
+      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+
+      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+
+      const [result1, result2] = await Promise.all([
+        sendRequest({ url: '/api/test', queryParams: new QueryParams().set('page', '1') }),
+        sendRequest({ url: '/api/test', queryParams: new QueryParams().set('page', '1') }),
+      ]);
+
+      expect(spy.callCount).to.equal(1);
       expect(result1.body).to.deep.equal(responseBody);
       expect(result2.body).to.deep.equal(responseBody);
     });
