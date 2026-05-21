@@ -2,9 +2,6 @@
  * @import { OtoroshiInfo } from './otoroshi.types.js';
  */
 
-import { sortBy } from '../../../../lib/utils.js';
-import { toArray } from '../../../../utils/environment-utils.js';
-
 /**
  * @param {any} response
  * @returns {OtoroshiInfo}
@@ -24,6 +21,5 @@ export function transformOtoroshiInfo(response) {
     features: response.features,
     api: response.api,
     initialCredentials: response.initialCredentials,
-    environment: sortBy(toArray(response.envVars), 'name'),
   };
 }

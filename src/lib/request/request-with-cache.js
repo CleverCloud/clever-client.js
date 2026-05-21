@@ -1,6 +1,8 @@
 /**
- * @import { RequestWrapper, CcRequestParams } from '../../types/request.types.js'
+ * @import { RequestWrapper } from '../../types/request.types.js'
  */
+
+import { calculateCacheKey } from '../utils.js';
 
 /**
  * @type {Map<string, { response: import('../../types/request.types.js').CcResponse<?>, expiresAt: number }>}
@@ -39,18 +41,4 @@ export async function requestWithCache(request, handler) {
   }
 
   return response;
-}
-
-/**
- * @param {Partial<CcRequestParams>} requestParams
- *  @returns {string}
- */
-function calculateCacheKey(requestParams) {
-  const cacheParams = [
-    requestParams.url,
-    requestParams.queryParams?.entries(),
-    requestParams.headers?.get('accept'),
-    requestParams.headers?.get('authorization'),
-  ];
-  return JSON.stringify(cacheParams);
 }

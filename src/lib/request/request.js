@@ -6,6 +6,7 @@ import { CcClientError, CcRequestError } from '../error/cc-client-errors.js';
 import { fetchWithTimeout } from './fetch-with-timeout.js';
 import { requestDebug } from './request-debug.js';
 import { requestWithCache } from './request-with-cache.js';
+import { requestWithDedupe } from './request-with-dedupe.js';
 
 const JSON_TYPE = 'application/json';
 const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
@@ -20,7 +21,7 @@ const NETWORK_ERROR_CODES = [
 ];
 
 /** @type {Array<RequestWrapper>} */
-const REQUEST_WRAPPERS = [requestWithCache, requestDebug];
+const REQUEST_WRAPPERS = [requestWithCache, requestWithDedupe, requestDebug];
 
 /**
  * @type {RequestAdapter}
