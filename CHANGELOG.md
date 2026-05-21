@@ -1,5 +1,18 @@
 # Clever Client changelog
 
+## [12.4.0](https://github.com/CleverCloud/clever-client.js/compare/12.3.1...12.4.0) (2026-05-21)
+
+
+### 🚀 Features
+
+* **cc-client:** add `dedupe` feature to request config ([1a5d835](https://github.com/CleverCloud/clever-client.js/commit/1a5d835574501ffb42b1025d0c5e69e62901ba01))
+
+
+### 🐛 Bug Fixes
+
+* **cc-client:** cache & dedupe query params properly ([7762c5b](https://github.com/CleverCloud/clever-client.js/commit/7762c5b9072389114ebb693b7deb9f7c457561de)), closes [#213](https://github.com/CleverCloud/clever-client.js/issues/213)
+* **Otoroshi Commands:** remove `environment` and add `api.swaggerUrl` ([88e3a5c](https://github.com/CleverCloud/clever-client.js/commit/88e3a5c6ef27667a935f46dbc2518931aec5d838))
+
 ## [12.3.1](https://github.com/CleverCloud/clever-client.js/compare/12.3.0...12.3.1) (2026-05-13)
 
 
