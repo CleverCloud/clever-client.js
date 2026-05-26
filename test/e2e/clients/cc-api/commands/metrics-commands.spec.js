@@ -1,6 +1,8 @@
 import { expect } from 'chai';
 import { GetMetricsCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-metrics-command.js';
-import { e2eSupport, STATIC_MYSQL_ADDON_ID } from '../e2e-support.js';
+import { GetStatusCodeDistributionCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-status-code-distribution-command.js';
+import { checkDateFormat } from '../../../../lib/expect-utils.js';
+import { e2eSupport, STATIC_LOGS_APPLICATION, STATIC_MYSQL_ADDON_ID } from '../e2e-support.js';
 
 describe('metrics commands', function () {
   const support = e2eSupport({ user: 'test-user-without-github' });
@@ -27,5 +29,29 @@ describe('metrics commands', function () {
     expect(response.load1).to.be.an('array');
     expect(response.load1[0].timestamp).to.be.a('number');
     expect(response.load1[0].value).to.be.a('number');
+  });
+
+  it('should get application status code distribution', async () => {
+    const response = await support.client.send(
+      new GetStatusCodeDistributionCommand({ applicationId: STATIC_LOGS_APPLICATION }),
+    );
+
+    expect(response.byDate).to.be.an('array');
+    response.byDate.forEach((entry) => {
+      checkDateFormat(entry.date);
+      expect(entry.total).to.be.a('number');
+      expect(entry.statuses).to.be.an('object');
+      Object.entries(entry.statuses).forEach(([code, count]) => {
+        expect(Number(code)).to.be.a('number');
+        expect(count).to.be.a('number');
+      });
+    });
+
+    expect(response.byStatusCode.total).to.be.a('number');
+    expect(response.byStatusCode.statuses).to.be.an('object');
+    Object.entries(response.byStatusCode.statuses).forEach(([code, count]) => {
+      expect(Number(code)).to.be.a('number');
+      expect(count).to.be.a('number');
+    });
   });
 });
