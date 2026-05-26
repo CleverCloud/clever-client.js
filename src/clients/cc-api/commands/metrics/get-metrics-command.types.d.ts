@@ -7,6 +7,11 @@ export type GetMetricsCommandInput = ApplicationOrAddonId & {
   span?: string;
   end?: Date | string | number;
   fill?: boolean;
+  /**
+   * Unit of the `timestamp` field in the result.
+   * @default 'ms'
+   */
+  timestampUnit?: 'us' | 'ms';
 };
 
 export type GetMetricsCommandOutput = Metrics;

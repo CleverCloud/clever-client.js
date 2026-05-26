@@ -7,6 +7,8 @@ import { get } from '../../../../lib/request/request-params-builder.js';
 import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
+const MICROSECONDS_PER_MILLISECOND = 1000;
+
 /**
  *
  * @extends {CcApiSimpleCommand<GetMetricsCommandInput, GetMetricsCommandOutput>}
@@ -32,12 +34,17 @@ export class GetMetricsCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<GetMetricsCommandInput, GetMetricsCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
+    const toMilliseconds = this.params.timestampUnit == null || this.params.timestampUnit === 'ms';
+
     /** @type {GetMetricsCommandOutput} */
     const result = {};
 
     response.forEach(
       /** @param {{name: MetricKind, data: Array<MetricData>}} metric */ ({ name, data }) => {
-        result[name] = data.map(({ timestamp, value }) => ({ timestamp, value: Number(value) }));
+        result[name] = data.map(({ timestamp, value }) => ({
+          timestamp: toMilliseconds ? Math.round(timestamp / MICROSECONDS_PER_MILLISECOND) : timestamp,
+          value: Number(value),
+        }));
       },
     );
 
