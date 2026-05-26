@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { GetHeatMapCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-heat-map-command.js';
 import { GetMetricsCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-metrics-command.js';
 import { GetStatusCodeDistributionCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-status-code-distribution-command.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
@@ -52,6 +53,17 @@ describe('metrics commands', function () {
     Object.entries(response.byStatusCode.statuses).forEach(([code, count]) => {
       expect(Number(code)).to.be.a('number');
       expect(count).to.be.a('number');
+    });
+  });
+
+  it('should get application requests heat map', async () => {
+    const response = await support.client.send(new GetHeatMapCommand({ applicationId: STATIC_LOGS_APPLICATION }));
+
+    expect(response).to.be.an('array');
+    response.forEach((point) => {
+      expect(point.lat).to.be.a('number');
+      expect(point.lon).to.be.a('number');
+      expect(point.count).to.be.a('number');
     });
   });
 });
