@@ -7,6 +7,12 @@ export type GetMetricsCommandInput = ApplicationOrAddonId & {
   span?: string;
   end?: Date | string | number;
   fill?: boolean;
+  /**
+   * Unit of the `timestamp` field in the result.
+   * The API returns microseconds; set to `'ms'` to convert timestamps to milliseconds.
+   * @default 'us'
+   */
+  timestampUnit?: 'us' | 'ms';
 };
 
 export type GetMetricsCommandOutput = Metrics;
