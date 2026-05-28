@@ -1,6 +1,15 @@
+/**
+ * @import { RequestLocation } from '../../../../../src/clients/cc-api/commands/metrics/stream-requests-command.types.js';
+ * @import { CcStream } from '../../../../../src/lib/stream/cc-stream.js';
+ */
 import { expect } from 'chai';
+import { GetHeatMapCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-heat-map-command.js';
 import { GetMetricsCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-metrics-command.js';
-import { e2eSupport, STATIC_MYSQL_ADDON_ID } from '../e2e-support.js';
+import { GetStatusCodeDistributionCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-status-code-distribution-command.js';
+import { StreamRequestsCommand } from '../../../../../src/clients/cc-api/commands/metrics/stream-requests-command.js';
+import { Deferred } from '../../../../../src/lib/utils.js';
+import { checkDateFormat } from '../../../../lib/expect-utils.js';
+import { e2eSupport, STATIC_LOGS_APPLICATION, STATIC_MYSQL_ADDON_ID } from '../e2e-support.js';
 
 describe('metrics commands', function () {
   const support = e2eSupport({ user: 'test-user-without-github' });
@@ -27,5 +36,79 @@ describe('metrics commands', function () {
     expect(response.load1).to.be.an('array');
     expect(response.load1[0].timestamp).to.be.a('number');
     expect(response.load1[0].value).to.be.a('number');
+  });
+
+  it('should get application status code distribution', async () => {
+    const response = await support.client.send(
+      new GetStatusCodeDistributionCommand({ applicationId: STATIC_LOGS_APPLICATION }),
+    );
+
+    expect(response.byDate).to.be.an('array');
+    response.byDate.forEach((entry) => {
+      checkDateFormat(entry.date);
+      expect(entry.total).to.be.a('number');
+      expect(entry.statuses).to.be.an('object');
+      Object.entries(entry.statuses).forEach(([code, count]) => {
+        expect(Number(code)).to.be.a('number');
+        expect(count).to.be.a('number');
+      });
+    });
+
+    expect(response.byStatusCode.total).to.be.a('number');
+    expect(response.byStatusCode.statuses).to.be.an('object');
+    Object.entries(response.byStatusCode.statuses).forEach(([code, count]) => {
+      expect(Number(code)).to.be.a('number');
+      expect(count).to.be.a('number');
+    });
+  });
+
+  it('should get application requests heat map', async () => {
+    const response = await support.client.send(new GetHeatMapCommand({ applicationId: STATIC_LOGS_APPLICATION }));
+
+    expect(response).to.be.an('array');
+    response.forEach((point) => {
+      expect(point.lat).to.be.a('number');
+      expect(point.lon).to.be.a('number');
+      expect(point.count).to.be.a('number');
+    });
+  });
+
+  describe('requests live stream', function () {
+    /** @type {CcStream} */
+    let currentStream = null;
+
+    afterEach(async () => {
+      currentStream?.close();
+    });
+
+    it('should stream live request locations', async () => {
+      /** @type {Deferred<Array<RequestLocation>>} */
+      const deferred = new Deferred();
+
+      currentStream = (
+        await support.client.stream(new StreamRequestsCommand({ applicationId: STATIC_LOGS_APPLICATION }))
+      )
+        .onOpen(() => {
+          // this API call will trigger a request that gets aggregated into a live location
+          fetch(`https://${STATIC_LOGS_APPLICATION.replaceAll('_', '-')}.cleverapps.io`, { method: 'GET' });
+        })
+        .onRequests((locations) => {
+          if (locations.length > 0) {
+            deferred.resolve(locations);
+          }
+        })
+        .onError(deferred.reject);
+
+      currentStream.start();
+      const locations = await deferred.promise;
+
+      expect(locations).to.be.an('array');
+      locations.forEach((location) => {
+        expect(location.lat).to.be.a('number');
+        expect(location.lon).to.be.a('number');
+        expect(location.city).to.be.a('string');
+        expect(location.count).to.be.a('number');
+      });
+    });
   });
 });
