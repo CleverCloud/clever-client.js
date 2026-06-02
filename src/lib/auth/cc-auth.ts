@@ -1,7 +1,4 @@
-/**
- * @import { CcRequestParams } from '../../types/request.types.js'
- */
-
+import type { CcRequestParams } from '../../types/request.types.js';
 import { HeadersBuilder } from '../request/headers-builder.js';
 
 /**
@@ -13,18 +10,15 @@ import { HeadersBuilder } from '../request/headers-builder.js';
  * - Applying authentication to request parameters
  * - Applying authentication to URLs
  * - Retrieving authentication tokens
- *
- * @abstract
  */
 export class CcAuth {
   /**
    * Applies authentication headers to request parameters.
    * Adds an Authorization header with the authentication token.
    *
-   * @param {Partial<CcRequestParams>} requestParams - The request parameters to modify
-   * @abstract
+   * @param requestParams - The request parameters to modify
    */
-  applyOnRequestParams(requestParams) {
+  applyOnRequestParams(requestParams: Partial<CcRequestParams>): void {
     requestParams.headers = new HeadersBuilder(requestParams.headers).authorization(this.getAuthorization()).build();
   }
 
@@ -32,10 +26,9 @@ export class CcAuth {
    * Applies authentication to a URL by adding an authorization query parameter.
    * The token is base64 encoded before being added to the URL.
    *
-   * @param {URL} url - The URL to modify with authentication
-   * @abstract
+   * @param url - The URL to modify with authentication
    */
-  applyOnUrl(url) {
+  applyOnUrl(url: URL): void {
     url.searchParams.append('authorization', btoa(this.getAuthorization()));
   }
 
@@ -43,11 +36,10 @@ export class CcAuth {
    * Returns the authentication token in the appropriate format for the auth strategy.
    * Must be implemented by concrete authentication classes.
    *
-   * @returns {string} The formatted authentication token
-   * @abstract
+   * @returns The formatted authentication token
    * @throws {Error} If the method is not implemented by the concrete class
    */
-  getAuthorization() {
+  getAuthorization(): string {
     throw new Error('Method not implemented');
   }
 }

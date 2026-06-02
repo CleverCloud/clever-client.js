@@ -1,7 +1,4 @@
-/**
- * @import { OauthTokens } from '../../types/auth.types.js'
- */
-
+import type { OauthTokens } from '../../types/auth.types.js';
 import { CcAuth } from './cc-auth.js';
 
 /**
@@ -19,19 +16,18 @@ import { CcAuth } from './cc-auth.js';
  * @see {@link https://oauth.net/core/1.0/#auth_header} OAuth 1.0 Authorization Header
  */
 export class CcAuthOauthV1Plaintext extends CcAuth {
-  /** @type {OauthTokens} */
-  #oauthToken;
+  #oauthToken: OauthTokens;
 
   /**
    * Creates a new OAuth v1 PLAINTEXT authentication instance.
    *
-   * @param {OauthTokens} oauthToken - OAuth token components containing:
+   * @param oauthToken - OAuth token components containing:
    *        - consumerKey: The OAuth consumer key
    *        - consumerSecret: The OAuth consumer secret
    *        - token: The OAuth token
    *        - secret: The OAuth token secret
    */
-  constructor(oauthToken) {
+  constructor(oauthToken: OauthTokens) {
     super();
     this.#oauthToken = oauthToken;
   }
@@ -52,9 +48,9 @@ export class CcAuthOauthV1Plaintext extends CcAuth {
    * - oauth_timestamp
    * - oauth_version (defaults to 1.0)
    *
-   * @returns {string} The formatted OAuth Authorization header value
+   * @returns The formatted OAuth Authorization header value
    */
-  getAuthorization() {
+  getAuthorization(): string {
     const token = [
       `oauth_consumer_key="${this.#oauthToken.consumerKey}"`,
       `oauth_token="${this.#oauthToken.token}"`,
