@@ -122,9 +122,9 @@ export interface InvoiceUptime {
   // renamed from owner_id
   ownerId: string;
   details: Array<InvoiceUptimeDetail>;
-  category: String;
+  category: string;
   // renamed from sub_category
-  subCategory: String;
+  subCategory: string;
 }
 
 export interface InvoiceUptimeDetail {

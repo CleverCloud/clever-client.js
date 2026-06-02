@@ -1,15 +1,20 @@
-/**
- * @import { Invoice, InvoiceSummary, InvoiceAddress, InvoiceMoney, InvoiceCouponRemains, InvoiceUptime, InvoiceUptimeDetail, InvoiceCountable, InvoiceCountableDetail, InvoiceVendorConsumption, InvoiceClassic, InvoiceUnusable } from './invoice.types.js'
- */
-
 import { normalizeDate } from '../../../../lib/utils.js';
+import type {
+  Invoice,
+  InvoiceAddress,
+  InvoiceClassic,
+  InvoiceCountable,
+  InvoiceCountableDetail,
+  InvoiceCouponRemains,
+  InvoiceMoney,
+  InvoiceSummary,
+  InvoiceUnusable,
+  InvoiceUptime,
+  InvoiceUptimeDetail,
+  InvoiceVendorConsumption,
+} from './invoice.types.js';
 
-/**
- *
- * @param {any} payload
- * @returns {Invoice}
- */
-export function transformInvoice(payload) {
+export function transformInvoice(payload: any): Invoice {
   return {
     invoiceNumber: payload.invoice_number,
     kind: payload.kind,
@@ -48,11 +53,7 @@ export function transformInvoice(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @return {InvoiceSummary}
- */
-export function transformInvoiceSummary(payload) {
+export function transformInvoiceSummary(payload: any): InvoiceSummary {
   return {
     invoiceNumber: payload.invoice_number,
     kind: payload.kind,
@@ -75,11 +76,7 @@ export function transformInvoiceSummary(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @return {InvoiceAddress}
- */
-function transformAddress(payload) {
+function transformAddress(payload: any): InvoiceAddress {
   return {
     id: payload.address_id,
     name: payload.name,
@@ -95,33 +92,21 @@ function transformAddress(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {InvoiceMoney}
- */
-function transformMoney(payload) {
+function transformMoney(payload: any): InvoiceMoney {
   return {
     amount: payload.amount,
     currency: payload.currency,
   };
 }
 
-/**
- * @param {any} payload
- * @returns {InvoiceCouponRemains}
- */
-function transformCouponRemains(payload) {
+function transformCouponRemains(payload: any): InvoiceCouponRemains {
   return {
     name: payload.name,
     remaining: transformMoney(payload.remaining),
   };
 }
 
-/**
- * @param {any} payload
- * @returns {InvoiceUptime}
- */
-function transformUptime(payload) {
+function transformUptime(payload: any): InvoiceUptime {
   return {
     id: payload.item_id,
     price: transformMoney(payload.price),
@@ -133,11 +118,7 @@ function transformUptime(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {InvoiceUptimeDetail}
- */
-function transformUptimeDetail(payload) {
+function transformUptimeDetail(payload: any): InvoiceUptimeDetail {
   return {
     instanceId: payload.instance_id,
     flavorName: payload.flavor_name,
@@ -149,11 +130,7 @@ function transformUptimeDetail(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {InvoiceCountable}
- */
-function transformCountable(payload) {
+function transformCountable(payload: any): InvoiceCountable {
   return {
     id: payload.item_id,
     price: transformMoney(payload.price),
@@ -173,11 +150,7 @@ function transformCountable(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {InvoiceCountableDetail}
- */
-function transformCountableDetail(payload) {
+function transformCountableDetail(payload: any): InvoiceCountableDetail {
   return {
     consumptionStartDate: normalizeDate(payload.consumption_start),
     consumptionEndDate: normalizeDate(payload.consumption_end),
@@ -187,11 +160,7 @@ function transformCountableDetail(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {InvoiceVendorConsumption}
- */
-function transformVendorConsumption(payload) {
+function transformVendorConsumption(payload: any): InvoiceVendorConsumption {
   return {
     itemId: payload.item_id,
     price: transformMoney(payload.price),
@@ -201,11 +170,7 @@ function transformVendorConsumption(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {InvoiceClassic}
- */
-function transformClassic(payload) {
+function transformClassic(payload: any): InvoiceClassic {
   return {
     id: payload.item_id,
     unitPrice: transformMoney(payload.unit_price),
@@ -221,11 +186,7 @@ function transformClassic(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {InvoiceUnusable}
- */
-function transformUnusable(payload) {
+function transformUnusable(payload: any): InvoiceUnusable {
   return {
     id: payload.item_id,
     zone: payload.zone_id,
