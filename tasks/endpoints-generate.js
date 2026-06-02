@@ -26,7 +26,7 @@ async function save(generatedCommand, force = false) {
     return false;
   }
   fs.mkdirSync(path.dirname(generatedCommand.classOutputPath), { recursive: true });
-  fs.writeFileSync(generatedCommand.classOutputPath, await formatJsCode(generatedCommand.classContent));
+  fs.writeFileSync(generatedCommand.classOutputPath, await formatTsCode(generatedCommand.classContent));
   fs.writeFileSync(generatedCommand.typesOutputPath, await formatTsCode(generatedCommand.typesContent));
   return true;
 }
@@ -108,7 +108,8 @@ async function run() {
     const barrelFilePath = path.join(barrelFileDir, `index.js`);
     const barrelFileContent = generatedCommands
       .map(
-        (command) => `export {${command.className}} from './${path.relative(barrelFileDir, command.classOutputPath)}';`,
+        (command) =>
+          `export {${command.className}} from './${path.relative(barrelFileDir, command.classOutputPath).replace(/\.ts$/, '.js')}';`,
       )
       .join('\n');
 

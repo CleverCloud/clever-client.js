@@ -73,9 +73,13 @@ function getClassContent(target, endpoint, namespace, className, composite, auto
   const hasInput = hasInputParams(endpoint);
   const hasOutput = hasPotentialResponseBody(endpoint);
   const inputInterface = `${className}Input`;
-  const outputInterface = hasOutput ? `${className}Output` : 'void';
+  const outputInterface = `${className}Output`;
+  const inputType = hasInput ? inputInterface : 'void';
+  const outputType = hasOutput ? outputInterface : 'void';
 
-  const jsDocImports = [];
+  const valueImports = [`import { ${baseCommand.className} } from '${baseCommand.classImport}';`];
+  const typeImports = [];
+
   const ioImports = [];
   if (hasInput) {
     ioImports.push(inputInterface);
@@ -84,27 +88,14 @@ function getClassContent(target, endpoint, namespace, className, composite, auto
     ioImports.push(outputInterface);
   }
   if (ioImports.length > 0) {
-    jsDocImports.push(` * @import { ${ioImports.join(', ')} } from './${kebabCase(className)}.types.js';`);
+    typeImports.push(`import type { ${ioImports.join(', ')} } from './${kebabCase(className)}.types.js';`);
   }
-  const jsDocImportsString =
-    jsDocImports.length === 0
-      ? ''
-      : `/**
-${jsDocImports.join('\n')}  
- */
-`;
-
-  const imports = [`import { ${baseCommand.className} } from '${baseCommand.classImport}';`];
-
-  const baseCommandClassNameWithGenerics = `${baseCommand.className}<${hasInput ? inputInterface : 'void'}, ${hasOutput ? outputInterface : 'void'}>`;
-  const baseCommandClassNameWithUnknownGenerics = `${baseCommand.className}<?, ?>`;
 
   const methodsToImplement = [];
 
   if (composite) {
-    methodsToImplement.push(`/** @type {${baseCommandClassNameWithGenerics}['compose']} */
-  async compose(params, composer) {
-  }`);
+    typeImports.push(`import type { CcApiComposer } from '../../types/cc-api.types.js';`);
+    methodsToImplement.push(`async compose(params: ${inputType}, composer: CcApiComposer): Promise<${outputType}> {}`);
   } else {
     const method = endpoint.method.toLowerCase();
     const methodUtilFunctionName = method === 'delete' ? 'delete_' : method;
@@ -114,26 +105,24 @@ ${jsDocImports.join('\n')}
       ? `${methodUtilFunctionName}(${pathParam}, {})`
       : `${methodUtilFunctionName}(${pathParam})`;
 
-    imports.push(`import { ${methodUtilFunctionName} } from '../../../../lib/request/request-params-builder.js';`);
+    valueImports.push(`import { ${methodUtilFunctionName} } from '../../../../lib/request/request-params-builder.js';`);
     if (needPathSafeUrl) {
-      imports.push(`import { safeUrl } from '../../../../lib/utils.js';`);
+      valueImports.push(`import { safeUrl } from '../../../../lib/utils.js';`);
     }
 
-    methodsToImplement.push(`/** @type {${baseCommandClassNameWithGenerics}['toRequestParams']} */
-  toRequestParams(params) {
+    methodsToImplement.push(`toRequestParams(${hasInput ? `params: ${inputType}` : ''}) {
     return ${requestParamsCall};
   }`);
 
     if (method === 'get') {
-      methodsToImplement.push(`/** @type {${baseCommandClassNameWithGenerics}['isEmptyResponse']} */
-  isEmptyResponse(status) {
-    return status === 404;
+      methodsToImplement.push(`getEmptyResponsePolicy(status: number) {
+    return { isEmpty: status === 404 };
   }`);
     }
 
     if (autoOwner) {
-      methodsToImplement.push(`/** @type {${baseCommandClassNameWithUnknownGenerics}['getIdsToResolve']} */
-  getIdsToResolve() {
+      typeImports.push(`import type { IdResolve } from '../../types/resource-id-resolver.types.js';`);
+      methodsToImplement.push(`getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
@@ -141,11 +130,7 @@ ${jsDocImports.join('\n')}
     }
   }
 
-  const tags = [
-    ` * @extends {${baseCommandClassNameWithGenerics}}`,
-    ` * @endpoint ${endpoint.id}`,
-    ` * @group ${namespace}`,
-  ];
+  const tags = [` * @endpoint ${endpoint.id}`, ` * @group ${namespace}`];
 
   if (endpoint.normalizedPath.startsWith('/v2/')) {
     tags.push(' * @version 2');
@@ -153,13 +138,12 @@ ${jsDocImports.join('\n')}
     tags.push(' * @version 4');
   }
 
-  return `${jsDocImportsString}${imports.join('\n')}
+  return `${[...valueImports, ...typeImports].join('\n')}
 
 /**
- * 
 ${tags.join('\n')}
  */
-export class ${className} extends ${baseCommand.className} {
+export class ${className} extends ${baseCommand.className}<${inputType}, ${outputType}> {
 ${methodsToImplement.join('\n\n')}
 }
 `;
@@ -177,7 +161,7 @@ function getTypeContent(target, endpoint, className, autoOwner) {
   const outputInterface = `${className}Output`;
 
   if (autoOwner && endpoint.normalizedPath.includes('/organisations/:XXX/applications/:XXX')) {
-    return `import { ApplicationId } from '../../types/cc-api.types.js';
+    return `import type { ApplicationId } from '../../types/cc-api.types.js';
 
 export interface ${inputInterface} extends ApplicationId {}
 
@@ -186,7 +170,7 @@ export interface ${outputInterface} {}
   }
 
   if (autoOwner && endpoint.normalizedPath.includes('/organisations/:XXX/addons/:XXX')) {
-    return `import { AddonId } from '../../types/cc-api.types.js';
+    return `import type { AddonId } from '../../types/cc-api.types.js';
 
 export interface ${inputInterface} extends AddonId {}
 
@@ -213,8 +197,8 @@ export function generateCommand(target, namespace, commandClassName, composite, 
   const className = `${commandClassName}Command`;
   const commandBaseFileName = kebabCase(className);
   const commandOutputDir = path.join(SRC_DIR, `./clients/${target}/commands/${kebabCase(namespace)}`);
-  const classOutputPath = path.join(commandOutputDir, `${commandBaseFileName}.js`);
-  const typesOutputPath = path.join(commandOutputDir, `${commandBaseFileName}.types.d.ts`);
+  const classOutputPath = path.join(commandOutputDir, `${commandBaseFileName}.ts`);
+  const typesOutputPath = path.join(commandOutputDir, `${commandBaseFileName}.types.ts`);
   const classContent = getClassContent(target, endpoint, namespace, className, composite, autoOwner);
   const typesContent = getTypeContent(target, endpoint, className, autoOwner);
 
