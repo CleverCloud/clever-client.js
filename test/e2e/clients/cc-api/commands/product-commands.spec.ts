@@ -1,6 +1,3 @@
-/**
- * @import  { ProductRuntime, ProductRuntimeFlavor, ProductAddon, ElasticsearchServiceInfo } from '../../../../../src/clients/cc-api/commands/product/product.types.js';
- */
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { GetProductAddonCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-addon-command.js';
 import { GetProductAddonVersionsCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-addon-versions-command.js';
@@ -8,6 +5,12 @@ import { GetProductElasticsearchInfoCommand } from '../../../../../src/clients/c
 import { GetProductRuntimeCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-runtime-command.js';
 import { ListProductAddonCommand } from '../../../../../src/clients/cc-api/commands/product/list-product-addon-command.js';
 import { ListProductRuntimeCommand } from '../../../../../src/clients/cc-api/commands/product/list-product-runtime-command.js';
+import type {
+  ElasticsearchServiceInfo,
+  ProductAddon,
+  ProductRuntime,
+  ProductRuntimeFlavor,
+} from '../../../../../src/clients/cc-api/commands/product/product.types.js';
 import { e2eSupport } from '../e2e-support.js';
 
 describe('product commands', function () {
@@ -81,10 +84,7 @@ describe('product commands', function () {
     checkElasticsearchServiceInfo(response.services.kibana);
   });
 
-  /**
-   * @param {ProductRuntime} runtime
-   */
-  function checkProductRuntime(runtime) {
+  function checkProductRuntime(runtime: ProductRuntime) {
     expect(runtime.type).toBeTypeOf('string');
     expect(runtime.version).toBeTypeOf('string');
     expect(runtime.name).toBeTypeOf('string');
@@ -106,10 +106,7 @@ describe('product commands', function () {
     checkProductRuntimeFlavor(runtime.buildFlavor);
   }
 
-  /**
-   * @param {ProductRuntimeFlavor} flavor
-   */
-  function checkProductRuntimeFlavor(flavor) {
+  function checkProductRuntimeFlavor(flavor: ProductRuntimeFlavor) {
     expect(flavor.name).toBeTypeOf('string');
     expect(flavor.mem).toBeTypeOf('number');
     expect(flavor.cpus).toBeTypeOf('number');
@@ -133,11 +130,7 @@ describe('product commands', function () {
     expect(flavor.memFactor).toBeTypeOf('number');
   }
 
-  /**
-   * @param {ProductAddon} addon
-   * @param {boolean} withVersion
-   */
-  function checkAddon(addon, withVersion) {
+  function checkAddon(addon: ProductAddon, withVersion: boolean) {
     expect(addon.id).toBeTypeOf('string');
     expect(addon.name).toBeTypeOf('string');
     expect(addon.website).toBeTypeOf('string');
@@ -160,11 +153,7 @@ describe('product commands', function () {
     }
   }
 
-  /**
-   *
-   * @param {ElasticsearchServiceInfo} elasticsearchServiceInfo
-   */
-  function checkElasticsearchServiceInfo(elasticsearchServiceInfo) {
+  function checkElasticsearchServiceInfo(elasticsearchServiceInfo: ElasticsearchServiceInfo) {
     expect(elasticsearchServiceInfo.name).toBeTypeOf('string');
     expect(elasticsearchServiceInfo.mem).toBeTypeOf('number');
     expect(elasticsearchServiceInfo.cpus).toBeTypeOf('number');

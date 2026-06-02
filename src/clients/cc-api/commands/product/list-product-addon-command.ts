@@ -1,24 +1,26 @@
-/**
- * @import { ListProductAddonCommandInput, ListProductAddonCommandOutput } from './list-product-addon-command.types.js';
- */
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { sortBy } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { CcApiComposer } from '../../types/cc-api.types.js';
 import { transformAddonProviderFull } from '../addon-provider/addon-provider-transform.js';
 import { GetProductAddonVersionsCommand } from './get-product-addon-versions-command.js';
+import type {
+  ListProductAddonCommandInput,
+  ListProductAddonCommandOutput,
+} from './list-product-addon-command.types.js';
 
 /**
- *
- * @extends {CcApiCompositeCommand<ListProductAddonCommandInput, ListProductAddonCommandOutput>}
  * @endpoint [GET] /v2/products/addonproviders
  * @endpoint [GET] /v4/addon-providers/:XXX
  * @group Product
  * @version 2
  */
-export class ListProductAddonCommand extends CcApiCompositeCommand {
-  /** @type {CcApiCompositeCommand<ListProductAddonCommandInput, ListProductAddonCommandOutput>['compose']} */
-  async compose(params, composer) {
+export class ListProductAddonCommand extends CcApiCompositeCommand<
+  ListProductAddonCommandInput,
+  ListProductAddonCommandOutput
+> {
+  async compose(params: ListProductAddonCommandInput, composer: CcApiComposer): Promise<ListProductAddonCommandOutput> {
     const addons = await composer.send(new ListProductAddonInnerCommand(params));
 
     if (!params.withVersions) {
@@ -35,20 +37,19 @@ export class ListProductAddonCommand extends CcApiCompositeCommand {
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<ListProductAddonCommandInput, ListProductAddonCommandOutput>}
  * @endpoint [GET] /v2/products/addonproviders
  * @group Product
  * @version 2
  */
-class ListProductAddonInnerCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<ListProductAddonCommandInput, ListProductAddonCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+class ListProductAddonInnerCommand extends CcApiSimpleCommand<
+  ListProductAddonCommandInput,
+  ListProductAddonCommandOutput
+> {
+  toRequestParams(params: ListProductAddonCommandInput) {
     return get(`/v2/products/addonproviders`, new QueryParams().append('orgaId', params.ownerId));
   }
 
-  /** @type {CcApiSimpleCommand<ListProductAddonCommandInput, ListProductAddonCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
-    return sortBy(response.map(transformAddonProviderFull), 'name');
+  transformCommandOutput(response: unknown): ListProductAddonCommandOutput {
+    return sortBy((response as Array<unknown>).map(transformAddonProviderFull), 'name');
   }
 }
