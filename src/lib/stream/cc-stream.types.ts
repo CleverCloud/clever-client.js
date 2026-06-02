@@ -17,7 +17,7 @@ export interface CcStreamConfig {
 }
 
 /** Configuration options for CcStream instances where all properties are deeply optional */
-export interface CcStreamConfigPartial extends Partial<CcStreamConfig> {
+export interface CcStreamConfigPartial extends Partial<Omit<CcStreamConfig, 'retry'>> {
   /** Retry configuration (null to disable retries) */
   retry?: Partial<RetryConfig> | null;
 }
@@ -38,5 +38,6 @@ export type CcStreamState = 'init' | 'connecting' | 'open' | 'paused' | 'closed'
 /** Information about why a stream was closed */
 export interface CcStreamCloseReason {
   /** The reason type for closing */
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- 'UNKNOWN' documents the sentinel value while allowing arbitrary reason strings
   type: string | 'UNKNOWN';
 }

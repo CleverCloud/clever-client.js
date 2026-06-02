@@ -70,7 +70,7 @@ export interface CcRequestConfig {
   debug: boolean;
 }
 
-export interface CcRequestConfigPartial extends Partial<CcRequestConfig> {
+export interface CcRequestConfigPartial extends Partial<Omit<CcRequestConfig, 'cache'>> {
   cache?: Partial<RequestCachePolicy> | null;
 }
 
@@ -109,7 +109,7 @@ export interface CcResponse<CommandOutput> {
 /**
  * Valid types for request body data.
  */
-export type RequestBody = string | Object | Blob;
+export type RequestBody = string | object | Blob;
 
 /**
  * Function type for adapters that handle the actual sending of requests.

@@ -8,6 +8,7 @@
  * @import { GetUrl } from './get-url.js'
  * @import { CcClientConfig, CcClientHooks } from '../types/client.types.js'
  * @import { CcRequest, CcRequestParams, CcRequestConfig, CcRequestConfigPartial, CcResponse, HttpMethod } from '../types/request.types.js'
+ * @import { WithRequired } from '../types/utils.types.js'
  */
 import { CompositeCommand } from './command/command.js';
 import { handleHttpErrors } from './error/handle-http-errors.js';
@@ -254,7 +255,7 @@ export class CcClient {
    * @protected
    */
   async _prepareRequest(requestParams, requestConfig) {
-    /** @type {Partial<CcRequestParams>} */
+    /** @type {WithRequired<Partial<CcRequestParams>, 'queryParams' | 'headers'>} */
     let preparedRequestParams = {
       ...requestParams,
       headers: requestParams.headers ?? new Headers(),
