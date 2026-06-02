@@ -6,19 +6,16 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
  *
  * This command is for internal use only.
  *
- * @extends {CcApiSimpleCommand<void, void>}
  * @endpoint [DELETE] /v2/self/tokens
  * @group Token
  * @version 2
  */
-export class DeleteOauthTokenCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<void, void>['toRequestParams']} */
+export class DeleteOauthTokenCommand extends CcApiSimpleCommand<void, void> {
   toRequestParams() {
     return delete_(`/v2/self/tokens/`);
   }
 
-  /** @type {CcApiSimpleCommand<void, void>['transformCommandOutput']} */
-  transformCommandOutput() {
+  transformCommandOutput(): void {
     return null;
   }
 }
