@@ -1,3 +1,3 @@
-import { AddonProviderId } from '../../types/cc-api.types.js';
+import type { AddonProviderId } from '../../types/cc-api.types.js';
 
 export interface DeleteAddonProviderCommandInput extends AddonProviderId {}

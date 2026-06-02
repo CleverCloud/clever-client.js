@@ -1,14 +1,13 @@
-/**
- * @import { AddonProvider, AddonProviderFull, AddonProviderPlan, AddonProviderFeature, AddonProviderPlanFeature } from './addon-provider.types.js';
- */
-
 import { sortBy } from '../../../../lib/utils.js';
+import type {
+  AddonProvider,
+  AddonProviderFeature,
+  AddonProviderFull,
+  AddonProviderPlan,
+  AddonProviderPlanFeature,
+} from './addon-provider.types.js';
 
-/**
- * @param {any} payload
- * @returns {AddonProviderFull}
- */
-export function transformAddonProviderFull(payload) {
+export function transformAddonProviderFull(payload: any): AddonProviderFull {
   return {
     ...transformAddonProvider(payload),
     plans: sortBy(payload.plans.map(transformAddonProviderPlan), 'price'),
@@ -16,11 +15,7 @@ export function transformAddonProviderFull(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {AddonProvider}
- */
-export function transformAddonProvider(payload) {
+export function transformAddonProvider(payload: any): AddonProvider {
   return {
     id: payload.id,
     name: payload.name,
@@ -39,11 +34,7 @@ export function transformAddonProvider(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {AddonProviderPlan}
- */
-export function transformAddonProviderPlan(payload) {
+export function transformAddonProviderPlan(payload: any): AddonProviderPlan {
   return {
     id: payload.id,
     name: payload.name,
@@ -55,11 +46,7 @@ export function transformAddonProviderPlan(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {AddonProviderPlanFeature}
- */
-export function transformAddonProviderPlanFeature(payload) {
+export function transformAddonProviderPlanFeature(payload: any): AddonProviderPlanFeature {
   return {
     ...transformAddonProviderFeature(payload),
     value: payload.value,
@@ -68,11 +55,7 @@ export function transformAddonProviderPlanFeature(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {AddonProviderFeature}
- */
-export function transformAddonProviderFeature(payload) {
+export function transformAddonProviderFeature(payload: any): AddonProviderFeature {
   return {
     name: payload.name,
     type: payload.type,
