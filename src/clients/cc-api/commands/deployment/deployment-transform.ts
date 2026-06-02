@@ -1,13 +1,7 @@
-/**
- * @import { DeploymentLegacy, DeploymentState } from './deployment.types.js';
- */
-
 import { normalizeDate } from '../../../../lib/utils.js';
+import type { DeploymentLegacy, DeploymentState } from './deployment.types.js';
 
-/**
- * @type {Record<string, Omit<DeploymentState, 'QUEUED'>>}
- */
-const DEPLOYMENT_STATE_CONVERT_MAP = {
+const DEPLOYMENT_STATE_CONVERT_MAP: Record<string, Omit<DeploymentState, 'QUEUED'>> = {
   TASK_RUNNING: 'TASK_IN_PROGRESS',
   WIP: 'WORK_IN_PROGRESS',
   FAIL: 'FAILED',
@@ -15,13 +9,7 @@ const DEPLOYMENT_STATE_CONVERT_MAP = {
   OK: 'SUCCEEDED',
 };
 
-/**
- *
- * @param {any} payload
- * @param {string} applicationId
- * @returns {DeploymentLegacy}
- */
-export function transformDeploymentLegacy(payload, applicationId) {
+export function transformDeploymentLegacy(payload: any, applicationId: string): DeploymentLegacy {
   return {
     id: payload.uuid,
     applicationId,

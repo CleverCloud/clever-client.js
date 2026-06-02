@@ -144,12 +144,7 @@ describe('deployment commands', function () {
     expect(response).toBeNull();
   });
 
-  /**
-   * @param {string} applicationId
-   * @param {string} deploymentId
-   * @returns {Promise<void>}
-   */
-  async function waitForDeployment(applicationId, deploymentId) {
+  async function waitForDeployment(applicationId: string, deploymentId: string): Promise<void> {
     await retry(() => support.client.send(new GetDeploymentCommand({ applicationId, deploymentId })), {
       interval: 500,
       delay: 1000,
