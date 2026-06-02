@@ -131,10 +131,10 @@ describe('environment commands', function () {
         ),
       ]);
       await Promise.all([
-        await support.client.send(
+        support.client.send(
           new AddLinkCommand({ applicationId: application1.id, targetApplicationId: application2.id }),
         ),
-        await support.client.send(new AddLinkCommand({ applicationId: application1.id, targetAddonId: addon.id })),
+        support.client.send(new AddLinkCommand({ applicationId: application1.id, targetAddonId: addon.id })),
       ]);
 
       const response = await support.client.send(
