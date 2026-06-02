@@ -1,7 +1,7 @@
 /**
  * @import  { ProductRuntime, ProductRuntimeFlavor, ProductAddon, ElasticsearchServiceInfo } from '../../../../../src/clients/cc-api/commands/product/product.types.js';
  */
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { GetProductAddonCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-addon-command.js';
 import { GetProductAddonVersionsCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-addon-versions-command.js';
 import { GetProductElasticsearchInfoCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-elasticsearch-info-command.js';
@@ -13,11 +13,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('product commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -26,7 +26,7 @@ describe('product commands', function () {
   it('should list runtimes', async () => {
     const response = await support.client.send(new ListProductRuntimeCommand());
 
-    expect(response).to.be.an('array');
+    expect(response).toBeInstanceOf(Array);
     checkProductRuntime(response[0]);
   });
 
@@ -43,14 +43,14 @@ describe('product commands', function () {
   it('should list addons without versions', async () => {
     const response = await support.client.send(new ListProductAddonCommand({ withVersions: false }));
 
-    expect(response).to.be.an('array');
+    expect(response).toBeInstanceOf(Array);
     checkAddon(response[0], false);
   });
 
   it('should list addons with versions', async () => {
     const response = await support.client.send(new ListProductAddonCommand({ withVersions: true }));
 
-    expect(response).to.be.an('array');
+    expect(response).toBeInstanceOf(Array);
     checkAddon(response[0], true);
   });
 
@@ -69,9 +69,9 @@ describe('product commands', function () {
   it('should get addon version', async () => {
     const response = await support.client.send(new GetProductAddonVersionsCommand({ id: 'mysql-addon' }));
 
-    expect(response.clusters).to.be.an('array');
-    expect(response.dedicated).to.be.an('object');
-    expect(response.defaultDedicatedVersion).to.be.a('string');
+    expect(response.clusters).toBeInstanceOf(Array);
+    expect(response.dedicated).toBeTypeOf('object');
+    expect(response.defaultDedicatedVersion).toBeTypeOf('string');
   });
 
   it('should get elasticsearch info', async () => {
@@ -85,22 +85,22 @@ describe('product commands', function () {
    * @param {ProductRuntime} runtime
    */
   function checkProductRuntime(runtime) {
-    expect(runtime.type).to.be.a('string');
-    expect(runtime.version).to.be.a('string');
-    expect(runtime.name).to.be.a('string');
-    expect(runtime.variant).to.be.an('object');
-    expect(runtime.variant.id).to.be.a('string');
-    expect(runtime.variant.slug).to.be.a('string');
-    expect(runtime.variant.name).to.be.a('string');
-    expect(runtime.variant.deployType).to.be.a('string');
-    expect(runtime.variant.logo).to.be.a('string');
-    expect(runtime.description).to.be.a('string');
-    expect(runtime.enabled).to.be.a('boolean');
-    expect(runtime.comingSoon).to.be.a('boolean');
-    expect(runtime.maxInstances).to.be.a('number');
-    expect(runtime.tags).to.be.an('array');
-    expect(runtime.deployments).to.be.an('array');
-    expect(runtime.flavors).to.be.an('array');
+    expect(runtime.type).toBeTypeOf('string');
+    expect(runtime.version).toBeTypeOf('string');
+    expect(runtime.name).toBeTypeOf('string');
+    expect(runtime.variant).toBeTypeOf('object');
+    expect(runtime.variant.id).toBeTypeOf('string');
+    expect(runtime.variant.slug).toBeTypeOf('string');
+    expect(runtime.variant.name).toBeTypeOf('string');
+    expect(runtime.variant.deployType).toBeTypeOf('string');
+    expect(runtime.variant.logo).toBeTypeOf('string');
+    expect(runtime.description).toBeTypeOf('string');
+    expect(runtime.enabled).toBeTypeOf('boolean');
+    expect(runtime.comingSoon).toBeTypeOf('boolean');
+    expect(runtime.maxInstances).toBeTypeOf('number');
+    expect(runtime.tags).toBeInstanceOf(Array);
+    expect(runtime.deployments).toBeInstanceOf(Array);
+    expect(runtime.flavors).toBeInstanceOf(Array);
     checkProductRuntimeFlavor(runtime.flavors[0]);
     checkProductRuntimeFlavor(runtime.defaultFlavor);
     checkProductRuntimeFlavor(runtime.buildFlavor);
@@ -110,27 +110,27 @@ describe('product commands', function () {
    * @param {ProductRuntimeFlavor} flavor
    */
   function checkProductRuntimeFlavor(flavor) {
-    expect(flavor.name).to.be.a('string');
-    expect(flavor.mem).to.be.a('number');
-    expect(flavor.cpus).to.be.a('number');
-    expect(flavor.gpus).to.be.a('number');
-    expect(flavor.price).to.be.a('number');
-    expect(flavor.available).to.be.a('boolean');
-    expect(flavor.microservice).to.be.a('boolean');
-    expect(flavor.machineLearning).to.be.a('boolean');
-    expect(flavor.nice).to.be.a('number');
-    expect(flavor.priceId).to.be.a('string');
+    expect(flavor.name).toBeTypeOf('string');
+    expect(flavor.mem).toBeTypeOf('number');
+    expect(flavor.cpus).toBeTypeOf('number');
+    expect(flavor.gpus).toBeTypeOf('number');
+    expect(flavor.price).toBeTypeOf('number');
+    expect(flavor.available).toBeTypeOf('boolean');
+    expect(flavor.microservice).toBeTypeOf('boolean');
+    expect(flavor.machineLearning).toBeTypeOf('boolean');
+    expect(flavor.nice).toBeTypeOf('number');
+    expect(flavor.priceId).toBeTypeOf('string');
     if (flavor.memory.unit != null) {
-      expect(flavor.memory.unit).to.be.a('string');
+      expect(flavor.memory.unit).toBeTypeOf('string');
     }
     if (flavor.memory.value != null) {
-      expect(flavor.memory.value).to.be.a('number');
+      expect(flavor.memory.value).toBeTypeOf('number');
     }
     if (flavor.memory.formatted != null) {
-      expect(flavor.memory.formatted).to.be.a('string');
+      expect(flavor.memory.formatted).toBeTypeOf('string');
     }
-    expect(flavor.cpuFactor).to.be.a('number');
-    expect(flavor.memFactor).to.be.a('number');
+    expect(flavor.cpuFactor).toBeTypeOf('number');
+    expect(flavor.memFactor).toBeTypeOf('number');
   }
 
   /**
@@ -138,25 +138,25 @@ describe('product commands', function () {
    * @param {boolean} withVersion
    */
   function checkAddon(addon, withVersion) {
-    expect(addon.id).to.be.a('string');
-    expect(addon.name).to.be.a('string');
-    expect(addon.website).to.be.a('string');
-    expect(addon.supportEmail).to.be.a('string');
-    expect(addon.googlePlusName).to.be.a('string');
-    expect(addon.twitterName).to.be.a('string');
-    expect(addon.analyticsId).to.be.a('string');
-    expect(addon.shortDesc).to.be.a('string');
-    expect(addon.longDesc).to.be.a('string');
-    expect(addon.logoUrl).to.be.a('string');
-    expect(addon.status).to.be.a('string');
-    expect(addon.openInNewTab).to.be.a('boolean');
-    expect(addon.canUpgrade).to.be.a('boolean');
-    expect(addon.zones).to.be.an('array');
-    expect(addon.plans).to.be.a('array');
-    expect(addon.features).to.be.a('array');
+    expect(addon.id).toBeTypeOf('string');
+    expect(addon.name).toBeTypeOf('string');
+    expect(addon.website).toBeTypeOf('string');
+    expect(addon.supportEmail).toBeTypeOf('string');
+    expect(addon.googlePlusName).toBeTypeOf('string');
+    expect(addon.twitterName).toBeTypeOf('string');
+    expect(addon.analyticsId).toBeTypeOf('string');
+    expect(addon.shortDesc).toBeTypeOf('string');
+    expect(addon.longDesc).toBeTypeOf('string');
+    expect(addon.logoUrl).toBeTypeOf('string');
+    expect(addon.status).toBeTypeOf('string');
+    expect(addon.openInNewTab).toBeTypeOf('boolean');
+    expect(addon.canUpgrade).toBeTypeOf('boolean');
+    expect(addon.zones).toBeInstanceOf(Array);
+    expect(addon.plans).toBeInstanceOf(Array);
+    expect(addon.features).toBeInstanceOf(Array);
 
     if (withVersion) {
-      expect(addon).to.have.property('versions');
+      expect(addon).toHaveProperty('versions');
     }
   }
 
@@ -165,14 +165,14 @@ describe('product commands', function () {
    * @param {ElasticsearchServiceInfo} elasticsearchServiceInfo
    */
   function checkElasticsearchServiceInfo(elasticsearchServiceInfo) {
-    expect(elasticsearchServiceInfo.name).to.be.a('string');
-    expect(elasticsearchServiceInfo.mem).to.be.a('number');
-    expect(elasticsearchServiceInfo.cpus).to.be.a('number');
-    expect(elasticsearchServiceInfo.gpus).to.be.a('number');
-    expect(elasticsearchServiceInfo.price).to.be.a('number');
-    expect(elasticsearchServiceInfo.available).to.be.a('boolean');
-    expect(elasticsearchServiceInfo.microservice).to.be.a('boolean');
-    expect(elasticsearchServiceInfo.nice).to.be.a('number');
-    expect(elasticsearchServiceInfo.priceId).to.be.a('string');
+    expect(elasticsearchServiceInfo.name).toBeTypeOf('string');
+    expect(elasticsearchServiceInfo.mem).toBeTypeOf('number');
+    expect(elasticsearchServiceInfo.cpus).toBeTypeOf('number');
+    expect(elasticsearchServiceInfo.gpus).toBeTypeOf('number');
+    expect(elasticsearchServiceInfo.price).toBeTypeOf('number');
+    expect(elasticsearchServiceInfo.available).toBeTypeOf('boolean');
+    expect(elasticsearchServiceInfo.microservice).toBeTypeOf('boolean');
+    expect(elasticsearchServiceInfo.nice).toBeTypeOf('number');
+    expect(elasticsearchServiceInfo.priceId).toBeTypeOf('string');
   }
 });

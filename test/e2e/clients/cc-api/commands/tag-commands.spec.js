@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { CreateTagCommand } from '../../../../../src/clients/cc-api/commands/tag/create-tag-command.js';
 import { DeleteTagCommand } from '../../../../../src/clients/cc-api/commands/tag/delete-tag-command.js';
 import { ListTagCommand } from '../../../../../src/clients/cc-api/commands/tag/list-tag-command.js';
@@ -8,11 +8,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('tag commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -21,8 +21,8 @@ describe('tag commands', function () {
 
     const response = await support.client.send(new CreateTagCommand({ applicationId: application.id, tag: 'tag-1' }));
 
-    expect(response).to.have.lengthOf(1);
-    expect(response[0]).to.equal('tag-1');
+    expect(response).toHaveLength(1);
+    expect(response[0]).toBe('tag-1');
   });
 
   it('should list application tag', async () => {
@@ -32,8 +32,8 @@ describe('tag commands', function () {
 
     const response = await support.client.send(new ListTagCommand({ applicationId: application.id }));
 
-    expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder(['tag-1', 'tag-2']);
+    expect(response).toHaveLength(2);
+    expect(response).toEqualInAnyOrder(['tag-1', 'tag-2']);
   });
 
   it('should delete application tag', async () => {
@@ -43,8 +43,8 @@ describe('tag commands', function () {
 
     const response = await support.client.send(new DeleteTagCommand({ applicationId: application.id, tag: 'tag-1' }));
 
-    expect(response).to.have.lengthOf(1);
-    expect(response).to.deep.equalInAnyOrder(['tag-2']);
+    expect(response).toHaveLength(1);
+    expect(response).toEqualInAnyOrder(['tag-2']);
   });
 
   it('should update application tag', async () => {
@@ -56,8 +56,8 @@ describe('tag commands', function () {
       new UpdateTagCommand({ applicationId: application.id, tags: ['tag-3', 'tag-4'] }),
     );
 
-    expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder(['tag-3', 'tag-4']);
+    expect(response).toHaveLength(2);
+    expect(response).toEqualInAnyOrder(['tag-3', 'tag-4']);
   });
 
   it('should create addon tag', async () => {
@@ -65,8 +65,8 @@ describe('tag commands', function () {
 
     const response = await support.client.send(new CreateTagCommand({ addonId: addon.id, tag: 'tag-1' }));
 
-    expect(response).to.have.lengthOf(1);
-    expect(response[0]).to.equal('tag-1');
+    expect(response).toHaveLength(1);
+    expect(response[0]).toBe('tag-1');
   });
 
   it('should list addon tag', async () => {
@@ -76,8 +76,8 @@ describe('tag commands', function () {
 
     const response = await support.client.send(new ListTagCommand({ addonId: addon.id }));
 
-    expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder(['tag-1', 'tag-2']);
+    expect(response).toHaveLength(2);
+    expect(response).toEqualInAnyOrder(['tag-1', 'tag-2']);
   });
 
   it('should delete addon tag', async () => {
@@ -87,8 +87,8 @@ describe('tag commands', function () {
 
     const response = await support.client.send(new DeleteTagCommand({ addonId: addon.id, tag: 'tag-1' }));
 
-    expect(response).to.have.lengthOf(1);
-    expect(response).to.deep.equalInAnyOrder(['tag-2']);
+    expect(response).toHaveLength(1);
+    expect(response).toEqualInAnyOrder(['tag-2']);
   });
 
   it('should update addon tag', async () => {
@@ -98,7 +98,7 @@ describe('tag commands', function () {
 
     const response = await support.client.send(new UpdateTagCommand({ addonId: addon.id, tags: ['tag-3', 'tag-4'] }));
 
-    expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder(['tag-3', 'tag-4']);
+    expect(response).toHaveLength(2);
+    expect(response).toEqualInAnyOrder(['tag-3', 'tag-4']);
   });
 });

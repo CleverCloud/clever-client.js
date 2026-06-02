@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { toMicroIsoString, toMicroTimestamp } from '../../../../esm/utils/date.js';
 
 describe('date#toMicroIsoString()', () => {
@@ -7,7 +7,7 @@ describe('date#toMicroIsoString()', () => {
     const milliTimestamp = date.getTime();
     const microTimestamp = milliTimestamp * 1000;
     const isoWithMicroseconds = toMicroIsoString(microTimestamp);
-    expect(isoWithMicroseconds).to.equal('2020-03-11T11:11:11.111000Z');
+    expect(isoWithMicroseconds).toBe('2020-03-11T11:11:11.111000Z');
   });
 
   it('from timestamp with microseconds precision', () => {
@@ -15,7 +15,7 @@ describe('date#toMicroIsoString()', () => {
     const milliTimestamp = date.getTime();
     const microTimestamp = milliTimestamp * 1000 + 345;
     const isoWithMicroseconds = toMicroIsoString(microTimestamp);
-    expect(isoWithMicroseconds).to.equal('2020-03-11T11:11:11.111345Z');
+    expect(isoWithMicroseconds).toBe('2020-03-11T11:11:11.111345Z');
   });
 });
 
@@ -23,18 +23,18 @@ describe('date#toMicroTimestamp()', () => {
   it('from round micro ISO string', () => {
     const microTimestamp = toMicroTimestamp('2020-03-11T11:11:11.111000Z');
     const milliTimestamp = new Date('2020-03-11T11:11:11.111Z').getTime();
-    expect(microTimestamp).to.equal(milliTimestamp * 1000);
+    expect(microTimestamp).toBe(milliTimestamp * 1000);
   });
 
   it('from precise micro ISO string', () => {
     const microTimestamp = toMicroTimestamp('2020-03-11T11:11:11.111345Z');
     const milliTimestamp = new Date('2020-03-11T11:11:11.111Z').getTime();
-    expect(microTimestamp).to.equal(milliTimestamp * 1000 + 345);
+    expect(microTimestamp).toBe(milliTimestamp * 1000 + 345);
   });
 
   it('from milli ISO string', () => {
     const microTimestamp = toMicroTimestamp('2020-03-11T11:11:11.111Z');
     const milliTimestamp = new Date('2020-03-11T11:11:11.111Z').getTime();
-    expect(microTimestamp).to.equal(milliTimestamp * 1000);
+    expect(microTimestamp).toBe(milliTimestamp * 1000);
   });
 });

@@ -1,7 +1,7 @@
 /**
  * @import { EmailNotificationTarget, WebhookNotificationUrl } from '../../../../../src/clients/cc-api/commands/notification/notification.types.js'
  */
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { CreateEmailNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/create-email-notification-command.js';
 import { CreateWebhookNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/create-webhook-notification-command.js';
 import { DeleteEmailNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/delete-email-notification-command.js';
@@ -14,11 +14,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('notification commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -70,11 +70,11 @@ describe('notification commands', function () {
       }),
     );
 
-    expect(response.ownerId).to.equal(support.organisationId);
-    expect(response.name).to.equal('hook name');
-    expect(response.targets).to.deep.equalInAnyOrder(targets);
-    expect(response.events).to.deep.equalInAnyOrder(['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION']);
-    expect(response.scope).to.deep.equalInAnyOrder([app1.id, app2.id]);
+    expect(response.ownerId).toBe(support.organisationId);
+    expect(response.name).toBe('hook name');
+    expect(response.targets).toEqualInAnyOrder(targets);
+    expect(response.events).toEqualInAnyOrder(['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION']);
+    expect(response.scope).toEqualInAnyOrder([app1.id, app2.id]);
   });
 
   it('should list email notifications', async () => {
@@ -99,11 +99,11 @@ describe('notification commands', function () {
       }),
     );
 
-    expect(response).to.have.lengthOf(2);
-    expect(response[0].id).to.equal(notification1.id);
-    expect(response[0].name).to.equal(notification1.name);
-    expect(response[1].id).to.equal(notification2.id);
-    expect(response[1].name).to.equal(notification2.name);
+    expect(response).toHaveLength(2);
+    expect(response[0].id).toBe(notification1.id);
+    expect(response[0].name).toBe(notification1.name);
+    expect(response[1].id).toBe(notification2.id);
+    expect(response[1].name).toBe(notification2.name);
   });
 
   it('should delete email notification', async () => {
@@ -122,7 +122,7 @@ describe('notification commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should create webhook notification', async () => {
@@ -158,11 +158,11 @@ describe('notification commands', function () {
       }),
     );
 
-    expect(response.ownerId).to.equal(support.organisationId);
-    expect(response.name).to.equal('hook name');
-    expect(response.urls).to.deep.equalInAnyOrder(urls);
-    expect(response.events).to.deep.equalInAnyOrder(['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION']);
-    expect(response.scope).to.deep.equalInAnyOrder([app1.id, app2.id]);
+    expect(response.ownerId).toBe(support.organisationId);
+    expect(response.name).toBe('hook name');
+    expect(response.urls).toEqualInAnyOrder(urls);
+    expect(response.events).toEqualInAnyOrder(['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION']);
+    expect(response.scope).toEqualInAnyOrder([app1.id, app2.id]);
   });
 
   it('should list webhook notifications', async () => {
@@ -187,11 +187,11 @@ describe('notification commands', function () {
       }),
     );
 
-    expect(response).to.have.lengthOf(2);
-    expect(response[0].id).to.equal(notification1.id);
-    expect(response[0].name).to.equal(notification1.name);
-    expect(response[1].id).to.equal(notification2.id);
-    expect(response[1].name).to.equal(notification2.name);
+    expect(response).toHaveLength(2);
+    expect(response[0].id).toBe(notification1.id);
+    expect(response[0].name).toBe(notification1.name);
+    expect(response[1].id).toBe(notification2.id);
+    expect(response[1].name).toBe(notification2.name);
   });
 
   it('should delete webhook notification', async () => {
@@ -210,14 +210,14 @@ describe('notification commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should get notification info', async () => {
     const response = await support.client.send(new GetNotificationInfoCommand());
 
-    expect(response.formats).to.have.length.greaterThan(0);
-    expect(response.events).to.have.length.greaterThan(0);
-    expect(Object.entries(response.metaEvents)).to.have.length.greaterThan(0);
+    expect(response.formats.length).toBeGreaterThan(0);
+    expect(response.events.length).toBeGreaterThan(0);
+    expect(Object.entries(response.metaEvents).length).toBeGreaterThan(0);
   });
 });

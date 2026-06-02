@@ -1,4 +1,4 @@
-// this is an ESM rewrite of https://github.com/oprogramador/deep-equal-in-any-order without lodash
+// Vitest custom matcher port of https://github.com/oprogramador/deep-equal-in-any-order without lodash.
 import { sortAny } from './sort-any.js';
 
 /**
@@ -19,26 +19,26 @@ function sortDeep(object) {
   return sortAny(object.map(sortDeep));
 }
 
-/** @type {Chai.ChaiPlugin} */
-export const deepEqualInAnyOrder = (chai, utils) => {
-  const { Assertion } = chai;
-  utils.addMethod(
-    Assertion.prototype,
-    'equalInAnyOrder',
-    /**
-     * @param {any} b
-     * @param {any} m
-     * @this {any}
-     */
-    function equalInAnyOrder(b, m) {
-      const a = utils.flag(this, 'object');
-      utils.flag(this, 'object', sortDeep(a));
-      this.equal(sortDeep(b), m);
-    },
-  );
+/**
+ * Vitest matcher: behaves like `toEqual` but ignores array order at any level of nesting.
+ *
+ * Register it once via `expect.extend({ toEqualInAnyOrder })` (done in `test/setup/matchers.js`).
+ *
+ * @this {import('vitest').MatcherState}
+ * @param {any} received
+ * @param {any} expected
+ * @returns {import('@vitest/expect').ExpectationResult}
+ */
+export function toEqualInAnyOrder(received, expected) {
+  const pass = this.equals(sortDeep(received), sortDeep(expected));
 
-  chai.assert.deepEqualInAnyOrder = (actual, expected, message) =>
-    chai.expect(actual).to.deep.equalInAnyOrder(expected, message);
-  chai.assert.notDeepEqualInAnyOrder = (actual, expected, message) =>
-    chai.expect(actual).to.not.deep.equalInAnyOrder(expected, message);
-};
+  return {
+    pass,
+    message: () =>
+      `expected ${this.utils.printReceived(received)} to ${pass ? 'not ' : ''}equal ${this.utils.printExpected(
+        expected,
+      )} in any order`,
+    actual: received,
+    expected,
+  };
+}

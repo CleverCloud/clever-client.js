@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import {
   DomainParseError,
   getDomainUrl,
@@ -18,7 +18,7 @@ describe('domains', () => {
         pathname: '/',
         isWildcard: false,
       };
-      expect(parsedDomain).to.deep.equal(expected);
+      expect(parsedDomain).toEqual(expected);
     });
 
     it('should parse a simple https URL', () => {
@@ -28,7 +28,7 @@ describe('domains', () => {
         pathname: '/',
         isWildcard: false,
       };
-      expect(parsedDomain).to.deep.equal(expected);
+      expect(parsedDomain).toEqual(expected);
     });
 
     it('should parse a simple domain', () => {
@@ -38,7 +38,7 @@ describe('domains', () => {
         pathname: '/',
         isWildcard: false,
       };
-      expect(parsedDomain).to.deep.equal(expected);
+      expect(parsedDomain).toEqual(expected);
     });
 
     it('should parse a domain with subdomain', () => {
@@ -48,7 +48,7 @@ describe('domains', () => {
         pathname: '/',
         isWildcard: false,
       };
-      expect(parsedDomain).to.deep.equal(expected);
+      expect(parsedDomain).toEqual(expected);
     });
 
     it('should parse a wildcard domain', () => {
@@ -58,7 +58,7 @@ describe('domains', () => {
         pathname: '/',
         isWildcard: true,
       };
-      expect(parsedDomain).to.deep.equal(expected);
+      expect(parsedDomain).toEqual(expected);
     });
 
     it('should parse a domain with path', () => {
@@ -68,80 +68,83 @@ describe('domains', () => {
         pathname: '/path',
         isWildcard: false,
       };
-      expect(parsedDomain).to.deep.equal(expected);
+      expect(parsedDomain).toEqual(expected);
     });
 
     it('should throw DomainParseError for invalid wildcard', () => {
       const parseDomainCallback = () => parseDomain('example*.com');
-      expect(parseDomainCallback).to.throw(DomainParseError).with.property('code', 'invalid-wildcard');
+      expect(parseDomainCallback).toThrow(DomainParseError);
+      expect(parseDomainCallback).toThrow(expect.objectContaining({ code: 'invalid-wildcard' }));
     });
 
     it('should throw DomainParseError for empty domain', () => {
       const parseDomainCallback = () => parseDomain('');
-      expect(parseDomainCallback).to.throw(DomainParseError).with.property('code', 'empty');
+      expect(parseDomainCallback).toThrow(DomainParseError);
+      expect(parseDomainCallback).toThrow(expect.objectContaining({ code: 'empty' }));
     });
 
     it('should throw DomainParseError for invalid format', () => {
       const parseDomainCallback = () => parseDomain('].com');
-      expect(parseDomainCallback).to.throw(DomainParseError).with.property('code', 'invalid-format');
+      expect(parseDomainCallback).toThrow(DomainParseError);
+      expect(parseDomainCallback).toThrow(expect.objectContaining({ code: 'invalid-format' }));
     });
   });
 
   describe('getHostWithWildcard()', () => {
     it('should return hostname with wildcard prefix when isWildcard is true', () => {
       const wildcardHostname = getHostWithWildcard('example.com', true);
-      expect(wildcardHostname).to.equal('*.example.com');
+      expect(wildcardHostname).toBe('*.example.com');
     });
 
     it('should return hostname without changes when isWildcard is false', () => {
       const nonWildcardHostname = getHostWithWildcard('example.com', false);
-      expect(nonWildcardHostname).to.equal('example.com');
+      expect(nonWildcardHostname).toBe('example.com');
     });
   });
 
   describe('getDomainUrl()', () => {
     it('should return HTTPS URL for non-wildcard, non-HTTP only domain', () => {
       const httpsUrl = getDomainUrl('example.com', '/path', false, false);
-      expect(httpsUrl).to.equal('https://example.com/path');
+      expect(httpsUrl).toBe('https://example.com/path');
     });
 
     it('should return HTTP URL for HTTP only domain', () => {
       const httpUrl = getDomainUrl('example.com', '/path', false, true);
-      expect(httpUrl).to.equal('http://example.com/path');
+      expect(httpUrl).toBe('http://example.com/path');
     });
 
     it('should include www for wildcard domains', () => {
       const wildcardUrl = getDomainUrl('example.com', '/path', true, false);
-      expect(wildcardUrl).to.equal('https://www.example.com/path');
+      expect(wildcardUrl).toBe('https://www.example.com/path');
     });
   });
 
   describe('isTestDomain()', () => {
     it('should return true for cleverapps.io domain', () => {
       const isTestDomainResult = isTestDomain('app.cleverapps.io');
-      expect(isTestDomainResult).to.be.equal(true);
+      expect(isTestDomainResult).toBe(true);
     });
 
     it('should return false for non-cleverapps.io domain', () => {
       const isTestDomainResult = isTestDomain('example.com');
-      expect(isTestDomainResult).to.be.equal(false);
+      expect(isTestDomainResult).toBe(false);
     });
   });
 
   describe('isTestDomainWithSubdomain()', () => {
     it('should return true for cleverapps.io domain with subdomain', () => {
       const isTestWithSubdomain = isTestDomainWithSubdomain('sub.app.cleverapps.io');
-      expect(isTestWithSubdomain).to.be.equal(true);
+      expect(isTestWithSubdomain).toBe(true);
     });
 
     it('should return false for cleverapps.io domain without subdomain', () => {
       const isTestWithSubdomain = isTestDomainWithSubdomain('app.cleverapps.io');
-      expect(isTestWithSubdomain).to.be.equal(false);
+      expect(isTestWithSubdomain).toBe(false);
     });
 
     it('should return false for non-cleverapps.io domain', () => {
       const isTestWithSubdomain = isTestDomainWithSubdomain('sub.example.com');
-      expect(isTestWithSubdomain).to.be.equal(false);
+      expect(isTestWithSubdomain).toBe(false);
     });
   });
 
@@ -155,7 +158,7 @@ describe('domains', () => {
 
     it('should sort domains alphabetically with primary first', () => {
       const sorted = [...domains].sort(sortDomains);
-      expect(sorted).to.deep.equal([
+      expect(sorted).toEqual([
         { hostname: 'primary.com', isPrimary: true, isWildcard: false, pathPrefix: '/' },
         { hostname: 'sub.example.com', isPrimary: false, isWildcard: false, pathPrefix: '/' },
         { hostname: 'example.com', isPrimary: false, isWildcard: false, pathPrefix: '/' },

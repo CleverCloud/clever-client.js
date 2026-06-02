@@ -1,11 +1,9 @@
-import { use } from 'chai';
 import { CcApiClient } from '../../../../src/clients/cc-api/cc-api-client.js';
 import { GetEnvironmentCommand } from '../../../../src/clients/cc-api/commands/environment/get-environment-command.js';
 import { CmdSendCommand } from '../../../../src/clients/redis-http/commands/cmd/cmd-send-command.js';
 import { RedisHttpClient } from '../../../../src/clients/redis-http/redis-http-client.js';
 import { isCcClientError } from '../../../../src/utils/error-utils.js';
 import { Polling } from '../../../../src/utils/polling.js';
-import { deepEqualInAnyOrder } from '../../../lib/deep-equal-in-any-order/deep-equal-in-any-order.js';
 import { getE2eUser } from '../../../lib/e2e-test-users.js';
 
 /**
@@ -16,8 +14,6 @@ import { getE2eUser } from '../../../lib/e2e-test-users.js';
 const IS_NODE = globalThis.process != null;
 const USER = getE2eUser('test-user-without-github');
 const USE_LOCAL_HTTP_REDIS = false;
-
-use(deepEqualInAnyOrder);
 
 const REDIS_ADDON_ID = 'addon_dc54e2c9-3114-48b4-bdfc-53c34a01935b';
 

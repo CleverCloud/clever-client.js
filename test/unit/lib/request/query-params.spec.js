@@ -1,11 +1,11 @@
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { QueryParams } from '../../../../src/lib/request/query-params.js';
 
 describe('QueryParams class', () => {
   describe('constructor', () => {
     it('should initialize with no parameters', () => {
       const params = new QueryParams();
-      expect(params.toObject()).to.deep.equal({});
+      expect(params.toObject()).toEqual({});
     });
 
     it('should initialize with parameters', () => {
@@ -14,7 +14,7 @@ describe('QueryParams class', () => {
         ids: [1, 2, 3],
         flag: true,
       });
-      expect(params.toObject()).to.deep.equal({
+      expect(params.toObject()).toEqual({
         name: 'test',
         ids: [1, 2, 3],
         flag: true,
@@ -23,7 +23,7 @@ describe('QueryParams class', () => {
 
     it('should handle null or undefined initial parameters', () => {
       const params = new QueryParams(null);
-      expect(params.toObject()).to.deep.equal({});
+      expect(params.toObject()).toEqual({});
     });
   });
 
@@ -31,19 +31,19 @@ describe('QueryParams class', () => {
     it('should set a single value', () => {
       const params = new QueryParams();
       params.set('name', 'test');
-      expect(params.get('name')).to.equal('test');
+      expect(params.get('name')).toBe('test');
     });
 
     it('should set an array value', () => {
       const params = new QueryParams();
       params.set('ids', [1, 2, 3]);
-      expect(params.get('ids')).to.deep.equal([1, 2, 3]);
+      expect(params.get('ids')).toEqual([1, 2, 3]);
     });
 
     it('should override existing value', () => {
       const params = new QueryParams({ name: 'old' });
       params.set('name', 'new');
-      expect(params.get('name')).to.equal('new');
+      expect(params.get('name')).toBe('new');
     });
   });
 
@@ -55,7 +55,7 @@ describe('QueryParams class', () => {
         active: true,
         items: ['a', 'b'],
       });
-      expect(params.toObject()).to.deep.equal({
+      expect(params.toObject()).toEqual({
         name: 'test',
         active: true,
         items: ['a', 'b'],
@@ -66,12 +66,12 @@ describe('QueryParams class', () => {
   describe('get', () => {
     it('should return undefined for non-existent key', () => {
       const params = new QueryParams();
-      expect(params.get('nonexistent')).to.be.undefined;
+      expect(params.get('nonexistent')).toBeUndefined();
     });
 
     it('should return the correct value', () => {
       const params = new QueryParams({ name: 'test' });
-      expect(params.get('name')).to.equal('test');
+      expect(params.get('name')).toBe('test');
     });
   });
 
@@ -79,19 +79,19 @@ describe('QueryParams class', () => {
     it('should append to existing value', () => {
       const params = new QueryParams({ tags: 'js' });
       params.append('tags', 'node');
-      expect(params.get('tags')).to.deep.equal(['js', 'node']);
+      expect(params.get('tags')).toEqual(['js', 'node']);
     });
 
     it('should handle appending to non-existent key', () => {
       const params = new QueryParams();
       params.append('tags', 'js');
-      expect(params.get('tags')).to.equal('js');
+      expect(params.get('tags')).toBe('js');
     });
 
     it('should handle appending arrays', () => {
       const params = new QueryParams({ tags: ['js'] });
       params.append('tags', ['node', 'typescript']);
-      expect(params.get('tags')).to.deep.equal(['js', 'node', 'typescript']);
+      expect(params.get('tags')).toEqual(['js', 'node', 'typescript']);
     });
   });
 
@@ -99,13 +99,13 @@ describe('QueryParams class', () => {
     it('should remove an existing parameter', () => {
       const params = new QueryParams({ name: 'test', id: 1 });
       params.remove('name');
-      expect(params.toObject()).to.deep.equal({ id: 1 });
+      expect(params.toObject()).toEqual({ id: 1 });
     });
 
     it('should do nothing for non-existent key', () => {
       const params = new QueryParams({ id: 1 });
       params.remove('nonexistent');
-      expect(params.toObject()).to.deep.equal({ id: 1 });
+      expect(params.toObject()).toEqual({ id: 1 });
     });
   });
 
@@ -113,9 +113,9 @@ describe('QueryParams class', () => {
     it('should return all entries', () => {
       const params = new QueryParams({ name: 'test', id: 1 });
       const entries = Array.from(params.entries());
-      expect(entries).to.have.lengthOf(2);
-      expect(entries).to.deep.include(['name', 'test']);
-      expect(entries).to.deep.include(['id', 1]);
+      expect(entries).toHaveLength(2);
+      expect(entries).toContainEqual(['name', 'test']);
+      expect(entries).toContainEqual(['id', 1]);
     });
   });
 
@@ -128,7 +128,7 @@ describe('QueryParams class', () => {
         active: true,
       });
       params.applyOnUrl(url);
-      expect(url.searchParams.toString()).to.equal('name=test&ids=1&ids=2&active=true');
+      expect(url.searchParams.toString()).toBe('name=test&ids=1&ids=2&active=true');
     });
 
     it('should handle null/undefined values', () => {
@@ -139,14 +139,14 @@ describe('QueryParams class', () => {
         active: true,
       });
       params.applyOnUrl(url);
-      expect(url.searchParams.toString()).to.equal('active=true');
+      expect(url.searchParams.toString()).toBe('active=true');
     });
   });
 
   describe('toObject', () => {
     it('should return an empty object for no parameters', () => {
       const params = new QueryParams();
-      expect(params.toObject()).to.deep.equal({});
+      expect(params.toObject()).toEqual({});
     });
 
     it('should convert parameters to a plain object', () => {
@@ -158,7 +158,7 @@ describe('QueryParams class', () => {
         undef: undefined,
         emptyArray: [],
       });
-      expect(params.toObject()).to.deep.equal({
+      expect(params.toObject()).toEqual({
         name: 'test',
         ids: [1, 2],
         active: true,

@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { InitStripeCommand } from '../../../../../src/clients/cc-api/commands/payment/init-stripe-command.js';
 import { e2eSupport, STATIC_INVOICE_ID } from '../e2e-support.js';
 

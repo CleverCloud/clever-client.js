@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { CreateHashKeyCommand } from '../../../../../src/clients/redis-http/commands/hash-key/create-hash-key-command.js';
 import { DeleteKeyCommand } from '../../../../../src/clients/redis-http/commands/key/delete-key-command.js';
 import { ScanKeyCommand } from '../../../../../src/clients/redis-http/commands/key/scan-key-command.js';
@@ -10,7 +10,7 @@ import { e2eSupport } from '../e2e-support.js';
 describe('key commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
@@ -24,7 +24,7 @@ describe('key commands', function () {
 
     const response = await support.client.send(new DeleteKeyCommand({ key: 'test' }));
 
-    expect(response).to.deep.equal({ key: 'test', deleted: true });
+    expect(response).toEqual({ key: 'test', deleted: true });
   });
 
   it('should scan keys', async () => {
@@ -39,9 +39,9 @@ describe('key commands', function () {
 
     const response = await support.client.send(new ScanKeyCommand());
 
-    expect(response.cursor).to.be.a('number');
-    expect(response.total).to.equal(4);
-    expect(response.keys).to.deep.equalInAnyOrder([
+    expect(response.cursor).toBeTypeOf('number');
+    expect(response.total).toBe(4);
+    expect(response.keys).toEqualInAnyOrder([
       { name: 'k1', type: 'hash' },
       { name: 'k2', type: 'list' },
       { name: 'k3', type: 'set' },
@@ -61,8 +61,8 @@ describe('key commands', function () {
 
     const response = await support.client.send(new ScanKeyCommand({ type: 'string' }));
 
-    expect(response.cursor).to.be.a('number');
-    expect(response.total).to.equal(4);
-    expect(response.keys).to.deep.equalInAnyOrder([{ name: 'k4', type: 'string' }]);
+    expect(response.cursor).toBeTypeOf('number');
+    expect(response.total).toBe(4);
+    expect(response.keys).toEqualInAnyOrder([{ name: 'k4', type: 'string' }]);
   });
 });

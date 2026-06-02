@@ -6,7 +6,6 @@
  * @import { CcApiAuth } from '../../../../src/clients/cc-api/types/cc-api.types.js'
  * @import { E2eUserName, E2eUser } from '../../../lib/e2e.types.js'
  */
-import { use } from 'chai';
 import { CcApiClient } from '../../../../src/clients/cc-api/cc-api-client.js';
 import { CreateAddonCommand } from '../../../../src/clients/cc-api/commands/addon/create-addon-command.js';
 import { DeleteAddonCommand } from '../../../../src/clients/cc-api/commands/addon/delete-addon-command.js';
@@ -27,7 +26,6 @@ import { DeleteOrganisationCommand } from '../../../../src/clients/cc-api/comman
 import { GetOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/get-organisation-command.js';
 import { GetProfileCommand } from '../../../../src/clients/cc-api/commands/profile/get-profile-command.js';
 import { merge } from '../../../../src/lib/utils.js';
-import { deepEqualInAnyOrder } from '../../../lib/deep-equal-in-any-order/deep-equal-in-any-order.js';
 import { getE2eUser } from '../../../lib/e2e-test-users.js';
 
 /**
@@ -42,8 +40,6 @@ const DEFAULT_USER = 'test-user-with-github';
 /** @type {Auth} */
 const DEFAULT_AUTH = 'api-token';
 const USE_LOCAL_API_BRIDGE = false;
-
-use(deepEqualInAnyOrder);
 
 // todo: get all that from env. (and inject them nicely for browser test)
 export const STATIC_MYSQL_ADDON_ID = 'addon_2066c7dd-5891-420a-ae3c-2334405c3bf1';

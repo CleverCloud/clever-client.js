@@ -18,13 +18,13 @@ const OAUTH_CONSUMER_KEY = globalThis.process?.env.OAUTH_CONSUMER_KEY;
 const OAUTH_CONSUMER_SECRET = globalThis.process?.env.OAUTH_CONSUMER_SECRET;
 
 export async function login() {
-  console.log('logging in all users');
+  console.log('log in all users');
   await Promise.all(getAllE2eUsers().map(loginUser));
   console.log('all users logged in');
 }
 
 export async function logout() {
-  console.log('logging out all users');
+  console.log('log out all users');
   await Promise.all(getAllE2eUsers().map(logoutUser));
   console.log('all users logged out');
 }

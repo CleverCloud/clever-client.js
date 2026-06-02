@@ -2,10 +2,10 @@
  * @import { CcRequestParams } from '../../../src/types/request.types.js'
  * @import { CcClientConfig } from '../../../src/types/client.types.js'
  * @import { OnRequestHook } from '../../../src/types/hook.types.js'
- * @import { MockCtrl } from '../../lib/mock-api/mock-ctrl.js'
+ * @import { NewScenario } from '@clevercloud/doublure'
  */
-import { expect } from 'chai';
-import * as hanbi from 'hanbi';
+import { doublureHooks } from '@clevercloud/doublure/testing';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CcAuthApiToken } from '../../../src/lib/auth/cc-auth-api-token.js';
 import { CcAuth } from '../../../src/lib/auth/cc-auth.js';
 import { CcClient } from '../../../src/lib/cc-client.js';
@@ -18,7 +18,6 @@ import { get, post } from '../../../src/lib/request/request-params-builder.js';
 import { CcStream } from '../../../src/lib/stream/cc-stream.js';
 import { StreamCommand } from '../../../src/lib/stream/stream-command.js';
 import { expectPromiseThrows } from '../../lib/expect-utils.js';
-import { mockTestHooks } from '../../lib/mock-api/support/mock-test-hooks.js';
 
 /**
  * @extends {SimpleCommand<'test', any, any>}
@@ -97,7 +96,7 @@ function streamCommand(requestsParams) {
 }
 
 /**
- * This client is here just to make all protected methods public so that hanbi can mock or spy those methods.
+ * This client is here just to make all protected methods public so that vitest can mock or spy those methods.
  * @extends {CcClient<'test'>}
  */
 class SpiedClient extends CcClient {
@@ -130,12 +129,12 @@ class SpiedClient extends CcClient {
 describe('clever-client', () => {
   /** @type {SpiedClient} */
   let client;
-  /** @type {MockCtrl} */
-  let apiMockCtrl;
+  /** @type {NewScenario} */
+  let newScenario;
   /** @type {() => void} */
   let closeStream;
 
-  const hooks = mockTestHooks();
+  const hooks = doublureHooks();
 
   /**
    * @param {Omit<CcClientConfig, 'baseUrl'>} [config]
@@ -143,7 +142,7 @@ describe('clever-client', () => {
    * @returns {SpiedClient}
    */
   function createClient(config, auth) {
-    return new SpiedClient({ ...config, baseUrl: apiMockCtrl.mockClient.baseUrl }, auth);
+    return new SpiedClient({ ...config, baseUrl: newScenario.mockClient.baseUrl }, auth);
   }
 
   /**
@@ -157,126 +156,119 @@ describe('clever-client', () => {
     return result;
   }
 
-  before(async () => {
-    apiMockCtrl = await hooks.before();
+  beforeAll(async () => {
+    newScenario = await hooks.before();
     client = createClient();
   });
   beforeEach(hooks.beforeEach);
   afterEach(() => {
-    hanbi.restore();
+    vi.restoreAllMocks();
     closeStream?.();
   });
-  after(hooks.after);
+  afterAll(hooks.after);
 
   describe('simple command', () => {
     it('should call `_transformCommandParams` method with right params', async () => {
-      const spy = hanbi.stubMethod(client, '_transformCommandParams').passThrough();
+      const spy = vi.spyOn(client, '_transformCommandParams');
       const command = simpleCommand(get('/path/subPath'));
 
       const requestConfig = {};
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200, body: 'hello' })
         .thenCall(() => client.send(command, requestConfig));
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0]).to.equal(command);
-      expect(spy.firstCall.args[1]).to.equal(requestConfig);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toBe(command);
+      expect(spy.mock.calls[0][1]).toBe(requestConfig);
     });
 
     it('should call `_getCommandRequestParams` method with right params', async () => {
-      const spy = hanbi.spyMethod(client, '_getCommandRequestParams').passThrough();
+      const spy = vi.spyOn(client, '_getCommandRequestParams');
       const command = simpleCommand(get('/path/subPath'));
 
       const requestConfig = {};
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200 })
         .thenCall(() => client.send(command, requestConfig));
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0]).to.equal(command);
-      expect(spy.firstCall.args[1]).to.equal(requestConfig);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toBe(command);
+      expect(spy.mock.calls[0][1]).toBe(requestConfig);
     });
 
     it('should call `_prepareRequest` method with right params', async () => {
-      const spy = hanbi.spyMethod(client, '_prepareRequest').passThrough();
+      const spy = vi.spyOn(client, '_prepareRequest');
       const command = simpleCommand(get('/path/subPath'));
       const requestConfig = {};
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200 })
         .thenCall(() => client.send(command, requestConfig));
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0].method).to.equal('GET');
-      expect(spy.firstCall.args[0].url).to.equal('/path/subPath');
-      expect(spy.firstCall.args[1]).to.equal(requestConfig);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0].method).toBe('GET');
+      expect(spy.mock.calls[0][0].url).toBe('/path/subPath');
+      expect(spy.mock.calls[0][1]).toBe(requestConfig);
     });
 
     it('should call `command.toRequestParams` method with the transformed params', async () => {
       const transformedParams = { transformed: 'params' };
-      hanbi.stubMethod(client, '_transformCommandParams').returns(Promise.resolve(transformedParams));
+      vi.spyOn(client, '_transformCommandParams').mockReturnValue(Promise.resolve(transformedParams));
 
       const command = simpleCommand(get('/path/subPath'));
-      const spy = hanbi.spyMethod(command, 'toRequestParams').passThrough();
+      const spy = vi.spyOn(command, 'toRequestParams');
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200 })
         .thenCall(() => client.send(command));
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0]).to.equal(transformedParams);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toBe(transformedParams);
     });
 
     it('should call `auth.applyOnRequestParams()`', async () => {
       const auth = new CcAuthApiToken('token');
-      const spy = hanbi.spyMethod(auth, 'applyOnRequestParams').passThrough();
+      const spy = vi.spyOn(auth, 'applyOnRequestParams');
       const client = createClient({}, auth);
       const command = simpleCommand(get('/path/subPath'));
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200 })
         .thenCall(() => client.send(command));
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0].method).to.equal('GET');
-      expect(spy.firstCall.args[0].url).to.equal('/path/subPath');
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0].method).toBe('GET');
+      expect(spy.mock.calls[0][0].url).toBe('/path/subPath');
     });
 
     it('should call onRequest hook function', async () => {
-      const spy = hanbi.stub((o) => o);
-      spy.passThrough();
+      const spy = vi.fn((o) => o);
       const client = createClient({
         hooks: {
-          onRequest: spy.handler,
+          onRequest: spy,
         },
       });
       const command = simpleCommand(get('/path/subPath'));
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200 })
         .thenCall(() => client.send(command));
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0].method).to.equal('GET');
-      expect(spy.firstCall.args[0].url).to.equal('/path/subPath');
-      expect(spy.firstCall.args[0].headers).to.not.equal(null);
-      expect(spy.firstCall.args[0].headers).to.not.equal(undefined);
-      expect(spy.firstCall.args[0].queryParams).to.not.equal(null);
-      expect(spy.firstCall.args[0].queryParams).to.not.equal(undefined);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0].method).toBe('GET');
+      expect(spy.mock.calls[0][0].url).toBe('/path/subPath');
+      expect(spy.mock.calls[0][0].headers).not.toBe(null);
+      expect(spy.mock.calls[0][0].headers).not.toBe(undefined);
+      expect(spy.mock.calls[0][0].queryParams).not.toBe(null);
+      expect(spy.mock.calls[0][0].queryParams).not.toBe(undefined);
     });
 
     it('should merge prepared request params from onRequest hook', async () => {
@@ -286,184 +278,175 @@ describe('clever-client', () => {
       };
 
       const client = createClient({ hooks: { onRequest } });
-      const spy = hanbi.spyMethod(client, '_prepareRequest').passThrough();
+      const spy = vi.spyOn(client, '_prepareRequest');
       const command = simpleCommand(get('/path/subPath'));
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200 })
         .thenCall(() => client.send(command));
 
-      expect(spy.callCount).to.equal(1);
-      const result = await spy.firstCall.returnValue;
+      expect(spy).toHaveBeenCalledTimes(1);
+      const result = await spy.mock.results[0].value;
 
-      expect(result.queryParams.get('hook')).to.equal('hook');
+      expect(result.queryParams.get('hook')).toBe('hook');
     });
 
     it('should prepend url with baseUrl', async () => {
-      const spy = hanbi.spyMethod(client, '_prepareRequest').passThrough();
+      const spy = vi.spyOn(client, '_prepareRequest');
       const command = simpleCommand(get('/path/subPath'));
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200 })
         .thenCall(() => client.send(command));
 
-      expect(spy.callCount).to.equal(1);
-      const result = await spy.firstCall.returnValue;
-      expect(result.url).to.equal(`${apiMockCtrl.mockClient.baseUrl}/path/subPath`);
+      expect(spy).toHaveBeenCalledTimes(1);
+      const result = await spy.mock.results[0].value;
+      expect(result.url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
     });
 
     it('should call `_handleResponse` with right parameters', async () => {
-      const spy = hanbi.spyMethod(client, '_handleResponse').passThrough();
+      const spy = vi.spyOn(client, '_handleResponse');
       const command = simpleCommand(get('/path/subPath'));
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200, body: 'body' })
         .thenCall(() => client.send(command));
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0].body).to.equal('body');
-      expect(spy.firstCall.args[0].status).to.equal(200);
-      expect(spy.firstCall.args[1].method).to.equal('GET');
-      expect(spy.firstCall.args[1].url).to.equal(`${apiMockCtrl.mockClient.baseUrl}/path/subPath`);
-      expect(spy.firstCall.args[2]).to.equal(command);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0].body).toBe('body');
+      expect(spy.mock.calls[0][0].status).toBe(200);
+      expect(spy.mock.calls[0][1].method).toBe('GET');
+      expect(spy.mock.calls[0][1].url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
+      expect(spy.mock.calls[0][2]).toBe(command);
     });
 
     it('should call `onResponse` hook with right parameters', async () => {
-      const spy = hanbi.spy();
-      const client = createClient({ hooks: { onResponse: spy.handler } });
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onResponse: spy } });
 
       const command = simpleCommand(get('/path/subPath'));
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200, body: 'body' })
         .thenCall(() => client.send(command));
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0].body).to.equal('body');
-      expect(spy.firstCall.args[0].status).to.equal(200);
-      expect(spy.firstCall.args[1].method).to.equal('GET');
-      expect(spy.firstCall.args[1].url).to.equal(`${apiMockCtrl.mockClient.baseUrl}/path/subPath`);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0].body).toBe('body');
+      expect(spy.mock.calls[0][0].status).toBe(200);
+      expect(spy.mock.calls[0][1].method).toBe('GET');
+      expect(spy.mock.calls[0][1].url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
     });
 
     it('should return `command.getEmptyResponse` when `getEmptyResponse.getEmptyResponsePolicy` returns an empty response', async () => {
-      const spy = hanbi.spyMethod(client, 'send').passThrough();
+      const spy = vi.spyOn(client, 'send');
       const command = simpleCommand(get('/path/subPath'));
-      hanbi.stubMethod(command, 'getEmptyResponsePolicy').returns({ isEmpty: true, emptyValue: 'empty response' });
+      vi.spyOn(command, 'getEmptyResponsePolicy').mockReturnValue({ isEmpty: true, emptyValue: 'empty response' });
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200, body: 'body' })
         .thenCall(() => client.send(command));
 
-      expect(spy.callCount).to.equal(1);
-      expect(await spy.firstCall.returnValue).to.equal('empty response');
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(await spy.mock.results[0].value).toBe('empty response');
     });
 
     it('should call `command.transformCommandOutput` with right parameters', async () => {
       const command = simpleCommand(get('/path/subPath'));
-      const spy = hanbi.spyMethod(command, 'transformCommandOutput').passThrough();
+      const spy = vi.spyOn(command, 'transformCommandOutput');
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200, body: 'body' })
         .thenCall(() => client.send(command));
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0]).to.equal('body');
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toBe('body');
     });
 
     it('should return `command.transformCommandOutput`', async () => {
-      const spy = hanbi.spyMethod(client, 'send').passThrough();
+      const spy = vi.spyOn(client, 'send');
       const command = simpleCommand(get('/path/subPath'));
-      hanbi.stubMethod(command, 'transformCommandOutput').returns('transformed response');
+      vi.spyOn(command, 'transformCommandOutput').mockReturnValue('transformed response');
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200, body: 'body' })
         .thenCall(() => client.send(command));
 
-      expect(spy.callCount).to.equal(1);
-      expect(await spy.firstCall.returnValue).to.equal('transformed response');
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(await spy.mock.results[0].value).toBe('transformed response');
     });
 
     it('should throw `CcHttpError` when API returns error status', async () => {
       const command = simpleCommand(get('/path/subPath'));
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 500, body: 'A server error occurred' });
 
       await expectPromiseThrows(client.send(command), (err) => {
-        expect(err).to.be.instanceOf(CcHttpError);
-        expect(err.response.status).to.equal(500);
-        expect(err.response.body).to.equal('A server error occurred');
+        expect(err).toBeInstanceOf(CcHttpError);
+        expect(err.response.status).toBe(500);
+        expect(err.response.body).toBe('A server error occurred');
       });
     });
 
     it('should call `onError` hook when API returns error status', async () => {
-      const spy = hanbi.spy();
-      const client = createClient({ hooks: { onError: spy.handler } });
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
       const command = simpleCommand(get('/path/subPath'));
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 500, body: 'A server error occurred' });
 
       await expectPromiseThrows(client.send(command), (err) => {
-        expect(spy.callCount).to.equal(1);
-        expect(spy.firstCall.args[0]).to.equal(err);
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.mock.calls[0][0]).toBe(err);
       });
     });
   });
 
   describe('composite command', () => {
     it('should call `_compose` method with right params', async () => {
-      const spy = hanbi.spyMethod(client, '_compose').passThrough();
+      const spy = vi.spyOn(client, '_compose');
       const command = compositeCommand('command result');
       const requestConfig = {};
 
       await client.send(command, requestConfig);
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0]).to.equal(command);
-      expect(spy.firstCall.args[1]).to.equal(requestConfig);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toBe(command);
+      expect(spy.mock.calls[0][1]).toBe(requestConfig);
     });
 
     it('should call `_transformCommandParams` method with right params', async () => {
-      const spy = hanbi.spyMethod(client, '_transformCommandParams').passThrough();
+      const spy = vi.spyOn(client, '_transformCommandParams');
       const command = compositeCommand('command result');
       const requestConfig = {};
 
       await client.send(command, requestConfig);
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0]).to.equal(command);
-      expect(spy.firstCall.args[1]).to.equal(requestConfig);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toBe(command);
+      expect(spy.mock.calls[0][1]).toBe(requestConfig);
     });
 
     it('should call `command.compose` method with right params', async () => {
       const transformedParams = { transformed: 'params' };
-      hanbi.stubMethod(client, '_transformCommandParams').returns(Promise.resolve(transformedParams));
+      vi.spyOn(client, '_transformCommandParams').mockReturnValue(Promise.resolve(transformedParams));
       const command = compositeCommand('command result');
-      const spy = hanbi.spyMethod(command, 'compose').passThrough();
+      const spy = vi.spyOn(command, 'compose');
 
       await client.send(command);
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0]).to.equal(transformedParams);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toBe(transformedParams);
     });
 
     it('composer should merge request config with initial request config', async () => {
@@ -474,13 +457,13 @@ describe('clever-client', () => {
           return 'result';
         }
       })();
-      const spy = hanbi.spyMethod(client, 'send').passThrough();
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
+      const spy = vi.spyOn(client, 'send');
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
 
       await client.send(command, { cors: false, cache: { mode: 'reload', ttl: 500 }, debug: true });
 
-      expect(spy.callCount).to.equal(2);
-      expect(spy.lastCall.args[1]).to.deep.equal({
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy.mock.lastCall[1]).toEqual({
         cache: { mode: 'reload', ttl: 100 },
         cors: true,
         timeout: 1000,
@@ -492,11 +475,11 @@ describe('clever-client', () => {
   describe('get url', () => {
     it('should call `get` method', async () => {
       const gu = getUrl('example');
-      const spy = hanbi.spyMethod(gu, 'get').passThrough();
+      const spy = vi.spyOn(gu, 'get');
 
       client.getUrl(gu);
 
-      expect(spy.callCount).to.equal(1);
+      expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should construct the right url', async () => {
@@ -504,20 +487,20 @@ describe('clever-client', () => {
 
       const url = client.getUrl(gu);
 
-      expect(url.toString()).to.equal(`${apiMockCtrl.mockClient.baseUrl}/example`);
+      expect(url.toString()).toBe(`${newScenario.mockClient.baseUrl}/example`);
     });
 
     it('should construct the right url with auth', async () => {
       const gu = getUrl('example');
       const auth = new CcAuth();
-      const spy = hanbi.spyMethod(auth, 'applyOnUrl').passThrough();
-      spy.callsFake(/** @param {URL} url*/ (url) => url.searchParams.set('auth', 'token'));
+      const spy = vi.spyOn(auth, 'applyOnUrl');
+      spy.mockImplementation(/** @param {URL} url*/ (url) => url.searchParams.set('auth', 'token'));
       const client = createClient({}, auth);
 
       const url = client.getUrl(gu);
 
-      expect(spy.callCount).to.equal(1);
-      expect(url.toString()).to.equal(`${apiMockCtrl.mockClient.baseUrl}/example?auth=token`);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(url.toString()).toBe(`${newScenario.mockClient.baseUrl}/example?auth=token`);
     });
   });
 
@@ -529,7 +512,7 @@ describe('clever-client', () => {
           timeout: 10,
         },
       });
-      const spy = hanbi.stubMethod(client, '_transformStreamParams').passThrough();
+      const spy = vi.spyOn(client, '_transformStreamParams');
       const command = streamCommand({ url: '/path/subPath' });
 
       await client.stream(command, {
@@ -537,10 +520,10 @@ describe('clever-client', () => {
         cors: true,
       });
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0]).to.equal(command);
-      expect(spy.firstCall.args[1].debug).to.equal(true);
-      expect(spy.firstCall.args[1].cors).to.equal(true);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toBe(command);
+      expect(spy.mock.calls[0][1].debug).toBe(true);
+      expect(spy.mock.calls[0][1].cors).toBe(true);
     });
 
     it('should call `createStream` method with right params', async () => {
@@ -558,7 +541,7 @@ describe('clever-client', () => {
         },
       });
       const command = streamCommand({ url: '/path/subPath' });
-      const spy = hanbi.stubMethod(command, 'createStream').passThrough();
+      const spy = vi.spyOn(command, 'createStream');
 
       await client.stream(command, {
         debug: true,
@@ -566,25 +549,24 @@ describe('clever-client', () => {
         retry: { maxRetryCount: 100 },
       });
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[1].retry.maxRetryCount).to.equal(100); // command config
-      expect(spy.firstCall.args[1].retry.backoffFactor).to.equal(10); // client config
-      expect(spy.firstCall.args[1].retry.initRetryTimeout).to.equal(1_000); // default config
-      expect(spy.firstCall.args[1].debug).to.equal(true); // command config
-      expect(spy.firstCall.args[1].healthcheckInterval).to.equal(10); // client config
-      expect(spy.firstCall.args[1].heartbeatPeriod).to.equal(2_500); // default config
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][1].retry.maxRetryCount).toBe(100); // command config
+      expect(spy.mock.calls[0][1].retry.backoffFactor).toBe(10); // client config
+      expect(spy.mock.calls[0][1].retry.initRetryTimeout).toBe(1_000); // default config
+      expect(spy.mock.calls[0][1].debug).toBe(true); // command config
+      expect(spy.mock.calls[0][1].healthcheckInterval).toBe(10); // client config
+      expect(spy.mock.calls[0][1].heartbeatPeriod).toBe(2_500); // default config
     });
 
     it('should call `command.toRequestParams` method with right params', async () => {
-      hanbi.stubMethod(client, '_transformStreamParams').returns(Promise.resolve({ param: 'param' }));
+      vi.spyOn(client, '_transformStreamParams').mockReturnValue(Promise.resolve({ param: 'param' }));
       const command = streamCommand({ url: '/path/subPath' });
-      const spy = hanbi.stubMethod(command, 'toRequestParams').passThrough();
+      const spy = vi.spyOn(command, 'toRequestParams');
 
       const stream = await client.stream(command);
-      expect(spy.callCount).to.equal(0);
+      expect(spy).toHaveBeenCalledTimes(0);
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({
           status: 200,
@@ -592,21 +574,20 @@ describe('clever-client', () => {
         })
         .thenCall(() => startStream(stream));
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0]).to.deep.equal({ param: 'param' });
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toEqual({ param: 'param' });
     });
 
     it('should call `_prepareRequest` method with right params', async () => {
       const command = streamCommand({ url: '/path/subPath' });
-      const spy = hanbi.stubMethod(client, '_prepareRequest').passThrough();
+      const spy = vi.spyOn(client, '_prepareRequest');
 
       const stream = await client.stream(command, {
         debug: true,
         cors: false,
       });
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({
           status: 200,
@@ -614,11 +595,11 @@ describe('clever-client', () => {
         })
         .thenCall(() => startStream(stream));
 
-      expect(spy.callCount).to.equal(1);
-      expect(spy.firstCall.args[0]).to.deep.equal({
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toEqual({
         url: '/path/subPath',
       });
-      expect(spy.firstCall.args[1]).to.deep.equal({
+      expect(spy.mock.calls[0][1]).toEqual({
         debug: true,
         cors: false,
       });
@@ -630,8 +611,7 @@ describe('clever-client', () => {
   it('should send request with the right method and path', async () => {
     const command = simpleCommand(get('/path/subPath'));
 
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'GET', path: '/path/subPath' })
       .respond({ status: 200 })
       .thenCall(() => client.send(command));
@@ -640,70 +620,65 @@ describe('clever-client', () => {
   it('should send request with the right accept header', async () => {
     const command = simpleCommand(get('/'));
 
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({ status: 200 })
       .thenCall(() => client.send(command))
       .verify((calls) => {
-        expect(calls.count).to.equal(1);
-        expect(calls.first.headers.accept).to.eq('application/json');
+        expect(calls.count).toBe(1);
+        expect(calls.first.headers.accept).toBe('application/json');
       });
   });
 
   it('should send request with the right content-type header', async () => {
     const command = simpleCommand(post('/', 'hello world'));
 
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'POST', path: '/' })
       .respond({ status: 200 })
       .thenCall(() => client.send(command))
       .verify((calls) => {
-        expect(calls.count).to.equal(1);
-        expect(calls.first.headers['content-type']).to.eq('text/plain');
+        expect(calls.count).toBe(1);
+        expect(calls.first.headers['content-type']).toBe('text/plain');
       });
   });
 
   it('should send request with the right query params', async () => {
     const command = simpleCommand(get('/', new QueryParams({ foo: ['bar1', 'bar2'], bar: 'foo' })));
 
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({ status: 200 })
       .thenCall(() => client.send(command))
       .verify((calls) => {
-        expect(calls.count).to.equal(1);
-        expect(calls.first.queryParams).to.deep.eq({ foo: ['bar1', 'bar2'], bar: 'foo' });
+        expect(calls.count).toBe(1);
+        expect(calls.first.queryParams).toEqual({ foo: ['bar1', 'bar2'], bar: 'foo' });
       });
   });
 
   it('should send request with the right plain text body', async () => {
     const command = simpleCommand(post('/', 'hello world'));
 
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'POST', path: '/' })
       .respond({ status: 200 })
       .thenCall(() => client.send(command))
       .verify((calls) => {
-        expect(calls.count).to.equal(1);
-        expect(calls.first.body).to.eq('hello world');
+        expect(calls.count).toBe(1);
+        expect(calls.first.body).toBe('hello world');
       });
   });
 
   it('should send request with the right json body', async () => {
     const command = simpleCommand(post('/', { hello: 'world' }));
 
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'POST', path: '/' })
       .respond({ status: 200 })
       .thenCall(() => client.send(command))
       .verify((calls) => {
-        expect(calls.count).to.equal(1);
-        expect(calls.first.body).to.deep.eq({ hello: 'world' });
+        expect(calls.count).toBe(1);
+        expect(calls.first.body).toEqual({ hello: 'world' });
       });
   });
 
@@ -715,14 +690,13 @@ describe('clever-client', () => {
       body: '{"hello":"world"}',
     });
 
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'POST', path: '/' })
       .respond({ status: 200 })
       .thenCall(() => client.send(command))
       .verify((calls) => {
-        expect(calls.count).to.equal(1);
-        expect(calls.first.body).to.deep.eq('{"hello":"world"}');
+        expect(calls.count).toBe(1);
+        expect(calls.first.body).toEqual('{"hello":"world"}');
       });
   });
 
@@ -735,33 +709,30 @@ describe('clever-client', () => {
       headers: new HeadersBuilder().acceptTextPlain().build(),
     });
 
-    const response = await apiMockCtrl
-      .mock()
+    const response = await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({ status: 200, body: 'Hello' })
       .thenCall(() => client.send(command));
-    expect(response).to.equal('Hello');
+    expect(response).toBe('Hello');
   });
 
   it('should get response with right json body', async () => {
     const command = simpleCommand(get('/'));
 
-    const response = await apiMockCtrl
-      .mock()
+    const response = await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({ status: 200, body: { hello: 'world' } })
       .thenCall(() => client.send(command));
-    expect(response).to.deep.eq({ hello: 'world' });
+    expect(response).toEqual({ hello: 'world' });
   });
 
   it('should get response with right empty body', async () => {
     const command = simpleCommand(get('/'));
 
-    const response = await apiMockCtrl
-      .mock()
+    const response = await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({ status: 200, body: null })
       .thenCall(() => client.send(command));
-    expect(response).to.deep.eq(null);
+    expect(response).toEqual(null);
   });
 });

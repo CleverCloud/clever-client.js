@@ -1,19 +1,17 @@
 /**
  * @import { CcRequest } from '../../../../src/types/request.types.js'
- * @import { MockCtrl } from '../../../lib/mock-api/mock-ctrl.js'
- * @import { MockSseEvent } from '../../../lib/mock-api/mock-api.types.js'
+ * @import { NewScenario, MockSseEvent } from '@clevercloud/doublure'
  * @import { CcStreamConfig } from '../../../../src/lib/stream/cc-stream.types.js'
  * @import { SpiedStream, Stubs } from './cc-stream.spec.types.js'
  */
 
-import { expect } from 'chai';
-import * as hanbi from 'hanbi';
+import { doublureHooks } from '@clevercloud/doublure/testing';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CcClientError, CcHttpError } from '../../../../src/lib/error/cc-client-errors.js';
 import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../../src/lib/request/query-params.js';
 import { requestWithCache } from '../../../../src/lib/request/request-with-cache.js';
 import { CcStream } from '../../../../src/lib/stream/cc-stream.js';
-import { mockTestHooks } from '../../../lib/mock-api/support/mock-test-hooks.js';
 import { sleep } from '../../../lib/timers.js';
 
 /** @type {MockSseEvent} */
@@ -28,23 +26,23 @@ const MESSAGE = { type: 'message', event: 'EVENT', data: 'hello' };
 const RETRY = { maxRetryCount: 2, initRetryTimeout: 10, backoffFactor: 1 };
 
 describe('cc-stream', () => {
-  /** @type {MockCtrl} */
-  let apiMockCtrl;
+  /** @type {NewScenario} */
+  let newScenario;
 
   /** @type {() => void | null} */
   let cleanStream;
 
-  const hooks = mockTestHooks();
+  const hooks = doublureHooks();
 
-  before(async () => {
-    apiMockCtrl = await hooks.before();
+  beforeAll(async () => {
+    newScenario = await hooks.before();
   });
   beforeEach(hooks.beforeEach);
   afterEach(() => {
-    hanbi.restore();
+    vi.restoreAllMocks();
     cleanStream?.();
   });
-  after(hooks.after);
+  afterAll(hooks.after);
 
   /**
    * @param {Partial<CcRequest>} request
@@ -56,17 +54,17 @@ describe('cc-stream', () => {
 
     /** @type {Stubs} */
     const stubs = {
-      request: hanbi.spy().passThrough(),
-      open: hanbi.spy().passThrough(),
-      error: hanbi.spy().passThrough(),
-      event: hanbi.spy().passThrough(),
-      success: hanbi.spy().passThrough(),
-      failure: hanbi.spy().passThrough(),
+      request: vi.fn(),
+      open: vi.fn(),
+      error: vi.fn(),
+      event: vi.fn(),
+      success: vi.fn(),
+      failure: vi.fn(),
     };
 
     const stream = new CcStream(
       () => {
-        stubs.request.handler();
+        stubs.request();
         return {
           cors: false,
           timeout: 0,
@@ -74,7 +72,7 @@ describe('cc-stream', () => {
           debug: false,
           method: 'GET',
           ...request,
-          url: request.url.startsWith('http') ? request.url : `${apiMockCtrl.mockClient.baseUrl}${request.url}`,
+          url: request.url.startsWith('http') ? request.url : `${newScenario.mockClient.baseUrl}${request.url}`,
         };
       },
       {
@@ -92,20 +90,22 @@ describe('cc-stream', () => {
     };
 
     stream
-      .onOpen(stubs.open.handler)
-      .onError(stubs.error.handler)
-      .on('EVENT', (evt) => stubs.event.handler(evt.data));
+      .onOpen(stubs.open)
+      .onError(stubs.error)
+      .on('EVENT', (evt) => stubs.event(evt.data));
 
     return {
       stream,
       async start() {
         try {
           const result = await stream.start();
-          stubs.success.handler(result);
+          stubs.success(result);
           return result;
         } catch (e) {
-          stubs.failure.handler(e);
-          throw e;
+          // Failures are asserted through the `failure` stub (see `verifyCounts`), and the
+          // failure-path tests call `start()` fire-and-forget. We must not rethrow here, or
+          // the unawaited rejection would surface as an unhandled rejection and fail the run.
+          stubs.failure(e);
         }
       },
       close(reason) {
@@ -119,9 +119,9 @@ describe('cc-stream', () => {
             const currentCounts = Object.fromEntries(
               Object.entries(stubs)
                 .filter(([key]) => key in expectedCounts)
-                .map(([key, stub]) => [key, stub.callCount]),
+                .map(([key, stub]) => [key, stub.mock.calls.length]),
             );
-            expect(currentCounts).to.deep.equal(expectedCounts);
+            expect(currentCounts).toEqual(expectedCounts);
             return;
           } catch (e) {
             if (e instanceof Error && e.name === 'AssertionError') {
@@ -151,8 +151,7 @@ describe('cc-stream', () => {
 
   it('GET request should open stream', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({
         status: 200,
@@ -167,8 +166,7 @@ describe('cc-stream', () => {
 
   it('POST request should open stream', async () => {
     const spiedStream = createAndSpyStream({ method: 'POST', url: '/' });
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'POST', path: '/' })
       .respond({
         status: 200,
@@ -189,8 +187,7 @@ describe('cc-stream', () => {
       headers: new HeadersBuilder().contentTypeTextPlain().withHeader('x-header', 'x-value').build(),
       queryParams: new QueryParams().append('param1', 'value1').append('param2', 'value2'),
     });
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'POST', path: '/' })
       .respond({
         status: 200,
@@ -199,13 +196,13 @@ describe('cc-stream', () => {
       })
       .thenCall(() => spiedStream.start())
       .verify((calls) => {
-        expect(calls.count).to.equal(1);
-        expect(calls.first.method).to.equal('POST');
-        expect(calls.first.path).to.equal('/');
-        expect(calls.first.headers.accept).to.equal('text/event-stream');
-        expect(calls.first.headers['content-type']).to.equal('text/plain');
-        expect(calls.first.headers['x-header']).to.equal('x-value');
-        expect(calls.first.queryParams).to.deep.equal({ param1: 'value1', param2: 'value2' });
+        expect(calls.count).toBe(1);
+        expect(calls.first.method).toBe('POST');
+        expect(calls.first.path).toBe('/');
+        expect(calls.first.headers.accept).toBe('text/event-stream');
+        expect(calls.first.headers['content-type']).toBe('text/plain');
+        expect(calls.first.headers['x-header']).toBe('x-value');
+        expect(calls.first.queryParams).toEqual({ param1: 'value1', param2: 'value2' });
       });
 
     await spiedStream.verifyCounts({ open: 1 });
@@ -216,7 +213,7 @@ describe('cc-stream', () => {
     await requestWithCache(
       {
         method: 'GET',
-        url: `${apiMockCtrl.mockClient.baseUrl}/`,
+        url: `${newScenario.mockClient.baseUrl}/`,
         headers: new HeadersBuilder().acceptEventStream().build(),
         cache: { ttl: 100 },
         cors: false,
@@ -241,8 +238,7 @@ describe('cc-stream', () => {
       cache: { ttl: 100 },
     });
 
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({
         status: 200,
@@ -251,8 +247,8 @@ describe('cc-stream', () => {
       })
       .thenCall(() => spiedStream.start())
       .verify((calls) => {
-        expect(calls.count).to.equal(1);
-        expect(calls.first.headers.accept).to.equal('text/event-stream');
+        expect(calls.count).toBe(1);
+        expect(calls.first.headers.accept).toBe('text/event-stream');
       });
 
     await spiedStream.verifyCounts({ open: 1 });
@@ -264,12 +260,12 @@ describe('cc-stream', () => {
     spiedStream.start();
 
     await spiedStream.verifyCounts({ failure: 1 }, 20);
-    expect(spiedStream.stubs.failure.firstCall.args[0]).to.be.instanceof(CcHttpError);
+    expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
   });
 
   it('non 200 status code should lead to failure with CcHttpError', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
-    await apiMockCtrl.mock().when({ method: 'GET', path: '/' }).respond({
+    await newScenario().when({ method: 'GET', path: '/' }).respond({
       status: 400,
       body: 'invalid request',
     });
@@ -277,12 +273,12 @@ describe('cc-stream', () => {
     spiedStream.start();
 
     await spiedStream.verifyCounts({ failure: 1 }, 20);
-    expect(spiedStream.stubs.failure.firstCall.args[0]).to.be.instanceof(CcHttpError);
+    expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
   });
 
   it('invalid response content type should lead to failure with CcClientError', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
-    await apiMockCtrl.mock().when({ method: 'GET', path: '/' }).respond({
+    await newScenario().when({ method: 'GET', path: '/' }).respond({
       status: 200,
       body: 'invalid content type',
     });
@@ -290,14 +286,13 @@ describe('cc-stream', () => {
     spiedStream.start();
 
     await spiedStream.verifyCounts({ failure: 1 }, 20);
-    expect(spiedStream.stubs.failure.firstCall.args[0]).to.be.instanceof(CcClientError);
-    expect(spiedStream.stubs.failure.firstCall.args[0].code).to.equal('SSE_INVALID_CONTENT_TYPE');
+    expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcClientError);
+    expect(spiedStream.stubs.failure.mock.calls[0][0].code).toBe('SSE_INVALID_CONTENT_TYPE');
   });
 
   it('receiving END_OF_STREAM event should close stream properly', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({
         status: 200,
@@ -308,13 +303,12 @@ describe('cc-stream', () => {
     const result = await spiedStream.start();
 
     await spiedStream.verifyCounts({ success: 1, failure: 0 });
-    expect(result).to.deep.equal({ type: 'UNTIL_REACHED' });
+    expect(result).toEqual({ type: 'UNTIL_REACHED' });
   });
 
   it('should receive all events and close properly after END_OF_STREAM event', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({
         status: 200,
@@ -330,16 +324,15 @@ describe('cc-stream', () => {
     const result = await spiedStream.start();
 
     await spiedStream.verifyCounts({ event: 3, success: 1 });
-    expect(result).to.deep.equal({ type: 'UNTIL_REACHED' });
-    expect(spiedStream.stubs.event.getCall(0).args[0]).to.equal('hello John');
-    expect(spiedStream.stubs.event.getCall(1).args[0]).to.equal('hello Jack');
-    expect(spiedStream.stubs.event.getCall(2).args[0]).to.equal('hello Mary');
+    expect(result).toEqual({ type: 'UNTIL_REACHED' });
+    expect(spiedStream.stubs.event.mock.calls[0][0]).toBe('hello John');
+    expect(spiedStream.stubs.event.mock.calls[1][0]).toBe('hello Jack');
+    expect(spiedStream.stubs.event.mock.calls[2][0]).toBe('hello Mary');
   });
 
   it('receiving heartbeat and events should not timeout', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({
         status: 200,
@@ -366,8 +359,7 @@ describe('cc-stream', () => {
 
   it('pause stream should not timeout', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({
         status: 200,
@@ -385,8 +377,7 @@ describe('cc-stream', () => {
 
   it('resume stream should run request with last event ID header', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
-    await apiMockCtrl
-      .mock()
+    await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({
         status: 200,
@@ -408,16 +399,15 @@ describe('cc-stream', () => {
         await spiedStream.verifyCounts({ open: 2 }, 20);
       })
       .verify((calls) => {
-        expect(calls.first.headers).to.not.ownProperty('last-event-id');
-        expect(calls.last.headers['last-event-id']).to.equal('210041493:43875:2');
+        expect(calls.first.headers).not.toHaveProperty('last-event-id');
+        expect(calls.last.headers['last-event-id']).toBe('210041493:43875:2');
       });
   });
 
   describe('without retry', () => {
     it('no more heartbeat should lead to failure without retry', async () => {
       const spiedStream = createAndSpyStream({ url: '/' });
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 200,
@@ -428,13 +418,12 @@ describe('cc-stream', () => {
       spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 1, error: 0, failure: 1 }, 50);
-      expect(spiedStream.stubs.failure.getCall(0).args[0].code).to.equal('SSE_HEALTH_ERROR');
+      expect(spiedStream.stubs.failure.mock.calls[0][0].code).toBe('SSE_HEALTH_ERROR');
     });
 
     it('connection closed by server should lead to a failure without retry', async () => {
       const spiedStream = createAndSpyStream({ url: '/' });
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 200,
@@ -445,15 +434,14 @@ describe('cc-stream', () => {
       spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 1, error: 0, failure: 1 }, 50);
-      expect(spiedStream.stubs.failure.getCall(0).args[0].code).to.equal('SSE_SERVER_ERROR');
+      expect(spiedStream.stubs.failure.mock.calls[0][0].code).toBe('SSE_SERVER_ERROR');
     });
   });
 
   describe('with retry', () => {
     it('400 status code should lead to failure without retry', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 400,
@@ -463,13 +451,12 @@ describe('cc-stream', () => {
       spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 0, failure: 1 }, 50);
-      expect(spiedStream.stubs.failure.getCall(0).args[0]).to.be.instanceof(CcHttpError);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
     });
 
     it('401 status code should lead to failure without retry', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 401,
@@ -479,13 +466,12 @@ describe('cc-stream', () => {
       spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 0, failure: 1 }, 50);
-      expect(spiedStream.stubs.failure.getCall(0).args[0]).to.be.instanceof(CcHttpError);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
     });
 
     it('403 status code should lead to failure without retry', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 403,
@@ -495,13 +481,12 @@ describe('cc-stream', () => {
       spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 0, failure: 1 }, 50);
-      expect(spiedStream.stubs.failure.getCall(0).args[0]).to.be.instanceof(CcHttpError);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
     });
 
     it('500 status code should lead to failure with retry', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 500,
@@ -511,13 +496,12 @@ describe('cc-stream', () => {
       spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 2, failure: 1 }, 150);
-      expect(spiedStream.stubs.failure.getCall(0).args[0]).to.be.instanceof(CcHttpError);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
     });
 
     it('408 status code should lead to failure with retry', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 408,
@@ -527,13 +511,12 @@ describe('cc-stream', () => {
       spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 2, failure: 1 }, 150);
-      expect(spiedStream.stubs.failure.getCall(0).args[0]).to.be.instanceof(CcHttpError);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
     });
 
     it('429 status code should lead to failure with retry', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 429,
@@ -543,13 +526,12 @@ describe('cc-stream', () => {
       spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 2, failure: 1 }, 150);
-      expect(spiedStream.stubs.failure.getCall(0).args[0]).to.be.instanceof(CcHttpError);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
     });
 
     it('[error 500 + error 500 + events] should be retried and succeed', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 500,
@@ -565,8 +547,7 @@ describe('cc-stream', () => {
       await spiedStream.verifyCounts({ open: 0, error: 2 }, 40);
 
       // 2nd retry (events) => open++ & event+=1 (& success because END_OF_STREAM)
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 200,
@@ -579,8 +560,7 @@ describe('cc-stream', () => {
 
     it('[events + timeout + events] should be retried and succeed', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 200,
@@ -602,8 +582,7 @@ describe('cc-stream', () => {
 
     it('[success + timeout + error 500 + error 500] should be retried and fail', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 200,
@@ -620,8 +599,7 @@ describe('cc-stream', () => {
       await spiedStream.verifyCounts({ open: 1, event: 2, error: 1 }, 60);
 
       // 2nd retry (error 500) => error++ & failure
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/' })
         .respond({
           status: 500,

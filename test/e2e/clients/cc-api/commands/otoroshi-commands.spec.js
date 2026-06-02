@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { CheckOtoroshiVersionCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/check-otoroshi-version-command.js';
 import { CreateOtoroshiNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/create-otoroshi-network-group-command.js';
 import { DeleteOtoroshiNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/delete-otoroshi-network-group-command.js';
@@ -12,7 +12,7 @@ import { e2eSupport } from '../e2e-support.js';
 describe('otoroshi commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
@@ -20,7 +20,7 @@ describe('otoroshi commands', function () {
     await support.deleteAddons();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -32,24 +32,24 @@ describe('otoroshi commands', function () {
     });
     const response = await support.client.send(new GetOtoroshiInfoCommand({ addonId: addon.id }));
 
-    expect(response.id).to.equal(addon.realId);
-    expect(response.addonId).to.equal(addon.id);
-    expect(response.name).to.equal(addon.name);
-    expect(response.ownerId).to.equal(support.organisationId);
-    expect(response.plan).to.be.a('string');
-    expect(response.version).to.be.a('string');
-    expect(response.javaVersion).to.be.a('string');
-    expect(response.accessUrl).to.be.a('string');
-    expect(response.availableVersions).to.be.an('array');
-    expect(response.resources.entrypoint).to.be.a('string');
-    expect(response.resources.redisId).to.be.a('string');
-    expect(response.api.url).to.be.a('string');
-    expect(response.api.user).to.be.a('string');
-    expect(response.api.secret).to.be.a('string');
-    expect(response.api.openapi).to.be.a('string');
-    expect(response.initialCredentials.user).to.be.a('string');
-    expect(response.initialCredentials.password).to.be.a('string');
-    expect(response.features).to.be.an('object');
+    expect(response.id).toBe(addon.realId);
+    expect(response.addonId).toBe(addon.id);
+    expect(response.name).toBe(addon.name);
+    expect(response.ownerId).toBe(support.organisationId);
+    expect(response.plan).toBeTypeOf('string');
+    expect(response.version).toBeTypeOf('string');
+    expect(response.javaVersion).toBeTypeOf('string');
+    expect(response.accessUrl).toBeTypeOf('string');
+    expect(response.availableVersions).toBeInstanceOf(Array);
+    expect(response.resources.entrypoint).toBeTypeOf('string');
+    expect(response.resources.redisId).toBeTypeOf('string');
+    expect(response.api.url).toBeTypeOf('string');
+    expect(response.api.user).toBeTypeOf('string');
+    expect(response.api.secret).toBeTypeOf('string');
+    expect(response.api.openapi).toBeTypeOf('string');
+    expect(response.initialCredentials.user).toBeTypeOf('string');
+    expect(response.initialCredentials.password).toBeTypeOf('string');
+    expect(response.features).toBeTypeOf('object');
   });
 
   it('should reboot otoroshi', async () => {
@@ -60,7 +60,7 @@ describe('otoroshi commands', function () {
     });
     const response = await support.client.send(new RebootOtoroshiCommand({ addonId: addon.id }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should rebuild otoroshi', async () => {
@@ -71,7 +71,7 @@ describe('otoroshi commands', function () {
     });
     const response = await support.client.send(new RebuildOtoroshiCommand({ addonId: addon.id }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should check otoroshi version', async () => {
@@ -82,10 +82,10 @@ describe('otoroshi commands', function () {
     });
     const response = await support.client.send(new CheckOtoroshiVersionCommand({ addonId: addon.id }));
 
-    expect(response.installed).to.be.a('string');
-    expect(response.latest).to.be.a('string');
-    expect(response.available).to.be.an('array').that.includes(response.latest);
-    expect(response.needUpdate).to.be.a('boolean');
+    expect(response.installed).toBeTypeOf('string');
+    expect(response.latest).toBeTypeOf('string');
+    expect(response.available).toContain(response.latest);
+    expect(response.needUpdate).toBeTypeOf('boolean');
   });
 
   it('should update otoroshi version', async () => {
@@ -100,8 +100,8 @@ describe('otoroshi commands', function () {
       new UpdateOtoroshiVersionCommand({ addonId: addon.id, targetVersion: info.version }),
     );
 
-    expect(response.id).to.equal(addon.realId);
-    expect(response.version).to.be.a('string');
+    expect(response.id).toBe(addon.realId);
+    expect(response.version).toBeTypeOf('string');
   });
 
   it('should create otoroshi network group', async () => {
@@ -112,9 +112,9 @@ describe('otoroshi commands', function () {
     });
     const response = await support.client.send(new CreateOtoroshiNetworkGroupCommand({ addonId: addon.id }));
 
-    expect(response.id).to.equal(addon.realId);
-    expect(response.features.networkGroup).to.not.be.null;
-    expect(response.features.networkGroup.id).to.be.a('string');
+    expect(response.id).toBe(addon.realId);
+    expect(response.features.networkGroup).not.toBeNull();
+    expect(response.features.networkGroup.id).toBeTypeOf('string');
   });
 
   it('should delete otoroshi network group', async () => {
@@ -128,7 +128,7 @@ describe('otoroshi commands', function () {
 
     const response = await support.client.send(new DeleteOtoroshiNetworkGroupCommand({ addonId: addon.id }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should get otoroshi config', async () => {
@@ -139,7 +139,7 @@ describe('otoroshi commands', function () {
     });
     const response = await support.client.send(new GetOtoroshiConfigCommand({ addonId: addon.id }));
 
-    expect(response).to.be.a('string');
-    expect(response.length).to.be.greaterThan(0);
+    expect(response).toBeTypeOf('string');
+    expect(response.length).toBeGreaterThan(0);
   });
 });

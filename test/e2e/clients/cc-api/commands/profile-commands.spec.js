@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { CreateProfileEmailAddressCommand } from '../../../../../src/clients/cc-api/commands/profile/create-profile-email-address-command.js';
 import { DeleteProfileEmailAddressCommand } from '../../../../../src/clients/cc-api/commands/profile/delete-profile-email-address-command.js';
 import { GetProfileCommand } from '../../../../../src/clients/cc-api/commands/profile/get-profile-command.js';
@@ -11,25 +11,25 @@ import { e2eSupport } from '../e2e-support.js';
 describe('profile commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
   it('should get profile linked', async () => {
     const response = await support.client.send(new GetProfileCommand());
 
-    expect(response.id).to.equal(support.userId);
-    expect(response.isLinkedToGitHub).to.equal(true);
+    expect(response.id).toBe(support.userId);
+    expect(response.isLinkedToGitHub).toBe(true);
   });
 
   it('should get profile when account is not linked to github', async () => {
     const response = await support.getClient({ user: 'test-user-without-github' }).send(new GetProfileCommand());
 
-    expect(response.isLinkedToGitHub).to.equal(false);
+    expect(response.isLinkedToGitHub).toBe(false);
   });
 
   it('should update profile', async () => {
@@ -38,8 +38,8 @@ describe('profile commands', function () {
     const response = await support.client.send(new UpdateProfileCommand({ name: 'updated name' }));
 
     try {
-      expect(response.id).to.equal(support.userId);
-      expect(response.name).to.equal('updated name');
+      expect(response.id).toBe(support.userId);
+      expect(response.name).toBe('updated name');
     } finally {
       await support.client.send(new UpdateProfileCommand({ name: profile.name }));
     }
@@ -62,7 +62,7 @@ describe('profile commands', function () {
     );
 
     try {
-      expect(response.url).not.to.be.null;
+      expect(response.url).not.toBeNull();
       new URL(response.url);
     } finally {
       await support.client.send(
@@ -82,8 +82,8 @@ describe('profile commands', function () {
       }),
     );
 
-    expect(response.url).not.to.be.null;
-    expect(response.url).to.match(/^https:\/\/avatars\.githubusercontent\.com/);
+    expect(response.url).not.toBeNull();
+    expect(response.url).toMatch(/^https:\/\/avatars\.githubusercontent\.com/);
   });
 
   it('should update avatar with gravatar external source', async () => {
@@ -94,18 +94,18 @@ describe('profile commands', function () {
       }),
     );
 
-    expect(response.url).not.to.be.null;
-    expect(response.url).to.match(/^https:\/\/www.gravatar.com\/avatar/);
+    expect(response.url).not.toBeNull();
+    expect(response.url).toMatch(/^https:\/\/www.gravatar.com\/avatar/);
   });
 
   it('should list email addresses', async () => {
     const response = await support.client.send(new ListProfileEmailAddressCommand());
 
-    expect(response.primaryAddress).not.to.be.null;
-    expect(response.primaryAddress.address).to.be.a('string');
-    expect(response.primaryAddress.verified).to.equal(true);
-    expect(response.secondaryAddresses).not.to.be.null;
-    expect(response.secondaryAddresses).to.be.an('array');
+    expect(response.primaryAddress).not.toBeNull();
+    expect(response.primaryAddress.address).toBeTypeOf('string');
+    expect(response.primaryAddress.verified).toBe(true);
+    expect(response.secondaryAddresses).not.toBeNull();
+    expect(response.secondaryAddresses).toBeInstanceOf(Array);
   });
 
   // cannot be automatised because we need to check email
@@ -116,7 +116,7 @@ describe('profile commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   // cannot be automatised because we need to check email
@@ -127,7 +127,7 @@ describe('profile commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   // cannot be automatised because we need to check email
@@ -138,6 +138,6 @@ describe('profile commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 });

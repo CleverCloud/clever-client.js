@@ -1,7 +1,7 @@
 /**
  * @import { EmailNotificationTarget, WebhookNotificationUrl } from '../../../../../src/clients/cc-api/commands/notification/notification.types.js'
  */
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { AddOrganisationMemberCommand } from '../../../../../src/clients/cc-api/commands/organisation/add-organisation-member-command.js';
 import { DeleteOrganisationCommand } from '../../../../../src/clients/cc-api/commands/organisation/delete-organisation-command.js';
 import { GetOrganisationCommand } from '../../../../../src/clients/cc-api/commands/organisation/get-organisation-command.js';
@@ -16,11 +16,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('organisation commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -39,26 +39,26 @@ describe('organisation commands', function () {
       country: 'FR',
     });
 
-    expect(response.id).to.be.a('string');
-    expect(response.id).to.match(/^orga_.+/);
-    expect(response.name).to.equal('name');
-    expect(response.description).to.equal('description');
-    expect(response).to.ownProperty('billingEmailAddress');
-    expect(response.address).to.equal('address');
-    expect(response.city).to.equal('city');
-    expect(response.zipcode).to.equal('zipcode');
-    expect(response.country).to.equal('FRANCE');
-    expect(response).to.ownProperty('company');
-    expect(response).to.ownProperty('VAT');
-    expect(response).to.ownProperty('avatar');
-    expect(response.vatState).to.be.a('string');
-    expect(response.customerFullName).to.be.a('string');
-    expect(response.customerFullName).to.equal('customerFullName');
-    expect(response.canPay).to.be.a('boolean');
-    expect(response.cleverEnterprise).to.be.a('boolean');
-    expect(response).to.ownProperty('emergencyNumber');
-    expect(response.canSEPA).to.be.a('boolean');
-    expect(response.isTrusted).to.be.a('boolean');
+    expect(response.id).toBeTypeOf('string');
+    expect(response.id).toMatch(/^orga_.+/);
+    expect(response.name).toBe('name');
+    expect(response.description).toBe('description');
+    expect(response).toHaveProperty('billingEmailAddress');
+    expect(response.address).toBe('address');
+    expect(response.city).toBe('city');
+    expect(response.zipcode).toBe('zipcode');
+    expect(response.country).toBe('FRANCE');
+    expect(response).toHaveProperty('company');
+    expect(response).toHaveProperty('VAT');
+    expect(response).toHaveProperty('avatar');
+    expect(response.vatState).toBeTypeOf('string');
+    expect(response.customerFullName).toBeTypeOf('string');
+    expect(response.customerFullName).toBe('customerFullName');
+    expect(response.canPay).toBeTypeOf('boolean');
+    expect(response.cleverEnterprise).toBeTypeOf('boolean');
+    expect(response).toHaveProperty('emergencyNumber');
+    expect(response.canSEPA).toBeTypeOf('boolean');
+    expect(response.isTrusted).toBeTypeOf('boolean');
   });
 
   it('should delete organisation', async () => {
@@ -74,7 +74,7 @@ describe('organisation commands', function () {
 
     const response = await support.client.send(new DeleteOrganisationCommand({ organisationId: organisation.id }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should update organisation', async () => {
@@ -97,25 +97,25 @@ describe('organisation commands', function () {
       }),
     );
 
-    expect(response.id).to.equal(organisation.id);
-    expect(response.name).to.equal('name');
-    expect(response.description).to.equal('updated description');
-    expect(response).to.ownProperty('billingEmailAddress');
-    expect(response.address).to.equal('address');
-    expect(response.city).to.equal('city');
-    expect(response.zipcode).to.equal('zipcode');
-    expect(response.country).to.equal('FRANCE');
-    expect(response).to.ownProperty('company');
-    expect(response).to.ownProperty('VAT');
-    expect(response).to.ownProperty('avatar');
-    expect(response.vatState).to.be.a('string');
-    expect(response.customerFullName).to.be.a('string');
-    expect(response.customerFullName).to.equal('customerFullName');
-    expect(response.canPay).to.be.a('boolean');
-    expect(response.cleverEnterprise).to.be.a('boolean');
-    expect(response).to.ownProperty('emergencyNumber');
-    expect(response.canSEPA).to.be.a('boolean');
-    expect(response.isTrusted).to.be.a('boolean');
+    expect(response.id).toBe(organisation.id);
+    expect(response.name).toBe('name');
+    expect(response.description).toBe('updated description');
+    expect(response).toHaveProperty('billingEmailAddress');
+    expect(response.address).toBe('address');
+    expect(response.city).toBe('city');
+    expect(response.zipcode).toBe('zipcode');
+    expect(response.country).toBe('FRANCE');
+    expect(response).toHaveProperty('company');
+    expect(response).toHaveProperty('VAT');
+    expect(response).toHaveProperty('avatar');
+    expect(response.vatState).toBeTypeOf('string');
+    expect(response.customerFullName).toBeTypeOf('string');
+    expect(response.customerFullName).toBe('customerFullName');
+    expect(response.canPay).toBeTypeOf('boolean');
+    expect(response.cleverEnterprise).toBeTypeOf('boolean');
+    expect(response).toHaveProperty('emergencyNumber');
+    expect(response.canSEPA).toBeTypeOf('boolean');
+    expect(response.isTrusted).toBeTypeOf('boolean');
   });
 
   it('should get organisation', async () => {
@@ -135,25 +135,25 @@ describe('organisation commands', function () {
       }),
     );
 
-    expect(response.id).to.equal(organisation.id);
-    expect(response.name).to.equal('name');
-    expect(response.description).to.equal('description');
-    expect(response).to.ownProperty('billingEmailAddress');
-    expect(response.address).to.equal('address');
-    expect(response.city).to.equal('city');
-    expect(response.zipcode).to.equal('zipcode');
-    expect(response.country).to.equal('FRANCE');
-    expect(response).to.ownProperty('company');
-    expect(response).to.ownProperty('VAT');
-    expect(response).to.ownProperty('avatar');
-    expect(response.vatState).to.be.a('string');
-    expect(response.customerFullName).to.be.a('string');
-    expect(response.customerFullName).to.equal('customerFullName');
-    expect(response.canPay).to.be.a('boolean');
-    expect(response.cleverEnterprise).to.be.a('boolean');
-    expect(response).to.ownProperty('emergencyNumber');
-    expect(response.canSEPA).to.be.a('boolean');
-    expect(response.isTrusted).to.be.a('boolean');
+    expect(response.id).toBe(organisation.id);
+    expect(response.name).toBe('name');
+    expect(response.description).toBe('description');
+    expect(response).toHaveProperty('billingEmailAddress');
+    expect(response.address).toBe('address');
+    expect(response.city).toBe('city');
+    expect(response.zipcode).toBe('zipcode');
+    expect(response.country).toBe('FRANCE');
+    expect(response).toHaveProperty('company');
+    expect(response).toHaveProperty('VAT');
+    expect(response).toHaveProperty('avatar');
+    expect(response.vatState).toBeTypeOf('string');
+    expect(response.customerFullName).toBeTypeOf('string');
+    expect(response.customerFullName).toBe('customerFullName');
+    expect(response.canPay).toBeTypeOf('boolean');
+    expect(response.cleverEnterprise).toBeTypeOf('boolean');
+    expect(response).toHaveProperty('emergencyNumber');
+    expect(response.canSEPA).toBeTypeOf('boolean');
+    expect(response.isTrusted).toBeTypeOf('boolean');
   });
 
   it('should list organisations without personal organisation', async () => {
@@ -178,8 +178,8 @@ describe('organisation commands', function () {
 
     const response = await support.client.send(new ListOrganisationCommand({ withPersonalOrganisation: false }));
 
-    expect(response).to.have.lengthOf(2);
-    expect(response.map((r) => r.id)).to.deep.equalInAnyOrder([organisation1.id, organisation2.id]);
+    expect(response).toHaveLength(2);
+    expect(response.map((r) => r.id)).toEqualInAnyOrder([organisation1.id, organisation2.id]);
   });
 
   it('should list organisations with personal organisation', async () => {
@@ -204,8 +204,8 @@ describe('organisation commands', function () {
 
     const response = await support.client.send(new ListOrganisationCommand({ withPersonalOrganisation: true }));
 
-    expect(response).to.have.lengthOf(3);
-    expect(response.map((r) => r.id)).to.deep.equalInAnyOrder([organisation1.id, organisation2.id, support.userId]);
+    expect(response).toHaveLength(3);
+    expect(response.map((r) => r.id)).toEqualInAnyOrder([organisation1.id, organisation2.id, support.userId]);
   });
 
   describe('members', () => {
@@ -216,13 +216,13 @@ describe('organisation commands', function () {
         new ListOrganisationMemberCommand({ organisationId: organisation.id }),
       );
 
-      expect(response).to.have.lengthOf(1);
-      expect(response[0].id).to.match(/^user_.+/);
-      expect(response[0].email).to.be.a('string');
-      expect(response[0].name).to.be.a('string');
-      expect(response[0].avatar).to.be.a('string');
-      expect(response[0].preferredMFA).to.be.a('string');
-      expect(response[0].role).to.equal('ADMIN');
+      expect(response).toHaveLength(1);
+      expect(response[0].id).toMatch(/^user_.+/);
+      expect(response[0].email).toBeTypeOf('string');
+      expect(response[0].name).toBeTypeOf('string');
+      expect(response[0].avatar).toBeTypeOf('string');
+      expect(response[0].preferredMFA).toBeTypeOf('string');
+      expect(response[0].role).toBe('ADMIN');
     });
 
     it('should update member', async () => {
@@ -234,7 +234,7 @@ describe('organisation commands', function () {
         new UpdateOrganisationMemberCommand({ organisationId: organisation.id, memberId }),
       );
 
-      expect(response).to.be.null;
+      expect(response).toBeNull();
     });
 
     // cannot be automatised because of rate limiting
@@ -249,7 +249,7 @@ describe('organisation commands', function () {
         }),
       );
 
-      expect(response).to.be.null;
+      expect(response).toBeNull();
     });
   });
 
@@ -271,7 +271,7 @@ describe('organisation commands', function () {
       }),
     );
 
-    expect(response.url).not.to.be.null;
+    expect(response.url).not.toBeNull();
     new URL(response.url);
   });
 });

@@ -1,14 +1,14 @@
-import type { Stub } from 'hanbi';
+import type { Mock } from 'vitest';
 import type { CcStream } from '../../../../src/lib/stream/cc-stream.js';
 import type { CcStreamCloseReason } from '../../../../src/lib/stream/cc-stream.types.js';
 
 export interface Stubs {
-  request: Stub<() => void>;
-  open: Stub<() => void>;
-  error: Stub<(err: any) => void>;
-  event: Stub<(data: ?) => void>;
-  success: Stub<(reason: CcStreamCloseReason) => void>;
-  failure: Stub<(err: any) => void>;
+  request: Mock<() => void>;
+  open: Mock<() => void>;
+  error: Mock<(err: any) => void>;
+  event: Mock<(data: ?) => void>;
+  success: Mock<(reason: CcStreamCloseReason) => void>;
+  failure: Mock<(err: any) => void>;
 }
 
 export interface SpiedStream {

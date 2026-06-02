@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import {
   ERROR_TYPES,
   parseRaw,
@@ -12,25 +12,25 @@ import {
 describe('environment-utils', () => {
   describe('validateName()', () => {
     it('OK (classic bash/linux)', () => {
-      expect(validateName('FOOBAR')).to.equal(true);
-      expect(validateName('FOO123')).to.equal(true);
-      expect(validateName('FOO_BAR')).to.equal(true);
+      expect(validateName('FOOBAR')).toBe(true);
+      expect(validateName('FOO123')).toBe(true);
+      expect(validateName('FOO_BAR')).toBe(true);
     });
 
     it('OK (clever cloud specials)', () => {
-      expect(validateName('foobar')).to.equal(true);
-      expect(validateName('123BAR')).to.equal(true);
-      expect(validateName('FOO-BAR')).to.equal(true);
-      expect(validateName('FOO.BAR')).to.equal(true);
+      expect(validateName('foobar')).toBe(true);
+      expect(validateName('123BAR')).toBe(true);
+      expect(validateName('FOO-BAR')).toBe(true);
+      expect(validateName('FOO.BAR')).toBe(true);
     });
 
     it('NOT OK', () => {
-      expect(validateName(' FOOBAR')).to.equal(false);
-      expect(validateName('FOOBAR ')).to.equal(false);
-      expect(validateName('FOO\nBAR')).to.equal(false);
-      expect(validateName('FOO@BAR')).to.equal(false);
-      expect(validateName('FOO)BAR')).to.equal(false);
-      expect(validateName('FOO=BAR')).to.equal(false);
+      expect(validateName(' FOOBAR')).toBe(false);
+      expect(validateName('FOOBAR ')).toBe(false);
+      expect(validateName('FOO\nBAR')).toBe(false);
+      expect(validateName('FOO@BAR')).toBe(false);
+      expect(validateName('FOO)BAR')).toBe(false);
+      expect(validateName('FOO=BAR')).toBe(false);
     });
   });
 
@@ -38,7 +38,7 @@ describe('environment-utils', () => {
     describe('OK', () => {
       it('simple var', () => {
         const rawInput = 'NAME_A=AAA';
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [{ name: 'NAME_A', value: `AAA` }],
           errors: [],
         });
@@ -46,7 +46,7 @@ describe('environment-utils', () => {
 
       it('multiple vars', () => {
         const rawInput = ['NAME_A=AAA', 'NAME_B=BBBB', 'NAME_C=CCCCC'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: 'AAA' },
             { name: 'NAME_B', value: 'BBBB' },
@@ -58,7 +58,7 @@ describe('environment-utils', () => {
 
       it('warn java info', () => {
         const rawInput = ['NAME.A=AAA', 'NAME_B=BBBB', 'NAME_C=CCCCC'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_B', value: 'BBBB' },
             { name: 'NAME_C', value: 'CCCCC' },
@@ -76,7 +76,7 @@ describe('environment-utils', () => {
 
       it('accept empty values', () => {
         const rawInput = ['NAME_A=AAA', 'NAME_B=', 'NAME_C='].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: 'AAA' },
             { name: 'NAME_B', value: '' },
@@ -89,7 +89,7 @@ describe('environment-utils', () => {
       // We don't consider these as 2 values
       it('accept space in values', () => {
         const rawInput = ['NAME_A=AAA', 'NAME_B=BBBB BBBB', 'NAME_C=CCCCC'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: 'AAA' },
             { name: 'NAME_B', value: 'BBBB BBBB' },
@@ -101,7 +101,7 @@ describe('environment-utils', () => {
 
       it('accept simple quotes in values', () => {
         const rawInput = ['NAME_A=AAA', `NAME_B=BBBB'BBBB`, 'NAME_C=CCCCC'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: 'AAA' },
             { name: 'NAME_B', value: `BBBB'BBBB` },
@@ -113,7 +113,7 @@ describe('environment-utils', () => {
 
       it('accept double quotes in values', () => {
         const rawInput = ['NAME_A=AAA', `NAME_B=BBBB"BBBB`, 'NAME_C=CCCCC'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: 'AAA' },
             { name: 'NAME_B', value: `BBBB"BBBB` },
@@ -126,7 +126,7 @@ describe('environment-utils', () => {
       // We consider = as part of the value
       it('accept = in values', () => {
         const rawInput = ['NAME_A=AAA', 'NAME_B=BBBB OTHER=BBBB', 'NAME_C=CCCCC'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: 'AAA' },
             { name: 'NAME_B', value: 'BBBB OTHER=BBBB' },
@@ -138,7 +138,7 @@ describe('environment-utils', () => {
 
       it('ignore lines starting with comments', () => {
         const rawInput = ['NAME_A=AAA', '#NAME_B=BBBB', 'NAME_C=CCCCC'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: 'AAA' },
             { name: 'NAME_C', value: 'CCCCC' },
@@ -149,7 +149,7 @@ describe('environment-utils', () => {
 
       it('ignore empty lines', () => {
         const rawInput = ['', 'NAME_A=AAA', '', 'NAME_B=BBBB', 'NAME_C=CCCCC', ''].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: 'AAA' },
             { name: 'NAME_B', value: 'BBBB' },
@@ -161,7 +161,7 @@ describe('environment-utils', () => {
 
       it('line breaks must be quoted (simple)', () => {
         const rawInput = [`NAME_A='A\na\nA'`, `NAME_B=BBBB`].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: `A\na\nA` },
             { name: 'NAME_B', value: 'BBBB' },
@@ -172,7 +172,7 @@ describe('environment-utils', () => {
 
       it('line breaks must be quoted (double)', () => {
         const rawInput = [`NAME_A="A\na\nA"`, `NAME_B=BBBB`].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: `A\na\nA` },
             { name: 'NAME_B', value: 'BBBB' },
@@ -183,7 +183,7 @@ describe('environment-utils', () => {
 
       it('simple quotes must be escaped in simple quotes', () => {
         const rawInput = [`NAME_A='AAA'`, `NAME_B='BBBB \\' BBBB'`, `NAME_C='CCCCC \\'CCCCC\\' CCCCC'`].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: `AAA` },
             { name: 'NAME_B', value: `BBBB ' BBBB` },
@@ -195,7 +195,7 @@ describe('environment-utils', () => {
 
       it('double quotes must be escaped in double quotes', () => {
         const rawInput = [`NAME_A="AAA"`, `NAME_B="BBBB \\" BBBB"`, `NAME_C="CCCCC \\"CCCCC\\" CCCCC"`].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: `AAA` },
             { name: 'NAME_B', value: `BBBB " BBBB` },
@@ -219,7 +219,7 @@ describe('environment-utils', () => {
           // CCCCC \\\\\\\"CCCCC\\\\\\\" CCCCC
           `NAME_C="CCCCC \\\\\\\\\\\\\\"CCCCC\\\\\\\\\\\\\\" CCCCC"`,
         ].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             // AAA \" AAA
             { name: 'NAME_A', value: `AAA \\" AAA` },
@@ -238,7 +238,7 @@ describe('environment-utils', () => {
           // BBBB\nBBBB
           `NAME_B="BBBB\\nBBBB"`,
         ].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             // AAA
             // AAA
@@ -252,7 +252,7 @@ describe('environment-utils', () => {
 
       it('sort vars by name', () => {
         const rawInput = ['NAME_C="CCCCC"', 'NAME_B="BBBB"', 'NAME_D="DDDDDD"', 'NAME_A="AAA"'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: `AAA` },
             { name: 'NAME_B', value: `BBBB` },
@@ -267,7 +267,7 @@ describe('environment-utils', () => {
     describe('return errors', () => {
       it('invalid variable name', () => {
         const rawInput = ['NAME_A=AAA', 'NAME@BBBB=BBBB', 'NAME_C=CCCCC'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: 'AAA' },
             { name: 'NAME_C', value: 'CCCCC' },
@@ -284,7 +284,7 @@ describe('environment-utils', () => {
 
       it('invalid variable name (strict mode) digit first char', () => {
         const rawInput = ['NAME_A=AAA', '0NAME_BBBB=BBBB', 'NAME_C=CCCCC'].join('\n');
-        expect(parseRaw(rawInput, { mode: 'strict' })).to.deep.equal({
+        expect(parseRaw(rawInput, { mode: 'strict' })).toEqual({
           variables: [
             { name: 'NAME_A', value: `AAA` },
             { name: 'NAME_C', value: `CCCCC` },
@@ -301,7 +301,7 @@ describe('environment-utils', () => {
 
       it('invalid variable name (strict mode) dash', () => {
         const rawInput = ['NAME_A=AAA', 'NAME-BBBB=BBBB', 'NAME_C=CCCCC'].join('\n');
-        expect(parseRaw(rawInput, { mode: 'strict' })).to.deep.equal({
+        expect(parseRaw(rawInput, { mode: 'strict' })).toEqual({
           variables: [
             { name: 'NAME_A', value: `AAA` },
             { name: 'NAME_C', value: `CCCCC` },
@@ -318,7 +318,7 @@ describe('environment-utils', () => {
 
       it('invalid variable name (strict mode) dot', () => {
         const rawInput = ['NAME_A=AAA', 'NAME.BBBB=BBBB', 'NAME_C=CCCCC'].join('\n');
-        expect(parseRaw(rawInput, { mode: 'strict' })).to.deep.equal({
+        expect(parseRaw(rawInput, { mode: 'strict' })).toEqual({
           variables: [
             { name: 'NAME_A', value: `AAA` },
             { name: 'NAME_C', value: `CCCCC` },
@@ -335,7 +335,7 @@ describe('environment-utils', () => {
 
       it('duplicated variable names', () => {
         const rawInput = ['NAME_A=AAA', 'NAME_A=aaa'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [{ name: 'NAME_A', value: 'AAA' }],
           errors: [
             {
@@ -349,7 +349,7 @@ describe('environment-utils', () => {
 
       it('line without =', () => {
         const rawInput = ['NAME_A=A', 'AA', 'NAME_B=BBBB'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: 'A' },
             { name: 'NAME_B', value: 'BBBB' },
@@ -365,7 +365,7 @@ describe('environment-utils', () => {
 
       it('simple quoted value with text after last quote', () => {
         const rawInput = [`NAME_A='AAA' bad text`, 'NAME_B=BBBB'].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [{ name: 'NAME_B', value: 'BBBB' }],
           errors: [
             {
@@ -379,7 +379,7 @@ describe('environment-utils', () => {
 
       it('no simple quote at the end', () => {
         const rawInput = [`NAME_A='AAA'`, `NAME_B='BBBB BBBB'`, `NAME_C='CCCCC CCCCC CCCCC`].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: `AAA` },
             { name: 'NAME_B', value: `BBBB BBBB` },
@@ -396,7 +396,7 @@ describe('environment-utils', () => {
 
       it('no double quote at the end', () => {
         const rawInput = [`NAME_A="AAA"`, `NAME_B="BBBB BBBB"`, `NAME_C="CCCCC CCCCC CCCCC`].join('\n');
-        expect(parseRaw(rawInput)).to.deep.equal({
+        expect(parseRaw(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: `AAA` },
             { name: 'NAME_B', value: `BBBB BBBB` },
@@ -417,7 +417,7 @@ describe('environment-utils', () => {
     describe('OK', () => {
       it('simple var', () => {
         const rawInput = '[{"name":"NAME_A","value":"AAA"}]';
-        expect(parseRawJson(rawInput)).to.deep.equal({
+        expect(parseRawJson(rawInput)).toEqual({
           variables: [{ name: 'NAME_A', value: `AAA` }],
           errors: [],
         });
@@ -425,7 +425,7 @@ describe('environment-utils', () => {
 
       it('multiple simple var', () => {
         const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"NAME_B","value":"BBB"}]';
-        expect(parseRawJson(rawInput)).to.deep.equal({
+        expect(parseRawJson(rawInput)).toEqual({
           variables: [
             { name: 'NAME_A', value: `AAA` },
             { name: 'NAME_B', value: `BBB` },
@@ -436,7 +436,7 @@ describe('environment-utils', () => {
 
       it('warn java info', () => {
         const rawInput = '[{"name":"NAME.A","value":"AAA"}, {"name":"NAME_B","value":"BBB"}]';
-        expect(parseRawJson(rawInput)).to.deep.equal({
+        expect(parseRawJson(rawInput)).toEqual({
           variables: [
             { name: 'NAME_B', value: `BBB` },
             { name: 'NAME.A', value: `AAA` },
@@ -454,7 +454,7 @@ describe('environment-utils', () => {
     describe('return errors', () => {
       it('duplicated name', () => {
         const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"NAME_A","value":"AAAAAA"}]';
-        expect(parseRawJson(rawInput)).to.deep.equal({
+        expect(parseRawJson(rawInput)).toEqual({
           variables: [{ name: 'NAME_A', value: `AAA` }],
           errors: [{ type: ERROR_TYPES.DUPLICATED_NAME, name: 'NAME_A' }],
         });
@@ -462,7 +462,7 @@ describe('environment-utils', () => {
 
       it('invalid name', () => {
         const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"NAME@BBBB","value":"AAA"}]';
-        expect(parseRawJson(rawInput)).to.deep.equal({
+        expect(parseRawJson(rawInput)).toEqual({
           variables: [{ name: 'NAME_A', value: `AAA` }],
           errors: [{ type: ERROR_TYPES.INVALID_NAME, name: 'NAME@BBBB' }],
         });
@@ -470,7 +470,7 @@ describe('environment-utils', () => {
 
       it('invalid name (strict mode) digit first char', () => {
         const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"0NAME_A","value":"AAA"}]';
-        expect(parseRawJson(rawInput, { mode: 'strict' })).to.deep.equal({
+        expect(parseRawJson(rawInput, { mode: 'strict' })).toEqual({
           variables: [{ name: 'NAME_A', value: `AAA` }],
           errors: [{ type: ERROR_TYPES.INVALID_NAME_STRICT, name: '0NAME_A' }],
         });
@@ -478,7 +478,7 @@ describe('environment-utils', () => {
 
       it('invalid name (strict mode) dash', () => {
         const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"-NAME_A","value":"AAA"}]';
-        expect(parseRawJson(rawInput, { mode: 'strict' })).to.deep.equal({
+        expect(parseRawJson(rawInput, { mode: 'strict' })).toEqual({
           variables: [{ name: 'NAME_A', value: `AAA` }],
           errors: [{ type: ERROR_TYPES.INVALID_NAME_STRICT, name: '-NAME_A' }],
         });
@@ -486,7 +486,7 @@ describe('environment-utils', () => {
 
       it('invalid name (strict mode) dot', () => {
         const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":".NAME_A","value":"AAA"}]';
-        expect(parseRawJson(rawInput, { mode: 'strict' })).to.deep.equal({
+        expect(parseRawJson(rawInput, { mode: 'strict' })).toEqual({
           variables: [{ name: 'NAME_A', value: `AAA` }],
           errors: [{ type: ERROR_TYPES.INVALID_NAME_STRICT, name: '.NAME_A' }],
         });
@@ -494,7 +494,7 @@ describe('environment-utils', () => {
 
       it('invalid JSON format', () => {
         const rawInput = '{"name":"NAME_A","value":"AAA"}';
-        expect(parseRawJson(rawInput)).to.deep.equal({
+        expect(parseRawJson(rawInput)).toEqual({
           variables: [],
           errors: [{ type: ERROR_TYPES.INVALID_JSON_FORMAT }],
         });
@@ -502,7 +502,7 @@ describe('environment-utils', () => {
 
       it('Wrong JSON (comma at end of JSON)', () => {
         const rawInput = '[{"name":"NAME_A","value":"AAA"}, {"name":"NAME_B","value":"BBB"},]';
-        expect(parseRawJson(rawInput)).to.deep.equal({
+        expect(parseRawJson(rawInput)).toEqual({
           variables: [],
           errors: [{ type: ERROR_TYPES.INVALID_JSON }],
         });
@@ -510,7 +510,7 @@ describe('environment-utils', () => {
 
       it('invalid entry (values not string)', () => {
         const rawInput = '[{"name":"NAME_A","value":0}, {"name":"NAME_B","value":-5}]';
-        expect(parseRawJson(rawInput)).to.deep.equal({
+        expect(parseRawJson(rawInput)).toEqual({
           variables: [],
           errors: [{ type: ERROR_TYPES.INVALID_JSON_ENTRY }],
         });
@@ -518,7 +518,7 @@ describe('environment-utils', () => {
 
       it('invalid entry (names not string)', () => {
         const rawInput = '[{"name": 0,"value":"0"}, {"name": false,"value":"-5"}]';
-        expect(parseRawJson(rawInput)).to.deep.equal({
+        expect(parseRawJson(rawInput)).toEqual({
           variables: [],
           errors: [{ type: ERROR_TYPES.INVALID_JSON_ENTRY }],
         });
@@ -526,7 +526,7 @@ describe('environment-utils', () => {
 
       it('invalid entry (names and values not string)', () => {
         const rawInput = '[{"name": 0,"value":0}, {"name": false,"value":-5}]';
-        expect(parseRawJson(rawInput)).to.deep.equal({
+        expect(parseRawJson(rawInput)).toEqual({
           variables: [],
           errors: [{ type: ERROR_TYPES.INVALID_JSON_ENTRY }],
         });
@@ -536,12 +536,12 @@ describe('environment-utils', () => {
 
   describe('toJson()', () => {
     it('no vars', () => {
-      expect(toJson([])).to.equal('[]');
+      expect(toJson([])).toBe('[]');
     });
 
     it('simple var', () => {
       const variables = [{ name: 'NAME_A', value: `AAA` }];
-      expect(toJson(variables)).to.equal(
+      expect(toJson(variables)).toBe(
         `[
   {
     "name": "NAME_A",
@@ -556,7 +556,7 @@ describe('environment-utils', () => {
         { name: 'NAME_A', value: `AAA` },
         { name: 'NAME_B', value: `BBB` },
       ];
-      expect(toJson(variables)).to.equal(
+      expect(toJson(variables)).toBe(
         `[
   {
     "name": "NAME_A",
@@ -577,7 +577,7 @@ describe('environment-utils', () => {
         { name: 'NAME_D', value: `DDD` },
         { name: 'NAME_C', value: `CCC` },
       ];
-      expect(toJson(variables)).to.equal(
+      expect(toJson(variables)).toBe(
         `[
   {
     "name": "NAME_A",
@@ -603,7 +603,7 @@ describe('environment-utils', () => {
   describe('toNameEqualsValueString()', () => {
     it('simple var', () => {
       const variables = [{ name: 'NAME_A', value: `AAA` }];
-      expect(toNameEqualsValueString(variables)).to.equal([`NAME_A="AAA"`].join('\n'));
+      expect(toNameEqualsValueString(variables)).toBe([`NAME_A="AAA"`].join('\n'));
     });
 
     it('multiple vars', () => {
@@ -612,9 +612,7 @@ describe('environment-utils', () => {
         { name: 'NAME_B', value: 'BBBB' },
         { name: 'NAME_C', value: 'CCCCC' },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal(
-        ['NAME_A="AAA"', 'NAME_B="BBBB"', 'NAME_C="CCCCC"'].join('\n'),
-      );
+      expect(toNameEqualsValueString(variables)).toBe(['NAME_A="AAA"', 'NAME_B="BBBB"', 'NAME_C="CCCCC"'].join('\n'));
     });
 
     it('multiple vars (with exports)', () => {
@@ -623,7 +621,7 @@ describe('environment-utils', () => {
         { name: 'NAME_B', value: 'BBBB' },
         { name: 'NAME_C', value: 'CCCCC' },
       ];
-      expect(toNameEqualsValueString(variables, { addExports: true })).to.equal(
+      expect(toNameEqualsValueString(variables, { addExports: true })).toBe(
         ['export NAME_A="AAA";', 'export NAME_B="BBBB";', 'export NAME_C="CCCCC";'].join('\n'),
       );
     });
@@ -634,7 +632,7 @@ describe('environment-utils', () => {
         { name: 'NAME_B', value: '' },
         { name: 'NAME_C', value: '' },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal(['NAME_A="AAA"', 'NAME_B=""', 'NAME_C=""'].join('\n'));
+      expect(toNameEqualsValueString(variables)).toBe(['NAME_A="AAA"', 'NAME_B=""', 'NAME_C=""'].join('\n'));
     });
 
     it('accept space in values', () => {
@@ -643,7 +641,7 @@ describe('environment-utils', () => {
         { name: 'NAME_B', value: 'BBBB BBBB' },
         { name: 'NAME_C', value: 'CCCCC' },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal(
+      expect(toNameEqualsValueString(variables)).toBe(
         ['NAME_A="AAA"', 'NAME_B="BBBB BBBB"', 'NAME_C="CCCCC"'].join('\n'),
       );
     });
@@ -654,7 +652,7 @@ describe('environment-utils', () => {
         { name: 'NAME_B', value: `BBBB'BBBB` },
         { name: 'NAME_C', value: 'CCCCC' },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal(
+      expect(toNameEqualsValueString(variables)).toBe(
         ['NAME_A="AAA"', `NAME_B="BBBB'BBBB"`, 'NAME_C="CCCCC"'].join('\n'),
       );
     });
@@ -665,7 +663,7 @@ describe('environment-utils', () => {
         { name: 'NAME_B', value: `BBBB"BBBB` },
         { name: 'NAME_C', value: 'CCCCC' },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal(
+      expect(toNameEqualsValueString(variables)).toBe(
         ['NAME_A="AAA"', `NAME_B="BBBB\\"BBBB"`, 'NAME_C="CCCCC"'].join('\n'),
       );
     });
@@ -676,7 +674,7 @@ describe('environment-utils', () => {
         { name: 'NAME_B', value: 'BBBB OTHER=BBBB' },
         { name: 'NAME_C', value: 'CCCCC' },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal(
+      expect(toNameEqualsValueString(variables)).toBe(
         ['NAME_A="AAA"', 'NAME_B="BBBB OTHER=BBBB"', 'NAME_C="CCCCC"'].join('\n'),
       );
     });
@@ -686,7 +684,7 @@ describe('environment-utils', () => {
         { name: 'NAME_A', value: `A\na\nA` },
         { name: 'NAME_B', value: 'BBBB' },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal([`NAME_A="A\na\nA"`, 'NAME_B="BBBB"'].join('\n'));
+      expect(toNameEqualsValueString(variables)).toBe([`NAME_A="A\na\nA"`, 'NAME_B="BBBB"'].join('\n'));
     });
 
     it('accept line breaks (with exports)', () => {
@@ -694,7 +692,7 @@ describe('environment-utils', () => {
         { name: 'NAME_A', value: `A\na\nA` },
         { name: 'NAME_B', value: 'BBBB' },
       ];
-      expect(toNameEqualsValueString(variables, { addExports: true })).to.equal(
+      expect(toNameEqualsValueString(variables, { addExports: true })).toBe(
         [`export NAME_A="A\na\nA";`, 'export NAME_B="BBBB";'].join('\n'),
       );
     });
@@ -704,7 +702,7 @@ describe('environment-utils', () => {
         { name: 'NAME_A', value: `A\n"a"\nA` },
         { name: 'NAME_B', value: 'BBBB' },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal([`NAME_A="A\n\\"a\\"\nA"`, 'NAME_B="BBBB"'].join('\n'));
+      expect(toNameEqualsValueString(variables)).toBe([`NAME_A="A\n\\"a\\"\nA"`, 'NAME_B="BBBB"'].join('\n'));
     });
 
     it('escape double quotes', () => {
@@ -714,7 +712,7 @@ describe('environment-utils', () => {
         { name: 'NAME_B', value: `BBBB " BBBB` },
         { name: 'NAME_C', value: `CCCCC "CCCCC" CCCCC` },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal(
+      expect(toNameEqualsValueString(variables)).toBe(
         ['NAME_A="AAA"', `NAME_B="BBBB \\" BBBB"`, `NAME_C="CCCCC \\"CCCCC\\" CCCCC"`].join('\n'),
       );
     });
@@ -732,7 +730,7 @@ describe('environment-utils', () => {
         // CCCCC \\\"CCCCC\\\" CCCCC
         { name: 'NAME_C', value: `CCCCC \\\\\\"CCCCC\\\\\\" CCCCC` },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal(
+      expect(toNameEqualsValueString(variables)).toBe(
         [
           // AAA \\\" AAA
           `NAME_A="AAA \\\\\\" AAA"`,
@@ -752,7 +750,7 @@ describe('environment-utils', () => {
         // BBBB\nBBBB
         { name: 'NAME_B', value: `BBBB\\nBBBB` },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal(
+      expect(toNameEqualsValueString(variables)).toBe(
         [
           'NAME_A="AAA\nAAA"',
           // BBBB\nBBBB
@@ -768,7 +766,7 @@ describe('environment-utils', () => {
         { name: 'NAME_D', value: `DDDDDD` },
         { name: 'NAME_A', value: `AAA` },
       ];
-      expect(toNameEqualsValueString(variables)).to.equal(
+      expect(toNameEqualsValueString(variables)).toBe(
         ['NAME_A="AAA"', 'NAME_B="BBBB"', 'NAME_C="CCCCC"', 'NAME_D="DDDDDD"'].join('\n'),
       );
     });
@@ -781,7 +779,7 @@ describe('environment-utils', () => {
         { name: 'NAME_B', value: 'BBBB' },
         { name: 'NAME_C', value: 'CCCCC' },
       ];
-      expect(toNameValueObject(variables)).to.deep.equal({
+      expect(toNameValueObject(variables)).toEqual({
         NAME_A: 'AAA',
         NAME_B: 'BBBB',
         NAME_C: 'CCCCC',
@@ -794,7 +792,7 @@ describe('environment-utils', () => {
         { name: 'NAME_A', value: 'aaa' },
         { name: 'NAME_B', value: 'BBBB' },
       ];
-      expect(toNameValueObject(variables)).to.deep.equal({
+      expect(toNameValueObject(variables)).toEqual({
         NAME_A: 'aaa',
         NAME_B: 'BBBB',
       });
@@ -806,7 +804,7 @@ describe('environment-utils', () => {
         { name: 'NAME@BBBB', value: 'BBBB' },
         { name: 'NAME_C', value: 'CCCCC' },
       ];
-      expect(toNameValueObject(variables)).to.deep.equal({
+      expect(toNameValueObject(variables)).toEqual({
         NAME_A: 'AAA',
         NAME_C: 'CCCCC',
       });

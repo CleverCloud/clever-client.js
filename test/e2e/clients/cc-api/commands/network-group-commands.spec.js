@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { CreateNetworkGroupExternalPeerCommand } from '../../../../../src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.js';
 import { CreateNetworkGroupMemberCommand } from '../../../../../src/clients/cc-api/commands/network-group/create-network-group-member-command.js';
 import { DeleteNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/delete-network-group-command.js';
@@ -15,11 +15,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('network-group commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -38,7 +38,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.deep.equalInAnyOrder(createdNetworkGroup);
+    expect(response).toEqualInAnyOrder(createdNetworkGroup);
   });
 
   it('should get network group null', async () => {
@@ -49,7 +49,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should list network groups', async () => {
@@ -63,8 +63,8 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder([ng1, ng2]);
+    expect(response).toHaveLength(2);
+    expect(response).toEqualInAnyOrder([ng1, ng2]);
   });
 
   it('should list network groups empty', async () => {
@@ -74,7 +74,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.have.lengthOf(0);
+    expect(response).toHaveLength(0);
   });
 
   it('should create network group', async () => {
@@ -82,8 +82,8 @@ describe('network-group commands', function () {
 
     const response = await support.createNetworkGroup(application.id);
 
-    expect(response.id).to.match(/ng_.+/);
-    expect(response.ownerId).to.equal(support.organisationId);
+    expect(response.id).toMatch(/ng_.+/);
+    expect(response.ownerId).toBe(support.organisationId);
   });
 
   it('should delete network group', async () => {
@@ -97,7 +97,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should create network group member', async () => {
@@ -113,9 +113,9 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response.id).to.equal(application.id);
-    expect(response.kind).to.equal('APPLICATION');
-    expect(response.label).to.equal('label');
+    expect(response.id).toBe(application.id);
+    expect(response.kind).toBe('APPLICATION');
+    expect(response.label).toBe('label');
   });
 
   it('should delete network group member', async () => {
@@ -130,7 +130,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should create network group external peer', async () => {
@@ -155,11 +155,11 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response.type).to.equal('ExternalPeer');
-    expect(response.parentMember).to.equal(member.id);
-    expect(response.publicKey).to.equal('publicKey');
-    expect(response.label).to.equal('label');
-    expect(response.endpoint.type).to.equal('ClientEndpoint');
+    expect(response.type).toBe('ExternalPeer');
+    expect(response.parentMember).toBe(member.id);
+    expect(response.publicKey).toBe('publicKey');
+    expect(response.label).toBe('label');
+    expect(response.endpoint.type).toBe('ClientEndpoint');
   });
 
   it('should delete network group external peer', async () => {
@@ -191,7 +191,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should get network group peer wireguard config', async () => {
@@ -223,7 +223,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.be.a('string');
+    expect(response).toBeTypeOf('string');
   });
 
   it('should get network group peer wireguard config url', async () => {
@@ -255,10 +255,10 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response.url).to.be.a('string');
-    expect(() => new URL(response.url)).to.not.throw();
-    expect(response.url).to.include(createdNetworkGroup.id);
-    expect(response.url).to.include(externalPeer.id);
+    expect(response.url).toBeTypeOf('string');
+    expect(() => new URL(response.url)).not.toThrow();
+    expect(response.url).toContain(createdNetworkGroup.id);
+    expect(response.url).toContain(externalPeer.id);
   });
 
   it('should search network groups', async () => {
@@ -289,7 +289,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.have.lengthOf(3);
+    expect(response).toHaveLength(3);
   });
 
   it('should search network groups with type filters', async () => {
@@ -321,7 +321,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.have.lengthOf(2);
+    expect(response).toHaveLength(2);
   });
 
   it('should create network group member with es-addon addon', async () => {
@@ -342,9 +342,9 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response.id).to.equal(addon.realId);
-    expect(response.kind).to.equal('ADDON');
-    expect(response.label).to.equal('label');
+    expect(response.id).toBe(addon.realId);
+    expect(response.kind).toBe('ADDON');
+    expect(response.label).toBe('label');
   });
 
   it('should delete network group member with es-addon addon', async () => {
@@ -364,7 +364,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should create network group member with mongodb-addon addon', async () => {
@@ -385,9 +385,9 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response.id).to.equal(addon.realId);
-    expect(response.kind).to.equal('ADDON');
-    expect(response.label).to.equal('label');
+    expect(response.id).toBe(addon.realId);
+    expect(response.kind).toBe('ADDON');
+    expect(response.label).toBe('label');
   });
 
   it('should delete network group member with mongodb-addon addon', async () => {
@@ -407,7 +407,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should create network group member with mysql-addon addon', async () => {
@@ -428,9 +428,9 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response.id).to.equal(addon.realId);
-    expect(response.kind).to.equal('ADDON');
-    expect(response.label).to.equal('label');
+    expect(response.id).toBe(addon.realId);
+    expect(response.kind).toBe('ADDON');
+    expect(response.label).toBe('label');
   });
 
   it('should delete network group member with mysql-addon addon', async () => {
@@ -450,7 +450,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should create network group member with postgresql-addon addon', async () => {
@@ -471,9 +471,9 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response.id).to.equal(addon.realId);
-    expect(response.kind).to.equal('ADDON');
-    expect(response.label).to.equal('label');
+    expect(response.id).toBe(addon.realId);
+    expect(response.kind).toBe('ADDON');
+    expect(response.label).toBe('label');
   });
 
   it('should delete network group member with postgresql-addon addon', async () => {
@@ -493,7 +493,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should create network group member with redis-addon addon', async () => {
@@ -514,9 +514,9 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response.id).to.equal(addon.realId);
-    expect(response.kind).to.equal('ADDON');
-    expect(response.label).to.equal('label');
+    expect(response.id).toBe(addon.realId);
+    expect(response.kind).toBe('ADDON');
+    expect(response.label).toBe('label');
   });
 
   it('should delete network group member with redis-addon addon', async () => {
@@ -536,6 +536,6 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 });

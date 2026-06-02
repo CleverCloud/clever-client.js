@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { CancelMigrationCommand } from '../../../../../src/clients/cc-api/commands/migration/cancel-migration-command.js';
 import { GetMigrationCommand } from '../../../../../src/clients/cc-api/commands/migration/get-migration-command.js';
 import { ListMigrationCommand } from '../../../../../src/clients/cc-api/commands/migration/list-migration-command.js';
@@ -10,11 +10,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe.skip('migration commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -43,7 +43,7 @@ describe.skip('migration commands', function () {
       }),
     );
 
-    expect(response.id).to.equal(createdMigration.id);
+    expect(response.id).toBe(createdMigration.id);
   });
 
   it('should get migration null', async () => {
@@ -54,7 +54,7 @@ describe.skip('migration commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should list migrations', async () => {
@@ -77,8 +77,8 @@ describe.skip('migration commands', function () {
       }),
     );
 
-    expect(response).to.have.lengthOf(1);
-    expect(response[0]).to.deep.equalInAnyOrder(createdMigration);
+    expect(response).toHaveLength(1);
+    expect(response[0]).toEqualInAnyOrder(createdMigration);
   });
 
   it('should list migrations empty', async () => {
@@ -93,7 +93,7 @@ describe.skip('migration commands', function () {
       }),
     );
 
-    expect(response).to.have.lengthOf(0);
+    expect(response).toHaveLength(0);
   });
 
   it('should list migration preorders', async () => {
@@ -109,7 +109,7 @@ describe.skip('migration commands', function () {
       }),
     );
 
-    expect(response.ownerId).to.equal(support.organisationId);
+    expect(response.ownerId).toBe(support.organisationId);
   });
 
   it('should start migration', async () => {
@@ -127,8 +127,8 @@ describe.skip('migration commands', function () {
       }),
     );
 
-    expect(result.id).to.match(/migration_.+/);
-    expect(result.status).to.equal('RUNNING');
+    expect(result.id).toMatch(/migration_.+/);
+    expect(result.status).toBe('RUNNING');
   });
 
   it('should cancel migration', async () => {
@@ -152,6 +152,6 @@ describe.skip('migration commands', function () {
       }),
     );
 
-    expect(result).to.be.null;
+    expect(result).toBeNull();
   });
 });

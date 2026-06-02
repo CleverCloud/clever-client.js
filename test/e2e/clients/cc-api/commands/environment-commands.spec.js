@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { UpdateConfigProviderCommand } from '../../../../../src/clients/cc-api/commands/config-provider/update-config-provider-command.js';
 import { CreateOrUpdateEnvironmentVariableCommand } from '../../../../../src/clients/cc-api/commands/environment/create-or-update-environment-variable-command.js';
 import { DeleteEnvironmentVariableCommand } from '../../../../../src/clients/cc-api/commands/environment/delete-environment-variable-command.js';
@@ -12,11 +12,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('environment commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -45,7 +45,7 @@ describe('environment commands', function () {
         }),
       );
 
-      expect(response).to.deep.equalInAnyOrder([
+      expect(response).toEqualInAnyOrder([
         { name: 'FOO', value: 'baz' },
         { name: 'BAR', value: 'bar' },
       ]);
@@ -70,7 +70,7 @@ describe('environment commands', function () {
         }),
       );
 
-      expect(response).to.deep.equalInAnyOrder([{ name: 'BAR', value: 'bar' }]);
+      expect(response).toEqualInAnyOrder([{ name: 'BAR', value: 'bar' }]);
     });
 
     it('should get environment', async () => {
@@ -87,7 +87,7 @@ describe('environment commands', function () {
 
       const response = await support.client.send(new GetEnvironmentCommand({ applicationId: application.id }));
 
-      expect(response).to.deep.equalInAnyOrder({
+      expect(response).toEqualInAnyOrder({
         environment: [
           { name: 'FOO', value: 'bar' },
           { name: 'BAR', value: 'bar' },
@@ -145,7 +145,7 @@ describe('environment commands', function () {
         }),
       );
 
-      expect(response).to.deep.equalInAnyOrder({
+      expect(response).toEqualInAnyOrder({
         environment: [
           { name: 'APP1_FOO', value: 'app1 foo' },
           { name: 'APP1_BAR', value: 'app1 bar' },
@@ -188,7 +188,7 @@ describe('environment commands', function () {
 
       const response = await support.client.send(new GetExposedEnvironmentCommand({ applicationId: application.id }));
 
-      expect(response).to.deep.equalInAnyOrder([
+      expect(response).toEqualInAnyOrder([
         { name: 'FOO', value: 'foo' },
         { name: 'BAR', value: 'bar' },
       ]);
@@ -207,7 +207,7 @@ describe('environment commands', function () {
         }),
       );
 
-      expect(response).to.be.null;
+      expect(response).toBeNull();
     });
 
     it('should update environment', async () => {
@@ -229,7 +229,7 @@ describe('environment commands', function () {
         }),
       );
 
-      expect(response).to.deep.equalInAnyOrder([{ name: 'FOO', value: 'FOO BAR' }]);
+      expect(response).toEqualInAnyOrder([{ name: 'FOO', value: 'FOO BAR' }]);
     });
   });
 
@@ -248,7 +248,7 @@ describe('environment commands', function () {
 
       const response = await support.client.send(new GetEnvironmentCommand({ addonId: addon.id }));
 
-      expect(response).to.deep.equalInAnyOrder({
+      expect(response).toEqualInAnyOrder({
         environment: [
           { name: 'ADDON_FOO', value: 'addon foo' },
           { name: 'ADDON_BAR', value: 'addon bar' },

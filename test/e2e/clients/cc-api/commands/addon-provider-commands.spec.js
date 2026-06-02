@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { CreateAddonProviderCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/create-addon-provider-command.js';
 import { CreateAddonProviderFeatureCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/create-addon-provider-feature-command.js';
 import { CreateAddonProviderPlanCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/create-addon-provider-plan-command.js';
@@ -21,11 +21,11 @@ const addonProvider = {
 describe.skip('addon-provider commands', function () {
   const support = e2eSupport({ user: 'test-user-without-github' });
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -77,15 +77,15 @@ describe.skip('addon-provider commands', function () {
 
     console.log(response);
 
-    expect(response.id).to.deep.equal('test-addon-provider');
-    expect(response.name).to.deep.equal('Test Addon Provider');
-    expect(response.status).to.deep.equal('ALPHA');
+    expect(response.id).toEqual('test-addon-provider');
+    expect(response.name).toEqual('Test Addon Provider');
+    expect(response.status).toEqual('ALPHA');
   });
 
   it('should delete addon provider', async () => {
     const response = await support.client.send(new DeleteAddonProviderCommand({ addonProviderId: addonProvider.id }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should update addon provider', async () => {
@@ -96,8 +96,8 @@ describe.skip('addon-provider commands', function () {
       }),
     );
 
-    expect(response.id).to.equal(addonProvider.id);
-    expect(response.name).to.equal('Test Addon Provider updated');
+    expect(response.id).toBe(addonProvider.id);
+    expect(response.name).toBe('Test Addon Provider updated');
   });
 
   it('should get addon provider', async () => {
@@ -109,9 +109,9 @@ describe.skip('addon-provider commands', function () {
 
     console.log(response);
 
-    expect(response.id).to.deep.equal(addonProvider.id);
-    expect(response.name).to.deep.equal('Test Addon Provider');
-    expect(response.status).to.deep.equal('ALPHA');
+    expect(response.id).toEqual(addonProvider.id);
+    expect(response.name).toEqual('Test Addon Provider');
+    expect(response.status).toEqual('ALPHA');
   });
 
   it('should create addon provider feature', async () => {
@@ -123,9 +123,9 @@ describe.skip('addon-provider commands', function () {
       }),
     );
 
-    expect(response.name).to.equal('feature');
-    expect(response.type).to.equal('STRING');
-    expect(response.nameCode).to.equal('feature');
+    expect(response.name).toBe('feature');
+    expect(response.type).toBe('STRING');
+    expect(response.nameCode).toBe('feature');
   });
 
   it('should delete addon provider feature', async () => {
@@ -144,7 +144,7 @@ describe.skip('addon-provider commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should list addon provider feature', async () => {
@@ -167,14 +167,14 @@ describe.skip('addon-provider commands', function () {
       new ListAddonProviderFeatureCommand({ addonProviderId: addonProvider.id }),
     );
 
-    expect(response).to.be.an('array');
-    expect(response).to.have.lengthOf(2);
-    expect(response[0].name).to.equal('feature1');
-    expect(response[0].nameCode).to.equal('feature1');
-    expect(response[0].type).to.equal('STRING');
-    expect(response[1].name).to.equal('feature2');
-    expect(response[1].nameCode).to.equal('feature2');
-    expect(response[1].type).to.equal('BOOLEAN');
+    expect(response).toBeInstanceOf(Array);
+    expect(response).toHaveLength(2);
+    expect(response[0].name).toBe('feature1');
+    expect(response[0].nameCode).toBe('feature1');
+    expect(response[0].type).toBe('STRING');
+    expect(response[1].name).toBe('feature2');
+    expect(response[1].nameCode).toBe('feature2');
+    expect(response[1].type).toBe('BOOLEAN');
   });
 
   it('should create addon provider plan', async () => {
@@ -188,12 +188,12 @@ describe.skip('addon-provider commands', function () {
     );
 
     console.log(response);
-    expect(response.id).to.match(/^plan_.+/);
-    expect(response.name).to.equal('plan name 2');
-    expect(response.price).to.equal(42);
-    expect(response.slug).to.equal('XS');
-    expect(response.zones).to.be.an('array');
-    expect(response.features).to.be.an('array');
+    expect(response.id).toMatch(/^plan_.+/);
+    expect(response.name).toBe('plan name 2');
+    expect(response.price).toBe(42);
+    expect(response.slug).toBe('XS');
+    expect(response.zones).toBeInstanceOf(Array);
+    expect(response.features).toBeInstanceOf(Array);
   });
 
   it('should update addon provider plan', async () => {
@@ -217,12 +217,12 @@ describe.skip('addon-provider commands', function () {
     );
 
     console.log(response);
-    expect(response.id).to.equal(plan.id);
-    expect(response.name).to.equal('updated name');
-    expect(response.price).to.equal(54);
-    expect(response.slug).to.equal('XXS');
-    expect(response.zones).to.be.an('array');
-    expect(response.features).to.be.an('array');
+    expect(response.id).toBe(plan.id);
+    expect(response.name).toBe('updated name');
+    expect(response.price).toBe(54);
+    expect(response.slug).toBe('XXS');
+    expect(response.zones).toBeInstanceOf(Array);
+    expect(response.features).toBeInstanceOf(Array);
   });
 
   it('should list addon provider plans', async () => {
@@ -246,9 +246,9 @@ describe.skip('addon-provider commands', function () {
     const response = await support.client.send(new ListAddonProviderPlanCommand({ addonProviderId: addonProvider.id }));
 
     console.log(response);
-    expect(response).to.be.an('array');
-    expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder([plan1, plan2]);
+    expect(response).toBeInstanceOf(Array);
+    expect(response).toHaveLength(2);
+    expect(response).toEqualInAnyOrder([plan1, plan2]);
   });
 
   it('should delete addon provider plans', async () => {
@@ -266,6 +266,6 @@ describe.skip('addon-provider commands', function () {
     );
 
     console.log(response);
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 });

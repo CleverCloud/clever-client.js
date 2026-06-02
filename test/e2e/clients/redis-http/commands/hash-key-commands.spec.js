@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { CreateHashKeyCommand } from '../../../../../src/clients/redis-http/commands/hash-key/create-hash-key-command.js';
 import { DeleteHashKeyElementCommand } from '../../../../../src/clients/redis-http/commands/hash-key/delete-hash-key-element-command.js';
 import { ScanHashKeyCommand } from '../../../../../src/clients/redis-http/commands/hash-key/scan-hash-key-command.js';
@@ -8,7 +8,7 @@ import { e2eSupport } from '../e2e-support.js';
 describe('hash-key commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
@@ -20,7 +20,7 @@ describe('hash-key commands', function () {
     const key = { key: 'test', elements: [{ field: 'f1', value: 'v1' }] };
     const response = await support.client.send(new CreateHashKeyCommand(key));
 
-    expect(response).to.deep.equal(key);
+    expect(response).toEqual(key);
   });
 
   it('should delete hash key element', async () => {
@@ -34,7 +34,7 @@ describe('hash-key commands', function () {
       }),
     );
 
-    expect(response).to.deep.equal({ key: 'test', field: 'f1', deleted: true });
+    expect(response).toEqual({ key: 'test', field: 'f1', deleted: true });
   });
 
   it('should scan hash key', async () => {
@@ -49,9 +49,9 @@ describe('hash-key commands', function () {
 
     const response = await support.client.send(new ScanHashKeyCommand({ key: 'test' }));
 
-    expect(response.key).to.equal('test');
-    expect(response.cursor).to.be.a('number');
-    expect(response.elements).to.deep.equalInAnyOrder(key.elements);
+    expect(response.key).toBe('test');
+    expect(response.cursor).toBeTypeOf('number');
+    expect(response.elements).toEqualInAnyOrder(key.elements);
   });
 
   it('should set hash key element', async () => {
@@ -66,6 +66,6 @@ describe('hash-key commands', function () {
       }),
     );
 
-    expect(response).to.deep.equal({ key: 'test', field: 'f1', value: 'v2', added: false });
+    expect(response).toEqual({ key: 'test', field: 'f1', value: 'v2', added: false });
   });
 });

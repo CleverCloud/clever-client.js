@@ -1,7 +1,7 @@
 /**
  * @import {PaymentMethod, Orga} from '../../../../esm/utils/payments.types.js'
  */
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import {
   ERROR_TYPES,
   getAllOrgaPaymentMethodsErrors,
@@ -42,76 +42,76 @@ describe('getOrgaPaymentMethodsErrors()', () => {
   describe('simple orga', () => {
     it('default payment method', () => {
       const errors = getOrgaPaymentMethodsError(simpleOrga, [simpleDefaultCard, simpleSepa]);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
     it('no payment method', () => {
       const errors = getOrgaPaymentMethodsError(simpleOrga, []);
-      expect(errors).to.deep.equal(ERROR_TYPES.NO_PAYMENT_METHOD);
+      expect(errors).toEqual(ERROR_TYPES.NO_PAYMENT_METHOD);
     });
     it('no default payment method', () => {
       const errors = getOrgaPaymentMethodsError(simpleOrga, [simpleCard, simpleSepa]);
-      expect(errors).to.deep.equal(ERROR_TYPES.NO_DEFAULT_PAYMENT_METHOD);
+      expect(errors).toEqual(ERROR_TYPES.NO_DEFAULT_PAYMENT_METHOD);
     });
     it('expired default payment method', () => {
       const errors = getOrgaPaymentMethodsError(simpleOrga, [expiredDefaultCard, simpleSepa]);
-      expect(errors).to.deep.equal(ERROR_TYPES.DEFAULT_PAYMENT_METHOD_IS_EXPIRED);
+      expect(errors).toEqual(ERROR_TYPES.DEFAULT_PAYMENT_METHOD_IS_EXPIRED);
     });
   });
 
   describe('premium orga', () => {
     it('default payment method', () => {
       const errors = getOrgaPaymentMethodsError(premiumOrga, [simpleDefaultCard, simpleSepa]);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
     it('no payment method', () => {
       const errors = getOrgaPaymentMethodsError(premiumOrga, []);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
     it('no default payment method', () => {
       const errors = getOrgaPaymentMethodsError(premiumOrga, [simpleCard, simpleSepa]);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
     it('expired default payment method', () => {
       const errors = getOrgaPaymentMethodsError(premiumOrga, [expiredDefaultCard, simpleSepa]);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
   });
 
   describe('trusted orga', () => {
     it('default payment method', () => {
       const errors = getOrgaPaymentMethodsError(trustedOrga, [simpleDefaultCard, simpleSepa]);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
     it('no payment method', () => {
       const errors = getOrgaPaymentMethodsError(trustedOrga, []);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
     it('no default payment method', () => {
       const errors = getOrgaPaymentMethodsError(trustedOrga, [simpleCard, simpleSepa]);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
     it('expired default payment method', () => {
       const errors = getOrgaPaymentMethodsError(trustedOrga, [expiredDefaultCard, simpleSepa]);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
   });
 
   describe('premium and trusted orga', () => {
     it('default payment method', () => {
       const errors = getOrgaPaymentMethodsError(premiumAndTrustedOrga, [simpleDefaultCard, simpleSepa]);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
     it('no payment method', () => {
       const errors = getOrgaPaymentMethodsError(premiumAndTrustedOrga, []);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
     it('no default payment method', () => {
       const errors = getOrgaPaymentMethodsError(premiumAndTrustedOrga, [simpleCard, simpleSepa]);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
     it('expired default payment method', () => {
       const errors = getOrgaPaymentMethodsError(premiumAndTrustedOrga, [expiredDefaultCard, simpleSepa]);
-      expect(errors).to.deep.equal(null);
+      expect(errors).toEqual(null);
     });
   });
 });
@@ -119,12 +119,12 @@ describe('getOrgaPaymentMethodsErrors()', () => {
 describe('checkAllOrgaPaymentMethods', () => {
   it('personal orga only without errors', () => {
     const errors = getAllOrgaPaymentMethodsErrors({ orga: simpleOrga, paymentMethods: [simpleDefaultCard] });
-    expect(errors).to.deep.equal([]);
+    expect(errors).toEqual([]);
   });
 
   it('personal orga only with errors', () => {
     const errors = getAllOrgaPaymentMethodsErrors({ orga: simpleOrga, paymentMethods: [] });
-    expect(errors).to.deep.equal([{ type: ERROR_TYPES.NO_PAYMENT_METHOD, orga: simpleOrga }]);
+    expect(errors).toEqual([{ type: ERROR_TYPES.NO_PAYMENT_METHOD, orga: simpleOrga }]);
   });
 
   it('other orgas without errors', () => {
@@ -132,7 +132,7 @@ describe('checkAllOrgaPaymentMethods', () => {
       { orga: simpleOrgaFoo, paymentMethods: [simpleDefaultCard] },
       { orga: simpleOrgaBar, paymentMethods: [simpleDefaultSepa] },
     ]);
-    expect(errors).to.deep.equal([]);
+    expect(errors).toEqual([]);
   });
 
   it('other orgas with one with errors', () => {
@@ -140,7 +140,7 @@ describe('checkAllOrgaPaymentMethods', () => {
       { orga: simpleOrgaFoo, paymentMethods: [simpleCard] },
       { orga: simpleOrgaBar, paymentMethods: [simpleDefaultSepa] },
     ]);
-    expect(errors).to.deep.equal([{ type: ERROR_TYPES.NO_DEFAULT_PAYMENT_METHOD, orga: simpleOrgaFoo }]);
+    expect(errors).toEqual([{ type: ERROR_TYPES.NO_DEFAULT_PAYMENT_METHOD, orga: simpleOrgaFoo }]);
   });
 
   it('other orgas with many with errors', () => {
@@ -148,7 +148,7 @@ describe('checkAllOrgaPaymentMethods', () => {
       { orga: simpleOrgaFoo, paymentMethods: [simpleCard] },
       { orga: simpleOrgaBar, paymentMethods: [simpleCard] },
     ]);
-    expect(errors).to.deep.equal([
+    expect(errors).toEqual([
       { type: ERROR_TYPES.NO_DEFAULT_PAYMENT_METHOD, orga: simpleOrgaFoo },
       { type: ERROR_TYPES.NO_DEFAULT_PAYMENT_METHOD, orga: simpleOrgaBar },
     ]);

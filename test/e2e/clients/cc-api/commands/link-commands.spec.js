@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { AddLinkCommand } from '../../../../../src/clients/cc-api/commands/link/add-link-command.js';
 import { ListLinkCommand } from '../../../../../src/clients/cc-api/commands/link/list-link-command.js';
 import { RemoveLinkCommand } from '../../../../../src/clients/cc-api/commands/link/remove-link-command.js';
@@ -7,11 +7,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('link commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -29,7 +29,7 @@ describe('link commands', function () {
       new AddLinkCommand({ applicationId: application1.id, targetApplicationId: application2.id }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should add link between an application and an addon', async () => {
@@ -39,7 +39,7 @@ describe('link commands', function () {
       new AddLinkCommand({ applicationId: application.id, targetAddonId: addon.id }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should list application links', async () => {
@@ -55,17 +55,17 @@ describe('link commands', function () {
 
     const response = await support.client.send(new ListLinkCommand({ applicationId: application1.id }));
 
-    expect(response).to.be.an('array');
-    expect(response).to.have.lengthOf(2);
-    expect(response[0].type).to.equal('link-to-application');
-    expect(response[0]).to.ownProperty('application');
+    expect(response).toBeInstanceOf(Array);
+    expect(response).toHaveLength(2);
+    expect(response[0].type).toBe('link-to-application');
+    expect(response[0]).toHaveProperty('application');
     // @ts-ignore
-    expect(response[0].application.id).to.equal(application2.id);
+    expect(response[0].application.id).toBe(application2.id);
 
-    expect(response[1].type).to.equal('link-to-addon');
-    expect(response[1]).to.ownProperty('addon');
+    expect(response[1].type).toBe('link-to-addon');
+    expect(response[1]).toHaveProperty('addon');
     // @ts-ignore
-    expect(response[1].addon.id).to.equal(addon.id);
+    expect(response[1].addon.id).toBe(addon.id);
   });
 
   it('should list addon links', async () => {
@@ -81,10 +81,10 @@ describe('link commands', function () {
 
     const response = await support.client.send(new ListLinkCommand({ addonId: addon.id }));
 
-    expect(response).to.be.an('array');
-    expect(response).to.have.lengthOf(2);
+    expect(response).toBeInstanceOf(Array);
+    expect(response).toHaveLength(2);
     // @ts-ignore
-    expect(response.map((l) => ({ type: l.type, id: l.application.id }))).to.deep.equalInAnyOrder([
+    expect(response.map((l) => ({ type: l.type, id: l.application.id }))).toEqualInAnyOrder([
       { type: 'link-to-application', id: application1.id },
       { type: 'link-to-application', id: application2.id },
     ]);
@@ -103,7 +103,7 @@ describe('link commands', function () {
       new RemoveLinkCommand({ applicationId: application1.id, targetApplicationId: application2.id }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should remove link to addon', async () => {
@@ -114,6 +114,6 @@ describe('link commands', function () {
       new RemoveLinkCommand({ applicationId: application.id, targetAddonId: addon.id }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 });

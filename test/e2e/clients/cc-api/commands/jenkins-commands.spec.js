@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { GetJenkinsInfoCommand } from '../../../../../src/clients/cc-api/commands/jenkins/get-jenkins-info-command.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
@@ -8,11 +8,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe.skip('jenkins commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -35,20 +35,20 @@ describe.skip('jenkins commands', function () {
 
     const response = await support.client.send(new GetJenkinsInfoCommand({ addonId: addon.id }));
 
-    expect(response.id).to.be.a('string');
-    expect(response.addonId).to.equal(addon.id);
-    expect(response.plan).to.equal('XS');
-    expect(response.zone).to.equal('par');
+    expect(response.id).toBeTypeOf('string');
+    expect(response.addonId).toBe(addon.id);
+    expect(response.plan).toBe('XS');
+    expect(response.zone).toBe('par');
     checkDateFormat(response.creationDate);
     checkDateFormat(response.deletionDate);
-    expect(response.status).to.equal('ACTIVE');
-    expect(response.host).to.be.a('string');
-    expect(response.user).to.be.a('string');
-    expect(response.password).to.be.a('string');
-    expect(response.version).to.be.a('string');
-    expect(response.features).to.deep.equalInAnyOrder([{ name: 'encryption', enabled: false }]);
-    expect(response.updates.manageLink).to.be.a('string');
-    expect(response.updates.versions.current).to.be.a('string');
-    expect(response.updates.versions.available).to.be.a('string');
+    expect(response.status).toBe('ACTIVE');
+    expect(response.host).toBeTypeOf('string');
+    expect(response.user).toBeTypeOf('string');
+    expect(response.password).toBeTypeOf('string');
+    expect(response.version).toBeTypeOf('string');
+    expect(response.features).toEqualInAnyOrder([{ name: 'encryption', enabled: false }]);
+    expect(response.updates.manageLink).toBeTypeOf('string');
+    expect(response.updates.versions.current).toBeTypeOf('string');
+    expect(response.updates.versions.available).toBeTypeOf('string');
   });
 });

@@ -1,7 +1,7 @@
 /**
  * @import { ApiToken } from '../../../../../src/clients/cc-api-bridge/commands/api-token/api-token.types.js'
  */
-import { expect } from 'chai';
+import { afterEach, describe, expect, it } from 'vitest';
 import { CreateApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.js';
 import { DeleteApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/delete-api-token-command.js';
 import { ListApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/list-api-token-command.js';
@@ -34,27 +34,28 @@ describe('api-token commands', function () {
     );
     createdTokenId = tokenCreated.apiTokenId;
 
-    expect(tokenCreated.apiToken).to.be.a('string');
-    expect(tokenCreated.apiTokenId).to.be.a('string');
-    expect(tokenCreated.name).to.equal('test-api-token');
-    expect(tokenCreated.description).to.equal('test description');
-    expect(tokenCreated.creationDate).to.equal(new Date(tokenCreated.creationDate).toISOString());
-    expect(tokenCreated.expirationDate).to.equal(new Date(tokenCreated.expirationDate).toISOString());
-    expect(tokenCreated.state).to.equal('ACTIVE');
+    expect(tokenCreated.apiToken).toBeTypeOf('string');
+    expect(tokenCreated.apiTokenId).toBeTypeOf('string');
+    expect(tokenCreated.name).toBe('test-api-token');
+    expect(tokenCreated.description).toBe('test description');
+    expect(tokenCreated.creationDate).toBe(new Date(tokenCreated.creationDate).toISOString());
+    expect(tokenCreated.expirationDate).toBe(new Date(tokenCreated.expirationDate).toISOString());
+    expect(tokenCreated.state).toBe('ACTIVE');
 
     // list
     const listResponse = await support.client.send(new ListApiTokenCommand());
 
-    expect(listResponse).to.be.an('array').of.length(2);
-    expect(listResponse.map((t) => t.apiTokenId)).to.contain(tokenCreated.apiTokenId);
+    expect(listResponse).toBeInstanceOf(Array);
+    expect(listResponse).toHaveLength(2);
+    expect(listResponse.map((t) => t.apiTokenId)).toContain(tokenCreated.apiTokenId);
     const tokenFormList = listResponse.find((t) => t.apiTokenId === tokenCreated.apiTokenId);
-    expect(tokenFormList.name).to.equal(tokenCreated.name);
-    expect(tokenFormList.description).to.equal(tokenCreated.description);
-    expect(tokenFormList.userId).to.be.a('string');
-    expect(tokenFormList.creationDate).to.equal(tokenCreated.creationDate);
-    expect(tokenFormList.expirationDate).to.equal(tokenCreated.expirationDate);
-    expect(tokenFormList.ip).to.be.a('string');
-    expect(tokenFormList.state).to.equal('ACTIVE');
+    expect(tokenFormList.name).toBe(tokenCreated.name);
+    expect(tokenFormList.description).toBe(tokenCreated.description);
+    expect(tokenFormList.userId).toBeTypeOf('string');
+    expect(tokenFormList.creationDate).toBe(tokenCreated.creationDate);
+    expect(tokenFormList.expirationDate).toBe(tokenCreated.expirationDate);
+    expect(tokenFormList.ip).toBeTypeOf('string');
+    expect(tokenFormList.state).toBe('ACTIVE');
 
     // update
     const updateResponse = await support.client.send(
@@ -65,18 +66,18 @@ describe('api-token commands', function () {
       }),
     );
 
-    expect(updateResponse).to.be.null;
+    expect(updateResponse).toBeNull();
     const apiTokenUpdated = await getApiToken(tokenCreated.apiTokenId);
-    expect(apiTokenUpdated.name).to.equal('test-api-token-updated');
-    expect(apiTokenUpdated.description).to.equal('test description updated');
+    expect(apiTokenUpdated.name).toBe('test-api-token-updated');
+    expect(apiTokenUpdated.description).toBe('test description updated');
 
     // delete
     const deleteResponse = await support.client.send(
       new DeleteApiTokenCommand({ apiTokenId: tokenCreated.apiTokenId }),
     );
-    expect(deleteResponse).to.be.null;
+    expect(deleteResponse).toBeNull();
     const apiTokenDeleted = await getApiToken(tokenCreated.apiTokenId);
-    expect(apiTokenDeleted).to.be.undefined;
+    expect(apiTokenDeleted).toBeUndefined();
     createdTokenId = null;
   });
 

@@ -37,3 +37,41 @@ export function getE2eUser(userName) {
 export function getAllE2eUsers() {
   return Array.from(e2eTestUsers.values());
 }
+
+/**
+ * Hydrates the in-memory user map with the login state (oauth tokens / api token).
+ *
+ * Needed for Vitest node-e2e: `login()` runs in the `globalSetup` context, which is a
+ * separate module graph from the test workers. The tokens it sets on the user objects are
+ * passed to the workers via Vitest's `provide`/`inject`, and this function copies them
+ * back onto the shared user objects so the e2e support code can read them lazily.
+ *
+ * @param {Record<E2eUserName, Partial<E2eUser>>} loginState
+ */
+export function hydrateE2eUsers(loginState) {
+  for (const [userName, state] of Object.entries(loginState)) {
+    const user = e2eTestUsers.get(/** @type {E2eUserName} */ (userName));
+    if (user != null) {
+      Object.assign(user, state);
+    }
+  }
+}
+
+/**
+ * Extracts the serializable login state of all users (tokens set by `login()`), suitable
+ * for passing across Vitest's `provide`/`inject` boundary.
+ *
+ * @returns {Record<string, Partial<E2eUser>>}
+ */
+export function getE2eUsersLoginState() {
+  /** @type {Record<string, Partial<E2eUser>>} */
+  const state = {};
+  for (const user of getAllE2eUsers()) {
+    state[user.userName] = {
+      oauthTokens: user.oauthTokens,
+      apiToken: user.apiToken,
+      apiTokenId: user.apiTokenId,
+    };
+  }
+  return state;
+}

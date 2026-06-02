@@ -2,7 +2,7 @@
  * @import { ApplicationRuntimeLog, ApplicationAccessLog } from '../../../../../src/clients/cc-api/commands/log/log.types.js';
  * @import { CcStream } from '../../../../../src/lib/stream/cc-stream.js';
  */
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { ListLogCommand } from '../../../../../src/clients/cc-api/commands/log/list-log-command.js';
 import { StreamApplicationAccessLogCommand } from '../../../../../src/clients/cc-api/commands/log/stream-application-access-log-command.js';
 import { StreamApplicationRuntimeLogCommand } from '../../../../../src/clients/cc-api/commands/log/stream-application-runtime-log-command.js';
@@ -16,17 +16,17 @@ describe('log commands', function () {
   it('should list addon log', async () => {
     const response = await support.client.send(new ListLogCommand({ addonId: STATIC_MYSQL_ADDON_ID }));
 
-    expect(response).to.be.an('array');
-    expect(response[0].id).to.be.a('string');
+    expect(response).toBeInstanceOf(Array);
+    expect(response[0].id).toBeTypeOf('string');
     checkDateFormat(response[0].date);
-    expect(response[0].message).to.be.a('string');
-    expect(response[0].type).to.be.a('string');
-    expect(response[0].severity).to.be.a('string');
-    expect(response[0].program).to.be.a('string');
-    expect(response[0].deploymentId).to.be.a('string');
-    expect(response[0].sourceHost).to.be.a('string');
-    expect(response[0].sourceIp).to.be.a('string');
-    expect(response[0].zone).to.be.a('string');
+    expect(response[0].message).toBeTypeOf('string');
+    expect(response[0].type).toBeTypeOf('string');
+    expect(response[0].severity).toBeTypeOf('string');
+    expect(response[0].program).toBeTypeOf('string');
+    expect(response[0].deploymentId).toBeTypeOf('string');
+    expect(response[0].sourceHost).toBeTypeOf('string');
+    expect(response[0].sourceIp).toBeTypeOf('string');
+    expect(response[0].zone).toBeTypeOf('string');
   });
 
   it('should list addon log with options', async () => {
@@ -42,17 +42,17 @@ describe('log commands', function () {
       }),
     );
 
-    expect(response).to.be.an('array');
-    expect(response[0].id).to.be.a('string');
+    expect(response).toBeInstanceOf(Array);
+    expect(response[0].id).toBeTypeOf('string');
     checkDateFormat(response[0].date);
-    expect(response[0].message).to.be.a('string');
-    expect(response[0].type).to.be.a('string');
-    expect(response[0].severity).to.be.a('string');
-    expect(response[0].program).to.be.a('string');
-    expect(response[0].deploymentId).to.be.a('string');
-    expect(response[0].sourceHost).to.be.a('string');
-    expect(response[0].sourceIp).to.be.a('string');
-    expect(response[0].zone).to.be.a('string');
+    expect(response[0].message).toBeTypeOf('string');
+    expect(response[0].type).toBeTypeOf('string');
+    expect(response[0].severity).toBeTypeOf('string');
+    expect(response[0].program).toBeTypeOf('string');
+    expect(response[0].deploymentId).toBeTypeOf('string');
+    expect(response[0].sourceHost).toBeTypeOf('string');
+    expect(response[0].sourceIp).toBeTypeOf('string');
+    expect(response[0].zone).toBeTypeOf('string');
   });
 
   describe('log stream', function () {
@@ -61,12 +61,12 @@ describe('log commands', function () {
     /** @type {CcStream} */
     let currentStream = null;
 
-    before(async () => {
+    beforeAll(async () => {
       currentStream = null;
       await support.prepare();
     });
 
-    after(async () => {
+    afterAll(async () => {
       await support.cleanup();
     });
 
@@ -92,18 +92,18 @@ describe('log commands', function () {
 
       const log = await deferred.promise;
 
-      expect(log.applicationId).to.equal(STATIC_LOGS_APPLICATION);
-      expect(log.commitId).to.be.a('string');
+      expect(log.applicationId).toBe(STATIC_LOGS_APPLICATION);
+      expect(log.commitId).toBeTypeOf('string');
       checkDateFormat(log.date);
-      expect(log.deploymentId).to.be.a('string');
-      expect(log.id).to.be.a('string');
-      expect(log.instanceId).to.be.a('string');
-      expect(log.message).to.equal('test log message');
-      expect(log.priority).to.be.a('number');
-      expect(log.service).to.be.a('string');
-      expect(log.severity).to.equal('info');
-      expect(log.version).to.be.a('string');
-      expect(log.zone).to.equal('par');
+      expect(log.deploymentId).toBeTypeOf('string');
+      expect(log.id).toBeTypeOf('string');
+      expect(log.instanceId).toBeTypeOf('string');
+      expect(log.message).toBe('test log message');
+      expect(log.priority).toBeTypeOf('number');
+      expect(log.service).toBeTypeOf('string');
+      expect(log.severity).toBe('info');
+      expect(log.version).toBeTypeOf('string');
+      expect(log.zone).toBe('par');
     });
 
     it('should get application access logs', async function () {
@@ -123,33 +123,33 @@ describe('log commands', function () {
       currentStream.start();
       const log = await deferred.promise;
 
-      expect(log.applicationId).to.equal(STATIC_LOGS_APPLICATION);
-      expect(log.bytesIn).to.be.a('number');
-      expect(log.bytesOut).to.be.a('number');
+      expect(log.applicationId).toBe(STATIC_LOGS_APPLICATION);
+      expect(log.bytesIn).toBeTypeOf('number');
+      expect(log.bytesOut).toBeTypeOf('number');
       checkDateFormat(log.date);
-      expect(log.destination.city).to.be.a('string');
-      expect(log.destination.countryCode).to.be.a('string');
-      expect(log.destination.geoLocation.latitude).to.be.a('number');
-      expect(log.destination.geoLocation.longitude).to.be.a('number');
-      expect(log.destination.ip).to.be.a('string');
-      expect(log.destination.port).to.be.a('number');
-      expect(log.id).to.be.a('string');
-      expect(log.instanceId).to.be.a('string');
-      expect(log.requestId).to.be.a('string');
-      expect(log.source.city).to.be.a('string');
-      expect(log.source.countryCode).to.be.a('string');
-      expect(log.source.geoLocation.latitude).to.be.a('number');
-      expect(log.source.geoLocation.longitude).to.be.a('number');
-      expect(log.source.ip).to.be.a('string');
-      expect(log.source.port).to.be.a('number');
-      expect(log.zone).to.be.a('string');
-      expect(log.type).to.be.a('string');
-      expect(log.detail.request.host).to.be.a('string');
-      expect(log.detail.request.method).to.equal('GET');
-      expect(log.detail.request.path).to.equal('/');
-      expect(log.detail.request.scheme).to.be.a('string');
-      expect(log.detail.response.statusCode).to.equal(200);
-      expect(log.detail.response.time).to.be.a('number');
+      expect(log.destination.city).toBeTypeOf('string');
+      expect(log.destination.countryCode).toBeTypeOf('string');
+      expect(log.destination.geoLocation.latitude).toBeTypeOf('number');
+      expect(log.destination.geoLocation.longitude).toBeTypeOf('number');
+      expect(log.destination.ip).toBeTypeOf('string');
+      expect(log.destination.port).toBeTypeOf('number');
+      expect(log.id).toBeTypeOf('string');
+      expect(log.instanceId).toBeTypeOf('string');
+      expect(log.requestId).toBeTypeOf('string');
+      expect(log.source.city).toBeTypeOf('string');
+      expect(log.source.countryCode).toBeTypeOf('string');
+      expect(log.source.geoLocation.latitude).toBeTypeOf('number');
+      expect(log.source.geoLocation.longitude).toBeTypeOf('number');
+      expect(log.source.ip).toBeTypeOf('string');
+      expect(log.source.port).toBeTypeOf('number');
+      expect(log.zone).toBeTypeOf('string');
+      expect(log.type).toBeTypeOf('string');
+      expect(log.detail.request.host).toBeTypeOf('string');
+      expect(log.detail.request.method).toBe('GET');
+      expect(log.detail.request.path).toBe('/');
+      expect(log.detail.request.scheme).toBeTypeOf('string');
+      expect(log.detail.response.statusCode).toBe(200);
+      expect(log.detail.response.time).toBeTypeOf('number');
     });
   });
 });

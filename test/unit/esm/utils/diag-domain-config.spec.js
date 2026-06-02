@@ -1,7 +1,7 @@
 /**
  * @import { ResolveDnsResult } from '../../../../esm/utils/diag-domain-config.types.js'
  */
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { diagDomainConfig } from '../../../../esm/utils/diag-domain-config.js';
 
 const HOSTNAME_EXAMPLE = 'example.com';
@@ -34,7 +34,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
       const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-      expect(domainDiagResults).to.deep.equal({
+      expect(domainDiagResults).toEqual({
         hostname: domainInfo.hostname,
         pathPrefix: domainInfo.pathPrefix,
         isApex: domainInfo.isApex,
@@ -66,7 +66,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
       const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-      expect(domainDiagResults).to.deep.equal({
+      expect(domainDiagResults).toEqual({
         hostname: domainInfo.hostname,
         pathPrefix: domainInfo.pathPrefix,
         isApex: domainInfo.isApex,
@@ -102,7 +102,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
       const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-      expect(domainDiagResults).to.deep.equal({
+      expect(domainDiagResults).toEqual({
         hostname: domainInfo.hostname,
         pathPrefix: domainInfo.pathPrefix,
         isApex: domainInfo.isApex,
@@ -146,7 +146,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
       const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-      expect(domainDiagResults).to.deep.equal({
+      expect(domainDiagResults).toEqual({
         hostname: domainInfo.hostname,
         pathPrefix: domainInfo.pathPrefix,
         isApex: domainInfo.isApex,
@@ -175,7 +175,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
       const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-      expect(domainDiagResults).to.deep.equal({
+      expect(domainDiagResults).toEqual({
         hostname: domainInfo.hostname,
         pathPrefix: domainInfo.pathPrefix,
         isApex: domainInfo.isApex,
@@ -217,7 +217,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
         const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-        expect(domainDiagResults).to.deep.equal({
+        expect(domainDiagResults).toEqual({
           hostname: domainInfo.hostname,
           pathPrefix: domainInfo.pathPrefix,
           isApex: domainInfo.isApex,
@@ -261,7 +261,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
         const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-        expect(domainDiagResults).to.deep.equal({
+        expect(domainDiagResults).toEqual({
           hostname: domainInfo.hostname,
           pathPrefix: domainInfo.pathPrefix,
           isApex: domainInfo.isApex,
@@ -329,7 +329,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
         const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-        expect(domainDiagResults).to.deep.equal({
+        expect(domainDiagResults).toEqual({
           hostname: domainInfo.hostname,
           pathPrefix: domainInfo.pathPrefix,
           isApex: domainInfo.isApex,
@@ -389,7 +389,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
         const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-        expect(domainDiagResults).to.deep.equal({
+        expect(domainDiagResults).toEqual({
           hostname: domainInfo.hostname,
           pathPrefix: domainInfo.pathPrefix,
           isApex: domainInfo.isApex,
@@ -449,7 +449,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
         const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-        expect(domainDiagResults).to.deep.equal({
+        expect(domainDiagResults).toEqual({
           hostname: domainInfo.hostname,
           pathPrefix: domainInfo.pathPrefix,
           isApex: domainInfo.isApex,
@@ -487,7 +487,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
         const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-        expect(domainDiagResults).to.deep.equal({
+        expect(domainDiagResults).toEqual({
           hostname: domainInfo.hostname,
           pathPrefix: domainInfo.pathPrefix,
           isApex: domainInfo.isApex,
@@ -539,7 +539,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
         const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-        expect(domainDiagResults).to.deep.equal({
+        expect(domainDiagResults).toEqual({
           hostname: domainInfo.hostname,
           pathPrefix: domainInfo.pathPrefix,
           isApex: domainInfo.isApex,
@@ -599,7 +599,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
         const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-        expect(domainDiagResults).to.deep.equal({
+        expect(domainDiagResults).toEqual({
           hostname: domainInfo.hostname,
           pathPrefix: domainInfo.pathPrefix,
           isApex: domainInfo.isApex,
@@ -675,7 +675,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
         const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-        expect(domainDiagResults).to.deep.equal({
+        expect(domainDiagResults).toEqual({
           hostname: domainInfo.hostname,
           pathPrefix: domainInfo.pathPrefix,
           isApex: domainInfo.isApex,
@@ -727,7 +727,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
         const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-        expect(domainDiagResults).to.deep.equal({
+        expect(domainDiagResults).toEqual({
           hostname: domainInfo.hostname,
           pathPrefix: domainInfo.pathPrefix,
           isApex: domainInfo.isApex,
@@ -761,7 +761,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
       const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
-      expect(domainDiagResults).to.deep.equal({
+      expect(domainDiagResults).toEqual({
         hostname: domainInfo.hostname,
         pathPrefix: domainInfo.pathPrefix,
         isApex: domainInfo.isApex,

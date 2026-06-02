@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, describe, it } from 'vitest';
 import { ListOauthTokenCommand } from '../../../../../src/clients/cc-api/commands/oauth-token/list-oauth-token-command.js';
 import { e2eSupport } from '../e2e-support.js';
 
@@ -6,11 +7,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe.skip('oauth token commands', function () {
   const support = e2eSupport({ auth: 'oauth-v1' });
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 

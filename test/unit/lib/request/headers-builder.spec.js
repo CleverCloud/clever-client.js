@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
 
 describe('HeadersBuilder', () => {
@@ -7,14 +7,14 @@ describe('HeadersBuilder', () => {
       const builder = new HeadersBuilder();
       const headers = builder.build();
       const entries = getHeadersEntries(headers);
-      expect(entries).to.have.lengthOf(0);
+      expect(entries).toHaveLength(0);
     });
 
     it('should initialize with provided Headers object', () => {
       const initialHeaders = new Headers({ 'x-test': 'value' });
       const builder = new HeadersBuilder(initialHeaders);
       const headers = builder.build();
-      expect(headers.get('x-test')).to.equal('value');
+      expect(headers.get('x-test')).toBe('value');
     });
 
     it('should initialize with provided plain object', () => {
@@ -22,8 +22,8 @@ describe('HeadersBuilder', () => {
       const builder = new HeadersBuilder(initialHeaders);
       const headers = builder.build();
       const entries = getHeadersEntries(headers);
-      expect(entries).to.deep.equal([['x-test', 'value']]);
-      expect(headers.get('x-test')).to.equal('value');
+      expect(entries).toEqual([['x-test', 'value']]);
+      expect(headers.get('x-test')).toBe('value');
     });
   });
 
@@ -31,39 +31,39 @@ describe('HeadersBuilder', () => {
     it('should set Accept header to JSON', () => {
       const headers = new HeadersBuilder().acceptJson().build();
       const entries = getHeadersEntries(headers);
-      expect(entries).to.deep.equal([['accept', 'application/json']]);
-      expect(headers.get('accept')).to.equal('application/json');
+      expect(entries).toEqual([['accept', 'application/json']]);
+      expect(headers.get('accept')).toBe('application/json');
     });
 
     it('should set Accept header to text/plain', () => {
       const headers = new HeadersBuilder().acceptTextPlain().build();
       const entries = getHeadersEntries(headers);
-      expect(entries).to.deep.equal([['accept', 'text/plain']]);
-      expect(headers.get('accept')).to.equal('text/plain');
+      expect(entries).toEqual([['accept', 'text/plain']]);
+      expect(headers.get('accept')).toBe('text/plain');
     });
 
     it('should set custom Accept header', () => {
       const headers = new HeadersBuilder().accept('application/xml').build();
       const entries = getHeadersEntries(headers);
-      expect(entries).to.deep.equal([['accept', 'application/xml']]);
-      expect(headers.get('accept')).to.equal('application/xml');
+      expect(entries).toEqual([['accept', 'application/xml']]);
+      expect(headers.get('accept')).toBe('application/xml');
     });
   });
 
   describe('contentType methods', () => {
     it('should set Content-Type header to JSON', () => {
       const headers = new HeadersBuilder().contentTypeJson().build();
-      expect(headers.get('content-type')).to.equal('application/json');
+      expect(headers.get('content-type')).toBe('application/json');
     });
 
     it('should set Content-Type header to text/plain', () => {
       const headers = new HeadersBuilder().contentTypeTextPlain().build();
-      expect(headers.get('content-type')).to.equal('text/plain');
+      expect(headers.get('content-type')).toBe('text/plain');
     });
 
     it('should set custom Content-Type header', () => {
       const headers = new HeadersBuilder().contentType('text/xml').build();
-      expect(headers.get('content-type')).to.equal('text/xml');
+      expect(headers.get('content-type')).toBe('text/xml');
     });
   });
 
@@ -71,25 +71,25 @@ describe('HeadersBuilder', () => {
     it('should set Authorization header', () => {
       const token = 'Bearer abc123';
       const headers = new HeadersBuilder().authorization(token).build();
-      expect(headers.get('authorization')).to.equal(token);
+      expect(headers.get('authorization')).toBe(token);
     });
   });
 
   describe('withHeader', () => {
     it('should set custom header', () => {
       const headers = new HeadersBuilder().withHeader('x-custom', 'value').build();
-      expect(headers.get('x-custom')).to.equal('value');
+      expect(headers.get('x-custom')).toBe('value');
     });
 
     it('should override existing header', () => {
       const headers = new HeadersBuilder().withHeader('x-test', 'initial').withHeader('x-test', 'updated').build();
-      expect(headers.get('x-test')).to.equal('updated');
+      expect(headers.get('x-test')).toBe('updated');
     });
 
     it('should be chainable', () => {
       const builder = new HeadersBuilder();
       const result = builder.withHeader('x-test', 'value');
-      expect(result).to.equal(builder);
+      expect(result).toBe(builder);
     });
   });
 
@@ -97,9 +97,9 @@ describe('HeadersBuilder', () => {
     it('should allow method chaining', () => {
       const headers = new HeadersBuilder().acceptJson().contentTypeJson().withHeader('x-custom', 'value').build();
 
-      expect(headers.get('accept')).to.equal('application/json');
-      expect(headers.get('content-type')).to.equal('application/json');
-      expect(headers.get('x-custom')).to.equal('value');
+      expect(headers.get('accept')).toBe('application/json');
+      expect(headers.get('content-type')).toBe('application/json');
+      expect(headers.get('x-custom')).toBe('value');
     });
   });
 
@@ -107,7 +107,7 @@ describe('HeadersBuilder', () => {
     it('should return a Headers instance', () => {
       const builder = new HeadersBuilder();
       const headers = builder.build();
-      expect(headers).to.be.instanceOf(Headers);
+      expect(headers).toBeInstanceOf(Headers);
     });
   });
 
@@ -117,9 +117,9 @@ describe('HeadersBuilder', () => {
       builder.withHeader('X-Custom', 'value');
 
       const headers = builder.build();
-      expect(headers.get('x-custom')).to.equal('value');
-      expect(headers.get('X-CUSTOM')).to.equal('value');
-      expect(headers.get('x-CuStOm')).to.equal('value');
+      expect(headers.get('x-custom')).toBe('value');
+      expect(headers.get('X-CUSTOM')).toBe('value');
+      expect(headers.get('x-CuStOm')).toBe('value');
     });
   });
 });

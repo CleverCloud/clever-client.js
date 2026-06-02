@@ -7,3 +7,7 @@ node_modules
 /*.tgz
 build
 dist
+
+# Vitest browser-mode artifacts
+.vitest-attachments
+__screenshots__
