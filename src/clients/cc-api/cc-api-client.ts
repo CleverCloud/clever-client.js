@@ -1,25 +1,23 @@
-/**
- * @import { CcApiCompositeCommand, CcApiSimpleCommand, CcApiStreamCommand } from './lib/cc-api-command.js'
- * @import { CcApiType, CcApiClientConfig } from './types/cc-api.types.js'
- * @import { IdResolve, AddonIdResolve } from './types/resource-id-resolver.types.js';
- * @import { CcAuth } from '../../lib/auth/cc-auth.js'
- * @import { CcRequestConfigPartial } from '../../types/request.types.js'
- */
 import { CcAuthApiToken } from '../../lib/auth/cc-auth-api-token.js';
 import { CcAuthOauthV1Plaintext } from '../../lib/auth/cc-auth-oauth-v1-plaintext.js';
+import type { CcAuth } from '../../lib/auth/cc-auth.js';
 import { CcClient } from '../../lib/cc-client.js';
 import { SimpleCommand } from '../../lib/command/command.js';
 import { CcClientError } from '../../lib/error/cc-client-errors.js';
+import type { CcStream } from '../../lib/stream/cc-stream.js';
 import { merge } from '../../lib/utils.js';
+import type { Command } from '../../types/command.types.js';
+import type { CcRequestConfigPartial } from '../../types/request.types.js';
+import type { CcApiCompositeCommand, CcApiSimpleCommand, CcApiStreamCommand } from './lib/cc-api-command.js';
 import { ResourceIdResolver } from './lib/resource-id-resolver.js';
 import { MemoryStore } from './lib/store/memory-store.js';
+import type { CcApiClientConfig, CcApiType, ResourceId } from './types/cc-api.types.js';
+import type { AddonIdResolve, IdResolve, ResourceIdIndex } from './types/resource-id-resolver.types.js';
 
 /**
  * Clever Cloud API client implementation.
  * Extends the base CcClient with specific handling for resource ID resolution
  * and authentication methods (OAuth v1 PLAINTEXT and API tokens).
- *
- * @extends {CcClient<CcApiType>}
  *
  * @example
  * // Create client with OAuth authentication
@@ -41,31 +39,31 @@ import { MemoryStore } from './lib/store/memory-store.js';
  * // Send a command
  * const result = await client.send(new GetApplicationCommand('app_123'));
  */
-export class CcApiClient extends CcClient {
+export class CcApiClient extends CcClient<CcApiType> {
   /**
    * Resource ID resolver for translating between different ID formats
-   * @type {ResourceIdResolver}
    */
-  #resourceIdResolver;
+  #resourceIdResolver: ResourceIdResolver;
 
   /**
    * Creates a new Clever Cloud API client instance
    *
-   * @param {CcApiClientConfig} [config] - Client configuration including auth method and optional settings
+   * @param config - Client configuration including auth method and optional settings
    */
-  constructor(config) {
+  constructor(config?: CcApiClientConfig) {
     super(merge({ baseUrl: getBaseUrl(config) }, config), getAuth(config));
 
-    this.#resourceIdResolver = new ResourceIdResolver(this, config.resourceIdResolverStore ?? new MemoryStore());
+    this.#resourceIdResolver = new ResourceIdResolver(
+      this,
+      config.resourceIdResolverStore ?? new MemoryStore<ResourceIdIndex>(),
+    );
   }
 
   /**
    * Resource ID resolver used by this client.
    * Exposes helpers to resolve owner IDs and translate between addonId and realAddonId.
-   *
-   * @returns {ResourceIdResolver}
    */
-  get resourceIdResolver() {
+  get resourceIdResolver(): ResourceIdResolver {
     return this.#resourceIdResolver;
   }
 
@@ -74,12 +72,14 @@ export class CcApiClient extends CcClient {
    * This method is called before sending a command to resolve any resource IDs
    * (owner IDs, addon IDs) to their proper format.
    *
-   * @param {CcApiSimpleCommand<?, ?> | CcApiCompositeCommand<?, ?>} command - The command being sent
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<any>} The transformed command parameters
-   * @protected
+   * @param command - The command being sent
+   * @param requestConfig - Optional request configuration
+   * @returns The transformed command parameters
    */
-  async _transformCommandParams(command, requestConfig) {
+  protected _transformCommandParams(
+    command: CcApiSimpleCommand<unknown, unknown> | CcApiCompositeCommand<unknown, unknown>,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<unknown> {
     return this.#transformParams(command.params, command.getIdsToResolve(), requestConfig);
   }
 
@@ -88,12 +88,14 @@ export class CcApiClient extends CcClient {
    * This method is called before sending a stream command to resolve any resource IDs
    * (owner IDs, addon IDs) to their proper format.
    *
-   * @param {CcApiStreamCommand<?, ?>} command - The command being sent
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<any>} The transformed command parameters
-   * @protected
+   * @param command - The command being sent
+   * @param requestConfig - Optional request configuration
+   * @returns The transformed command parameters
    */
-  async _transformStreamParams(command, requestConfig) {
+  protected _transformStreamParams(
+    command: CcApiStreamCommand<unknown, CcStream>,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<unknown> {
     return this.#transformParams(command.params, command.getIdsToResolve(), requestConfig);
   }
 
@@ -102,49 +104,45 @@ export class CcApiClient extends CcClient {
    * If a command fails due to resource ID resolution but defines a 404 empty response policy,
    * returns the empty value instead of throwing.
    *
-   * @type {CcClient<CcApiType>['send']}
-   *
    * @example
    * // Command with empty response policy for 404
    * const result = await client.send(new GetApplicationCommand('app_123'));
    * // Returns null if app doesn't exist, instead of throwing
    */
-  async send(command, requestConfig) {
+  async send<CommandInput, CommandOutput>(
+    command: Command<CcApiType, CommandInput, CommandOutput>,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<CommandOutput> {
     try {
       return await super.send(command, requestConfig);
-    } catch (e) {
+    } catch (e: unknown) {
       if (command instanceof SimpleCommand && e instanceof CcClientError && e.code === 'CANNOT_RESOLVE_RESOURCE_ID') {
         const emptyResponsePolicy = command.getEmptyResponsePolicy(404);
         if (emptyResponsePolicy?.isEmpty) {
-          return /** @type {any} */ (emptyResponsePolicy.emptyValue ?? null);
+          return (emptyResponsePolicy.emptyValue ?? null) as CommandOutput;
         }
       }
       throw e;
     }
   }
 
-  /**
-   *
-   * @param {any} params
-   * @param {IdResolve} idsToResolve
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<any>}
-   */
-  async #transformParams(params, idsToResolve, requestConfig) {
+  async #transformParams(
+    params: unknown,
+    idsToResolve: IdResolve | null,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<unknown> {
     if (idsToResolve == null) {
       return params;
     }
 
-    /** @type {{ownerId?: string, addonId?: string}} */
-    const resolvedIds = {};
+    const resolvedIds: { ownerId?: string; addonId?: string } = {};
 
     if (idsToResolve.ownerId) {
-      resolvedIds.ownerId = await this.#resourceIdResolver.resolveOwnerId(params, requestConfig);
+      resolvedIds.ownerId = await this.#resourceIdResolver.resolveOwnerId(params as ResourceId, requestConfig);
     }
 
     if (idsToResolve.addonId != null) {
-      /** @type {AddonIdResolve} */
-      const addonIdResolve =
+      const addonIdResolve: AddonIdResolve =
         typeof idsToResolve.addonId === 'string'
           ? {
               property: 'addonId',
@@ -153,13 +151,13 @@ export class CcApiClient extends CcClient {
           : idsToResolve.addonId;
 
       resolvedIds.addonId = await this.#resourceIdResolver.resolveAddonId(
-        params[addonIdResolve.property],
+        (params as Record<string, string>)[addonIdResolve.property],
         addonIdResolve.type,
         requestConfig,
       );
     }
 
-    return { ...params, ...resolvedIds };
+    return { ...(params as Record<string, unknown>), ...resolvedIds };
   }
 }
 
@@ -167,10 +165,10 @@ export class CcApiClient extends CcClient {
  * Determines the API base URL based on the authentication method.
  * Uses the bridge URL for API token auth and the main API URL for OAuth.
  *
- * @param {CcApiClientConfig} config - Client configuration
- * @returns {string} The base URL for API requests
+ * @param config - Client configuration
+ * @returns The base URL for API requests
  */
-function getBaseUrl(config) {
+function getBaseUrl(config?: CcApiClientConfig): string {
   if (config?.authMethod == null || config.authMethod.type === 'oauth-v1') {
     return 'https://api.clever-cloud.com';
   }
@@ -183,10 +181,10 @@ function getBaseUrl(config) {
  * Creates the appropriate authentication handler based on the config.
  * Supports OAuth v1 PLAINTEXT and API token authentication methods.
  *
- * @param {CcApiClientConfig} config - Client configuration
- * @returns {CcAuth|null} Authentication handler or null if no auth method specified
+ * @param config - Client configuration
+ * @returns Authentication handler or null if no auth method specified
  */
-function getAuth(config) {
+function getAuth(config?: CcApiClientConfig): CcAuth | null {
   if (config?.authMethod == null) {
     return null;
   }

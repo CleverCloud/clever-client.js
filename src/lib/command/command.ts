@@ -85,7 +85,7 @@ export class SimpleCommand<Api extends string, CommandInput, CommandOutput> exte
    *   - null: treat response as non-empty
    *   - {isEmpty: true}: treat as empty, use emptyValue if provided
    */
-  getEmptyResponsePolicy(_status: number, _body: unknown): { isEmpty: boolean; emptyValue?: unknown } | null {
+  getEmptyResponsePolicy(_status: number, _body?: unknown): { isEmpty: boolean; emptyValue?: unknown } | null {
     return null;
   }
 
