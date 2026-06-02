@@ -1,15 +1,8 @@
-/**
- * @import { KeycloakInfo } from './keycloak.types.js';
- */
-
 import { sortBy } from '../../../../lib/utils.js';
 import { toArray } from '../../../../utils/environment-utils.js';
+import type { KeycloakInfo } from './keycloak.types.js';
 
-/**
- * @param {any} response
- * @returns {KeycloakInfo}
- */
-export function transformKeycloakInfo(response) {
+export function transformKeycloakInfo(response: any): KeycloakInfo {
   return {
     id: response.resourceId,
     addonId: response.addonId,

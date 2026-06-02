@@ -1,4 +1,4 @@
-import { EnvironmentVariable } from '../../../../utils/environment.types.js';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
 
 export interface KeycloakInfo {
   id: string;
