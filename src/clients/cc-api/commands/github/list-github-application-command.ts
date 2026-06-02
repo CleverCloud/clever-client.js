@@ -1,43 +1,24 @@
-/**
- * @import { ListGithubApplicationCommandOutput } from './list-github-application-command.types.js';
- */
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { sortBy } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { transformGithubApplication } from './github-transform.js';
+import type { ListGithubApplicationCommandOutput } from './list-github-application-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<void, ListGithubApplicationCommandOutput>}
  * @endpoint [GET] /v2/github/applications
  * @group Github
  * @version 2
  */
-export class ListGithubApplicationCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<void, ListGithubApplicationCommandOutput>['toRequestParams']} */
+export class ListGithubApplicationCommand extends CcApiSimpleCommand<void, ListGithubApplicationCommandOutput> {
   toRequestParams() {
     return get(`/v2/github/applications`);
   }
 
-  /** @type {CcApiSimpleCommand<void, ListGithubApplicationCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
-    return sortBy(
-      response.map(
-        /** @param {any} payload*/ (payload) => ({
-          id: payload.id,
-          owner: payload.owner,
-          name: payload.name,
-          description: payload.description,
-          gitUrl: payload.gitUrl,
-          defaultBranch: payload.defaultBranch,
-          private: payload.priv,
-        }),
-      ),
-      'name',
-    );
+  transformCommandOutput(response: unknown): ListGithubApplicationCommandOutput {
+    return sortBy((response as Array<unknown>).map(transformGithubApplication), 'name');
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
-  getEmptyResponsePolicy(status) {
+  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
     return { isEmpty: status === 404, emptyValue: [] };
   }
 }
