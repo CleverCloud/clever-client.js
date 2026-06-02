@@ -35,7 +35,7 @@ describe('polling', () => {
 
     polling.stop();
 
-    await expectPromiseThrows(pollingPromise, (err) => {
+    await expectPromiseThrows(pollingPromise, (err: Error) => {
       expect(err.message).toBe('Interrupted');
     });
   }, 1_100);
@@ -62,11 +62,6 @@ describe('polling', () => {
   }, 1_100);
 });
 
-/**
- *
- * @param {number} ms
- * @returns {Promise<void>}
- */
-function sleep(ms) {
+function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }

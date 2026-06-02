@@ -1,14 +1,7 @@
-/**
- * @import { Profile } from './profile.types.js'
- */
-
 import { normalizeDate } from '../../../../lib/utils.js';
+import type { Profile } from './profile.types.js';
 
-/**
- * @param {any} payload
- * @returns {Profile}
- */
-export function transformProfile(payload) {
+export function transformProfile(payload: any): Profile {
   return {
     id: payload.id,
     email: payload.email,

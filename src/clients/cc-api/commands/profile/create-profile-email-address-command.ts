@@ -1,9 +1,7 @@
-/**
- * @import { CreateProfileEmailAddressCommandInput } from './create-profile-email-address-command.types.js';
- */
 import { put } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { CreateProfileEmailAddressCommandInput } from './create-profile-email-address-command.types.js';
 
 /**
  * Adds a new email address to the user profile.
@@ -13,24 +11,20 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
  * - `clever.profile.email-address.already-defined`: the email adresse already belongs to the user
  * - `clever.profile.email-address.invalid-format`: the email adresse already belongs to another user
  *
- * @extends {CcApiSimpleCommand<CreateProfileEmailAddressCommandInput, void>}
  * @endpoint [PUT] /v2/self/emails/:XXX
  * @group Profile
  * @version 2
  */
-export class CreateProfileEmailAddressCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<CreateProfileEmailAddressCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+export class CreateProfileEmailAddressCommand extends CcApiSimpleCommand<CreateProfileEmailAddressCommandInput, void> {
+  toRequestParams(params: CreateProfileEmailAddressCommandInput) {
     return put(safeUrl`/v2/self/emails/${params.address}`, {});
   }
 
-  /** @type {CcApiSimpleCommand<CreateProfileEmailAddressCommandInput, void>['transformCommandOutput']} */
-  transformCommandOutput() {
+  transformCommandOutput(): void {
     return null;
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['transformErrorCode']} */
-  transformErrorCode(errorCode) {
+  transformErrorCode(errorCode: string) {
     if (errorCode === '550') {
       return 'clever.profile.email-address.invalid-format';
     }

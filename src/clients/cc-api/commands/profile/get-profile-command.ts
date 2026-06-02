@@ -1,24 +1,19 @@
-/**
- * @import { GetProfileCommandOutput } from './get-profile-command.types.js';
- */
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { GetProfileCommandOutput } from './get-profile-command.types.js';
 import { transformProfile } from './profile-transform.js';
 
 /**
- * @extends {CcApiSimpleCommand<void, GetProfileCommandOutput>}
  * @endpoint [GET] /v2/self
  * @group Profile
  * @version 2
  */
-export class GetProfileCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<void, GetProfileCommandOutput>['toRequestParams']} */
+export class GetProfileCommand extends CcApiSimpleCommand<void, GetProfileCommandOutput> {
   toRequestParams() {
     return get('/v2/self');
   }
 
-  /** @type {CcApiSimpleCommand<void, GetProfileCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
+  transformCommandOutput(response: unknown): GetProfileCommandOutput {
     return transformProfile(response);
   }
 }

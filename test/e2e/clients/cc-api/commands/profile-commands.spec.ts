@@ -46,7 +46,7 @@ describe('profile commands', function () {
   });
 
   it('should update avatar with dataSource', async () => {
-    let getImage;
+    let getImage: Response;
     try {
       getImage = await fetch('/avatar');
     } catch {

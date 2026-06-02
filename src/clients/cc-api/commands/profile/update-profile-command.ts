@@ -1,25 +1,19 @@
-/**
- * @import { UpdateProfileCommandInput, UpdateProfileCommandOutput } from './update-profile-command.types.js';
- */
 import { put } from '../../../../lib/request/request-params-builder.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import { transformProfile } from './profile-transform.js';
+import type { UpdateProfileCommandInput, UpdateProfileCommandOutput } from './update-profile-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<UpdateProfileCommandInput, UpdateProfileCommandOutput>}
  * @endpoint [PUT] /v2/self
  * @group Profile
  * @version 2
  */
-export class UpdateProfileCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<UpdateProfileCommandInput, UpdateProfileCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+export class UpdateProfileCommand extends CcApiSimpleCommand<UpdateProfileCommandInput, UpdateProfileCommandOutput> {
+  toRequestParams(params: UpdateProfileCommandInput) {
     return put(`/v2/self`, params);
   }
 
-  /** @type {CcApiSimpleCommand<UpdateProfileCommandInput, UpdateProfileCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
+  transformCommandOutput(response: unknown): UpdateProfileCommandOutput {
     return transformProfile(response);
   }
 }

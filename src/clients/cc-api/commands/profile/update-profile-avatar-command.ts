@@ -1,20 +1,22 @@
-/**
- * @import { UpdateProfileAvatarCommandInput, UpdateProfileAvatarCommandOutput } from './update-profile-avatar-command.types.js';
- */
 import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
 import { put } from '../../../../lib/request/request-params-builder.js';
+import type { CcRequestParams } from '../../../../types/request.types.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type {
+  UpdateProfileAvatarCommandInput,
+  UpdateProfileAvatarCommandOutput,
+} from './update-profile-avatar-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<UpdateProfileAvatarCommandInput, UpdateProfileAvatarCommandOutput>}
  * @endpoint [PUT] /v2/self/avatar
  * @group Profile
  * @version 2
  */
-export class UpdateProfileAvatarCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<UpdateProfileAvatarCommandInput, UpdateProfileAvatarCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+export class UpdateProfileAvatarCommand extends CcApiSimpleCommand<
+  UpdateProfileAvatarCommandInput,
+  UpdateProfileAvatarCommandOutput
+> {
+  toRequestParams(params: UpdateProfileAvatarCommandInput): Partial<CcRequestParams> {
     const url = `/v2/self/avatar`;
 
     switch (params.type) {
