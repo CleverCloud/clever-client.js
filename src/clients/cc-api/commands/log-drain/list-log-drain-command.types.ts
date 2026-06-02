@@ -1,4 +1,4 @@
-import { ApplicationId } from '../../types/cc-api.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.js';
 import type { LogDrain, LogDrainExecutionStatus, LogDrainStatus } from './log-drain.types.js';
 
 export type ListLogDrainCommandInput = ApplicationId & {

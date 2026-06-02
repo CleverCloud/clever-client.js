@@ -1,63 +1,64 @@
-/**
- * @import { CreateLogDrainCommandInput, CreateLogDrainCommandOutput } from './create-log-drain-command.types.js';
- * @import { LogDrainTarget, LogDrainKind } from './log-drain.types.js';
- */
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { CcApiComposer } from '../../types/cc-api.types.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import type { CreateLogDrainCommandInput, CreateLogDrainCommandOutput } from './create-log-drain-command.types.js';
 import { waitForLogDrainEnabled } from './log-drain-utils.js';
+import type { LogDrainKind, LogDrainTarget } from './log-drain.types.js';
 
 /**
- *
- * @extends {CcApiCompositeCommand<CreateLogDrainCommandInput, CreateLogDrainCommandOutput>}
  * @endpoint [POST] /v4/drains/organisations/:XXX/applications/:XXX/drains
  * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
  * @group LogDrain
  * @version 4
  */
-export class CreateLogDrainCommand extends CcApiCompositeCommand {
-  /** @type {CcApiCompositeCommand<CreateLogDrainCommandInput, CreateLogDrainCommandOutput>['compose']} */
-  async compose(params, composer) {
+export class CreateLogDrainCommand extends CcApiCompositeCommand<
+  CreateLogDrainCommandInput,
+  CreateLogDrainCommandOutput
+> {
+  async compose(params: CreateLogDrainCommandInput, composer: CcApiComposer): Promise<CreateLogDrainCommandOutput> {
     const created = await composer.send(new CreateLogDrainInnerCommand(params));
     return waitForLogDrainEnabled(composer, params.ownerId, params.applicationId, created.id);
   }
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<CreateLogDrainCommandInput, {id: string}>}
  * @endpoint [POST] /v4/drains/organisations/:XXX/applications/:XXX/drains
  * @group LogDrain
  * @version 4
  */
-class CreateLogDrainInnerCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<CreateLogDrainCommandInput, {id: string}>['toRequestParams']} */
-  toRequestParams(params) {
+class CreateLogDrainInnerCommand extends CcApiSimpleCommand<CreateLogDrainCommandInput, { id: string }> {
+  toRequestParams(params: CreateLogDrainCommandInput) {
     return post(
       safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains`,
       this.#getBody(params.target, params.kind),
     );
   }
 
-  /** @type {CcApiSimpleCommand<CreateLogDrainCommandInput, {id: string}>['transformCommandOutput']} */
-  transformCommandOutput(response) {
-    return { id: response.id };
+  transformCommandOutput(response: unknown): { id: string } {
+    return { id: (response as { id: string }).id };
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
   }
 
-  /**
-   * @param {LogDrainTarget} drain
-   * @param {LogDrainKind} kind
-   */
-  #getBody(drain, kind) {
-    /** @type {any} */
-    const body = {
+  #getBody(drain: LogDrainTarget, kind: LogDrainKind) {
+    const body: {
+      kind: LogDrainKind;
+      recipient: {
+        type: string;
+        url: string;
+        username?: string;
+        password?: string;
+        index?: string;
+        apiKey?: string;
+        rfc5424StructuredDataParameters?: string;
+      };
+    } = {
       kind,
       recipient: {
         type: drain.type,

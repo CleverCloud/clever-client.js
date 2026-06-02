@@ -1,37 +1,40 @@
-/**
- * @import { LogDrain, LogDrainTarget, LogDrainStatus, LogDrainKind, LogDrainExecutionStatus, RawHttpDrainTarget, SyslogTcpDrainTarget, SyslogUdpDrainTarget, ElasticsearchDrainTarget } from './log-drain.types.js'
- */
-
 import { normalizeDate } from '../../../../lib/utils.js';
+import type {
+  ElasticsearchDrainTarget,
+  LogDrain,
+  LogDrainExecutionStatus,
+  LogDrainKind,
+  LogDrainStatus,
+  LogDrainTarget,
+  RawHttpDrainTarget,
+  SyslogTcpDrainTarget,
+  SyslogUdpDrainTarget,
+} from './log-drain.types.js';
 
-/**
- * @typedef ApiLogDrainPayload
- * @property {string} id
- * @property {string} resourceId
- * @property {{date: string, status: LogDrainStatus, authorId?: string}} status
- * @property {LogDrainKind} [kind]
- * @property {ApiRecipientPayload} recipient
- * @property {{status: LogDrainExecutionStatus, lastError: string}} execution
- * @property {{msgRateOut: number, msgBacklog: number}} backlog
- */
+interface ApiLogDrainPayload {
+  id: string;
+  resourceId: string;
+  status: { date: string; status: LogDrainStatus; authorId?: string };
+  kind?: LogDrainKind;
+  recipient: ApiRecipientPayload;
+  execution: { status: LogDrainExecutionStatus; lastError: string };
+  backlog: { msgRateOut: number; msgBacklog: number };
+}
 
-/**
- * @typedef ApiRecipientPayload
- * @property {'RAW_HTTP' | 'SYSLOG_TCP' | 'SYSLOG_UDP' | 'DATADOG' | 'ELASTICSEARCH' | 'NEWRELIC'} type
- * @property {string} url
- * @property {string} [username]
- * @property {string} [password]
- * @property {string} [apiKey]
- * @property {string} [index]
- * @property {string} [rfc5424StructuredDataParameters]
- */
+interface ApiRecipientPayload {
+  type: 'RAW_HTTP' | 'SYSLOG_TCP' | 'SYSLOG_UDP' | 'DATADOG' | 'ELASTICSEARCH' | 'NEWRELIC';
+  url: string;
+  username?: string;
+  password?: string;
+  apiKey?: string;
+  index?: string;
+  rfc5424StructuredDataParameters?: string;
+}
 
 /**
  * Transform API v4 log drain payload to client format
- * @param {ApiLogDrainPayload} payload - API v4 drain response
- * @returns {LogDrain}
  */
-export function transformLogDrain(payload) {
+export function transformLogDrain(payload: ApiLogDrainPayload): LogDrain {
   return {
     id: payload.id,
     applicationId: payload.resourceId,
@@ -50,14 +53,11 @@ export function transformLogDrain(payload) {
 
 /**
  * Transform API v4 recipient payload to client drain target format
- * @param {ApiRecipientPayload} payload - API v4 recipient object
- * @returns {LogDrainTarget}
  */
-export function transformLogDrainTarget(payload) {
+export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainTarget {
   switch (payload.type) {
     case 'RAW_HTTP': {
-      /** @type {RawHttpDrainTarget} */
-      const target = {
+      const target: RawHttpDrainTarget = {
         type: 'RAW_HTTP',
         url: payload.url,
       };
@@ -70,8 +70,7 @@ export function transformLogDrainTarget(payload) {
       return target;
     }
     case 'SYSLOG_TCP': {
-      /** @type {SyslogTcpDrainTarget} */
-      const target = {
+      const target: SyslogTcpDrainTarget = {
         type: 'SYSLOG_TCP',
         url: payload.url,
       };
@@ -81,8 +80,7 @@ export function transformLogDrainTarget(payload) {
       return target;
     }
     case 'SYSLOG_UDP': {
-      /** @type {SyslogUdpDrainTarget} */
-      const target = {
+      const target: SyslogUdpDrainTarget = {
         type: 'SYSLOG_UDP',
         url: payload.url,
       };
@@ -97,8 +95,7 @@ export function transformLogDrainTarget(payload) {
         url: payload.url,
       };
     case 'ELASTICSEARCH': {
-      /** @type {ElasticsearchDrainTarget} */
-      const target = {
+      const target: ElasticsearchDrainTarget = {
         type: 'ELASTICSEARCH',
         url: payload.url,
       };

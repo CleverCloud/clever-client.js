@@ -1,22 +1,18 @@
-/**
- * @import { ListLogDrainCommandInput, ListLogDrainCommandOutput } from './list-log-drain-command.types.js';
- */
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import type { ListLogDrainCommandInput, ListLogDrainCommandOutput } from './list-log-drain-command.types.js';
 import { transformLogDrain } from './log-drain-transform.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<ListLogDrainCommandInput, ListLogDrainCommandOutput>}
  * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains
  * @group LogDrain
  * @version 4
  */
-export class ListLogDrainCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<ListLogDrainCommandInput, ListLogDrainCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+export class ListLogDrainCommand extends CcApiSimpleCommand<ListLogDrainCommandInput, ListLogDrainCommandOutput> {
+  toRequestParams(params: ListLogDrainCommandInput) {
     return get(
       safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains`,
       new QueryParams()
@@ -26,18 +22,18 @@ export class ListLogDrainCommand extends CcApiSimpleCommand {
     );
   }
 
-  /** @type {CcApiSimpleCommand<ListLogDrainCommandInput, ListLogDrainCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
-    return sortBy(response.map(transformLogDrain), { key: 'updatedAt', order: 'desc' });
+  transformCommandOutput(response: unknown): ListLogDrainCommandOutput {
+    return sortBy((response as Array<Parameters<typeof transformLogDrain>[0]>).map(transformLogDrain), {
+      key: 'updatedAt',
+      order: 'desc',
+    });
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
-  getEmptyResponsePolicy(status) {
+  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
     return { isEmpty: status === 404, emptyValue: [] };
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
