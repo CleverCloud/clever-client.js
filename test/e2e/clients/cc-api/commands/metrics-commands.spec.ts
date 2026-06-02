@@ -1,12 +1,10 @@
-/**
- * @import { RequestLocation } from '../../../../../src/clients/cc-api/commands/metrics/stream-requests-command.types.js';
- * @import { CcStream } from '../../../../../src/lib/stream/cc-stream.js';
- */
 import { afterEach, describe, expect, it } from 'vitest';
 import { GetHeatMapCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-heat-map-command.js';
 import { GetMetricsCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-metrics-command.js';
 import { GetStatusCodeDistributionCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-status-code-distribution-command.js';
 import { StreamRequestsCommand } from '../../../../../src/clients/cc-api/commands/metrics/stream-requests-command.js';
+import type { RequestLocation } from '../../../../../src/clients/cc-api/commands/metrics/stream-requests-command.types.js';
+import type { CcStream } from '../../../../../src/lib/stream/cc-stream.js';
 import { Deferred } from '../../../../../src/lib/utils.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
 import { e2eSupport, STATIC_LOGS_APPLICATION, STATIC_MYSQL_ADDON_ID } from '../e2e-support.js';
@@ -74,23 +72,21 @@ describe('metrics commands', function () {
   });
 
   describe('requests live stream', function () {
-    /** @type {CcStream} */
-    let currentStream = null;
+    let currentStream: CcStream = null;
 
     afterEach(async () => {
       currentStream?.close();
     });
 
     it('should stream live request locations', async () => {
-      /** @type {Deferred<Array<RequestLocation>>} */
-      const deferred = new Deferred();
+      const deferred: Deferred<Array<RequestLocation>> = new Deferred();
 
       currentStream = (
         await support.client.stream(new StreamRequestsCommand({ applicationId: STATIC_LOGS_APPLICATION }))
       )
         .onOpen(() => {
           // this API call will trigger a request that gets aggregated into a live location
-          fetch(`https://${STATIC_LOGS_APPLICATION.replaceAll('_', '-')}.cleverapps.io`, { method: 'GET' });
+          void fetch(`https://${STATIC_LOGS_APPLICATION.replaceAll('_', '-')}.cleverapps.io`, { method: 'GET' });
         })
         .onRequests((locations) => {
           if (locations.length > 0) {
@@ -99,7 +95,7 @@ describe('metrics commands', function () {
         })
         .onError(deferred.reject);
 
-      currentStream.start();
+      void currentStream.start();
       const locations = await deferred.promise;
 
       expect(locations).to.be.an('array');
