@@ -1,10 +1,4 @@
-/**
- * @import { CcRequest } from '../../../../src/types/request.types.js'
- * @import { NewScenario, MockSseEvent } from '@clevercloud/doublure'
- * @import { CcStreamConfig } from '../../../../src/lib/stream/cc-stream.types.js'
- * @import { SpiedStream, Stubs } from './cc-stream.spec.types.js'
- */
-
+import type { MockSseEvent, NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CcClientError, CcHttpError } from '../../../../src/lib/error/cc-client-errors.js';
@@ -12,25 +6,22 @@ import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../../src/lib/request/query-params.js';
 import { requestWithCache } from '../../../../src/lib/request/request-with-cache.js';
 import { CcStream } from '../../../../src/lib/stream/cc-stream.js';
+import type { CcStreamConfig } from '../../../../src/lib/stream/cc-stream.types.js';
+import type { CcRequest } from '../../../../src/types/request.types.js';
 import { sleep } from '../../../lib/timers.js';
+import type { SpiedStream, Stubs } from './cc-stream.spec.types.js';
 
-/** @type {MockSseEvent} */
-const END_OF_STREAM = { type: 'message', event: 'END_OF_STREAM', data: { endedBy: 'UNTIL_REACHED' } };
-/** @type {MockSseEvent} */
-const HEARTBEAT = { type: 'message', event: 'HEARTBEAT' };
-/** @type {MockSseEvent} */
-const CLOSE_STREAM = { type: 'close' };
-/** @type {MockSseEvent} */
-const MESSAGE = { type: 'message', event: 'EVENT', data: 'hello' };
+const END_OF_STREAM: MockSseEvent = { type: 'message', event: 'END_OF_STREAM', data: { endedBy: 'UNTIL_REACHED' } };
+const HEARTBEAT: MockSseEvent = { type: 'message', event: 'HEARTBEAT' };
+const CLOSE_STREAM: MockSseEvent = { type: 'close' };
+const MESSAGE: MockSseEvent = { type: 'message', event: 'EVENT', data: 'hello' };
 
 const RETRY = { maxRetryCount: 2, initRetryTimeout: 10, backoffFactor: 1 };
 
 describe('cc-stream', () => {
-  /** @type {NewScenario} */
-  let newScenario;
+  let newScenario: NewScenario;
 
-  /** @type {() => void | null} */
-  let cleanStream;
+  let cleanStream: (() => void) | null;
 
   const hooks = doublureHooks();
 
@@ -44,16 +35,10 @@ describe('cc-stream', () => {
   });
   afterAll(hooks.after);
 
-  /**
-   * @param {Partial<CcRequest>} request
-   * @param {Partial<CcStreamConfig>} config
-   * @returns {SpiedStream}
-   */
-  function createAndSpyStream(request, config = {}) {
+  function createAndSpyStream(request: Partial<CcRequest>, config: Partial<CcStreamConfig> = {}): SpiedStream {
     cleanStream?.();
 
-    /** @type {Stubs} */
-    const stubs = {
+    const stubs: Stubs = {
       request: vi.fn(),
       open: vi.fn(),
       error: vi.fn(),
@@ -119,7 +104,7 @@ describe('cc-stream', () => {
             const currentCounts = Object.fromEntries(
               Object.entries(stubs)
                 .filter(([key]) => key in expectedCounts)
-                .map(([key, stub]) => [key, stub.mock.calls.length]),
+                .map(([key, stub]) => [key, (stub as { mock: { calls: Array<unknown> } }).mock.calls.length]),
             );
             expect(currentCounts).toEqual(expectedCounts);
             return;
@@ -144,7 +129,7 @@ describe('cc-stream', () => {
   it('starting stream should call the request factory', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
 
-    spiedStream.start();
+    void spiedStream.start();
 
     await spiedStream.verifyCounts({ request: 1 });
   });
@@ -257,7 +242,7 @@ describe('cc-stream', () => {
   it('unknown url should lead to failure with CcHttpError', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
 
-    spiedStream.start();
+    void spiedStream.start();
 
     await spiedStream.verifyCounts({ failure: 1 }, 20);
     expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
@@ -270,7 +255,7 @@ describe('cc-stream', () => {
       body: 'invalid request',
     });
 
-    spiedStream.start();
+    void spiedStream.start();
 
     await spiedStream.verifyCounts({ failure: 1 }, 20);
     expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
@@ -283,11 +268,11 @@ describe('cc-stream', () => {
       body: 'invalid content type',
     });
 
-    spiedStream.start();
+    void spiedStream.start();
 
     await spiedStream.verifyCounts({ failure: 1 }, 20);
     expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcClientError);
-    expect(spiedStream.stubs.failure.mock.calls[0][0].code).toBe('SSE_INVALID_CONTENT_TYPE');
+    expect((spiedStream.stubs.failure.mock.calls[0][0] as CcClientError).code).toBe('SSE_INVALID_CONTENT_TYPE');
   });
 
   it('receiving END_OF_STREAM event should close stream properly', async () => {
@@ -366,7 +351,7 @@ describe('cc-stream', () => {
         events: [HEARTBEAT],
         delayBetween: 10,
       });
-    spiedStream.start();
+    void spiedStream.start();
     await spiedStream.verifyCounts({ open: 1, error: 0, event: 0, failure: 0 }, 20);
 
     spiedStream.stream.pause();
@@ -389,7 +374,7 @@ describe('cc-stream', () => {
         delayBetween: 10,
       })
       .thenCall(async () => {
-        spiedStream.start();
+        void spiedStream.start();
         // make sure the 3 events have been processed
         await spiedStream.verifyCounts({ event: 3 }, 50);
         spiedStream.stream.pause();
@@ -415,10 +400,10 @@ describe('cc-stream', () => {
           delayBetween: 10,
         });
 
-      spiedStream.start();
+      void spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 1, error: 0, failure: 1 }, 50);
-      expect(spiedStream.stubs.failure.mock.calls[0][0].code).toBe('SSE_HEALTH_ERROR');
+      expect((spiedStream.stubs.failure.mock.calls[0][0] as CcClientError).code).toBe('SSE_HEALTH_ERROR');
     });
 
     it('connection closed by server should lead to a failure without retry', async () => {
@@ -431,10 +416,10 @@ describe('cc-stream', () => {
           delayBetween: 10,
         });
 
-      spiedStream.start();
+      void spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 1, error: 0, failure: 1 }, 50);
-      expect(spiedStream.stubs.failure.mock.calls[0][0].code).toBe('SSE_SERVER_ERROR');
+      expect((spiedStream.stubs.failure.mock.calls[0][0] as CcClientError).code).toBe('SSE_SERVER_ERROR');
     });
   });
 
@@ -448,7 +433,7 @@ describe('cc-stream', () => {
           body: { message: '400' },
         });
 
-      spiedStream.start();
+      void spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 0, failure: 1 }, 50);
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
@@ -463,7 +448,7 @@ describe('cc-stream', () => {
           body: { message: '401' },
         });
 
-      spiedStream.start();
+      void spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 0, failure: 1 }, 50);
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
@@ -478,7 +463,7 @@ describe('cc-stream', () => {
           body: { message: '403' },
         });
 
-      spiedStream.start();
+      void spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 0, failure: 1 }, 50);
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
@@ -493,7 +478,7 @@ describe('cc-stream', () => {
           body: { message: '500' },
         });
 
-      spiedStream.start();
+      void spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 2, failure: 1 }, 150);
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
@@ -508,7 +493,7 @@ describe('cc-stream', () => {
           body: { message: '408' },
         });
 
-      spiedStream.start();
+      void spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 2, failure: 1 }, 150);
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
@@ -523,7 +508,7 @@ describe('cc-stream', () => {
           body: { message: '429' },
         });
 
-      spiedStream.start();
+      void spiedStream.start();
 
       await spiedStream.verifyCounts({ open: 0, error: 2, failure: 1 }, 150);
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
@@ -538,7 +523,7 @@ describe('cc-stream', () => {
           body: { message: '500' },
         });
 
-      spiedStream.start();
+      void spiedStream.start();
 
       // 1rst attempt (error 500) => error++
       await spiedStream.verifyCounts({ open: 0, error: 1 }, 40);
@@ -568,7 +553,7 @@ describe('cc-stream', () => {
           delayBetween: 10,
         });
 
-      spiedStream.start();
+      void spiedStream.start();
 
       // 1rst attempt (events) => open++ & event+=2
       await spiedStream.verifyCounts({ open: 1, event: 2 }, 40);
@@ -590,7 +575,7 @@ describe('cc-stream', () => {
           delayBetween: 10,
         });
 
-      spiedStream.start();
+      void spiedStream.start();
 
       // 1rst attempt (events) => open++ & event+=2
       await spiedStream.verifyCounts({ open: 1, event: 2, error: 0 }, 40);

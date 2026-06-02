@@ -1,3 +1,4 @@
+import type { ProvidedContext } from 'vitest';
 import { getE2eUsersLoginState } from '../lib/e2e-test-users.js';
 import { login, logout } from '../lib/login.js';
 
@@ -24,10 +25,12 @@ import { login, logout } from '../lib/login.js';
  * reads them back with `inject('e2eUsers')` and re-hydrates its own user map — see the matching
  * setup file `./hydrate-users.node.js`. Without this hand-off, every node-e2e request would go
  * out unauthenticated (401).
- *
- * @param {{ provide: <K extends keyof import('vitest').ProvidedContext>(key: K, value: import('vitest').ProvidedContext[K]) => void }} ctx
  */
-export async function setup({ provide }) {
+export async function setup({
+  provide,
+}: {
+  provide: <K extends keyof ProvidedContext>(key: K, value: ProvidedContext[K]) => void;
+}) {
   // Authenticate all e2e users once; tokens land on the user objects in this module context.
   await login();
   // Serialize just the tokens and hand them to the workers (they can't see the objects above).

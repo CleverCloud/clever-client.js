@@ -1,6 +1,3 @@
-/**
- * @import { CcRequestParams } from '../../../../src/types/request.types.js'
- */
 import { describe, expect, it } from 'vitest';
 import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../../src/lib/request/query-params.js';
@@ -13,6 +10,7 @@ import {
   post,
   postJson,
 } from '../../../../src/lib/request/request-params-builder.js';
+import type { CcRequestParams } from '../../../../src/types/request.types.js';
 
 describe('RequestParamsBuilder', () => {
   describe('get', () => {
@@ -271,12 +269,7 @@ describe('RequestParamsBuilder', () => {
   });
 });
 
-/**
- *
- * @param {Partial<CcRequestParams>} actual
- * @param {Partial<CcRequestParams>} expected
- */
-function expectRequestParams(actual, expected) {
+function expectRequestParams(actual: Partial<CcRequestParams>, expected: Partial<CcRequestParams>) {
   expect(actual.method).toBe(expected.method);
   expect(actual.url).toBe(expected.url);
   expect(actual.queryParams?.toObject()).toEqual(expected.queryParams?.toObject());
@@ -284,7 +277,6 @@ function expectRequestParams(actual, expected) {
   expect(actual.body).toEqual(expected.body);
 }
 
-/** @param {Headers} headers */
-function getHeadersEntries(headers) {
+function getHeadersEntries(headers: Headers) {
   return Array.from(headers?.entries() ?? []);
 }

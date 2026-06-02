@@ -6,29 +6,19 @@ import { isCcClientError } from '../../../../src/utils/error-utils.js';
 import { Polling } from '../../../../src/utils/polling.js';
 import { getE2eUser } from '../../../lib/e2e-test-users.js';
 
-/**
- * @typedef Auth
- * @type {'none'|'oauth-v1'}
- */
-
 const IS_NODE = globalThis.process != null;
 const USER = getE2eUser('test-user-without-github');
 const USE_LOCAL_HTTP_REDIS = false;
 
 const REDIS_ADDON_ID = 'addon_dc54e2c9-3114-48b4-bdfc-53c34a01935b';
 
-/**
- * @param {{debug?: boolean }} [config]
- */
-export function e2eSupport(config) {
+export function e2eSupport(config?: { debug?: boolean }) {
   const conf = {
     ...{ user: USER.userName, debug: false },
     ...(config ?? {}),
   };
-  /** @type {CcApiClient} */
-  let ccApiClient;
-  /** @type {RedisHttpClient} */
-  let client;
+  let ccApiClient: CcApiClient;
+  let client: RedisHttpClient;
 
   return {
     isNode: IS_NODE,
@@ -60,7 +50,7 @@ export function e2eSupport(config) {
               console.log('-> ready');
               return { stop: true, value: ping.result };
             } else {
-              console.log(`-> not ready yet (PING result: ${ping.result})`);
+              console.log(`-> not ready yet (PING result: ${String(ping.result)})`);
               return { stop: false };
             }
           } catch (e) {
@@ -82,12 +72,7 @@ export function e2eSupport(config) {
   };
 }
 
-/**
- * @param {string} backendUrl
- * @param {boolean} debug
- * @returns {RedisHttpClient}
- */
-function createRedisHttpClient(backendUrl, debug) {
+function createRedisHttpClient(backendUrl: string, debug: boolean): RedisHttpClient {
   const defaultRequestConfig = { debug };
 
   return new RedisHttpClient({
@@ -97,10 +82,7 @@ function createRedisHttpClient(backendUrl, debug) {
   });
 }
 
-/**
- * @returns {string|null}
- */
-function getBaseUrl() {
+function getBaseUrl(): string | null {
   if (IS_NODE) {
     if (USE_LOCAL_HTTP_REDIS) {
       return 'http://localhost:8080';

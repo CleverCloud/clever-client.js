@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
+import type { Addon } from '../../../../../../src/clients/cc-api/commands/addon/addon.types.js';
 import {
   NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS,
   constructNetworkGroupMember,
   isNetworkGroupAddonCandidate,
 } from '../../../../../../src/clients/cc-api/commands/network-group/network-group-utils.js';
 
-/**
- * @param {{ providerId?: string, planSlug?: string }} [overrides]
- * @returns {import('../../../../../../src/clients/cc-api/commands/addon/addon.types.js').Addon}
- */
-function makeAddon({ providerId = 'postgresql-addon', planSlug = 'xsmall' } = {}) {
-  return /** @type {any} */ ({ provider: { id: providerId }, plan: { slug: planSlug } });
+function makeAddon({
+  providerId = 'postgresql-addon',
+  planSlug = 'xsmall',
+}: { providerId?: string; planSlug?: string } = {}): Addon {
+  return { provider: { id: providerId }, plan: { slug: planSlug } } as unknown as Addon;
 }
 
 describe('isNetworkGroupAddonCandidate', () => {

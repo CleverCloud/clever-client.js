@@ -1,13 +1,7 @@
-/**
- * @import { CreateOrganisationCommandInput } from '../../../../src/clients/cc-api/commands/organisation/create-organisation-command.types.js'
- * @import { Organisation } from '../../../../src/clients/cc-api/commands/organisation/organisation.types.js'
- * @import { CreateAddonCommandInput } from '../../../../src/clients/cc-api/commands/addon/create-addon-command.types.js'
- * @import { Addon } from '../../../../src/clients/cc-api/commands/addon/addon.types.js'
- * @import { CcApiAuth } from '../../../../src/clients/cc-api/types/cc-api.types.js'
- * @import { E2eUserName, E2eUser } from '../../../lib/e2e.types.js'
- */
 import { CcApiClient } from '../../../../src/clients/cc-api/cc-api-client.js';
+import type { Addon } from '../../../../src/clients/cc-api/commands/addon/addon.types.js';
 import { CreateAddonCommand } from '../../../../src/clients/cc-api/commands/addon/create-addon-command.js';
+import type { CreateAddonCommandInput } from '../../../../src/clients/cc-api/commands/addon/create-addon-command.types.js';
 import { DeleteAddonCommand } from '../../../../src/clients/cc-api/commands/addon/delete-addon-command.js';
 import { GetAddonCommand } from '../../../../src/clients/cc-api/commands/addon/get-addon-command.js';
 import { CreateApplicationCommand } from '../../../../src/clients/cc-api/commands/application/create-application-command.js';
@@ -22,23 +16,22 @@ import { CreateOauthConsumerCommand } from '../../../../src/clients/cc-api/comma
 import { DeleteOauthConsumerCommand } from '../../../../src/clients/cc-api/commands/oauth-consumer/delete-oauth-consumer-command.js';
 import { GetOauthConsumerCommand } from '../../../../src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.js';
 import { CreateOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/create-organisation-command.js';
+import type { CreateOrganisationCommandInput } from '../../../../src/clients/cc-api/commands/organisation/create-organisation-command.types.js';
 import { DeleteOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/delete-organisation-command.js';
 import { GetOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/get-organisation-command.js';
+import type { Organisation } from '../../../../src/clients/cc-api/commands/organisation/organisation.types.js';
 import { GetProfileCommand } from '../../../../src/clients/cc-api/commands/profile/get-profile-command.js';
+import type { CcApiAuth } from '../../../../src/clients/cc-api/types/cc-api.types.js';
 import { merge } from '../../../../src/lib/utils.js';
 import { getE2eUser } from '../../../lib/e2e-test-users.js';
+import type { E2eUser, E2eUserName } from '../../../lib/e2e.types.js';
 
-/**
- * @typedef Auth
- * @type {'api-token'|'oauth-v1'}
- */
+type Auth = 'api-token' | 'oauth-v1';
 
 const IS_NODE = globalThis.process != null;
 
-/** @type {E2eUserName} */
-const DEFAULT_USER = 'test-user-with-github';
-/** @type {Auth} */
-const DEFAULT_AUTH = 'api-token';
+const DEFAULT_USER: E2eUserName = 'test-user-with-github';
+const DEFAULT_AUTH: Auth = 'api-token';
 const USE_LOCAL_API_BRIDGE = false;
 
 // todo: get all that from env. (and inject them nicely for browser test)
@@ -47,31 +40,22 @@ export const STATIC_INVOICE_ID = 'F20250718-021327';
 export const STATIC_ORGANISATION_ID = 'orga_3659ccc6-1b06-4393-83d6-52dc3d72416d';
 export const STATIC_LOGS_APPLICATION = 'app_1f5472ee-d87f-495e-9a76-24028e3624eb';
 
-/**
- * @param {{user?: E2eUserName, auth?: Auth, debug?: boolean }} [config]
- */
-export function e2eSupport(config) {
+export function e2eSupport(config?: { user?: E2eUserName; auth?: Auth; debug?: boolean }) {
   const conf = merge({ user: DEFAULT_USER, auth: DEFAULT_AUTH, debug: false }, config);
   const e2eUser = getE2eUser(conf.user);
-  /** @type {CcApiClient} */
-  let client;
+  let client: CcApiClient;
 
-  /** @type {string} */
-  let organisationId;
-  /** @type {string} */
-  let userId;
-  /** @type {Array<{type: 'application'|'addon'|'ng'|'consumer'|'organisation'|'drain', id: string, applicationId?: string}>} */
-  let cleanupTasks = [];
+  let organisationId: string;
+  let userId: string;
+  let cleanupTasks: Array<{
+    type: 'application' | 'addon' | 'ng' | 'consumer' | 'organisation' | 'drain';
+    id: string;
+    applicationId?: string;
+  }> = [];
 
   return {
     isNode: IS_NODE,
-    /**
-     * @param {object} _
-     * @param {E2eUserName} [_.user]
-     * @param {Auth} [_.auth]
-     * @returns {CcApiClient}
-     */
-    getClient({ user, auth }) {
+    getClient({ user, auth }: { user?: E2eUserName; auth?: Auth }): CcApiClient {
       return createCcApiClient(getE2eUser(user ?? DEFAULT_USER), auth ?? DEFAULT_AUTH, conf.debug);
     },
     get client() {
@@ -243,11 +227,7 @@ export function e2eSupport(config) {
       cleanupTasks = cleanupTasks.filter((task) => task.type !== 'consumer');
     },
     async deleteAddonProviders() {},
-    /**
-     * @param {CreateOrganisationCommandInput} [organisation]
-     * @returns {Promise<Organisation>}
-     */
-    async createTestOrganisation(organisation) {
+    async createTestOrganisation(organisation?: CreateOrganisationCommandInput): Promise<Organisation> {
       const createdOrganisation = await this.client.send(
         new CreateOrganisationCommand(
           organisation ?? {
@@ -311,12 +291,8 @@ export function e2eSupport(config) {
       cleanupTasks.push({ type: 'application', id: application.id });
       return application;
     },
-    /**
-     * @param {Partial<CreateAddonCommandInput>} [addon]
-     * @returns {Promise<Addon>}
-     */
-    async createTestAddon(addon) {
-      let createdAddon = await this.client.send(
+    async createTestAddon(addon?: Partial<CreateAddonCommandInput>): Promise<Addon> {
+      const createdAddon = await this.client.send(
         new CreateAddonCommand(
           addon
             ? {
@@ -343,11 +319,7 @@ export function e2eSupport(config) {
       cleanupTasks.push({ type: 'addon', id: createdAddon.id });
       return createdAddon;
     },
-    /**
-     * @param {string} [memberId]
-     * @param {string} [label]
-     */
-    async createNetworkGroup(memberId, label) {
+    async createNetworkGroup(memberId?: string, label?: string) {
       const networkGroup = await this.client.send(
         new CreateNetworkGroupCommand({
           ownerId: organisationId,
@@ -396,13 +368,7 @@ export function e2eSupport(config) {
   };
 }
 
-/**
- * @param {E2eUser} user
- * @param {Auth} auth
- * @param {boolean} debug
- * @returns {CcApiClient}
- */
-function createCcApiClient(user, auth, debug) {
+function createCcApiClient(user: E2eUser, auth: Auth, debug: boolean): CcApiClient {
   const defaultRequestConfig = { debug };
 
   if (USE_LOCAL_API_BRIDGE && auth === 'oauth-v1') {
@@ -416,12 +382,7 @@ function createCcApiClient(user, auth, debug) {
   });
 }
 
-/**
- * @param {E2eUser} user
- * @param {Auth} auth
- * @returns {string|null}
- */
-function getBaseUrl(user, auth) {
+function getBaseUrl(user: E2eUser, auth: Auth): string | null {
   if (IS_NODE) {
     if (USE_LOCAL_API_BRIDGE) {
       return 'http://localhost:8080';
@@ -432,12 +393,7 @@ function getBaseUrl(user, auth) {
   return `/cc-api-${user.userName}-${auth}`;
 }
 
-/**
- * @param {E2eUser} user
- * @param {Auth} auth
- * @returns {CcApiAuth}
- */
-function getCcApiAuth(user, auth) {
+function getCcApiAuth(user: E2eUser, auth: Auth): CcApiAuth {
   // if running in browser, no auth (authentication will be done by the proxy)
   if (!IS_NODE) {
     return null;

@@ -1,9 +1,4 @@
-/**
- * @import { CcRequestParams } from '../../../src/types/request.types.js'
- * @import { CcClientConfig } from '../../../src/types/client.types.js'
- * @import { OnRequestHook } from '../../../src/types/hook.types.js'
- * @import { NewScenario } from '@clevercloud/doublure'
- */
+import type { NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CcAuthApiToken } from '../../../src/lib/auth/cc-auth-api-token.js';
@@ -16,43 +11,33 @@ import { HeadersBuilder } from '../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../src/lib/request/query-params.js';
 import { get, post } from '../../../src/lib/request/request-params-builder.js';
 import { CcStream } from '../../../src/lib/stream/cc-stream.js';
+import type { CcStreamConfig, CcStreamRequestFactory } from '../../../src/lib/stream/cc-stream.types.js';
 import { StreamCommand } from '../../../src/lib/stream/stream-command.js';
+import type { CcClientConfig } from '../../../src/types/client.types.js';
+import type { OnRequestHook, OnResponseHook } from '../../../src/types/hook.types.js';
+import type {
+  CcRequest,
+  CcRequestConfigPartial,
+  CcRequestParams,
+  CcResponse,
+} from '../../../src/types/request.types.js';
 import { expectPromiseThrows } from '../../lib/expect-utils.js';
 
-/**
- * @extends {SimpleCommand<'test', any, any>}
- * @abstract
- */
-export class TestSimpleCommand extends SimpleCommand {}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export abstract class TestSimpleCommand extends SimpleCommand<'test', void, any> {}
 
-/**
- * @extends {CompositeCommand<'test', any, any>}
- * @abstract
- */
-export class TestCompositeCommand extends CompositeCommand {}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export abstract class TestCompositeCommand extends CompositeCommand<'test', void, any> {}
 
-/**
- * @extends {GetUrl<'test', any>}
- * @abstract
- */
-export class TestGetUrl extends GetUrl {}
+export abstract class TestGetUrl extends GetUrl<'test', void> {}
 
-/**
- * @extends {StreamCommand<'test', any, CcStream>}
- * @abstract
- */
-export class TestStreamCommand extends StreamCommand {
-  /** @type {StreamCommand<'test', any, CcStream>['createStream']} */
-  createStream(requestFactory, config) {
+export abstract class TestStreamCommand extends StreamCommand<'test', void, CcStream> {
+  createStream(requestFactory: CcStreamRequestFactory, config: CcStreamConfig): CcStream {
     return new CcStream(requestFactory, config);
   }
 }
 
-/**
- * @param {Partial<CcRequestParams>} requestsParams
- * @returns {TestSimpleCommand}
- */
-function simpleCommand(requestsParams) {
+function simpleCommand(requestsParams: Partial<CcRequestParams>): TestSimpleCommand {
   return new (class MyCommand extends TestSimpleCommand {
     toRequestParams() {
       return requestsParams;
@@ -60,11 +45,7 @@ function simpleCommand(requestsParams) {
   })();
 }
 
-/**
- * @param {any} result
- * @returns {TestCompositeCommand}
- */
-function compositeCommand(result) {
+function compositeCommand(result: unknown): TestCompositeCommand {
   return new (class MyCommand extends TestCompositeCommand {
     async compose() {
       return result;
@@ -72,10 +53,7 @@ function compositeCommand(result) {
   })();
 }
 
-/**
- * @param {string} result
- */
-function getUrl(result) {
+function getUrl(result: string) {
   return new (class MyGetUrl extends TestGetUrl {
     get() {
       return result;
@@ -83,11 +61,7 @@ function getUrl(result) {
   })();
 }
 
-/**
- * @param {Partial<CcRequestParams>} requestsParams
- * @returns {TestStreamCommand}
- */
-function streamCommand(requestsParams) {
+function streamCommand(requestsParams: Partial<CcRequestParams>): TestStreamCommand {
   return new (class MyCommand extends TestStreamCommand {
     toRequestParams() {
       return requestsParams;
@@ -97,58 +71,59 @@ function streamCommand(requestsParams) {
 
 /**
  * This client is here just to make all protected methods public so that vitest can mock or spy those methods.
- * @extends {CcClient<'test'>}
  */
-class SpiedClient extends CcClient {
-  /** @type {CcClient<'test'>['_transformCommandParams']} */
-  async _transformCommandParams(command, _requestConfig) {
+class SpiedClient extends CcClient<'test'> {
+  override async _transformCommandParams(
+    command: Parameters<CcClient<'test'>['_transformCommandParams']>[0],
+    _requestConfig: Parameters<CcClient<'test'>['_transformCommandParams']>[1],
+  ): ReturnType<CcClient<'test'>['_transformCommandParams']> {
     return super._transformCommandParams(command, _requestConfig);
   }
-  /** @type {CcClient<'test'>['_transformStreamParams']} */
-  async _transformStreamParams(command, _requestConfig) {
+  override async _transformStreamParams(
+    command: Parameters<CcClient<'test'>['_transformStreamParams']>[0],
+    _requestConfig: Parameters<CcClient<'test'>['_transformStreamParams']>[1],
+  ): ReturnType<CcClient<'test'>['_transformStreamParams']> {
     return super._transformStreamParams(command, _requestConfig);
   }
-  /** @type {CcClient<'test'>['_compose']} */
-  async _compose(command, requestConfig) {
+  override async _compose<CommandOutput>(
+    command: CompositeCommand<'test', unknown, CommandOutput>,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<CommandOutput> {
     return super._compose(command, requestConfig);
   }
-  /** @type {CcClient<'test'>['_getCommandRequestParams']} */
-  async _getCommandRequestParams(command, requestConfig) {
+  override async _getCommandRequestParams(
+    command: Parameters<CcClient<'test'>['_getCommandRequestParams']>[0],
+    requestConfig: Parameters<CcClient<'test'>['_getCommandRequestParams']>[1],
+  ): ReturnType<CcClient<'test'>['_getCommandRequestParams']> {
     return super._getCommandRequestParams(command, requestConfig);
   }
-  /** @type {CcClient<'test'>['_prepareRequest']} */
-  async _prepareRequest(requestParams, requestConfig) {
+  override async _prepareRequest(
+    requestParams: Parameters<CcClient<'test'>['_prepareRequest']>[0],
+    requestConfig: Parameters<CcClient<'test'>['_prepareRequest']>[1],
+  ): ReturnType<CcClient<'test'>['_prepareRequest']> {
     return super._prepareRequest(requestParams, requestConfig);
   }
-  /** @type {CcClient<'test'>['_handleResponse']} */
-  async _handleResponse(response, request, command) {
+  override async _handleResponse<CommandOutput>(
+    response: CcResponse<CommandOutput>,
+    request: CcRequest,
+    command: SimpleCommand<'test', unknown, CommandOutput>,
+  ): Promise<CommandOutput> {
     return super._handleResponse(response, request, command);
   }
 }
 
 describe('clever-client', () => {
-  /** @type {SpiedClient} */
-  let client;
-  /** @type {NewScenario} */
-  let newScenario;
-  /** @type {() => void} */
-  let closeStream;
+  let client: SpiedClient;
+  let newScenario: NewScenario;
+  let closeStream: (() => void) | undefined;
 
   const hooks = doublureHooks();
 
-  /**
-   * @param {Omit<CcClientConfig, 'baseUrl'>} [config]
-   * @param {CcAuth|null} [auth]
-   * @returns {SpiedClient}
-   */
-  function createClient(config, auth) {
+  function createClient(config?: Omit<CcClientConfig, 'baseUrl'>, auth?: CcAuth | null): SpiedClient {
     return new SpiedClient({ ...config, baseUrl: newScenario.mockClient.baseUrl }, auth);
   }
 
-  /**
-   * @param {CcStream} stream
-   */
-  function startStream(stream) {
+  function startStream(stream: CcStream) {
     const result = stream.start();
     closeStream = () => {
       stream.close();
@@ -249,7 +224,7 @@ describe('clever-client', () => {
     });
 
     it('should call onRequest hook function', async () => {
-      const spy = vi.fn((o) => o);
+      const spy = vi.fn<OnRequestHook>();
       const client = createClient({
         hooks: {
           onRequest: spy,
@@ -272,8 +247,7 @@ describe('clever-client', () => {
     });
 
     it('should merge prepared request params from onRequest hook', async () => {
-      /** @type {OnRequestHook} */
-      const onRequest = (request) => {
+      const onRequest: OnRequestHook = (request) => {
         request.queryParams.set('hook', 'hook');
       };
 
@@ -287,7 +261,7 @@ describe('clever-client', () => {
         .thenCall(() => client.send(command));
 
       expect(spy).toHaveBeenCalledTimes(1);
-      const result = await spy.mock.results[0].value;
+      const result = (await spy.mock.results[0].value) as CcRequest;
 
       expect(result.queryParams.get('hook')).toBe('hook');
     });
@@ -302,7 +276,7 @@ describe('clever-client', () => {
         .thenCall(() => client.send(command));
 
       expect(spy).toHaveBeenCalledTimes(1);
-      const result = await spy.mock.results[0].value;
+      const result = (await spy.mock.results[0].value) as CcRequest;
       expect(result.url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
     });
 
@@ -316,15 +290,16 @@ describe('clever-client', () => {
         .thenCall(() => client.send(command));
 
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy.mock.calls[0][0].body).toBe('body');
-      expect(spy.mock.calls[0][0].status).toBe(200);
-      expect(spy.mock.calls[0][1].method).toBe('GET');
-      expect(spy.mock.calls[0][1].url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
-      expect(spy.mock.calls[0][2]).toBe(command);
+      const [response, request, calledCommand] = spy.mock.calls[0];
+      expect(response.body).toBe('body');
+      expect(response.status).toBe(200);
+      expect(request.method).toBe('GET');
+      expect(request.url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
+      expect(calledCommand).toBe(command);
     });
 
     it('should call `onResponse` hook with right parameters', async () => {
-      const spy = vi.fn();
+      const spy = vi.fn<OnResponseHook>();
       const client = createClient({ hooks: { onResponse: spy } });
 
       const command = simpleCommand(get('/path/subPath'));
@@ -389,7 +364,7 @@ describe('clever-client', () => {
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 500, body: 'A server error occurred' });
 
-      await expectPromiseThrows(client.send(command), (err) => {
+      await expectPromiseThrows(client.send(command), (err: CcHttpError) => {
         expect(err).toBeInstanceOf(CcHttpError);
         expect(err.response.status).toBe(500);
         expect(err.response.body).toBe('A server error occurred');
@@ -451,9 +426,11 @@ describe('clever-client', () => {
 
     it('composer should merge request config with initial request config', async () => {
       const command = new (class MyCommand extends TestCompositeCommand {
-        /** @type {CompositeCommand<'test', ?, ?>['compose']} */
-        async compose(_params, composer) {
-          composer.send(simpleCommand(get('/path/subPath')), { cors: true, cache: { ttl: 100 }, timeout: 1000 });
+        override async compose(
+          _params: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[0],
+          composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
+        ) {
+          void composer.send(simpleCommand(get('/path/subPath')), { cors: true, cache: { ttl: 100 }, timeout: 1000 });
           return 'result';
         }
       })();
@@ -494,7 +471,7 @@ describe('clever-client', () => {
       const gu = getUrl('example');
       const auth = new CcAuth();
       const spy = vi.spyOn(auth, 'applyOnUrl');
-      spy.mockImplementation(/** @param {URL} url*/ (url) => url.searchParams.set('auth', 'token'));
+      spy.mockImplementation((url: URL) => url.searchParams.set('auth', 'token'));
       const client = createClient({}, auth);
 
       const url = client.getUrl(gu);
@@ -709,7 +686,7 @@ describe('clever-client', () => {
       headers: new HeadersBuilder().acceptTextPlain().build(),
     });
 
-    const response = await newScenario()
+    const response: unknown = await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({ status: 200, body: 'Hello' })
       .thenCall(() => client.send(command));
@@ -719,7 +696,7 @@ describe('clever-client', () => {
   it('should get response with right json body', async () => {
     const command = simpleCommand(get('/'));
 
-    const response = await newScenario()
+    const response: unknown = await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({ status: 200, body: { hello: 'world' } })
       .thenCall(() => client.send(command));
@@ -729,7 +706,7 @@ describe('clever-client', () => {
   it('should get response with right empty body', async () => {
     const command = simpleCommand(get('/'));
 
-    const response = await newScenario()
+    const response: unknown = await newScenario()
       .when({ method: 'GET', path: '/' })
       .respond({ status: 200, body: null })
       .thenCall(() => client.send(command));

@@ -1,8 +1,6 @@
 // this is an ESM rewrite of https://github.com/oprogramador/sort-any without lodash
-/**
- * @typedef Comparator
- * @type {(a: any, b:any) => number}
- */
+
+type Comparator = (a: unknown, b: unknown) => number;
 
 const types = {
   undefined: Symbol('undefined'),
@@ -20,33 +18,25 @@ const types = {
 };
 
 const typesValues = Object.values(types);
-/** @type {Record<symbol, number>} */
-const orderedTypes = Object.fromEntries(typesValues.map((symbol, index) => [symbol, index]));
+const orderedTypes: Record<symbol, number> = Object.fromEntries(typesValues.map((symbol, index) => [symbol, index]));
 
-/** @type {Record<symbol, Comparator>} */
-const comparators = {
+const comparators: Record<symbol, Comparator> = {
   [types.array]: compareArray,
-  [types.set]: (a, b) => compareArray([...a], [...b]),
-  [types.map]: (a, b) => compareObject(Object.fromEntries(a), Object.fromEntries(b)),
+  [types.set]: (a, b) => compareArray([...(a as Set<unknown>)], [...(b as Set<unknown>)]),
+  [types.map]: (a, b) =>
+    compareObject(Object.fromEntries(a as Map<unknown, unknown>), Object.fromEntries(b as Map<unknown, unknown>)),
   [types.number]: standardCompare,
   [types.object]: compareObject,
   [types.string]: standardCompare,
-  [types.symbol]: (a, b) => standardCompare(a.toString().slice(0, -1), b.toString().slice(0, -1)),
+  [types.symbol]: (a, b) =>
+    standardCompare((a as symbol).toString().slice(0, -1), (b as symbol).toString().slice(0, -1)),
 };
 
-/**
- * @param {symbol} type
- * @return {number}
- */
-function getOrderByType(type) {
+function getOrderByType(type: symbol): number {
   return orderedTypes[type];
 }
 
-/**
- * @param {any} value
- * @return {symbol}
- */
-function getTypeByValue(value) {
+function getTypeByValue(value: unknown): symbol {
   if (typeof value === 'undefined') {
     return types.undefined;
   }
@@ -84,46 +74,38 @@ function getTypeByValue(value) {
   return types.object;
 }
 
-/**
- * @param {any} first
- * @param {any} second
- * @return {number}
- */
-function standardCompare(first, second) {
-  if (first < second) {
+function standardCompare(first: unknown, second: unknown): number {
+  if ((first as number) < (second as number)) {
     return -1;
   }
-  if (first > second) {
+  if ((first as number) > (second as number)) {
     return 1;
   }
 
   return 0;
 }
 
-/**
- * @param {any} first
- * @param {any} second
- * @return {number}
- */
-function compareArray(first, second) {
-  if (first.length < second.length) {
+function compareArray(first: unknown, second: unknown): number {
+  const firstArray = first as Array<unknown>;
+  const secondArray = second as Array<unknown>;
+  if (firstArray.length < secondArray.length) {
     return -1;
   }
-  if (second.length < first.length) {
+  if (secondArray.length < firstArray.length) {
     return 1;
   }
-  const sortedFirst = sortAny(first);
-  const sortedSecond = sortAny(second);
+  const sortedFirst = sortAny(firstArray);
+  const sortedSecond = sortAny(secondArray);
 
-  for (let i = 0; i < first.length; i++) {
+  for (let i = 0; i < firstArray.length; i++) {
     const compareResult = compare(sortedFirst[i], sortedSecond[i]);
     if (compareResult) {
       return compareResult;
     }
   }
 
-  for (let i = 0; i < first.length; i++) {
-    const compareResult = compare(first[i], second[i]);
+  for (let i = 0; i < firstArray.length; i++) {
+    const compareResult = compare(firstArray[i], secondArray[i]);
     if (compareResult) {
       return compareResult;
     }
@@ -132,22 +114,19 @@ function compareArray(first, second) {
   return 0;
 }
 
-/**
- * @param {any} first
- * @param {any} second
- * @return {number}
- */
-function compareObject(first, second) {
-  const firstKeys = Object.keys(first);
-  const secondKeys = Object.keys(second);
+function compareObject(first: unknown, second: unknown): number {
+  const firstObject = first as Record<string, unknown>;
+  const secondObject = second as Record<string, unknown>;
+  const firstKeys = Object.keys(firstObject);
+  const secondKeys = Object.keys(secondObject);
   if (firstKeys.length < secondKeys.length) {
     return -1;
   }
   if (secondKeys.length < firstKeys.length) {
     return 1;
   }
-  const sortedFirstKeys = sortAny(firstKeys);
-  const sortedSecondKeys = sortAny(secondKeys);
+  const sortedFirstKeys = sortAny(firstKeys) as Array<string>;
+  const sortedSecondKeys = sortAny(secondKeys) as Array<string>;
 
   for (let i = 0; i < firstKeys.length; i++) {
     const compareResult = compare(sortedFirstKeys[i], sortedSecondKeys[i]);
@@ -158,7 +137,7 @@ function compareObject(first, second) {
 
   for (let i = 0; i < firstKeys.length; i++) {
     const key = sortedFirstKeys[i];
-    const compareResult = compare(first[key], second[key]);
+    const compareResult = compare(firstObject[key], secondObject[key]);
     if (compareResult) {
       return compareResult;
     }
@@ -174,12 +153,7 @@ function compareObject(first, second) {
   return 0;
 }
 
-/**
- * @param {any} first
- * @param {any} second
- * @return {number}
- */
-function compare(first, second) {
+function compare(first: unknown, second: unknown): number {
   const firstType = getTypeByValue(first);
   const secondType = getTypeByValue(second);
   const firstOrder = getOrderByType(firstType);
@@ -193,12 +167,7 @@ function compare(first, second) {
   return comparator(first, second);
 }
 
-/**
- *
- * @param {Array<any>} array
- * @return {Array<any>}
- */
-export function sortAny(array) {
+export function sortAny(array: Array<unknown>): Array<unknown> {
   const undefinedsArray = array.filter((x) => typeof x === 'undefined');
   const notUndefinedsArray = array.filter((x) => typeof x !== 'undefined');
 

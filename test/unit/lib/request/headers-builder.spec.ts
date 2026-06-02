@@ -124,7 +124,6 @@ describe('HeadersBuilder', () => {
   });
 });
 
-/** @param {Headers} headers */
-function getHeadersEntries(headers) {
+function getHeadersEntries(headers: Headers) {
   return Array.from(headers.entries());
 }

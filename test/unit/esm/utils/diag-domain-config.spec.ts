@@ -1,8 +1,6 @@
-/**
- * @import { ResolveDnsResult } from '../../../../esm/utils/diag-domain-config.types.js'
- */
 import { describe, expect, it } from 'vitest';
 import { diagDomainConfig } from '../../../../esm/utils/diag-domain-config.js';
+import type { ResolveDnsResult } from '../../../../esm/utils/diag-domain-config.types.js';
 
 const HOSTNAME_EXAMPLE = 'example.com';
 const HOSTNAME_TESTONLY = 'app-f6ed4d4f-9668-4a03-a6fd-b297c15fc825.cleverapps.io';
@@ -29,8 +27,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
     };
 
     it('All A records valid', () => {
-      /** @type {ResolveDnsResult} */
-      const resolveDnsResult = { aRecords: A_RECORDS, cnameRecords: [] };
+      const resolveDnsResult: ResolveDnsResult = { aRecords: A_RECORDS, cnameRecords: [] };
 
       const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
@@ -58,8 +55,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
     });
 
     it('1 A record unknown', () => {
-      /** @type {ResolveDnsResult} */
-      const resolveDnsResult = {
+      const resolveDnsResult: ResolveDnsResult = {
         aRecords: A_RECORDS_WITH_ONE_UNKNOWN,
         cnameRecords: [],
       };
@@ -94,8 +90,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
     });
 
     it('All A records unknown', () => {
-      /** @type {ResolveDnsResult} */
-      const resolveDnsResult = {
+      const resolveDnsResult: ResolveDnsResult = {
         aRecords: A_RECORDS_WITH_ALL_UNKNOWN,
         cnameRecords: [],
       };
@@ -138,8 +133,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
     });
 
     it('1 A record missing', () => {
-      /** @type {ResolveDnsResult} */
-      const resolveDnsResult = {
+      const resolveDnsResult: ResolveDnsResult = {
         aRecords: A_RECORDS_WITH_ONE_MISSING,
         cnameRecords: [],
       };
@@ -170,8 +164,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
     });
 
     it('All A records missing', () => {
-      /** @type {ResolveDnsResult} */
-      const resolveDnsResult = { aRecords: [], cnameRecords: [] };
+      const resolveDnsResult: ResolveDnsResult = { aRecords: [], cnameRecords: [] };
 
       const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 
@@ -209,8 +202,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
     describe('With CNAME', () => {
       it('All A records valid', () => {
-        /** @type {ResolveDnsResult} */
-        const resolveDnsResult = {
+        const resolveDnsResult: ResolveDnsResult = {
           aRecords: A_RECORDS,
           cnameRecords: [CNAME_RECORD],
         };
@@ -253,8 +245,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
       });
 
       it('1 A record unknown', () => {
-        /** @type {ResolveDnsResult} */
-        const resolveDnsResult = {
+        const resolveDnsResult: ResolveDnsResult = {
           aRecords: A_RECORDS_WITH_ONE_UNKNOWN,
           cnameRecords: [ALTERNATIVE_CNAME_RECORD],
         };
@@ -321,8 +312,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
       });
 
       it('All A records unknown', () => {
-        /** @type {ResolveDnsResult} */
-        const resolveDnsResult = {
+        const resolveDnsResult: ResolveDnsResult = {
           aRecords: A_RECORDS_WITH_ALL_UNKNOWN,
           cnameRecords: [ALTERNATIVE_CNAME_RECORD],
         };
@@ -381,8 +371,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
       });
 
       it('1 A record missing', () => {
-        /** @type {ResolveDnsResult} */
-        const resolveDnsResult = {
+        const resolveDnsResult: ResolveDnsResult = {
           aRecords: A_RECORDS_WITH_ONE_MISSING,
           cnameRecords: [ALTERNATIVE_CNAME_RECORD],
         };
@@ -441,8 +430,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
       });
 
       it('All A records missing', () => {
-        /** @type {ResolveDnsResult} */
-        const resolveDnsResult = {
+        const resolveDnsResult: ResolveDnsResult = {
           aRecords: [],
           cnameRecords: [ALTERNATIVE_CNAME_RECORD],
         };
@@ -479,8 +467,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
 
     describe('Without CNAME', () => {
       it('All A Records valid', () => {
-        /** @type {ResolveDnsResult} */
-        const resolveDnsResult = {
+        const resolveDnsResult: ResolveDnsResult = {
           aRecords: A_RECORDS,
           cnameRecords: [],
         };
@@ -531,8 +518,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
       });
 
       it('1 A record unknown', () => {
-        /** @type {ResolveDnsResult} */
-        const resolveDnsResult = {
+        const resolveDnsResult: ResolveDnsResult = {
           aRecords: A_RECORDS_WITH_ONE_UNKNOWN,
           cnameRecords: [],
         };
@@ -591,8 +577,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
       });
 
       it('All A records unknown', () => {
-        /** @type {ResolveDnsResult} */
-        const resolveDnsResult = {
+        const resolveDnsResult: ResolveDnsResult = {
           aRecords: A_RECORDS_WITH_ALL_UNKNOWN,
           cnameRecords: [],
         };
@@ -667,8 +652,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
       });
 
       it('1 A record missing', () => {
-        /** @type {ResolveDnsResult} */
-        const resolveDnsResult = {
+        const resolveDnsResult: ResolveDnsResult = {
           aRecords: A_RECORDS_WITH_ONE_MISSING,
           cnameRecords: [],
         };
@@ -719,8 +703,7 @@ describe('diag-domain-config#diagDomainConfig()', () => {
       });
 
       it('All A records missing', () => {
-        /** @type {ResolveDnsResult} */
-        const resolveDnsResult = {
+        const resolveDnsResult: ResolveDnsResult = {
           aRecords: [],
           cnameRecords: [],
         };
@@ -754,10 +737,8 @@ describe('diag-domain-config#diagDomainConfig()', () => {
         isWildcard: false,
         isApex: false,
       };
-      /** @type {ResolveDnsResult} */
-      const resolveDnsResult = null;
-      /** @type {null} */
-      const loadBalancerDnsConfig = null;
+      const resolveDnsResult: ResolveDnsResult = null;
+      const loadBalancerDnsConfig: null = null;
 
       const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
 

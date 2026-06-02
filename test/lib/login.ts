@@ -9,30 +9,24 @@ import { CcApiClient } from '../../src/clients/cc-api/cc-api-client.js';
 import { DeleteOauthTokenCommand } from '../../src/clients/cc-api/commands/oauth-token/delete-oauth-token-command.js';
 import { getAllE2eUsers } from './e2e-test-users.js';
 
-/**
- * @typedef {import('./e2e.types.js').E2eUser} E2eUser
- * @typedef {import('cheerio').CheerioAPI} CheerioAPI
- */
+import type { E2eUser } from './e2e.types.js';
 
 const OAUTH_CONSUMER_KEY = globalThis.process?.env.OAUTH_CONSUMER_KEY;
 const OAUTH_CONSUMER_SECRET = globalThis.process?.env.OAUTH_CONSUMER_SECRET;
 
-export async function login() {
+export async function login(): Promise<void> {
   console.log('log in all users');
   await Promise.all(getAllE2eUsers().map(loginUser));
   console.log('all users logged in');
 }
 
-export async function logout() {
+export async function logout(): Promise<void> {
   console.log('log out all users');
   await Promise.all(getAllE2eUsers().map(logoutUser));
   console.log('all users logged out');
 }
 
-/**
- * @param {E2eUser} user
- */
-async function loginUser(user) {
+async function loginUser(user: E2eUser): Promise<void> {
   console.log(`  login attempt for user ${user.userName} (${user.email})`);
   const oauthDance = new OauthDance({
     API_HOST: 'https://api.clever-cloud.com',
@@ -42,7 +36,7 @@ async function loginUser(user) {
   });
 
   await oauthDance.postOauthRequestToken();
-  let mfaCode;
+  let mfaCode: string | undefined;
   const requiresMfa = await oauthDance.postSessionsLogin(user.email, user.password);
   if (requiresMfa) {
     mfaCode = (await TOTP.generate(user.totpSecret)).otp;
@@ -79,10 +73,7 @@ async function loginUser(user) {
   console.log(`  api token creation success for user ${user.userName} (${user.email})`);
 }
 
-/**
- * @param {E2eUser} user
- */
-async function logoutUser(user) {
+async function logoutUser(user: E2eUser): Promise<void> {
   if (user.apiTokenId != null && user.oauthTokens != null) {
     const apiBridgeClient = new CcApiBridgeClient({ oauthTokens: user.oauthTokens });
     await apiBridgeClient.send(new DeleteApiTokenCommand({ apiTokenId: user.apiTokenId }));
@@ -109,19 +100,26 @@ async function logoutUser(user) {
  * 4) postOauthAccessToken()
  */
 class OauthDance {
-  #API_HOST;
-  #OAUTH_CONSUMER_KEY;
-  #OAUTH_CONSUMER_SECRET;
-  #OAUTH_CONSUMER_CALLBACK_URL;
+  #API_HOST: string;
+  #OAUTH_CONSUMER_KEY: string;
+  #OAUTH_CONSUMER_SECRET: string;
+  #OAUTH_CONSUMER_CALLBACK_URL: string;
 
-  /**
-   * @param {Object} config
-   * @param {string} config.API_HOST - The API host URL
-   * @param {string} config.OAUTH_CONSUMER_KEY - OAuth consumer key
-   * @param {string} config.OAUTH_CONSUMER_SECRET - OAuth consumer secret
-   * @param {string} config.OAUTH_CONSUMER_CALLBACK_URL - OAuth callback URL
-   */
-  constructor({ API_HOST, OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET, OAUTH_CONSUMER_CALLBACK_URL }) {
+  constructor({
+    API_HOST,
+    OAUTH_CONSUMER_KEY,
+    OAUTH_CONSUMER_SECRET,
+    OAUTH_CONSUMER_CALLBACK_URL,
+  }: {
+    /** The API host URL */
+    API_HOST: string;
+    /** OAuth consumer key */
+    OAUTH_CONSUMER_KEY: string;
+    /** OAuth consumer secret */
+    OAUTH_CONSUMER_SECRET: string;
+    /** OAuth callback URL */
+    OAUTH_CONSUMER_CALLBACK_URL: string;
+  }) {
     this.#API_HOST = API_HOST;
     this.#OAUTH_CONSUMER_KEY = OAUTH_CONSUMER_KEY;
     this.#OAUTH_CONSUMER_SECRET = OAUTH_CONSUMER_SECRET;
@@ -130,22 +128,16 @@ class OauthDance {
 
   //#region [1] get request token
 
-  /** @type {string | null} */
-  #oauthToken;
-  /** @type {string | null} */
-  #oauthTokenSecret;
+  #oauthToken: string | null;
+  #oauthTokenSecret: string | null;
 
   /**
-   * @returns {Promise<void>}
    * @throws {OauthDanceError}
    */
-  async postOauthRequestToken() {
+  async postOauthRequestToken(): Promise<void> {
     const response = await this.#postForm('/v2/oauth/request_token', {
-      // eslint-disable-next-line camelcase
       oauth_consumer_key: this.#OAUTH_CONSUMER_KEY,
-      // eslint-disable-next-line camelcase
       oauth_signature: this.#OAUTH_CONSUMER_SECRET + '&',
-      // eslint-disable-next-line camelcase
       oauth_callback: this.#OAUTH_CONSUMER_CALLBACK_URL,
     });
 
@@ -165,24 +157,20 @@ class OauthDance {
 
   //#region [2] submit login form / submit MFA form
 
-  /** @type {string | null} */
-  #email;
-  /** @type {string | null} */
-  #mfaFormHtml;
-  /** @type {string | null} */
-  #ccid;
+  #email: string | null;
+  #mfaFormHtml: string | null;
+  #ccid: string | null;
 
   /**
-   * @param {string} email - User email
-   * @param {string} password - User password
-   * @returns {Promise<boolean>} - Returns true if MFA is required
+   * @param email - User email
+   * @param password - User password
+   * @returns Returns true if MFA is required
    * @throws {InvalidCredentialError | OauthDanceError}
    */
-  async postSessionsLogin(email, password) {
+  async postSessionsLogin(email: string, password: string): Promise<boolean> {
     const response = await this.#postForm('/v2/sessions/login', {
       email,
       pass: password,
-      // eslint-disable-next-line camelcase
       from_authorize: 'true',
     });
 
@@ -207,11 +195,10 @@ class OauthDance {
   }
 
   /**
-   * @param {string} mfaCode - Multi-factor authentication code
-   * @returns {Promise<void>}
+   * @param mfaCode - Multi-factor authentication code
    * @throws {InvalidMfaCodeError | OauthDanceError}
    */
-  async postSessionsMfaLogin(mfaCode) {
+  async postSessionsMfaLogin(mfaCode: string): Promise<void> {
     const $ = cheerio.load(this.#mfaFormHtml || '');
 
     const form = $('form[action="/v2/sessions/mfa_login"]');
@@ -221,11 +208,8 @@ class OauthDance {
     const mfaAuthId = $(form).find('input[type="hidden"][name="auth_id"]').attr('value');
 
     const response = await this.#postForm('/v2/sessions/mfa_login', {
-      // eslint-disable-next-line camelcase
       mfa_attempt: mfaCode,
-      // eslint-disable-next-line camelcase
       mfa_kind: 'TOTP',
-      // eslint-disable-next-line camelcase
       auth_id: mfaAuthId,
       email: this.#email,
     });
@@ -248,18 +232,15 @@ class OauthDance {
 
   //#region [3] authorize / submit oauth rights form
 
-  /** @type {string | null} */
-  #oauthRightsHtml;
-  /** @type {string | null} */
-  #oauthVerifier;
-  /** @type {string | null} */
-  #userId;
+  #oauthRightsHtml: string | null;
+  #oauthVerifier: string | null;
+  #userId: string | null;
 
   /**
-   * @returns {Promise<boolean>} - Returns true if rights form needs to be submitted
+   * @returns Returns true if rights form needs to be submitted
    * @throws {OauthDanceError}
    */
-  async getOauthAuthorize() {
+  async getOauthAuthorize(): Promise<boolean> {
     const response = await fetch(`${this.#API_HOST}/v2/oauth/authorize`, {
       redirect: 'manual',
       credentials: 'include',
@@ -288,10 +269,9 @@ class OauthDance {
   }
 
   /**
-   * @returns {Promise<void>}
    * @throws {OauthDanceError}
    */
-  async postOauthAuthorize() {
+  async postOauthAuthorize(): Promise<void> {
     const $ = cheerio.load(this.#oauthRightsHtml || '');
 
     const form = $('form[action="/v2/oauth/authorize"]');
@@ -299,11 +279,10 @@ class OauthDance {
       throw new OauthDanceError('3bis', `OAuth rights page does not have the expected HTML form`);
     }
 
-    /** @type {Record<string, string>} */
-    const oauthRights = $(form)
+    const oauthRights: Record<string, string> = $(form)
       .find('input[type="checkbox"]')
       .toArray()
-      .reduce((/** @type {Record<string, string>} */ acc, input) => {
+      .reduce((acc: Record<string, string>, input) => {
         const name = $(input).attr('name');
         if (name) {
           acc[name] = 'on';
@@ -335,24 +314,17 @@ class OauthDance {
 
   //#region [4] get access token
 
-  /** @type {string | null} */
-  oauthUserToken;
-  /** @type {string | null} */
-  oauthUserSecret;
+  oauthUserToken: string | null;
+  oauthUserSecret: string | null;
 
   /**
-   * @returns {Promise<{ userId: string, oauthUserToken: string, oauthUserSecret: string }>}
    * @throws {OauthDanceError}
    */
-  async postOauthAccessToken() {
+  async postOauthAccessToken(): Promise<{ userId: string; oauthUserToken: string; oauthUserSecret: string }> {
     const response = await this.#postForm('/v2/oauth/access_token', {
-      // eslint-disable-next-line camelcase
       oauth_consumer_key: this.#OAUTH_CONSUMER_KEY,
-      // eslint-disable-next-line camelcase
       oauth_signature: this.#OAUTH_CONSUMER_SECRET + '&' + this.#oauthTokenSecret,
-      // eslint-disable-next-line camelcase
       oauth_token: this.#oauthToken,
-      // eslint-disable-next-line camelcase
       oauth_verifier: this.#oauthVerifier,
     });
 
@@ -373,14 +345,12 @@ class OauthDance {
   //#endregion
 
   /**
-   * @param {string} path - API endpoint path
-   * @param {Record<string, string>} data - Form data
-   * @param {Record<string, string>} [cookies] - Optional cookies to include
-   * @returns {Promise<Response>}
+   * @param path - API endpoint path
+   * @param data - Form data
+   * @param cookies - Optional cookies to include
    */
-  #postForm(path, data, cookies) {
-    /** @type {Record<string, string>} */
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+  #postForm(path: string, data: Record<string, string>, cookies?: Record<string, string>): Promise<Response> {
+    const headers: Record<string, string> = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
     if (cookies != null) {
       headers.cookie = serializeCookies(cookies);
@@ -400,24 +370,26 @@ class OauthDance {
 
 /**
  * Serialize cookies object into cookie header string
- * @param {Record<string, string>} cookies
- * @returns {string}
  */
-function serializeCookies(cookies) {
+function serializeCookies(cookies: Record<string, string>): string {
   return Object.entries(cookies)
     .map(([name, value]) => cookie.serialize(name, value))
     .join(';');
 }
 
 class AuthBackendError extends Error {
+  code: string;
+  statusCode: number;
+  details?: string;
+
   /**
-   * @param {string} message - The error message
-   * @param {string} code - The error code
-   * @param {number} statusCode - HTTP status code
-   * @param {string} [details] - Additional error details
-   * @param {Error} [cause] - The cause of the error
+   * @param message - The error message
+   * @param code - The error code
+   * @param statusCode - HTTP status code
+   * @param details - Additional error details
+   * @param cause - The cause of the error
    */
-  constructor(message, code, statusCode, details, cause) {
+  constructor(message: string, code: string, statusCode: number, details?: string, cause?: Error) {
     super(message, { cause });
     this.code = code;
     this.statusCode = statusCode;
@@ -439,11 +411,11 @@ export class InvalidMfaCodeError extends AuthBackendError {
 
 class OauthDanceError extends AuthBackendError {
   /**
-   * @param {string} step - The OAuth step that failed
-   * @param {string} details - Details about the failure
-   * @param {string} [body] - The response body of the API error
+   * @param step - The OAuth step that failed
+   * @param details - Details about the failure
+   * @param body - The response body of the API error
    */
-  constructor(step, details, body = '') {
+  constructor(step: string, details: string, body: string = '') {
     super(
       'Token creation failed',
       `failed-token-creation-${step}`,

@@ -1,18 +1,15 @@
-/**
- * @import { CcRequest, CcResponse } from '../../../../src/types/request.types.js'
- * @import { NewScenario } from '@clevercloud/doublure'
- */
+import type { NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CcClientError, CcRequestError } from '../../../../src/lib/error/cc-client-errors.js';
 import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../../src/lib/request/query-params.js';
 import { sendRequest as originalSendRequest } from '../../../../src/lib/request/request.js';
+import type { CcRequest, CcResponse } from '../../../../src/types/request.types.js';
 import { expectPromiseThrows } from '../../../lib/expect-utils.js';
 
 describe('request', () => {
-  /** @type {NewScenario} */
-  let newScenario;
+  let newScenario: NewScenario;
 
   const hooks = doublureHooks();
 
@@ -25,12 +22,7 @@ describe('request', () => {
   });
   afterAll(hooks.after);
 
-  /**
-   *
-   * @param {Partial<CcRequest>} request
-   * @returns {Promise<CcResponse<any>>}
-   */
-  async function sendRequest(request) {
+  async function sendRequest(request: Partial<CcRequest>): Promise<CcResponse<unknown>> {
     return originalSendRequest({
       cors: false,
       timeout: 0,
@@ -293,7 +285,7 @@ describe('request', () => {
           method: 'GET',
           url: 'https://example.com/api/error',
         }),
-        (error) => {
+        (error: CcRequestError) => {
           expect(error).toBeInstanceOf(CcRequestError);
           expect(error.code).toBe('NETWORK_ERROR');
           expect(error.message).toContain('A network error occurred');
@@ -307,7 +299,7 @@ describe('request', () => {
           method: 'GET',
           url: 'http://:\\invalid-url',
         }),
-        (error) => {
+        (error: CcRequestError) => {
           expect(error).toBeInstanceOf(CcRequestError);
           expect(error.code).toBe('INVALID_URL');
           expect(error.message).toContain('Invalid URL');
@@ -326,7 +318,7 @@ describe('request', () => {
           url: 'https://example.com/api/error',
           headers: new HeadersBuilder().build(),
         }),
-        (error) => {
+        (error: CcRequestError) => {
           expect(error).toBeInstanceOf(CcRequestError);
           expect(error.code).toBe('UNEXPECTED_ERROR');
           expect(error.message).toContain('An unexpected error occurred');
@@ -582,7 +574,7 @@ describe('request', () => {
           url: `/api/test`,
           timeout: 10,
         }),
-        (error) => {
+        (error: CcClientError) => {
           expect(error).toBeInstanceOf(CcClientError);
           expect(error.code).toBe('TIMEOUT_EXCEEDED');
           expect(error.message).toContain(`Timeout of 10 ms exceeded`);

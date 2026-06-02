@@ -1,29 +1,20 @@
-/**
- * @import {OauthTokens} from '../../../../src/types/auth.types.js'
- */
 import { CcApiBridgeClient } from '../../../../src/clients/cc-api-bridge/cc-api-bridge-client.js';
+import type { OauthTokens } from '../../../../src/types/auth.types.js';
 import { getE2eUser } from '../../../lib/e2e-test-users.js';
 
-/**
- * @typedef Auth
- * @type {'none'|'oauth-v1'}
- */
+type Auth = 'none' | 'oauth-v1';
 
 const IS_NODE = globalThis.process != null;
 const USER = getE2eUser('test-user-with-github');
 const USE_LOCAL_API_BRIDGE = false;
 
-/**
- * @param {{debug?: boolean }} [config]
- */
-export function e2eSupport(config) {
+export function e2eSupport(config?: { debug?: boolean }) {
   const conf = {
     ...{ user: USER.userName, debug: false },
     ...(config ?? {}),
   };
   const clientForCreate = createApiBridgeClient('none', conf.debug);
-  /** @type {CcApiBridgeClient} */
-  let client;
+  let client: CcApiBridgeClient;
 
   return {
     isNode: IS_NODE,
@@ -47,12 +38,7 @@ export function e2eSupport(config) {
   };
 }
 
-/**
- * @param {Auth} auth
- * @param {boolean} debug
- * @returns {CcApiBridgeClient}
- */
-function createApiBridgeClient(auth, debug) {
+function createApiBridgeClient(auth: Auth, debug: boolean): CcApiBridgeClient {
   const defaultRequestConfig = { debug };
 
   return new CcApiBridgeClient({
@@ -62,11 +48,7 @@ function createApiBridgeClient(auth, debug) {
   });
 }
 
-/**
- * @param {Auth} auth
- * @returns {string|null}
- */
-function getBaseUrl(auth) {
+function getBaseUrl(auth: Auth): string | null {
   if (IS_NODE) {
     if (USE_LOCAL_API_BRIDGE) {
       return 'http://localhost:8080';
@@ -77,11 +59,7 @@ function getBaseUrl(auth) {
   return `/cc-api-bridge-${USER.userName}-${auth}`;
 }
 
-/**
- * @param {Auth} auth
- * @returns {OauthTokens}
- */
-function getAuth(auth) {
+function getAuth(auth: Auth): OauthTokens {
   // if running in browser, no auth (authentication will be done by the proxy)
   if (!IS_NODE || auth === 'none') {
     return null;

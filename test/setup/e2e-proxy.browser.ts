@@ -1,15 +1,24 @@
 import httpProxy from 'http-proxy-3';
+import type { ClientRequest, IncomingMessage, ServerResponse } from 'node:http';
 import { TOTP } from 'totp-generator';
+import type { Plugin } from 'vite';
 import { CcAuthApiToken } from '../../src/lib/auth/cc-auth-api-token.js';
 import { CcAuthOauthV1Plaintext } from '../../src/lib/auth/cc-auth-oauth-v1-plaintext.js';
 import { encodeToBase64 } from '../../src/lib/utils.js';
 import { getAllE2eUsers, getE2eUser } from '../lib/e2e-test-users.js';
+import type { E2eUser, E2eUserName } from '../lib/e2e.types.js';
 import { login, logout } from '../lib/login.js';
 
 /**
- * @typedef {import('../lib/e2e.types.d.ts').E2eUser} E2eUser
- * @typedef {import('../lib/e2e.types.d.ts').E2eUserName} E2eUserName
+ * One proxy route: a URL prefix forwarded to a target host, optionally carrying a user's
+ * auth headers. Matches the `e2eRoute` shape augmented onto `http.IncomingMessage`.
  */
+interface E2eRoute {
+  prefix: string;
+  target: string;
+  user?: E2eUser;
+  authorizationHeader?: () => string;
+}
 
 /**
  * Vite plugin powering Vitest browser-mode e2e tests.
@@ -17,7 +26,7 @@ import { login, logout } from '../lib/login.js';
  * Vitest browser mode runs two Vite servers and applies this plugin to both; we set things
  * up only on the browser server (the one with an `httpServer` that actually serves the
  * browser and receives the proxied requests). On that server's boot it:
- * 1. logs in all e2e users (the same shared {@link E2eUser} objects the proxy routes read),
+ * 1. logs in all e2e users (the same shared `E2eUser` objects the proxy routes read),
  * 2. mounts one middleware per route (user × auth combination, plus avatar and redis-http)
  *    that forwards browser requests through a single shared proxy to the real Clever Cloud
  *    hosts, injecting the route's `Authorization` / `x-clever-password` headers,
@@ -29,10 +38,8 @@ import { login, logout } from '../lib/login.js';
  *
  * Connect's `server.middlewares.use('/prefix', ...)` strips the prefix from `req.url`, so
  * each route's path is forwarded to its target host as-is.
- *
- * @returns {import('vite').Plugin}
  */
-export function e2eProxyPlugin() {
+export function e2eProxyPlugin(): Plugin {
   // Log users out (deleting the temporary tokens) at most once, even if both the
   // httpServer `close` event and the `buildEnd` fallback fire.
   let loggedOut = false;
@@ -63,20 +70,22 @@ export function e2eProxyPlugin() {
       // the request stream for matching paths, then stashes the rewritten body on
       // `req.newBody` so the proxy can replay it.
       const rewriters = [rewriteCcApiChangePassword, rewriteCcApiBridgeCreateToken];
-      server.middlewares.use(async (req, res, next) => {
-        try {
-          for (const rewriter of rewriters) {
-            if (rewriter.match(req.url)) {
-              const rawBody = await getRawBody(req);
-              const newBody = await rewriter.newBody(JSON.parse(rawBody), req.url);
-              req.newBody = JSON.stringify(newBody);
-              break;
+      server.middlewares.use((req: IncomingMessage, _res: ServerResponse, next: () => void) => {
+        void (async () => {
+          try {
+            for (const rewriter of rewriters) {
+              if (rewriter.match(req.url)) {
+                const rawBody = await getRawBody(req);
+                const newBody = await rewriter.newBody(JSON.parse(rawBody) as Record<string, unknown>, req.url);
+                req.newBody = JSON.stringify(newBody);
+                break;
+              }
             }
+          } catch {
+            // ignore: let the proxy forward the request as-is
           }
-        } catch {
-          // ignore: let the proxy forward the request as-is
-        }
-        next();
+          next();
+        })();
       });
 
       // A single shared proxy for every route: the per-request `target` (and the
@@ -85,7 +94,7 @@ export function e2eProxyPlugin() {
       // one socket pool) per route.
       const proxy = httpProxy.createProxyServer({ changeOrigin: true });
       proxy.on('error', () => {});
-      proxy.on('proxyReq', (proxyReq, req) => {
+      proxy.on('proxyReq', (proxyReq: ClientRequest, req: IncomingMessage) => {
         const route = req.e2eRoute;
         if (route == null) {
           return;
@@ -107,7 +116,7 @@ export function e2eProxyPlugin() {
       });
 
       for (const route of buildRoutes()) {
-        server.middlewares.use(`/${route.prefix}`, (req, res) => {
+        server.middlewares.use(`/${route.prefix}`, (req: IncomingMessage, res: ServerResponse) => {
           req.e2eRoute = route;
           proxy.web(req, res, { target: route.target });
         });
@@ -133,10 +142,8 @@ export function e2eProxyPlugin() {
 
 /**
  * Builds the list of proxy routes (one set per user × auth, plus avatar and redis-http).
- *
- * @returns {Array<{prefix: string, target: string, user?: E2eUser, authorizationHeader?: () => string}>}
  */
-function buildRoutes() {
+function buildRoutes(): Array<E2eRoute> {
   return [
     ...getAllE2eUsers().flatMap((user) => [
       {
@@ -175,17 +182,12 @@ function buildRoutes() {
 }
 
 const rewriteCcApiChangePassword = {
-  /** @param {string} url */
-  match(url) {
+  match(url: string) {
     return url.match(/\/cc-api-(.+)-oauth-v1\/v2\/self\/change_password/) != null;
   },
-  /**
-   * @param {any} body
-   * @param {string} url
-   */
-  newBody(body, url) {
+  newBody(body: Record<string, unknown>, url: string) {
     const match = url.match(/\/cc-api-(.+)-oauth-v1\/v2\/self\/change_password/);
-    const user = getE2eUser(/** @type {E2eUserName} */ (match[1]));
+    const user = getE2eUser(match[1] as E2eUserName);
     if (body.newPassword === user.newTemporaryPassword) {
       body.oldPassword = user.password;
     }
@@ -197,17 +199,12 @@ const rewriteCcApiChangePassword = {
 };
 
 const rewriteCcApiBridgeCreateToken = {
-  /** @param {string} url */
-  match(url) {
+  match(url: string) {
     return url.match(/\/cc-api-bridge-(.+)-none\/api-tokens/) != null;
   },
-  /**
-   * @param {any} body
-   * @param {string} url
-   */
-  async newBody(body, url) {
+  async newBody(body: Record<string, unknown>, url: string) {
     const match = url.match(/\/cc-api-bridge-(.+)-none\/api-tokens/);
-    const user = getE2eUser(/** @type {E2eUserName} */ (match[1]));
+    const user = getE2eUser(match[1] as E2eUserName);
     body.email = user.email;
     body.password = user.password;
     if (user.totpSecret != null) {
@@ -217,14 +214,10 @@ const rewriteCcApiBridgeCreateToken = {
   },
 };
 
-/**
- * @param {import('node:http').IncomingMessage} req
- * @returns {Promise<string>}
- */
-function getRawBody(req) {
+function getRawBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
     let body = '';
-    req.on('data', (chunk) => {
+    req.on('data', (chunk: Buffer) => {
       body += chunk.toString();
     });
     req.on('end', () => {

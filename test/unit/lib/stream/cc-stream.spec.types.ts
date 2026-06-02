@@ -5,10 +5,10 @@ import type { CcStreamCloseReason } from '../../../../src/lib/stream/cc-stream.t
 export interface Stubs {
   request: Mock<() => void>;
   open: Mock<() => void>;
-  error: Mock<(err: any) => void>;
-  event: Mock<(data: ?) => void>;
+  error: Mock<(err: unknown) => void>;
+  event: Mock<(data: unknown) => void>;
   success: Mock<(reason: CcStreamCloseReason) => void>;
-  failure: Mock<(err: any) => void>;
+  failure: Mock<(err: unknown) => void>;
 }
 
 export interface SpiedStream {

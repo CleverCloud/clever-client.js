@@ -79,7 +79,7 @@ describe('Utils', () => {
     });
 
     it('should throw error for invalid date', () => {
-      // @ts-ignore
+      // @ts-expect-error deliberately passing an invalid date value to test the error path
       expect(() => normalizeDate({})).toThrow('Invalid date: [object Object]');
     });
   });
@@ -184,8 +184,7 @@ describe('Utils', () => {
   });
 
   describe('merge', () => {
-    /** @type {{ prop1: string, prop2: string, prop3?: string }} */
-    const props = { prop1: 'prop1', prop2: 'prop2' };
+    const props: { prop1: string; prop2: string; prop3?: string } = { prop1: 'prop1', prop2: 'prop2' };
 
     it('should merge objects', () => {
       const result = merge(props, { prop1: 'overridden prop1', prop3: 'prop3' });

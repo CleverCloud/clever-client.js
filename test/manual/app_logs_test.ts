@@ -34,10 +34,10 @@ const logStream = new ApplicationLogStream({
 
 logStream
   .on('open', (event) => console.debug('stream opened!', event))
-  .on('error', /** @param {Event & {error?: any}} event */ (event) => console.log('RETRYABLE_ERROR', event.error))
+  .on('error', (event: Event & { error?: unknown }) => console.log('RETRYABLE_ERROR', event.error))
   .onLog((log) => console.log(log.date, log.message));
 
-logStream
+void logStream
   .start()
   .then((reason) => console.info('OK', reason)) // -> FIN
   .catch((error) => console.error('FATAL_ERROR', error)) // -> FIN alternative

@@ -1,15 +1,12 @@
-/**
- * @import {PaymentMethod, Orga} from '../../../../esm/utils/payments.types.js'
- */
 import { describe, expect, it } from 'vitest';
 import {
   ERROR_TYPES,
   getAllOrgaPaymentMethodsErrors,
   getOrgaPaymentMethodsError,
 } from '../../../../esm/utils/payment.js';
+import type { Orga, PaymentMethod } from '../../../../esm/utils/payments.types.js';
 
-/** @type {Orga} */
-const simpleOrga = {
+const simpleOrga: Orga = {
   id: 'orga_???',
   name: '???',
   cleverEnterprise: false,
@@ -21,8 +18,7 @@ const premiumOrga = { ...simpleOrga, cleverEnterprise: true };
 const trustedOrga = { ...simpleOrga, isTrusted: true };
 const premiumAndTrustedOrga = { ...simpleOrga, cleverEnterprise: true, isTrusted: true };
 
-/** @type {PaymentMethod} */
-const simpleCard = {
+const simpleCard: PaymentMethod = {
   type: 'CREDITCARD',
   isDefault: false,
   isExpired: false,
@@ -30,8 +26,7 @@ const simpleCard = {
 const simpleDefaultCard = { ...simpleCard, isDefault: true };
 const expiredDefaultCard = { ...simpleCard, isExpired: true, isDefault: true };
 
-/** @type {PaymentMethod} */
-const simpleSepa = {
+const simpleSepa: PaymentMethod = {
   type: 'SEPA_DEBIT',
   isDefault: false,
   isExpired: false,

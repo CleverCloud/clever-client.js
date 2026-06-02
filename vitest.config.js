@@ -5,6 +5,9 @@
 import { vitestPlugin as mockApiPlugin } from '@clevercloud/doublure/vitest';
 import { playwright } from '@vitest/browser-playwright';
 import { defaultExclude, defineConfig } from 'vitest/config';
+// NB: this `import` keeps the `.js` specifier (NodeNext maps it to the `.ts` source when this
+// config is loaded in Node). The `setupFiles` / `globalSetup` paths below, by contrast, must use
+// `.ts` — they are served to the browser as literal URLs and browser mode does not remap `.js`→`.ts`.
 import { e2eProxyPlugin } from './test/setup/e2e-proxy.browser.js';
 
 /**
@@ -35,7 +38,7 @@ const allProjects = [
       name: 'node-unit',
       environment: 'node',
       globals: true,
-      setupFiles: ['./test/setup/vite-matchers.js'],
+      setupFiles: ['./test/setup/vite-matchers.ts'],
       include: ['test/unit/**/*.spec.{js,ts}'],
       exclude: excludeForNode,
       // The browser-unit mock server / node mock servers are shared per run
@@ -48,7 +51,7 @@ const allProjects = [
     test: {
       name: 'browser-unit',
       globals: true,
-      setupFiles: ['./test/setup/vite-matchers.js'],
+      setupFiles: ['./test/setup/vite-matchers.ts'],
       include: ['test/unit/**/*.spec.{js,ts}'],
       exclude: excludeForBrowser,
       fileParallelism: false,
@@ -62,8 +65,8 @@ const allProjects = [
       name: 'node-e2e',
       environment: 'node',
       globals: true,
-      setupFiles: ['./test/setup/vite-matchers.js', './test/setup/hydrate-users.node.js'],
-      globalSetup: ['./test/setup/global-setup.node.js'],
+      setupFiles: ['./test/setup/vite-matchers.ts', './test/setup/hydrate-users.node.ts'],
+      globalSetup: ['./test/setup/global-setup.node.ts'],
       include: ['test/e2e/**/*.spec.{js,ts}'],
       exclude: excludeForNode,
       testTimeout: 30000,
@@ -77,7 +80,7 @@ const allProjects = [
     test: {
       name: 'browser-e2e',
       globals: true,
-      setupFiles: ['./test/setup/vite-matchers.js'],
+      setupFiles: ['./test/setup/vite-matchers.ts'],
       include: ['test/e2e/**/*.spec.{js,ts}'],
       exclude: excludeForBrowser,
       testTimeout: 30000,
