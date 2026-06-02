@@ -95,6 +95,16 @@ export default [
       '@typescript-eslint/require-await': 'off',
     },
   },
+  // Store backends implement the async (Promise-returning) `Store` interface, but some are
+  // synchronous internally (memory, fs, localStorage); keeping `async` preserves the public
+  // throw-as-rejection contract, so require-await is noise here.
+  {
+    name: 'project-cc-api-stores',
+    files: ['src/clients/cc-api/lib/store/**/*.ts'],
+    rules: {
+      '@typescript-eslint/require-await': 'off',
+    },
+  },
   {
     ...cleverCloud.configs.node,
     files: ['eslint.config.js', 'vitest.config.js', 'tasks/**/*.js', 'test-*.config.*.*js', 'test/**/*.*js'],

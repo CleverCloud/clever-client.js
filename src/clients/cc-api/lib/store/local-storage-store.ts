@@ -1,6 +1,4 @@
-/**
- * @import { Store } from '../../types/resource-id-resolver.types.js'
- */
+import type { Store } from '../../types/resource-id-resolver.types.js';
 
 //--
 
@@ -8,7 +6,6 @@
  * Browser localStorage-based implementation of the Store interface.
  * Persists data in the browser's localStorage, making it available across page reloads.
  *
- * @extends {Store<T>}
  * @template T - The type of data to be stored
  *
  * @example
@@ -19,17 +16,16 @@
  *
  * @throws {Error} If localStorage is not available in the environment
  */
-export class LocalStorageStore {
+export class LocalStorageStore<T> implements Store<T> {
   /**
    * Key used to store data in localStorage
-   * @type {string}
    */
-  #storageKey;
+  #storageKey: string;
 
   /**
    * Creates a new localStorage-based store
    *
-   * @param {string} [storageKey='cc-resource-id-index'] - Key to use in localStorage
+   * @param storageKey - Key to use in localStorage
    * @throws {Error} If localStorage is not available
    */
   constructor(storageKey = 'cc-resource-id-index') {
@@ -43,24 +39,23 @@ export class LocalStorageStore {
   /**
    * Writes data to localStorage in JSON format
    *
-   * @param {T} index - Data to store
-   * @returns {Promise<void>}
+   * @param index - Data to store
    * @throws {Error} If writing to localStorage fails or if data cannot be stringified
    */
-  async write(index) {
+  async write(index: T): Promise<void> {
     localStorage.setItem(this.#storageKey, JSON.stringify(index));
   }
 
   /**
    * Reads and parses data from localStorage
    *
-   * @returns {Promise<T|null>} The stored data, or null if no data exists
+   * @returns The stored data, or null if no data exists
    * @throws {Error} If reading from localStorage fails or if data cannot be parsed
    */
-  async read() {
+  async read(): Promise<T | null> {
     const item = localStorage.getItem(this.#storageKey);
     if (item != null) {
-      return JSON.parse(item);
+      return JSON.parse(item) as T;
     }
     return null;
   }
@@ -68,10 +63,9 @@ export class LocalStorageStore {
   /**
    * Removes the stored data from localStorage
    *
-   * @returns {Promise<void>}
    * @throws {Error} If removing from localStorage fails
    */
-  async flush() {
+  async flush(): Promise<void> {
     localStorage.removeItem(this.#storageKey);
   }
 }

@@ -1,12 +1,10 @@
-/**
- * @import { ResourceIdIndex, Store, AddonIdType } from '../types/resource-id-resolver.types.js'
- * @import { CcApiClient } from '../cc-api-client.js'
- * @import { GetOrganisationSummariesCommandOutput } from '../commands/organisation/get-organisation-summaries-command.types.js'
- * @import { ResourceId } from '../types/cc-api.types.js'
- * @import { CcRequestConfigPartial } from '../../../types/request.types.js'
- */
 import { CcClientError } from '../../../lib/error/cc-client-errors.js';
+import type { CcRequestConfigPartial } from '../../../types/request.types.js';
+import type { CcApiClient } from '../cc-api-client.js';
 import { GetOrganisationSummariesCommand } from '../commands/organisation/get-organisation-summaries-command.js';
+import type { GetOrganisationSummariesCommandOutput } from '../commands/organisation/get-organisation-summaries-command.types.js';
+import type { ResourceId } from '../types/cc-api.types.js';
+import type { AddonIdType, ResourceIdIndex, Store } from '../types/resource-id-resolver.types.js';
 
 /**
  * Utility class to resolve and translate between different types of resource IDs in the Clever Cloud API.
@@ -30,29 +28,26 @@ import { GetOrganisationSummariesCommand } from '../commands/organisation/get-or
 export class ResourceIdResolver {
   /**
    * API client used to fetch resource information
-   * @type {CcApiClient}
    */
-  #client;
+  #client: CcApiClient;
 
   /**
    * Storage backend for the resource index
-   * @type {Store<ResourceIdIndex>}
    */
-  #indexStore;
+  #indexStore: Store<ResourceIdIndex>;
 
   /**
    * In-memory cache of resource mappings
-   * @type {ResourceIdIndex}
    */
-  #index;
+  #index: ResourceIdIndex;
 
   /**
    * Creates a new ResourceIdResolver instance
    *
-   * @param {CcApiClient} client - API client to use for fetching resource information
-   * @param {Store<ResourceIdIndex>} indexStore - Storage backend for caching resource mappings
+   * @param client - API client to use for fetching resource information
+   * @param indexStore - Storage backend for caching resource mappings
    */
-  constructor(client, indexStore) {
+  constructor(client: CcApiClient, indexStore: Store<ResourceIdIndex>) {
     this.#client = client;
     this.#indexStore = indexStore;
   }
@@ -61,9 +56,9 @@ export class ResourceIdResolver {
    * Resolves the owner ID (organization ID) for a given resource.
    * The resource can be an application, addon, addon provider, or OAuth consumer.
    *
-   * @param {ResourceId} resourceId - The resource identifier to resolve
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<string>} The owner ID for the resource
+   * @param resourceId - The resource identifier to resolve
+   * @param requestConfig - Optional request configuration
+   * @returns The owner ID for the resource
    * @throws {CcClientError} If the resource doesn't exist or is inaccessible
    *
    * @example
@@ -73,7 +68,7 @@ export class ResourceIdResolver {
    * // Resolve owner for an addon
    * const ownerId = await resolver.resolveOwnerId({ addonId: 'addon_123' });
    */
-  async resolveOwnerId(resourceId, requestConfig) {
+  async resolveOwnerId(resourceId: ResourceId, requestConfig?: CcRequestConfigPartial): Promise<string> {
     const resolved = await this.#resolveOwnerId(resourceId, requestConfig);
 
     if (resolved.ownerId == null) {
@@ -90,10 +85,10 @@ export class ResourceIdResolver {
    * Resolves an addon ID to either its real ID or addon ID format.
    * Addons can be identified by two types of IDs, and this method translates between them.
    *
-   * @param {string} addonId - The addon ID to resolve
-   * @param {AddonIdType} requiredAddonIdType - The desired ID format ('ADDON_ID' or 'ADDON_REAL_ID')
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<string>} The resolved addon ID in the requested format
+   * @param addonId - The addon ID to resolve
+   * @param requiredAddonIdType - The desired ID format ('ADDON_ID' or 'ADDON_REAL_ID')
+   * @param requestConfig - Optional request configuration
+   * @returns The resolved addon ID in the requested format
    * @throws {CcClientError} If the addon doesn't exist or is inaccessible
    *
    * @example
@@ -103,7 +98,11 @@ export class ResourceIdResolver {
    * // Convert real ID to addon ID
    * const addonId = await resolver.resolveAddonId('real_123', 'ADDON_ID');
    */
-  async resolveAddonId(addonId, requiredAddonIdType, requestConfig) {
+  async resolveAddonId(
+    addonId: string,
+    requiredAddonIdType: AddonIdType,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<string> {
     if (addonId == null) {
       return null;
     }
@@ -127,13 +126,19 @@ export class ResourceIdResolver {
    * Handles different types of resources (applications, addons, etc.) and returns
    * both the resolved owner ID and information about the resource itself.
    *
-   * @param {ResourceId} resourceId - The resource identifier to resolve
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<{id: string, kind: 'this'|'application'|'addon'|'addon provider'|'oauth consumer', ownerId: string}>}
-   *          Object containing the resource ID, its kind, and resolved owner ID
+   * @param resourceId - The resource identifier to resolve
+   * @param requestConfig - Optional request configuration
+   * @returns Object containing the resource ID, its kind, and resolved owner ID
    * @throws {CcClientError} If the resource type is not supported
    */
-  async #resolveOwnerId(resourceId, requestConfig) {
+  async #resolveOwnerId(
+    resourceId: ResourceId,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<{
+    id: string;
+    kind: 'this' | 'application' | 'addon' | 'addon provider' | 'oauth consumer';
+    ownerId: string;
+  }> {
     if (resourceId.ownerId != null) {
       return {
         id: resourceId.ownerId,
@@ -201,12 +206,16 @@ export class ResourceIdResolver {
    * Internal method to resolve between different addon ID formats.
    * Handles the actual resolution logic for translating between addon IDs and real IDs.
    *
-   * @param {string} addonId - The addon ID to resolve
-   * @param {AddonIdType} requiredAddonIdType - The desired ID format
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<string>} The resolved addon ID
+   * @param addonId - The addon ID to resolve
+   * @param requiredAddonIdType - The desired ID format
+   * @param requestConfig - Optional request configuration
+   * @returns The resolved addon ID
    */
-  async #resolveAddonId(addonId, requiredAddonIdType, requestConfig) {
+  async #resolveAddonId(
+    addonId: string,
+    requiredAddonIdType: AddonIdType,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<string> {
     if (addonId == null) {
       return null;
     }
@@ -227,12 +236,16 @@ export class ResourceIdResolver {
    * Core resolution method that handles cache lookup and refresh.
    * If the ID is not found in the cache, it triggers a fetch of fresh data.
    *
-   * @param {() => Record<string, string>} index - Function that returns the relevant index map
-   * @param {string} id - The ID to resolve
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<string>} The resolved ID
+   * @param index - Function that returns the relevant index map
+   * @param id - The ID to resolve
+   * @param requestConfig - Optional request configuration
+   * @returns The resolved ID
    */
-  async #resolve(index, id, requestConfig) {
+  async #resolve(
+    index: () => Record<string, string>,
+    id: string,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<string> {
     await this.#init();
 
     let resolvedId = index()[id];
@@ -247,10 +260,8 @@ export class ResourceIdResolver {
   /**
    * Initializes the resolver by loading the index from storage.
    * If no stored index exists, creates an empty one.
-   *
-   * @returns {Promise<void>}
    */
-  async #init() {
+  async #init(): Promise<void> {
     if (this.#index == null) {
       this.#index = (await this.#indexStore.read()) ?? this.#createEmptyIndex();
     }
@@ -260,10 +271,9 @@ export class ResourceIdResolver {
    * Fetches fresh resource data from the API and updates the cache.
    * This is called when a requested ID is not found in the current cache.
    *
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<void>}
+   * @param requestConfig - Optional request configuration
    */
-  async #fetchAndStore(requestConfig) {
+  async #fetchAndStore(requestConfig?: CcRequestConfigPartial): Promise<void> {
     const summary = await this.#client.send(new GetOrganisationSummariesCommand(), {
       ...requestConfig,
       cache: { mode: 'reload' },
@@ -272,10 +282,7 @@ export class ResourceIdResolver {
     return this.#indexStore.write(this.#index);
   }
 
-  /**
-   * @param {GetOrganisationSummariesCommandOutput} summaries
-   */
-  #indexSummary(summaries) {
+  #indexSummary(summaries: GetOrganisationSummariesCommandOutput): void {
     this.#index = this.#createEmptyIndex();
 
     for (const organisation of summaries) {
@@ -297,10 +304,7 @@ export class ResourceIdResolver {
     }
   }
 
-  /**
-   * @returns {ResourceIdIndex}
-   */
-  #createEmptyIndex() {
+  #createEmptyIndex(): ResourceIdIndex {
     return {
       ownerIdIndex: {
         applicationIds: {},
@@ -317,10 +321,6 @@ export class ResourceIdResolver {
   }
 }
 
-/**
- * @param {string} id
- * @returns {AddonIdType}
- */
-function getAddonIdType(id) {
+function getAddonIdType(id: string): AddonIdType {
   return id.startsWith('addon_') ? 'ADDON_ID' : 'REAL_ADDON_ID';
 }
