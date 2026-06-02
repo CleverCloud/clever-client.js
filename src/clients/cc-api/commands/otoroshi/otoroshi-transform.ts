@@ -1,12 +1,6 @@
-/**
- * @import { OtoroshiInfo } from './otoroshi.types.js';
- */
+import type { OtoroshiInfo } from './otoroshi.types.js';
 
-/**
- * @param {any} response
- * @returns {OtoroshiInfo}
- */
-export function transformOtoroshiInfo(response) {
+export function transformOtoroshiInfo(response: any): OtoroshiInfo {
   return {
     id: response.resourceId,
     addonId: response.addonId,
