@@ -6,9 +6,8 @@
  *
  * Note: This class is specifically designed for GET requests.
  *
- * @template {string} Api -The API type this command targets (e.g., 'cc-api', 'cc-api-bridge')
+ * @template Api - The API type this command targets (e.g., 'cc-api', 'cc-api-bridge')
  * @template Input - The input parameters type required for URL generation
- * @abstract
  *
  * @example
  * // URL generator for GET application endpoints
@@ -35,28 +34,22 @@
  *   }
  * }
  */
-export class GetUrl {
-  /**
-   * Input parameters stored for URL generation
-   * @type {Input}
-   */
-  #params;
+export class GetUrl<Api extends string, Input> {
+  #params: Input;
 
   /**
    * Creates a new URL generator instance
    *
-   * @param {Input} params - Parameters required for generating the URL
+   * @param params - Parameters required for generating the URL
    */
-  constructor(params) {
+  constructor(params: Input) {
     this.#params = params;
   }
 
   /**
    * Gets the stored input parameters
-   *
-   * @returns {Input} The input parameters for URL generation
    */
-  get params() {
+  get params(): Input {
     return this.#params;
   }
 
@@ -64,22 +57,18 @@ export class GetUrl {
    * Generates a URL path based on the input parameters.
    * Must be implemented by subclasses.
    *
-   * @param {Input} _params - Parameters for URL generation
-   * @returns {string} The generated URL path (relative to API base URL)
-   * @abstract
+   * @param _params - Parameters for URL generation
+   * @returns The generated URL path (relative to API base URL)
    */
-  get(_params) {
+  get(_params: Input): string {
     throw new Error('Method not implemented');
   }
 
   /**
    * Gets the API endpoint type this URL generator targets.
    * Must be implemented by subclasses.
-   *
-   * @returns {Api} The API endpoint type
-   * @abstract
    */
-  get api() {
+  get api(): Api {
     throw new Error('Method not implemented');
   }
 }

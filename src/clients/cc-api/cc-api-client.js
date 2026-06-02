@@ -116,7 +116,7 @@ export class CcApiClient extends CcClient {
       if (command instanceof SimpleCommand && e instanceof CcClientError && e.code === 'CANNOT_RESOLVE_RESOURCE_ID') {
         const emptyResponsePolicy = command.getEmptyResponsePolicy(404);
         if (emptyResponsePolicy?.isEmpty) {
-          return emptyResponsePolicy.emptyValue ?? null;
+          return /** @type {any} */ (emptyResponsePolicy.emptyValue ?? null);
         }
       }
       throw e;

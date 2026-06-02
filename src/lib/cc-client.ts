@@ -1,34 +1,35 @@
-/**
- * @import { CcAuth } from './auth/cc-auth.js'
- * @import { Command } from '../types/command.types.js'
- * @import { SimpleCommand } from './command/command.js'
- * @import { CcStream } from './stream/cc-stream.js'
- * @import { CcStreamConfig, CcStreamConfigPartial } from './stream/cc-stream.types.js'
- * @import { StreamCommand } from './stream/stream-command.js'
- * @import { GetUrl } from './get-url.js'
- * @import { CcClientConfig, CcClientHooks } from '../types/client.types.js'
- * @import { CcRequest, CcRequestParams, CcRequestConfig, CcRequestConfigPartial, CcResponse, HttpMethod } from '../types/request.types.js'
- * @import { WithRequired } from '../types/utils.types.js'
- */
-import { CompositeCommand } from './command/command.js';
+import type { CcClientConfig, CcClientHooks } from '../types/client.types.js';
+import type { Command } from '../types/command.types.js';
+import type {
+  CcRequest,
+  CcRequestConfig,
+  CcRequestConfigPartial,
+  CcRequestParams,
+  CcResponse,
+  HttpMethod,
+} from '../types/request.types.js';
+import type { WithRequired } from '../types/utils.types.js';
+import type { CcAuth } from './auth/cc-auth.js';
+import { CompositeCommand, type SimpleCommand } from './command/command.js';
 import { handleHttpErrors } from './error/handle-http-errors.js';
+import type { GetUrl } from './get-url.js';
 import { QueryParams } from './request/query-params.js';
 import { sendRequest } from './request/request.js';
+import type { CcStream } from './stream/cc-stream.js';
+import type { CcStreamConfig, CcStreamConfigPartial } from './stream/cc-stream.types.js';
+import type { StreamCommand } from './stream/stream-command.js';
 import { mergeRequestConfig, mergeRequestConfigPartial } from './utils.js';
 
-/** @type {CcRequestConfig} */
-const DEFAULT_REQUEST_CONFIG = {
+const DEFAULT_REQUEST_CONFIG: CcRequestConfig = {
   cors: false,
   timeout: 0,
   cache: null,
   debug: false,
 };
-/** @type {Partial<CcRequestParams> & { method: HttpMethod }} */
-const DEFAULT_REQUEST_PARAMS = {
+const DEFAULT_REQUEST_PARAMS: Partial<CcRequestParams> & { method: HttpMethod } = {
   method: 'GET',
 };
-/** @type {CcStreamConfig} */
-const DEFAULT_STREAM_CONFIG = {
+const DEFAULT_STREAM_CONFIG: CcStreamConfig = {
   retry: {
     backoffFactor: 1.25,
     initRetryTimeout: 1_000,
@@ -44,7 +45,7 @@ const DEFAULT_STREAM_CONFIG = {
  * CcClient is the main client class for interacting with the Clever Cloud API.
  * It handles HTTP requests, authentication, response processing, and real-time streaming.
  *
- * @template {string} Api - The API type this client targets (e.g., 'cc-api', 'cc-api-bridge')
+ * @template Api - The API type this client targets (e.g., 'cc-api', 'cc-api-bridge')
  *
  * @description
  * The CcClient class provides methods to:
@@ -56,7 +57,7 @@ const DEFAULT_STREAM_CONFIG = {
  * - Handle errors and empty responses
  *
  * @example
- * ```javascript
+ * ```typescript
  * // Create client configuration
  * const config = {
  *   baseUrl: 'https://api.clever-cloud.com',
@@ -83,40 +84,20 @@ const DEFAULT_STREAM_CONFIG = {
  * await stream.start();
  * ```
  */
-export class CcClient {
-  /**
-   * The base URL for the Clever Cloud API
-   * @type {string}
-   */
-  #baseUrl;
-  /**
-   * Default configuration for all requests made by this client
-   * @type {CcRequestConfig}
-   */
-  #defaultRequestsConfig;
-  /**
-   * Default configuration for all streams created by this client
-   * @type {CcStreamConfig}
-   */
-  #defaultStreamsConfig;
-  /**
-   * Client hooks for request/response lifecycle
-   * @type {CcClientHooks}
-   */
-  #hooks;
-  /**
-   * Authentication handler for requests
-   * @type {CcAuth|null}
-   */
-  #auth;
+export class CcClient<Api extends string> {
+  #baseUrl: string;
+  #defaultRequestsConfig: CcRequestConfig;
+  #defaultStreamsConfig: CcStreamConfig;
+  #hooks: CcClientHooks;
+  #auth: CcAuth | null;
 
   /**
    * Creates a new CcClient instance
    *
-   * @param {CcClientConfig} config - Client configuration including baseUrl and default request settings
-   * @param {CcAuth|null} [auth] - Optional authentication handler
+   * @param config - Client configuration including baseUrl and default request settings
+   * @param auth - Optional authentication handler
    */
-  constructor(config, auth) {
+  constructor(config: CcClientConfig, auth?: CcAuth | null) {
     this.#baseUrl = config.baseUrl;
     this.#defaultRequestsConfig = mergeRequestConfig(DEFAULT_REQUEST_CONFIG, config.defaultRequestConfig);
     this.#defaultStreamsConfig = mergeStreamConfig(DEFAULT_STREAM_CONFIG, config.defaultStreamConfig);
@@ -127,15 +108,16 @@ export class CcClient {
   /**
    * Sends a command to the API and processes the response
    *
-   * @param {Command<Api, CommandInput, CommandOutput>} command - The command to execute
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration that overrides the default
-   * @returns {Promise<CommandOutput>} The processed command response
-   * @template CommandInput - The type of the command input parameters
-   * @template CommandOutput - The type of the command output
+   * @param command - The command to execute
+   * @param requestConfig - Optional request configuration that overrides the default
+   * @returns The processed command response
    * @throws {CcClientError} When there's a client-side error
    * @throws {CcHttpError} When there's a server-side error
    */
-  async send(command, requestConfig) {
+  async send<CommandInput, CommandOutput>(
+    command: Command<Api, CommandInput, CommandOutput>,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<CommandOutput> {
     try {
       if (command instanceof CompositeCommand) {
         return await this._compose(command, requestConfig);
@@ -143,11 +125,11 @@ export class CcClient {
 
       const requestParams = await this._getCommandRequestParams(command, requestConfig);
       const request = await this._prepareRequest(requestParams, requestConfig);
-      const response = await sendRequest(request);
+      const response = await sendRequest<CommandOutput>(request);
       return await this._handleResponse(response, request, command);
     } catch (e) {
       if (this.#hooks.onError != null) {
-        this.#hooks.onError(e);
+        void this.#hooks.onError(e);
       }
 
       throw e;
@@ -157,10 +139,10 @@ export class CcClient {
   /**
    * Constructs a complete URL for an API endpoint
    *
-   * @param {GetUrl<Api, ?>} getUrl - URL generator with parameters
-   * @returns {URL} The complete URL with base URL and authentication parameters
+   * @param getUrl - URL generator with parameters
+   * @returns The complete URL with base URL and authentication parameters
    */
-  getUrl(getUrl) {
+  getUrl(getUrl: GetUrl<Api, unknown>): URL {
     const url = getUrl.get(getUrl.params);
 
     const left = this.#baseUrl.endsWith('/') ? this.#baseUrl : this.#baseUrl + '/';
@@ -175,14 +157,15 @@ export class CcClient {
   /**
    * Creates and returns a stream based on the provided command.
    *
-   * @param {StreamCommand<Api, CommandInput, Stream>} command - The stream command to execute
-   * @param {CcStreamConfigPartial & CcRequestConfigPartial} [requestAndStreamConfig] - Optional stream and request configuration that overrides the default
-   * @returns {Promise<Stream>} A promise that resolves to the created stream
-   * @template CommandInput - The type of the command input parameters
-   * @template {CcStream} Stream - The type of the output stream
+   * @param command - The stream command to execute
+   * @param requestAndStreamConfig - Optional stream and request configuration that overrides the default
+   * @returns A promise that resolves to the created stream
    */
-  async stream(command, requestAndStreamConfig) {
-    const transformedParams = await this._transformStreamParams(command, requestAndStreamConfig);
+  async stream<CommandInput, Stream extends CcStream>(
+    command: StreamCommand<Api, CommandInput, Stream>,
+    requestAndStreamConfig?: CcStreamConfigPartial & CcRequestConfigPartial,
+  ): Promise<Stream> {
+    const transformedParams = (await this._transformStreamParams(command, requestAndStreamConfig)) as CommandInput;
 
     const streamConfigWithDefaults = mergeStreamConfig(this.#defaultStreamsConfig, requestAndStreamConfig);
     return command.createStream(async () => {
@@ -194,37 +177,42 @@ export class CcClient {
   /**
    * Transforms command parameters before sending the request
    *
-   * @param {Command<Api, ?, ?>} command - The command whose parameters need transformation
-   * @param {CcRequestConfigPartial} [_requestConfig] - Optional request configuration
-   * @returns {Promise<any>} The transformed parameters
-   * @protected
+   * @param command - The command whose parameters need transformation
+   * @param _requestConfig - Optional request configuration
+   * @returns The transformed parameters
    */
-  async _transformCommandParams(command, _requestConfig) {
-    return command.params;
+  protected _transformCommandParams(
+    command: Command<Api, unknown, unknown>,
+    _requestConfig?: CcRequestConfigPartial,
+  ): Promise<unknown> {
+    return Promise.resolve(command.params);
   }
 
   /**
    * Transforms stream command parameters before creating the stream
    *
-   * @param {StreamCommand<Api, ?, ?>} command - The stream command whose parameters need transformation
-   * @param {CcRequestConfigPartial} [_requestConfig] - Optional request configuration
-   * @returns {Promise<any>} The transformed parameters
-   * @protected
+   * @param command - The stream command whose parameters need transformation
+   * @param _requestConfig - Optional request configuration
+   * @returns The transformed parameters
    */
-  async _transformStreamParams(command, _requestConfig) {
-    return command.params;
+  protected _transformStreamParams(
+    command: StreamCommand<Api, unknown, CcStream>,
+    _requestConfig?: CcRequestConfigPartial,
+  ): Promise<unknown> {
+    return Promise.resolve(command.params);
   }
 
   /**
    * Handles execution of composite commands that consist of multiple sub-commands
    *
-   * @param {CompositeCommand<Api, ?, CommandOutput>} command - The composite command to execute
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<CommandOutput>} The result of executing all sub-commands
-   * @template CommandOutput - The type of the composite command output
-   * @protected
+   * @param command - The composite command to execute
+   * @param requestConfig - Optional request configuration
+   * @returns The result of executing all sub-commands
    */
-  async _compose(command, requestConfig) {
+  protected async _compose<CommandOutput>(
+    command: CompositeCommand<Api, unknown, CommandOutput>,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<CommandOutput> {
     const transformedParams = await this._transformCommandParams(command, requestConfig);
 
     return command.compose(transformedParams, {
@@ -236,12 +224,14 @@ export class CcClient {
   /**
    * Prepares request parameters for a simple command
    *
-   * @param {SimpleCommand<Api, ?, ?>} command - The command to prepare parameters for
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<Partial<CcRequestParams>>} The prepared request parameters
-   * @protected
+   * @param command - The command to prepare parameters for
+   * @param requestConfig - Optional request configuration
+   * @returns The prepared request parameters
    */
-  async _getCommandRequestParams(command, requestConfig) {
+  protected async _getCommandRequestParams(
+    command: SimpleCommand<Api, unknown, unknown>,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<Partial<CcRequestParams>> {
     const transformedParams = await this._transformCommandParams(command, requestConfig);
     return command.toRequestParams(transformedParams);
   }
@@ -249,14 +239,15 @@ export class CcClient {
   /**
    * Prepares the final request by combining parameters, configuration, and authentication
    *
-   * @param {Partial<CcRequestParams>} requestParams - The request parameters
-   * @param {CcRequestConfigPartial} [requestConfig] - Optional request configuration
-   * @returns {Promise<CcRequest>} The prepared request
-   * @protected
+   * @param requestParams - The request parameters
+   * @param requestConfig - Optional request configuration
+   * @returns The prepared request
    */
-  async _prepareRequest(requestParams, requestConfig) {
-    /** @type {WithRequired<Partial<CcRequestParams>, 'queryParams' | 'headers'>} */
-    let preparedRequestParams = {
+  protected async _prepareRequest(
+    requestParams: Partial<CcRequestParams>,
+    requestConfig?: CcRequestConfigPartial,
+  ): Promise<CcRequest> {
+    const preparedRequestParams: WithRequired<Partial<CcRequestParams>, 'queryParams' | 'headers'> = {
       ...requestParams,
       headers: requestParams.headers ?? new Headers(),
       queryParams: requestParams.queryParams ?? new QueryParams(),
@@ -284,16 +275,18 @@ export class CcClient {
   /**
    * Processes the API response and transforms it according to the command's requirements
    *
-   * @param {CcResponse<CommandOutput>} response - The response
-   * @param {CcRequest} request - The request
-   * @param {SimpleCommand<Api, ?, ?>} command - The command that generated the response
-   * @returns {Promise<CommandOutput>} The processed response
-   * @template CommandOutput - The type of the expected output
+   * @param response - The response
+   * @param request - The request
+   * @param command - The command that generated the response
+   * @returns The processed response
    * @throws {CcClientError} When there's a client-side error processing the response
    * @throws {CcHttpError} When the server returns an error response
-   * @protected
    */
-  async _handleResponse(response, request, command) {
+  protected async _handleResponse<CommandOutput>(
+    response: CcResponse<CommandOutput>,
+    request: CcRequest,
+    command: SimpleCommand<Api, unknown, CommandOutput>,
+  ): Promise<CommandOutput> {
     // apply hook
     if (this.#hooks.onResponse != null) {
       await this.#hooks.onResponse(response, request);
@@ -302,7 +295,7 @@ export class CcClient {
     // special case for null response
     const emptyResponsePolicy = command.getEmptyResponsePolicy(response.status, response.body);
     if (emptyResponsePolicy?.isEmpty) {
-      return emptyResponsePolicy.emptyValue ?? null;
+      return (emptyResponsePolicy.emptyValue ?? null) as CommandOutput;
     }
 
     // handle http errors
@@ -312,14 +305,8 @@ export class CcClient {
   }
 }
 
-/**
- * @param {CcStreamConfig} baseConfig
- * @param {CcStreamConfigPartial|null} config
- * @return {CcStreamConfig}
- */
-function mergeStreamConfig(baseConfig, config) {
-  /** @type {CcStreamConfigPartial} */
-  const overrideConfig = config ?? {};
+function mergeStreamConfig(baseConfig: CcStreamConfig, config: CcStreamConfigPartial | null): CcStreamConfig {
+  const overrideConfig: CcStreamConfigPartial = config ?? {};
 
   return {
     ...baseConfig,
