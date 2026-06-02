@@ -1,15 +1,19 @@
-/**
- * @import { ListBackupCommandInput, ListBackupCommandOutput, ListBackupInnerCommandOutput, InnerBackup, GetAddonDetailsInnerCommandInput, GetAddonDetailsInnerCommandOutput } from './list-backup-command.types.js';
- */
 import { get } from '../../../../lib/request/request-params-builder.js';
-import { normalizeDate, omit, safeUrl, sortBy } from '../../../../lib/utils.js';
+import { omit, safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { CcApiComposer } from '../../types/cc-api.types.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import { GetAddonCommand } from '../addon/get-addon-command.js';
+import { transformAddonDetails, transformBackup } from './backup-transform.js';
+import type {
+  GetAddonDetailsInnerCommandInput,
+  GetAddonDetailsInnerCommandOutput,
+  ListBackupCommandInput,
+  ListBackupCommandOutput,
+  ListBackupInnerCommandOutput,
+} from './list-backup-command.types.js';
 
-/**
- * @type {{[key: string]: (addonDetails: GetAddonDetailsInnerCommandOutput) => string}}
- */
-const CUSTOM_RESTORE_COMMANDS = {
+const CUSTOM_RESTORE_COMMANDS: { [key: string]: (addonDetails: GetAddonDetailsInnerCommandOutput) => string } = {
   'postgresql-addon': (addonDetails) =>
     `pg_restore -h ${addonDetails.host} -p ${addonDetails.port} -U ${addonDetails.user} -d ${addonDetails.database} --no-owner --no-privileges --no-comments --format=c YOUR_BACKUP_FILE`,
   'mysql-addon': (addonDetails) =>
@@ -19,15 +23,12 @@ const CUSTOM_RESTORE_COMMANDS = {
 };
 
 /**
- *
- * @extends {CcApiCompositeCommand<ListBackupCommandInput, ListBackupCommandOutput>}
  * @endpoint [GET] /v2/backups/:XXX/:XXX
  * @group Backup
  * @version 2
  */
-export class ListBackupCommand extends CcApiCompositeCommand {
-  /** @type {CcApiCompositeCommand<ListBackupCommandInput, ListBackupCommandOutput>['compose']} */
-  async compose(params, composer) {
+export class ListBackupCommand extends CcApiCompositeCommand<ListBackupCommandInput, ListBackupCommandOutput> {
+  async compose(params: ListBackupCommandInput, composer: CcApiComposer): Promise<ListBackupCommandOutput> {
     const backups = await composer.send(new ListBackupInnerCommand(params));
     if (!params.withCommands || backups.length === 0) {
       return backups.map((backup) => omit(backup, 'restoreCommand', 'deleteCommand'));
@@ -69,29 +70,24 @@ export class ListBackupCommand extends CcApiCompositeCommand {
 }
 
 /**
- * @extends {CcApiSimpleCommand<ListBackupCommandInput, ListBackupInnerCommandOutput>}
  * @endpoint [GET] /v2/backups/:XXX/:XXX
  * @group Backup
  * @version 2
  */
-class ListBackupInnerCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<ListBackupCommandInput, ListBackupInnerCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+class ListBackupInnerCommand extends CcApiSimpleCommand<ListBackupCommandInput, ListBackupInnerCommandOutput> {
+  toRequestParams(params: ListBackupCommandInput) {
     return get(safeUrl`/v2/backups/${params.ownerId}/${params.addonId}`);
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
-  getEmptyResponsePolicy(status) {
+  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
     return { isEmpty: status === 404, emptyValue: [] };
   }
 
-  /** @type {CcApiSimpleCommand<ListBackupCommandInput, ListBackupInnerCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
-    return sortBy(response.map(transformBackup), { key: 'creationDate', order: 'desc' });
+  transformCommandOutput(response: unknown): ListBackupInnerCommandOutput {
+    return sortBy((response as Array<unknown>).map(transformBackup), { key: 'creationDate', order: 'desc' });
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
       addonId: 'REAL_ADDON_ID',
@@ -100,45 +96,19 @@ class ListBackupInnerCommand extends CcApiSimpleCommand {
 }
 
 /**
- * @param {any} payload
- * @returns {InnerBackup}
- */
-function transformBackup(payload) {
-  return {
-    backupId: payload.backup_id,
-    entityId: payload.entity_id,
-    status: payload.status,
-    creationDate: normalizeDate(payload.creation_date),
-    expirationDate: normalizeDate(payload.delete_at),
-    downloadUrl: payload.download_url ?? payload.link,
-    restoreCommand: payload.restore_command,
-    deleteCommand: payload.delete_command,
-  };
-}
-
-/**
- *
- * @extends {CcApiSimpleCommand<GetAddonDetailsInnerCommandInput, GetAddonDetailsInnerCommandOutput>}
  * @endpoint [GET] /v4/addon-providers/:XXX/addons/:XXX
  * @group Addon
  * @version 4
  */
-class GetAddonDetailsInnerCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<GetAddonDetailsInnerCommandInput, GetAddonDetailsInnerCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+class GetAddonDetailsInnerCommand extends CcApiSimpleCommand<
+  GetAddonDetailsInnerCommandInput,
+  GetAddonDetailsInnerCommandOutput
+> {
+  toRequestParams(params: GetAddonDetailsInnerCommandInput) {
     return get(safeUrl`/v4/addon-providers/${params.addonProviderId}/addons/${params.addonId}`);
   }
 
-  /** @type {CcApiSimpleCommand<GetAddonDetailsInnerCommandInput, GetAddonDetailsInnerCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
-    return {
-      id: response.id,
-      providerId: this.params.addonProviderId,
-      host: response.host,
-      port: response.port,
-      user: response.user,
-      password: response.password,
-      database: response.database,
-    };
+  transformCommandOutput(response: unknown): GetAddonDetailsInnerCommandOutput {
+    return transformAddonDetails(response, this.params.addonProviderId);
   }
 }
