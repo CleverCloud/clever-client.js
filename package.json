@@ -16,10 +16,6 @@
     "client"
   ],
   "files": [
-    "esm/",
-    "!esm/**/*.types.d.ts",
-    "src/",
-    "!src/**/*.types.d.ts",
     "dist/"
   ],
   "engines": {
@@ -27,49 +23,49 @@
   },
   "exports": {
     "./cc-api-client.js": {
-      "types": "./dist/types/src/clients/cc-api/cc-api-client.d.ts",
-      "default": "./src/clients/cc-api/cc-api-client.js"
+      "types": "./dist/src/clients/cc-api/cc-api-client.d.ts",
+      "default": "./dist/src/clients/cc-api/cc-api-client.js"
     },
     "./cc-api-commands/*": {
-      "types": "./dist/types/src/clients/cc-api/commands/*",
-      "default": "./src/clients/cc-api/commands/*"
+      "types": "./dist/src/clients/cc-api/commands/*",
+      "default": "./dist/src/clients/cc-api/commands/*"
     },
     "./cc-api-local-storage-store.js": {
-      "types": "./dist/types/src/clients/cc-api/lib/store/local-storage-store.d.ts",
-      "browser": "./src/clients/cc-api/lib/store/local-storage-store.js"
+      "types": "./dist/src/clients/cc-api/lib/store/local-storage-store.d.ts",
+      "browser": "./dist/src/clients/cc-api/lib/store/local-storage-store.js"
     },
     "./cc-api-file-store.js": {
-      "types": "./dist/types/src/clients/cc-api/lib/store/file-store.d.ts",
-      "node": "./src/clients/cc-api/lib/store/file-store.js"
+      "types": "./dist/src/clients/cc-api/lib/store/file-store.d.ts",
+      "node": "./dist/src/clients/cc-api/lib/store/file-store.js"
     },
     "./cc-api-bridge-client.js": {
-      "types": "./dist/types/src/clients/cc-api-bridge/cc-api-bridge-client.d.ts",
-      "default": "./src/clients/cc-api-bridge/cc-api-bridge-client.js"
+      "types": "./dist/src/clients/cc-api-bridge/cc-api-bridge-client.d.ts",
+      "default": "./dist/src/clients/cc-api-bridge/cc-api-bridge-client.js"
     },
     "./cc-api-bridge-commands/*": {
-      "types": "./dist/types/src/clients/cc-api-bridge/commands/*",
-      "default": "./src/clients/cc-api-bridge/commands/*"
+      "types": "./dist/src/clients/cc-api-bridge/commands/*",
+      "default": "./dist/src/clients/cc-api-bridge/commands/*"
     },
     "./redis-http-client.js": {
-      "types": "./dist/types/src/clients/redis-http/redis-http-client.d.ts",
-      "default": "./src/clients/redis-http/redis-http-client.js"
+      "types": "./dist/src/clients/redis-http/redis-http-client.d.ts",
+      "default": "./dist/src/clients/redis-http/redis-http-client.js"
     },
     "./redis-http-commands/*": {
-      "types": "./dist/types/src/clients/redis-http/commands/*",
-      "default": "./src/clients/redis-http/commands/*"
+      "types": "./dist/src/clients/redis-http/commands/*",
+      "default": "./dist/src/clients/redis-http/commands/*"
     },
     "./utils/*": {
-      "types": "./dist/types/src/utils/*",
-      "default": "./src/utils/*"
+      "types": "./dist/src/utils/*",
+      "default": "./dist/src/utils/*"
     },
     "./esm/*": {
-      "types": "./dist/types/esm/*",
-      "default": "./esm/*"
+      "types": "./dist/esm/*",
+      "default": "./dist/esm/*"
     }
   },
   "scripts": {
     "api-usage-analyze": "node tasks/api-usage-analyze.js -i ../console3 -i ../clever-components -i ../clever-tools",
-    "build": "rollup -c",
+    "build": "node tasks/clean-dist.js && tsc -p tsconfig.build.json && node tasks/copy-type-sidecars.js",
     "endpoints-analyze": "node tasks/endpoints-analyze.js",
     "endpoints-generate": "node tasks/endpoints-generate.js",
     "endpoints-list": "node tasks/endpoints-list.js",
@@ -109,8 +105,6 @@
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/compat": "^1.4.1",
     "@inquirer/prompts": "^7.10.1",
-    "@rollup-extras/plugin-clean": "^1.3.9",
-    "@rollup/plugin-terser": "^0.4.4",
     "@scalar/openapi-parser": "^0.23.2",
     "@scalar/openapi-types": "^0.5.1",
     "@scalar/types": "^0.4.0",
@@ -132,8 +126,6 @@
     "playwright": "^1.60.0",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.3.0",
-    "rollup": "^4.60.4",
-    "rollup-plugin-dts": "^6.2.3",
     "safe-stringify": "^1.2.0",
     "tinyglobby": "^0.2.15",
     "totp-generator": "^2.0.0",

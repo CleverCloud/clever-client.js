@@ -4,7 +4,7 @@ import globals from 'globals';
 export default [
   {
     name: 'project-ignores',
-    ignores: ['**/*.d.ts'],
+    ignores: ['**/*.d.ts', 'dist/**', 'build/**'],
   },
   {
     ...cleverCloud.configs.browser,
@@ -21,14 +21,7 @@ export default [
   },
   {
     ...cleverCloud.configs.node,
-    files: [
-      'eslint.config.js',
-      'rollup.config.js',
-      'vitest.config.js',
-      'tasks/**/*.js',
-      'test-*.config.*.*js',
-      'test/**/*.*js',
-    ],
+    files: ['eslint.config.js', 'vitest.config.js', 'tasks/**/*.js', 'test-*.config.*.*js', 'test/**/*.*js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
