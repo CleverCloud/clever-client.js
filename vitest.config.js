@@ -11,8 +11,8 @@ import { e2eProxyPlugin } from './test/setup/e2e-proxy.browser.js';
  * The same `*.spec.js` files run in both Node and the browser. `*.node.spec.js` and
  * `*.browser.spec.js` are escape hatches to restrict a spec to a single environment.
  */
-const excludeForNode = [...defaultExclude, '**/*.browser.spec.js'];
-const excludeForBrowser = [...defaultExclude, '**/*.node.spec.js'];
+const excludeForNode = [...defaultExclude, '**/*.browser.spec.{js,ts}'];
+const excludeForBrowser = [...defaultExclude, '**/*.node.spec.{js,ts}'];
 
 /**
  * Local-only escape hatch (can be set via mise) to run a single environment, e.g. from the WebStorm
@@ -36,7 +36,7 @@ const allProjects = [
       environment: 'node',
       globals: true,
       setupFiles: ['./test/setup/vite-matchers.js'],
-      include: ['test/unit/**/*.spec.js'],
+      include: ['test/unit/**/*.spec.{js,ts}'],
       exclude: excludeForNode,
       // The browser-unit mock server / node mock servers are shared per run
       fileParallelism: false,
@@ -49,7 +49,7 @@ const allProjects = [
       name: 'browser-unit',
       globals: true,
       setupFiles: ['./test/setup/vite-matchers.js'],
-      include: ['test/unit/**/*.spec.js'],
+      include: ['test/unit/**/*.spec.{js,ts}'],
       exclude: excludeForBrowser,
       fileParallelism: false,
       maxConcurrency: 1,
@@ -64,7 +64,7 @@ const allProjects = [
       globals: true,
       setupFiles: ['./test/setup/vite-matchers.js', './test/setup/hydrate-users.node.js'],
       globalSetup: ['./test/setup/global-setup.node.js'],
-      include: ['test/e2e/**/*.spec.js'],
+      include: ['test/e2e/**/*.spec.{js,ts}'],
       exclude: excludeForNode,
       testTimeout: 30000,
       hookTimeout: 30000,
@@ -78,7 +78,7 @@ const allProjects = [
       name: 'browser-e2e',
       globals: true,
       setupFiles: ['./test/setup/vite-matchers.js'],
-      include: ['test/e2e/**/*.spec.js'],
+      include: ['test/e2e/**/*.spec.{js,ts}'],
       exclude: excludeForBrowser,
       testTimeout: 30000,
       hookTimeout: 30000,

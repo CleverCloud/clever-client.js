@@ -19,6 +19,10 @@ export default [
     rules: {
       ...cleverCloud.configs.browser.rules,
       'import-x/extensions': ['error', 'always', { ignorePackages: true }],
+      // During the .js -> .ts migration, `.js` files import already-converted modules via `.js`
+      // specifiers that resolve to `.ts` on disk. ESLint resolvers can't follow that mapping;
+      // tsc (checkJs) is the resolution authority, so disable the resolution-checking rules.
+      'import-x/no-unresolved': 'off',
     },
   },
   ...tseslint.config({
@@ -58,6 +62,39 @@ export default [
       ],
     },
   }),
+  // Transform functions map untyped raw API payloads field by field, so the `any` family of
+  // type-checked rules is unavoidable noise here. Command files type their inputs/outputs
+  // properly and stay strict — only the *-transform.ts files relax these.
+  {
+    name: 'project-transform-payloads',
+    files: ['**/*-transform.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+    },
+  },
+  // Hand-written type-contract sidecars use empty interfaces as intentional stubs for
+  // unmodeled/empty API responses; that pattern is fine here (unlike in real code).
+  {
+    name: 'project-type-declarations',
+    files: ['**/*.types.ts'],
+    rules: {
+      '@typescript-eslint/no-empty-object-type': 'off',
+    },
+  },
+  // Test specs use async mock callbacks that conform to promise-returning signatures without
+  // awaiting anything; require-await fights that idiomatic pattern.
+  {
+    name: 'project-test-ts',
+    files: ['test/**/*.ts'],
+    rules: {
+      '@typescript-eslint/require-await': 'off',
+    },
+  },
   {
     ...cleverCloud.configs.node,
     files: ['eslint.config.js', 'vitest.config.js', 'tasks/**/*.js', 'test-*.config.*.*js', 'test/**/*.*js'],
@@ -73,6 +110,9 @@ export default [
         { devDependencies: true, optionalDependencies: false, peerDependencies: false },
       ],
       'import-x/extensions': ['error', 'always', { ignorePackages: true }],
+      // See the browser block: these resolution checks can't follow `.js` -> `.ts`; tsc covers it.
+      'import-x/no-unresolved': 'off',
+      'n/no-missing-import': 'off',
     },
   },
   // Specific rules for generated client files
