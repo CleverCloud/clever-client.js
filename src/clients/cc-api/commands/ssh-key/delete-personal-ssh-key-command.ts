@@ -1,25 +1,19 @@
-/**
- * @import { DeletePersonalSshKeyCommandInput } from './delete-personal-ssh-key-command.types.js';
- */
 import { delete_ } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { DeletePersonalSshKeyCommandInput } from './delete-personal-ssh-key-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<DeletePersonalSshKeyCommandInput, void>}
  * @endpoint [DELETE] /v2/self/keys/:XXX
  * @group SshKey
  * @version 2
  */
-export class DeletePersonalSshKeyCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<DeletePersonalSshKeyCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+export class DeletePersonalSshKeyCommand extends CcApiSimpleCommand<DeletePersonalSshKeyCommandInput, void> {
+  toRequestParams(params: DeletePersonalSshKeyCommandInput) {
     return delete_(safeUrl`/v2/self/keys/${params.name}`);
   }
 
-  /** @type {CcApiSimpleCommand<DeletePersonalSshKeyCommandInput, void>['toRequestParams']} */
-  transformCommandOutput() {
+  transformCommandOutput(): void {
     return null;
   }
 }
