@@ -1,24 +1,26 @@
-/**
- * @import { ListLinkCommandInput, ListLinkCommandOutput, ListApplicationLinkCommandInput, ListAddonLinkCommandInput } from './list-link-command.types.js';
- * @import { LinkToApplication, LinkToAddon } from './link.types.js';
- */
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { CcApiComposer } from '../../types/cc-api.types.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import { transformLinkToAddon, transformLinkToApplication } from './link-transform.js';
+import type { LinkToAddon, LinkToApplication } from './link.types.js';
+import type {
+  ListAddonLinkCommandInput,
+  ListApplicationLinkCommandInput,
+  ListLinkCommandInput,
+  ListLinkCommandOutput,
+} from './list-link-command.types.js';
 
 /**
- *
- * @extends {CcApiCompositeCommand<ListLinkCommandInput, ListLinkCommandOutput>}
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/applications
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/dependencies
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/addons
  * @group Link
  * @version 2
  */
-export class ListLinkCommand extends CcApiCompositeCommand {
-  /** @type {CcApiCompositeCommand<ListLinkCommandInput, ListLinkCommandOutput>['compose']} */
-  async compose(params, composer) {
+export class ListLinkCommand extends CcApiCompositeCommand<ListLinkCommandInput, ListLinkCommandOutput> {
+  async compose(params: ListLinkCommandInput, composer: CcApiComposer): Promise<ListLinkCommandOutput> {
     if ('applicationId' in params) {
       return Promise.all([
         composer.send(new ListApplicationToApplicationLinkCommand(params)),
@@ -29,8 +31,7 @@ export class ListLinkCommand extends CcApiCompositeCommand {
     return composer.send(new ListAddonToApplicationLinkCommand(params));
   }
 
-  /** @type {CcApiCompositeCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
@@ -38,22 +39,21 @@ export class ListLinkCommand extends CcApiCompositeCommand {
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<ListApplicationLinkCommandInput, Array<LinkToApplication>>}
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
  * @group Link
  * @version 2
  */
-class ListApplicationToApplicationLinkCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<ListApplicationLinkCommandInput, Array<LinkToApplication>>['toRequestParams']} */
-  toRequestParams(params) {
+class ListApplicationToApplicationLinkCommand extends CcApiSimpleCommand<
+  ListApplicationLinkCommandInput,
+  Array<LinkToApplication>
+> {
+  toRequestParams(params: ListApplicationLinkCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/dependencies`);
   }
 
-  /** @type {CcApiSimpleCommand<ListApplicationLinkCommandInput, Array<LinkToApplication>>['transformCommandOutput']} */
-  transformCommandOutput(response) {
+  transformCommandOutput(response: unknown): Array<LinkToApplication> {
     return sortBy(
-      response.map(transformLinkToApplication),
+      (response as Array<unknown>).map(transformLinkToApplication),
       (link) => link.application.name,
       (link) => link.application.id,
     );
@@ -61,22 +61,21 @@ class ListApplicationToApplicationLinkCommand extends CcApiSimpleCommand {
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<ListApplicationLinkCommandInput, Array<LinkToAddon>>}
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/addons
  * @group Link
  * @version 2
  */
-class ListApplicationToAddonLinkCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<ListApplicationLinkCommandInput, Array<LinkToAddon>>['toRequestParams']} */
-  toRequestParams(params) {
+class ListApplicationToAddonLinkCommand extends CcApiSimpleCommand<
+  ListApplicationLinkCommandInput,
+  Array<LinkToAddon>
+> {
+  toRequestParams(params: ListApplicationLinkCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/addons`);
   }
 
-  /** @type {CcApiSimpleCommand<ListApplicationLinkCommandInput, Array<LinkToAddon>>['transformCommandOutput']} */
-  transformCommandOutput(response) {
+  transformCommandOutput(response: unknown): Array<LinkToAddon> {
     return sortBy(
-      response.map(transformLinkToAddon),
+      (response as Array<unknown>).map(transformLinkToAddon),
       (link) => link.addon.name,
       (link) => link.addon.id,
     );
@@ -84,29 +83,27 @@ class ListApplicationToAddonLinkCommand extends CcApiSimpleCommand {
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<ListAddonLinkCommandInput, Array<LinkToApplication>>}
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/applications
  * @group Link
  * @version 2
  */
-class ListAddonToApplicationLinkCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<ListAddonLinkCommandInput, Array<LinkToApplication>>['toRequestParams']} */
-  toRequestParams(params) {
+class ListAddonToApplicationLinkCommand extends CcApiSimpleCommand<
+  ListAddonLinkCommandInput,
+  Array<LinkToApplication>
+> {
+  toRequestParams(params: ListAddonLinkCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}/applications`);
   }
 
-  /** @type {CcApiCompositeCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       addonId: 'ADDON_ID',
     };
   }
 
-  /** @type {CcApiSimpleCommand<ListAddonLinkCommandInput, Array<LinkToApplication>>['transformCommandOutput']} */
-  transformCommandOutput(response) {
+  transformCommandOutput(response: unknown): Array<LinkToApplication> {
     return sortBy(
-      response.map(transformLinkToApplication),
+      (response as Array<unknown>).map(transformLinkToApplication),
       (link) => link.application.name,
       (link) => link.application.id,
     );

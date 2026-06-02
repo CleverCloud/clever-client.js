@@ -1,5 +1,6 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { AddLinkCommand } from '../../../../../src/clients/cc-api/commands/link/add-link-command.js';
+import type { LinkToAddon, LinkToApplication } from '../../../../../src/clients/cc-api/commands/link/link.types.js';
 import { ListLinkCommand } from '../../../../../src/clients/cc-api/commands/link/list-link-command.js';
 import { RemoveLinkCommand } from '../../../../../src/clients/cc-api/commands/link/remove-link-command.js';
 import { e2eSupport } from '../e2e-support.js';
@@ -59,13 +60,11 @@ describe('link commands', function () {
     expect(response).toHaveLength(2);
     expect(response[0].type).toBe('link-to-application');
     expect(response[0]).toHaveProperty('application');
-    // @ts-ignore
-    expect(response[0].application.id).toBe(application2.id);
+    expect((response[0] as LinkToApplication).application.id).toBe(application2.id);
 
     expect(response[1].type).toBe('link-to-addon');
     expect(response[1]).toHaveProperty('addon');
-    // @ts-ignore
-    expect(response[1].addon.id).toBe(addon.id);
+    expect((response[1] as LinkToAddon).addon.id).toBe(addon.id);
   });
 
   it('should list addon links', async () => {
@@ -83,8 +82,7 @@ describe('link commands', function () {
 
     expect(response).toBeInstanceOf(Array);
     expect(response).toHaveLength(2);
-    // @ts-ignore
-    expect(response.map((l) => ({ type: l.type, id: l.application.id }))).toEqualInAnyOrder([
+    expect(response.map((l) => ({ type: l.type, id: (l as LinkToApplication).application.id }))).toEqualInAnyOrder([
       { type: 'link-to-application', id: application1.id },
       { type: 'link-to-application', id: application2.id },
     ]);

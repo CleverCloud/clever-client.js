@@ -1,25 +1,15 @@
-/**
- * @import { LinkToApplication, LinkToAddon } from './link.types.js';
- */
 import { transformAddon } from '../addon/addon-transform.js';
 import { transformApplication } from '../application/application-transform.js';
+import type { LinkToAddon, LinkToApplication } from './link.types.js';
 
-/**
- * @param {string} payload
- * @returns {LinkToApplication}
- */
-export function transformLinkToApplication(payload) {
+export function transformLinkToApplication(payload: any): LinkToApplication {
   return {
     type: 'link-to-application',
     application: transformApplication(payload),
   };
 }
 
-/**
- * @param {string} payload
- * @returns {LinkToAddon}
- */
-export function transformLinkToAddon(payload) {
+export function transformLinkToAddon(payload: any): LinkToAddon {
   return {
     type: 'link-to-addon',
     addon: transformAddon(payload),

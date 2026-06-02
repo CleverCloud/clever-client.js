@@ -1,29 +1,29 @@
-/**
- * @import { RemoveLinkCommandInput, RemoveApplicationToApplicationLinkCommandInput, RemoveApplicationToAddonLinkCommandInput } from './remove-link-command.types.js';
- */
 import { delete_ } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { CcApiComposer } from '../../types/cc-api.types.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import type {
+  RemoveApplicationToAddonLinkCommandInput,
+  RemoveApplicationToApplicationLinkCommandInput,
+  RemoveLinkCommandInput,
+} from './remove-link-command.types.js';
 
 /**
- *
- * @extends {CcApiCompositeCommand<RemoveLinkCommandInput, void>}
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/addons/:XXX
  * @group Link
  * @version 2
  */
-export class RemoveLinkCommand extends CcApiCompositeCommand {
-  /** @type {CcApiCompositeCommand<RemoveLinkCommandInput, void>['compose']} */
-  async compose(params, composer) {
+export class RemoveLinkCommand extends CcApiCompositeCommand<RemoveLinkCommandInput, void> {
+  async compose(params: RemoveLinkCommandInput, composer: CcApiComposer): Promise<void> {
     if ('targetApplicationId' in params) {
       return composer.send(new RemoveApplicationToApplicationLinkCommand(params));
     }
     return composer.send(new RemoveApplicationToAddonLinkCommand(params));
   }
 
-  /** @type {CcApiCompositeCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
@@ -31,15 +31,15 @@ export class RemoveLinkCommand extends CcApiCompositeCommand {
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<RemoveApplicationToApplicationLinkCommandInput, void>}
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
  * @group Link
  * @version 2
  */
-export class RemoveApplicationToApplicationLinkCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<RemoveApplicationToApplicationLinkCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+export class RemoveApplicationToApplicationLinkCommand extends CcApiSimpleCommand<
+  RemoveApplicationToApplicationLinkCommandInput,
+  void
+> {
+  toRequestParams(params: RemoveApplicationToApplicationLinkCommandInput) {
     return delete_(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/dependencies/${params.targetApplicationId}`,
     );
@@ -47,22 +47,21 @@ export class RemoveApplicationToApplicationLinkCommand extends CcApiSimpleComman
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<RemoveApplicationToAddonLinkCommandInput, void>}
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/addons/:XXX
  * @group Link
  * @version 2
  */
-export class RemoveApplicationToAddonLinkCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<RemoveApplicationToAddonLinkCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+export class RemoveApplicationToAddonLinkCommand extends CcApiSimpleCommand<
+  RemoveApplicationToAddonLinkCommandInput,
+  void
+> {
+  toRequestParams(params: RemoveApplicationToAddonLinkCommandInput) {
     return delete_(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/addons/${params.targetAddonId}`,
     );
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       addonId: { property: 'targetAddonId', type: 'ADDON_ID' },
     };

@@ -1,21 +1,22 @@
-/**
- * @import { AddLinkCommandInput, AddApplicationToApplicationLinkCommandInput, AddApplicationToAddonLinkCommandInput } from './add-link-command.types.js';
- */
 import { postJson, put } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { CcApiComposer } from '../../types/cc-api.types.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import type {
+  AddApplicationToAddonLinkCommandInput,
+  AddApplicationToApplicationLinkCommandInput,
+  AddLinkCommandInput,
+} from './add-link-command.types.js';
 
 /**
- *
- * @extends {CcApiCompositeCommand<AddLinkCommandInput, void>}
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
  * @endpoint [POST] /v2/organisations/:XXX/applications/:XXX/addons
  * @group Link
  * @version 2
  */
-export class AddLinkCommand extends CcApiCompositeCommand {
-  /** @type {CcApiCompositeCommand<AddLinkCommandInput, void>['compose']} */
-  async compose(params, composer) {
+export class AddLinkCommand extends CcApiCompositeCommand<AddLinkCommandInput, void> {
+  async compose(params: AddLinkCommandInput, composer: CcApiComposer): Promise<void> {
     if ('targetApplicationId' in params) {
       await composer.send(new AddApplicationToApplicationLinkCommand(params));
     } else {
@@ -25,8 +26,7 @@ export class AddLinkCommand extends CcApiCompositeCommand {
     return null;
   }
 
-  /** @type {CcApiCompositeCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
@@ -34,15 +34,15 @@ export class AddLinkCommand extends CcApiCompositeCommand {
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<AddApplicationToApplicationLinkCommandInput, void>}
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
  * @group Link
  * @version 2
  */
-export class AddApplicationToApplicationLinkCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<AddApplicationToApplicationLinkCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+export class AddApplicationToApplicationLinkCommand extends CcApiSimpleCommand<
+  AddApplicationToApplicationLinkCommandInput,
+  void
+> {
+  toRequestParams(params: AddApplicationToApplicationLinkCommandInput) {
     return put(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/dependencies/${params.targetApplicationId}`,
     );
@@ -50,23 +50,19 @@ export class AddApplicationToApplicationLinkCommand extends CcApiSimpleCommand {
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<AddApplicationToAddonLinkCommandInput, void>}
  * @endpoint [POST] /v2/organisations/:XXX/applications/:XXX/addons
  * @group Link
  * @version 2
  */
-export class AddApplicationToAddonLinkCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<AddApplicationToAddonLinkCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+export class AddApplicationToAddonLinkCommand extends CcApiSimpleCommand<AddApplicationToAddonLinkCommandInput, void> {
+  toRequestParams(params: AddApplicationToAddonLinkCommandInput) {
     return postJson(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/addons`,
       params.targetAddonId,
     );
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       addonId: { property: 'targetAddonId', type: 'ADDON_ID' },
     };
