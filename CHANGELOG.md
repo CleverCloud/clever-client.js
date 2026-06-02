@@ -1,5 +1,16 @@
 # Clever Client changelog
 
+## [12.5.0](https://github.com/CleverCloud/clever-client.js/compare/12.4.0...12.5.0) (2026-06-02)
+
+
+### 🚀 Features
+
+* **metrics:** add command to fetch HTTP status code distribution ([f640219](https://github.com/CleverCloud/clever-client.js/commit/f640219a18cde4d544d44ede743fec2a272a89a5))
+* **metrics:** add command to fetch the requests heat map ([84dc71c](https://github.com/CleverCloud/clever-client.js/commit/84dc71c93d9415148a82f3a2382b133a1a246912))
+* **metrics:** add command to stream live requests ([8a27505](https://github.com/CleverCloud/clever-client.js/commit/8a2750585f79b5e5504a4e75808cc5432f4a6501))
+* **metrics:** allow converting metric timestamps to milliseconds or microseconds ([966a31d](https://github.com/CleverCloud/clever-client.js/commit/966a31daafce9781afd7b320a8f100b3db8c66ce))
+* **metrics:** migrate warp token command to v4 stats API ([25adb84](https://github.com/CleverCloud/clever-client.js/commit/25adb8443c0995e943e97bf67da886d07818e4db))
+
 ## [12.4.0](https://github.com/CleverCloud/clever-client.js/compare/12.3.1...12.4.0) (2026-05-21)
 
 
