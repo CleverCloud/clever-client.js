@@ -1,27 +1,28 @@
-/**
- * @import { GetWarpTokenCommandInput, GetWarpTokenCommandOutput } from './get-warp-token-command.types.js';
- */
 import { post } from '../../../../lib/request/request-params-builder.js';
-import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
+import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import type {
+  GetWarpTokenCommandInput,
+  GetWarpTokenCommandOutput,
+  WarpTokenApplication,
+} from './get-warp-token-command.types.js';
+import { transformWarpToken } from './warp-token-transform.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<GetWarpTokenCommandInput, GetWarpTokenCommandOutput>}
  * @endpoint [POST] /v4/stats/organisations/{ownerId}/tokens/read
  * @endpoint [POST] /v4/stats/organisations/{ownerId}/resources/{resourceId}/tokens/read
  * @group WarpToken
  * @version 4
  */
-export class GetWarpTokenCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<GetWarpTokenCommandInput, GetWarpTokenCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+export class GetWarpTokenCommand extends CcApiSimpleCommand<GetWarpTokenCommandInput, GetWarpTokenCommandOutput> {
+  toRequestParams(params: GetWarpTokenCommandInput) {
     const url =
       'applicationId' in params && params.applicationId != null && params.applicationId !== ''
         ? safeUrl`/v4/stats/organisations/${params.ownerId}/resources/${params.applicationId}/tokens/read`
         : safeUrl`/v4/stats/organisations/${params.ownerId}/tokens/read`;
 
-    const body = {};
+    const body: { applications?: Array<WarpTokenApplication>; ttl?: string } = {};
     if (params.applications != null && params.applications.length > 0) {
       body.applications = params.applications;
     }
@@ -32,19 +33,11 @@ export class GetWarpTokenCommand extends CcApiSimpleCommand {
     return post(url, body);
   }
 
-  /** @type {CcApiSimpleCommand<GetWarpTokenCommandInput, GetWarpTokenCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
-    return {
-      token: response.token,
-      expiresAt: normalizeDate(response.expiresAt),
-      createdAt: normalizeDate(response.createdAt),
-      scope: response.scope,
-      applications: response.applications,
-    };
+  transformCommandOutput(response: unknown): GetWarpTokenCommandOutput {
+    return transformWarpToken(response);
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
