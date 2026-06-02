@@ -1,20 +1,22 @@
-/**
- * @import { UpdateOrganisationAvatarCommandInput, UpdateOrganisationAvatarCommandOutput } from './update-organisation-avatar-command.types.js';
- */
 import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
+import type { CcRequestParams } from '../../../../types/request.types.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type {
+  UpdateOrganisationAvatarCommandInput,
+  UpdateOrganisationAvatarCommandOutput,
+} from './update-organisation-avatar-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<UpdateOrganisationAvatarCommandInput, UpdateOrganisationAvatarCommandOutput>}
  * @endpoint [PUT] /v2/organisations/:XXX/avatar
  * @group Organisation
  * @version 2
  */
-export class UpdateOrganisationAvatarCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<UpdateOrganisationAvatarCommandInput, UpdateOrganisationAvatarCommandOutput>['toRequestParams']} */
-  async toRequestParams(params) {
+export class UpdateOrganisationAvatarCommand extends CcApiSimpleCommand<
+  UpdateOrganisationAvatarCommandInput,
+  UpdateOrganisationAvatarCommandOutput
+> {
+  toRequestParams(params: UpdateOrganisationAvatarCommandInput): Partial<CcRequestParams> {
     return {
       method: 'PUT',
       url: safeUrl`/v2/organisations/${params.organisationId}/avatar`,

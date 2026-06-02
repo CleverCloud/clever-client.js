@@ -1,21 +1,16 @@
-/**
- * @import { AddOrganisationMemberCommandInput } from './add-organisation-member-command.types.js';
- */
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { AddOrganisationMemberCommandInput } from './add-organisation-member-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<AddOrganisationMemberCommandInput, void>}
  * @endpoint [POST] /v2/organisations/:XXX/members
  * @group Organisation
  * @version 2
  */
-export class AddOrganisationMemberCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<AddOrganisationMemberCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+export class AddOrganisationMemberCommand extends CcApiSimpleCommand<AddOrganisationMemberCommandInput, void> {
+  toRequestParams(params: AddOrganisationMemberCommandInput) {
     return post(
       safeUrl`/v2/organisations/${params.organisationId}/members`,
       {
@@ -27,8 +22,7 @@ export class AddOrganisationMemberCommand extends CcApiSimpleCommand {
     );
   }
 
-  /** @type {CcApiSimpleCommand<AddOrganisationMemberCommandInput, void>['transformCommandOutput']} */
-  transformCommandOutput() {
+  transformCommandOutput(): void {
     return null;
   }
 }

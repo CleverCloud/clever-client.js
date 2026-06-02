@@ -1,4 +1,4 @@
-import { Organisation } from './organisation.types.js';
+import type { Organisation } from './organisation.types.js';
 
 export interface ListOrganisationCommandInput {
   withPersonalOrganisation: boolean;

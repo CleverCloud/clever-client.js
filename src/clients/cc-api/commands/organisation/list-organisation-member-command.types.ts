@@ -1,4 +1,4 @@
-import { OrganisationMember } from './organisation.types.js';
+import type { OrganisationMember } from './organisation.types.js';
 
 export interface ListOrganisationMemberCommandInput {
   organisationId: string;
