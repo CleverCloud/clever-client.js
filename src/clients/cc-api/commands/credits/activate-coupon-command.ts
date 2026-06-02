@@ -1,9 +1,8 @@
-/**
- * @import { ActivateCouponCommandInput, ActivateCouponCommandOutput } from './activate-coupon-command.types.js';
- */
 import { post } from '../../../../lib/request/request-params-builder.js';
-import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
+import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { ActivateCouponCommandInput, ActivateCouponCommandOutput } from './activate-coupon-command.types.js';
+import { transformCouponUsage } from './credits-transform.js';
 
 /**
  * Activates a coupon
@@ -16,30 +15,20 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
  * - `clever.credits.coupon.currency-mismatch`: The currency of the coupon doesn't match the currency of the owner
  * - `clever.credits.coupon.already-activated`: The coupon was already activated
  *
- * @extends {CcApiSimpleCommand<ActivateCouponCommandInput, ActivateCouponCommandOutput>}
  * @endpoint [POST] /v4/billing/organisations/:XXX/applied-coupons
  * @group Credits
  * @version 4
  */
-export class ActivateCouponCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<ActivateCouponCommandInput, ActivateCouponCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+export class ActivateCouponCommand extends CcApiSimpleCommand<ActivateCouponCommandInput, ActivateCouponCommandOutput> {
+  toRequestParams(params: ActivateCouponCommandInput) {
     return post(safeUrl`/v4/billing/organisations/${params.ownerId}/applied-coupons`, { name: params.couponName });
   }
 
-  /** @type {CcApiSimpleCommand<ActivateCouponCommandInput, ActivateCouponCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
-    return {
-      couponName: response.coupon_name,
-      usageDate: normalizeDate(response.usageDate),
-      freeCreditsStartDate: normalizeDate(response.freeCreditsStartDate),
-      freeCreditsEndDate: normalizeDate(response.freeCreditsEndDate),
-      appliedByUserId: response.appliedByUserId,
-    };
+  transformCommandOutput(response: unknown): ActivateCouponCommandOutput {
+    return transformCouponUsage(response);
   }
 
-  /** @type {CcApiSimpleCommand<ActivateCouponCommandInput, ActivateCouponCommandOutput>['transformErrorCode']} */
-  transformErrorCode(errorCode) {
+  transformErrorCode(errorCode: string) {
     if (errorCode === '10001') {
       return 'clever.credits.coupon.not-found';
     }
