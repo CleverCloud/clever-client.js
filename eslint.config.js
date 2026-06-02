@@ -6,6 +6,10 @@ import tseslint from 'typescript-eslint';
 export default [
   {
     name: 'project-ignores',
+    // `**/*.d.ts` covers the remaining hand-written declaration sidecars under
+    // `esm/`, `test/` and `tasks/` (all intentionally left as JS-side `.d.ts`).
+    // `src/` no longer ships any `.d.ts` — every sidecar there is now a compiled
+    // `*.types.ts` — so this glob matches nothing in `src/`.
     ignores: ['**/*.d.ts', 'dist/**', 'build/**'],
   },
   {
