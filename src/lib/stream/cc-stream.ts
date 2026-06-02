@@ -1,13 +1,10 @@
-/**
- * @import { CcStreamRequestFactory, CcStreamConfig, CcStreamState, CcStreamCloseReason } from './cc-stream.types.js'
- * @import { SseMessage } from '../../types/request.types.js'
- */
-
+import type { SseMessage } from '../../types/request.types.js';
 import { CcClientError, CcHttpError } from '../error/cc-client-errors.js';
 import { handleHttpErrors } from '../error/handle-http-errors.js';
 import { HeadersBuilder } from '../request/headers-builder.js';
 import { isNetworkError, sendRequest, SseResponseBody } from '../request/request.js';
 import { combineWithSignal, Deferred } from '../utils.js';
+import type { CcStreamCloseReason, CcStreamConfig, CcStreamRequestFactory, CcStreamState } from './cc-stream.types.js';
 
 const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
 
@@ -17,40 +14,27 @@ const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
  * for real-time data from the Clever Cloud API.
  */
 export class CcStream {
-  /** @type {CcStreamRequestFactory} */
-  #requestFactory;
-  /** @type {CcStreamConfig} config */
-  #config;
-  /** @type {CcStreamState} */
-  #state = 'init';
-  /** @type {EventTarget} */
+  #requestFactory: CcStreamRequestFactory;
+  #config: CcStreamConfig;
+  #state: CcStreamState = 'init';
   #eventTarget = new EventTarget();
-  /** @type {AbortController | null} */
-  #abortController;
-  /** @type {Deferred<CcStreamCloseReason>} */
-  #closeDeferred;
-  /** @type {string | null} */
-  #lastReceivedMessageId;
-  /** @type {Date | null} */
-  #lastContact;
-  /** @type {number} */
+  #abortController: AbortController | null;
+  #closeDeferred: Deferred<CcStreamCloseReason>;
+  #lastReceivedMessageId: string | null;
+  #lastContact: Date | null;
   #retryCount = 0;
-  /** @type { any | null} */
-  #retryTimeoutId = null;
-  /** @type { any | null} */
-  #heartbeatIntervalId = null;
-  /** @type {Date | null} */
-  #connectionStartTime = null;
-  /** @type {Set<{type: string, callback: EventListenerOrEventListenerObject}>} */
-  #eventListeners = new Set();
+  #retryTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  #heartbeatIntervalId: ReturnType<typeof setInterval> | null = null;
+  #connectionStartTime: Date | null = null;
+  #eventListeners = new Set<{ type: string; callback: EventListenerOrEventListenerObject }>();
 
   /**
    * Creates a new CcStream instance.
    *
-   * @param {CcStreamRequestFactory} requestFactory - Factory function that creates HTTP requests for the stream
-   * @param {CcStreamConfig} config - Configuration options for the stream including retry settings and heartbeat
+   * @param requestFactory - Factory function that creates HTTP requests for the stream
+   * @param config - Configuration options for the stream including retry settings and heartbeat
    */
-  constructor(requestFactory, config) {
+  constructor(requestFactory: CcStreamRequestFactory, config: CcStreamConfig) {
     this.#requestFactory = requestFactory;
     this.#config = config;
   }
@@ -60,18 +44,18 @@ export class CcStream {
   /**
    * Gets the current state of the stream.
    *
-   * @returns {CcStreamState} The current stream state ('init', 'connecting', 'open', 'paused', or 'closed')
+   * @returns The current stream state ('init', 'connecting', 'open', 'paused', or 'closed')
    */
-  get state() {
+  get state(): CcStreamState {
     return this.#state;
   }
 
   /**
    * Gets the current retry count for connection attempts.
    *
-   * @returns {number} The number of retry attempts made
+   * @returns The number of retry attempts made
    */
-  get retryCount() {
+  get retryCount(): number {
     return this.#retryCount;
   }
 
@@ -79,16 +63,15 @@ export class CcStream {
    * Starts the stream. Returns a promise that
    * - resolves when the stream is closed,
    * - rejects when a non-retryable error occurs or when the retry limit is reached.
-   * @returns {Promise<CcStreamCloseReason>}
    */
-  start() {
+  start(): Promise<CcStreamCloseReason> {
     if (this.state !== 'init') {
       throw new CcClientError('Cannot start a stream that is not in the "init" state', 'SSE_INVALID_STATE_ERROR');
     }
 
     if (this.#closeDeferred == null) {
-      this.#closeDeferred = new Deferred();
-      this.#start();
+      this.#closeDeferred = new Deferred<CcStreamCloseReason>();
+      void this.#start();
     }
 
     return this.#closeDeferred.promise;
@@ -98,7 +81,7 @@ export class CcStream {
    * Pauses the stream, stopping the current connection and preventing automatic retries.
    * The stream can be resumed later with the resume() method.
    */
-  pause() {
+  pause(): void {
     if (this.state !== 'open') {
       throw new CcClientError('Cannot pause a stream that is not in the "open" state', 'SSE_INVALID_STATE_ERROR');
     }
@@ -111,22 +94,22 @@ export class CcStream {
   /**
    * Resumes a paused stream, attempting to reconnect and continue streaming.
    */
-  resume() {
+  resume(): void {
     if (this.state !== 'paused') {
       throw new CcClientError('Cannot resume a stream that is not in the "paused" state', 'SSE_INVALID_STATE_ERROR');
     }
 
     this.#debugLog('Resuming stream', { previousState: this.#state });
-    this.#start();
+    void this.#start();
   }
 
   /**
    * Manually closes the stream with an optional reason.
    * Once closed, the stream cannot be reopened.
    *
-   * @param {CcStreamCloseReason} [reason] - The reason for closing the stream
+   * @param reason - The reason for closing the stream
    */
-  close(reason = { type: 'UNKNOWN' }) {
+  close(reason: CcStreamCloseReason = { type: 'UNKNOWN' }): void {
     if (this.state === 'closed') {
       return;
     }
@@ -139,39 +122,37 @@ export class CcStream {
   /**
    * Registers a callback to be called when the stream opens successfully.
    *
-   * @param {() => void} callback - Function to call when the stream opens
-   * @return {this} This stream instance for method chaining
+   * @param callback - Function to call when the stream opens
+   * @returns This stream instance for method chaining
    */
-  onOpen(callback) {
+  onOpen(callback: () => void): this {
     return this.on('open', () => callback());
   }
 
   /**
    * Registers a callback to be called when the stream encounters an error.
    *
-   * @param {(error: Error) => void} callback - Function to call when an error occurs
-   * @return {this} This stream instance for method chaining
+   * @param callback - Function to call when an error occurs
+   * @returns This stream instance for method chaining
    */
-  onError(callback) {
-    return this.on('error', (event) => callback(event.data));
+  onError(callback: (error: Error) => void): this {
+    return this.on<Error>('error', (event) => callback(event.data));
   }
 
   /**
    * Registers an event listener for the specified event type.
    * This is the generic event listener method used by other on* methods.
    *
-   * @param {string} type - The event type to listen for
-   * @param {(event: CcStreamEvent<T>) => void} callback - Function to call when the event occurs
-   * @param {AddEventListenerOptions | boolean} [options] - Event listener options
-   * @return {this} This stream instance for method chaining
+   * @param type - The event type to listen for
+   * @param callback - Function to call when the event occurs
+   * @param options - Event listener options
+   * @returns This stream instance for method chaining
    *
    * @template T Type of the event data
    */
-  on(type, callback, options) {
-    // @ts-ignore
-    this.#eventTarget.addEventListener(type, callback, options);
-    // @ts-ignore
-    this.#eventListeners.add({ type, callback });
+  on<T>(type: string, callback: (event: CcStreamEvent<T>) => void, options?: AddEventListenerOptions | boolean): this {
+    this.#eventTarget.addEventListener(type, callback as EventListener, options);
+    this.#eventListeners.add({ type, callback: callback as EventListener });
     return this;
   }
 
@@ -179,10 +160,10 @@ export class CcStream {
 
   /**
    * Logs debug information if debug mode is enabled
-   * @param {string} message - The debug message
-   * @param {any} [data] - Optional data to include in the log
+   * @param message - The debug message
+   * @param data - Optional data to include in the log
    */
-  #debugLog(message, data) {
+  #debugLog(message: string, data?: unknown): void {
     if (this.#config.debug) {
       const timestamp = new Date().toISOString();
       const logMessage = `[CcStream] [${timestamp}] ${message}`;
@@ -194,7 +175,7 @@ export class CcStream {
     }
   }
 
-  async #start() {
+  async #start(): Promise<void> {
     this.#connectionStartTime = new Date();
     if (this.#config.retry) {
       this.#debugLog(
@@ -220,7 +201,7 @@ export class CcStream {
         this.#debugLog('Resuming from last event ID', { lastEventId: this.#lastReceivedMessageId });
       }
 
-      const response = await sendRequest({
+      const response = await sendRequest<SseResponseBody>({
         ...request,
         cache: null,
         headers: headersBuilder.build(),
@@ -248,7 +229,7 @@ export class CcStream {
         onClose: this.#onClose.bind(this),
         onError: this.#onError.bind(this),
       });
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof CcClientError) {
         this.#onError(error);
       } else {
@@ -261,9 +242,9 @@ export class CcStream {
 
   /**
    * Clears any active timeouts and intervals to prevent memory leaks.
-   * @param {boolean} clearListeners - Whether to also clear event listeners
+   * @param clearListeners - Whether to also clear event listeners
    */
-  #cleanup(clearListeners = false) {
+  #cleanup(clearListeners = false): void {
     this.#debugLog('Cleaning up stream resources');
     clearTimeout(this.#retryTimeoutId);
     clearInterval(this.#heartbeatIntervalId);
@@ -277,7 +258,7 @@ export class CcStream {
   /**
    * When SSE is opened
    */
-  async #onOpen() {
+  #onOpen(): void {
     const connectionTime = this.#connectionStartTime
       ? new Date().getTime() - this.#connectionStartTime.getTime()
       : null;
@@ -312,9 +293,9 @@ export class CcStream {
   /**
    * when a message is received through SSE
    *
-   * @param {SseMessage} message
+   * @param message - The received SSE message
    */
-  #onMessage(message) {
+  #onMessage(message: SseMessage): void {
     this.#lastContact = new Date();
 
     this.#debugLog('SSE message received', {
@@ -330,11 +311,14 @@ export class CcStream {
         return;
       case 'END_OF_STREAM': {
         try {
-          const reason = JSON.parse(message.data);
+          const reason = JSON.parse(message.data) as { endedBy?: string };
           this.#debugLog('End of stream received', { reason });
           this.close({ type: reason.endedBy });
-        } catch (e) {
-          this.#debugLog('Failed to parse END_OF_STREAM data', { data: message.data, error: e.message });
+        } catch (e: unknown) {
+          this.#debugLog('Failed to parse END_OF_STREAM data', {
+            data: message.data,
+            error: e,
+          });
           this.#onError(
             new CcClientError(`Expect JSON for END_OF_STREAM event but got "${message.data}"`, 'SSE_SERVER_ERROR', e),
           );
@@ -352,7 +336,7 @@ export class CcStream {
     }
   }
 
-  #onClose() {
+  #onClose(): void {
     if (this.#state === 'closed' || this.#state === 'paused') {
       this.#debugLog('Close event ignored', { currentState: this.#state });
       return;
@@ -367,9 +351,9 @@ export class CcStream {
 
   /**
    * when the SSE has an error
-   * @param {CcClientError} error
+   * @param error - The error that occurred
    */
-  #onError(error) {
+  #onError(error: unknown): void {
     if (this.#state === 'closed' || this.#state === 'paused') {
       this.#debugLog('Error event ignored', { currentState: this.#state, error });
       return;
@@ -379,7 +363,7 @@ export class CcStream {
 
     this.#cleanup();
 
-    const wrappedError = isNetworkError(error)
+    const wrappedError = isNetworkError(error as Parameters<typeof isNetworkError>[0])
       ? new CcClientError('Failed to establish/maintain the connection with the server', 'SSE_SERVER_ERROR', error)
       : error;
 
@@ -404,7 +388,9 @@ export class CcStream {
         backoffFactor: this.#config.retry.backoffFactor,
       });
 
-      this.#retryTimeoutId = setTimeout(this.#start.bind(this), exponentialBackoffDelay);
+      this.#retryTimeoutId = setTimeout(() => {
+        void this.#start();
+      }, exponentialBackoffDelay);
     } else {
       this.#debugLog('Stream permanently closed due to error', {
         finalRetryCount: this.#retryCount,
@@ -416,11 +402,7 @@ export class CcStream {
     }
   }
 
-  /**
-   * @param {any} error
-   * @returns {boolean}
-   */
-  #canRetry(error) {
+  #canRetry(error: unknown): boolean {
     if (this.#config.retry == null) {
       return false;
     }
@@ -443,13 +425,13 @@ export class CcStream {
   /**
    * Construct and dispatch an event
    *
-   * @param {string} type
-   * @param {any} [data]
+   * @param type - The event type
+   * @param data - The event data payload
    */
-  #emit(type, data) {
+  #emit(type: string, data?: unknown): void {
     try {
       this.#eventTarget.dispatchEvent(new CcStreamEvent(type, data));
-    } catch (e) {
+    } catch (e: unknown) {
       // we catch errors in case one of the listeners throws an error
       this.#onError(new CcClientError(`An error occurred while emitting ${type} event`, 'SSE_CLIENT_ERROR', e));
     }
@@ -462,17 +444,16 @@ export class CcStream {
  *
  * @template T Type of the event data
  */
-export class CcStreamEvent extends Event {
-  /** @type {T} */
-  #data;
+export class CcStreamEvent<T> extends Event {
+  #data: T;
 
   /**
    * Creates a new CcStreamEvent with the specified type and data.
    *
-   * @param {string} type - The event type
-   * @param {T} data - The event data payload
+   * @param type - The event type
+   * @param data - The event data payload
    */
-  constructor(type, data) {
+  constructor(type: string, data: T) {
     super(type);
     this.#data = data;
   }
@@ -480,9 +461,9 @@ export class CcStreamEvent extends Event {
   /**
    * Gets the data associated with this event.
    *
-   * @return {T} The event data
+   * @returns The event data
    */
-  get data() {
+  get data(): T {
     return this.#data;
   }
 }
