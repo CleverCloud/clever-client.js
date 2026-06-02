@@ -1,25 +1,19 @@
-/**
- * @import { ResetGrafanaCommandInput } from './reset-grafana-command.types.js';
- */
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { ResetGrafanaCommandInput } from './reset-grafana-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<ResetGrafanaCommandInput, void>}
  * @endpoint [POST] /v4/saas/grafana/:XXX/reset
  * @group Grafana
  * @version 4
  */
-export class ResetGrafanaCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<ResetGrafanaCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+export class ResetGrafanaCommand extends CcApiSimpleCommand<ResetGrafanaCommandInput, void> {
+  toRequestParams(params: ResetGrafanaCommandInput) {
     return post(safeUrl`/v4/saas/grafana/${params.ownerId}/reset`);
   }
 
-  /** @type {CcApiSimpleCommand<ResetGrafanaCommandInput, void>['transformCommandOutput']} */
-  transformCommandOutput() {
+  transformCommandOutput(): void {
     return null;
   }
 }
