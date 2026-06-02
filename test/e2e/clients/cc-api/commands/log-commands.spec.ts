@@ -1,11 +1,12 @@
-/**
- * @import { ApplicationRuntimeLog, ApplicationAccessLog } from '../../../../../src/clients/cc-api/commands/log/log.types.js';
- * @import { CcStream } from '../../../../../src/lib/stream/cc-stream.js';
- */
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { ListLogCommand } from '../../../../../src/clients/cc-api/commands/log/list-log-command.js';
+import type {
+  ApplicationAccessLog,
+  ApplicationRuntimeLog,
+} from '../../../../../src/clients/cc-api/commands/log/log.types.js';
 import { StreamApplicationAccessLogCommand } from '../../../../../src/clients/cc-api/commands/log/stream-application-access-log-command.js';
 import { StreamApplicationRuntimeLogCommand } from '../../../../../src/clients/cc-api/commands/log/stream-application-runtime-log-command.js';
+import type { CcStream } from '../../../../../src/lib/stream/cc-stream.js';
 import { Deferred } from '../../../../../src/lib/utils.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
 import { e2eSupport, STATIC_LOGS_APPLICATION, STATIC_MYSQL_ADDON_ID } from '../e2e-support.js';
@@ -58,8 +59,7 @@ describe('log commands', function () {
   describe('log stream', function () {
     const support = e2eSupport({ user: 'test-user-without-github' });
 
-    /** @type {CcStream} */
-    let currentStream = null;
+    let currentStream: CcStream = null;
 
     beforeAll(async () => {
       currentStream = null;
@@ -75,20 +75,19 @@ describe('log commands', function () {
     });
 
     it('should get application runtime logs', async () => {
-      /** @type {Deferred<ApplicationRuntimeLog>} */
-      const deferred = new Deferred();
+      const deferred = new Deferred<ApplicationRuntimeLog>();
 
       currentStream = (
         await support.client.stream(new StreamApplicationRuntimeLogCommand({ applicationId: STATIC_LOGS_APPLICATION }))
       )
         .onOpen(() => {
           // this API call will trigger a log message
-          fetch(`https://${STATIC_LOGS_APPLICATION.replaceAll('_', '-')}.cleverapps.io`, { method: 'HEAD' });
+          void fetch(`https://${STATIC_LOGS_APPLICATION.replaceAll('_', '-')}.cleverapps.io`, { method: 'HEAD' });
         })
         .onLog(deferred.resolve)
         .onError(deferred.reject);
 
-      currentStream.start();
+      void currentStream.start();
 
       const log = await deferred.promise;
 
@@ -107,20 +106,19 @@ describe('log commands', function () {
     });
 
     it('should get application access logs', async function () {
-      /** @type {Deferred<ApplicationAccessLog>} */
-      const deferred = new Deferred();
+      const deferred = new Deferred<ApplicationAccessLog>();
 
       currentStream = (
         await support.client.stream(new StreamApplicationAccessLogCommand({ applicationId: STATIC_LOGS_APPLICATION }))
       )
         .onOpen(() => {
           // this API call will trigger an access log
-          fetch(`https://${STATIC_LOGS_APPLICATION.replaceAll('_', '-')}.cleverapps.io`, { method: 'GET' });
+          void fetch(`https://${STATIC_LOGS_APPLICATION.replaceAll('_', '-')}.cleverapps.io`, { method: 'GET' });
         })
         .onLog(deferred.resolve)
         .onError(deferred.reject);
 
-      currentStream.start();
+      void currentStream.start();
       const log = await deferred.promise;
 
       expect(log.applicationId).toBe(STATIC_LOGS_APPLICATION);
