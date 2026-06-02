@@ -1,32 +1,26 @@
-/**
- * @import { RebootMatomoCommandInput } from './reboot-matomo-command.types.js';
- */
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import type { RebootMatomoCommandInput } from './reboot-matomo-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<RebootMatomoCommandInput, void>}
  * @endpoint [POST] /v4/addon-providers/addon-matomo/addons/:XXX/reboot
  * @group Matomo
  * @version 4
  */
-export class RebootMatomoCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<RebootMatomoCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+export class RebootMatomoCommand extends CcApiSimpleCommand<RebootMatomoCommandInput, void> {
+  toRequestParams(params: RebootMatomoCommandInput) {
     return post(safeUrl`/v4/addon-providers/addon-matomo/addons/${params.addonId}/reboot`);
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       addonId: 'REAL_ADDON_ID',
     };
   }
 
-  /** @type {CcApiSimpleCommand<RebootMatomoCommandInput, void>['transformCommandOutput']} */
-  transformCommandOutput() {
+  transformCommandOutput(): void {
     return null;
   }
 }
