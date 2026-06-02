@@ -1,4 +1,4 @@
-import { PaymentMethod } from './payment-method.types.js';
+import type { PaymentMethod } from './payment-method.types.js';
 
 export interface SetPrimaryPaymentMethodCommandInput {
   ownerId: string;
