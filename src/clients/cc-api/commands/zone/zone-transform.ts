@@ -1,10 +1,6 @@
-/** @import { Zone } from './zone.types.d.ts' */
+import type { Zone } from './zone.types.js';
 
-/**
- * @param {any} payload
- * @returns {Zone}
- */
-export function transformZone(payload) {
+export function transformZone(payload: any): Zone {
   return {
     id: payload.id,
     name: payload.name,
