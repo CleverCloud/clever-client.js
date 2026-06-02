@@ -1,15 +1,8 @@
-/**
- * @import { MetabaseInfo } from './metabase.types.js';
- */
-
 import { sortBy } from '../../../../lib/utils.js';
 import { toArray } from '../../../../utils/environment-utils.js';
+import type { MetabaseInfo } from './metabase.types.js';
 
-/**
- * @param {any} response
- * @returns {MetabaseInfo}
- */
-export function transformMetabaseInfo(response) {
+export function transformMetabaseInfo(response: any): MetabaseInfo {
   return {
     id: response.resourceId,
     addonId: response.addonId,
