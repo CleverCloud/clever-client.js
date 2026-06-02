@@ -1,7 +1,5 @@
-/**
- * @import { ApiToken } from '../../../../../src/clients/cc-api-bridge/commands/api-token/api-token.types.js'
- */
 import { afterEach, describe, expect, it } from 'vitest';
+import type { ApiToken } from '../../../../../src/clients/cc-api-bridge/commands/api-token/api-token.types.js';
 import { CreateApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.js';
 import { DeleteApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/delete-api-token-command.js';
 import { ListApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/list-api-token-command.js';
@@ -11,8 +9,7 @@ import { e2eSupport } from '../e2e-support.js';
 describe('api-token commands', function () {
   const support = e2eSupport();
 
-  /** @type {null|string} */
-  let createdTokenId = null;
+  let createdTokenId: string | null = null;
 
   afterEach(async () => {
     if (createdTokenId != null) {
@@ -81,11 +78,7 @@ describe('api-token commands', function () {
     createdTokenId = null;
   });
 
-  /**
-   * @param {string} tokenId
-   * @return {Promise<ApiToken>}
-   */
-  async function getApiToken(tokenId) {
+  async function getApiToken(tokenId: string): Promise<ApiToken> {
     const listResponse = await support.client.send(new ListApiTokenCommand());
     return listResponse.find((t) => t.apiTokenId === tokenId);
   }
