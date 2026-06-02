@@ -1,30 +1,30 @@
-/**
- * @import { ListTcpRedirectionCommandInput, ListTcpRedirectionCommandOutput } from './list-tcp-redirection-command.types.js';
- */
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import type {
+  ListTcpRedirectionCommandInput,
+  ListTcpRedirectionCommandOutput,
+} from './list-tcp-redirection-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<ListTcpRedirectionCommandInput, ListTcpRedirectionCommandOutput>}
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/tcpRedirs
  * @group TcpRedirection
  * @version 2
  */
-export class ListTcpRedirectionCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<ListTcpRedirectionCommandInput, ListTcpRedirectionCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+export class ListTcpRedirectionCommand extends CcApiSimpleCommand<
+  ListTcpRedirectionCommandInput,
+  ListTcpRedirectionCommandOutput
+> {
+  toRequestParams(params: ListTcpRedirectionCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/tcpRedirs`);
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
-  getEmptyResponsePolicy(status) {
+  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
     return { isEmpty: status === 404, emptyValue: [] };
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
