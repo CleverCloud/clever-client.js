@@ -1,7 +1,5 @@
-/**
- * @import { CcRequest, RequestAdapter, RequestWrapper, SseMessage } from '../../types/request.types.js'
- */
 import { events } from 'fetch-event-stream';
+import type { CcRequest, CcResponse, RequestAdapter, RequestWrapper, SseMessage } from '../../types/request.types.js';
 import { CcClientError, CcRequestError } from '../error/cc-client-errors.js';
 import { fetchWithTimeout } from './fetch-with-timeout.js';
 import { requestDebug } from './request-debug.js';
@@ -20,16 +18,11 @@ const NETWORK_ERROR_CODES = [
   'UND_ERR_SOCKET',
 ];
 
-/** @type {Array<RequestWrapper>} */
-const REQUEST_WRAPPERS = [requestWithCache, requestWithDedupe, requestDebug];
+const REQUEST_WRAPPERS: Array<RequestWrapper> = [requestWithCache, requestWithDedupe, requestDebug];
 
-/**
- * @type {RequestAdapter}
- */
-export async function sendRequest(request) {
+export async function sendRequest<CommandOutput>(request: CcRequest): Promise<CcResponse<CommandOutput>> {
   let i = 0;
-  /** @type {RequestAdapter} */
-  const handler = (request) => {
+  const handler: RequestAdapter = (request) => {
     i++;
     if (i >= REQUEST_WRAPPERS.length) {
       return doRequest(request);
@@ -38,13 +31,10 @@ export async function sendRequest(request) {
     }
   };
 
-  return REQUEST_WRAPPERS[0](request, handler);
+  return REQUEST_WRAPPERS[0]<CommandOutput>(request, handler);
 }
 
-/**
- * @type {RequestAdapter}
- */
-async function doRequest(request) {
+async function doRequest<CommandOutput>(request: CcRequest): Promise<CcResponse<CommandOutput>> {
   try {
     const url = getRequestUrl(request);
     const body = getRequestBody(request);
@@ -62,12 +52,11 @@ async function doRequest(request) {
     return {
       status: fetchResponse.status,
       headers: fetchResponse.headers,
-      body: await getResponseBody(request, fetchResponse),
+      body: (await getResponseBody(request, fetchResponse)) as CommandOutput,
       requestDuration: duration,
       cacheHit: false,
     };
-  } catch (error) {
-    /** @param {Error|any} err */
+  } catch (error: unknown) {
     if (error instanceof CcRequestError) {
       throw error;
     }
@@ -80,12 +69,12 @@ async function doRequest(request) {
       throw new CcRequestError('The request was aborted', 'ABORTED', request, error);
     }
 
-    if (isNetworkError(error)) {
+    if (isNetworkError(error as Parameters<typeof isNetworkError>[0])) {
       throw new CcRequestError(
         'A network error occurred while fetching HTTP endpoint',
         'NETWORK_ERROR',
         request,
-        error.cause ?? error,
+        (error as { cause?: unknown }).cause ?? error,
       );
     }
 
@@ -98,13 +87,8 @@ async function doRequest(request) {
   }
 }
 
-/**
- * @param {CcRequest} request
- * @returns {URL}
- * @throws {CcClientError}
- */
-export function getRequestUrl(request) {
-  let url;
+export function getRequestUrl(request: CcRequest): URL {
+  let url: URL;
   try {
     url = new URL(request.url, globalThis.location?.href);
   } catch (e) {
@@ -116,11 +100,7 @@ export function getRequestUrl(request) {
   return url;
 }
 
-/**
- * @param {CcRequest} request
- * @returns {BodyInit|null}
- */
-export function getRequestBody(request) {
+export function getRequestBody(request: CcRequest): BodyInit | null {
   if (request.body == null) {
     return null;
   }
@@ -138,15 +118,11 @@ export function getRequestBody(request) {
   // todo: if text/plain but got object => error?
   // todo: streamable request body?
 
+  // eslint-disable-next-line @typescript-eslint/no-base-to-string -- non-JSON bodies are expected to be strings; an object here is a caller error left as-is (see todo above)
   return String(request.body);
 }
 
-/**
- * @param {CcRequest} request
- * @param {Response} fetchResponse
- * @returns {Promise<any>}
- */
-async function getResponseBody(request, fetchResponse) {
+async function getResponseBody(request: CcRequest, fetchResponse: Response): Promise<unknown> {
   if (request.method === 'HEAD') {
     return null;
   }
@@ -177,20 +153,17 @@ async function getResponseBody(request, fetchResponse) {
   return fetchResponse.blob();
 }
 
-/**
- * @param {Headers} headers
- * @returns {string|null}
- */
-function getContentType(headers) {
+function getContentType(headers: Headers): string | null {
   const contentType = headers.get('content-type');
   return contentType != null ? contentType.split(';')[0] : contentType;
 }
 
-/**
- * @param {{name: string, message: string, cause?: {code?: string}, code?: string}} error
- * @returns {boolean}
- */
-export function isNetworkError(error) {
+export function isNetworkError(error: {
+  name: string;
+  message: string;
+  cause?: { code?: string };
+  code?: string;
+}): boolean {
   const errorCode = error.cause?.code ?? error.code;
 
   if (NETWORK_ERROR_CODES.includes(errorCode)) {
@@ -213,32 +186,26 @@ export function isNetworkError(error) {
 }
 
 export class SseResponseBody {
-  /** @type {Response} */
-  #response;
-  /** @type {AbortSignal} */
-  #signal;
+  #response: Response;
+  #signal: AbortSignal;
 
-  /**
-   * @param {Response} response
-   * @param {AbortSignal} signal
-   */
-  constructor(response, signal) {
+  constructor(response: Response, signal: AbortSignal) {
     this.#response = response;
     this.#signal = signal;
   }
 
-  /**
-   *
-   * @param {Object} _
-   * @param {(message: SseMessage) => void} _.onMessage
-   * @param {(err: any) => void} [_.onError]
-   * @param {(reason: any) => void} [_.onClose]
-   * @return {Promise<*>}
-   */
-  async read({ onMessage, onError, onClose }) {
+  async read({
+    onMessage,
+    onError,
+    onClose,
+  }: {
+    onMessage: (message: SseMessage) => void;
+    onError?: (err: unknown) => void;
+    onClose?: (reason?: unknown) => void;
+  }): Promise<void> {
     try {
       const stream = events(this.#response, this.#signal);
-      for await (let event of stream) {
+      for await (const event of stream) {
         onMessage({
           data: event.data,
           event: event.event,
@@ -246,8 +213,8 @@ export class SseResponseBody {
           retry: event.retry,
         });
       }
-      return onClose?.();
-    } catch (err) {
+      onClose?.();
+    } catch (err: unknown) {
       if (this.#signal.aborted) {
         onClose?.(this.#signal.reason);
       } else {

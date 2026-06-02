@@ -1,18 +1,15 @@
-/**
- * @import {RequestWrapper} from '../../types/request.types.js'
- */
-
+import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.js';
 import { QueryParams } from './query-params.js';
 
-/**
- * @type {RequestWrapper}
- */
-export async function requestDebug(request, handler) {
+export async function requestDebug<CommandOutput>(
+  request: CcRequest,
+  handler: RequestAdapter,
+): Promise<CcResponse<CommandOutput>> {
   if (!request.debug) {
-    return handler(request);
+    return handler<CommandOutput>(request);
   }
 
-  const response = await handler(request);
+  const response = await handler<CommandOutput>(request);
   console.log(
     JSON.stringify(
       {
@@ -34,10 +31,7 @@ export async function requestDebug(request, handler) {
   return response;
 }
 
-/**
- * @param {Headers} headers
- */
-function obfuscateHeaders(headers) {
+function obfuscateHeaders(headers: Headers): Record<string, string> | null {
   if (headers == null) {
     return null;
   }
@@ -47,10 +41,7 @@ function obfuscateHeaders(headers) {
   return Object.fromEntries(headers.entries());
 }
 
-/**
- * @param {QueryParams} queryParams
- */
-function obfuscateQueryParams(queryParams) {
+function obfuscateQueryParams(queryParams: QueryParams): Record<string, unknown> | null {
   if (queryParams == null) {
     return null;
   }

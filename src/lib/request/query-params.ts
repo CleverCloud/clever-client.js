@@ -1,17 +1,11 @@
-/**
- * @import { QueryParamValue } from '../../types/request.types.js'
- * @import { OneOrMany } from '../../types/utils.types.js'
- */
+import type { QueryParamValue } from '../../types/request.types.js';
+import type { OneOrMany } from '../../types/utils.types.js';
 import { toArray } from '../utils.js';
 
 export class QueryParams {
-  /** @type {Map<string, OneOrMany<QueryParamValue>>} */
-  #queryParams = new Map();
+  #queryParams = new Map<string, OneOrMany<QueryParamValue>>();
 
-  /**
-   * @param {Record<string, OneOrMany<QueryParamValue>>|QueryParams} [params]
-   */
-  constructor(params) {
+  constructor(params?: Record<string, OneOrMany<QueryParamValue>> | QueryParams) {
     if (params != null) {
       if (params instanceof QueryParams) {
         this.setParams(params.toObject());
@@ -21,41 +15,23 @@ export class QueryParams {
     }
   }
 
-  /**
-   * @param {string} param
-   * @param {OneOrMany<QueryParamValue>} value
-   * @returns {this}
-   */
-  set(param, value) {
+  set(param: string, value: OneOrMany<QueryParamValue>): this {
     this.#queryParams.set(param, value);
     return this;
   }
 
-  /**
-   * @param {Record<string, OneOrMany<QueryParamValue>>} params
-   * @returns {this}
-   */
-  setParams(params) {
+  setParams(params: Record<string, OneOrMany<QueryParamValue>>): this {
     Object.entries(params).forEach(([key, value]) => {
       this.set(key, value);
     });
     return this;
   }
 
-  /**
-   * @param {string} param
-   * @returns {OneOrMany<QueryParamValue>}
-   */
-  get(param) {
+  get(param: string): OneOrMany<QueryParamValue> {
     return this.#queryParams.get(param);
   }
 
-  /**
-   * @param {string} param
-   * @param {OneOrMany<QueryParamValue>} value
-   * @returns {QueryParams}
-   */
-  append(param, value) {
+  append(param: string, value: OneOrMany<QueryParamValue>): this {
     if (this.#queryParams.has(param)) {
       this.#queryParams.set(param, [...toArray(this.#queryParams.get(param)), ...toArray(value)]);
     } else {
@@ -64,21 +40,15 @@ export class QueryParams {
     return this;
   }
 
-  /**
-   * @param {string} param
-   */
-  remove(param) {
+  remove(param: string): void {
     this.#queryParams.delete(param);
   }
 
-  entries() {
+  entries(): MapIterator<[string, OneOrMany<QueryParamValue>]> {
     return this.#queryParams.entries();
   }
 
-  /**
-   * @param {URL} url
-   */
-  applyOnUrl(url) {
+  applyOnUrl(url: URL): void {
     this.#queryParams.forEach((value, param) => {
       const values = toArray(value);
       values
@@ -89,10 +59,10 @@ export class QueryParams {
     });
   }
 
-  toObject() {
+  toObject(): Record<string, QueryParamValue | Array<QueryParamValue>> {
     return Object.fromEntries(
       Array.from(this.#queryParams.entries())
-        .map(function ([key, value]) {
+        .map(function ([key, value]): [string, QueryParamValue | Array<QueryParamValue>] | null {
           if (value == null) {
             return null;
           }

@@ -2,18 +2,12 @@ import { combineWithSignal } from '../utils.js';
 
 // TODO: replace this by using AbortSignal.timeout() static method when it becomes widely available
 
-/**
- * @param {number} timeout
- * @param {string | URL | Request} input
- * @param {RequestInit} [init]
- * @returns {Promise<Response>}
- */
-export function fetchWithTimeout(timeout, input, init) {
-  /**
-   * @param {AbortSignal} signal
-   * @return {Promise<Response>}
-   */
-  function doFetch(signal) {
+export function fetchWithTimeout(
+  timeout: number,
+  input: string | URL | Request,
+  init?: RequestInit,
+): Promise<Response> {
+  function doFetch(signal: AbortSignal): Promise<Response> {
     return fetch(input, { ...init, signal });
   }
 
@@ -24,15 +18,15 @@ export function fetchWithTimeout(timeout, input, init) {
   const ac = new AbortController();
   combineWithSignal(ac, init.signal);
 
-  /** @type {() => void} */
-  let clear;
+  let clear: () => void;
 
   const requestPromise = doFetch(ac.signal).finally(() => {
     clear?.();
   });
-  const timeoutPromise = new Promise((_resolve, reject) => {
+  const timeoutPromise = new Promise<Response>((_resolve, reject) => {
     const timeoutId = setTimeout(() => {
       ac.abort();
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- 'TIMEOUT' is a sentinel matched by `error === 'TIMEOUT'` in doRequest
       reject('TIMEOUT');
     }, timeout);
     clear = () => clearTimeout(timeoutId);

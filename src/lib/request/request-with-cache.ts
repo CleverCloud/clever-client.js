@@ -1,21 +1,15 @@
-/**
- * @import { RequestWrapper } from '../../types/request.types.js'
- */
-
+import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.js';
 import { calculateCacheKey } from '../utils.js';
 
-/**
- * @type {Map<string, { response: import('../../types/request.types.js').CcResponse<?>, expiresAt: number }>}
- */
-const CACHE = new Map();
+const CACHE = new Map<string, { response: CcResponse<unknown>; expiresAt: number }>();
 
-/**
- * @type {RequestWrapper}
- */
-export async function requestWithCache(request, handler) {
+export async function requestWithCache<CommandOutput>(
+  request: CcRequest,
+  handler: RequestAdapter,
+): Promise<CcResponse<CommandOutput>> {
   // no caching on HTTP method other than GET
   if (request.cache == null || request.method.toLowerCase() !== 'get') {
-    return handler(request);
+    return handler<CommandOutput>(request);
   }
 
   const cacheKey = calculateCacheKey(request);
@@ -24,14 +18,14 @@ export async function requestWithCache(request, handler) {
   if (request.cache.mode !== 'reload' && CACHE.has(cacheKey)) {
     const entry = CACHE.get(cacheKey);
     if (entry.expiresAt > Date.now()) {
-      return entry.response;
+      return entry.response as CcResponse<CommandOutput>;
     } else {
       CACHE.delete(cacheKey);
     }
   }
 
   // cache miss
-  const response = await handler(request);
+  const response = await handler<CommandOutput>(request);
 
   if (request.cache.ttl > 0) {
     CACHE.set(cacheKey, {
