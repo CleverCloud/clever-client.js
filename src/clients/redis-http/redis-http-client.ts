@@ -1,17 +1,13 @@
-/**
- * @import { RedisHttpType, RedisHttpClientConfig } from './types/redis-http.types.js'
- * @import { CcRequestConfig } from '../../types/request.types.js'
- * @import { CompositeCommand } from '../../lib/command/command.js'
- */
 import { CcClient } from '../../lib/cc-client.js';
+import type { CompositeCommand } from '../../lib/command/command.js';
 import { merge } from '../../lib/utils.js';
+import type { CcRequestConfigPartial } from '../../types/request.types.js';
 import { RedisHttpCommand } from './lib/redis-http-command.js';
+import type { RedisHttpClientConfig, RedisHttpCommandInput, RedisHttpType } from './types/redis-http.types.js';
 
 /**
  * Client for the Redis© HTTP proxy service.
  * Provides HTTP access to Redis databases through Clever Cloud's proxy service.
- *
- * @extends {CcClient<RedisHttpType>}
  *
  * @example
  * // Create client
@@ -25,25 +21,23 @@ import { RedisHttpCommand } from './lib/redis-http-command.js';
  *   args: ['my-key'],
  * }));
  */
-export class RedisHttpClient extends CcClient {
+export class RedisHttpClient extends CcClient<RedisHttpType> {
   /**
    * Default Redis© database URL to use for commands that require a backend.
    * Can be overridden per command via the backendUrl parameter.
-   *
-   * @type {string|null}
    */
-  #backendUrl;
+  #backendUrl: string | null;
 
   /**
    * Creates a new Redis© HTTP client instance.
    * By default, uses the https://kv-proxy.services.clever-cloud.com base URL
    * for the proxy service.
    *
-   * @param {RedisHttpClientConfig} [config] - Client configuration including Redis© backend URL
+   * @param config - Client configuration including Redis© backend URL
    */
-  constructor(config) {
+  constructor(config?: RedisHttpClientConfig) {
     super(merge({ baseUrl: 'https://kv-proxy.services.clever-cloud.com' }, config));
-    this.#backendUrl = config?.backendUrl;
+    this.#backendUrl = config?.backendUrl ?? null;
   }
 
   /**
@@ -51,23 +45,25 @@ export class RedisHttpClient extends CcClient {
    * For Redis© commands that require a backend URL, this method injects the default
    * backendUrl from the client config if not specified in the command parameters.
    *
-   * @param {RedisHttpCommand<?, ?> | CompositeCommand<RedisHttpType, ?, ?>} command - Command to transform
-   * @param {Partial<CcRequestConfig>} [_requestConfig] - Additional request configuration
-   * @returns {Promise<any>} Transformed command parameters
-   * @protected
+   * @param command - Command to transform
+   * @param _requestConfig - Additional request configuration
+   * @returns Transformed command parameters
    */
-  async _transformCommandParams(command, _requestConfig) {
+  protected _transformCommandParams(
+    command: RedisHttpCommand<unknown, unknown> | CompositeCommand<RedisHttpType, unknown, unknown>,
+    _requestConfig?: CcRequestConfigPartial,
+  ): Promise<unknown> {
     if (
       this.#backendUrl != null &&
       command instanceof RedisHttpCommand &&
       command.requiresBackendUrl() &&
-      command.params?.backendUrl == null
+      (command.params as RedisHttpCommandInput)?.backendUrl == null
     ) {
-      return {
-        ...command.params,
+      return Promise.resolve({
+        ...(command.params as Record<string, unknown>),
         backendUrl: this.#backendUrl,
-      };
+      });
     }
-    return command.params;
+    return Promise.resolve(command.params);
   }
 }
