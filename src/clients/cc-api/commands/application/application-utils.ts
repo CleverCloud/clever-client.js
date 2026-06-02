@@ -1,15 +1,12 @@
-/**
- * @import { Application } from './application.types.js';
- * @import { Composer } from '../../../../types/command.types.js';
- * @import { CcApiType } from '../../types/cc-api.types.js';
- */
+import type { Composer } from '../../../../types/command.types.js';
+import type { CcApiType } from '../../types/cc-api.types.js';
+import type { Application } from './application.types.js';
 import { GetApplicationBranchesCommand } from './get-application-branches-command.js';
 
-/**
- * @param {Application} application
- * @param {Composer<CcApiType>} composer
- */
-export async function consolidateApplicationWithBranches(application, composer) {
+export async function consolidateApplicationWithBranches(
+  application: Application,
+  composer: Composer<CcApiType>,
+): Promise<void> {
   let branches = ['master'];
 
   if (application.oauthApp?.type === 'github') {

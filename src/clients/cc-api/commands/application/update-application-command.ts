@@ -1,23 +1,30 @@
-/**
- * @import { UpdateApplicationCommandInput, UpdateApplicationCommandOutput, UpdateApplicationBranchCommandInput } from './update-application-command.types.js';
- */
 import { put } from '../../../../lib/request/request-params-builder.js';
 import { omit, safeUrl } from '../../../../lib/utils.js';
 import { toNameValueObject } from '../../../../utils/environment-utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { CcApiComposer } from '../../types/cc-api.types.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import { transformApplication } from './application-transform.js';
 import { consolidateApplicationWithBranches } from './application-utils.js';
+import type {
+  UpdateApplicationBranchCommandInput,
+  UpdateApplicationCommandInput,
+  UpdateApplicationCommandOutput,
+} from './update-application-command.types.js';
 
 /**
- *
- * @extends {CcApiCompositeCommand<UpdateApplicationCommandInput, UpdateApplicationCommandOutput>}
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX
  * @group Application
  * @version 2
  */
-export class UpdateApplicationCommand extends CcApiCompositeCommand {
-  /** @type {CcApiCompositeCommand<UpdateApplicationCommandInput, UpdateApplicationCommandOutput>['compose']} */
-  async compose(params, composer) {
+export class UpdateApplicationCommand extends CcApiCompositeCommand<
+  UpdateApplicationCommandInput,
+  UpdateApplicationCommandOutput
+> {
+  async compose(
+    params: UpdateApplicationCommandInput,
+    composer: CcApiComposer,
+  ): Promise<UpdateApplicationCommandOutput> {
     if (params.branch != null) {
       await composer.send(
         new UpdateApplicationBranchCommand({
@@ -33,8 +40,7 @@ export class UpdateApplicationCommand extends CcApiCompositeCommand {
     return application;
   }
 
-  /** @type {CcApiCompositeCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
@@ -42,17 +48,16 @@ export class UpdateApplicationCommand extends CcApiCompositeCommand {
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<UpdateApplicationCommandInput, UpdateApplicationCommandOutput>}
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX
  * @group Application
  * @version 2
  */
-class UpdateApplicationInnerCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<UpdateApplicationCommandInput, UpdateApplicationCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
-    /** @type {any} */
-    const body = {
+class UpdateApplicationInnerCommand extends CcApiSimpleCommand<
+  UpdateApplicationCommandInput,
+  UpdateApplicationCommandOutput
+> {
+  toRequestParams(params: UpdateApplicationCommandInput) {
+    const body: Record<string, unknown> = {
       ...omit(params, 'ownerId', 'applicationId', 'environment'),
     };
     if (params.environment != null) {
@@ -68,22 +73,18 @@ class UpdateApplicationInnerCommand extends CcApiSimpleCommand {
     return put(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}`, body);
   }
 
-  /** @type {CcApiSimpleCommand<UpdateApplicationCommandInput, UpdateApplicationCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
+  transformCommandOutput(response: unknown): UpdateApplicationCommandOutput {
     return transformApplication(response);
   }
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<UpdateApplicationBranchCommandInput, void>}
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/branch
  * @group Application
  * @version 2
  */
-class UpdateApplicationBranchCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<UpdateApplicationBranchCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+class UpdateApplicationBranchCommand extends CcApiSimpleCommand<UpdateApplicationBranchCommandInput, void> {
+  toRequestParams(params: UpdateApplicationBranchCommandInput) {
     return put(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/branch`, {
       branch: params.branch,
     });

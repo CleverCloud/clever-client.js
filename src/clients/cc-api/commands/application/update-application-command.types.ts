@@ -1,5 +1,5 @@
 import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
-import { ApplicationId } from '../../types/cc-api.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.js';
 import type { Application, ApplicationLifetime } from './application.types.js';
 
 export interface UpdateApplicationCommandInput extends ApplicationId {

@@ -1,18 +1,10 @@
-/**
- * @import { Application } from './application.types.js';
- */
-
 import { normalizeDate, sortBy } from '../../../../lib/utils.js';
 import { toArray } from '../../../../utils/environment-utils.js';
 import { transformProductRuntimeFlavor } from '../product/product-transform.js';
+import type { Application } from './application.types.js';
 
-/**
- * @param {any} payload
- * @returns {Application}
- */
-export function transformApplication(payload) {
-  /** @type {Application} */
-  const application = {
+export function transformApplication(payload: any): Application {
+  const application: Application = {
     id: payload.id,
     ownerId: payload.ownerId,
     name: payload.name,
@@ -40,7 +32,7 @@ export function transformApplication(payload) {
       httpUrl: payload.deployment.httpUrl,
     },
     domains: sortBy(
-      payload.vhosts?.map(/** @param {any} domain */ (domain) => ({ domain: domain.fqdn })),
+      payload.vhosts?.map((domain: any) => ({ domain: domain.fqdn })),
       'domain',
     ),
     creationDate: normalizeDate(payload.creationDate),
@@ -73,10 +65,6 @@ export function transformApplication(payload) {
   return application;
 }
 
-/**
- * @param {any} payload
- * @returns {boolean}
- */
-export function isGithubApplication(payload) {
+export function isGithubApplication(payload: any): boolean {
   return payload.deployment.httpUrl?.startsWith('https://github.com') ?? false;
 }

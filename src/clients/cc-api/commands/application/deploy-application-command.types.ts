@@ -1,4 +1,4 @@
-import { ApplicationId } from '../../types/cc-api.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.js';
 
 export interface DeployApplicationCommandInput extends ApplicationId {
   commit?: string;

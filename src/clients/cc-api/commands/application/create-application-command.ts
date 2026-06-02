@@ -1,18 +1,19 @@
-/**
- * @import { CreateApplicationCommandInput, CreateApplicationCommandOutput, CreateApplicationInnerCommandInput } from './create-application-command.types.js';
- */
 import { CcClientError } from '../../../../lib/error/cc-client-errors.js';
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { toNameValueObject } from '../../../../utils/environment-utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { CcApiComposer } from '../../types/cc-api.types.js';
 import { ListProductRuntimeCommand } from '../product/list-product-runtime-command.js';
 import { transformApplication } from './application-transform.js';
 import { consolidateApplicationWithBranches } from './application-utils.js';
+import type {
+  CreateApplicationCommandInput,
+  CreateApplicationCommandOutput,
+  CreateApplicationInnerCommandInput,
+} from './create-application-command.types.js';
 
 /**
- *
- * @extends {CcApiCompositeCommand<CreateApplicationCommandInput, CreateApplicationCommandOutput>}
  * @endpoint [POST] /v2/organisations/:XXX/applications
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/branches
  * @group Application
@@ -27,12 +28,16 @@ import { consolidateApplicationWithBranches } from './application-utils.js';
  * - minInstances: 1
  * - zone: "par"
  */
-export class CreateApplicationCommand extends CcApiCompositeCommand {
-  /** @type {CcApiCompositeCommand<CreateApplicationCommandInput, CreateApplicationCommandOutput>['compose']} */
-  async compose(params, composer) {
+export class CreateApplicationCommand extends CcApiCompositeCommand<
+  CreateApplicationCommandInput,
+  CreateApplicationCommandOutput
+> {
+  async compose(
+    params: CreateApplicationCommandInput,
+    composer: CcApiComposer,
+  ): Promise<CreateApplicationCommandOutput> {
     // Apply default values
-    /** @type {CreateApplicationCommandInput} */
-    const paramsWithDefaults = {
+    const paramsWithDefaults: CreateApplicationCommandInput = {
       branch: 'master',
       buildFlavor: '',
       deploy: 'git',
@@ -43,8 +48,7 @@ export class CreateApplicationCommand extends CcApiCompositeCommand {
       ...params,
     };
 
-    /** @type {CreateApplicationInnerCommandInput} */
-    let innerParams;
+    let innerParams: CreateApplicationInnerCommandInput;
 
     if ('slug' in paramsWithDefaults.instance) {
       const slug = paramsWithDefaults.instance.slug;
@@ -95,17 +99,16 @@ export class CreateApplicationCommand extends CcApiCompositeCommand {
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<CreateApplicationInnerCommandInput, CreateApplicationCommandOutput>}
  * @endpoint [POST] /v2/organisations/:XXX/applications
  * @group Application
  * @version 2
  */
-class CreateApplicationInnerCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<CreateApplicationInnerCommandInput, CreateApplicationCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
-    /** @type {any} */
-    const body = {
+class CreateApplicationInnerCommand extends CcApiSimpleCommand<
+  CreateApplicationInnerCommandInput,
+  CreateApplicationCommandOutput
+> {
+  toRequestParams(params: CreateApplicationInnerCommandInput) {
+    const body: Record<string, unknown> = {
       instanceType: params.instance.type,
       instanceVersion: params.instance.version,
       instanceVariant: params.instance.variant,
@@ -145,8 +148,7 @@ class CreateApplicationInnerCommand extends CcApiSimpleCommand {
     return post(safeUrl`/v2/organisations/${params.ownerId}/applications`, body);
   }
 
-  /** @type {CcApiSimpleCommand<CreateApplicationInnerCommandInput, CreateApplicationCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
+  transformCommandOutput(response: unknown): CreateApplicationCommandOutput {
     return transformApplication(response);
   }
 }
