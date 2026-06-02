@@ -1,5 +1,5 @@
-import { ApplicationId } from '../../types/cc-api.types.js';
-import { Domain } from './domain.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.js';
+import type { Domain } from './domain.types.js';
 
 export interface ListDomainCommandInput extends ApplicationId {}
 
