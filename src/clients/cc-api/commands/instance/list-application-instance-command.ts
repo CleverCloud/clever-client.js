@@ -1,22 +1,24 @@
-/**
- * @import { ListApplicationInstanceCommandInput, ListApplicationInstanceCommandOutput } from './list-application-instance-command.types.js';
- */
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { normalizeDate, safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import { transformApplicationInstance } from './instance-transform.js';
+import type {
+  ListApplicationInstanceCommandInput,
+  ListApplicationInstanceCommandOutput,
+} from './list-application-instance-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<ListApplicationInstanceCommandInput, ListApplicationInstanceCommandOutput>}
  * @endpoint [GET] /v4/orchestration/organisations/:XXX/applications/:XXX/instances
  * @group Instance
  * @version 4
  */
-export class ListApplicationInstanceCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<ListApplicationInstanceCommandInput, ListApplicationInstanceCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+export class ListApplicationInstanceCommand extends CcApiSimpleCommand<
+  ListApplicationInstanceCommandInput,
+  ListApplicationInstanceCommandOutput
+> {
+  toRequestParams(params: ListApplicationInstanceCommandInput) {
     return get(
       safeUrl`/v4/orchestration/organisations/${params.ownerId}/applications/${params.applicationId}/instances`,
       new QueryParams()
@@ -30,18 +32,15 @@ export class ListApplicationInstanceCommand extends CcApiSimpleCommand {
     );
   }
 
-  /** @type {CcApiSimpleCommand<ListApplicationInstanceCommandInput, ListApplicationInstanceCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
-    return sortBy(response.map(transformApplicationInstance), 'creationDate', 'index');
+  transformCommandOutput(response: unknown): ListApplicationInstanceCommandOutput {
+    return sortBy((response as Array<unknown>).map(transformApplicationInstance), 'creationDate', 'index');
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
-  getEmptyResponsePolicy(status) {
+  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
     return { isEmpty: status === 404, emptyValue: [] };
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };

@@ -1,9 +1,7 @@
-/**
- * @import { Instance } from '../../../../../src/clients/cc-api/commands/instance/instance.types.js';
- */
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { DeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/deploy-application-command.js';
 import { GetApplicationInstanceCommand } from '../../../../../src/clients/cc-api/commands/instance/get-application-instance-command.js';
+import type { Instance } from '../../../../../src/clients/cc-api/commands/instance/instance.types.js';
 import { ListApplicationInstanceCommand } from '../../../../../src/clients/cc-api/commands/instance/list-application-instance-command.js';
 import { Polling } from '../../../../../src/utils/polling.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
@@ -73,11 +71,7 @@ describe('instance commands', { timeout: 60000 }, () => {
     expect(response.isBuildVm).toBe(false);
   });
 
-  /**
-   * @param {string} applicationId
-   * @returns {Promise<Array<Instance>>}
-   */
-  function waitForInstances(applicationId) {
+  function waitForInstances(applicationId: string): Promise<Array<Instance>> {
     return new Polling(
       async () => {
         const result = await support.client.send(new ListApplicationInstanceCommand({ applicationId }));

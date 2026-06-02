@@ -1,15 +1,7 @@
-/**
- * @import { Instance } from './instance.types.js'
- */
-
 import { normalizeDate } from '../../../../lib/utils.js';
+import type { Instance } from './instance.types.js';
 
-/**
- *
- * @param {any} payload
- * @returns {Instance}
- */
-export function transformApplicationInstance(payload) {
+export function transformApplicationInstance(payload: any): Instance {
   return {
     id: payload.id,
     ownerId: payload.ownerId,
