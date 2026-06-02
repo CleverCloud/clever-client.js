@@ -1,20 +1,16 @@
-/**
- * @import { DeleteAuthMfaCommandInput } from './delete-auth-mfa-command.types.js';
- */
 import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
 import { encodeToBase64, safeUrl } from '../../../../lib/utils.js';
+import type { CcRequestParams } from '../../../../types/request.types.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { DeleteAuthMfaCommandInput } from './delete-auth-mfa-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<DeleteAuthMfaCommandInput, void>}
  * @endpoint [DELETE] /v2/self/mfa/:XXX
  * @group Auth
  * @version 2
  */
-export class DeleteAuthMfaCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<DeleteAuthMfaCommandInput, void>['toRequestParams']} */
-  toRequestParams(params) {
+export class DeleteAuthMfaCommand extends CcApiSimpleCommand<DeleteAuthMfaCommandInput, void> {
+  toRequestParams(params: DeleteAuthMfaCommandInput): Partial<CcRequestParams> {
     return {
       method: 'DELETE',
       url: safeUrl`/v2/self/mfa/${params.kind}`,
@@ -25,8 +21,7 @@ export class DeleteAuthMfaCommand extends CcApiSimpleCommand {
     };
   }
 
-  /** @type {CcApiSimpleCommand<DeleteAuthMfaCommandInput, void>['transformCommandOutput']} */
-  transformCommandOutput() {
+  transformCommandOutput(): void {
     return null;
   }
 }
