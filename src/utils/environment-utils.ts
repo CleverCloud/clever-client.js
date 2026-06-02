@@ -13,9 +13,9 @@
  * - Validate variable names according to different standards
  * - Handle duplicates, invalid names, and malformed input gracefully
  * - Comprehensive error reporting with line/column information
- *
- * @import {EnvironmentVariable, EnvVarValidationMode, EnvVarParsingError } from './environment.types.js'
  */
+
+import type { EnvironmentVariable, EnvVarParsingError, EnvVarValidationMode } from './environment.types.js';
 
 /**
  * https://stackoverflow.com/questions/2821043/allowed-characters-in-linux-environment-variable-names
@@ -77,11 +77,11 @@ export const ERROR_TYPES = {
  * - 'simple': Allows letters, digits, underscores, dashes, and dots (Clever Cloud extended)
  * - 'strict': Only allows letters, digits (not first char), and underscores (Linux standard)
  *
- * @param {string} name - The environment variable name to validate
- * @param {EnvVarValidationMode} [mode] - Validation mode: 'simple' or 'strict' ('simple' by default)
- * @returns {boolean} True if the name is valid according to the specified mode
+ * @param name - The environment variable name to validate
+ * @param mode - Validation mode: 'simple' or 'strict' ('simple' by default)
+ * @returns True if the name is valid according to the specified mode
  */
-export function validateName(name, mode = 'simple') {
+export function validateName(name: string, mode: EnvVarValidationMode = 'simple'): boolean {
   return mode !== 'strict' ? ENV_VAR_NAME_REGEX.test(name) : ENV_VAR_NAME_STRICT_REGEX.test(name);
 }
 
@@ -102,17 +102,17 @@ export function validateName(name, mode = 'simple') {
  * - Invalid name validation
  * - Malformed line detection
  *
- * @param {string} [rawInput=''] - Raw environment variables string in shell format
- * @param {{mode?: EnvVarValidationMode}} [options={}] - Parsing options including validation mode
- * @returns {{variables: Array<EnvironmentVariable>, errors: Array<EnvVarParsingError>}}
- *   Object containing parsed variables and any parsing errors encountered
+ * @param rawInput - Raw environment variables string in shell format
+ * @param options - Parsing options including validation mode
+ * @returns Object containing parsed variables and any parsing errors encountered
  */
-export function parseRaw(rawInput = '', options = {}) {
-  /** @type {Array<EnvironmentVariable>} */
-  const parsedVariables = [];
-  /** @type {Array<EnvVarParsingError>} */
-  const parsingErrors = [];
-  const allNames = new Set();
+export function parseRaw(
+  rawInput = '',
+  options: { mode?: EnvVarValidationMode } = {},
+): { variables: Array<EnvironmentVariable>; errors: Array<EnvVarParsingError> } {
+  const parsedVariables: Array<EnvironmentVariable> = [];
+  const parsingErrors: Array<EnvVarParsingError> = [];
+  const allNames = new Set<string>();
   const { mode = 'simple' } = options;
 
   let startIdx = 0;
@@ -224,15 +224,16 @@ export function parseRaw(rawInput = '', options = {}) {
  * - Invalid name detection and error reporting
  * - Type validation (ensures all values are strings)
  *
- * @param {string} [rawInput=''] - Raw environment variables string in JSON format
- * @param {{mode?: EnvVarValidationMode}} [options={}] - Parsing options including validation mode
- * @returns {{variables: Array<EnvironmentVariable>, errors: Array<EnvVarParsingError>}}
- *   Object containing an array of parsed environment variables and any parsing errors encountered
+ * @param rawInput - Raw environment variables string in JSON format
+ * @param options - Parsing options including validation mode
+ * @returns Object containing an array of parsed environment variables and any parsing errors encountered
  */
-export function parseRawJson(rawInput = '', options = {}) {
-  let parsedInput;
-  /** @type {Array<EnvVarParsingError>} */
-  const parsingErrors = [];
+export function parseRawJson(
+  rawInput = '',
+  options: { mode?: EnvVarValidationMode } = {},
+): { variables: Array<EnvironmentVariable>; errors: Array<EnvVarParsingError> } {
+  let parsedInput: unknown;
+  const parsingErrors: Array<EnvVarParsingError> = [];
   const { mode = 'simple' } = options;
 
   try {
@@ -247,20 +248,19 @@ export function parseRawJson(rawInput = '', options = {}) {
     return { variables: [], errors: parsingErrors };
   }
 
-  const variablesWithNameValue = parsedInput.filter(({ name, value }) => {
-    return typeof name === 'string' && typeof value === 'string';
-  });
-  if (variablesWithNameValue.length < parsedInput.length) {
+  const entries = parsedInput as Array<{ name?: unknown; value?: unknown }>;
+  const variablesWithNameValue = entries.filter(
+    (entry): entry is EnvironmentVariable => typeof entry.name === 'string' && typeof entry.value === 'string',
+  );
+  if (variablesWithNameValue.length < entries.length) {
     parsingErrors.push({ type: ERROR_TYPES.INVALID_JSON_ENTRY });
   }
 
-  /** @type {Array<EnvironmentVariable>} */
-  const validVariables = [];
-  /** @type {Array<string>} */
-  const visitedNames = [];
-  const duplicatedNames = new Set();
-  const invalidNames = new Set();
-  const infoJava = new Set();
+  const validVariables: Array<EnvironmentVariable> = [];
+  const visitedNames: Array<string> = [];
+  const duplicatedNames = new Set<string>();
+  const invalidNames = new Set<string>();
+  const infoJava = new Set<string>();
 
   variablesWithNameValue.forEach((variable) => {
     const isNameDuplicated = visitedNames.includes(variable.name);
@@ -316,10 +316,10 @@ export function parseRawJson(rawInput = '', options = {}) {
  * - Automatically sorts variables by name for consistent output
  * - Uses 2-space indentation for readability
  *
- * @param {Array<EnvironmentVariable>} variables - Array of environment variables to convert
- * @returns {string} Formatted JSON string representation of the variables
+ * @param variables - Array of environment variables to convert
+ * @returns Formatted JSON string representation of the variables
  */
-export function toJson(variables) {
+export function toJson(variables: Array<EnvironmentVariable>): string {
   if (variables.length === 0) {
     return '[]';
   }
@@ -339,12 +339,14 @@ export function toJson(variables) {
  * - Without exports: `VAR_NAME="value"`
  * - With exports: `export VAR_NAME="value"`
  *
- * @param {Array<EnvironmentVariable>} variables - The environment variables to convert
- * @param {object} [options={}] - Options object
- * @param {boolean} [options.addExports=false] - Whether to add `export ` prefix on every line
- * @returns {string} Shell-compatible string representation of the variables
+ * @param variables - The environment variables to convert
+ * @param options - Options object
+ * @returns Shell-compatible string representation of the variables
  */
-export function toNameEqualsValueString(variables, options = {}) {
+export function toNameEqualsValueString(
+  variables: Array<EnvironmentVariable>,
+  options: { addExports?: boolean } = {},
+): string {
   const { addExports = false } = options;
   return [...variables]
     .sort((a, b) => a.name.localeCompare(b.name))
@@ -363,12 +365,11 @@ export function toNameEqualsValueString(variables, options = {}) {
  * - Automatically merges duplicated names (keeps last value)
  * - Removes variables with invalid names
  *
- * @param {Array<EnvironmentVariable>} variables - The environment variables to convert
- * @returns {Record<string, string>} Plain object with variable names as keys and values as strings
+ * @param variables - The environment variables to convert
+ * @returns Plain object with variable names as keys and values as strings
  */
-export function toNameValueObject(variables) {
-  /** @type {Record<string, string>} */
-  const keyValueObject = {};
+export function toNameValueObject(variables: Array<EnvironmentVariable>): Record<string, string> {
+  const keyValueObject: Record<string, string> = {};
   variables
     .filter(({ name }) => validateName(name))
     .forEach(({ name, value }) => {
@@ -387,10 +388,10 @@ export function toNameValueObject(variables) {
  * - Automatically removes variables with invalid names
  * - Preserves original key-value relationships
  *
- * @param {Record<string, string>} variables - Plain object with variable names as keys
- * @returns {Array<EnvironmentVariable>} Array of structured environment variable objects
+ * @param variables - Plain object with variable names as keys
+ * @returns Array of structured environment variable objects
  */
-export function toArray(variables) {
+export function toArray(variables: Record<string, string>): Array<EnvironmentVariable> {
   return Object.entries(variables)
     .filter(([name]) => validateName(name))
     .map(([name, value]) => ({ name, value }));
@@ -400,12 +401,8 @@ export function toArray(variables) {
 
 /**
  *
- * @param {string} text
- * @param {string} char
- * @param {number} start
- * @returns {number}
  */
-function nextIndex(text, char, start = 0) {
+function nextIndex(text: string, char: string, start = 0): number {
   let i = start;
   let escaped = false;
   while (i < text.length) {
@@ -418,67 +415,45 @@ function nextIndex(text, char, start = 0) {
   return i;
 }
 
-/**
- * @param {string} line
- * @returns {boolean}
- */
-function isEmptyLine(line) {
+function isEmptyLine(line: string): boolean {
   return line.trim() === '';
 }
 
-/**
- * @param {string} line
- * @returns {boolean}
- */
-function isCommentLine(line) {
+function isCommentLine(line: string): boolean {
   return line.trim().startsWith('#');
 }
 
-/**
- * @param {string} text
- * @param {number} index
- * @returns {{line: number, column: number}}
- */
-function getPosition(text, index) {
+function getPosition(text: string, index: number): { line: number; column: number } {
   const lines = text.substring(0, index).split(NEW_LINE);
   const line = lines.length;
   const column = lines.slice(-1)[0].length;
   return { line, column };
 }
 
-/**
- * @param {string} str
- * @returns {string}
- */
-function doubleQuoteString(str) {
+function doubleQuoteString(str: string): string {
   // Here we surround a string with double quotes,
   // it means we need to escape existing double quotes,
   // we need to do so in a way that is compatible with shells and environment variables,
   // this is why we have (slashes * 2 + 1).
 
-  const escapedString = str.replace(DOUBLE_QUOTE_REPLACE, (_, slashes) => {
+  const escapedString = str.replace(DOUBLE_QUOTE_REPLACE, (_: string, slashes: string) => {
     return SLASH.repeat(slashes.length * 2 + 1) + DOUBLE_QUOTE;
   });
   return DOUBLE_QUOTE + escapedString + DOUBLE_QUOTE;
 }
 
-/**
- * @param {string} firstChar
- * @param {string} str
- * @returns {string}
- */
-function unquoteString(firstChar, str) {
+function unquoteString(firstChar: string, str: string): string {
   // Here we must be able to reverse what doubleQuoteString() does,
   // with the same logic,
   // we also want it to work with simple quotes.
 
   if (firstChar === SIMPLE_QUOTE) {
-    return str.replace(SIMPLE_QUOTE_REPLACE, (_, slashes) => {
+    return str.replace(SIMPLE_QUOTE_REPLACE, (_: string, slashes: string) => {
       return SLASH.repeat((slashes.length - 1) / 2) + SIMPLE_QUOTE;
     });
   }
   if (firstChar === DOUBLE_QUOTE) {
-    return str.replace(DOUBLE_QUOTE_REPLACE, (_, slashes) => {
+    return str.replace(DOUBLE_QUOTE_REPLACE, (_: string, slashes: string) => {
       return SLASH.repeat((slashes.length - 1) / 2) + DOUBLE_QUOTE;
     });
   }

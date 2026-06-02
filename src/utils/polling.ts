@@ -53,65 +53,62 @@ import { Deferred } from '../lib/utils.js';
  *   .then(result => console.log('Task completed:', result);)
  *   .catch(error => console.error('Failed:', error.message));
  */
-export class Polling {
+export class Polling<T> {
   /**
    * The async function to be called on each polling tick.
-   * @type {() => Promise<{stop: true, value?: T}|{stop: false}>}
    */
-  #asyncCallback;
+  #asyncCallback: () => Promise<{ stop: true; value?: T } | { stop: false }>;
 
   /**
    * The delay in milliseconds to wait after each polling operation completes.
-   * @type {number}
    */
-  #delay;
+  #delay: number;
 
   /**
    * Optional timeout in milliseconds after which polling will stop.
-   * @type {number | undefined}
    */
-  #timeout;
+  #timeout: number | undefined;
 
   /**
    * The calculated end time for polling timeout. `null` if no timeout is set.
-   * @type {number | null}
    */
-  #endTime = null;
+  #endTime: number | null = null;
 
   /**
    * Indicates whether the polling process is currently active.
-   * @type {boolean}
    */
   #running = false;
 
   /**
    * Timer instance used to schedule the next polling tick.
-   * @type {SingleTimer}
    */
   #timer = new SingleTimer();
 
   /**
    * Deferred promise that resolves when polling completes or rejects on error.
-   * @type {Deferred<T> | undefined}
    */
-  #deferred;
+  #deferred: Deferred<T> | undefined;
 
   /**
    * Creates a new Polling instance.
    *
-   * @param {() => Promise<{stop: true, value?: T}|{stop: false}>} asyncCallback
+   * @param asyncCallback
    *        The async function to be called on each polling tick.
    *        Should return an object with:
    *        - stop: true to end polling (optionally with a value)
    *        - stop: false to continue polling
-   * @param {number} delay
+   * @param delay
    *        The delay in milliseconds to wait after each polling operation completes
    *        before starting the next one
-   * @param {number} [timeout]
+   * @param timeout
    *        Optional timeout in milliseconds after which polling will stop
    *        and reject with PollingTimeoutError
    */
-  constructor(asyncCallback, delay, timeout) {
+  constructor(
+    asyncCallback: () => Promise<{ stop: true; value?: T } | { stop: false }>,
+    delay: number,
+    timeout?: number,
+  ) {
     this.#asyncCallback = asyncCallback;
     this.#delay = delay;
     this.#timeout = timeout;
@@ -120,9 +117,9 @@ export class Polling {
   /**
    * Indicates whether the polling process is currently active.
    *
-   * @returns {boolean} true if polling is running, false otherwise
+   * @returns true if polling is running, false otherwise
    */
-  get running() {
+  get running(): boolean {
     return this.#running;
   }
 
@@ -130,11 +127,11 @@ export class Polling {
    * Starts the polling process.
    * If polling is already running, it will be forcefully stopped before starting anew.
    *
-   * @returns {Promise<T>} Resolves with the final value when polling completes successfully
+   * @returns Resolves with the final value when polling completes successfully
    * @throws {PollingInterruptedError} If polling is manually stopped
    * @throws {PollingTimeoutError} If the specified timeout is reached
    */
-  start() {
+  start(): Promise<T> {
     // force stop before starting
     if (this.#running) {
       this.#stop({ type: 'error', error: new PollingInterruptedError() });
@@ -142,7 +139,7 @@ export class Polling {
     // calculate end time if a timeout was provided
     this.#endTime = this.#timeout != null ? Date.now() + this.#timeout : null;
     // create deferred
-    this.#deferred = new Deferred();
+    this.#deferred = new Deferred<T>();
 
     // start polling
     this.#running = true;
@@ -155,7 +152,7 @@ export class Polling {
    * Stops the polling process immediately.
    * This will reject the promise returned by start() with a PollingInterruptedError.
    */
-  stop() {
+  stop(): void {
     this.#stop({ type: 'error', error: new PollingInterruptedError() });
   }
 
@@ -163,12 +160,12 @@ export class Polling {
    * Internal method to stop the polling process.
    * Handles both successful completion and error cases.
    *
-   * @param {{type: 'error', error: Error}|{type:'success', value: T}} reason
+   * @param reason
    *        The reason for stopping:
    *        - For errors: {type: 'error', error: Error}
    *        - For success: {type: 'success', value: T}
    */
-  #stop(reason) {
+  #stop(reason: { type: 'error'; error: Error } | { type: 'success'; value?: T }): void {
     this.#running = false;
     this.#timer.clear();
     if (reason.type === 'error') {
@@ -178,7 +175,7 @@ export class Polling {
     }
   }
 
-  #tick() {
+  #tick(): void {
     // do nothing if not running
     if (!this.running) {
       return;
@@ -189,7 +186,7 @@ export class Polling {
       return;
     }
 
-    this.#asyncCallback()
+    void this.#asyncCallback()
       .then((state) => {
         if (state.stop) {
           this.#stop({ type: 'success', value: state.value });
@@ -206,7 +203,7 @@ export class Polling {
       });
   }
 
-  #isTimedOut() {
+  #isTimedOut(): boolean {
     if (this.#endTime == null) {
       return false;
     }
@@ -225,14 +222,13 @@ export class Polling {
 class SingleTimer {
   /**
    * The ID of the currently active timer, or null if no timer is running.
-   * @type {number | null}
    */
-  #id = null;
+  #id: number | null = null;
 
   /**
-   * @returns {number|null} The id of the running timer. `null` if none is running.
+   * @returns The id of the running timer. `null` if none is running.
    */
-  get id() {
+  get id(): number | null {
     return this.#id;
   }
 
@@ -241,12 +237,11 @@ class SingleTimer {
    *
    * It forces the running one to be stopped before starting.
    *
-   * @param {() => any} callback The function to call when the timer elapses.
-   * @param {number} [delay=1] The number of milliseconds to wait before calling the `callback`.
-   * @param {Array<any>} [args] Optional arguments to pass when the `callback` is called.
-   * @returns {number}
+   * @param callback The function to call when the timer elapses.
+   * @param delay The number of milliseconds to wait before calling the `callback`.
+   * @param args Optional arguments to pass when the `callback` is called.
    */
-  set(callback, delay, ...args) {
+  set(callback: () => unknown, delay?: number, ...args: Array<unknown>): number {
     // force stopping current timeout if any
     this.clear();
 
@@ -257,7 +252,7 @@ class SingleTimer {
   /**
    * Stops the current running timer.
    */
-  clear() {
+  clear(): void {
     if (this.#id != null) {
       clearTimeout(this.#id);
       this.#id = null;
@@ -286,19 +281,19 @@ export class PollingTimeoutError extends Error {
 /**
  * Utility function to check if an error is a PollingTimeoutError.
  *
- * @param {unknown} error The error to check
- * @returns {boolean} true if the error is a PollingTimeoutError, false otherwise
+ * @param error The error to check
+ * @returns true if the error is a PollingTimeoutError, false otherwise
  */
-export function isTimeoutError(error) {
+export function isTimeoutError(error: unknown): boolean {
   return error instanceof PollingTimeoutError;
 }
 
 /**
  * Utility function to check if an error is a PollingInterruptedError.
  *
- * @param {unknown} error The error to check
- * @returns {boolean} true if the error is a PollingInterruptedError, false otherwise
+ * @param error The error to check
+ * @returns true if the error is a PollingInterruptedError, false otherwise
  */
-export function isInterruptedError(error) {
+export function isInterruptedError(error: unknown): boolean {
   return error instanceof PollingInterruptedError;
 }
