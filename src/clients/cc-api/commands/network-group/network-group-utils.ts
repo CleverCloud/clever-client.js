@@ -1,47 +1,39 @@
-/**
- * @import { NetworkGroup, NetworkGroupMember, NetworkGroupPeer } from './network-group.types.js'
- * @import { CcApiType, CcApiCommand } from '../../types/cc-api.types.js'
- * @import { Composer } from '../../../../types/command.types.js'
- * @import { Addon } from '../addon/addon.types.js'
- */
 import { randomUUID } from '../../../../lib/utils.js';
+import type { Composer } from '../../../../types/command.types.js';
 import { isTimeoutError, Polling } from '../../../../utils/polling.js';
+import type { CcApiCommand, CcApiType } from '../../types/cc-api.types.js';
+import type { Addon } from '../addon/addon.types.js';
 import { GetNetworkGroupCommand } from './get-network-group-command.js';
 import { GetNetworkGroupMemberCommand } from './get-network-group-member-command.js';
 import { GetNetworkGroupPeerCommand } from './get-network-group-peer-command.js';
+import type { NetworkGroup, NetworkGroupMember, NetworkGroupPeer } from './network-group.types.js';
 
 const POLLING_TIMEOUT_MS = 30_000;
 const POLLING_INTERVAL_MS = 1000;
 const DOMAIN = 'cc-ng.cloud';
 
-/**
- * @param {Composer<CcApiType>} composer
- * @param {string} ownerId
- * @param {string} networkGroupId
- * @returns {Promise<NetworkGroup>}
- */
-export async function waitForNetworkGroupCreation(composer, ownerId, networkGroupId) {
+export async function waitForNetworkGroupCreation(
+  composer: Composer<CcApiType>,
+  ownerId: string,
+  networkGroupId: string,
+): Promise<NetworkGroup> {
   return waitForCreation(composer, new GetNetworkGroupCommand({ ownerId, networkGroupId }), 'Network group');
 }
 
-/**
- * @param {Composer<CcApiType>} composer
- * @param {string} ownerId
- * @param {string} networkGroupId
- * @returns {Promise<void>}
- */
-export async function waitForNetworkGroupDeletion(composer, ownerId, networkGroupId) {
+export async function waitForNetworkGroupDeletion(
+  composer: Composer<CcApiType>,
+  ownerId: string,
+  networkGroupId: string,
+): Promise<void> {
   return waitForDeletion(composer, new GetNetworkGroupCommand({ ownerId, networkGroupId }), 'Network group');
 }
 
-/**
- * @param {Composer<CcApiType>} composer
- * @param {string} ownerId
- * @param {string} networkGroupId
- * @param {string} memberId
- * @returns {Promise<NetworkGroupMember>}
- */
-export async function waitForNetworkGroupMemberCreation(composer, ownerId, networkGroupId, memberId) {
+export async function waitForNetworkGroupMemberCreation(
+  composer: Composer<CcApiType>,
+  ownerId: string,
+  networkGroupId: string,
+  memberId: string,
+): Promise<NetworkGroupMember> {
   return waitForCreation(
     composer,
     new GetNetworkGroupMemberCommand({ ownerId, networkGroupId, memberId }),
@@ -49,14 +41,12 @@ export async function waitForNetworkGroupMemberCreation(composer, ownerId, netwo
   );
 }
 
-/**
- * @param {Composer<CcApiType>} composer
- * @param {string} ownerId
- * @param {string} networkGroupId
- * @param {string} memberId
- * @returns {Promise<void>}
- */
-export async function waitForNetworkGroupMemberDeletion(composer, ownerId, networkGroupId, memberId) {
+export async function waitForNetworkGroupMemberDeletion(
+  composer: Composer<CcApiType>,
+  ownerId: string,
+  networkGroupId: string,
+  memberId: string,
+): Promise<void> {
   return waitForDeletion(
     composer,
     new GetNetworkGroupMemberCommand({ ownerId, networkGroupId, memberId }),
@@ -64,14 +54,12 @@ export async function waitForNetworkGroupMemberDeletion(composer, ownerId, netwo
   );
 }
 
-/**
- * @param {Composer<CcApiType>} composer
- * @param {string} ownerId
- * @param {string} networkGroupId
- * @param {string} peerId
- * @returns {Promise<NetworkGroupPeer>}
- */
-export async function waitForNetworkGroupPeerCreation(composer, ownerId, networkGroupId, peerId) {
+export async function waitForNetworkGroupPeerCreation(
+  composer: Composer<CcApiType>,
+  ownerId: string,
+  networkGroupId: string,
+  peerId: string,
+): Promise<NetworkGroupPeer> {
   return waitForCreation(
     composer,
     new GetNetworkGroupPeerCommand({ ownerId, networkGroupId, peerId }),
@@ -79,14 +67,12 @@ export async function waitForNetworkGroupPeerCreation(composer, ownerId, network
   );
 }
 
-/**
- * @param {Composer<CcApiType>} composer
- * @param {string} ownerId
- * @param {string} networkGroupId
- * @param {string} peerId
- * @returns {Promise<void>}
- */
-export async function waitForNetworkGroupPeerDeletion(composer, ownerId, networkGroupId, peerId) {
+export async function waitForNetworkGroupPeerDeletion(
+  composer: Composer<CcApiType>,
+  ownerId: string,
+  networkGroupId: string,
+  peerId: string,
+): Promise<void> {
   return waitForDeletion(
     composer,
     new GetNetworkGroupPeerCommand({ ownerId, networkGroupId, peerId }),
@@ -99,25 +85,19 @@ export async function waitForNetworkGroupPeerDeletion(composer, ownerId, network
  *
  * The Clever Cloud API may return the member `kind` in lower or mixed case; this
  * guarantees it is always one of `'APPLICATION' | 'ADDON' | 'EXTERNAL'`.
- *
- * @template {{ kind: string }} T
- * @param {T} member
- * @returns {T & { kind: NetworkGroupMember['kind'] }}
  */
-export function normalizeMemberKind(member) {
+export function normalizeMemberKind<T extends { kind: string }>(member: T): T & { kind: NetworkGroupMember['kind'] } {
   return {
     ...member,
-    kind: /** @type {NetworkGroupMember['kind']} */ (member.kind.toUpperCase()),
+    kind: member.kind.toUpperCase() as NetworkGroupMember['kind'],
   };
 }
 
 /**
- *
- * @param {string} ngId The Network Group ID
- * @param {string} memberId The member ID
- * @returns {Omit<NetworkGroupMember, 'label'>}
+ * @param ngId The Network Group ID
+ * @param memberId The member ID
  */
-export function constructNetworkGroupMember(ngId, memberId) {
+export function constructNetworkGroupMember(ngId: string, memberId: string): Omit<NetworkGroupMember, 'label'> {
   return {
     id: memberId,
     domainName: getDomainName(ngId, memberId),
@@ -125,35 +105,19 @@ export function constructNetworkGroupMember(ngId, memberId) {
   };
 }
 
-/**
- * @returns {Promise<string>}
- */
-export async function generateNetworkGroupId() {
+export async function generateNetworkGroupId(): Promise<string> {
   return `ng_${await randomUUID()}`;
 }
 
-/**
- * @returns {Promise<string>}
- */
-export async function generateExternalMemberId() {
+export async function generateExternalMemberId(): Promise<string> {
   return `external_${await randomUUID()}`;
 }
 
-/**
- * @param {string} ngId
- * @param {string} memberId
- * @returns {string}
- */
-function getDomainName(ngId, memberId) {
+function getDomainName(ngId: string, memberId: string): string {
   return `${memberId}.m.${ngId}.${DOMAIN}`;
 }
 
-/**
- *
- * @param {string} memberId
- * @returns {'APPLICATION'|'ADDON'|'EXTERNAL'}
- */
-function getKind(memberId) {
+function getKind(memberId: string): 'APPLICATION' | 'ADDON' | 'EXTERNAL' {
   if (memberId.startsWith('app_')) {
     return 'APPLICATION';
   }
@@ -177,10 +141,8 @@ function getKind(memberId) {
  *
  * key   — provider ID (e.g. 'postgresql-addon')
  * value — realId prefix (e.g. 'postgresql_')
- *
- * @type {Map<string, string>}
  */
-export const NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS = new Map([
+export const NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS = new Map<string, string>([
   ['es-addon', 'elasticsearch_'],
   ['mongodb-addon', 'mongodb_'],
   ['mysql-addon', 'mysql_'],
@@ -193,23 +155,16 @@ export const NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS = new Map([
  * An addon is a valid candidate if:
  * - Its provider ID is in NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS
  * - Its plan slug is not "dev"
- *
- * @param {Addon} addon
- * @returns {boolean}
  */
-export function isNetworkGroupAddonCandidate(addon) {
+export function isNetworkGroupAddonCandidate(addon: Addon): boolean {
   return NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS.has(addon.provider.id) && addon.plan.slug !== 'dev';
 }
 
-/**
- *
- * @param {Composer<CcApiType>} composer
- * @param {CcApiCommand<?, T>} command
- * @param {string} entityName
- * @returns {Promise<T>}
- * @template T
- */
-async function waitForCreation(composer, command, entityName) {
+async function waitForCreation<T>(
+  composer: Composer<CcApiType>,
+  command: CcApiCommand<unknown, T>,
+  entityName: string,
+): Promise<T> {
   const polling = new Polling(
     async () => {
       const result = await composer.send(command);
@@ -234,14 +189,11 @@ async function waitForCreation(composer, command, entityName) {
   }
 }
 
-/**
- *
- * @param {Composer<CcApiType>} composer
- * @param {CcApiCommand<?, ?>} command
- * @param {string} entityName
- * @returns {Promise<void>}
- */
-async function waitForDeletion(composer, command, entityName) {
+async function waitForDeletion(
+  composer: Composer<CcApiType>,
+  command: CcApiCommand<unknown, unknown>,
+  entityName: string,
+): Promise<void> {
   const polling = new Polling(
     async () => {
       const result = await composer.send(command);
