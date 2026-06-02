@@ -1,27 +1,22 @@
-/**
- * @import { CcRequest, CcResponse } from '../../types/request.types.js'
- */
+import type { CcRequest, CcResponse } from '../../types/request.types.js';
 
 //--
 
 /**
  * Base error class for Clever Cloud client errors.
  * Extends the native Error class with an error code system.
- *
- * @extends Error
  */
 export class CcClientError extends Error {
-  /** @type {string} */
-  #code;
+  #code: string;
 
   /**
    * Creates a new client error.
    *
-   * @param {string} message - Human-readable error description
-   * @param {string} code - Machine-readable error code for programmatic handling
-   * @param {unknown} [cause] - Optional underlying cause of the error
+   * @param message - Human-readable error description
+   * @param code - Machine-readable error code for programmatic handling
+   * @param cause - Optional underlying cause of the error
    */
-  constructor(message, code, cause) {
+  constructor(message: string, code: string, cause?: unknown) {
     super(message, { cause });
     this.#code = code;
   }
@@ -29,9 +24,9 @@ export class CcClientError extends Error {
   /**
    * Gets the error code associated with this error.
    *
-   * @returns {string} The machine-readable error code
+   * @returns The machine-readable error code
    */
-  get code() {
+  get code(): string {
     return this.#code;
   }
 }
@@ -39,22 +34,19 @@ export class CcClientError extends Error {
 /**
  * Error class for request-specific errors in the Clever Cloud client.
  * Extends CcClientError with request context information.
- *
- * @extends CcClientError
  */
 export class CcRequestError extends CcClientError {
-  /** @type {CcRequest} */
-  #request;
+  #request: CcRequest;
 
   /**
    * Creates a new request error.
    *
-   * @param {string} message - Human-readable error description
-   * @param {string} code - Machine-readable error code
-   * @param {CcRequest} request - The request that caused the error
-   * @param {unknown} [cause] - Optional underlying cause of the error
+   * @param message - Human-readable error description
+   * @param code - Machine-readable error code
+   * @param request - The request that caused the error
+   * @param cause - Optional underlying cause of the error
    */
-  constructor(message, code, request, cause) {
+  constructor(message: string, code: string, request: CcRequest, cause?: unknown) {
     super(message, code, cause);
     this.#request = request;
   }
@@ -62,9 +54,9 @@ export class CcRequestError extends CcClientError {
   /**
    * Gets the request object associated with this error.
    *
-   * @returns {CcRequest} The request that caused the error
+   * @returns The request that caused the error
    */
-  get request() {
+  get request(): CcRequest {
     return this.#request;
   }
 }
@@ -75,22 +67,19 @@ export class CcRequestError extends CcClientError {
  *
  * Used for errors that occur when a request receives an error response
  * from the server (non-2xx status codes).
- *
- * @extends CcRequestError
  */
 export class CcHttpError extends CcRequestError {
-  /** @type {CcResponse<?>} */
-  #response;
+  #response: CcResponse<unknown>;
 
   /**
    * Creates a new HTTP error.
    *
-   * @param {string} message - Human-readable error description
-   * @param {string} code - Machine-readable error code
-   * @param {CcRequest} request - The HTTP request that caused the error
-   * @param {CcResponse<?>} response - The HTTP response
+   * @param message - Human-readable error description
+   * @param code - Machine-readable error code
+   * @param request - The HTTP request that caused the error
+   * @param response - The HTTP response
    */
-  constructor(message, code, request, response) {
+  constructor(message: string, code: string, request: CcRequest, response: CcResponse<unknown>) {
     super(message, code, request);
     this.#response = response;
   }
@@ -98,18 +87,18 @@ export class CcHttpError extends CcRequestError {
   /**
    * Gets the HTTP status code from the error response.
    *
-   * @returns {number} The HTTP status code
+   * @returns The HTTP status code
    */
-  get statusCode() {
+  get statusCode(): number {
     return this.#response.status;
   }
 
   /**
    * Gets the complete HTTP response associated with this error.
    *
-   * @returns {CcResponse<?>} The HTTP response that caused the error
+   * @returns The HTTP response that caused the error
    */
-  get response() {
+  get response(): CcResponse<unknown> {
     return this.#response;
   }
 }
