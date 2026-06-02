@@ -1,21 +1,23 @@
-/**
- * @import { UpdateOauthConsumerCommandInput, UpdateOauthConsumerCommandOutput } from './update-oauth-consumer-command.types.js';
- */
 import { put } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import { transformOauthConsumer, transformOauthConsumerRightsForApi } from './oauth-consumer-transform.js';
+import type {
+  UpdateOauthConsumerCommandInput,
+  UpdateOauthConsumerCommandOutput,
+} from './update-oauth-consumer-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<UpdateOauthConsumerCommandInput, UpdateOauthConsumerCommandOutput>}
  * @endpoint [PUT] /v2/organisations/:XXX/consumers/:XXX
  * @group OauthConsumer
  * @version 2
  */
-export class UpdateOauthConsumerCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<UpdateOauthConsumerCommandInput, UpdateOauthConsumerCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+export class UpdateOauthConsumerCommand extends CcApiSimpleCommand<
+  UpdateOauthConsumerCommandInput,
+  UpdateOauthConsumerCommandOutput
+> {
+  toRequestParams(params: UpdateOauthConsumerCommandInput) {
     return put(safeUrl`/v2/organisations/${params.ownerId}/consumers/${params.oauthConsumerKey}`, {
       name: params.name,
       description: params.description,
@@ -26,13 +28,11 @@ export class UpdateOauthConsumerCommand extends CcApiSimpleCommand {
     });
   }
 
-  /** @type {CcApiSimpleCommand<UpdateOauthConsumerCommandInput, UpdateOauthConsumerCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
+  transformCommandOutput(response: unknown): UpdateOauthConsumerCommandOutput {
     return transformOauthConsumer(response);
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getIdsToResolve']} */
-  getIdsToResolve() {
+  getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };

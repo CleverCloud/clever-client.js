@@ -1,12 +1,6 @@
-/**
- * @import { OauthConsumer, AccessRights, ManageRights, OauthConsumerRights } from './oauth-consumer.types.js'
- */
+import type { AccessRights, ManageRights, OauthConsumer, OauthConsumerRights } from './oauth-consumer.types.js';
 
-/**
- * @param {any} payload
- * @returns {OauthConsumer}
- */
-export function transformOauthConsumer(payload) {
+export function transformOauthConsumer(payload: any): OauthConsumer {
   return {
     key: payload.key,
     name: payload.name,
@@ -18,11 +12,7 @@ export function transformOauthConsumer(payload) {
   };
 }
 
-/**
- * @param {any} payload
- * @returns {Record<OauthConsumerRights, boolean>}
- */
-export function transformOauthConsumerRights(payload) {
+export function transformOauthConsumerRights(payload: any): Record<OauthConsumerRights, boolean> {
   return {
     almighty: payload.almighty,
     accessOrganisations: payload.access_organisations,
@@ -39,32 +29,18 @@ export function transformOauthConsumerRights(payload) {
   };
 }
 
-/**
- * @param {Record<AccessRights | ManageRights, boolean>} rights
- */
-export function transformOauthConsumerRightsForApi(rights) {
+export function transformOauthConsumerRightsForApi(rights: Record<AccessRights | ManageRights, boolean>) {
   return {
-    // eslint-disable-next-line camelcase
     access_organisations: rights.accessOrganisations,
-    // eslint-disable-next-line camelcase
     access_organisations_bills: rights.accessOrganisationsBills,
-    // eslint-disable-next-line camelcase
     access_organisations_credit_count: rights.accessOrganisationsCreditCount,
-    // eslint-disable-next-line camelcase
     access_organisations_consumption_statistics: rights.accessOrganisationsConsumptionStatistics,
-    // eslint-disable-next-line camelcase
     access_personal_information: rights.accessPersonalInformation,
-    // eslint-disable-next-line camelcase
     manage_organisations: rights.manageOrganisations,
-    // eslint-disable-next-line camelcase
     manage_organisations_services: rights.manageOrganisationsServices,
-    // eslint-disable-next-line camelcase
     manage_organisations_applications: rights.manageOrganisationsApplications,
-    // eslint-disable-next-line camelcase
     manage_organisations_members: rights.manageOrganisationsMembers,
-    // eslint-disable-next-line camelcase
     manage_personal_information: rights.managePersonalInformation,
-    // eslint-disable-next-line camelcase
     manage_ssh_keys: rights.manageSshKeys,
   };
 }

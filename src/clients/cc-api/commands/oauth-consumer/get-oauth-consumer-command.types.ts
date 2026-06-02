@@ -1,4 +1,4 @@
-import { type OauthConsumer } from './oauth-consumer.types.js';
+import type { OauthConsumer } from './oauth-consumer.types.js';
 
 export interface GetOauthConsumerCommandInput {
   ownerId?: string;

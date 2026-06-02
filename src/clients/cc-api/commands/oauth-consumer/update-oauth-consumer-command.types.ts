@@ -1,4 +1,4 @@
-import { AccessRights, ManageRights, OauthConsumer } from './oauth-consumer.types.js';
+import type { AccessRights, ManageRights, OauthConsumer } from './oauth-consumer.types.js';
 
 export interface UpdateOauthConsumerCommandInput {
   ownerId?: string;

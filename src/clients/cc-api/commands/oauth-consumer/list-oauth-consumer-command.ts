@@ -1,23 +1,28 @@
-/**
- * @import { ListOauthConsumerCommandInput, ListOauthConsumerCommandOutput } from './list-oauth-consumer-command.types.js';
- */
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { CcApiComposer } from '../../types/cc-api.types.js';
 import { GetOauthConsumerSecretCommand } from './get-oauth-consumer-secret-command.js';
+import type {
+  ListOauthConsumerCommandInput,
+  ListOauthConsumerCommandOutput,
+} from './list-oauth-consumer-command.types.js';
 import { transformOauthConsumer } from './oauth-consumer-transform.js';
 
 /**
- *
- * @extends {CcApiCompositeCommand<ListOauthConsumerCommandInput, ListOauthConsumerCommandOutput>}
  * @endpoint [GET] /v2/organisations/:XXX/consumers
  * @endpoint [GET] /v2/organisations/:XXX/consumers
  * @group OauthConsumer
  * @version 2
  */
-export class ListOauthConsumerCommand extends CcApiCompositeCommand {
-  /** @type {CcApiCompositeCommand<ListOauthConsumerCommandInput, ListOauthConsumerCommandOutput>['compose']} */
-  async compose(params, composer) {
+export class ListOauthConsumerCommand extends CcApiCompositeCommand<
+  ListOauthConsumerCommandInput,
+  ListOauthConsumerCommandOutput
+> {
+  async compose(
+    params: ListOauthConsumerCommandInput,
+    composer: CcApiComposer,
+  ): Promise<ListOauthConsumerCommandOutput> {
     const oauthConsumers = await composer.send(new ListOauthConsumerInnerCommand(params));
     if (params.withSecret) {
       return Promise.all(
@@ -37,25 +42,23 @@ export class ListOauthConsumerCommand extends CcApiCompositeCommand {
 }
 
 /**
- *
- * @extends {CcApiSimpleCommand<ListOauthConsumerCommandInput, ListOauthConsumerCommandOutput>}
  * @endpoint [GET] /v2/organisations/:XXX/consumers
  * @group OauthConsumer
  * @version 2
  */
-class ListOauthConsumerInnerCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<ListOauthConsumerCommandInput, ListOauthConsumerCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+class ListOauthConsumerInnerCommand extends CcApiSimpleCommand<
+  ListOauthConsumerCommandInput,
+  ListOauthConsumerCommandOutput
+> {
+  toRequestParams(params: ListOauthConsumerCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/consumers`);
   }
 
-  /** @type {CcApiSimpleCommand<ListOauthConsumerCommandInput, ListOauthConsumerCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
-    return sortBy(response.map(transformOauthConsumer), 'name');
+  transformCommandOutput(response: unknown): ListOauthConsumerCommandOutput {
+    return sortBy((response as Array<unknown>).map(transformOauthConsumer), 'name');
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
-  getEmptyResponsePolicy(status) {
+  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
     return { isEmpty: status === 404, emptyValue: [] };
   }
 }
