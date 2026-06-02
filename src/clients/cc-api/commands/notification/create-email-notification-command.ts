@@ -1,21 +1,22 @@
-/**
- * @import { CreateEmailNotificationCommandInput, CreateEmailNotificationCommandOutput } from './create-email-notification-command.types.js';
- */
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type {
+  CreateEmailNotificationCommandInput,
+  CreateEmailNotificationCommandOutput,
+} from './create-email-notification-command.types.js';
 import { transformEmailNotification } from './notification-transform.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<CreateEmailNotificationCommandInput, CreateEmailNotificationCommandOutput>}
  * @endpoint [POST] /v2/notifications/emailhooks/:XXX
  * @group Notification
  * @version 2
  */
-export class CreateEmailNotificationCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<CreateEmailNotificationCommandInput, CreateEmailNotificationCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+export class CreateEmailNotificationCommand extends CcApiSimpleCommand<
+  CreateEmailNotificationCommandInput,
+  CreateEmailNotificationCommandOutput
+> {
+  toRequestParams(params: CreateEmailNotificationCommandInput) {
     const notified = params.targets.map((target) => {
       switch (target.type) {
         case 'email':
@@ -42,8 +43,7 @@ export class CreateEmailNotificationCommand extends CcApiSimpleCommand {
     });
   }
 
-  /** @type {CcApiSimpleCommand<CreateEmailNotificationCommandInput, CreateEmailNotificationCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
+  transformCommandOutput(response: unknown): CreateEmailNotificationCommandOutput {
     return transformEmailNotification(response);
   }
 }

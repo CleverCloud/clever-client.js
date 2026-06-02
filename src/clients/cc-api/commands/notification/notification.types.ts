@@ -18,7 +18,7 @@ export interface WebhookNotificationUrl {
 export type WebhookNotificationFormat = 'raw' | 'slack' | 'flowdock' | 'gitter';
 
 export interface WebhookNotificationRequestFailure {
-  url: String;
+  url: string;
   networkFailure?: string;
   status?: number;
   partialBody?: string;

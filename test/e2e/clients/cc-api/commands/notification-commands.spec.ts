@@ -1,6 +1,3 @@
-/**
- * @import { EmailNotificationTarget, WebhookNotificationUrl } from '../../../../../src/clients/cc-api/commands/notification/notification.types.js'
- */
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { CreateEmailNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/create-email-notification-command.js';
 import { CreateWebhookNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/create-webhook-notification-command.js';
@@ -9,6 +6,10 @@ import { DeleteWebhookNotificationCommand } from '../../../../../src/clients/cc-
 import { GetNotificationInfoCommand } from '../../../../../src/clients/cc-api/commands/notification/get-notification-info-command.js';
 import { ListEmailNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/list-email-notification-command.js';
 import { ListWebhookNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/list-webhook-notification-command.js';
+import type {
+  EmailNotificationTarget,
+  WebhookNotificationUrl,
+} from '../../../../../src/clients/cc-api/commands/notification/notification.types.js';
 import { e2eSupport } from '../e2e-support.js';
 
 describe('notification commands', function () {
@@ -47,8 +48,7 @@ describe('notification commands', function () {
     const app1 = await support.createTestApplication();
     const app2 = await support.createTestApplication();
 
-    /** @type {Array<EmailNotificationTarget>} */
-    const targets = [
+    const targets: Array<EmailNotificationTarget> = [
       {
         type: 'email',
         emailAddresses: ['test1@example.com', 'test2@example.com'],
@@ -126,8 +126,7 @@ describe('notification commands', function () {
   });
 
   it('should create webhook notification', async () => {
-    /** @type {Array<WebhookNotificationUrl>} */
-    const urls = [
+    const urls: Array<WebhookNotificationUrl> = [
       {
         format: 'raw',
         url: 'https://example.com',
