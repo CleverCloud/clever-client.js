@@ -1,21 +1,17 @@
-/**
- * @import { GetUserSettingCommandInput, GetUserSettingCommandOutput } from './get-user-setting-command.types.js';
- */
 import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { safeUrl } from '../../../../lib/utils.js';
+import type { CcRequestParams } from '../../../../types/request.types.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { GetUserSettingCommandInput, GetUserSettingCommandOutput } from './get-user-setting-command.types.js';
 
 /**
- *
- * @extends {CcApiSimpleCommand<GetUserSettingCommandInput, GetUserSettingCommandOutput>}
  * @endpoint [GET] /v4/console/settings/:XXX
  * @group UserSetting
  * @version 4
  */
-export class GetUserSettingCommand extends CcApiSimpleCommand {
-  /** @type {CcApiSimpleCommand<GetUserSettingCommandInput, GetUserSettingCommandOutput>['toRequestParams']} */
-  toRequestParams(params) {
+export class GetUserSettingCommand extends CcApiSimpleCommand<GetUserSettingCommandInput, GetUserSettingCommandOutput> {
+  toRequestParams(params: GetUserSettingCommandInput): Partial<CcRequestParams> {
     return {
       method: 'GET',
       url: safeUrl`/v4/console/settings/${params.name}`,
@@ -24,13 +20,11 @@ export class GetUserSettingCommand extends CcApiSimpleCommand {
     };
   }
 
-  /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
-  getEmptyResponsePolicy(status) {
+  getEmptyResponsePolicy(status: number) {
     return { isEmpty: status === 404 };
   }
 
-  /** @type {CcApiSimpleCommand<GetUserSettingCommandInput, GetUserSettingCommandOutput>['transformCommandOutput']} */
-  transformCommandOutput(response) {
-    return response.value;
+  transformCommandOutput(response: unknown): GetUserSettingCommandOutput {
+    return (response as { value: string }).value;
   }
 }
