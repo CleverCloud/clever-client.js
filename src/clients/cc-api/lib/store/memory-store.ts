@@ -26,7 +26,7 @@ export class MemoryStore<T> implements Store<T> {
    *
    * @param index - Data to store
    */
-  async write(index: T): Promise<void> {
+  write(index: T): void {
     this.#index = index;
   }
 
@@ -35,14 +35,14 @@ export class MemoryStore<T> implements Store<T> {
    *
    * @returns The stored data, or null if no data has been stored
    */
-  async read(): Promise<T | null> {
+  read(): T | null {
     return this.#index;
   }
 
   /**
    * Clears the stored data from memory
    */
-  async flush(): Promise<void> {
+  flush(): void {
     this.#index = null;
   }
 }

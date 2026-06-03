@@ -1,3 +1,5 @@
+import type { SelfOrPromise } from '../../../types/utils.types.js';
+
 export interface ResourceIdIndex {
   ownerIdIndex: OwnerIdIndex;
   addonsIndex: AddonIdIndex;
@@ -22,8 +24,13 @@ export interface AddonIdIndex {
  *
  * @template T - The type of data to be stored
  *
+ * Implementations may be synchronous or asynchronous: each method may return
+ * its value directly or wrapped in a promise. Consumers should always `await`
+ * the result so both kinds of backend work transparently.
+ *
  * @example
- * class MyStore implements Store<MyData> {
+ * // Asynchronous backend
+ * class MyAsyncStore implements Store<MyData> {
  *   async write(data: MyData): Promise<void> {
  *     // Store the data
  *   }
@@ -36,32 +43,48 @@ export interface AddonIdIndex {
  *     // Clear the data
  *   }
  * }
+ *
+ * @example
+ * // Synchronous backend
+ * class MySyncStore implements Store<MyData> {
+ *   write(data: MyData): void {
+ *     // Store the data
+ *   }
+ *
+ *   read(): MyData | null {
+ *     // Retrieve the data
+ *   }
+ *
+ *   flush(): void {
+ *     // Clear the data
+ *   }
+ * }
  */
 export interface Store<T> {
   /**
    * Writes data to the store.
    *
    * @param index - The data to store
-   * @returns A promise that resolves when the write is complete
+   * @returns Resolves (or returns) when the write is complete
    * @throws {Error} If writing to the store fails
    */
-  write(index: T): Promise<void>;
+  write(index: T): SelfOrPromise<void>;
 
   /**
    * Reads data from the store.
    *
-   * @returns A promise that resolves with the stored data, or null if no data exists
+   * @returns The stored data, or null if no data exists
    * @throws {Error} If reading from the store fails
    */
-  read(): Promise<T | null>;
+  read(): SelfOrPromise<T | null>;
 
   /**
    * Removes all data from the store.
    *
-   * @returns A promise that resolves when the flush is complete
+   * @returns Resolves (or returns) when the flush is complete
    * @throws {Error} If clearing the store fails
    */
-  flush(): Promise<void>;
+  flush(): SelfOrPromise<void>;
 }
 
 /**

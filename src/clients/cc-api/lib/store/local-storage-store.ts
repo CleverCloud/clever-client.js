@@ -42,7 +42,7 @@ export class LocalStorageStore<T> implements Store<T> {
    * @param index - Data to store
    * @throws {Error} If writing to localStorage fails or if data cannot be stringified
    */
-  async write(index: T): Promise<void> {
+  write(index: T): void {
     localStorage.setItem(this.#storageKey, JSON.stringify(index));
   }
 
@@ -52,7 +52,7 @@ export class LocalStorageStore<T> implements Store<T> {
    * @returns The stored data, or null if no data exists
    * @throws {Error} If reading from localStorage fails or if data cannot be parsed
    */
-  async read(): Promise<T | null> {
+  read(): T | null {
     const item = localStorage.getItem(this.#storageKey);
     if (item != null) {
       return JSON.parse(item) as T;
@@ -65,7 +65,7 @@ export class LocalStorageStore<T> implements Store<T> {
    *
    * @throws {Error} If removing from localStorage fails
    */
-  async flush(): Promise<void> {
+  flush(): void {
     localStorage.removeItem(this.#storageKey);
   }
 }

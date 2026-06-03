@@ -34,7 +34,7 @@ export class FileStore<T> implements Store<T> {
    * @param index - Data to store
    * @throws {Error} If writing to the file fails
    */
-  async write(index: T): Promise<void> {
+  write(index: T): void {
     fs.writeFileSync(this.#filePath, JSON.stringify(index));
   }
 
@@ -44,7 +44,7 @@ export class FileStore<T> implements Store<T> {
    * @returns The stored data, or null if file doesn't exist
    * @throws {Error} If reading or parsing the file fails
    */
-  async read(): Promise<T | null> {
+  read(): T | null {
     if (fs.existsSync(this.#filePath)) {
       return JSON.parse(fs.readFileSync(this.#filePath).toString()) as T;
     }
@@ -56,7 +56,7 @@ export class FileStore<T> implements Store<T> {
    *
    * @throws {Error} If deleting the file fails
    */
-  async flush(): Promise<void> {
+  flush(): void {
     if (fs.existsSync(this.#filePath)) {
       fs.unlinkSync(this.#filePath);
     }
