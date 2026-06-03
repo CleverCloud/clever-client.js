@@ -151,7 +151,6 @@ export function todo_postAccessTokenRequestQuery(params) {
  * @param {String} params.ccid
  * @param {String} params.cctk
  * @param {String} params.oauth_token
- * @param {String} params.ccid
  * @param {String} params.cli_token
  * @param {String} params.from_oauth
  * @param {String} params.partner_id
@@ -486,8 +485,7 @@ export function todo_getStripeToken() {
 
 /**
  * POST /payments/webhooks/stripe/sepa
- * @param {Object} params
- * @param {String} params.Stripe-Signature
+ * @param {{ 'Stripe-Signature': String }} params
  * @param {Object} body
  * @returns {Promise<RequestParams>}
  */

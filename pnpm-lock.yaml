@@ -33,13 +33,13 @@ importers:
         version: 7.29.0
       '@clevercloud/doublure':
         specifier: ^0.0.5
-        version: 0.0.5(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
+        version: 0.0.5(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
       '@clevercloud/eslint-config':
         specifier: ^1.1.0
         version: 1.1.0(@typescript-eslint/utils@8.61.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
       '@commitlint/cli':
         specifier: ^20.1.0
-        version: 20.5.3(@types/node@25.9.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3)
+        version: 20.5.3(@types/node@22.19.20)(conventional-commits-parser@6.4.0)(typescript@5.9.3)
       '@commitlint/config-conventional':
         specifier: ^20.0.0
         version: 20.5.3
@@ -51,7 +51,7 @@ importers:
         version: 9.39.4
       '@inquirer/prompts':
         specifier: ^7.10.1
-        version: 7.10.1(@types/node@25.9.0)
+        version: 7.10.1(@types/node@22.19.20)
       '@scalar/openapi-parser':
         specifier: 0.23.2
         version: 0.23.2
@@ -73,12 +73,18 @@ importers:
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
+      '@types/node':
+        specifier: ^22.19.19
+        version: 22.19.20
+      '@typescript/native-preview':
+        specifier: latest
+        version: 7.0.0-dev.20260608.1
       '@vitest/browser':
         specifier: ^4.1.8
-        version: 4.1.8(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)
+        version: 4.1.8(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)
       '@vitest/browser-playwright':
         specifier: ^4.1.8
-        version: 4.1.8(playwright@1.60.0)(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)
+        version: 4.1.8(playwright@1.60.0)(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)
       '@vitest/expect':
         specifier: ^4.1.8
         version: 4.1.8
@@ -127,18 +133,15 @@ importers:
       totp-generator:
         specifier: ^2.0.0
         version: 2.0.1
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
       typescript-eslint:
         specifier: ^8.60.1
         version: 8.61.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
       vite:
         specifier: ^8.0.16
-        version: 8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0)
+        version: 8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0)
       vitest:
         specifier: ^4.1.8
-        version: 4.1.8(@types/node@25.9.0)(@vitest/browser-playwright@4.1.8)(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
+        version: 4.1.8(@types/node@22.19.20)(@vitest/browser-playwright@4.1.8)(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
 
 packages:
 
@@ -701,6 +704,9 @@ packages:
   '@types/jsonfile@6.1.4':
     resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
 
+  '@types/node@22.19.20':
+    resolution: {integrity: sha512-6tELRwSDYWW9EdZhbeZmYGZ1/7Djkt+Ah3/ScEYT9cDord7UJzasR/4D3VONg9tQI5CDp+/CZC1AXj2pCFOvpw==}
+
   '@types/node@25.9.0':
     resolution: {integrity: sha512-AOQwYUNolgy3VosiRqXrACUXTN8nJUtPl7FJXMqZVyxiiCLhQuG3jXKvCS1ALr+Y2OmZhzzLVlYPEqJaiqkaJQ==}
 
@@ -766,6 +772,53 @@ packages:
   '@typescript-eslint/visitor-keys@8.61.0':
     resolution: {integrity: sha512-QVLZu3ZPQEE+HICQyAMZ2yLQhxf0meY/wx6Hx14YcTNj13JB3qHlX3lJ02L3fLGHgERRH71kvYDwiXIguT3AjQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260608.1':
+    resolution: {integrity: sha512-ZGs+yhsPWFDkSHydJyF8I3d4witpXiD69auWZtSotNWG3gBR5Ne291m38rvxoLFDRlFHwAQpPT7q3yStp+cQSQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260608.1':
+    resolution: {integrity: sha512-cxmBCl1+fvGgom2vwPTbZ43bW68rfjDIU1ZDQGtjXvj1bpW9fEozskJqgZdNNHu8WQIl17zj4Ke+noENwgGu9w==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260608.1':
+    resolution: {integrity: sha512-/JPrQqa36CSMdXeEXhZ0mYUmufehIL8ujagXvU8z/3/b/CeWjgoZLJCuy76k9NLZCG7wGvcFWFK5kgOEKyDQdw==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20260608.1':
+    resolution: {integrity: sha512-tWFLuzAWg8XnOkN7f94MAW8qLTMG7Q74IXHSG18cVmftuBxwvn1Lov+0Rnd9rsH7VAuSIu00Co6G3/PbGvGrxA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm]
+    os: [linux]
+
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20260608.1':
+    resolution: {integrity: sha512-QfVLSH1NMAOa+N6Ey9cFHWppLFISOeCG3c0nJER3LXrDwkE4WtsVGHQ4IRDpIYT3Q2iC7QWUFWwrHayNKlrGYA==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [linux]
+
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260608.1':
+    resolution: {integrity: sha512-DvpbX0aPCWCe4bJEP0cOky4cCwF+5QJZHsLoGV4gYd+0EFEkarTOxZG0CezP30E/iX6u1RUOrtTeMZOQthqDpQ==}
+    engines: {node: '>=16.20.0'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20260608.1':
+    resolution: {integrity: sha512-J9nQB87sU+YJE3fq3XKwQvgLNWVXiEWyOP1L/FuyOlHb77UkFXmpaUbFTJ1w7rfd91nlKb2EECfsdTxbELUT0Q==}
+    engines: {node: '>=16.20.0'}
+    cpu: [x64]
+    os: [win32]
+
+  '@typescript/native-preview@7.0.0-dev.20260608.1':
+    resolution: {integrity: sha512-nJyuPQwFn/VlP7JvFA0jPHJMMHaDy5vWM5xRYUwjZZd3dcY7LldfZ1EkdPOLc+GW0trXcmvRemQ4XCsBkOGOUQ==}
+    engines: {node: '>=16.20.0'}
+    hasBin: true
 
   '@unrs/resolver-binding-android-arm-eabi@1.12.2':
     resolution: {integrity: sha512-g5T90pqg1bo/7mytQx6F4iBNC0Wsh9cu+z9veDbFjc7HjpesJFWD7QMS0NGStXM075+7dJPPVvBbpZlnrdpi/w==}
@@ -2078,6 +2131,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  undici-types@6.21.0:
+    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+
   undici-types@7.24.6:
     resolution: {integrity: sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg==}
 
@@ -2304,12 +2360,12 @@ snapshots:
 
   '@blazediff/core@1.9.1': {}
 
-  '@clevercloud/doublure@0.0.5(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))':
+  '@clevercloud/doublure@0.0.5(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))':
     dependencies:
       fastify: 5.8.5
       find-my-way: 9.6.0
     optionalDependencies:
-      vite: 8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0)
+      vite: 8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0)
 
   '@clevercloud/eslint-config@1.1.0(@typescript-eslint/utils@8.61.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)':
     dependencies:
@@ -2323,11 +2379,11 @@ snapshots:
       - supports-color
       - typescript
 
-  '@commitlint/cli@20.5.3(@types/node@25.9.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3)':
+  '@commitlint/cli@20.5.3(@types/node@22.19.20)(conventional-commits-parser@6.4.0)(typescript@5.9.3)':
     dependencies:
       '@commitlint/format': 20.5.0
       '@commitlint/lint': 20.5.3
-      '@commitlint/load': 20.5.3(@types/node@25.9.0)(typescript@5.9.3)
+      '@commitlint/load': 20.5.3(@types/node@22.19.20)(typescript@5.9.3)
       '@commitlint/read': 20.5.0(conventional-commits-parser@6.4.0)
       '@commitlint/types': 20.5.0
       tinyexec: 1.1.2
@@ -2372,14 +2428,14 @@ snapshots:
       '@commitlint/rules': 20.5.3
       '@commitlint/types': 20.5.0
 
-  '@commitlint/load@20.5.3(@types/node@25.9.0)(typescript@5.9.3)':
+  '@commitlint/load@20.5.3(@types/node@22.19.20)(typescript@5.9.3)':
     dependencies:
       '@commitlint/config-validator': 20.5.0
       '@commitlint/execute-rule': 20.0.0
       '@commitlint/resolve-extends': 20.5.3
       '@commitlint/types': 20.5.0
       cosmiconfig: 9.0.1(typescript@5.9.3)
-      cosmiconfig-typescript-loader: 6.3.0(@types/node@25.9.0)(cosmiconfig@9.0.1(typescript@5.9.3))(typescript@5.9.3)
+      cosmiconfig-typescript-loader: 6.3.0(@types/node@22.19.20)(cosmiconfig@9.0.1(typescript@5.9.3))(typescript@5.9.3)
       es-toolkit: 1.46.1
       is-plain-obj: 4.1.0
       picocolors: 1.1.1
@@ -2550,128 +2606,128 @@ snapshots:
 
   '@inquirer/ansi@1.0.2': {}
 
-  '@inquirer/checkbox@4.3.2(@types/node@25.9.0)':
+  '@inquirer/checkbox@4.3.2(@types/node@22.19.20)':
     dependencies:
       '@inquirer/ansi': 1.0.2
-      '@inquirer/core': 10.3.2(@types/node@25.9.0)
+      '@inquirer/core': 10.3.2(@types/node@22.19.20)
       '@inquirer/figures': 1.0.15
-      '@inquirer/type': 3.0.10(@types/node@25.9.0)
+      '@inquirer/type': 3.0.10(@types/node@22.19.20)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
 
-  '@inquirer/confirm@5.1.21(@types/node@25.9.0)':
+  '@inquirer/confirm@5.1.21(@types/node@22.19.20)':
     dependencies:
-      '@inquirer/core': 10.3.2(@types/node@25.9.0)
-      '@inquirer/type': 3.0.10(@types/node@25.9.0)
+      '@inquirer/core': 10.3.2(@types/node@22.19.20)
+      '@inquirer/type': 3.0.10(@types/node@22.19.20)
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
 
-  '@inquirer/core@10.3.2(@types/node@25.9.0)':
+  '@inquirer/core@10.3.2(@types/node@22.19.20)':
     dependencies:
       '@inquirer/ansi': 1.0.2
       '@inquirer/figures': 1.0.15
-      '@inquirer/type': 3.0.10(@types/node@25.9.0)
+      '@inquirer/type': 3.0.10(@types/node@22.19.20)
       cli-width: 4.1.0
       mute-stream: 2.0.0
       signal-exit: 4.1.0
       wrap-ansi: 6.2.0
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
 
-  '@inquirer/editor@4.2.23(@types/node@25.9.0)':
+  '@inquirer/editor@4.2.23(@types/node@22.19.20)':
     dependencies:
-      '@inquirer/core': 10.3.2(@types/node@25.9.0)
-      '@inquirer/external-editor': 1.0.3(@types/node@25.9.0)
-      '@inquirer/type': 3.0.10(@types/node@25.9.0)
+      '@inquirer/core': 10.3.2(@types/node@22.19.20)
+      '@inquirer/external-editor': 1.0.3(@types/node@22.19.20)
+      '@inquirer/type': 3.0.10(@types/node@22.19.20)
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
 
-  '@inquirer/expand@4.0.23(@types/node@25.9.0)':
+  '@inquirer/expand@4.0.23(@types/node@22.19.20)':
     dependencies:
-      '@inquirer/core': 10.3.2(@types/node@25.9.0)
-      '@inquirer/type': 3.0.10(@types/node@25.9.0)
+      '@inquirer/core': 10.3.2(@types/node@22.19.20)
+      '@inquirer/type': 3.0.10(@types/node@22.19.20)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
 
-  '@inquirer/external-editor@1.0.3(@types/node@25.9.0)':
+  '@inquirer/external-editor@1.0.3(@types/node@22.19.20)':
     dependencies:
       chardet: 2.1.1
       iconv-lite: 0.7.2
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
 
   '@inquirer/figures@1.0.15': {}
 
-  '@inquirer/input@4.3.1(@types/node@25.9.0)':
+  '@inquirer/input@4.3.1(@types/node@22.19.20)':
     dependencies:
-      '@inquirer/core': 10.3.2(@types/node@25.9.0)
-      '@inquirer/type': 3.0.10(@types/node@25.9.0)
+      '@inquirer/core': 10.3.2(@types/node@22.19.20)
+      '@inquirer/type': 3.0.10(@types/node@22.19.20)
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
 
-  '@inquirer/number@3.0.23(@types/node@25.9.0)':
+  '@inquirer/number@3.0.23(@types/node@22.19.20)':
     dependencies:
-      '@inquirer/core': 10.3.2(@types/node@25.9.0)
-      '@inquirer/type': 3.0.10(@types/node@25.9.0)
+      '@inquirer/core': 10.3.2(@types/node@22.19.20)
+      '@inquirer/type': 3.0.10(@types/node@22.19.20)
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
 
-  '@inquirer/password@4.0.23(@types/node@25.9.0)':
-    dependencies:
-      '@inquirer/ansi': 1.0.2
-      '@inquirer/core': 10.3.2(@types/node@25.9.0)
-      '@inquirer/type': 3.0.10(@types/node@25.9.0)
-    optionalDependencies:
-      '@types/node': 25.9.0
-
-  '@inquirer/prompts@7.10.1(@types/node@25.9.0)':
-    dependencies:
-      '@inquirer/checkbox': 4.3.2(@types/node@25.9.0)
-      '@inquirer/confirm': 5.1.21(@types/node@25.9.0)
-      '@inquirer/editor': 4.2.23(@types/node@25.9.0)
-      '@inquirer/expand': 4.0.23(@types/node@25.9.0)
-      '@inquirer/input': 4.3.1(@types/node@25.9.0)
-      '@inquirer/number': 3.0.23(@types/node@25.9.0)
-      '@inquirer/password': 4.0.23(@types/node@25.9.0)
-      '@inquirer/rawlist': 4.1.11(@types/node@25.9.0)
-      '@inquirer/search': 3.2.2(@types/node@25.9.0)
-      '@inquirer/select': 4.4.2(@types/node@25.9.0)
-    optionalDependencies:
-      '@types/node': 25.9.0
-
-  '@inquirer/rawlist@4.1.11(@types/node@25.9.0)':
-    dependencies:
-      '@inquirer/core': 10.3.2(@types/node@25.9.0)
-      '@inquirer/type': 3.0.10(@types/node@25.9.0)
-      yoctocolors-cjs: 2.1.3
-    optionalDependencies:
-      '@types/node': 25.9.0
-
-  '@inquirer/search@3.2.2(@types/node@25.9.0)':
-    dependencies:
-      '@inquirer/core': 10.3.2(@types/node@25.9.0)
-      '@inquirer/figures': 1.0.15
-      '@inquirer/type': 3.0.10(@types/node@25.9.0)
-      yoctocolors-cjs: 2.1.3
-    optionalDependencies:
-      '@types/node': 25.9.0
-
-  '@inquirer/select@4.4.2(@types/node@25.9.0)':
+  '@inquirer/password@4.0.23(@types/node@22.19.20)':
     dependencies:
       '@inquirer/ansi': 1.0.2
-      '@inquirer/core': 10.3.2(@types/node@25.9.0)
-      '@inquirer/figures': 1.0.15
-      '@inquirer/type': 3.0.10(@types/node@25.9.0)
+      '@inquirer/core': 10.3.2(@types/node@22.19.20)
+      '@inquirer/type': 3.0.10(@types/node@22.19.20)
+    optionalDependencies:
+      '@types/node': 22.19.20
+
+  '@inquirer/prompts@7.10.1(@types/node@22.19.20)':
+    dependencies:
+      '@inquirer/checkbox': 4.3.2(@types/node@22.19.20)
+      '@inquirer/confirm': 5.1.21(@types/node@22.19.20)
+      '@inquirer/editor': 4.2.23(@types/node@22.19.20)
+      '@inquirer/expand': 4.0.23(@types/node@22.19.20)
+      '@inquirer/input': 4.3.1(@types/node@22.19.20)
+      '@inquirer/number': 3.0.23(@types/node@22.19.20)
+      '@inquirer/password': 4.0.23(@types/node@22.19.20)
+      '@inquirer/rawlist': 4.1.11(@types/node@22.19.20)
+      '@inquirer/search': 3.2.2(@types/node@22.19.20)
+      '@inquirer/select': 4.4.2(@types/node@22.19.20)
+    optionalDependencies:
+      '@types/node': 22.19.20
+
+  '@inquirer/rawlist@4.1.11(@types/node@22.19.20)':
+    dependencies:
+      '@inquirer/core': 10.3.2(@types/node@22.19.20)
+      '@inquirer/type': 3.0.10(@types/node@22.19.20)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
 
-  '@inquirer/type@3.0.10(@types/node@25.9.0)':
+  '@inquirer/search@3.2.2(@types/node@22.19.20)':
+    dependencies:
+      '@inquirer/core': 10.3.2(@types/node@22.19.20)
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@22.19.20)
+      yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
+
+  '@inquirer/select@4.4.2(@types/node@22.19.20)':
+    dependencies:
+      '@inquirer/ansi': 1.0.2
+      '@inquirer/core': 10.3.2(@types/node@22.19.20)
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@22.19.20)
+      yoctocolors-cjs: 2.1.3
+    optionalDependencies:
+      '@types/node': 22.19.20
+
+  '@inquirer/type@3.0.10(@types/node@22.19.20)':
+    optionalDependencies:
+      '@types/node': 22.19.20
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
@@ -2835,6 +2891,10 @@ snapshots:
     dependencies:
       '@types/node': 25.9.0
 
+  '@types/node@22.19.20':
+    dependencies:
+      undici-types: 6.21.0
+
   '@types/node@25.9.0':
     dependencies:
       undici-types: 7.24.6
@@ -2932,6 +2992,37 @@ snapshots:
       '@typescript-eslint/types': 8.61.0
       eslint-visitor-keys: 5.0.1
 
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260608.1':
+    optional: true
+
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260608.1':
+    optional: true
+
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260608.1':
+    optional: true
+
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20260608.1':
+    optional: true
+
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20260608.1':
+    optional: true
+
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260608.1':
+    optional: true
+
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20260608.1':
+    optional: true
+
+  '@typescript/native-preview@7.0.0-dev.20260608.1':
+    optionalDependencies:
+      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20260608.1
+      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20260608.1
+      '@typescript/native-preview-linux-arm': 7.0.0-dev.20260608.1
+      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20260608.1
+      '@typescript/native-preview-linux-x64': 7.0.0-dev.20260608.1
+      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260608.1
+      '@typescript/native-preview-win32-x64': 7.0.0-dev.20260608.1
+
   '@unrs/resolver-binding-android-arm-eabi@1.12.2':
     optional: true
 
@@ -3002,29 +3093,29 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.12.2':
     optional: true
 
-  '@vitest/browser-playwright@4.1.8(playwright@1.60.0)(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)':
+  '@vitest/browser-playwright@4.1.8(playwright@1.60.0)(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)':
     dependencies:
-      '@vitest/browser': 4.1.8(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)
-      '@vitest/mocker': 4.1.8(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
+      '@vitest/browser': 4.1.8(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)
+      '@vitest/mocker': 4.1.8(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
       playwright: 1.60.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.8(@types/node@25.9.0)(@vitest/browser-playwright@4.1.8)(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
+      vitest: 4.1.8(@types/node@22.19.20)(@vitest/browser-playwright@4.1.8)(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
     transitivePeerDependencies:
       - bufferutil
       - msw
       - utf-8-validate
       - vite
 
-  '@vitest/browser@4.1.8(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)':
+  '@vitest/browser@4.1.8(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)':
     dependencies:
       '@blazediff/core': 1.9.1
-      '@vitest/mocker': 4.1.8(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
+      '@vitest/mocker': 4.1.8(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
       '@vitest/utils': 4.1.8
       magic-string: 0.30.21
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.1.0
-      vitest: 4.1.8(@types/node@25.9.0)(@vitest/browser-playwright@4.1.8)(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
+      vitest: 4.1.8(@types/node@22.19.20)(@vitest/browser-playwright@4.1.8)(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
       ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
@@ -3041,13 +3132,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.8(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))':
+  '@vitest/mocker@4.1.8(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))':
     dependencies:
       '@vitest/spy': 4.1.8
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0)
+      vite: 8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0)
 
   '@vitest/pretty-format@4.1.8':
     dependencies:
@@ -3242,9 +3333,9 @@ snapshots:
 
   cookie@1.1.1: {}
 
-  cosmiconfig-typescript-loader@6.3.0(@types/node@25.9.0)(cosmiconfig@9.0.1(typescript@5.9.3))(typescript@5.9.3):
+  cosmiconfig-typescript-loader@6.3.0(@types/node@22.19.20)(cosmiconfig@9.0.1(typescript@5.9.3))(typescript@5.9.3):
     dependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
       cosmiconfig: 9.0.1(typescript@5.9.3)
       jiti: 2.6.1
       typescript: 5.9.3
@@ -4160,6 +4251,8 @@ snapshots:
 
   typescript@5.9.3: {}
 
+  undici-types@6.21.0: {}
+
   undici-types@7.24.6: {}
 
   undici@7.25.0: {}
@@ -4197,7 +4290,7 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0):
+  vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.4
@@ -4205,16 +4298,16 @@ snapshots:
       rolldown: 1.0.3
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 22.19.20
       fsevents: 2.3.3
       jiti: 2.6.1
       terser: 5.47.1
       yaml: 2.8.0
 
-  vitest@4.1.8(@types/node@25.9.0)(@vitest/browser-playwright@4.1.8)(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0)):
+  vitest@4.1.8(@types/node@22.19.20)(@vitest/browser-playwright@4.1.8)(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0)):
     dependencies:
       '@vitest/expect': 4.1.8
-      '@vitest/mocker': 4.1.8(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
+      '@vitest/mocker': 4.1.8(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))
       '@vitest/pretty-format': 4.1.8
       '@vitest/runner': 4.1.8
       '@vitest/snapshot': 4.1.8
@@ -4231,11 +4324,11 @@ snapshots:
       tinyexec: 1.1.2
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vite: 8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0)
+      vite: 8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 25.9.0
-      '@vitest/browser-playwright': 4.1.8(playwright@1.60.0)(vite@8.0.16(@types/node@25.9.0)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)
+      '@types/node': 22.19.20
+      '@vitest/browser-playwright': 4.1.8(playwright@1.60.0)(vite@8.0.16(@types/node@22.19.20)(jiti@2.6.1)(terser@5.47.1)(yaml@2.8.0))(vitest@4.1.8)
     transitivePeerDependencies:
       - msw
 

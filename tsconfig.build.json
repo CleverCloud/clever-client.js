@@ -2,6 +2,7 @@
   "extends": "./tsconfig.ci.json",
   "compilerOptions": {
     "noEmit": false,
+    "types": ["node"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,

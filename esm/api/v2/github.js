@@ -153,10 +153,7 @@ export function getLogin(params) {
 
 /**
  * POST /github/redeploy
- * @param {Object} params
- * @param {String} params.User-Agent
- * @param {String} params.X-Github-Event
- * @param {String} params.X-Hub-Signature
+ * @param {{ 'User-Agent': String, 'X-Github-Event': String, 'X-Hub-Signature': String }} params
  * @param {Object} body
  * @returns {Promise<RequestParams>}
  */
