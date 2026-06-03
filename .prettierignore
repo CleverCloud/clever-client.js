@@ -1,3 +1,4 @@
 # Ignore MD files
 **/*.md
 data
+pnpm-lock.yaml

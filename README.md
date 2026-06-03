@@ -11,7 +11,7 @@ This project contains a REST client for Clever Cloud's API and some utils.
 First, you need to install the Node.js module:
 
 ```sh
-npm install @clevercloud/client
+pnpm install @clevercloud/client
 ```
 
 We recommend using [mise](https://mise.jdx.dev/) to make sure you rely on the same Node.js & pnpm versions as us (defined in [`mise.toml`](mise.toml)).

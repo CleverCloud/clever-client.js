@@ -5,35 +5,35 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 ### Building
-- `npm run build` - Build the project with Rollup
-- `npm run prepack:dev` - Development build only
-- `npm run prepack:prod` - Full production build with format check, lint, typecheck, tests
-- `npm run prepack` - Smart prepack (dev or prod based on DEV env var)
+- `pnpm run build` - Build the project with Rollup
+- `pnpm run prepack:dev` - Development build only
+- `pnpm run prepack:prod` - Full production build with format check, lint, typecheck, tests
+- `pnpm run prepack` - Smart prepack (dev or prod based on DEV env var)
 
 ### Testing
-- `npm run test` - Run all unit tests (browser + Node.js)
-- `npm run test:unit` - Same as test (unit tests only)
-- `npm run test:unit:browser` - Browser unit tests with Web Test Runner
-- `npm run test:unit:browser:watch` - Watch mode for browser unit tests
-- `npm run test:unit:node` - Node.js unit tests with Mocha
-- `npm run test:unit:node:watch` - Watch mode for Node.js unit tests
-- `npm run test:unit:watch` - Watch mode for unit tests (both environments)
-- `npm run test:e2e` - End-to-end tests (browser + Node.js)
-- `npm run test:e2e:browser` - Browser e2e tests
-- `npm run test:e2e:node` - Node.js e2e tests
+- `pnpm run test` - Run all unit tests (browser + Node.js)
+- `pnpm run test:unit` - Same as test (unit tests only)
+- `pnpm run test:unit:browser` - Browser unit tests with Web Test Runner
+- `pnpm run test:unit:browser:watch` - Watch mode for browser unit tests
+- `pnpm run test:unit:node` - Node.js unit tests with Mocha
+- `pnpm run test:unit:node:watch` - Watch mode for Node.js unit tests
+- `pnpm run test:unit:watch` - Watch mode for unit tests (both environments)
+- `pnpm run test:e2e` - End-to-end tests (browser + Node.js)
+- `pnpm run test:e2e:browser` - Browser e2e tests
+- `pnpm run test:e2e:node` - Node.js e2e tests
 
 ### Linting & Formatting
-- `npm run lint` - ESLint check
-- `npm run lint:fix` - ESLint auto-fix
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check code formatting
-- `npm run typecheck` - TypeScript type checking
+- `pnpm run lint` - ESLint check
+- `pnpm run lint:fix` - ESLint auto-fix
+- `pnpm run format` - Format code with Prettier
+- `pnpm run format:check` - Check code formatting
+- `pnpm run typecheck` - TypeScript type checking
 
 ### Analysis & Generation
-- `npm run endpoints-generate` - Generate API endpoints from OpenAPI specs
-- `npm run endpoints-list` - List all available endpoints
-- `npm run endpoints-analyze` - Analyze endpoint usage
-- `npm run api-usage-analyze` - Analyze API usage across console3, clever-components, clever-tools
+- `pnpm run endpoints-generate` - Generate API endpoints from OpenAPI specs
+- `pnpm run endpoints-list` - List all available endpoints
+- `pnpm run endpoints-analyze` - Analyze endpoint usage
+- `pnpm run api-usage-analyze` - Analyze API usage across console3, clever-components, clever-tools
 
 ## Architecture Overview
 
