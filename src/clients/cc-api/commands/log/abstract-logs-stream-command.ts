@@ -2,10 +2,10 @@ import { CcStream } from '../../../../lib/stream/cc-stream.js';
 import type { CcStreamConfig, CcStreamRequestFactory } from '../../../../lib/stream/cc-stream.types.js';
 import { CcApiStreamCommand } from '../../lib/cc-api-command.js';
 
-export class AbstractLogsStreamCommand<CommandInput extends { limit?: number }, Log> extends CcApiStreamCommand<
-  CommandInput,
-  LogsStream<Log>
-> {
+export abstract class AbstractLogsStreamCommand<
+  CommandInput extends { limit?: number },
+  Log,
+> extends CcApiStreamCommand<CommandInput, LogsStream<Log>> {
   #logsCount = 0;
 
   createStream(requestFactory: CcStreamRequestFactory, config: CcStreamConfig): LogsStream<Log> {
@@ -25,17 +25,13 @@ export class AbstractLogsStreamCommand<CommandInput extends { limit?: number }, 
    * @abstract
    * @protected
    */
-  _logTopicName(): string {
-    throw new Error('Not implemented');
-  }
+  abstract _logTopicName(): string;
 
   /**
    * @abstract
    * @protected
    */
-  _convertLog(_rawLog: unknown): Log {
-    throw new Error('Not implemented');
-  }
+  abstract _convertLog(_rawLog: unknown): Log;
 
   /**
    * @protected

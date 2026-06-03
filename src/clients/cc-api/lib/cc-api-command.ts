@@ -8,7 +8,7 @@ import type { IdResolve } from '../types/resource-id-resolver.types.js';
  * @template CommandInput
  * @template CommandOutput
  */
-export class CcApiSimpleCommand<CommandInput, CommandOutput> extends SimpleCommand<
+export abstract class CcApiSimpleCommand<CommandInput, CommandOutput> extends SimpleCommand<
   CcApiType,
   CommandInput,
   CommandOutput
@@ -26,7 +26,7 @@ export class CcApiSimpleCommand<CommandInput, CommandOutput> extends SimpleComma
  * @template CommandInput
  * @template CommandOutput
  */
-export class CcApiCompositeCommand<CommandInput, CommandOutput> extends CompositeCommand<
+export abstract class CcApiCompositeCommand<CommandInput, CommandOutput> extends CompositeCommand<
   CcApiType,
   CommandInput,
   CommandOutput
@@ -44,7 +44,7 @@ export class CcApiCompositeCommand<CommandInput, CommandOutput> extends Composit
  * @template CommandInput
  * @template Stream
  */
-export class CcApiStreamCommand<CommandInput, Stream extends CcStream> extends StreamCommand<
+export abstract class CcApiStreamCommand<CommandInput, Stream extends CcStream> extends StreamCommand<
   CcApiType,
   CommandInput,
   Stream

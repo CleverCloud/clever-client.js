@@ -5,7 +5,7 @@ import type { CcApiBridgeType } from '../types/cc-api-bridge.types.js';
  * @template CommandInput
  * @template CommandOutput
  */
-export class CcApiBridgeCommand<CommandInput, CommandOutput> extends SimpleCommand<
+export abstract class CcApiBridgeCommand<CommandInput, CommandOutput> extends SimpleCommand<
   CcApiBridgeType,
   CommandInput,
   CommandOutput

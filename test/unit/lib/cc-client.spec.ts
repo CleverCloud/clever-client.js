@@ -2,7 +2,7 @@ import type { NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CcAuthApiToken } from '../../../src/lib/auth/cc-auth-api-token.js';
-import { CcAuth } from '../../../src/lib/auth/cc-auth.js';
+import type { CcAuth } from '../../../src/lib/auth/cc-auth.js';
 import { CcClient } from '../../../src/lib/cc-client.js';
 import { CompositeCommand, SimpleCommand } from '../../../src/lib/command/command.js';
 import { CcHttpError } from '../../../src/lib/error/cc-client-errors.js';
@@ -24,14 +24,30 @@ import type {
 import { expectPromiseThrows } from '../../lib/expect-utils.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export abstract class TestSimpleCommand extends SimpleCommand<'test', void, any> {}
+export abstract class TestSimpleCommand extends SimpleCommand<'test', void, any> {
+  get api(): 'test' {
+    return 'test';
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export abstract class TestCompositeCommand extends CompositeCommand<'test', void, any> {}
+export abstract class TestCompositeCommand extends CompositeCommand<'test', void, any> {
+  get api(): 'test' {
+    return 'test';
+  }
+}
 
-export abstract class TestGetUrl extends GetUrl<'test', void> {}
+export abstract class TestGetUrl extends GetUrl<'test', void> {
+  get api(): 'test' {
+    return 'test';
+  }
+}
 
 export abstract class TestStreamCommand extends StreamCommand<'test', void, CcStream> {
+  get api(): 'test' {
+    return 'test';
+  }
+
   createStream(requestFactory: CcStreamRequestFactory, config: CcStreamConfig): CcStream {
     return new CcStream(requestFactory, config);
   }
@@ -469,7 +485,7 @@ describe('clever-client', () => {
 
     it('should construct the right url with auth', async () => {
       const gu = getUrl('example');
-      const auth = new CcAuth();
+      const auth = new CcAuthApiToken('token');
       const spy = vi.spyOn(auth, 'applyOnUrl');
       spy.mockImplementation((url: URL) => url.searchParams.set('auth', 'token'));
       const client = createClient({}, auth);

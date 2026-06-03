@@ -9,7 +9,7 @@ import type { RedisHttpType } from '../types/redis-http.types.js';
  * @template CommandOutput - Type of the command's output
  * @abstract
  */
-export class RedisHttpCommand<CommandInput, CommandOutput> extends SimpleCommand<
+export abstract class RedisHttpCommand<CommandInput, CommandOutput> extends SimpleCommand<
   RedisHttpType,
   CommandInput,
   CommandOutput

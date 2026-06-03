@@ -70,15 +70,16 @@ const DEFAULT_STREAM_CONFIG: CcStreamConfig = {
  * };
  *
  * // Initialize authentication and client
- * const auth = new CcAuth();
+ * // (CcAuth, SimpleCommand and StreamCommand are abstract: use concrete subclasses)
+ * const auth = new CcAuthApiToken('your-api-token');
  * const client = new CcClient(config, auth);
  *
  * // Send a command
- * const command = new SimpleCommand();
+ * const command = new GetApplicationCommand({ applicationId: 'app_123' });
  * const result = await client.send(command);
  *
  * // Create a stream for real-time data
- * const streamCommand = new StreamCommand();
+ * const streamCommand = new GetApplicationLogsCommand({ applicationId: 'app_123' });
  * const stream = await client.stream(streamCommand);
  * stream.onLog(log => console.log('Received log:', log));
  * await stream.start();

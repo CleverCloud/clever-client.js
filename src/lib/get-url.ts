@@ -34,7 +34,7 @@
  *   }
  * }
  */
-export class GetUrl<Api extends string, Input> {
+export abstract class GetUrl<Api extends string, Input> {
   #params: Input;
 
   /**
@@ -60,15 +60,11 @@ export class GetUrl<Api extends string, Input> {
    * @param _params - Parameters for URL generation
    * @returns The generated URL path (relative to API base URL)
    */
-  get(_params: Input): string {
-    throw new Error('Method not implemented');
-  }
+  abstract get(_params: Input): string;
 
   /**
    * Gets the API endpoint type this URL generator targets.
    * Must be implemented by subclasses.
    */
-  get api(): Api {
-    throw new Error('Method not implemented');
-  }
+  abstract get api(): Api;
 }

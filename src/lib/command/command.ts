@@ -19,7 +19,7 @@ import type { SelfOrPromise } from '../../types/utils.types.js';
  * const command = new MyCommand({ id: '123' });
  * ```
  */
-export class AbstractCommand<Api extends string, CommandInput> {
+export abstract class AbstractCommand<Api extends string, CommandInput> {
   #params: CommandInput;
 
   /**
@@ -42,9 +42,7 @@ export class AbstractCommand<Api extends string, CommandInput> {
    * Gets the API type this command targets.
    * Must be implemented by a concrete class.
    */
-  get api(): Api {
-    throw new Error('Method not implemented');
-  }
+  abstract get api(): Api;
 }
 
 /**
@@ -64,7 +62,10 @@ export class AbstractCommand<Api extends string, CommandInput> {
  * }
  * ```
  */
-export class SimpleCommand<Api extends string, CommandInput, CommandOutput> extends AbstractCommand<Api, CommandInput> {
+export abstract class SimpleCommand<Api extends string, CommandInput, CommandOutput> extends AbstractCommand<
+  Api,
+  CommandInput
+> {
   /**
    * Transforms command parameters into HTTP request parameters.
    * Must be implemented by a concrete class.
@@ -72,9 +73,7 @@ export class SimpleCommand<Api extends string, CommandInput, CommandOutput> exte
    * @param _params - The command's input parameters
    * @returns The HTTP request parameters (URL, method, etc.)
    */
-  toRequestParams(_params: CommandInput): SelfOrPromise<Partial<CcRequestParams>> {
-    throw new Error('Method not implemented');
-  }
+  abstract toRequestParams(_params: CommandInput): SelfOrPromise<Partial<CcRequestParams>>;
 
   /**
    * Determines how to handle empty responses from the API.
@@ -128,7 +127,7 @@ export class SimpleCommand<Api extends string, CommandInput, CommandOutput> exte
  * }
  * ```
  */
-export class CompositeCommand<Api extends string, CommandInput, CommandOutput> extends AbstractCommand<
+export abstract class CompositeCommand<Api extends string, CommandInput, CommandOutput> extends AbstractCommand<
   Api,
   CommandInput
 > {
@@ -140,7 +139,5 @@ export class CompositeCommand<Api extends string, CommandInput, CommandOutput> e
    * @param _composer - The composer utility for executing sub-commands
    * @returns The final result after all sub-commands complete
    */
-  compose(_params: CommandInput, _composer: Composer<Api>): Promise<CommandOutput> {
-    throw new Error('Method not implemented');
-  }
+  abstract compose(_params: CommandInput, _composer: Composer<Api>): Promise<CommandOutput>;
 }

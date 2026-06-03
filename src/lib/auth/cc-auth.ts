@@ -11,7 +11,7 @@ import { HeadersBuilder } from '../request/headers-builder.js';
  * - Applying authentication to URLs
  * - Retrieving authentication tokens
  */
-export class CcAuth {
+export abstract class CcAuth {
   /**
    * Applies authentication headers to request parameters.
    * Adds an Authorization header with the authentication token.
@@ -37,9 +37,6 @@ export class CcAuth {
    * Must be implemented by concrete authentication classes.
    *
    * @returns The formatted authentication token
-   * @throws {Error} If the method is not implemented by the concrete class
    */
-  getAuthorization(): string {
-    throw new Error('Method not implemented');
-  }
+  abstract getAuthorization(): string;
 }

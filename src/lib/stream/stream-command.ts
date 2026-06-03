@@ -12,7 +12,7 @@ import type { CcStreamConfig, CcStreamRequestFactory } from './cc-stream.types.j
  * @template CommandInput - The input parameters type for the command
  * @template Stream - The type of stream this command creates
  */
-export class StreamCommand<Api extends string, CommandInput, Stream extends CcStream> {
+export abstract class StreamCommand<Api extends string, CommandInput, Stream extends CcStream> {
   #params: CommandInput;
 
   /**
@@ -27,9 +27,7 @@ export class StreamCommand<Api extends string, CommandInput, Stream extends CcSt
   /**
    * Gets the API type that this stream command targets.
    */
-  get api(): Api {
-    throw new Error('Method not implemented');
-  }
+  abstract get api(): Api;
 
   /**
    * Gets the input parameters for this command.
@@ -44,9 +42,7 @@ export class StreamCommand<Api extends string, CommandInput, Stream extends CcSt
    * @param _params - The command's input parameters
    * @returns The HTTP request parameters (URL, method, etc.)
    */
-  toRequestParams(_params: CommandInput): SelfOrPromise<Partial<CcRequestParams>> {
-    throw new Error('Method not implemented');
-  }
+  abstract toRequestParams(_params: CommandInput): SelfOrPromise<Partial<CcRequestParams>>;
 
   /**
    * Creates the Stream object for the command with the given request factory and configuration.
@@ -56,7 +52,5 @@ export class StreamCommand<Api extends string, CommandInput, Stream extends CcSt
    * @param _config - Stream configuration options
    * @returns The created stream instance
    */
-  createStream(_requestFactory: CcStreamRequestFactory, _config: CcStreamConfig): Stream {
-    throw new Error('Method not implemented');
-  }
+  abstract createStream(_requestFactory: CcStreamRequestFactory, _config: CcStreamConfig): Stream;
 }
