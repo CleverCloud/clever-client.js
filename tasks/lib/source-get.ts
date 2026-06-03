@@ -1,17 +1,9 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { CACHE_DIR } from './config.js';
+import { CACHE_DIR } from './config.ts';
+import type { EndpointsSource } from './endpoint.types.ts';
 
-/**
- * @import { EndpointsSource } from './endpoint.types.js'
- */
-
-/**
- * @param {string} url
- * @param {string} cachePath
- * @returns {Promise<object>}
- */
-async function fetchFileAndCache(url, cachePath) {
+async function fetchFileAndCache(url: string, cachePath: string): Promise<object> {
   const existsInCache = await fs.pathExists(cachePath);
 
   if (existsInCache) {
@@ -24,11 +16,7 @@ async function fetchFileAndCache(url, cachePath) {
   return openapi;
 }
 
-/**
- * @param {EndpointsSource} source
- * @returns {Promise<object>}
- */
-export async function getSourceFileObject(source) {
+export async function getSourceFileObject(source: EndpointsSource): Promise<object> {
   if (source.type === 'file') {
     return fs.readJson(source.path);
   }
@@ -36,5 +24,5 @@ export async function getSourceFileObject(source) {
     const cachePath = path.join(CACHE_DIR, `./${source.id}.json`);
     return fetchFileAndCache(source.url, cachePath);
   }
-  throw new Error(`Unsupported source ${source}`);
+  throw new Error(`Unsupported source ${JSON.stringify(source)}`);
 }

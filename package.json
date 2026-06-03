@@ -64,11 +64,11 @@
     }
   },
   "scripts": {
-    "api-usage-analyze": "node tasks/api-usage-analyze.js -i ../console3 -i ../clever-components -i ../clever-tools",
-    "build": "node tasks/clean-dist.js && tsc -p tsconfig.build.json && node tasks/copy-type-sidecars.js",
-    "endpoints-analyze": "node tasks/endpoints-analyze.js",
-    "endpoints-generate": "node tasks/endpoints-generate.js",
-    "endpoints-list": "node tasks/endpoints-list.js",
+    "api-usage-analyze": "node --experimental-strip-types tasks/api-usage-analyze.ts -i ../console3 -i ../clever-components -i ../clever-tools",
+    "build": "node --experimental-strip-types tasks/clean-dist.ts && tsc -p tsconfig.build.json && node --experimental-strip-types tasks/copy-type-sidecars.ts",
+    "endpoints-analyze": "node --experimental-strip-types tasks/endpoints-analyze.ts",
+    "endpoints-generate": "node --experimental-strip-types tasks/endpoints-generate.ts",
+    "endpoints-list": "node --experimental-strip-types tasks/endpoints-list.ts",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "lint": "eslint",

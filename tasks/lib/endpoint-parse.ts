@@ -1,21 +1,19 @@
-/**
- * @import { Endpoint, QueryParam, PathParam, EndpointType, EndpointResponse } from './endpoint.types.js'
- * @import { OpenAPI } from '@scalar/openapi-types'
- * @import { OpenAPIV3 } from '@scalar/openapi-types'
- */
 import { dereference } from '@scalar/openapi-parser';
+import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types';
+import type { Endpoint, EndpointResponse, EndpointType, PathParam, QueryParam } from './endpoint.types.ts';
 
 /**
- * @param {OpenAPI.Document} openapiObject the openapi object
- * @param {string} pathPrefix the prefix to add to every path found in the openapi
- * @returns {Promise<Record<string, Endpoint>>}
+ * @param openapiObject the openapi object
+ * @param pathPrefix the prefix to add to every path found in the openapi
  */
-export async function parseEndpoints(openapiObject, pathPrefix) {
-  /** @type {{specification?: OpenAPI.Document, schema?: OpenAPI.Document}} */
-  const dereferenced = await dereference(openapiObject, { throwOnError: false });
+export async function parseEndpoints(
+  openapiObject: OpenAPI.Document,
+  pathPrefix: string,
+): Promise<Record<string, Endpoint>> {
+  // `dereference` is synchronous (it returns the result object directly, not a Promise).
+  const dereferenced = dereference(openapiObject, { throwOnError: false });
 
-  /** @type {Record<string, Endpoint>} */
-  const result = {};
+  const result: Record<string, Endpoint> = {};
 
   Object.entries(dereferenced.schema.paths).forEach(([p, methods]) => {
     const path = `${pathPrefix}${p}`;
@@ -24,24 +22,20 @@ export async function parseEndpoints(openapiObject, pathPrefix) {
       // todo: we don't know how to hande that case
     } else {
       Object.entries(methods).forEach((entry) => {
-        /** @type {string} */
-        const method = entry[0];
-        /** @type {OpenAPIV3.OperationObject} */
-        const operation = entry[1];
+        const method: string = entry[0];
+        const operation = entry[1] as OpenAPIV3.OperationObject;
 
         //-- normalize ------
         const normalizedPath = normalizePath(path);
         const endpointId = `[${method.toUpperCase()}] ${normalizedPath}`;
 
-        // @ts-ignore : we are sure the original specification has the same shape as the dereferenced schema
-        const operationSpec = /** @type {OpenAPIV3.OperationObject}*/ (dereferenced.specification.paths[p][method]);
+        // @ts-expect-error : we are sure the original specification has the same shape as the dereferenced schema
+        const operationSpec = dereferenced.specification.paths[p][method] as OpenAPIV3.OperationObject;
 
         //-- parse query params, pathParams, ... ------
 
-        /** @type {Array<QueryParam>} */
-        const queryParams = [];
-        /** @type {Array<PathParam>} */
-        const pathParams = [];
+        const queryParams: Array<QueryParam> = [];
+        const pathParams: Array<PathParam> = [];
         operation.parameters
           ?.sort((param1, param2) => {
             // todo: sometimes, name and in are null
@@ -78,8 +72,7 @@ export async function parseEndpoints(openapiObject, pathPrefix) {
 
         // todo: warn when there are multiple valid status code entries.
 
-        /** @type {null|EndpointResponse} */
-        let response;
+        let response: null | EndpointResponse;
         if (responseByStatusCodeEntry == null) {
           // todo: validation warning
           response = null;
@@ -87,7 +80,7 @@ export async function parseEndpoints(openapiObject, pathPrefix) {
           const statusCode = Number(responseByStatusCodeEntry[0]);
 
           const entries = Object.entries(responseByStatusCodeEntry[1].content ?? {});
-          let responseByContentTypeEntry;
+          let responseByContentTypeEntry: [string, any] | null | undefined;
           if (entries.length === 0) {
             responseByContentTypeEntry = null;
           } else if (entries.length === 1) {
@@ -143,30 +136,19 @@ export async function parseEndpoints(openapiObject, pathPrefix) {
   return result;
 }
 
-/**
- * @param {string} pathPattern
- * @returns {string}
- */
-function normalizePath(pathPattern) {
+function normalizePath(pathPattern: string): string {
   return pathPattern.replaceAll(/\{[^}]+}/g, ':XXX');
 }
 
-/**
- * @param {string} contentType
- * @returns {string}
- */
-function normalizeContentType(contentType) {
+function normalizeContentType(contentType: string): string {
   // todo: warn when contentType has got charset
   return contentType.split(';')[0];
 }
 
-/**
- *
- * @param {OpenAPIV3.ReferenceObject|OpenAPIV3.SchemaObject} dereferencedType
- * @param {OpenAPIV3.ReferenceObject|OpenAPIV3.SchemaObject} specificationType
- * @returns {EndpointType}
- */
-function parseEndpointType(dereferencedType, specificationType) {
+function parseEndpointType(
+  dereferencedType: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
+  specificationType: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
+): EndpointType {
   if (dereferencedType.$ref != null) {
     return {
       type: 'broken',

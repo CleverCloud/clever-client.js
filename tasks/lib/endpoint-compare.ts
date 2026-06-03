@@ -1,16 +1,12 @@
-/**
- * @import { EndpointsSource, AnalyzedOpenapi, Endpoint, OpenapiDiff } from './endpoint.types.js'
- */
 import safeStringify from 'safe-stringify';
-import { isIgnored } from './endpoint-ignore.js';
+import { isIgnored } from './endpoint-ignore.ts';
+import type { AnalyzedOpenapi, Endpoint, EndpointsSource, OpenapiDiff } from './endpoint.types.ts';
 
-/**
- * @param {EndpointsSource} source
- * @param {Record<string, Endpoint>} before
- * @param {Record<string, Endpoint>} after
- * @returns {OpenapiDiff}
- */
-export function compareEndpoints(source, before, after) {
+export function compareEndpoints(
+  source: EndpointsSource,
+  before: Record<string, Endpoint>,
+  after: Record<string, Endpoint>,
+): OpenapiDiff {
   const endpointsBefore = Object.values(before).filter((endpoint) => !isIgnored(source, endpoint));
   const endpointsAfter = Object.values(after).filter((endpoint) => !isIgnored(source, endpoint));
 
@@ -33,12 +29,7 @@ export function compareEndpoints(source, before, after) {
   };
 }
 
-/**
- * @param {string} now
- * @param {Array<AnalyzedOpenapi>} analyzed
- * @returns {string}
- */
-export function generateMarkdownReport(now, analyzed) {
+export function generateMarkdownReport(now: string, analyzed: Array<AnalyzedOpenapi>): string {
   const withDiffs = analyzed.filter((c) => c.diff.hasDiff);
 
   return `# Diff Report ${now}
@@ -63,10 +54,7 @@ ${endpointsMarkdownChapter(diff.modifiedEndpoints)}
 `;
 }
 
-/**
- * @param {Array<Endpoint>} endpoints
- */
-function endpointsMarkdownChapter(endpoints) {
+function endpointsMarkdownChapter(endpoints: Array<Endpoint>): string {
   if (endpoints == null || endpoints.length === 0) {
     return '\nNone';
   }
@@ -89,12 +77,7 @@ ${safeStringify(endpoint, { indentation: 2 })}
 `;
 }
 
-/**
- * @param {string} now
- * @param {Array<AnalyzedOpenapi>} analyzed
- * @returns {string}
- */
-export function generateJsonReport(now, analyzed) {
+export function generateJsonReport(now: string, analyzed: Array<AnalyzedOpenapi>): string {
   const jsonReport = Object.fromEntries(
     analyzed.map(({ versionedOpenapi, diff, previous }) => {
       return [

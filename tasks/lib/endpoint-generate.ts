@@ -1,41 +1,22 @@
-/**
- * @import { Endpoint, GeneratedCommand } from './endpoint.types.js'
- */
 import { kebabCase, pascalCase } from 'change-case';
 import path from 'node:path';
-import { SRC_DIR } from './config.js';
+import { SRC_DIR } from './config.ts';
+import type { Endpoint, GeneratedCommand } from './endpoint.types.ts';
 
-/**
- * @param {Endpoint} endpoint
- * @returns {boolean}
- */
-function hasPotentialRequestBody(endpoint) {
+function hasPotentialRequestBody(endpoint: Endpoint): boolean {
   const method = endpoint.method;
   return method === 'post' || method === 'put' || method === 'patch';
 }
 
-/**
- * @param {Endpoint} endpoint
- * @returns {boolean}
- */
-function hasPotentialResponseBody(endpoint) {
+function hasPotentialResponseBody(endpoint: Endpoint): boolean {
   return endpoint.method !== 'head' && endpoint.response?.statusCode !== 204;
 }
 
-/**
- * @param {Endpoint} endpoint
- * @returns {boolean}
- */
-function hasInputParams(endpoint) {
+function hasInputParams(endpoint: Endpoint): boolean {
   return endpoint.pathParams?.length > 0 || endpoint.queryParams?.length > 0 || endpoint.requestBody != null;
 }
 
-/**
- * @param {string} target
- * @param {boolean} composite
- * @returns {{className: string, classImport: string}}
- */
-function getBaseCommand(target, composite) {
+function getBaseCommand(target: string, composite: boolean): { className: string; classImport: string } {
   if (target === 'cc-api') {
     if (composite) {
       return {
@@ -59,16 +40,14 @@ function getBaseCommand(target, composite) {
   }
 }
 
-/**
- * @param {string} target
- * @param {Endpoint} endpoint
- * @param {string} namespace
- * @param {string} className
- * @param {boolean} composite
- * @param {boolean} autoOwner
- * @returns {string}
- */
-function getClassContent(target, endpoint, namespace, className, composite, autoOwner) {
+function getClassContent(
+  target: string,
+  endpoint: Endpoint,
+  namespace: string,
+  className: string,
+  composite: boolean,
+  autoOwner: boolean,
+): string {
   const baseCommand = getBaseCommand(target, composite);
   const hasInput = hasInputParams(endpoint);
   const hasOutput = hasPotentialResponseBody(endpoint);
@@ -78,9 +57,9 @@ function getClassContent(target, endpoint, namespace, className, composite, auto
   const outputType = hasOutput ? outputInterface : 'void';
 
   const valueImports = [`import { ${baseCommand.className} } from '${baseCommand.classImport}';`];
-  const typeImports = [];
+  const typeImports: Array<string> = [];
 
-  const ioImports = [];
+  const ioImports: Array<string> = [];
   if (hasInput) {
     ioImports.push(inputInterface);
   }
@@ -91,7 +70,7 @@ function getClassContent(target, endpoint, namespace, className, composite, auto
     typeImports.push(`import type { ${ioImports.join(', ')} } from './${kebabCase(className)}.types.js';`);
   }
 
-  const methodsToImplement = [];
+  const methodsToImplement: Array<string> = [];
 
   if (composite) {
     typeImports.push(`import type { CcApiComposer } from '../../types/cc-api.types.js';`);
@@ -149,14 +128,7 @@ ${methodsToImplement.join('\n\n')}
 `;
 }
 
-/**
- * @param {string} target
- * @param {Endpoint} endpoint
- * @param {string} className
- * @param {boolean} autoOwner
- * @returns {string}
- */
-function getTypeContent(target, endpoint, className, autoOwner) {
+function getTypeContent(endpoint: Endpoint, className: string, autoOwner: boolean): string {
   const inputInterface = `${className}Input`;
   const outputInterface = `${className}Output`;
 
@@ -184,23 +156,21 @@ export interface ${outputInterface} {}
 `;
 }
 
-/**
- * @param {string} target
- * @param {string} namespace
- * @param {string} commandClassName
- * @param {boolean} composite
- * @param {boolean} autoOwner
- * @param {Endpoint} endpoint
- * @returns {GeneratedCommand}
- */
-export function generateCommand(target, namespace, commandClassName, composite, autoOwner, endpoint) {
+export function generateCommand(
+  target: string,
+  namespace: string,
+  commandClassName: string,
+  composite: boolean,
+  autoOwner: boolean,
+  endpoint: Endpoint,
+): GeneratedCommand {
   const className = `${commandClassName}Command`;
   const commandBaseFileName = kebabCase(className);
   const commandOutputDir = path.join(SRC_DIR, `./clients/${target}/commands/${kebabCase(namespace)}`);
   const classOutputPath = path.join(commandOutputDir, `${commandBaseFileName}.ts`);
   const typesOutputPath = path.join(commandOutputDir, `${commandBaseFileName}.types.ts`);
   const classContent = getClassContent(target, endpoint, namespace, className, composite, autoOwner);
-  const typesContent = getTypeContent(target, endpoint, className, autoOwner);
+  const typesContent = getTypeContent(endpoint, className, autoOwner);
 
   return {
     className,

@@ -7,9 +7,6 @@ export default [
   {
     name: 'project-ignores',
     // `**/*.d.ts` covers the remaining hand-written declaration sidecars under
-    // `esm/`, `test/` and `tasks/` (all intentionally left as JS-side `.d.ts`).
-    // `src/` no longer ships any `.d.ts` — every sidecar there is now a compiled
-    // `*.types.ts` — so this glob matches nothing in `src/`.
     ignores: ['**/*.d.ts', 'dist/**', 'build/**'],
   },
   {
@@ -81,6 +78,23 @@ export default [
       '@typescript-eslint/no-unsafe-return': 'off',
     },
   },
+  // Build/codegen scripts under `tasks/` parse untyped raw payloads (OpenAPI specs fetched as JSON,
+  // Babel ASTs), so the `any` family of type-checked rules is unavoidable noise here — same rationale
+  // as the `*-transform.ts` block above. `require-await` is also relaxed: some functions stay `async`
+  // to honor a Promise-returning contract even when their body has nothing to await.
+  {
+    name: 'project-tasks',
+    files: ['tasks/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/require-await': 'off',
+    },
+  },
   // Hand-written type-contract sidecars use empty interfaces as intentional stubs for
   // unmodeled/empty API responses; that pattern is fine here (unlike in real code).
   {
@@ -111,7 +125,7 @@ export default [
   },
   {
     ...cleverCloud.configs.node,
-    files: ['eslint.config.js', 'vitest.config.js', 'tasks/**/*.js', 'test-*.config.*.*js', 'test/**/*.*js'],
+    files: ['eslint.config.js', 'vitest.config.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',

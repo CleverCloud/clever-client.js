@@ -1,43 +1,31 @@
-/**
- * @import { AnalyzedOpenapi, EndpointsSource, Endpoint } from './lib/endpoint.types.js'
- */
 import fs from 'fs-extra';
 import path from 'node:path';
 // todo: remove that when we use a version of Node.js >= 23.5.0 (we can ignore because the feature was backported to version 22.13.0)
 import { styleText } from 'node:util';
-import { SOURCES, WORKING_DIR } from './lib/config.js';
-import { compareEndpoints, generateJsonReport, generateMarkdownReport } from './lib/endpoint-compare.js';
-import { parseEndpoints } from './lib/endpoint-parse.js';
-import { confirm } from './lib/prompt.js';
-import { getSourceFileObject } from './lib/source-get.js';
+import { SOURCES, WORKING_DIR } from './lib/config.ts';
+import { compareEndpoints, generateJsonReport, generateMarkdownReport } from './lib/endpoint-compare.ts';
+import { parseEndpoints } from './lib/endpoint-parse.ts';
+import type { AnalyzedOpenapi, Endpoint, EndpointsSource } from './lib/endpoint.types.ts';
+import { confirm } from './lib/prompt.ts';
+import { getSourceFileObject } from './lib/source-get.ts';
 
 const NOW = new Date().toISOString();
 const OUTPUT_DIR = path.join(WORKING_DIR, `./analyze`);
 
-/**
- * @param {'md'|'json'} type
- * @returns {string}
- */
-function getDiffReportPath(type) {
+function getDiffReportPath(type: 'md' | 'json'): string {
   return path.join(OUTPUT_DIR, `./diff-report.${type}`);
 }
 
-/**
- * @param {EndpointsSource} source
- * @returns {string}
- */
-function getVersionedFilePath(source) {
+function getVersionedFilePath(source: EndpointsSource): string {
   return path.join(OUTPUT_DIR, `./${source.id}.json`);
 }
 
-/**
- * @param {EndpointsSource} source
- * @param {object} versionedOpenapi
- * @param {string} filePath
- * @param {string} [backup]
- * @returns {Promise<void>}
- */
-async function storeVersioned(source, versionedOpenapi, filePath, backup) {
+async function storeVersioned(
+  source: EndpointsSource,
+  versionedOpenapi: object,
+  filePath: string,
+  backup?: string,
+): Promise<void> {
   if (backup != null && (await fs.pathExists(filePath))) {
     const backupPath = path.join(OUTPUT_DIR, `./backup/${source.id}.${backup}.json`);
     console.log(styleText('gray', `Copying ${filePath} to ${backupPath} ...`));
@@ -54,13 +42,12 @@ async function storeVersioned(source, versionedOpenapi, filePath, backup) {
 //  - no interactive and generate report in md or json (or both)
 //  - no save
 
-async function run() {
+async function run(): Promise<void> {
   console.log(styleText(['bold', 'underline'], 'Analysing...'));
 
-  /** @type {Array<AnalyzedOpenapi>} */
-  const analyzedSources = [];
+  const analyzedSources: Array<AnalyzedOpenapi> = [];
 
-  for (let source of SOURCES) {
+  for (const source of SOURCES) {
     console.log(`${styleText('blue', `▶ Processing source ${source.id}...`)}`);
 
     // fetch source
@@ -76,8 +63,7 @@ async function run() {
     // versioned output path
     const versionedFilePath = getVersionedFilePath(source);
 
-    /** @type {AnalyzedOpenapi} */
-    const analyzedOpenapi = {
+    const analyzedOpenapi: AnalyzedOpenapi = {
       versionedOpenapi: { source, date: NOW, openapi },
       endpoints,
       diff: { hasDiff: false },
@@ -88,8 +74,7 @@ async function run() {
     // get previous version
     console.log(styleText('gray', `Comparing with last version...`));
 
-    /** @type {Record<string, Endpoint>} */
-    let previousEndpoints = {};
+    let previousEndpoints: Record<string, Endpoint> = {};
     if (!(await fs.pathExists(versionedFilePath))) {
       console.log(`${styleText('gray', '> First time I see this openapi')}`);
     } else {
@@ -110,7 +95,7 @@ async function run() {
     if (!diff.hasDiff) {
       console.log(`${styleText('green', '✔ No Diff found')}`);
     } else {
-      const diffStrings = [];
+      const diffStrings: Array<string> = [];
       if (diff.addedEndpoints?.length > 0) {
         diffStrings.push(styleText('green', `+${diff.addedEndpoints.length}`));
       }

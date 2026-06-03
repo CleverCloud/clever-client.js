@@ -1,26 +1,21 @@
-/**
- * @import { EndpointsSource, Endpoint, CommandDetail } from './lib/endpoint.types.js'
- */
 import fs from 'fs-extra';
 import path from 'node:path';
 // todo: remove that when we use a version of Node.js >= 23.5.0 (we can ignore because the feature was backported to version 22.13.0)
 import { styleText } from 'node:util';
-import { SOURCES, WORKING_DIR } from './lib/config.js';
-import { flattenEndpointsBySourceTarget, parseCommandsList, storeCommandsList } from './lib/endpoint-list.js';
-import { parseEndpoints } from './lib/endpoint-parse.js';
-import { confirm } from './lib/prompt.js';
-import { getSourceFileObject } from './lib/source-get.js';
+import { SOURCES, WORKING_DIR } from './lib/config.ts';
+import { flattenEndpointsBySourceTarget, parseCommandsList, storeCommandsList } from './lib/endpoint-list.ts';
+import { parseEndpoints } from './lib/endpoint-parse.ts';
+import type { CommandDetail, Endpoint, EndpointsSource } from './lib/endpoint.types.ts';
+import { confirm } from './lib/prompt.ts';
+import { getSourceFileObject } from './lib/source-get.ts';
 
-/**
- * @param {string} sourceId
- */
-function getOutputFilePath(sourceId) {
+function getOutputFilePath(sourceId: string): string {
   return path.join(WORKING_DIR, `./commands/${sourceId}.csv`);
 }
 
-async function run() {
-  /** @type {Map<string, Map<string, CommandDetail>>} commands list by source id */
-  const commandsListBySourceTarget = new Map();
+async function run(): Promise<void> {
+  // commands list by source id
+  const commandsListBySourceTarget: Map<string, Map<string, CommandDetail>> = new Map();
   let totalCommandsCount = 0;
 
   console.log();
@@ -31,10 +26,9 @@ async function run() {
   console.log();
   console.log(styleText(['bold', 'underline'], 'Analysing...'));
 
-  /** @type {Map<EndpointsSource, Array<Endpoint>>} */
-  const endpointsBySource = new Map();
+  const endpointsBySource: Map<EndpointsSource, Array<Endpoint>> = new Map();
 
-  for (let source of SOURCES) {
+  for (const source of SOURCES) {
     console.log(`${styleText('blue', `▶ Processing source ${source.id}...`)}`);
 
     // fetch source
@@ -57,11 +51,11 @@ async function run() {
 
     const outputFilePath = getOutputFilePath(sourceTarget);
 
-    /** @type {Map<string, CommandDetail>} */
-    const existingCommands = fs.existsSync(outputFilePath) ? parseCommandsList(outputFilePath) : new Map();
+    const existingCommands: Map<string, CommandDetail> = fs.existsSync(outputFilePath)
+      ? parseCommandsList(outputFilePath)
+      : new Map();
 
-    /** @type {Map<string, CommandDetail>} */
-    const mergedCommands = new Map();
+    const mergedCommands: Map<string, CommandDetail> = new Map();
     commandsListBySourceTarget.set(sourceTarget, mergedCommands);
 
     let keptCount = 0;

@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from '@scalar/openapi-types';
+import type { OpenAPIV3 } from '@scalar/openapi-types';
 
 export type EndpointsSource = EndpointsSourceRemote | EndpointsSourceLocal;
 

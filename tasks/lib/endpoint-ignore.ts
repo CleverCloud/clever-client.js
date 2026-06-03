@@ -1,18 +1,11 @@
-/**
- * @import { EndpointsSource, Endpoint } from './endpoint.types.js'
- */
 import fs from 'fs-extra';
 import path from 'node:path';
-import { WORKING_DIR } from './config.js';
+import { WORKING_DIR } from './config.ts';
+import type { Endpoint, EndpointsSource } from './endpoint.types.ts';
 
-/** @type {Set<string>} */
-let ignoredEndpoints;
+let ignoredEndpoints: Set<string>;
 
-/**
- * @param {EndpointsSource} source
- * @param {Endpoint} endpoint
- */
-export function isIgnored(source, endpoint) {
+export function isIgnored(source: EndpointsSource, endpoint: Endpoint): boolean {
   if (ignoredEndpoints == null) {
     readIgnoredEndpoints();
   }
@@ -20,7 +13,7 @@ export function isIgnored(source, endpoint) {
   return ignoredEndpoints.has(`${source.target} ${endpoint.id}`);
 }
 
-function readIgnoredEndpoints() {
+function readIgnoredEndpoints(): void {
   const ignoredFilePath = path.join(WORKING_DIR, '.ignore');
   const ignored = fs.readFileSync(ignoredFilePath).toString();
 

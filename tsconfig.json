@@ -1,17 +1,11 @@
 {
-  "include": [
-    "esm/**/*",
-    "src/**/*",
-    "tasks/endpoints-*.js",
-    "tasks/lib/api-analyze.js",
-    "test/**/*",
-    "vitest.config.js"
-  ],
+  "include": ["esm/**/*", "src/**/*", "tasks/**/*", "test/**/*", "vitest.config.js"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "NodeNext",
+    "rewriteRelativeImportExtensions": true,
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,

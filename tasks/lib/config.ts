@@ -1,15 +1,11 @@
 import path from 'node:path';
-
-/**
- * @import { EndpointsSource } from './endpoint.types.js'
- */
+import type { EndpointsSource } from './endpoint.types.ts';
 
 export const WORKING_DIR = './data/endpoints';
 export const SRC_DIR = './src';
 export const CACHE_DIR = './.cache';
 
-/** @type {Array<EndpointsSource>} */
-export const SOURCES = [
+export const SOURCES: Array<EndpointsSource> = [
   {
     type: 'file',
     id: 'local-cc-api-v4',

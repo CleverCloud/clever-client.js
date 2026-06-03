@@ -1,23 +1,17 @@
-/**
- * @import { EndpointsSource, Endpoint, GeneratedCommand } from './lib/endpoint.types.js'
- */
 import fs from 'node:fs';
 import path from 'node:path';
 // todo: remove that when we use a version of Node.js >= 23.5.0 (we can ignore because the feature was backported to version 22.13.0)
 import { styleText } from 'node:util';
-import { SOURCES, SRC_DIR, WORKING_DIR } from './lib/config.js';
-import { generateCommand } from './lib/endpoint-generate.js';
-import { flattenEndpointsBySourceTarget, parseCommandsList } from './lib/endpoint-list.js';
-import { parseEndpoints } from './lib/endpoint-parse.js';
-import { formatJsCode, formatTsCode } from './lib/format-code.js';
-import { confirm } from './lib/prompt.js';
-import { getSourceFileObject } from './lib/source-get.js';
+import { SOURCES, SRC_DIR, WORKING_DIR } from './lib/config.ts';
+import { generateCommand } from './lib/endpoint-generate.ts';
+import { flattenEndpointsBySourceTarget, parseCommandsList } from './lib/endpoint-list.ts';
+import { parseEndpoints } from './lib/endpoint-parse.ts';
+import type { Endpoint, EndpointsSource, GeneratedCommand } from './lib/endpoint.types.ts';
+import { formatJsCode, formatTsCode } from './lib/format-code.ts';
+import { confirm } from './lib/prompt.ts';
+import { getSourceFileObject } from './lib/source-get.ts';
 
-/**
- * @param {GeneratedCommand} generatedCommand
- * @param {boolean} [force]
- */
-async function save(generatedCommand, force = false) {
+async function save(generatedCommand: GeneratedCommand, force = false): Promise<boolean> {
   console.log(
     styleText('gray', `Writing command ${generatedCommand.className} to ${generatedCommand.classOutputPath}`),
   );
@@ -31,14 +25,13 @@ async function save(generatedCommand, force = false) {
   return true;
 }
 
-async function run() {
+async function run(): Promise<void> {
   let totalCommands = 0;
 
-  /** @type {Map<EndpointsSource, Array<Endpoint>>} */
-  const endpointsBySource = new Map();
+  const endpointsBySource: Map<EndpointsSource, Array<Endpoint>> = new Map();
 
   console.log(`${styleText(['bold', 'underline'], `Analyzing sources...`)}`);
-  for (let source of SOURCES) {
+  for (const source of SOURCES) {
     console.log(`${styleText('blue', `▶ Analyzing source ${source.id}...`)}`);
 
     // fetch source
@@ -53,12 +46,11 @@ async function run() {
   }
 
   const endpointsBySourceTarget = flattenEndpointsBySourceTarget(endpointsBySource);
-  for (let [sourceTarget, endpoints] of endpointsBySourceTarget.entries()) {
+  for (const [sourceTarget, endpoints] of endpointsBySourceTarget.entries()) {
     console.log();
     console.log(`${styleText(['bold', 'underline'], `Processing target ${sourceTarget}...`)}`);
 
-    /** @type {Map<string, Endpoint>} */
-    const endpointsMap = new Map();
+    const endpointsMap: Map<string, Endpoint> = new Map();
     endpoints.forEach(({ endpoint }) => {
       endpointsMap.set(endpoint.id, endpoint);
     });

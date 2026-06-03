@@ -1,36 +1,32 @@
 import parser from '@babel/parser';
-import traverse from '@babel/traverse';
+import babelTraverse from '@babel/traverse';
+import type {
+  CallExpression,
+  ExportNamedDeclaration,
+  ImportDeclaration,
+  Node,
+  Program,
+  VariableDeclaration,
+} from '@babel/types';
 import * as t from '@babel/types';
 import fs from 'fs';
 import path from 'node:path';
 
-/**
- * @typedef {import('@babel/types').Program} Program
- * @typedef {import('@babel/types').Node} Node
- * @typedef {import('@babel/types').ImportDeclaration} ImportDeclaration
- * @typedef {import('@babel/types').CallExpression} CallExpression
- * @typedef {import('@babel/types').VariableDeclaration} VariableDeclaration
- * @typedef {import('@babel/types').ExportNamedDeclaration} ExportNamedDeclaration
- */
+// `@babel/traverse` ships as CommonJS; under NodeNext the default import resolves to the module
+// namespace, so the callable lives on its `.default` interop binding.
+const traverse = babelTraverse.default;
 
-/**
- * @typedef {object} ApiCall
- * @property {string} method
- * @property {string} path
- * @property {string} filepath
- * @property {number} line
- * @property {boolean} withLegacyClient
- * @property {string} version
- */
+export interface ApiCall {
+  method: string;
+  path: string;
+  filepath: string;
+  line: number;
+  withLegacyClient: boolean;
+  version: string;
+}
 
-/**
- * @param {string} projectDir
- * @param {Array<string>} sourceFilepaths
- * @return {Array<ApiCall>}
- */
-export function getApiCalls(projectDir, sourceFilepaths) {
-  /** @type {Array<ApiCall>} */
-  const allApiCalls = [];
+export function getApiCalls(projectDir: string, sourceFilepaths: Array<string>): Array<ApiCall> {
+  const allApiCalls: Array<ApiCall> = [];
 
   for (const localFilepath of sourceFilepaths) {
     const filepath = path.relative(process.cwd(), localFilepath);
@@ -67,11 +63,7 @@ export function getApiCalls(projectDir, sourceFilepaths) {
   return allApiCalls;
 }
 
-/**
- * @param {string} filepath
- * @return {{sourceCode: string, ast: any }}
- */
-function getAst(filepath) {
+function getAst(filepath: string): { sourceCode: string; ast: any } {
   const sourceCode = fs.readFileSync(filepath, 'utf8');
 
   try {
@@ -87,19 +79,18 @@ function getAst(filepath) {
   }
 }
 
-/**
- * @param {string} projectDir
- * @param {Program} ast
- * @return {Record<string, { filepath: string, innerFunctionName: string, functionName: string }>}
- */
-function findCleverClientImportsAndRequire(projectDir, ast) {
-  /** @type {Record<string, { filepath: string, innerFunctionName: string, functionName: string }>} */
-  const functionImportOrRequireByName = {};
+function findCleverClientImportsAndRequire(
+  projectDir: string,
+  ast: Program,
+): Record<string, { filepath: string; innerFunctionName: string; functionName: string }> {
+  const functionImportOrRequireByName: Record<
+    string,
+    { filepath: string; innerFunctionName: string; functionName: string }
+  > = {};
 
-  traverse.default(ast, {
+  traverse(ast, {
     ImportDeclaration(path) {
-      /** @type {ImportDeclaration} */
-      const node = path.node;
+      const node: ImportDeclaration = path.node;
       if (isCleverClientImport(node)) {
         for (const specifier of node.specifiers) {
           if (t.isImportNamespaceSpecifier(specifier) || t.isImportDefaultSpecifier(specifier)) {
@@ -116,8 +107,7 @@ function findCleverClientImportsAndRequire(projectDir, ast) {
     },
 
     VariableDeclaration(path) {
-      /** @type {VariableDeclaration} */
-      const node = path.node;
+      const node: VariableDeclaration = path.node;
       if (isCleverClientRequire(node)) {
         if (t.isObjectPattern(node.declarations[0].id)) {
           for (const property of node.declarations[0].id.properties) {
@@ -146,16 +136,13 @@ function findCleverClientImportsAndRequire(projectDir, ast) {
   return functionImportOrRequireByName;
 }
 
-/**
- * @param {Program} ast
- * @param {string} sourceCode
- * @return {Array<{ method: string, path: string, line: number }>}
- */
-function findCleverClientLegacyCalls(ast, sourceCode) {
-  /** @type {Array<{ method: string, path: string, line: number }>} */
-  const apiCalls = [];
+function findCleverClientLegacyCalls(
+  ast: Program,
+  sourceCode: string,
+): Array<{ method: string; path: string; line: number }> {
+  const apiCalls: Array<{ method: string; path: string; line: number }> = [];
 
-  traverse.default(ast, {
+  traverse(ast, {
     enter(path) {
       const node = path.node;
       if (isCleverClientLegacyHttpMethodCall(node)) {
@@ -191,18 +178,12 @@ function findCleverClientLegacyCalls(ast, sourceCode) {
   return apiCalls;
 }
 
-/**
- * @param {Program} ast
- * @return {Array<{ functionName: string, line: number }>}
- */
-function findCleverClientNewCalls(ast) {
-  /** @type {Array<{ functionName: string, line: number }>} */
-  const functionCalls = [];
+function findCleverClientNewCalls(ast: Program): Array<{ functionName: string; line: number }> {
+  const functionCalls: Array<{ functionName: string; line: number }> = [];
 
-  traverse.default(ast, {
+  traverse(ast, {
     CallExpression(path) {
-      /** @type {CallExpression} */
-      const node = path.node;
+      const node: CallExpression = path.node;
       if (isCleverClientNewFunctionCall(node) && t.isMemberExpression(node.callee)) {
         const line = node.loc.start.line;
         let functionName = '';
@@ -223,11 +204,7 @@ function findCleverClientNewCalls(ast) {
   return functionCalls;
 }
 
-/**
- * @param {VariableDeclaration} node
- * @return {boolean}
- */
-function isCleverClientRequire(node) {
+function isCleverClientRequire(node: VariableDeclaration): boolean {
   return (
     node.declarations.length === 1 &&
     t.isCallExpression(node.declarations[0].init) &&
@@ -238,21 +215,13 @@ function isCleverClientRequire(node) {
   );
 }
 
-/**
- * @param {ImportDeclaration} node
- * @return {boolean}
- */
-function isCleverClientImport(node) {
+function isCleverClientImport(node: ImportDeclaration): boolean {
   return t.isStringLiteral(node.source) && node.source.value.startsWith('@clevercloud/client/esm/api/');
 }
 
 const HTTP_LEGACY_CLIENT_METHODS = ['get', 'post', 'put', 'delete'];
 
-/**
- * @param {Node} node
- * @return {boolean}
- */
-function isCleverClientLegacyHttpMethodCall(node) {
+function isCleverClientLegacyHttpMethodCall(node: Node): boolean {
   return (
     node.type === 'CallExpression' &&
     node.callee.type === 'MemberExpression' &&
@@ -262,11 +231,7 @@ function isCleverClientLegacyHttpMethodCall(node) {
   );
 }
 
-/**
- * @param {CallExpression} node
- * @return {boolean}
- */
-function isCleverClientNewFunctionCall(node) {
+function isCleverClientNewFunctionCall(node: CallExpression): boolean {
   return (
     t.isMemberExpression(node.callee) &&
     t.isIdentifier(node.callee.property) &&
@@ -279,21 +244,18 @@ function isCleverClientNewFunctionCall(node) {
   );
 }
 
-/**
- * @param {string} filepath
- * @return {Record<string, { method: string, path: string, version: string }>}
- */
-function getCleverClientMethodsAndPathsByFunctionName(filepath) {
+function getCleverClientMethodsAndPathsByFunctionName(
+  filepath: string,
+): Record<string, { method: string; path: string; version: string }> {
   const { ast } = getAst(filepath);
 
-  /** @type {Record<string, { method: string, path: string, version: string }>} */
-  const urlPathByFunctionName = {};
+  const urlPathByFunctionName: Record<string, { method: string; path: string; version: string }> = {};
 
   const versionPrefix = filepath.includes('/v2/') ? '/v2' : '/v4';
 
-  traverse.default(ast, {
+  traverse(ast, {
     ExportNamedDeclaration(path) {
-      const node = path.node;
+      const node: ExportNamedDeclaration = path.node;
       if (node.declaration?.type === 'FunctionDeclaration') {
         const functionName = node.declaration.id.name;
         // We can't take the first one as it could be the @typedef comment in our projects
@@ -330,12 +292,7 @@ function getCleverClientMethodsAndPathsByFunctionName(filepath) {
   return urlPathByFunctionName;
 }
 
-/**
- * @param {ApiCall} a
- * @param {ApiCall} b
- * @return {number}
- */
-function sortCalls(a, b) {
+function sortCalls(a: ApiCall, b: ApiCall): number {
   if (a.path === b.path) {
     if (a.method === b.method) {
       if (a.filepath === b.filepath) {
@@ -348,13 +305,8 @@ function sortCalls(a, b) {
   return a.path.localeCompare(b.path);
 }
 
-/**
- * @param {Array<ApiCall>} apiCalls
- * @returns {Array<Array<ApiCall>>}
- */
-export function sortAndGroupByCall(apiCalls) {
-  /** @type {Record<string, Array<ApiCall>>} */
-  const groupsByKey = {};
+export function sortAndGroupByCall(apiCalls: Array<ApiCall>): Array<Array<ApiCall>> {
+  const groupsByKey: Record<string, Array<ApiCall>> = {};
   const sortedApiCalls = [...apiCalls].sort(sortCalls);
   for (const call of sortedApiCalls) {
     const key = `${call.method} ${call.path}`;

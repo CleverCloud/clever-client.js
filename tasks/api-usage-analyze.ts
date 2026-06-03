@@ -2,20 +2,17 @@ import path from 'node:path';
 // todo: remove that when we use a version of Node.js >= 23.5.0 (we can ignore because the feature was backported to version 22.13.0)
 import { styleText } from 'node:util';
 import { globSync } from 'tinyglobby';
-import { getApiCalls, sortAndGroupByCall } from './lib/api-analyze.js';
+import type { ApiCall } from './lib/api-analyze.ts';
+import { getApiCalls, sortAndGroupByCall } from './lib/api-analyze.ts';
 
-/**
- * @typedef {Object} Options
- * @property {Array<string>} input
- * @property {'json'|'md'} format
- * @property {boolean} withLegacyClient
- */
+interface Options {
+  input: Array<string>;
+  format: 'json' | 'md';
+  withLegacyClient: boolean;
+  apiVersion: 'v2' | 'v4' | null;
+}
 
-/**
- * @param {string} option
- * @param {number} i
- */
-function getOptionValue(option, i) {
+function getOptionValue(option: string, i: number): string {
   const next = i + 1;
   if (next > process.argv.length - 1) {
     throw new Error(`Invalid command: no value found for option "${option}"`);
@@ -23,14 +20,11 @@ function getOptionValue(option, i) {
   return process.argv[next];
 }
 
-/**
- * @returns {Options}
- */
-function parseArgs() {
-  const input = [];
+function parseArgs(): Options {
+  const input: Array<string> = [];
   let format = 'json';
   let withLegacyClient = false;
-  let apiVersion = null;
+  let apiVersion: string | null = null;
 
   for (let i = 0; i < process.argv.length; i++) {
     const arg = process.argv[i];
@@ -95,15 +89,13 @@ function parseArgs() {
     input,
     format,
     withLegacyClient,
-    apiVersion,
+    // validated just above; the `!= null` disjunct prevents the compiler from narrowing the literal union itself
+    apiVersion: apiVersion as 'v2' | 'v4' | null,
   };
 }
 
-/**
- * @param {Array<Array<ApiCall>>} apiCallsGroupedAndSorted
- */
-function printJson(apiCallsGroupedAndSorted) {
-  const result = {};
+function printJson(apiCallsGroupedAndSorted: Array<Array<ApiCall>>): void {
+  const result: Record<string, Array<string>> = {};
 
   for (const groupedCalls of apiCallsGroupedAndSorted) {
     const { method, path } = groupedCalls[0];
@@ -114,10 +106,7 @@ function printJson(apiCallsGroupedAndSorted) {
   console.log(JSON.stringify(result));
 }
 
-/**
- * @param {Array<Array<ApiCall>>} apiCallsGroupedAndSorted
- */
-function printMarkdown(apiCallsGroupedAndSorted) {
+function printMarkdown(apiCallsGroupedAndSorted: Array<Array<ApiCall>>): void {
   console.log('# Analysis of @clevercloud/client usage');
   console.log('');
 
@@ -136,8 +125,7 @@ function printMarkdown(apiCallsGroupedAndSorted) {
   }
 }
 
-/** @type {Options} */
-let args;
+let args: Options;
 try {
   args = parseArgs();
 } catch (e) {

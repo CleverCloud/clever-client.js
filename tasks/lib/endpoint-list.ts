@@ -1,10 +1,7 @@
-/**
- * @import {CommandDetail, EndpointsSource, Endpoint} from './endpoint.types.js'
- */
 import fs from 'node:fs';
+import type { CommandDetail, Endpoint, EndpointsSource } from './endpoint.types.ts';
 
-/** @type {Array<string>} */
-const CSV_HEADER = [
+const CSV_HEADER: Array<string> = [
   'Source id',
   'Endpoint id',
   'Used',
@@ -18,15 +15,10 @@ const CSV_HEADER = [
   'Comment',
 ];
 
-/**
- * @param {string} path
- * @returns {Map<string, CommandDetail>}
- */
-export function parseCommandsList(path) {
+export function parseCommandsList(path: string): Map<string, CommandDetail> {
   const csv = fs.readFileSync(path).toString();
 
-  /** @type {Map<string, CommandDetail>} */
-  const result = new Map();
+  const result: Map<string, CommandDetail> = new Map();
   csv
     .split('\n')
     .filter((_v, i) => i > 0)
@@ -63,11 +55,7 @@ export function parseCommandsList(path) {
   return result;
 }
 
-/**
- * @param {string} path
- * @param {Map<string, CommandDetail>} commands
- */
-export function storeCommandsList(path, commands) {
+export function storeCommandsList(path: string, commands: Map<string, CommandDetail>): void {
   // csv
   const csv = [CSV_HEADER.join(',')];
   commands.forEach((commandDetail) => {
@@ -92,13 +80,10 @@ export function storeCommandsList(path, commands) {
   fs.writeFileSync(path, csv.join('\n'));
 }
 
-/**
- * @param {Map<EndpointsSource, Array<Endpoint>>} endpointsBySource
- * @returns {Map<string, Array<{source: EndpointsSource, endpoint: Endpoint}>>}
- */
-export function flattenEndpointsBySourceTarget(endpointsBySource) {
-  /** @type {Map<string, Array<{source: EndpointsSource, endpoint: Endpoint}>>} */
-  const result = new Map();
+export function flattenEndpointsBySourceTarget(
+  endpointsBySource: Map<EndpointsSource, Array<Endpoint>>,
+): Map<string, Array<{ source: EndpointsSource; endpoint: Endpoint }>> {
+  const result: Map<string, Array<{ source: EndpointsSource; endpoint: Endpoint }>> = new Map();
   endpointsBySource.forEach((endpoints, source) => {
     const toAdd = endpoints.map((endpoint) => ({ source, endpoint }));
     result.set(source.target, [...(result.get(source.target) ?? []), ...toAdd]);

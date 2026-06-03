@@ -1,28 +1,17 @@
-/**
- * @import { Options } from 'prettier'
- */
 import { join as pathJoin } from 'path';
+import type { Options } from 'prettier';
 import { format, resolveConfig } from 'prettier';
 
-/**
- * @param {string} rawContents
- * @returns {Promise<string>}
- */
-export async function formatJsCode(rawContents) {
+export async function formatJsCode(rawContents: string): Promise<string> {
   return await format(rawContents, { ...(await getOptions()), parser: 'babel' });
 }
 
-/**
- * @param {string} rawContents
- * @returns {Promise<string>}
- */
-export async function formatTsCode(rawContents) {
+export async function formatTsCode(rawContents: string): Promise<string> {
   return await format(rawContents, { ...(await getOptions()), parser: 'typescript' });
 }
 
-/** @type {Options} */
-let options;
-async function getOptions() {
+let options: Options;
+async function getOptions(): Promise<Options> {
   if (options == null) {
     options = await resolveConfig(pathJoin('./.prettierrc'));
   }
