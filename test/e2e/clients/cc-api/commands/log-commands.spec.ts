@@ -70,7 +70,7 @@ describe('log commands', function () {
       await support.cleanup();
     });
 
-    afterEach(async () => {
+    afterEach(() => {
       currentStream?.close();
     });
 

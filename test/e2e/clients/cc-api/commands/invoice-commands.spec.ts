@@ -58,7 +58,7 @@ describe('invoice commands', function () {
     });
   }
 
-  it('should get invoice URL', async () => {
+  it('should get invoice URL', () => {
     const url = support.client.getUrl(new GetInvoiceUrl({ ownerId: support.userId, invoiceNumber, format: 'pdf' }));
 
     expect(url.origin).toBeTypeOf('string');

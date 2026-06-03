@@ -8,6 +8,7 @@ describe('polling', () => {
 
     const polling = new Polling(
       async () => {
+        await sleep(1);
         count++;
         if (count === 3) {
           return { stop: true, value: 'value' };
@@ -25,6 +26,7 @@ describe('polling', () => {
   it('should fail with interrupted when stopping', async () => {
     const polling = new Polling(
       async () => {
+        await sleep(1);
         return { stop: false };
       },
       100,
@@ -47,6 +49,7 @@ describe('polling', () => {
     const polling = new Polling(
       async () => {
         spy();
+        await sleep(1);
         count++;
         if (count === 3) {
           return { stop: true, value: 'value' };

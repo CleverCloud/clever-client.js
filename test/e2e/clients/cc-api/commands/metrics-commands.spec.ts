@@ -74,7 +74,7 @@ describe('metrics commands', function () {
   describe('requests live stream', function () {
     let currentStream: CcStream = null;
 
-    afterEach(async () => {
+    afterEach(() => {
       currentStream?.close();
     });
 

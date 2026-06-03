@@ -64,7 +64,7 @@ function simpleCommand(requestsParams: Partial<CcRequestParams>): TestSimpleComm
 function compositeCommand(result: unknown): TestCompositeCommand {
   return new (class MyCommand extends TestCompositeCommand {
     async compose() {
-      return result;
+      return Promise.resolve(result);
     }
   })();
 }
@@ -447,7 +447,7 @@ describe('clever-client', () => {
           composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
         ) {
           void composer.send(simpleCommand(get('/path/subPath')), { cors: true, cache: { ttl: 100 }, timeout: 1000 });
-          return 'result';
+          return Promise.resolve('result');
         }
       })();
       const spy = vi.spyOn(client, 'send');
@@ -466,7 +466,7 @@ describe('clever-client', () => {
   });
 
   describe('get url', () => {
-    it('should call `get` method', async () => {
+    it('should call `get` method', () => {
       const gu = getUrl('example');
       const spy = vi.spyOn(gu, 'get');
 
@@ -475,7 +475,7 @@ describe('clever-client', () => {
       expect(spy).toHaveBeenCalledTimes(1);
     });
 
-    it('should construct the right url', async () => {
+    it('should construct the right url', () => {
       const gu = getUrl('example');
 
       const url = client.getUrl(gu);
@@ -483,7 +483,7 @@ describe('clever-client', () => {
       expect(url.toString()).toBe(`${newScenario.mockClient.baseUrl}/example`);
     });
 
-    it('should construct the right url with auth', async () => {
+    it('should construct the right url with auth', () => {
       const gu = getUrl('example');
       const auth = new CcAuthApiToken('token');
       const spy = vi.spyOn(auth, 'applyOnUrl');

@@ -104,15 +104,6 @@ export default [
       '@typescript-eslint/no-empty-object-type': 'off',
     },
   },
-  // Test specs use async mock callbacks that conform to promise-returning signatures without
-  // awaiting anything; require-await fights that idiomatic pattern.
-  {
-    name: 'project-test-ts',
-    files: ['test/**/*.ts'],
-    rules: {
-      '@typescript-eslint/require-await': 'off',
-    },
-  },
   {
     ...cleverCloud.configs.node,
     files: ['eslint.config.js', 'vitest.config.js'],
