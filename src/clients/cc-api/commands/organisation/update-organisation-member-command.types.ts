@@ -6,5 +6,3 @@ export interface UpdateOrganisationMemberCommandInput {
   role?: OrganisationMemberRole;
   job?: string;
 }
-
-export interface UpdateOrganisationMemberCommandOutput {}

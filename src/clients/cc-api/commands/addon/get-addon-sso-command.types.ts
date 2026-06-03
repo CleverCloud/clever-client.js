@@ -1,6 +1,6 @@
 import type { AddonId } from '../../types/cc-api.types.js';
 
-export interface GetAddonSsoCommandInput extends AddonId {}
+export type GetAddonSsoCommandInput = AddonId;
 
 export interface GetAddonSsoCommandOutput {
   url: string;

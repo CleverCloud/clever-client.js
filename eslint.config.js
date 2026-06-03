@@ -95,15 +95,6 @@ export default [
       '@typescript-eslint/require-await': 'off',
     },
   },
-  // Hand-written type-contract sidecars use empty interfaces as intentional stubs for
-  // unmodeled/empty API responses; that pattern is fine here (unlike in real code).
-  {
-    name: 'project-type-declarations',
-    files: ['**/*.types.ts'],
-    rules: {
-      '@typescript-eslint/no-empty-object-type': 'off',
-    },
-  },
   {
     ...cleverCloud.configs.node,
     files: ['eslint.config.js', 'vitest.config.js'],

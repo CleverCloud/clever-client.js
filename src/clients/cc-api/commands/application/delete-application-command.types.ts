@@ -1,3 +1,3 @@
 import type { ApplicationId } from '../../types/cc-api.types.js';
 
-export interface DeleteApplicationCommandInput extends ApplicationId {}
+export type DeleteApplicationCommandInput = ApplicationId;

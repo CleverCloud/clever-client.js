@@ -38,7 +38,7 @@ export interface NetworkGroupPeerClever extends TypedComponent<'CleverPeer', Net
   hv: string;
 }
 
-export interface NetworkGroupPeerExternal extends TypedComponent<'ExternalPeer', NetworkGroupPeerBase> {}
+export type NetworkGroupPeerExternal = TypedComponent<'ExternalPeer', NetworkGroupPeerBase>;
 
 export interface NetworkGroupMember {
   id: string;

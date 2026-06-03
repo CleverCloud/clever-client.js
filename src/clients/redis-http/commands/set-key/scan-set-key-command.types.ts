@@ -4,9 +4,9 @@ import type { SetKeyElement } from './set-key.types.js';
 /**
  * The key to scan and some scan options
  */
-export interface ScanSetKeyCommandInput extends RedisHttpCommandInput, KeyScan {}
+export type ScanSetKeyCommandInput = RedisHttpCommandInput & KeyScan;
 
 /**
  * The result when the scan is successful
  */
-export interface ScanSetKeyCommandOutput extends KeyScanResult<SetKeyElement> {}
+export type ScanSetKeyCommandOutput = KeyScanResult<SetKeyElement>;

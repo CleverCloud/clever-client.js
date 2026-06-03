@@ -4,9 +4,9 @@ import type { SetKey } from './set-key.types.js';
 /**
  * The key and its members to create
  */
-export interface CreateSetKeyCommandInput extends RedisHttpCommandInput, SetKey {}
+export type CreateSetKeyCommandInput = RedisHttpCommandInput & SetKey;
 
 /**
  * The created key and its members
  */
-export interface CreateSetKeyCommandOutput extends SetKey {}
+export type CreateSetKeyCommandOutput = SetKey;
