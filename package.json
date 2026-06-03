@@ -65,7 +65,7 @@
   },
   "scripts": {
     "api-usage-analyze": "node --experimental-strip-types tasks/api-usage-analyze.ts -i ../console3 -i ../clever-components -i ../clever-tools",
-    "build": "node --experimental-strip-types tasks/clean-dist.ts && tsgo -p tsconfig.build.json && node --experimental-strip-types tasks/copy-type-sidecars.ts",
+    "build": "node --experimental-strip-types tasks/clean-dist.ts && tsgo -p tsconfig.build.json",
     "endpoints-analyze": "node --experimental-strip-types tasks/endpoints-analyze.ts",
     "endpoints-generate": "node --experimental-strip-types tasks/endpoints-generate.ts",
     "endpoints-list": "node --experimental-strip-types tasks/endpoints-list.ts",

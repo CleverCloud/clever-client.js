@@ -146,9 +146,26 @@ export default [
   // Specific rules for generated client files
   {
     name: 'generated-client-context',
-    files: ['esm/api/**/*.js'],
+    files: ['esm/api/**/*.ts'],
     rules: {
       camelcase: ['off'],
+    },
+  },
+  // The legacy `esm/` client was migrated from JSDoc-typed JS to TypeScript. Its
+  // request/streaming layers and generated endpoints are intentionally loosely
+  // typed (dynamic SSE/WS payloads, untyped JSON response bodies, error objects),
+  // mirroring the `any`/`*`/`Object` JSDoc they carried as JS. Relax the
+  // type-aware safety rules here rather than papering over genuinely dynamic data.
+  {
+    name: 'legacy-esm-loose-types',
+    files: ['esm/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
     },
   },
 ];
