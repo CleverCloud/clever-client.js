@@ -14,6 +14,8 @@ First, you need to install the Node.js module:
 npm install @clevercloud/client
 ```
 
+We recommend using [mise](https://mise.jdx.dev/) to make sure you rely on the same Node.js & pnpm versions as us (defined in [`mise.toml`](mise.toml)).
+
 All API REST paths are accessible as "functions" organized in "services".
 A call to a function of a service will just prepare the HTTP request and return the request params in an object via a promise.
 It won't authenticate the request and it won't send it.

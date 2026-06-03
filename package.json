@@ -141,8 +141,5 @@
     "tinyglobby": "^0.2.15",
     "totp-generator": "^2.0.0",
     "typescript": "^5.9.3"
-  },
-  "volta": {
-    "node": "22.7.0"
   }
 }
