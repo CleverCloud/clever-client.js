@@ -8,6 +8,7 @@ import { defaultExclude, defineConfig } from 'vitest/config';
 // NB: this `import` keeps the `.js` specifier (NodeNext maps it to the `.ts` source when this
 // config is loaded in Node). The `setupFiles` / `globalSetup` paths below, by contrast, must use
 // `.ts` — they are served to the browser as literal URLs and browser mode does not remap `.js`→`.ts`.
+// eslint-disable-next-line n/no-missing-import,import-x/no-unresolved
 import { e2eProxyPlugin } from './test/setup/e2e-proxy.browser.js';
 
 /**
