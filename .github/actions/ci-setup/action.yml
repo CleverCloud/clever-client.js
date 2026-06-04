@@ -1,0 +1,29 @@
+name: Setup CI
+description: 'Install the toolchain with mise (Node + pnpm) and install dependencies with a frozen lockfile'
+
+runs:
+  using: composite
+  steps:
+    - name: 🛠️ Setup mise
+      uses: jdx/mise-action@v4
+      with:
+        # Don't export mise.toml [env] vars into $GITHUB_ENV: GitHub forbids
+        # setting NODE_OPTIONS that way (runner >= 2.309.0). NODE_OPTIONS is set
+        # at the workflow `env:` level instead; mise.toml keeps it for local dev.
+        env: false
+
+    - name: 🗂️ Resolve pnpm store path
+      shell: bash
+      run: echo "PNPM_STORE_PATH=$(pnpm store path --silent)" >> "$GITHUB_ENV"
+
+    - name: 💾 Cache pnpm store
+      uses: actions/cache@v5
+      with:
+        path: ${{ env.PNPM_STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
+    - name: 📦 Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
