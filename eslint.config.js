@@ -6,8 +6,7 @@ import tseslint from 'typescript-eslint';
 export default [
   {
     name: 'project-ignores',
-    // `**/*.d.ts` covers the remaining hand-written declaration sidecars under
-    ignores: ['**/*.d.ts', 'dist/**', 'build/**'],
+    ignores: ['dist/**', 'build/**'],
   },
   {
     ...cleverCloud.configs.browser,
