@@ -9,11 +9,15 @@ import type { UpdateApiTokenCommandInput } from './update-api-token-command.type
  * @endpoint [PUT] /api-tokens/:XXX
  * @group ApiToken
  */
-export class UpdateApiTokenCommand extends CcApiBridgeCommand<UpdateApiTokenCommandInput, void> {
+export class UpdateApiTokenCommand extends CcApiBridgeCommand<UpdateApiTokenCommandInput, undefined> {
   toRequestParams(params: UpdateApiTokenCommandInput) {
     return put(safeUrl`/api-tokens/${params.apiTokenId}`, {
       name: params.name,
       description: params.description,
     });
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

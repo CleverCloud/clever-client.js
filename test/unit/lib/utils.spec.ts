@@ -184,7 +184,7 @@ describe('Utils', () => {
   });
 
   describe('merge', () => {
-    const props: { prop1: string; prop2: string; prop3?: string } = { prop1: 'prop1', prop2: 'prop2' };
+    const props: { prop1: string | null; prop2: string; prop3?: string } = { prop1: 'prop1', prop2: 'prop2' };
 
     it('should merge objects', () => {
       const result = merge(props, { prop1: 'overridden prop1', prop3: 'prop3' });
@@ -229,6 +229,7 @@ describe('Utils', () => {
           cache: null,
           debug: true,
         },
+        // @ts-expect-error testing null override config
         null,
       );
       expect(config).toEqual({

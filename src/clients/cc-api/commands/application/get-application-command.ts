@@ -21,7 +21,7 @@ export class GetApplicationCommand extends CcApiCompositeCommand<
     const application = await composer.send(new GetApplicationInnerCommand(params));
 
     if (application == null) {
-      return null;
+      return undefined;
     }
     if (params.withBranches === true) {
       await consolidateApplicationWithBranches(application, composer);

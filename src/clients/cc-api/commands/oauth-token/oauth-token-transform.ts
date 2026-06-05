@@ -6,9 +6,9 @@ export function transformOauthToken(payload: any): OauthToken {
   return {
     token: payload.token,
     consumer: transformOauthConsumer(payload.consumer),
-    creationDate: normalizeDate(payload.creationDate),
-    expirationDate: normalizeDate(payload.expirationDate),
-    lastUtilisationDate: normalizeDate(payload.lastUtilisation),
+    creationDate: normalizeDate(payload.creationDate)!,
+    expirationDate: normalizeDate(payload.expirationDate)!,
+    lastUtilisationDate: normalizeDate(payload.lastUtilisation)!,
     rights: transformOauthConsumerRights(payload.rights),
     employeeId: payload.employeeId,
   };

@@ -8,7 +8,10 @@ import type { UpdateOrganisationMemberCommandInput } from './update-organisation
  * @group Organisation
  * @version 2
  */
-export class UpdateOrganisationMemberCommand extends CcApiSimpleCommand<UpdateOrganisationMemberCommandInput, void> {
+export class UpdateOrganisationMemberCommand extends CcApiSimpleCommand<
+  UpdateOrganisationMemberCommandInput,
+  undefined
+> {
   toRequestParams(params: UpdateOrganisationMemberCommandInput) {
     return put(safeUrl`/v2/organisations/${params.organisationId}/members/${params.memberId}`, {
       role: params.role,
@@ -16,7 +19,7 @@ export class UpdateOrganisationMemberCommand extends CcApiSimpleCommand<UpdateOr
     });
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

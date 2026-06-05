@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { diagDomainConfig } from '../../../../esm/utils/diag-domain-config.js';
-import type { ResolveDnsResult } from '../../../../esm/utils/diag-domain-config.types.js';
+import type { LoadBalancerDnsConfig, ResolveDnsResult } from '../../../../esm/utils/diag-domain-config.types.js';
 
 const HOSTNAME_EXAMPLE = 'example.com';
 const HOSTNAME_TESTONLY = 'app-f6ed4d4f-9668-4a03-a6fd-b297c15fc825.cleverapps.io';
@@ -14,7 +14,7 @@ const CNAME_RECORD = 'cname.example.com.';
 const ALTERNATIVE_CNAME_RECORD = 'example.net.';
 
 describe('diag-domain-config#diagDomainConfig()', () => {
-  const loadBalancerDnsConfig = {
+  const loadBalancerDnsConfig: LoadBalancerDnsConfig = {
     aRecords: A_RECORDS,
     cnameRecord: CNAME_RECORD,
   };
@@ -737,10 +737,8 @@ describe('diag-domain-config#diagDomainConfig()', () => {
         isWildcard: false,
         isApex: false,
       };
-      const resolveDnsResult: ResolveDnsResult = null;
-      const loadBalancerDnsConfig: null = null;
 
-      const domainDiagResults = diagDomainConfig(domainInfo, resolveDnsResult, loadBalancerDnsConfig);
+      const domainDiagResults = diagDomainConfig(domainInfo, undefined, undefined);
 
       expect(domainDiagResults).toEqual({
         hostname: domainInfo.hostname,

@@ -10,13 +10,13 @@ import type { SetProfilePrimaryEmailAddressCommandInput } from './set-profile-pr
  */
 export class SetProfilePrimaryEmailAddressCommand extends CcApiSimpleCommand<
   SetProfilePrimaryEmailAddressCommandInput,
-  void
+  undefined
 > {
   toRequestParams(params: SetProfilePrimaryEmailAddressCommandInput) {
     return put(safeUrl`/v2/self/emails/${params.address}`, { make_primary: true });
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

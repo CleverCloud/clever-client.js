@@ -76,7 +76,7 @@ export interface Store<T> {
    * @returns The stored data, or null if no data exists
    * @throws {Error} If reading from the store fails
    */
-  read(): SelfOrPromise<T | null>;
+  read(): SelfOrPromise<T | undefined>;
 
   /**
    * Removes all data from the store.

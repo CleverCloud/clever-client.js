@@ -11,7 +11,7 @@ import type { DeleteKeycloakNetworkGroupCommandInput } from './delete-keycloak-n
  */
 export class DeleteKeycloakNetworkGroupCommand extends CcApiSimpleCommand<
   DeleteKeycloakNetworkGroupCommandInput,
-  void
+  undefined
 > {
   toRequestParams(params: DeleteKeycloakNetworkGroupCommandInput) {
     return delete_(safeUrl`/v4/addon-providers/addon-keycloak/addons/${params.addonId}/networkgroup`);
@@ -23,7 +23,7 @@ export class DeleteKeycloakNetworkGroupCommand extends CcApiSimpleCommand<
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

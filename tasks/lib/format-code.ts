@@ -13,7 +13,7 @@ export async function formatTsCode(rawContents: string): Promise<string> {
 let options: Options;
 async function getOptions(): Promise<Options> {
   if (options == null) {
-    options = await resolveConfig(pathJoin('./.prettierrc'));
+    options = (await resolveConfig(pathJoin('./.prettierrc'))) ?? {};
   }
   return options;
 }

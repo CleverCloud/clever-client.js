@@ -10,7 +10,7 @@ import type { SetUserSettingCommandInput } from './set-user-setting-command.type
  * @group UserSetting
  * @version 4
  */
-export class SetUserSettingCommand extends CcApiSimpleCommand<SetUserSettingCommandInput, void> {
+export class SetUserSettingCommand extends CcApiSimpleCommand<SetUserSettingCommandInput, undefined> {
   toRequestParams(params: SetUserSettingCommandInput): Partial<CcRequestParams> {
     return {
       method: 'PUT',
@@ -19,5 +19,9 @@ export class SetUserSettingCommand extends CcApiSimpleCommand<SetUserSettingComm
       body: params.value,
       headers: new HeadersBuilder().acceptTextPlain().acceptJson().contentTypeTextPlain().build(),
     };
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

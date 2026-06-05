@@ -9,15 +9,15 @@ import type { DeleteLogDrainCommandInput } from './delete-log-drain-command.type
  * @group LogDrain
  * @version 4
  */
-export class DeleteLogDrainCommand extends CcApiSimpleCommand<DeleteLogDrainCommandInput, void> {
+export class DeleteLogDrainCommand extends CcApiSimpleCommand<DeleteLogDrainCommandInput, undefined> {
   toRequestParams(params: DeleteLogDrainCommandInput) {
     return delete_(
       safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains/${params.drainId}`,
     );
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

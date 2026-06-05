@@ -9,13 +9,13 @@ import type { DeleteOauthConsumerCommandInput } from './delete-oauth-consumer-co
  * @group OauthConsumer
  * @version 2
  */
-export class DeleteOauthConsumerCommand extends CcApiSimpleCommand<DeleteOauthConsumerCommandInput, void> {
+export class DeleteOauthConsumerCommand extends CcApiSimpleCommand<DeleteOauthConsumerCommandInput, undefined> {
   toRequestParams(params: DeleteOauthConsumerCommandInput) {
     return delete_(safeUrl`/v2/organisations/${params.ownerId}/consumers/${params.oauthConsumerKey}`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

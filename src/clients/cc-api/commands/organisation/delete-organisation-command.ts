@@ -8,7 +8,7 @@ import type { DeleteOrganisationCommandInput } from './delete-organisation-comma
  * @group Organisation
  * @version 2
  */
-export class DeleteOrganisationCommand extends CcApiSimpleCommand<DeleteOrganisationCommandInput, void> {
+export class DeleteOrganisationCommand extends CcApiSimpleCommand<DeleteOrganisationCommandInput, undefined> {
   toRequestParams(params: DeleteOrganisationCommandInput) {
     if (params.organisationId?.startsWith('user_')) {
       throw new Error(`Cannot delete user organisation ${params.organisationId}`);
@@ -16,7 +16,7 @@ export class DeleteOrganisationCommand extends CcApiSimpleCommand<DeleteOrganisa
     return delete_(safeUrl`/v2/organisations/${params.organisationId}`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

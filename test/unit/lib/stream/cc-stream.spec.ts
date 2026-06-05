@@ -50,6 +50,7 @@ describe('cc-stream', () => {
     const stream = new CcStream(
       () => {
         stubs.request();
+        const requestUrl = request.url ?? '';
         return {
           cors: false,
           timeout: 0,
@@ -57,7 +58,7 @@ describe('cc-stream', () => {
           debug: false,
           method: 'GET',
           ...request,
-          url: request.url.startsWith('http') ? request.url : `${newScenario.mockClient.baseUrl}${request.url}`,
+          url: requestUrl.startsWith('http') ? requestUrl : `${newScenario.mockClient.baseUrl}${requestUrl}`,
         };
       },
       {
@@ -195,7 +196,7 @@ describe('cc-stream', () => {
 
   it('should override accept header and cache config', async () => {
     // fake caching request response
-    await requestWithCache(
+    await requestWithCache<string>(
       {
         method: 'GET',
         url: `${newScenario.mockClient.baseUrl}/`,
@@ -205,11 +206,11 @@ describe('cc-stream', () => {
         timeout: 0,
         debug: false,
       },
-      () =>
+      <CommandOutput>() =>
         Promise.resolve({
           status: 200,
-          headers: null,
-          body: null,
+          headers: new Headers(),
+          body: 'body' as CommandOutput,
           requestDuration: 0,
           cacheHit: false,
         }),

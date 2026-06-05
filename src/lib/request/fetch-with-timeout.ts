@@ -7,16 +7,18 @@ export function fetchWithTimeout(
   input: string | URL | Request,
   init?: RequestInit,
 ): Promise<Response> {
-  function doFetch(signal: AbortSignal): Promise<Response> {
+  function doFetch(signal: AbortSignal | null | undefined): Promise<Response> {
     return fetch(input, { ...init, signal });
   }
 
   if (timeout <= 0) {
-    return doFetch(init.signal);
+    return doFetch(init?.signal);
   }
 
   const ac = new AbortController();
-  combineWithSignal(ac, init.signal);
+  if (init?.signal != null) {
+    combineWithSignal(ac, init.signal);
+  }
 
   let clear: () => void;
 

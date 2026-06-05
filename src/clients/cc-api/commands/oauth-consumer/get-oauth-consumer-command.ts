@@ -28,12 +28,12 @@ export class GetOauthConsumerCommand extends CcApiCompositeCommand<
     ]);
 
     if (oauthConsumer == null) {
-      return null;
+      return undefined;
     }
 
     if (params.withSecret) {
       if (secret == null) {
-        return null;
+        return undefined;
       }
       return {
         ...oauthConsumer,

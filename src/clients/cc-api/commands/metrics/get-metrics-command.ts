@@ -18,7 +18,7 @@ export class GetMetricsCommand extends CcApiSimpleCommand<GetMetricsCommandInput
     return get(
       safeUrl`/v4/stats/organisations/${params.ownerId}/resources/${resourceId}/metrics`,
       new QueryParams()
-        .set('only', params.metrics?.length > 0 ? Array.from(new Set(params.metrics).values()) : null)
+        .set('only', (params.metrics?.length ?? 0) > 0 ? Array.from(new Set(params.metrics).values()) : null)
         .set('interval', params.interval)
         .set('span', params.span)
         .set('end', normalizeDate(params.end))

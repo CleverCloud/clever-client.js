@@ -27,15 +27,15 @@ export function e2eSupport(config?: { debug?: boolean }) {
     },
     async prepare() {
       ccApiClient = new CcApiClient({
-        baseUrl: IS_NODE ? null : `/cc-api-${USER.userName}-api-token`,
+        baseUrl: IS_NODE ? undefined : `/cc-api-${USER.userName}-api-token`,
         authMethod: {
           type: 'api-token',
-          apiToken: USER.apiToken,
+          apiToken: USER.apiToken!,
         },
       });
 
       const environment = await ccApiClient.send(new GetEnvironmentCommand({ addonId: REDIS_ADDON_ID }));
-      const backendUrl = environment.environment.find((e) => e.name === 'REDIS_URL').value;
+      const backendUrl = environment.environment.find((e) => e.name === 'REDIS_URL')!.value;
 
       client = createRedisHttpClient(backendUrl, conf.debug);
 
@@ -82,12 +82,12 @@ function createRedisHttpClient(backendUrl: string, debug: boolean): RedisHttpCli
   });
 }
 
-function getBaseUrl(): string | null {
+function getBaseUrl(): string | undefined {
   if (IS_NODE) {
     if (USE_LOCAL_HTTP_REDIS) {
       return 'http://localhost:8080';
     }
-    return null;
+    return undefined;
   }
   // if running in browser, we use the proxified URLs
   return `/redis-http`;

@@ -41,13 +41,13 @@ ${withDiffs
 ${previous != null ? `Diff since ${previous.versionedOpenapi.date}` : 'First time'}
 
 ### Added endpoints
-${endpointsMarkdownChapter(diff.addedEndpoints)}
+${endpointsMarkdownChapter(diff.addedEndpoints ?? [])}
 
 ### Removed endpoints
-${endpointsMarkdownChapter(diff.deletedEndpoints)}
+${endpointsMarkdownChapter(diff.deletedEndpoints ?? [])}
 
 ### Modified endpoints
-${endpointsMarkdownChapter(diff.modifiedEndpoints)}
+${endpointsMarkdownChapter(diff.modifiedEndpoints ?? [])}
 `,
   )
   .join('')}

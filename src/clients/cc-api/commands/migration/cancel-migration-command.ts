@@ -9,13 +9,13 @@ import type { CancelMigrationCommandInput } from './cancel-migration-command.typ
  * @group Migration
  * @version 2
  */
-export class CancelMigrationCommand extends CcApiSimpleCommand<CancelMigrationCommandInput, void> {
+export class CancelMigrationCommand extends CcApiSimpleCommand<CancelMigrationCommandInput, undefined> {
   toRequestParams(params: CancelMigrationCommandInput) {
     return delete_(safeUrl`/v2/organisations/${params.ownerId}addons/${params.addonId}/migrations/:XXX`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

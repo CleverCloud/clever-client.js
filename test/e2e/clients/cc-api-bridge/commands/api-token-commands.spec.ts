@@ -46,13 +46,13 @@ describe('api-token commands', function () {
     expect(listResponse).toHaveLength(2);
     expect(listResponse.map((t) => t.apiTokenId)).toContain(tokenCreated.apiTokenId);
     const tokenFormList = listResponse.find((t) => t.apiTokenId === tokenCreated.apiTokenId);
-    expect(tokenFormList.name).toBe(tokenCreated.name);
-    expect(tokenFormList.description).toBe(tokenCreated.description);
-    expect(tokenFormList.userId).toBeTypeOf('string');
-    expect(tokenFormList.creationDate).toBe(tokenCreated.creationDate);
-    expect(tokenFormList.expirationDate).toBe(tokenCreated.expirationDate);
-    expect(tokenFormList.ip).toBeTypeOf('string');
-    expect(tokenFormList.state).toBe('ACTIVE');
+    expect(tokenFormList!.name).toBe(tokenCreated.name);
+    expect(tokenFormList!.description).toBe(tokenCreated.description);
+    expect(tokenFormList!.userId).toBeTypeOf('string');
+    expect(tokenFormList!.creationDate).toBe(tokenCreated.creationDate);
+    expect(tokenFormList!.expirationDate).toBe(tokenCreated.expirationDate);
+    expect(tokenFormList!.ip).toBeTypeOf('string');
+    expect(tokenFormList!.state).toBe('ACTIVE');
 
     // update
     const updateResponse = await support.client.send(
@@ -65,8 +65,8 @@ describe('api-token commands', function () {
 
     expect(updateResponse).toBeNull();
     const apiTokenUpdated = await getApiToken(tokenCreated.apiTokenId);
-    expect(apiTokenUpdated.name).toBe('test-api-token-updated');
-    expect(apiTokenUpdated.description).toBe('test description updated');
+    expect(apiTokenUpdated!.name).toBe('test-api-token-updated');
+    expect(apiTokenUpdated!.description).toBe('test description updated');
 
     // delete
     const deleteResponse = await support.client.send(
@@ -78,7 +78,7 @@ describe('api-token commands', function () {
     createdTokenId = null;
   });
 
-  async function getApiToken(tokenId: string): Promise<ApiToken> {
+  async function getApiToken(tokenId: string): Promise<ApiToken | undefined> {
     const listResponse = await support.client.send(new ListApiTokenCommand());
     return listResponse.find((t) => t.apiTokenId === tokenId);
   }

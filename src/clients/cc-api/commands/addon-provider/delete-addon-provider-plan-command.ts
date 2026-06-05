@@ -9,7 +9,7 @@ import type { DeleteAddonProviderPlanCommandInput } from './delete-addon-provide
  * @group AddonProvider
  * @version 2
  */
-export class DeleteAddonProviderPlanCommand extends CcApiSimpleCommand<DeleteAddonProviderPlanCommandInput, void> {
+export class DeleteAddonProviderPlanCommand extends CcApiSimpleCommand<DeleteAddonProviderPlanCommandInput, undefined> {
   toRequestParams(params: DeleteAddonProviderPlanCommandInput) {
     return delete_(
       safeUrl`/v2/organisations/${params.ownerId}/addonproviders/${params.addonProviderId}/plans/${params.planId}`,
@@ -20,5 +20,9 @@ export class DeleteAddonProviderPlanCommand extends CcApiSimpleCommand<DeleteAdd
     return {
       ownerId: true,
     };
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

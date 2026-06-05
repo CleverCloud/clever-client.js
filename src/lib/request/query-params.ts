@@ -3,7 +3,7 @@ import type { OneOrMany } from '../../types/utils.types.js';
 import { toArray } from '../utils.js';
 
 export class QueryParams {
-  #queryParams = new Map<string, OneOrMany<QueryParamValue>>();
+  #queryParams = new Map<string, OneOrMany<QueryParamValue> | undefined>();
 
   constructor(params?: Record<string, OneOrMany<QueryParamValue>> | QueryParams) {
     if (params != null) {
@@ -15,23 +15,26 @@ export class QueryParams {
     }
   }
 
-  set(param: string, value: OneOrMany<QueryParamValue>): this {
+  set(param: string, value: OneOrMany<QueryParamValue> | undefined): this {
     this.#queryParams.set(param, value);
     return this;
   }
 
-  setParams(params: Record<string, OneOrMany<QueryParamValue>>): this {
+  setParams(params: Record<string, OneOrMany<QueryParamValue> | undefined>): this {
     Object.entries(params).forEach(([key, value]) => {
       this.set(key, value);
     });
     return this;
   }
 
-  get(param: string): OneOrMany<QueryParamValue> {
+  get(param: string): OneOrMany<QueryParamValue> | undefined {
     return this.#queryParams.get(param);
   }
 
-  append(param: string, value: OneOrMany<QueryParamValue>): this {
+  append(param: string, value: OneOrMany<QueryParamValue> | undefined): this {
+    if (value == null) {
+      return this;
+    }
     if (this.#queryParams.has(param)) {
       this.#queryParams.set(param, [...toArray(this.#queryParams.get(param)), ...toArray(value)]);
     } else {
@@ -44,7 +47,7 @@ export class QueryParams {
     this.#queryParams.delete(param);
   }
 
-  entries(): MapIterator<[string, OneOrMany<QueryParamValue>]> {
+  entries(): MapIterator<[string, OneOrMany<QueryParamValue> | undefined]> {
     return this.#queryParams.entries();
   }
 

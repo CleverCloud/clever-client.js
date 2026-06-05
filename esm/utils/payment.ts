@@ -26,8 +26,8 @@ export function getOrgaPaymentMethodsError(orga: Orga, paymentMethodList: Array<
     return ERROR_TYPES.NO_DEFAULT_PAYMENT_METHOD;
   }
 
-  const defaultPaymentMethod = defaultPaymentList.find((pm) => pm.isDefault === true);
-  if (defaultPaymentMethod.isExpired) {
+  const defaultPaymentMethod = defaultPaymentList.find((pm) => pm.isDefault);
+  if (defaultPaymentMethod!.isExpired) {
     return ERROR_TYPES.DEFAULT_PAYMENT_METHOD_IS_EXPIRED;
   }
 

@@ -21,11 +21,11 @@ export function transformInvoice(payload: any): Invoice {
     origin: payload.origin,
     category: payload.category,
     address: transformAddress(payload.address),
-    emissionDate: normalizeDate(payload.emission_date),
-    payDate: normalizeDate(payload.pay_date),
+    emissionDate: normalizeDate(payload.emission_date)!,
+    payDate: normalizeDate(payload.pay_date)!,
     status: payload.status,
-    consumptionStartDate: normalizeDate(payload.consumption_begin_date),
-    consumptionEndDate: normalizeDate(payload.consumption_end_date),
+    consumptionStartDate: normalizeDate(payload.consumption_begin_date)!,
+    consumptionEndDate: normalizeDate(payload.consumption_end_date)!,
     currency: payload.currency,
     kpiComputeMonths: payload.kpi_compute_months,
     priceFactor: payload.price_factor,
@@ -125,8 +125,8 @@ function transformUptimeDetail(payload: any): InvoiceUptimeDetail {
     zone: payload.zone_id,
     policyId: payload.runtime_policy_id,
     price: transformMoney(payload.price),
-    consumptionStartDate: normalizeDate(payload.consumption_start),
-    consumptionEndDate: normalizeDate(payload.consumption_end),
+    consumptionStartDate: normalizeDate(payload.consumption_start)!,
+    consumptionEndDate: normalizeDate(payload.consumption_end)!,
   };
 }
 
@@ -152,8 +152,8 @@ function transformCountable(payload: any): InvoiceCountable {
 
 function transformCountableDetail(payload: any): InvoiceCountableDetail {
   return {
-    consumptionStartDate: normalizeDate(payload.consumption_start),
-    consumptionEndDate: normalizeDate(payload.consumption_end),
+    consumptionStartDate: normalizeDate(payload.consumption_start)!,
+    consumptionEndDate: normalizeDate(payload.consumption_end)!,
     planId: payload.plan_id,
     quantity: payload.quantity,
     price: transformMoney(payload.price),

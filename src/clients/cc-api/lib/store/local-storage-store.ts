@@ -52,12 +52,12 @@ export class LocalStorageStore<T> implements Store<T> {
    * @returns The stored data, or null if no data exists
    * @throws {Error} If reading from localStorage fails or if data cannot be parsed
    */
-  read(): T | null {
+  read(): T | undefined {
     const item = localStorage.getItem(this.#storageKey);
     if (item != null) {
       return JSON.parse(item) as T;
     }
-    return null;
+    return undefined;
   }
 
   /**

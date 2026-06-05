@@ -11,8 +11,8 @@ import { isTestDomain } from './domains.js';
 
 export function diagDomainConfig(
   domainInfo: DomainDiagInfo,
-  resolveDnsResult: ResolveDnsResult | null,
-  loadBalancerDnsConfig: LoadBalancerDnsConfig | null,
+  resolveDnsResult: ResolveDnsResult | undefined,
+  loadBalancerDnsConfig: LoadBalancerDnsConfig | undefined,
 ): DomainDiag {
   if (isTestDomain(domainInfo.hostname)) {
     return {
@@ -20,6 +20,11 @@ export function diagDomainConfig(
       diagSummary: 'managed',
       diagDetails: [],
     };
+  }
+
+  // For non-test domains, DNS resolution and load balancer config are required
+  if (resolveDnsResult == null || loadBalancerDnsConfig == null) {
+    throw new Error('Cannot diagnose a non-test domain without DNS resolution and load balancer config');
   }
 
   if (!domainInfo.isApex && resolveDnsResult.aRecords.length === 0 && resolveDnsResult.cnameRecords.length === 0) {

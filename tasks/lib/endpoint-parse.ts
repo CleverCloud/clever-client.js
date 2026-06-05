@@ -15,10 +15,10 @@ export async function parseEndpoints(
 
   const result: Record<string, Endpoint> = {};
 
-  Object.entries(dereferenced.schema.paths).forEach(([p, methods]) => {
+  Object.entries(dereferenced.schema!.paths!).forEach(([p, methods]) => {
     const path = `${pathPrefix}${p}`;
 
-    if (methods.$ref) {
+    if (methods?.$ref) {
       // todo: we don't know how to hande that case
     } else {
       Object.entries(methods).forEach((entry) => {
@@ -46,7 +46,7 @@ export async function parseEndpoints(
             return nameCompare;
           })
           .forEach((param, index) => {
-            const paramSpec = operationSpec.parameters[index];
+            const paramSpec = operationSpec.parameters![index];
 
             const simpleParam = {
               name: param.name,
@@ -66,7 +66,7 @@ export async function parseEndpoints(
         //-- parse responses ------
 
         // get only the first non error status response
-        const responseByStatusCodeEntry = Object.entries(operation.responses).find(
+        const responseByStatusCodeEntry = Object.entries(operation.responses ?? {}).find(
           ([code]) => Number(code) >= 200 && Number(code) < 300,
         );
 
@@ -106,7 +106,7 @@ export async function parseEndpoints(
             const contentType = responseByContentTypeEntry[0];
             const res = responseByContentTypeEntry[1];
 
-            const resultSpec = operationSpec.responses[responseByStatusCodeEntry[0]].content[contentType];
+            const resultSpec = operationSpec.responses![responseByStatusCodeEntry[0]].content![contentType];
             response = {
               statusCode,
               contentType,
@@ -122,12 +122,17 @@ export async function parseEndpoints(
           method,
           path,
           normalizedPath,
-          operationId: operation.operationId,
+          operationId: operation.operationId ?? '',
           queryParams,
           pathParams,
           requestBody:
-            operation.requestBody != null ? parseEndpointType(operation.requestBody, operationSpec.requestBody) : null,
-          response,
+            operation.requestBody != null
+              ? parseEndpointType(
+                  operation.requestBody,
+                  operationSpec.requestBody as OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
+                )
+              : undefined,
+          response: response!,
         };
       });
     }

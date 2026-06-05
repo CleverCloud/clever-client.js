@@ -34,7 +34,7 @@ export class StreamApplicationAccessLogCommand extends AbstractLogsStreamCommand
   }
 
   _convertLog(payload: unknown): ApplicationAccessLog {
-    return transformApplicationAccessLog(payload);
+    return transformApplicationAccessLog(payload)!;
   }
 
   getIdsToResolve(): IdResolve {

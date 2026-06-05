@@ -88,7 +88,7 @@ export class CreateApplicationCommand extends CcApiCompositeCommand<
       innerParams.maxFlavor = innerParams.minFlavor;
     }
 
-    if (innerParams.buildFlavor?.length > 0) {
+    if ((innerParams.buildFlavor?.length ?? 0) > 0) {
       innerParams.separateBuild = true;
     }
 
@@ -119,7 +119,7 @@ class CreateApplicationInnerCommand extends CcApiSimpleCommand<
       cancelOnPush: params.cancelOnPush,
       deploy: params.deploy,
       description: params.description,
-      env: toNameValueObject(params.environment),
+      env: toNameValueObject(params.environment ?? []),
       favourite: params.favourite,
       homogeneous: params.homogeneous,
       instance: params.instance,

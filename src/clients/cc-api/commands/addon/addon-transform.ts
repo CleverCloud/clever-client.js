@@ -12,7 +12,7 @@ export function transformAddon(payload: any): Addon {
     zoneId: payload.zoneId,
     provider: payload.provider,
     plan: transformAddonProviderPlan(payload.plan),
-    creationDate: normalizeDate(payload.creationDate),
+    creationDate: normalizeDate(payload.creationDate)!,
     configKeys: payload.configKeys.sort(),
   };
 }

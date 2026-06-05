@@ -6,12 +6,12 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
  * @group Github
  * @version 2
  */
-export class UnlinkGithubAccountCommand extends CcApiSimpleCommand<void, void> {
+export class UnlinkGithubAccountCommand extends CcApiSimpleCommand<void, undefined> {
   toRequestParams() {
     return delete_(`/v2/github/link`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

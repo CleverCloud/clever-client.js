@@ -9,7 +9,7 @@ import type { ConfirmAuthMfaCommandInput } from './confirm-auth-mfa-command.type
  * @group Auth
  * @version 2
  */
-export class ConfirmAuthMfaCommand extends CcApiSimpleCommand<ConfirmAuthMfaCommandInput, void> {
+export class ConfirmAuthMfaCommand extends CcApiSimpleCommand<ConfirmAuthMfaCommandInput, undefined> {
   toRequestParams(params: ConfirmAuthMfaCommandInput): Partial<CcRequestParams> {
     return {
       method: 'POST',
@@ -24,5 +24,9 @@ export class ConfirmAuthMfaCommand extends CcApiSimpleCommand<ConfirmAuthMfaComm
         revokeTokens: params.revokeTokens,
       },
     };
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

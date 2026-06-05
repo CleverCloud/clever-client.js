@@ -29,11 +29,14 @@ export function fetchRequestToken({
   consumerSecret: string;
   oauthCallback: string;
 }): Promise<RequestParams> {
-  return doFetchRequestToken(null, {
-    ...getOauthParams({ consumerKey, consumerSecret }),
+  return doFetchRequestToken(
+    {},
+    {
+      ...getOauthParams({ consumerKey, consumerSecret }),
 
-    oauth_callback: oauthCallback,
-  });
+      oauth_callback: oauthCallback,
+    },
+  );
 }
 
 export function fetchAccessToken({
@@ -49,11 +52,12 @@ export function fetchAccessToken({
   oauthToken: string;
   oauthVerifier: string;
 }): Promise<RequestParams> {
-  return doFetchAccessToken(null, {
-    ...getOauthParams({ consumerKey, consumerSecret, tokenSecret }),
-
-    oauth_token: oauthToken,
-
-    oauth_verifier: oauthVerifier,
-  });
+  return doFetchAccessToken(
+    {},
+    {
+      ...getOauthParams({ consumerKey, consumerSecret, tokenSecret }),
+      oauth_token: oauthToken,
+      oauth_verifier: oauthVerifier,
+    },
+  );
 }

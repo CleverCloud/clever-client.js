@@ -8,7 +8,7 @@ import type { UpdateAuthPasswordCommandInput } from './update-auth-password-comm
  * @group Auth
  * @version 2
  */
-export class UpdateAuthPasswordCommand extends CcApiSimpleCommand<UpdateAuthPasswordCommandInput, void> {
+export class UpdateAuthPasswordCommand extends CcApiSimpleCommand<UpdateAuthPasswordCommandInput, undefined> {
   toRequestParams(params: UpdateAuthPasswordCommandInput) {
     return put(safeUrl`/v2/self/change_password`, {
       oldPassword: params.oldPassword,
@@ -17,7 +17,7 @@ export class UpdateAuthPasswordCommand extends CcApiSimpleCommand<UpdateAuthPass
     });
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

@@ -14,7 +14,7 @@ describe('backup commands', function () {
     expect(response[0].entityId).toBeTypeOf('string');
     expect(response[0].status).toBeTypeOf('string');
     checkDateFormat(response[0].creationDate);
-    checkDateFormat(response[0].expirationDate);
+    checkDateFormat(response[0].expirationDate!);
     expect(response[0].downloadUrl).toBeTypeOf('string');
     expect(response[0].commands).toBeUndefined();
   });
@@ -29,10 +29,10 @@ describe('backup commands', function () {
     expect(response[0].entityId).toBeTypeOf('string');
     expect(response[0].status).toBeTypeOf('string');
     checkDateFormat(response[0].creationDate);
-    checkDateFormat(response[0].expirationDate);
+    checkDateFormat(response[0].expirationDate!);
     expect(response[0].downloadUrl).toBeTypeOf('string');
-    expect(response[0].commands.restoreCommand).toBeTypeOf('string');
-    expect(response[0].commands.password).toBeTypeOf('string');
-    expect(response[0].commands.deleteCommand).toBeUndefined();
+    expect(response[0].commands!.restoreCommand).toBeTypeOf('string');
+    expect(response[0].commands!.password).toBeTypeOf('string');
+    expect(response[0].commands!.deleteCommand).toBeUndefined();
   });
 });

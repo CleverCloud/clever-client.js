@@ -24,7 +24,7 @@ export class CreatePersonalSshKeyCommand extends CcApiCompositeCommand<
   ): Promise<CreatePersonalSshKeyCommandOutput> {
     await composer.send(new CreatePersonalSshKeyInnerCommand(params));
     const keys = await composer.send(new ListPersonalSshKeyCommand());
-    return keys.find((key) => key.name === params.name);
+    return keys.find((key) => key.name === params.name)!;
   }
 }
 
@@ -33,7 +33,7 @@ export class CreatePersonalSshKeyCommand extends CcApiCompositeCommand<
  * @group SshKey
  * @version 2
  */
-export class CreatePersonalSshKeyInnerCommand extends CcApiSimpleCommand<CreatePersonalSshKeyCommandInput, void> {
+export class CreatePersonalSshKeyInnerCommand extends CcApiSimpleCommand<CreatePersonalSshKeyCommandInput, undefined> {
   toRequestParams(params: CreatePersonalSshKeyCommandInput): Partial<CcRequestParams> {
     return {
       method: 'PUT',
@@ -43,7 +43,7 @@ export class CreatePersonalSshKeyInnerCommand extends CcApiSimpleCommand<CreateP
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

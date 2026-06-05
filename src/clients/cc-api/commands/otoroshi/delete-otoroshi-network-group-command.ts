@@ -11,7 +11,7 @@ import type { DeleteOtoroshiNetworkGroupCommandInput } from './delete-otoroshi-n
  */
 export class DeleteOtoroshiNetworkGroupCommand extends CcApiSimpleCommand<
   DeleteOtoroshiNetworkGroupCommandInput,
-  void
+  undefined
 > {
   toRequestParams(params: DeleteOtoroshiNetworkGroupCommandInput) {
     return delete_(safeUrl`/v4/addon-providers/addon-otoroshi/addons/${params.addonId}/networkgroup`);
@@ -23,7 +23,7 @@ export class DeleteOtoroshiNetworkGroupCommand extends CcApiSimpleCommand<
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

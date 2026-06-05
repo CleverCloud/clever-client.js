@@ -10,7 +10,7 @@ export function transformEmailNotification(payload: any): EmailNotification {
     targets: sortBy(payload.notified?.map(transformTarget) ?? [], 'type'),
     events: payload.events?.sort() ?? [],
     scope: payload.scope?.sort() ?? [],
-    createdAt: normalizeDate(payload.createdAt),
+    createdAt: normalizeDate(payload.createdAt)!,
   };
 }
 
@@ -29,6 +29,8 @@ function transformTarget(payload: any): EmailNotificationTarget {
       return {
         type: 'user',
       };
+    default:
+      throw new Error(`Unknown notification target type: ${payload.type}`);
   }
 }
 

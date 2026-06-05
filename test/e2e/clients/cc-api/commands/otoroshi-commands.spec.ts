@@ -114,7 +114,7 @@ describe('otoroshi commands', function () {
 
     expect(response.id).toBe(addon.realId);
     expect(response.features.networkGroup).not.toBeNull();
-    expect(response.features.networkGroup.id).toBeTypeOf('string');
+    expect(response.features.networkGroup!.id).toBeTypeOf('string');
   });
 
   it('should delete otoroshi network group', async () => {

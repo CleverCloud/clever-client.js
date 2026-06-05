@@ -27,7 +27,7 @@ export class ListDeploymentCommand extends CcApiCompositeCommand<
     if ('applicationId' in params && params.applicationId != null) {
       return client.send(new ListApplicationDeploymentCommand(params));
     }
-    return client.send(new ListOrganisationDeploymentCommand({ ownerId: params.ownerId }));
+    return client.send(new ListOrganisationDeploymentCommand({ ownerId: params.ownerId! }));
   }
 }
 

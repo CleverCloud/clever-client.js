@@ -55,7 +55,7 @@ export class CcApiClient extends CcClient<CcApiType> {
 
     this.#resourceIdResolver = new ResourceIdResolver(
       this,
-      config.resourceIdResolverStore ?? new MemoryStore<ResourceIdIndex>(),
+      config?.resourceIdResolverStore ?? new MemoryStore<ResourceIdIndex>(),
     );
   }
 
@@ -172,9 +172,7 @@ function getBaseUrl(config?: CcApiClientConfig): string {
   if (config?.authMethod == null || config.authMethod.type === 'oauth-v1') {
     return 'https://api.clever-cloud.com';
   }
-  if (config.authMethod.type === 'api-token') {
-    return 'https://api-bridge.clever-cloud.com';
-  }
+  return 'https://api-bridge.clever-cloud.com';
 }
 
 /**
@@ -182,11 +180,11 @@ function getBaseUrl(config?: CcApiClientConfig): string {
  * Supports OAuth v1 PLAINTEXT and API token authentication methods.
  *
  * @param config - Client configuration
- * @returns Authentication handler or null if no auth method specified
+ * @returns Authentication handler or undefined if no auth method specified
  */
-function getAuth(config?: CcApiClientConfig): CcAuth | null {
+function getAuth(config?: CcApiClientConfig): CcAuth | undefined {
   if (config?.authMethod == null) {
-    return null;
+    return undefined;
   }
   if (config.authMethod.type === 'oauth-v1') {
     return new CcAuthOauthV1Plaintext(config.authMethod.oauthTokens);
@@ -194,4 +192,5 @@ function getAuth(config?: CcApiClientConfig): CcAuth | null {
   if (config.authMethod.type === 'api-token') {
     return new CcAuthApiToken(config.authMethod.apiToken);
   }
+  return undefined;
 }

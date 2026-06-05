@@ -9,7 +9,7 @@ import type { RebuildMatomoCommandInput } from './rebuild-matomo-command.types.j
  * @group Matomo
  * @version 4
  */
-export class RebuildMatomoCommand extends CcApiSimpleCommand<RebuildMatomoCommandInput, void> {
+export class RebuildMatomoCommand extends CcApiSimpleCommand<RebuildMatomoCommandInput, undefined> {
   toRequestParams(params: RebuildMatomoCommandInput) {
     return post(safeUrl`/v4/addon-providers/addon-matomo/addons/${params.addonId}/rebuild`);
   }
@@ -20,7 +20,7 @@ export class RebuildMatomoCommand extends CcApiSimpleCommand<RebuildMatomoComman
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

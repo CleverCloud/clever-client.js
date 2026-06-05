@@ -11,7 +11,7 @@ import type { DeleteAddonProviderFeatureCommandInput } from './delete-addon-prov
  */
 export class DeleteAddonProviderFeatureCommand extends CcApiSimpleCommand<
   DeleteAddonProviderFeatureCommandInput,
-  void
+  undefined
 > {
   toRequestParams(params: DeleteAddonProviderFeatureCommandInput) {
     return delete_(
@@ -23,5 +23,9 @@ export class DeleteAddonProviderFeatureCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

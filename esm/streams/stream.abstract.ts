@@ -94,7 +94,7 @@ export abstract class AbstractStream extends EventEmitter {
     this._closeSource();
     // Always clear all timeouts
     clearTimeout(this._pingTimeoutId);
-    clearTimeout(this._autoRetry.timeoutId);
+    clearTimeout(this._autoRetry?.timeoutId);
     this.emit('close', reason);
   }
 

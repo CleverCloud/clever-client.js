@@ -14,7 +14,7 @@ export function transformDeploymentLegacy(payload: any, applicationId: string): 
     id: payload.uuid,
     applicationId,
     index: payload.id,
-    date: normalizeDate(payload.date),
+    date: normalizeDate(payload.date)!,
     state: DEPLOYMENT_STATE_CONVERT_MAP[payload.state],
     action: payload.action,
     commit: payload.commit,

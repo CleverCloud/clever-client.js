@@ -13,7 +13,7 @@ export function toMicroTimestamp(isoString?: string): number {
     return Date.now() * 1000;
   }
   const milliTimestamp = new Date(isoString).getTime();
-  const [, microSuffix = '000'] = isoString.match(/\.\d{3}(\d{3})?Z$/);
+  const [, microSuffix = '000'] = isoString.match(/\.\d{3}(\d{3})?Z$/) ?? [];
   const microseconds = Number(microSuffix);
   return milliTimestamp * 1000 + microseconds;
 }

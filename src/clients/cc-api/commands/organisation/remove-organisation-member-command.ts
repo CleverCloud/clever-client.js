@@ -8,12 +8,15 @@ import type { RemoveOrganisationMemberCommandInput } from './remove-organisation
  * @group Organisation
  * @version 2
  */
-export class RemoveOrganisationMemberCommand extends CcApiSimpleCommand<RemoveOrganisationMemberCommandInput, void> {
+export class RemoveOrganisationMemberCommand extends CcApiSimpleCommand<
+  RemoveOrganisationMemberCommandInput,
+  undefined
+> {
   toRequestParams(params: RemoveOrganisationMemberCommandInput) {
     return delete_(safeUrl`/v2/organisations/${params.organisationId}/members/${params.memberId}`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

@@ -89,8 +89,7 @@ function parseArgs(): Options {
     input,
     format,
     withLegacyClient,
-    // validated just above; the `!= null` disjunct prevents the compiler from narrowing the literal union itself
-    apiVersion: apiVersion as 'v2' | 'v4' | null,
+    apiVersion,
   };
 }
 

@@ -11,11 +11,14 @@ import { waitForNetworkGroupMemberDeletion } from './network-group-utils.js';
  * @group NetworkGroup
  * @version 4
  */
-export class DeleteNetworkGroupMemberCommand extends CcApiCompositeCommand<DeleteNetworkGroupMemberCommandInput, void> {
-  async compose(params: DeleteNetworkGroupMemberCommandInput, composer: CcApiComposer): Promise<void> {
+export class DeleteNetworkGroupMemberCommand extends CcApiCompositeCommand<
+  DeleteNetworkGroupMemberCommandInput,
+  undefined
+> {
+  async compose(params: DeleteNetworkGroupMemberCommandInput, composer: CcApiComposer): Promise<undefined> {
     await composer.send(new DeleteNetworkGroupMemberCommandInner(params));
     await waitForNetworkGroupMemberDeletion(composer, params.ownerId, params.networkGroupId, params.memberId);
-    return null;
+    return undefined;
   }
 }
 
@@ -24,10 +27,14 @@ export class DeleteNetworkGroupMemberCommand extends CcApiCompositeCommand<Delet
  * @group NetworkGroup
  * @version 4
  */
-class DeleteNetworkGroupMemberCommandInner extends CcApiSimpleCommand<DeleteNetworkGroupMemberCommandInput, void> {
+class DeleteNetworkGroupMemberCommandInner extends CcApiSimpleCommand<DeleteNetworkGroupMemberCommandInput, undefined> {
   toRequestParams(params: DeleteNetworkGroupMemberCommandInput) {
     return delete_(
       safeUrl`/v4/networkgroups/organisations/${params.ownerId}/networkgroups/${params.networkGroupId}/members/${params.memberId}`,
     );
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

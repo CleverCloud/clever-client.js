@@ -1,5 +1,6 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { GetPulsarInfoCommand } from '../../../../../src/clients/cc-api/commands/pulsar/get-pulsar-info-command.js';
+import { expectToBeDefined } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
 // cannot be automatised because addon deletion just after creation is not supported by the platform
@@ -29,6 +30,7 @@ describe.skip('pulsar commands', function () {
 
     const response = await support.client.send(new GetPulsarInfoCommand({ addonId: addon.id }));
 
+    expectToBeDefined(response);
     expect(response.id).toBe(addon.realId);
     expect(response.tenant).toBeTypeOf('string');
     expect(response.namespace).toBeTypeOf('string');

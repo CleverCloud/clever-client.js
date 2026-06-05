@@ -44,25 +44,28 @@ function createApiBridgeClient(auth: Auth, debug: boolean): CcApiBridgeClient {
   return new CcApiBridgeClient({
     defaultRequestConfig,
     baseUrl: getBaseUrl(auth),
-    oauthTokens: getAuth(auth),
+    // The bridge client constructor handles `oauthTokens == null` (no auth, e.g. browser /
+    // proxy or the `none` auth mode), but `CcApiBridgeClientConfig.oauthTokens` is typed as
+    // required. Cast here until the src type is made optional.
+    oauthTokens: getAuth(auth) as OauthTokens,
   });
 }
 
-function getBaseUrl(auth: Auth): string | null {
+function getBaseUrl(auth: Auth): string | undefined {
   if (IS_NODE) {
     if (USE_LOCAL_API_BRIDGE) {
       return 'http://localhost:8080';
     }
-    return null;
+    return undefined;
   }
   // if running in browser, we use the proxified URLs
   return `/cc-api-bridge-${USER.userName}-${auth}`;
 }
 
-function getAuth(auth: Auth): OauthTokens {
+function getAuth(auth: Auth): OauthTokens | undefined {
   // if running in browser, no auth (authentication will be done by the proxy)
   if (!IS_NODE || auth === 'none') {
-    return null;
+    return undefined;
   }
 
   return USER.oauthTokens;

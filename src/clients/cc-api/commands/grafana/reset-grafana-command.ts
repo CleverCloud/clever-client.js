@@ -8,12 +8,12 @@ import type { ResetGrafanaCommandInput } from './reset-grafana-command.types.js'
  * @group Grafana
  * @version 4
  */
-export class ResetGrafanaCommand extends CcApiSimpleCommand<ResetGrafanaCommandInput, void> {
+export class ResetGrafanaCommand extends CcApiSimpleCommand<ResetGrafanaCommandInput, undefined> {
   toRequestParams(params: ResetGrafanaCommandInput) {
     return post(safeUrl`/v4/saas/grafana/${params.ownerId}/reset`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

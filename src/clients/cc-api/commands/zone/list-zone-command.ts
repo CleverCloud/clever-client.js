@@ -12,7 +12,7 @@ import { transformZone } from './zone-transform.js';
  */
 export class ListZoneCommand extends CcApiSimpleCommand<ListZoneCommandInput, ListZoneCommandOutput> {
   toRequestParams(params: ListZoneCommandInput) {
-    let queryParms: QueryParams;
+    let queryParms: QueryParams | undefined;
     if (params != null && typeof params === 'object') {
       queryParms = new QueryParams().append('ownerId', params.ownerId);
     }

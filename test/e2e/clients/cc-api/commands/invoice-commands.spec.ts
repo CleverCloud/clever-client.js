@@ -27,7 +27,7 @@ describe('invoice commands', function () {
     expect(response).toBeTypeOf('object');
     expect(response.invoiceNumber).toBe(invoiceNumber);
     checkDateFormat(response.emissionDate);
-    checkDateFormat(response.payDate);
+    checkDateFormat(response.payDate!);
     checkDateFormat(response.consumptionStartDate);
     checkDateFormat(response.consumptionEndDate);
   });
@@ -64,7 +64,7 @@ describe('invoice commands', function () {
     expect(url.origin).toBeTypeOf('string');
     if (support.isNode) {
       expect(url.pathname).toBe(`/v4/billing/organisations/${support.userId}/invoices/${invoiceNumber}.pdf`);
-      expect(atob(url.searchParams.get('authorization'))).toMatch(/^Bearer .+/);
+      expect(atob(url.searchParams.get('authorization')!)).toMatch(/^Bearer .+/);
     } else {
       expect(url.pathname).toMatch(
         new RegExp(`^/[^/]+/v4/billing/organisations/${support.userId}/invoices/${invoiceNumber}.pdf$`),

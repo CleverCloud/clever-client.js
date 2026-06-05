@@ -9,7 +9,7 @@ import type { RebuildOtoroshiCommandInput } from './rebuild-otoroshi-command.typ
  * @group Otoroshi
  * @version 4
  */
-export class RebuildOtoroshiCommand extends CcApiSimpleCommand<RebuildOtoroshiCommandInput, void> {
+export class RebuildOtoroshiCommand extends CcApiSimpleCommand<RebuildOtoroshiCommandInput, undefined> {
   toRequestParams(params: RebuildOtoroshiCommandInput) {
     return post(safeUrl`/v4/addon-providers/addon-otoroshi/addons/${params.addonId}/rebuild`);
   }
@@ -20,7 +20,7 @@ export class RebuildOtoroshiCommand extends CcApiSimpleCommand<RebuildOtoroshiCo
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

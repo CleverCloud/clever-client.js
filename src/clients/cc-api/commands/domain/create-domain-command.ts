@@ -9,15 +9,15 @@ import type { CreateDomainCommandInput } from './create-domain-command.types.js'
  * @group Domain
  * @version 2
  */
-export class CreateDomainCommand extends CcApiSimpleCommand<CreateDomainCommandInput, void> {
+export class CreateDomainCommand extends CcApiSimpleCommand<CreateDomainCommandInput, undefined> {
   toRequestParams(params: CreateDomainCommandInput) {
     return put(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/vhosts/${params.domain}`,
     );
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

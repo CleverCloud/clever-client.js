@@ -15,8 +15,8 @@ import type {
  * @group Link
  * @version 2
  */
-export class RemoveLinkCommand extends CcApiCompositeCommand<RemoveLinkCommandInput, void> {
-  async compose(params: RemoveLinkCommandInput, composer: CcApiComposer): Promise<void> {
+export class RemoveLinkCommand extends CcApiCompositeCommand<RemoveLinkCommandInput, undefined> {
+  async compose(params: RemoveLinkCommandInput, composer: CcApiComposer): Promise<undefined> {
     if ('targetApplicationId' in params) {
       return composer.send(new RemoveApplicationToApplicationLinkCommand(params));
     }
@@ -37,12 +37,16 @@ export class RemoveLinkCommand extends CcApiCompositeCommand<RemoveLinkCommandIn
  */
 export class RemoveApplicationToApplicationLinkCommand extends CcApiSimpleCommand<
   RemoveApplicationToApplicationLinkCommandInput,
-  void
+  undefined
 > {
   toRequestParams(params: RemoveApplicationToApplicationLinkCommandInput) {
     return delete_(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/dependencies/${params.targetApplicationId}`,
     );
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }
 
@@ -53,7 +57,7 @@ export class RemoveApplicationToApplicationLinkCommand extends CcApiSimpleComman
  */
 export class RemoveApplicationToAddonLinkCommand extends CcApiSimpleCommand<
   RemoveApplicationToAddonLinkCommandInput,
-  void
+  undefined
 > {
   toRequestParams(params: RemoveApplicationToAddonLinkCommandInput) {
     return delete_(
@@ -65,5 +69,9 @@ export class RemoveApplicationToAddonLinkCommand extends CcApiSimpleCommand<
     return {
       addonId: { property: 'targetAddonId', type: 'ADDON_ID' },
     };
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

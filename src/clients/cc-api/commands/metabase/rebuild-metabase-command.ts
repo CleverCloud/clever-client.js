@@ -9,7 +9,7 @@ import type { RebuildMetabaseCommandInput } from './rebuild-metabase-command.typ
  * @group Metabase
  * @version 4
  */
-export class RebuildMetabaseCommand extends CcApiSimpleCommand<RebuildMetabaseCommandInput, void> {
+export class RebuildMetabaseCommand extends CcApiSimpleCommand<RebuildMetabaseCommandInput, undefined> {
   toRequestParams(params: RebuildMetabaseCommandInput) {
     return post(safeUrl`/v4/addon-providers/addon-metabase/addons/${params.addonId}/rebuild`);
   }
@@ -20,7 +20,7 @@ export class RebuildMetabaseCommand extends CcApiSimpleCommand<RebuildMetabaseCo
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

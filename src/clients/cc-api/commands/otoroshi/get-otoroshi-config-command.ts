@@ -35,7 +35,8 @@ export class GetOtoroshiConfigCommand extends CcApiSimpleCommand<
     if (typeof response === 'string') {
       return response;
     }
-    // The response body is read asynchronously; the command runner awaits this value.
-    return (response as Response).text() as unknown as GetOtoroshiConfigCommandOutput;
+    // An `application/yaml` response is decoded as a Blob by `getResponseBody`.
+    // Its text is read asynchronously; the command runner awaits this value.
+    return (response as Blob).text() as unknown as GetOtoroshiConfigCommandOutput;
   }
 }

@@ -83,10 +83,14 @@ class UpdateApplicationInnerCommand extends CcApiSimpleCommand<
  * @group Application
  * @version 2
  */
-class UpdateApplicationBranchCommand extends CcApiSimpleCommand<UpdateApplicationBranchCommandInput, void> {
+class UpdateApplicationBranchCommand extends CcApiSimpleCommand<UpdateApplicationBranchCommandInput, undefined> {
   toRequestParams(params: UpdateApplicationBranchCommandInput) {
     return put(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/branch`, {
       branch: params.branch,
     });
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

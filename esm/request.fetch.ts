@@ -8,21 +8,21 @@ const FORM_TYPE = 'application/x-www-form-urlencoded';
 
 function formatBody(requestParams: RequestParams): any {
   // for now we support the fact that users sometimes already stringified the body
-  if (requestParams.headers['Content-Type'] === JSON_TYPE && typeof requestParams.body !== 'string') {
+  if (requestParams.headers?.['Content-Type'] === JSON_TYPE && typeof requestParams.body !== 'string') {
     return JSON.stringify(requestParams.body);
   }
 
   // for now we support the fact that users sometimes already stringified the body
-  if (requestParams.headers['Content-Type'] === FORM_TYPE && typeof requestParams.body !== 'string') {
+  if (requestParams.headers?.['Content-Type'] === FORM_TYPE && typeof requestParams.body !== 'string') {
     const qs = new URLSearchParams();
-    Object.entries(requestParams.body).forEach(([name, value]) => qs.set(name, value));
+    Object.entries(requestParams.body ?? {}).forEach(([name, value]) => qs.set(name, String(value)));
     return qs.toString();
   }
 
   return requestParams.body;
 }
 
-function getContentType(headers: Headers): string {
+function getContentType(headers: Headers): string | null {
   const contentType = headers.get('Content-Type');
   return contentType != null ? contentType.split(';')[0] : contentType;
 }
@@ -58,7 +58,7 @@ function getErrorMessage(responseBody: null | string | { message?: string; error
   return 'Unknown error';
 }
 
-export async function request<T>(requestParams: RequestParams): Promise<T> {
+export async function request<T>(requestParams: RequestParams): Promise<T | undefined> {
   const url = new URL(requestParams.url);
   fillUrlSearchParams(url, requestParams.queryParams);
 

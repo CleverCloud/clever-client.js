@@ -8,8 +8,12 @@ import type { DeleteEmailNotificationCommandInput } from './delete-email-notific
  * @group Notification
  * @version 2
  */
-export class DeleteEmailNotificationCommand extends CcApiSimpleCommand<DeleteEmailNotificationCommandInput, void> {
+export class DeleteEmailNotificationCommand extends CcApiSimpleCommand<DeleteEmailNotificationCommandInput, undefined> {
   toRequestParams(params: DeleteEmailNotificationCommandInput) {
     return delete_(safeUrl`/v2/notifications/emailhooks/${params.ownerId}/${params.emailNotificationId}`);
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

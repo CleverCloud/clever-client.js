@@ -30,8 +30,8 @@ async function loginUser(user: E2eUser): Promise<void> {
   console.log(`  login attempt for user ${user.userName} (${user.email})`);
   const oauthDance = new OauthDance({
     API_HOST: 'https://api.clever-cloud.com',
-    OAUTH_CONSUMER_KEY: OAUTH_CONSUMER_KEY,
-    OAUTH_CONSUMER_SECRET: OAUTH_CONSUMER_SECRET,
+    OAUTH_CONSUMER_KEY: OAUTH_CONSUMER_KEY!,
+    OAUTH_CONSUMER_SECRET: OAUTH_CONSUMER_SECRET!,
     OAUTH_CONSUMER_CALLBACK_URL: 'https://console.clever-cloud.com',
   });
 
@@ -39,7 +39,7 @@ async function loginUser(user: E2eUser): Promise<void> {
   let mfaCode: string | undefined;
   const requiresMfa = await oauthDance.postSessionsLogin(user.email, user.password);
   if (requiresMfa) {
-    mfaCode = (await TOTP.generate(user.totpSecret)).otp;
+    mfaCode = (await TOTP.generate(user.totpSecret!)).otp;
     await oauthDance.postSessionsMfaLogin(mfaCode);
   }
   await timers.setTimeout(1000);
@@ -50,8 +50,8 @@ async function loginUser(user: E2eUser): Promise<void> {
   await timers.setTimeout(1000);
   const { oauthUserToken, oauthUserSecret } = await oauthDance.postOauthAccessToken();
   user.oauthTokens = {
-    consumerKey: OAUTH_CONSUMER_KEY,
-    consumerSecret: OAUTH_CONSUMER_SECRET,
+    consumerKey: OAUTH_CONSUMER_KEY!,
+    consumerSecret: OAUTH_CONSUMER_SECRET!,
     token: oauthUserToken,
     secret: oauthUserSecret,
   };
@@ -128,8 +128,8 @@ class OauthDance {
 
   //#region [1] get request token
 
-  #oauthToken: string | null;
-  #oauthTokenSecret: string | null;
+  #oauthToken!: string | null;
+  #oauthTokenSecret!: string | null;
 
   /**
    * @throws {OauthDanceError}
@@ -157,9 +157,9 @@ class OauthDance {
 
   //#region [2] submit login form / submit MFA form
 
-  #email: string | null;
-  #mfaFormHtml: string | null;
-  #ccid: string | null;
+  #email!: string | null;
+  #mfaFormHtml!: string | null;
+  #ccid!: string | null;
 
   /**
    * @param email - User email
@@ -186,7 +186,7 @@ class OauthDance {
 
     if (response.status === 303) {
       const cookies = cookie.parse(response.headers.get('set-cookie') || '');
-      this.#ccid = cookies.ccid;
+      this.#ccid = cookies.ccid ?? null;
       return false;
     }
 
@@ -210,8 +210,8 @@ class OauthDance {
     const response = await this.#postForm('/v2/sessions/mfa_login', {
       mfa_attempt: mfaCode,
       mfa_kind: 'TOTP',
-      auth_id: mfaAuthId,
-      email: this.#email,
+      auth_id: mfaAuthId!,
+      email: this.#email!,
     });
 
     if (response.status === 401) {
@@ -220,7 +220,7 @@ class OauthDance {
 
     if (response.status === 303) {
       const cookies = cookie.parse(response.headers.get('set-cookie') || '');
-      this.#ccid = cookies.ccid;
+      this.#ccid = cookies.ccid ?? null;
       return;
     }
 
@@ -232,9 +232,9 @@ class OauthDance {
 
   //#region [3] authorize / submit oauth rights form
 
-  #oauthRightsHtml: string | null;
-  #oauthVerifier: string | null;
-  #userId: string | null;
+  #oauthRightsHtml!: string | null;
+  #oauthVerifier!: string | null;
+  #userId!: string | null;
 
   /**
    * @returns Returns true if rights form needs to be submitted
@@ -246,8 +246,8 @@ class OauthDance {
       credentials: 'include',
       headers: {
         cookie: serializeCookies({
-          cctk: this.#oauthToken,
-          ccid: this.#ccid,
+          cctk: this.#oauthToken!,
+          ccid: this.#ccid!,
         }),
       },
     });
@@ -295,8 +295,8 @@ class OauthDance {
     }
 
     const response = await this.#postForm('/v2/oauth/authorize', oauthRights, {
-      cctk: this.#oauthToken,
-      ccid: this.#ccid,
+      cctk: this.#oauthToken!,
+      ccid: this.#ccid!,
     });
 
     if (response.status === 303) {
@@ -314,8 +314,8 @@ class OauthDance {
 
   //#region [4] get access token
 
-  oauthUserToken: string | null;
-  oauthUserSecret: string | null;
+  oauthUserToken!: string | null;
+  oauthUserSecret!: string | null;
 
   /**
    * @throws {OauthDanceError}
@@ -324,17 +324,17 @@ class OauthDance {
     const response = await this.#postForm('/v2/oauth/access_token', {
       oauth_consumer_key: this.#OAUTH_CONSUMER_KEY,
       oauth_signature: this.#OAUTH_CONSUMER_SECRET + '&' + this.#oauthTokenSecret,
-      oauth_token: this.#oauthToken,
-      oauth_verifier: this.#oauthVerifier,
+      oauth_token: this.#oauthToken!,
+      oauth_verifier: this.#oauthVerifier!,
     });
 
     if (response.status === 200) {
       const encodedSearchParams = await response.text();
       const searchParams = new URLSearchParams(encodedSearchParams);
       return {
-        userId: this.#userId,
-        oauthUserToken: searchParams.get('oauth_token'),
-        oauthUserSecret: searchParams.get('oauth_token_secret'),
+        userId: this.#userId!,
+        oauthUserToken: searchParams.get('oauth_token')!,
+        oauthUserSecret: searchParams.get('oauth_token_secret')!,
       };
     }
 

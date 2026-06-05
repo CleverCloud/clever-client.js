@@ -35,7 +35,7 @@ export function transformApplication(payload: any): Application {
       payload.vhosts?.map((domain: any) => ({ domain: domain.fqdn })),
       'domain',
     ),
-    creationDate: normalizeDate(payload.creationDate),
+    creationDate: normalizeDate(payload.creationDate)!,
     lastDeploy: payload.last_deploy,
     archived: payload.archived,
     stickySessions: payload.stickySessions,

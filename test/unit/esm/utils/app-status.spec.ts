@@ -3,6 +3,7 @@ import { getStatus } from '../../../../esm/utils/app-status.js';
 
 describe('app-status#getStatus()', () => {
   it('stopped', () => {
+    // @ts-expect-error testing null deployments/instances on the stopped path
     const status = getStatus({ state: 'SHOULD_BE_DOWN', homogeneous: false }, null, null);
     expect(status).toBe('stopped');
   });

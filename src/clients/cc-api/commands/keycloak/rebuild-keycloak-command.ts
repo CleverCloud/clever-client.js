@@ -9,7 +9,7 @@ import type { RebuildKeycloakCommandInput } from './rebuild-keycloak-command.typ
  * @group Keycloak
  * @version 4
  */
-export class RebuildKeycloakCommand extends CcApiSimpleCommand<RebuildKeycloakCommandInput, void> {
+export class RebuildKeycloakCommand extends CcApiSimpleCommand<RebuildKeycloakCommandInput, undefined> {
   toRequestParams(params: RebuildKeycloakCommandInput) {
     return post(safeUrl`/v4/addon-providers/addon-keycloak/addons/${params.addonId}/rebuild`);
   }
@@ -20,7 +20,7 @@ export class RebuildKeycloakCommand extends CcApiSimpleCommand<RebuildKeycloakCo
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

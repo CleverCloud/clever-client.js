@@ -13,7 +13,7 @@ export interface Stubs {
 
 export interface SpiedStream {
   stream: CcStream;
-  start: () => Promise<CcStreamCloseReason>;
+  start: () => Promise<CcStreamCloseReason | undefined>;
   close: (reason: CcStreamCloseReason) => void;
   verifyCounts: (expectedCounts: Counts, maxWait?: number) => Promise<void>;
   stubs: Stubs;

@@ -4,18 +4,18 @@ const ownerId = process.env.OWNER_ID;
 const appId = process.env.APP_ID;
 
 const tokens = {
-  OAUTH_CONSUMER_KEY: process.env.OAUTH_CONSUMER_KEY,
-  OAUTH_CONSUMER_SECRET: process.env.OAUTH_CONSUMER_SECRET,
-  API_OAUTH_TOKEN: process.env.API_OAUTH_TOKEN,
-  API_OAUTH_TOKEN_SECRET: process.env.API_OAUTH_TOKEN_SECRET,
+  OAUTH_CONSUMER_KEY: process.env.OAUTH_CONSUMER_KEY!,
+  OAUTH_CONSUMER_SECRET: process.env.OAUTH_CONSUMER_SECRET!,
+  API_OAUTH_TOKEN: process.env.API_OAUTH_TOKEN!,
+  API_OAUTH_TOKEN_SECRET: process.env.API_OAUTH_TOKEN_SECRET!,
 };
 
 const apiHost = 'https://api.clever-cloud.com';
 const logStream = new ApplicationLogStream({
   apiHost,
   tokens,
-  ownerId,
-  appId,
+  ownerId: ownerId!,
+  appId: appId!,
   since: new Date('2023-07-25T00:23:08.602Z'),
   retryConfiguration: {
     enabled: true,

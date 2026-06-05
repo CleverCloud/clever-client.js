@@ -10,7 +10,10 @@ import type { UpdateExposedEnvironmentCommandInput } from './update-exposed-envi
  * @group Environment
  * @version 2
  */
-export class UpdateExposedEnvironmentCommand extends CcApiSimpleCommand<UpdateExposedEnvironmentCommandInput, void> {
+export class UpdateExposedEnvironmentCommand extends CcApiSimpleCommand<
+  UpdateExposedEnvironmentCommandInput,
+  undefined
+> {
   toRequestParams(params: UpdateExposedEnvironmentCommandInput) {
     return put(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/exposed_env`,
@@ -18,8 +21,8 @@ export class UpdateExposedEnvironmentCommand extends CcApiSimpleCommand<UpdateEx
     );
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

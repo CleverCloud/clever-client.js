@@ -7,6 +7,7 @@ import { GetOauthConsumerCommand } from '../../../../../src/clients/cc-api/comma
 import { ListOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/list-oauth-consumer-command.js';
 import { UpdateOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.js';
 import { omit } from '../../../../../src/lib/utils.js';
+import { expectToBeDefined } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
 describe('oauth consumers commands', function () {
@@ -99,6 +100,7 @@ describe('oauth consumers commands', function () {
       }),
     );
 
+    expectToBeDefined(response);
     expect(response.key).toBe(consumer.key);
     expect(response.name).toBe('test-consumer');
     expect(response.description).toBe('test consumer description');
@@ -132,6 +134,7 @@ describe('oauth consumers commands', function () {
       }),
     );
 
+    expectToBeDefined(response);
     expect(response.key).toBe(consumer.key);
     expect(response.name).toBe('test-consumer');
     expect(response.description).toBe('test consumer description');

@@ -9,8 +9,12 @@ import type { DeleteApiTokenCommandInput } from './delete-api-token-command.type
  * @endpoint [DELETE] /api-tokens/:XXX
  * @group ApiToken
  */
-export class DeleteApiTokenCommand extends CcApiBridgeCommand<DeleteApiTokenCommandInput, void> {
+export class DeleteApiTokenCommand extends CcApiBridgeCommand<DeleteApiTokenCommandInput, undefined> {
   toRequestParams(params: DeleteApiTokenCommandInput) {
     return delete_(safeUrl`/api-tokens/${params.apiTokenId}`);
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

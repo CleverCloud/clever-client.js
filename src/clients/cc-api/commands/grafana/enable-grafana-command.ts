@@ -23,8 +23,12 @@ export class EnableGrafanaCommand extends CcApiCompositeCommand<EnableGrafanaCom
  * @group Grafana
  * @version 4
  */
-class InnerEnableGrafanaCommand extends CcApiSimpleCommand<EnableGrafanaCommandInput, void> {
+class InnerEnableGrafanaCommand extends CcApiSimpleCommand<EnableGrafanaCommandInput, undefined> {
   toRequestParams(params: EnableGrafanaCommandInput) {
     return post(safeUrl`/v4/saas/grafana/${params.ownerId}`);
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

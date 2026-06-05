@@ -55,7 +55,7 @@ export class ApplicationAccessLogStream extends CleverCloudSse {
   // compute the number of events to retrieve, based on elements already received
   private _computedLimit() {
     if (this._options.limit == null) {
-      return null;
+      return undefined;
     }
     return Math.max(this._options.limit - this._logsCount, 0);
   }

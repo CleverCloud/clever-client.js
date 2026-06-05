@@ -9,7 +9,7 @@ import type { DeleteAuthMfaCommandInput } from './delete-auth-mfa-command.types.
  * @group Auth
  * @version 2
  */
-export class DeleteAuthMfaCommand extends CcApiSimpleCommand<DeleteAuthMfaCommandInput, void> {
+export class DeleteAuthMfaCommand extends CcApiSimpleCommand<DeleteAuthMfaCommandInput, undefined> {
   toRequestParams(params: DeleteAuthMfaCommandInput): Partial<CcRequestParams> {
     return {
       method: 'DELETE',
@@ -21,7 +21,7 @@ export class DeleteAuthMfaCommand extends CcApiSimpleCommand<DeleteAuthMfaComman
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

@@ -19,7 +19,7 @@ export class GetProductAddonCommand extends CcApiCompositeCommand<
   async compose(params: GetProductAddonCommandInput, composer: CcApiComposer): Promise<GetProductAddonCommandOutput> {
     const addon = await composer.send(new GetProductAddonInnerCommand(params));
     if (addon == null) {
-      return null;
+      return undefined;
     }
 
     if (!params.withVersions) {

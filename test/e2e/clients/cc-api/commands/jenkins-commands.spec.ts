@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { GetJenkinsInfoCommand } from '../../../../../src/clients/cc-api/commands/jenkins/get-jenkins-info-command.js';
-import { checkDateFormat } from '../../../../lib/expect-utils.js';
+import { checkDateFormat, expectToBeDefined } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
 // cannot be automatised because addon deletion just after creation is not supported by the platform
@@ -34,13 +34,14 @@ describe.skip('jenkins commands', function () {
     });
 
     const response = await support.client.send(new GetJenkinsInfoCommand({ addonId: addon.id }));
+    expectToBeDefined(response);
 
     expect(response.id).toBeTypeOf('string');
     expect(response.addonId).toBe(addon.id);
     expect(response.plan).toBe('XS');
     expect(response.zone).toBe('par');
     checkDateFormat(response.creationDate);
-    checkDateFormat(response.deletionDate);
+    checkDateFormat(response.deletionDate!);
     expect(response.status).toBe('ACTIVE');
     expect(response.host).toBeTypeOf('string');
     expect(response.user).toBeTypeOf('string');

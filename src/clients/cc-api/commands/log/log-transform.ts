@@ -31,7 +31,7 @@ export function transformAddonRuntimeLog(rawLog: any): AddonRuntimeLog {
     addonId: rawLog.resourceId,
     hostname: rawLog.hostname,
     instanceId: rawLog.instanceId,
-    date: normalizeDate(rawLog.date),
+    date: normalizeDate(rawLog.date)!,
     zone: rawLog.zone,
     pid: rawLog.pid,
     facility: rawLog.facility,
@@ -48,7 +48,7 @@ export function transformApplicationRuntimeLog(rawLog: any): ApplicationRuntimeL
     commitId: rawLog.commitId,
     deploymentId: rawLog.deploymentId,
     instanceId: rawLog.instanceId,
-    date: normalizeDate(rawLog.date),
+    date: normalizeDate(rawLog.date)!,
     zone: rawLog.zone,
     pid: rawLog.pid,
     facility: rawLog.facility,
@@ -60,7 +60,7 @@ export function transformApplicationRuntimeLog(rawLog: any): ApplicationRuntimeL
   };
 }
 
-export function transformApplicationAccessLog(payload: any): ApplicationAccessLog | null {
+export function transformApplicationAccessLog(payload: any): ApplicationAccessLog | undefined {
   if (payload.http != null) {
     return {
       ...convertBaseAccessLog(payload),
@@ -69,13 +69,13 @@ export function transformApplicationAccessLog(payload: any): ApplicationAccessLo
     };
   }
   // todo: handle TCP and SSH access logs.
-  return null;
+  return undefined;
 }
 
 function convertBaseAccessLog(payload: any): Omit<ApplicationAccessLogBase<unknown>, 'detail'> {
   return {
     id: payload.id,
-    date: normalizeDate(payload.date),
+    date: normalizeDate(payload.date)!,
     applicationId: payload.applicationId,
     instanceId: payload.instanceId,
     requestId: payload.requestId,

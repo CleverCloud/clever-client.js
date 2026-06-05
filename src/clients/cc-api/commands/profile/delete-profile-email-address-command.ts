@@ -8,12 +8,15 @@ import type { DeleteProfileEmailAddressCommandInput } from './delete-profile-ema
  * @group Profile
  * @version 2
  */
-export class DeleteProfileEmailAddressCommand extends CcApiSimpleCommand<DeleteProfileEmailAddressCommandInput, void> {
+export class DeleteProfileEmailAddressCommand extends CcApiSimpleCommand<
+  DeleteProfileEmailAddressCommandInput,
+  undefined
+> {
   toRequestParams(params: DeleteProfileEmailAddressCommandInput) {
     return delete_(safeUrl`/v2/self/emails/${params.address}`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

@@ -28,7 +28,7 @@ export class GetJenkinsInfoCommand extends CcApiCompositeCommand<
     ]);
 
     if (internal == null || updates == null) {
-      return null;
+      return undefined;
     }
 
     return {

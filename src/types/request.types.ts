@@ -139,7 +139,7 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD';
  * Valid types for query parameter values.
  * These values will be properly encoded when added to the URL.
  */
-export type QueryParamValue = string | number | boolean | null;
+export type QueryParamValue = string | number | boolean | null | undefined;
 
 export type RequestCachePolicy = {
   /**

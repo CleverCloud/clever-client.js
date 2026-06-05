@@ -18,7 +18,7 @@ export class EnableLogDrainCommand extends CcApiCompositeCommand<
 > {
   async compose(params: EnableLogDrainCommandInput, composer: CcApiComposer): Promise<EnableLogDrainCommandOutput> {
     await composer.send(new InnerEnableLogDrainCommand(params));
-    return waitForLogDrainEnabled(composer, params.ownerId, params.applicationId, params.drainId);
+    return waitForLogDrainEnabled(composer, params.ownerId!, params.applicationId, params.drainId);
   }
 }
 
@@ -27,15 +27,15 @@ export class EnableLogDrainCommand extends CcApiCompositeCommand<
  * @group LogDrain
  * @version 4
  */
-class InnerEnableLogDrainCommand extends CcApiSimpleCommand<EnableLogDrainCommandInput, void> {
+class InnerEnableLogDrainCommand extends CcApiSimpleCommand<EnableLogDrainCommandInput, undefined> {
   toRequestParams(params: EnableLogDrainCommandInput) {
     return put(
       safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains/${params.drainId}/enable`,
     );
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

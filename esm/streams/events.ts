@@ -20,8 +20,8 @@ export class EventsStream<T extends WebSocketLike = WebSocketLike> extends Abstr
   apiHost: string;
   tokens: OAuthTokens;
   appId?: string;
-  protected _ws: T;
-  protected _wsCloseListener: (reason: any) => void;
+  protected _ws!: T;
+  protected _wsCloseListener!: (reason: any) => void;
 
   constructor({ apiHost, tokens, appId }: { apiHost: string; tokens: OAuthTokens; appId?: string }) {
     super();
@@ -110,7 +110,7 @@ export class EventsStream<T extends WebSocketLike = WebSocketLike> extends Abstr
         // prepare message to auth WebSocket
         const authMessage = JSON.stringify({
           message_type: 'oauth',
-          authorization: requestParams.headers.authorization,
+          authorization: (requestParams.headers ?? {}).authorization,
         });
         return { url, authMessage };
       });

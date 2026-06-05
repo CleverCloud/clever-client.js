@@ -9,13 +9,13 @@ import type { UnsetPrimaryDomainCommandInput } from './unset-primary-domain-comm
  * @group Domain
  * @version 2
  */
-export class UnsetPrimaryDomainCommand extends CcApiSimpleCommand<UnsetPrimaryDomainCommandInput, void> {
+export class UnsetPrimaryDomainCommand extends CcApiSimpleCommand<UnsetPrimaryDomainCommandInput, undefined> {
   toRequestParams(params: UnsetPrimaryDomainCommandInput) {
     return delete_(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/vhosts/favourite`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

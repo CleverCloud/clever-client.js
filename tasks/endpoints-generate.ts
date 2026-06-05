@@ -74,6 +74,9 @@ async function run(): Promise<void> {
         }
 
         const endpoint = endpointsMap.get(command.endpointId);
+        if (endpoint == null) {
+          return null;
+        }
         return generateCommand(
           sourceTarget,
           command.namespace,

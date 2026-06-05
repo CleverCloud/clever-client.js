@@ -9,12 +9,16 @@ import type { DeleteUserSettingCommandInput } from './delete-user-setting-comman
  * @group UserSetting
  * @version 4
  */
-export class DeleteUserSettingCommand extends CcApiSimpleCommand<DeleteUserSettingCommandInput, void> {
+export class DeleteUserSettingCommand extends CcApiSimpleCommand<DeleteUserSettingCommandInput, undefined> {
   toRequestParams(params: DeleteUserSettingCommandInput) {
     return delete_(safeUrl`/v4/console/settings/${params.name}`, new QueryParams().append('env', this.params.env));
   }
 
   getEmptyResponsePolicy(status: number) {
     return { isEmpty: status === 404 };
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

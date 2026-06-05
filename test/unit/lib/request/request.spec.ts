@@ -30,7 +30,7 @@ describe('request', () => {
       debug: false,
       method: 'GET',
       ...request,
-      url: request.url.startsWith('http') ? request.url : `${newScenario.mockClient.baseUrl}${request.url}`,
+      url: request.url!.startsWith('http') ? request.url! : `${newScenario.mockClient.baseUrl}${request.url}`,
     });
   }
 
@@ -336,7 +336,7 @@ describe('request', () => {
         cors: true,
       });
 
-      expect(spy.mock.lastCall[1].mode).toBe('cors');
+      expect(spy.mock.lastCall![1]!.mode).toBe('cors');
     });
   });
 

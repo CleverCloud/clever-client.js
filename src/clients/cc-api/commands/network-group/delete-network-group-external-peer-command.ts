@@ -13,12 +13,12 @@ import { waitForNetworkGroupPeerDeletion } from './network-group-utils.js';
  */
 export class DeleteNetworkGroupExternalPeerCommand extends CcApiCompositeCommand<
   DeleteNetworkGroupExternalPeerCommandInput,
-  void
+  undefined
 > {
-  async compose(params: DeleteNetworkGroupExternalPeerCommandInput, composer: CcApiComposer): Promise<void> {
+  async compose(params: DeleteNetworkGroupExternalPeerCommandInput, composer: CcApiComposer): Promise<undefined> {
     await composer.send(new DeleteNetworkGroupExternalPeerCommandInner(params));
     await waitForNetworkGroupPeerDeletion(composer, params.ownerId, params.networkGroupId, params.externalPeerId);
-    return null;
+    return undefined;
   }
 }
 
@@ -29,7 +29,7 @@ export class DeleteNetworkGroupExternalPeerCommand extends CcApiCompositeCommand
  */
 class DeleteNetworkGroupExternalPeerCommandInner extends CcApiSimpleCommand<
   DeleteNetworkGroupExternalPeerCommandInput,
-  void
+  undefined
 > {
   toRequestParams(params: DeleteNetworkGroupExternalPeerCommandInput) {
     return delete_(
@@ -37,7 +37,7 @@ class DeleteNetworkGroupExternalPeerCommandInner extends CcApiSimpleCommand<
     );
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

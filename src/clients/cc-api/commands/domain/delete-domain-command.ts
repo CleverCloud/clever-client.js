@@ -9,15 +9,15 @@ import type { DeleteDomainCommandInput } from './delete-domain-command.types.js'
  * @group Domain
  * @version 2
  */
-export class DeleteDomainCommand extends CcApiSimpleCommand<DeleteDomainCommandInput, void> {
+export class DeleteDomainCommand extends CcApiSimpleCommand<DeleteDomainCommandInput, undefined> {
   toRequestParams(params: DeleteDomainCommandInput) {
     return delete_(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/vhosts/${params.domain}`,
     );
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

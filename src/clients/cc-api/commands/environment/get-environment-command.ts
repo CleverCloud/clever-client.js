@@ -43,10 +43,10 @@ export class GetEnvironmentCommand extends CcApiCompositeCommand<
         environment: sortBy(responses[0] ?? [], 'name'),
       };
       if (params.includeLinkedApplications) {
-        result.linkedApplicationsEnvironment = sortBy(responses[1], 'applicationName');
+        result.linkedApplicationsEnvironment = sortBy(responses[1] ?? [], 'applicationName');
       }
       if (params.includeLinkedAddons) {
-        result.linkedAddonsEnvironment = sortBy(responses[2], 'addonName');
+        result.linkedAddonsEnvironment = sortBy(responses[2] ?? [], 'addonName');
       }
 
       return result;

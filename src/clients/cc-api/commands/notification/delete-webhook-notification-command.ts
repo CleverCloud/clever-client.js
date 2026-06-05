@@ -8,8 +8,15 @@ import type { DeleteWebhookNotificationCommandInput } from './delete-webhook-not
  * @group Notification
  * @version 2
  */
-export class DeleteWebhookNotificationCommand extends CcApiSimpleCommand<DeleteWebhookNotificationCommandInput, void> {
+export class DeleteWebhookNotificationCommand extends CcApiSimpleCommand<
+  DeleteWebhookNotificationCommandInput,
+  undefined
+> {
   toRequestParams(params: DeleteWebhookNotificationCommandInput) {
     return delete_(safeUrl`/v2/notifications/webhooks/${params.ownerId}/${params.webhookNotificationId}`);
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

@@ -22,6 +22,7 @@ describe('QueryParams class', () => {
     });
 
     it('should handle null or undefined initial parameters', () => {
+      // @ts-expect-error testing null initial parameters
       const params = new QueryParams(null);
       expect(params.toObject()).toEqual({});
     });

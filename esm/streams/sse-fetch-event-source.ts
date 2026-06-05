@@ -41,9 +41,9 @@ export function fetchEventSource(
       const stream = events(response, abortController.signal);
       for await (const event of stream) {
         onMessage({
-          data: event.data,
-          event: event.event,
-          id: event.id != null ? String(event.id) : null,
+          data: event.data!,
+          event: event.event!,
+          id: event.id != null ? String(event.id) : '',
           retry: event.retry,
         });
       }

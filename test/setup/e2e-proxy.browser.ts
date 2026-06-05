@@ -74,7 +74,7 @@ export function e2eProxyPlugin(): Plugin {
         void (async () => {
           try {
             for (const rewriter of rewriters) {
-              if (rewriter.match(req.url)) {
+              if (req.url != null && rewriter.match(req.url)) {
                 const rawBody = await getRawBody(req);
                 const newBody = await rewriter.newBody(JSON.parse(rawBody) as Record<string, unknown>, req.url);
                 req.newBody = JSON.stringify(newBody);
@@ -150,19 +150,19 @@ function buildRoutes(): Array<E2eRoute> {
         prefix: `cc-api-${user.userName}-api-token`,
         target: `https://api-bridge.clever-cloud.com`,
         user,
-        authorizationHeader: () => new CcAuthApiToken(user.apiToken).getAuthorization(),
+        authorizationHeader: () => new CcAuthApiToken(user.apiToken!).getAuthorization(),
       },
       {
         prefix: `cc-api-${user.userName}-oauth-v1`,
         target: `https://api.clever-cloud.com`,
         user,
-        authorizationHeader: () => new CcAuthOauthV1Plaintext(user.oauthTokens).getAuthorization(),
+        authorizationHeader: () => new CcAuthOauthV1Plaintext(user.oauthTokens!).getAuthorization(),
       },
       {
         prefix: `cc-api-bridge-${user.userName}-oauth-v1`,
         target: `https://api-bridge.clever-cloud.com`,
         user,
-        authorizationHeader: () => new CcAuthOauthV1Plaintext(user.oauthTokens).getAuthorization(),
+        authorizationHeader: () => new CcAuthOauthV1Plaintext(user.oauthTokens!).getAuthorization(),
       },
       {
         prefix: `cc-api-bridge-${user.userName}-none`,
@@ -187,12 +187,14 @@ const rewriteCcApiChangePassword = {
   },
   newBody(body: Record<string, unknown>, url: string) {
     const match = url.match(/\/cc-api-(.+)-oauth-v1\/v2\/self\/change_password/);
-    const user = getE2eUser(match[1] as E2eUserName);
-    if (body.newPassword === user.newTemporaryPassword) {
-      body.oldPassword = user.password;
-    }
-    if (body.oldPassword === user.newTemporaryPassword) {
-      body.newPassword = user.password;
+    if (match != null) {
+      const user = getE2eUser(match[1] as E2eUserName);
+      if (body.newPassword === user.newTemporaryPassword) {
+        body.oldPassword = user.password;
+      }
+      if (body.oldPassword === user.newTemporaryPassword) {
+        body.newPassword = user.password;
+      }
     }
     return body;
   },
@@ -204,11 +206,13 @@ const rewriteCcApiBridgeCreateToken = {
   },
   async newBody(body: Record<string, unknown>, url: string) {
     const match = url.match(/\/cc-api-bridge-(.+)-none\/api-tokens/);
-    const user = getE2eUser(match[1] as E2eUserName);
-    body.email = user.email;
-    body.password = user.password;
-    if (user.totpSecret != null) {
-      body.mfaCode = (await TOTP.generate(user.totpSecret)).otp;
+    if (match != null) {
+      const user = getE2eUser(match[1] as E2eUserName);
+      body.email = user.email;
+      body.password = user.password;
+      if (user.totpSecret != null) {
+        body.mfaCode = (await TOTP.generate(user.totpSecret)).otp;
+      }
     }
     return body;
   },

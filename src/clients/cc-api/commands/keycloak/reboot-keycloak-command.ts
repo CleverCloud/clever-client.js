@@ -9,7 +9,7 @@ import type { RebootKeycloakCommandInput } from './reboot-keycloak-command.types
  * @group Keycloak
  * @version 4
  */
-export class RebootKeycloakCommand extends CcApiSimpleCommand<RebootKeycloakCommandInput, void> {
+export class RebootKeycloakCommand extends CcApiSimpleCommand<RebootKeycloakCommandInput, undefined> {
   toRequestParams(params: RebootKeycloakCommandInput) {
     return post(safeUrl`/v4/addon-providers/addon-keycloak/addons/${params.addonId}/reboot`);
   }
@@ -20,7 +20,7 @@ export class RebootKeycloakCommand extends CcApiSimpleCommand<RebootKeycloakComm
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

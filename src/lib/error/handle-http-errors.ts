@@ -24,13 +24,13 @@ export function handleHttpErrors(
   }
 }
 
-function parseErrorMessage(response: CcResponse<unknown>): string | null {
+function parseErrorMessage(response: CcResponse<unknown>): string | undefined {
   const body = response.body;
   if (typeof body === 'string') {
     return body;
   }
 
-  const errorBody = body as { message?: unknown; error?: unknown } | null;
+  const errorBody = body as { message?: unknown; error?: unknown } | undefined;
   if (typeof errorBody?.message === 'string') {
     return errorBody.message;
   }
@@ -38,11 +38,11 @@ function parseErrorMessage(response: CcResponse<unknown>): string | null {
     return errorBody.error;
   }
 
-  return null;
+  return undefined;
 }
 
-function parseErrorCode(response: CcResponse<unknown>): string | null {
-  const body = response.body as { code?: string | number; id?: string | number } | null;
+function parseErrorCode(response: CcResponse<unknown>): string | undefined {
+  const body = response.body as { code?: string | number; id?: string | number } | undefined;
   if (body?.code != null) {
     return String(body.code);
   }
@@ -50,15 +50,12 @@ function parseErrorCode(response: CcResponse<unknown>): string | null {
     return String(body.id);
   }
 
-  return null;
+  return undefined;
 }
 
-function transformErrorCode(
-  errorCode: string | null,
-  command?: SimpleCommand<string, unknown, unknown>,
-): string | null {
+function transformErrorCode(errorCode: string | undefined, command?: SimpleCommand<string, unknown, unknown>): string {
   if (errorCode == null || command == null) {
-    return errorCode;
+    return 'unknown_error';
   }
   return command.transformErrorCode(errorCode);
 }

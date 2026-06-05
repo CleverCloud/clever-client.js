@@ -1,7 +1,12 @@
 import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.js';
 import { calculateCacheKey } from '../utils.js';
 
-const CACHE = new Map<string, { response: CcResponse<unknown>; expiresAt: number }>();
+interface CacheEntry<T> {
+  response: CcResponse<T>;
+  expiresAt: number;
+}
+
+const CACHE = new Map<string, CacheEntry<unknown>>();
 
 export async function requestWithCache<CommandOutput>(
   request: CcRequest,
@@ -16,7 +21,7 @@ export async function requestWithCache<CommandOutput>(
 
   // cache hit - check expiration only for this entry
   if (request.cache.mode !== 'reload' && CACHE.has(cacheKey)) {
-    const entry = CACHE.get(cacheKey);
+    const entry = CACHE.get(cacheKey) as CacheEntry<unknown>;
     if (entry.expiresAt > Date.now()) {
       return entry.response as CcResponse<CommandOutput>;
     } else {

@@ -18,22 +18,22 @@ describe('metrics commands', function () {
     );
 
     expect(response.mem).toBeInstanceOf(Array);
-    expect(response.mem[0].timestamp).toBeTypeOf('number');
-    expect(response.mem[0].value).toBeTypeOf('number');
+    expect(response.mem![0].timestamp).toBeTypeOf('number');
+    expect(response.mem![0].value).toBeTypeOf('number');
   });
 
   it('should get addon metrics', async () => {
     const response = await support.client.send(new GetMetricsCommand({ addonId: STATIC_MYSQL_ADDON_ID }));
 
     expect(response.cpu).toBeInstanceOf(Array);
-    expect(response.cpu[0].timestamp).toBeTypeOf('number');
-    expect(response.cpu[0].value).toBeTypeOf('number');
+    expect(response.cpu![0].timestamp).toBeTypeOf('number');
+    expect(response.cpu![0].value).toBeTypeOf('number');
     expect(response.mem).toBeInstanceOf(Array);
-    expect(response.mem[0].timestamp).toBeTypeOf('number');
-    expect(response.mem[0].value).toBeTypeOf('number');
+    expect(response.mem![0].timestamp).toBeTypeOf('number');
+    expect(response.mem![0].value).toBeTypeOf('number');
     expect(response.load1).toBeInstanceOf(Array);
-    expect(response.load1[0].timestamp).toBeTypeOf('number');
-    expect(response.load1[0].value).toBeTypeOf('number');
+    expect(response.load1![0].timestamp).toBeTypeOf('number');
+    expect(response.load1![0].value).toBeTypeOf('number');
   });
 
   it('should get application status code distribution', async () => {
@@ -72,7 +72,7 @@ describe('metrics commands', function () {
   });
 
   describe('requests live stream', function () {
-    let currentStream: CcStream = null;
+    let currentStream: CcStream | null = null;
 
     afterEach(() => {
       currentStream?.close();

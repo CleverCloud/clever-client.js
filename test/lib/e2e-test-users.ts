@@ -1,16 +1,18 @@
 import type { E2eUser, E2eUserName } from './e2e.types.js';
 
+const env: Record<string, string | undefined> = globalThis.process?.env ?? {};
+
 const TEST_USER_WITHOUT_GITHUB: E2eUser = {
   userName: 'test-user-without-github',
-  email: globalThis.process?.env.TEST_USER_WITHOUT_GITHUB_EMAIL,
-  password: globalThis.process?.env.TEST_USER_WITHOUT_GITHUB_PASSWORD,
-  totpSecret: globalThis.process?.env.TEST_USER_WITHOUT_GITHUB_TOTP_SECRET,
+  email: env.TEST_USER_WITHOUT_GITHUB_EMAIL!,
+  password: env.TEST_USER_WITHOUT_GITHUB_PASSWORD!,
+  totpSecret: env.TEST_USER_WITHOUT_GITHUB_TOTP_SECRET,
 };
 
 const TEST_USER_WITH_GITHUB: E2eUser = {
   userName: 'test-user-with-github',
-  email: globalThis.process?.env.TEST_USER_WITH_GITHUB_EMAIL,
-  password: globalThis.process?.env.TEST_USER_WITH_GITHUB_PASSWORD,
+  email: env.TEST_USER_WITH_GITHUB_EMAIL!,
+  password: env.TEST_USER_WITH_GITHUB_PASSWORD!,
   newTemporaryPassword: 'Y2aTev3JUiAdFx_Nk9eP!4UQiXdtvpr_oFa!Eahm',
 };
 
@@ -19,7 +21,7 @@ e2eTestUsers.set('test-user-without-github', TEST_USER_WITHOUT_GITHUB);
 e2eTestUsers.set('test-user-with-github', TEST_USER_WITH_GITHUB);
 
 export function getE2eUser(userName: E2eUserName): E2eUser {
-  return e2eTestUsers.get(userName);
+  return e2eTestUsers.get(userName)!;
 }
 
 export function getAllE2eUsers(): Array<E2eUser> {

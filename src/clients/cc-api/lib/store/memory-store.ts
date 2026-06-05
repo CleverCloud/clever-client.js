@@ -19,7 +19,7 @@ export class MemoryStore<T> implements Store<T> {
   /**
    * The stored data
    */
-  #index: T;
+  #index: T | undefined;
 
   /**
    * Stores data in memory
@@ -35,7 +35,7 @@ export class MemoryStore<T> implements Store<T> {
    *
    * @returns The stored data, or null if no data has been stored
    */
-  read(): T | null {
+  read(): T | undefined {
     return this.#index;
   }
 
@@ -43,6 +43,6 @@ export class MemoryStore<T> implements Store<T> {
    * Clears the stored data from memory
    */
   flush(): void {
-    this.#index = null;
+    this.#index = undefined;
   }
 }

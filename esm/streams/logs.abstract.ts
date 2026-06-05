@@ -15,7 +15,7 @@ export abstract class AbstractLogsStream<T extends SseLike = SseLike> extends Ab
   appId: string;
   filter?: string;
   deploymentId?: string;
-  protected _sse: T;
+  protected _sse: T | undefined;
 
   constructor({
     apiHost,
@@ -83,7 +83,7 @@ export abstract class AbstractLogsStream<T extends SseLike = SseLike> extends Ab
     // Closing is the same call for browser/node
     if (this._sse != null) {
       this._sse.close();
-      this._sse = null;
+      this._sse = null as unknown as T;
     }
   }
 
@@ -129,7 +129,7 @@ export abstract class AbstractLogsStream<T extends SseLike = SseLike> extends Ab
         // prepare SSE URL's authorization query param
         const url = new URL(requestParams.url);
         fillUrlSearchParams(url, requestParams.queryParams);
-        const base64AuthorizationHeader = globalThis.btoa(requestParams.headers.authorization);
+        const base64AuthorizationHeader = globalThis.btoa(requestParams.headers!.authorization);
         url.searchParams.set('authorization', base64AuthorizationHeader);
         return { url: url.toString() };
       });

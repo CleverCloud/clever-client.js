@@ -39,10 +39,10 @@ export function transformLogDrain(payload: ApiLogDrainPayload): LogDrain {
     id: payload.id,
     applicationId: payload.resourceId,
     // status.date is the date when the drain's current status was set (changes when status changes)
-    updatedAt: normalizeDate(payload.status.date),
+    updatedAt: normalizeDate(payload.status.date)!,
     status: payload.status.status,
-    updatedBy: payload.status.authorId,
-    kind: payload.kind,
+    updatedBy: payload.status.authorId!,
+    kind: payload.kind!,
     target: transformLogDrainTarget(payload.recipient),
     execution: {
       ...payload.execution,
@@ -64,7 +64,7 @@ export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainT
       if (payload.username) {
         target.credentials = {
           username: payload.username,
-          password: payload.password,
+          password: payload.password!,
         };
       }
       return target;
@@ -102,7 +102,7 @@ export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainT
       if (payload.username) {
         target.credentials = {
           username: payload.username,
-          password: payload.password,
+          password: payload.password!,
         };
       }
       if (payload.index) {
@@ -114,7 +114,7 @@ export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainT
       return {
         type: 'NEWRELIC',
         url: payload.url,
-        apiKey: payload.apiKey,
+        apiKey: payload.apiKey!,
       };
   }
 }

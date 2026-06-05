@@ -59,7 +59,7 @@ describe('log commands', function () {
   describe('log stream', function () {
     const support = e2eSupport({ user: 'test-user-without-github' });
 
-    let currentStream: CcStream = null;
+    let currentStream: CcStream | null = null;
 
     beforeAll(async () => {
       currentStream = null;

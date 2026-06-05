@@ -9,15 +9,15 @@ import type { CancelDeploymentCommandInput } from './cancel-deployment-command.t
  * @group Deployment
  * @version 2
  */
-export class CancelDeploymentCommand extends CcApiSimpleCommand<CancelDeploymentCommandInput, void> {
+export class CancelDeploymentCommand extends CcApiSimpleCommand<CancelDeploymentCommandInput, undefined> {
   toRequestParams(params: CancelDeploymentCommandInput) {
     return delete_(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/deployments/${params.deploymentId}/instances`,
     );
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

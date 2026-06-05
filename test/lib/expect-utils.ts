@@ -38,6 +38,15 @@ export async function expectAsyncFunctionThrows<E = unknown>(
   verify?.(err as E);
 }
 
+/**
+ * Asserts that the given value is neither null nor undefined, narrowing its type accordingly.
+ * @param value - The value expected to be defined
+ */
+export function expectToBeDefined<T>(value: T): asserts value is NonNullable<T> {
+  expect(value, 'A defined value was expected but got null or undefined').not.toBeNull();
+  expect(value, 'A defined value was expected but got null or undefined').not.toBeUndefined();
+}
+
 export function checkDateFormat(date: string): void {
   if (date != null) {
     expect(date).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z$/);

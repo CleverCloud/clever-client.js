@@ -23,7 +23,7 @@ export interface SseFetchEventSourceParams extends RequestInit {
   onMessage: (message: SseMessage) => void;
   onClose: (reason?: any) => void;
   onError: (error: any) => void;
-  resumeFrom: string;
+  resumeFrom?: string;
 }
 
 export interface AutoRetry {

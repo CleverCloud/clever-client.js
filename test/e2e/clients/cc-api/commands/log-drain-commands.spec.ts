@@ -49,8 +49,8 @@ describe('log-drain commands', function () {
     expect(response.target.url).toBe('https://example.com');
     if (response.target.type === 'RAW_HTTP') {
       expect(response.target.credentials).toBeTypeOf('object');
-      expect(response.target.credentials.username).toBe('username');
-      expect(response.target.credentials.password).toBeTypeOf('string'); // API returns masked password
+      expect(response.target.credentials!.username).toBe('username');
+      expect(response.target.credentials!.password).toBeTypeOf('string'); // API returns masked password
     }
   });
 
@@ -107,8 +107,8 @@ describe('log-drain commands', function () {
     expect(response.target.url).toBe('https://example.com');
     if (response.target.type === 'RAW_HTTP') {
       expect(response.target.credentials).toBeTypeOf('object');
-      expect(response.target.credentials.username).toBe('username');
-      expect(response.target.credentials.password).toBeTypeOf('string'); // API returns masked password
+      expect(response.target.credentials!.username).toBe('username');
+      expect(response.target.credentials!.password).toBeTypeOf('string'); // API returns masked password
     }
   });
 
@@ -207,8 +207,8 @@ describe('log-drain commands', function () {
     expect(response.target.url).toBe('https://example.com');
     if (response.target.type === 'RAW_HTTP') {
       expect(response.target.credentials).toBeTypeOf('object');
-      expect(response.target.credentials.username).toBe('username');
-      expect(response.target.credentials.password).toBeTypeOf('string'); // API returns masked password
+      expect(response.target.credentials!.username).toBe('username');
+      expect(response.target.credentials!.password).toBeTypeOf('string'); // API returns masked password
     }
   });
 

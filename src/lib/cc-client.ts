@@ -16,7 +16,7 @@ import type { GetUrl } from './get-url.js';
 import { QueryParams } from './request/query-params.js';
 import { sendRequest } from './request/request.js';
 import type { CcStream } from './stream/cc-stream.js';
-import type { CcStreamConfig, CcStreamConfigPartial } from './stream/cc-stream.types.js';
+import type { CcStreamConfig, CcStreamConfigPartial, RetryConfig } from './stream/cc-stream.types.js';
 import type { StreamCommand } from './stream/stream-command.js';
 import { mergeRequestConfig, mergeRequestConfigPartial } from './utils.js';
 
@@ -90,7 +90,7 @@ export class CcClient<Api extends string> {
   #defaultRequestsConfig: CcRequestConfig;
   #defaultStreamsConfig: CcStreamConfig;
   #hooks: CcClientHooks;
-  #auth: CcAuth | null;
+  #auth: CcAuth | undefined;
 
   /**
    * Creates a new CcClient instance
@@ -98,7 +98,7 @@ export class CcClient<Api extends string> {
    * @param config - Client configuration including baseUrl and default request settings
    * @param auth - Optional authentication handler
    */
-  constructor(config: CcClientConfig, auth?: CcAuth | null) {
+  constructor(config: CcClientConfig, auth?: CcAuth) {
     this.#baseUrl = config.baseUrl;
     this.#defaultRequestsConfig = mergeRequestConfig(DEFAULT_REQUEST_CONFIG, config.defaultRequestConfig);
     this.#defaultStreamsConfig = mergeStreamConfig(DEFAULT_STREAM_CONFIG, config.defaultStreamConfig);
@@ -306,12 +306,12 @@ export class CcClient<Api extends string> {
   }
 }
 
-function mergeStreamConfig(baseConfig: CcStreamConfig, config: CcStreamConfigPartial | null): CcStreamConfig {
+function mergeStreamConfig(baseConfig: CcStreamConfig, config?: CcStreamConfigPartial): CcStreamConfig {
   const overrideConfig: CcStreamConfigPartial = config ?? {};
 
   return {
     ...baseConfig,
     ...overrideConfig,
-    retry: { ...baseConfig.retry, ...(overrideConfig?.retry ?? {}) },
+    retry: { ...baseConfig.retry, ...(overrideConfig?.retry ?? {}) } as RetryConfig,
   };
 }

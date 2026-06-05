@@ -9,7 +9,7 @@ import type { RebootMatomoCommandInput } from './reboot-matomo-command.types.js'
  * @group Matomo
  * @version 4
  */
-export class RebootMatomoCommand extends CcApiSimpleCommand<RebootMatomoCommandInput, void> {
+export class RebootMatomoCommand extends CcApiSimpleCommand<RebootMatomoCommandInput, undefined> {
   toRequestParams(params: RebootMatomoCommandInput) {
     return post(safeUrl`/v4/addon-providers/addon-matomo/addons/${params.addonId}/reboot`);
   }
@@ -20,7 +20,7 @@ export class RebootMatomoCommand extends CcApiSimpleCommand<RebootMatomoCommandI
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

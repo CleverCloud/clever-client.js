@@ -5,7 +5,7 @@ import type { Migration, MigrationStep } from './migration.types.js';
 export function transformMigration(payload: any): Migration {
   return {
     id: payload.migrationId,
-    requestDate: normalizeDate(payload.requestDate),
+    requestDate: normalizeDate(payload.requestDate)!,
     steps: payload.steps.map((step: MigrationStep) => ({
       ...step,
       startDate: normalizeDate(step.startDate),
@@ -19,7 +19,7 @@ export function transformMigrationPreorder(response: any): ListMigrationPreorder
   return {
     ownerId: response.ownerId,
     target: response.target,
-    emissionDate: normalizeDate(response.emissionDate),
+    emissionDate: normalizeDate(response.emissionDate)!,
     name: response.name,
     company: response.company,
     VAT: response.VAT,

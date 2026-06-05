@@ -18,10 +18,10 @@ export class CcStream {
   #config: CcStreamConfig;
   #state: CcStreamState = 'init';
   #eventTarget = new EventTarget();
-  #abortController: AbortController | null;
-  #closeDeferred: Deferred<CcStreamCloseReason>;
-  #lastReceivedMessageId: string | null;
-  #lastContact: Date | null;
+  #abortController: AbortController | undefined;
+  #closeDeferred: Deferred<CcStreamCloseReason> | undefined;
+  #lastReceivedMessageId: string | undefined;
+  #lastContact: Date | undefined;
   #retryCount = 0;
   #retryTimeoutId: ReturnType<typeof setTimeout> | null = null;
   #heartbeatIntervalId: ReturnType<typeof setInterval> | null = null;
@@ -116,7 +116,7 @@ export class CcStream {
     this.#debugLog('Manually closing stream', { reason, previousState: this.#state });
     this.#state = 'closed';
     this.#cleanup(true);
-    this.#closeDeferred.resolve(reason);
+    this.#closeDeferred!.resolve(reason);
   }
 
   /**
@@ -193,7 +193,9 @@ export class CcStream {
       this.#debugLog('State changed to connecting', { state: this.#state, retryCount: this.#retryCount });
 
       this.#abortController = new AbortController();
-      combineWithSignal(this.#abortController, request.signal);
+      if (request.signal != null) {
+        combineWithSignal(this.#abortController, request.signal);
+      }
 
       const headersBuilder = new HeadersBuilder(request.headers).acceptEventStream();
       if (this.#lastReceivedMessageId != null) {
@@ -246,8 +248,8 @@ export class CcStream {
    */
   #cleanup(clearListeners = false): void {
     this.#debugLog('Cleaning up stream resources');
-    clearTimeout(this.#retryTimeoutId);
-    clearInterval(this.#heartbeatIntervalId);
+    clearTimeout(this.#retryTimeoutId ?? undefined);
+    clearInterval(this.#heartbeatIntervalId ?? undefined);
     if (clearListeners) {
       this.#eventListeners.forEach(({ type, callback }) => this.#eventTarget.removeEventListener(type, callback));
       this.#eventListeners.clear();
@@ -274,7 +276,7 @@ export class CcStream {
 
     this.#heartbeatIntervalId = setInterval(() => {
       const now = new Date();
-      const diff = now.getTime() - this.#lastContact.getTime();
+      const diff = now.getTime() - (this.#lastContact?.getTime() ?? now.getTime());
       if (diff > this.#config.heartbeatPeriod) {
         this.#debugLog('Heartbeat timeout detected', {
           timeSinceLastContact: diff,
@@ -313,7 +315,7 @@ export class CcStream {
         try {
           const reason = JSON.parse(message.data) as { endedBy?: string };
           this.#debugLog('End of stream received', { reason });
-          this.close({ type: reason.endedBy });
+          this.close({ type: reason.endedBy ?? 'UNKNOWN' });
         } catch (e: unknown) {
           this.#debugLog('Failed to parse END_OF_STREAM data', {
             data: message.data,
@@ -374,18 +376,18 @@ export class CcStream {
       maxRetry: this.#config.retry?.maxRetryCount,
     });
 
-    if (canRetry) {
+    if (canRetry && this.#config.retry != null) {
+      const retry = this.#config.retry;
       this.#state = 'paused';
       this.#emit('error', wrappedError);
 
       this.#retryCount++;
-      const exponentialBackoffDelay =
-        this.#config.retry.initRetryTimeout * this.#config.retry.backoffFactor ** this.#retryCount;
+      const exponentialBackoffDelay = retry.initRetryTimeout * retry.backoffFactor ** this.#retryCount;
 
       this.#debugLog('Scheduling retry', {
         retryCount: this.#retryCount,
         delayMs: exponentialBackoffDelay,
-        backoffFactor: this.#config.retry.backoffFactor,
+        backoffFactor: retry.backoffFactor,
       });
 
       this.#retryTimeoutId = setTimeout(() => {
@@ -398,7 +400,7 @@ export class CcStream {
       });
       this.#state = 'closed';
       this.#cleanup(true);
-      this.#closeDeferred.reject(wrappedError);
+      this.#closeDeferred?.reject(wrappedError);
     }
   }
 

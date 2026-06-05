@@ -40,19 +40,19 @@ const NETWORK_ERROR_CODES = [
 export default abstract class CleverCloudSse extends CustomEventTarget {
   protected _apiHost: string;
   protected _tokens: OAuthTokens;
-  protected _promise: Promise<SseCloseReason> | null;
-  protected _lastId: string | null;
-  protected _lastContact: Date | null;
-  protected _connectionTimeoutId: ReturnType<typeof setTimeout> | null;
-  protected _heartbeatIntervalId: ReturnType<typeof setInterval> | null;
+  protected _promise: Promise<SseCloseReason> | undefined;
+  protected _lastId: string | undefined;
+  protected _lastContact: Date | undefined;
+  protected _connectionTimeoutId: ReturnType<typeof setTimeout> | undefined;
+  protected _heartbeatIntervalId: ReturnType<typeof setInterval> | undefined;
   protected _retry: RetryConfiguration;
-  protected _retryTimeoutId: ReturnType<typeof setTimeout> | null;
+  protected _retryTimeoutId: ReturnType<typeof setTimeout> | undefined;
   retryCount: number;
   protected _connectionTimeout: number;
   state: string;
-  protected _resolve: (reason: SseCloseReason) => void;
-  protected _reject: (error: any) => void;
-  protected _abortController: AbortController;
+  protected _resolve!: (reason: SseCloseReason) => void;
+  protected _reject!: (error: any) => void;
+  protected _abortController: AbortController | undefined;
 
   constructor(
     apiHost: string,
@@ -63,13 +63,7 @@ export default abstract class CleverCloudSse extends CustomEventTarget {
     super();
     this._apiHost = apiHost;
     this._tokens = tokens;
-    this._promise = null;
-    this._lastId = null;
-    this._lastContact = null;
-    this._connectionTimeoutId = null;
-    this._heartbeatIntervalId = null;
     this._retry = { ...DEFAULT_RETRY_CONFIGURATION, ...retryConfiguration };
-    this._retryTimeoutId = null;
     this.retryCount = 0;
     this._connectionTimeout = connectionTimeout ?? CONNECTION_TIMEOUT_MS;
     this.state = 'init';
@@ -78,7 +72,7 @@ export default abstract class CleverCloudSse extends CustomEventTarget {
   /**
    * Build a URL from a base path and advanced query params
    */
-  buildUrl(path: string = '', queryParams: QueryParams<string | Date | number> = {}): URL {
+  buildUrl(path: string = '', queryParams: QueryParams<string | Date | number | undefined> = {}): URL {
     const url = new URL(path, this._apiHost);
 
     fillUrlSearchParams(url, queryParams, formatValue);
@@ -130,7 +124,7 @@ export default abstract class CleverCloudSse extends CustomEventTarget {
       }, this._connectionTimeout);
 
       fetchEventSource(url.toString(), {
-        headers: requestParams.headers,
+        headers: requestParams.headers ?? {},
         abortController: this._abortController,
         resumeFrom: this._lastId,
         onOpen: (res) => this._onOpen(res),
@@ -169,7 +163,7 @@ export default abstract class CleverCloudSse extends CustomEventTarget {
       return false;
     }
 
-    if (this.retryCount >= this._retry.maxRetryCount) {
+    if (this.retryCount >= this._retry.maxRetryCount!) {
       return false;
     }
 
@@ -224,7 +218,7 @@ export default abstract class CleverCloudSse extends CustomEventTarget {
 
     this._heartbeatIntervalId = setInterval(() => {
       const now = new Date();
-      const diff = now.getTime() - this._lastContact.getTime();
+      const diff = now.getTime() - this._lastContact!.getTime();
       if (diff > SAFE_SSE_HEARTBEAT_PERIOD) {
         this._onError(new NetworkError(`Failed to receive heartbeat within ${SAFE_SSE_HEARTBEAT_PERIOD}ms period`));
       }
@@ -312,7 +306,7 @@ export default abstract class CleverCloudSse extends CustomEventTarget {
       this.emit('error', { error: wrappedError });
 
       this.retryCount++;
-      const exponentialBackoffDelay = this._retry.initRetryTimeout * this._retry.backoffFactor ** this.retryCount;
+      const exponentialBackoffDelay = this._retry.initRetryTimeout! * this._retry.backoffFactor! ** this.retryCount;
 
       this._retryTimeoutId = setTimeout(() => {
         void this._start();
@@ -336,7 +330,7 @@ function formatValue(value: any): string {
 
 function isNetworkError(error: { name?: string; message?: string; cause?: { code?: string }; code?: string }): boolean {
   const errorCode = error?.cause?.code ?? error.code;
-  if (NETWORK_ERROR_CODES.includes(errorCode)) {
+  if (errorCode != null && NETWORK_ERROR_CODES.includes(errorCode)) {
     return true;
   }
 
@@ -344,7 +338,7 @@ function isNetworkError(error: { name?: string; message?: string; cause?: { code
     if (error.message === 'Failed to fetch') {
       return true;
     }
-    if (error.message.startsWith('NetworkError')) {
+    if (error.message?.startsWith('NetworkError')) {
       return true;
     }
   }

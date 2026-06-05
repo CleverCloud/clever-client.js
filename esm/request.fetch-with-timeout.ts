@@ -19,7 +19,7 @@ export function fetchWithTimeout(url: string, params: RequestInit, timeoutDelay?
   return Promise.race([fetchPromise, timeoutPromise]);
 }
 
-function controllerWithSignal(signal: AbortSignal): AbortController {
+function controllerWithSignal(signal: AbortSignal | null | undefined): AbortController {
   const ac = new AbortController();
   if (signal != null) {
     signal.addEventListener('abort', () => ac.abort(), { once: true });

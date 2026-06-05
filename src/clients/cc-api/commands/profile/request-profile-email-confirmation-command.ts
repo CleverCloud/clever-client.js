@@ -6,12 +6,12 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
  * @group Profile
  * @version 2
  */
-export class RequestProfileEmailConfirmationCommand extends CcApiSimpleCommand<void, void> {
+export class RequestProfileEmailConfirmationCommand extends CcApiSimpleCommand<void, undefined> {
   toRequestParams() {
     return get(`/v2/self/confirmation_email`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

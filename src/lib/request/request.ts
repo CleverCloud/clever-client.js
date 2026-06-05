@@ -153,8 +153,8 @@ async function getResponseBody(request: CcRequest, fetchResponse: Response): Pro
   return fetchResponse.blob();
 }
 
-function getContentType(headers: Headers): string | null {
-  const contentType = headers.get('content-type');
+function getContentType(headers: Headers | undefined): string | null {
+  const contentType = headers?.get('content-type') ?? null;
   return contentType != null ? contentType.split(';')[0] : contentType;
 }
 
@@ -166,7 +166,7 @@ export function isNetworkError(error: {
 }): boolean {
   const errorCode = error.cause?.code ?? error.code;
 
-  if (NETWORK_ERROR_CODES.includes(errorCode)) {
+  if (errorCode != null && NETWORK_ERROR_CODES.includes(errorCode)) {
     return true;
   }
 
@@ -187,9 +187,9 @@ export function isNetworkError(error: {
 
 export class SseResponseBody {
   #response: Response;
-  #signal: AbortSignal;
+  #signal: AbortSignal | undefined;
 
-  constructor(response: Response, signal: AbortSignal) {
+  constructor(response: Response, signal: AbortSignal | undefined) {
     this.#response = response;
     this.#signal = signal;
   }
@@ -207,15 +207,15 @@ export class SseResponseBody {
       const stream = events(this.#response, this.#signal);
       for await (const event of stream) {
         onMessage({
-          data: event.data,
-          event: event.event,
-          id: event.id != null ? String(event.id) : null,
+          data: event.data ?? '',
+          event: event.event ?? '',
+          id: event.id != null ? String(event.id) : '',
           retry: event.retry,
         });
       }
       onClose?.();
     } catch (err: unknown) {
-      if (this.#signal.aborted) {
+      if (this.#signal?.aborted) {
         onClose?.(this.#signal.reason);
       } else {
         // if we haven't aborted the request ourselves

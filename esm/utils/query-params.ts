@@ -2,7 +2,7 @@ import type { QueryParams } from './query-params.types.js';
 
 export function fillUrlSearchParams<T>(
   url: URL,
-  queryParams: QueryParams<T>,
+  queryParams?: QueryParams<T>,
   formatValue?: (param: T) => string,
 ): void {
   Object.entries(queryParams || {}).forEach(([k, v]) => {

@@ -9,13 +9,13 @@ import type { UndeployApplicationCommandInput } from './undeploy-application-com
  * @group Application
  * @version 2
  */
-export class UndeployApplicationCommand extends CcApiSimpleCommand<UndeployApplicationCommandInput, void> {
+export class UndeployApplicationCommand extends CcApiSimpleCommand<UndeployApplicationCommandInput, undefined> {
   toRequestParams(params: UndeployApplicationCommandInput) {
     return delete_(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/instances`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

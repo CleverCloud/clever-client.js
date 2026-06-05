@@ -6,4 +6,4 @@ export interface GetOauthConsumerCommandInput {
   withSecret: boolean;
 }
 
-export type GetOauthConsumerCommandOutput = OauthConsumer;
+export type GetOauthConsumerCommandOutput = OauthConsumer | undefined;

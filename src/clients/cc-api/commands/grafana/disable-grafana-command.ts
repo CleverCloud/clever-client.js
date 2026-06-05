@@ -8,12 +8,12 @@ import type { DisableGrafanaCommandInput } from './disable-grafana-command.types
  * @group Grafana
  * @version 4
  */
-export class DisableGrafanaCommand extends CcApiSimpleCommand<DisableGrafanaCommandInput, void> {
+export class DisableGrafanaCommand extends CcApiSimpleCommand<DisableGrafanaCommandInput, undefined> {
   toRequestParams(params: DisableGrafanaCommandInput) {
     return delete_(safeUrl`/v4/saas/grafana/${params.ownerId}`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

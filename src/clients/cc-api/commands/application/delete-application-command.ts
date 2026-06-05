@@ -9,13 +9,13 @@ import type { DeleteApplicationCommandInput } from './delete-application-command
  * @group Application
  * @version 2
  */
-export class DeleteApplicationCommand extends CcApiSimpleCommand<DeleteApplicationCommandInput, void> {
+export class DeleteApplicationCommand extends CcApiSimpleCommand<DeleteApplicationCommandInput, undefined> {
   toRequestParams(params: DeleteApplicationCommandInput) {
     return delete_(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

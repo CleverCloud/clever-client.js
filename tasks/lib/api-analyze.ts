@@ -99,7 +99,7 @@ function findCleverClientImportsAndRequire(
           const functionName = specifier.local.name;
           functionImportOrRequireByName[functionName] = {
             filepath: projectDir + '/node_modules/' + node.source.value,
-            innerFunctionName: specifier.imported.loc.identifierName,
+            innerFunctionName: specifier.imported.loc?.identifierName ?? '',
             functionName,
           };
         }
@@ -146,10 +146,10 @@ function findCleverClientLegacyCalls(
     enter(path) {
       const node = path.node;
       if (isCleverClientLegacyHttpMethodCall(node)) {
-        const line = node.loc.start.line;
+        const line = node.loc!.start.line;
 
         const urlPath = sourceCode
-          .substring(node.start, node.end)
+          .substring(node.start!, node.end!)
           // remove new lines and indent
           .replaceAll(/\s+/g, '')
           // remove API.something.get()
@@ -161,7 +161,7 @@ function findCleverClientLegacyCalls(
 
         if (!urlPath.startsWith('dateSelectionSettingManager')) {
           const parts = urlPath.split('.');
-          const method = parts.pop().toUpperCase();
+          const method = parts.pop()!.toUpperCase();
           const path =
             '/v2/' +
             parts
@@ -185,7 +185,7 @@ function findCleverClientNewCalls(ast: Program): Array<{ functionName: string; l
     CallExpression(path) {
       const node: CallExpression = path.node;
       if (isCleverClientNewFunctionCall(node) && t.isMemberExpression(node.callee)) {
-        const line = node.loc.start.line;
+        const line = node.loc!.start.line;
         let functionName = '';
 
         if (t.isMemberExpression(node.callee.object) && t.isIdentifier(node.callee.object.object)) {
@@ -257,7 +257,7 @@ function getCleverClientMethodsAndPathsByFunctionName(
     ExportNamedDeclaration(path) {
       const node: ExportNamedDeclaration = path.node;
       if (node.declaration?.type === 'FunctionDeclaration') {
-        const functionName = node.declaration.id.name;
+        const functionName = node.declaration.id!.name;
         // We can't take the first one as it could be the @typedef comment in our projects
         const commentNode = node.leadingComments?.find((commentNode) =>
           commentNode.value.split(' ').some((word) => ['GET', 'POST', 'DELETE', 'PUT'].includes(word)),

@@ -9,7 +9,7 @@ import type { RebootOtoroshiCommandInput } from './reboot-otoroshi-command.types
  * @group Otoroshi
  * @version 4
  */
-export class RebootOtoroshiCommand extends CcApiSimpleCommand<RebootOtoroshiCommandInput, void> {
+export class RebootOtoroshiCommand extends CcApiSimpleCommand<RebootOtoroshiCommandInput, undefined> {
   toRequestParams(params: RebootOtoroshiCommandInput) {
     return post(safeUrl`/v4/addon-providers/addon-otoroshi/addons/${params.addonId}/reboot`);
   }
@@ -20,7 +20,7 @@ export class RebootOtoroshiCommand extends CcApiSimpleCommand<RebootOtoroshiComm
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

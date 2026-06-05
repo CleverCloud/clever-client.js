@@ -10,7 +10,7 @@ import type { DeleteTcpRedirectionCommandInput } from './delete-tcp-redirection-
  * @group TcpRedirection
  * @version 2
  */
-export class DeleteTcpRedirectionCommand extends CcApiSimpleCommand<DeleteTcpRedirectionCommandInput, void> {
+export class DeleteTcpRedirectionCommand extends CcApiSimpleCommand<DeleteTcpRedirectionCommandInput, undefined> {
   toRequestParams(params: DeleteTcpRedirectionCommandInput) {
     return delete_(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/tcpRedirs/${params.port}`,
@@ -24,7 +24,7 @@ export class DeleteTcpRedirectionCommand extends CcApiSimpleCommand<DeleteTcpRed
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

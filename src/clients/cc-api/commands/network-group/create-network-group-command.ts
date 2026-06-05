@@ -39,7 +39,7 @@ export class CreateNetworkGroupCommand extends CcApiCompositeCommand<
  * @group NetworkGroup
  * @version 4
  */
-class CreateNetworkGroupCommandInner extends CcApiSimpleCommand<CreateNetworkGroupCommandInnerInput, void> {
+class CreateNetworkGroupCommandInner extends CcApiSimpleCommand<CreateNetworkGroupCommandInnerInput, undefined> {
   toRequestParams(params: CreateNetworkGroupCommandInnerInput) {
     const body: {
       id: string;
@@ -60,7 +60,7 @@ class CreateNetworkGroupCommandInner extends CcApiSimpleCommand<CreateNetworkGro
       body.members = params.members.map((member) => {
         return {
           ...constructNetworkGroupMember(params.networkGroupId, member.id),
-          label: member.label,
+          label: member.label!,
         };
       });
     }
@@ -68,7 +68,7 @@ class CreateNetworkGroupCommandInner extends CcApiSimpleCommand<CreateNetworkGro
     return post(safeUrl`/v4/networkgroups/organisations/${params.ownerId}/networkgroups`, body);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

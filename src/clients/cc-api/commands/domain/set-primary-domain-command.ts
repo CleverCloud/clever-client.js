@@ -9,15 +9,15 @@ import type { SetPrimaryDomainCommandInput } from './set-primary-domain-command.
  * @group Domain
  * @version 2
  */
-export class SetPrimaryDomainCommand extends CcApiSimpleCommand<SetPrimaryDomainCommandInput, void> {
+export class SetPrimaryDomainCommand extends CcApiSimpleCommand<SetPrimaryDomainCommandInput, undefined> {
   toRequestParams(params: SetPrimaryDomainCommandInput) {
     return put(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/vhosts/favourite`, {
       fqdn: params.domain,
     });
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

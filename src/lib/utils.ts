@@ -51,12 +51,12 @@ export function toArray<T>(value: T | Array<T>): Array<T> {
  * normalizeDate('2023-01-01[UTC]')          // '2023-01-01T00:00:00.000Z'
  * normalizeDate(1672531200000)              // '2023-01-01T00:00:00.000Z'
  */
-export function normalizeDate(date: Date | string | number): string | null {
+export function normalizeDate(date: Date | string | number | null | undefined): string | null {
   if (date == null) {
     return null;
   }
 
-  let parsedDate: Date;
+  let parsedDate: Date | undefined;
 
   if (date instanceof Date) {
     parsedDate = date;
@@ -204,7 +204,7 @@ export function sortBy<T extends object, K extends keyof T | ((item: T) => unkno
  * merge(user, update);
  * // Result: { name: 'John', age: 31 }
  */
-export function merge<T>(object1: T, object2: Partial<T> | null): T {
+export function merge<T>(object1: T, object2: Partial<T> | undefined): T {
   const o2 = object2 == null ? {} : pickNonNull(object2);
   return { ...object1, ...o2 };
 }
@@ -267,7 +267,7 @@ export function combineWithSignal(abortController: AbortController, signal: Abor
 
 export function mergeRequestConfig(
   baseConfig: CcRequestConfig,
-  config: CcRequestConfigPartial | null,
+  config: CcRequestConfigPartial | undefined,
 ): CcRequestConfig {
   const overrideConfig: CcRequestConfigPartial = config ?? {};
 
@@ -279,8 +279,8 @@ export function mergeRequestConfig(
 }
 
 export function mergeRequestConfigPartial(
-  baseConfig: CcRequestConfigPartial | null,
-  config: CcRequestConfigPartial | null,
+  baseConfig: CcRequestConfigPartial | undefined,
+  config: CcRequestConfigPartial | undefined,
 ): CcRequestConfigPartial {
   const bConfig: CcRequestConfigPartial = baseConfig ?? {};
   const overrideConfig: CcRequestConfigPartial = config ?? {};
@@ -303,8 +303,8 @@ export function mergeRequestConfigPartial(
  */
 export class Deferred<T> {
   #promise: Promise<T>;
-  #resolve: (value: T) => void;
-  #reject: (error: unknown) => void;
+  #resolve!: (value: T) => void;
+  #reject!: (error: unknown) => void;
 
   constructor() {
     this.#promise = new Promise((resolve, reject) => {
@@ -378,7 +378,7 @@ function mergeCache(
 function mergeCachePartial(
   baseCache: Partial<RequestCachePolicy> | null | undefined,
   cache: Partial<RequestCachePolicy> | null | undefined,
-): Partial<RequestCachePolicy> | null {
+): Partial<RequestCachePolicy> | null | undefined {
   if (cache === undefined) {
     return baseCache;
   }

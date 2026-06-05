@@ -5,4 +5,4 @@ export interface GetApplicationCommandInput extends ApplicationId {
   withBranches?: boolean;
 }
 
-export type GetApplicationCommandOutput = Application;
+export type GetApplicationCommandOutput = Application | undefined;

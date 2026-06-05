@@ -31,9 +31,9 @@ export async function requestDebug<CommandOutput>(
   return response;
 }
 
-function obfuscateHeaders(headers: Headers): Record<string, string> | null {
+function obfuscateHeaders(headers?: Headers): Record<string, string> | undefined {
   if (headers == null) {
-    return null;
+    return undefined;
   }
   if (headers.get('authorization') != null) {
     return { ...Object.fromEntries(headers.entries()), authorization: '***' };
@@ -41,9 +41,9 @@ function obfuscateHeaders(headers: Headers): Record<string, string> | null {
   return Object.fromEntries(headers.entries());
 }
 
-function obfuscateQueryParams(queryParams: QueryParams): Record<string, unknown> | null {
+function obfuscateQueryParams(queryParams?: QueryParams): Record<string, unknown> | undefined {
   if (queryParams == null) {
-    return null;
+    return undefined;
   }
 
   if (queryParams.get('authorization') != null) {

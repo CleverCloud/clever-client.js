@@ -135,7 +135,7 @@ describe('clever-client', () => {
 
   const hooks = doublureHooks();
 
-  function createClient(config?: Omit<CcClientConfig, 'baseUrl'>, auth?: CcAuth | null): SpiedClient {
+  function createClient(config?: Omit<CcClientConfig, 'baseUrl'>, auth?: CcAuth): SpiedClient {
     return new SpiedClient({ ...config, baseUrl: newScenario.mockClient.baseUrl }, auth);
   }
 
@@ -279,7 +279,7 @@ describe('clever-client', () => {
       expect(spy).toHaveBeenCalledTimes(1);
       const result = (await spy.mock.results[0].value) as CcRequest;
 
-      expect(result.queryParams.get('hook')).toBe('hook');
+      expect(result.queryParams!.get('hook')).toBe('hook');
     });
 
     it('should prepend url with baseUrl', async () => {
@@ -456,7 +456,7 @@ describe('clever-client', () => {
       await client.send(command, { cors: false, cache: { mode: 'reload', ttl: 500 }, debug: true });
 
       expect(spy).toHaveBeenCalledTimes(2);
-      expect(spy.mock.lastCall[1]).toEqual({
+      expect(spy.mock.lastCall![1]).toEqual({
         cache: { mode: 'reload', ttl: 100 },
         cors: true,
         timeout: 1000,
@@ -515,8 +515,8 @@ describe('clever-client', () => {
 
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy.mock.calls[0][0]).toBe(command);
-      expect(spy.mock.calls[0][1].debug).toBe(true);
-      expect(spy.mock.calls[0][1].cors).toBe(true);
+      expect(spy.mock.calls[0][1]!.debug).toBe(true);
+      expect(spy.mock.calls[0][1]!.cors).toBe(true);
     });
 
     it('should call `createStream` method with right params', async () => {
@@ -543,9 +543,9 @@ describe('clever-client', () => {
       });
 
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy.mock.calls[0][1].retry.maxRetryCount).toBe(100); // command config
-      expect(spy.mock.calls[0][1].retry.backoffFactor).toBe(10); // client config
-      expect(spy.mock.calls[0][1].retry.initRetryTimeout).toBe(1_000); // default config
+      expect(spy.mock.calls[0][1].retry!.maxRetryCount).toBe(100); // command config
+      expect(spy.mock.calls[0][1].retry!.backoffFactor).toBe(10); // client config
+      expect(spy.mock.calls[0][1].retry!.initRetryTimeout).toBe(1_000); // default config
       expect(spy.mock.calls[0][1].debug).toBe(true); // command config
       expect(spy.mock.calls[0][1].healthcheckInterval).toBe(10); // client config
       expect(spy.mock.calls[0][1].heartbeatPeriod).toBe(2_500); // default config

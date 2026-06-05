@@ -8,12 +8,12 @@ import type { DeletePaymentMethodCommandInput } from './delete-payment-method-co
  * @group PaymentMethod
  * @version 4
  */
-export class DeletePaymentMethodCommand extends CcApiSimpleCommand<DeletePaymentMethodCommandInput, void> {
+export class DeletePaymentMethodCommand extends CcApiSimpleCommand<DeletePaymentMethodCommandInput, undefined> {
   toRequestParams(params: DeletePaymentMethodCommandInput) {
     return delete_(safeUrl`/v4/billing/organisations/${params.ownerId}/payments/methods/${params.token}`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

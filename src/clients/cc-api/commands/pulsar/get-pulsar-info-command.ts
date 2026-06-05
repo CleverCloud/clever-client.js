@@ -18,12 +18,18 @@ import { transformPulsarCluster, transformPulsarInfo } from './pulsar-transform.
  * @group Pulsar
  * @version 4
  */
-export class GetPulsarInfoCommand extends CcApiCompositeCommand<GetPulsarInfoCommandInput, GetPulsarInfoCommandOutput> {
-  async compose(params: GetPulsarInfoCommandInput, composer: CcApiComposer): Promise<GetPulsarInfoCommandOutput> {
+export class GetPulsarInfoCommand extends CcApiCompositeCommand<
+  GetPulsarInfoCommandInput,
+  GetPulsarInfoCommandOutput | undefined
+> {
+  async compose(
+    params: GetPulsarInfoCommandInput,
+    composer: CcApiComposer,
+  ): Promise<GetPulsarInfoCommandOutput | undefined> {
     const pulsarInfo = await composer.send(new GetPulsarInfoInnerCommand(params));
 
     if (pulsarInfo == null) {
-      return null;
+      return undefined;
     }
 
     const pulsarCluster = await composer.send(new GetPulsarClusterCommand({ clusterId: pulsarInfo.clusterId }));

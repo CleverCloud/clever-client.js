@@ -171,7 +171,7 @@ export class Polling<T> {
     if (reason.type === 'error') {
       this.#deferred?.reject(reason.error);
     } else {
-      this.#deferred?.resolve(reason.value);
+      this.#deferred?.resolve(reason.value as T);
     }
   }
 

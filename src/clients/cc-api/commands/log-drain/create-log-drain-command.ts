@@ -19,7 +19,7 @@ export class CreateLogDrainCommand extends CcApiCompositeCommand<
 > {
   async compose(params: CreateLogDrainCommandInput, composer: CcApiComposer): Promise<CreateLogDrainCommandOutput> {
     const created = await composer.send(new CreateLogDrainInnerCommand(params));
-    return waitForLogDrainEnabled(composer, params.ownerId, params.applicationId, created.id);
+    return waitForLogDrainEnabled(composer, params.ownerId!, params.applicationId, created.id);
   }
 }
 

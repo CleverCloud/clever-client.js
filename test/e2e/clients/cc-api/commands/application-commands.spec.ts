@@ -5,6 +5,7 @@ import { GetApplicationCommand } from '../../../../../src/clients/cc-api/command
 import { ListApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/list-application-command.js';
 import { UndeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/undeploy-application-command.js';
 import { UpdateApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/update-application-command.js';
+import { expectToBeDefined } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
 describe('application commands', function () {
@@ -125,6 +126,7 @@ describe('application commands', function () {
       new GetApplicationCommand({ applicationId: application.id, withBranches: false }),
     );
 
+    expectToBeDefined(response);
     expect(response.id).toBe(application.id);
     expect(response.deployment.type).toBe('FTP');
   });

@@ -6,4 +6,4 @@ export interface GetProductAddonCommandInput {
   ownerId?: string;
 }
 
-export type GetProductAddonCommandOutput = ProductAddon;
+export type GetProductAddonCommandOutput = ProductAddon | undefined;

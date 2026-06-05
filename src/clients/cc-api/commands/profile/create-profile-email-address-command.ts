@@ -15,13 +15,16 @@ import type { CreateProfileEmailAddressCommandInput } from './create-profile-ema
  * @group Profile
  * @version 2
  */
-export class CreateProfileEmailAddressCommand extends CcApiSimpleCommand<CreateProfileEmailAddressCommandInput, void> {
+export class CreateProfileEmailAddressCommand extends CcApiSimpleCommand<
+  CreateProfileEmailAddressCommandInput,
+  undefined
+> {
   toRequestParams(params: CreateProfileEmailAddressCommandInput) {
     return put(safeUrl`/v2/self/emails/${params.address}`, {});
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   transformErrorCode(errorCode: string) {

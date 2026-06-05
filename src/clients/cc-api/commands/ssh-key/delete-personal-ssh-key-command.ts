@@ -8,12 +8,12 @@ import type { DeletePersonalSshKeyCommandInput } from './delete-personal-ssh-key
  * @group SshKey
  * @version 2
  */
-export class DeletePersonalSshKeyCommand extends CcApiSimpleCommand<DeletePersonalSshKeyCommandInput, void> {
+export class DeletePersonalSshKeyCommand extends CcApiSimpleCommand<DeletePersonalSshKeyCommandInput, undefined> {
   toRequestParams(params: DeletePersonalSshKeyCommandInput) {
     return delete_(safeUrl`/v2/self/keys/${params.name}`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

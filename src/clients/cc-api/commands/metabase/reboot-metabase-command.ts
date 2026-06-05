@@ -9,7 +9,7 @@ import type { RebootMetabaseCommandInput } from './reboot-metabase-command.types
  * @group Metabase
  * @version 4
  */
-export class RebootMetabaseCommand extends CcApiSimpleCommand<RebootMetabaseCommandInput, void> {
+export class RebootMetabaseCommand extends CcApiSimpleCommand<RebootMetabaseCommandInput, undefined> {
   toRequestParams(params: RebootMetabaseCommandInput) {
     return post(safeUrl`/v4/addon-providers/addon-metabase/addons/${params.addonId}/reboot`);
   }
@@ -20,7 +20,7 @@ export class RebootMetabaseCommand extends CcApiSimpleCommand<RebootMetabaseComm
     };
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

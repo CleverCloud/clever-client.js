@@ -26,7 +26,7 @@ export class RedisHttpClient extends CcClient<RedisHttpType> {
    * Default Redis© database URL to use for commands that require a backend.
    * Can be overridden per command via the backendUrl parameter.
    */
-  #backendUrl: string | null;
+  #backendUrl: string | undefined;
 
   /**
    * Creates a new Redis© HTTP client instance.
@@ -37,7 +37,7 @@ export class RedisHttpClient extends CcClient<RedisHttpType> {
    */
   constructor(config?: RedisHttpClientConfig) {
     super(merge({ baseUrl: 'https://kv-proxy.services.clever-cloud.com' }, config));
-    this.#backendUrl = config?.backendUrl ?? null;
+    this.#backendUrl = config?.backendUrl;
   }
 
   /**

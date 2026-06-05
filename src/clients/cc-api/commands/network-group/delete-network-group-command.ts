@@ -11,11 +11,11 @@ import { waitForNetworkGroupDeletion } from './network-group-utils.js';
  * @group NetworkGroup
  * @version 4
  */
-export class DeleteNetworkGroupCommand extends CcApiCompositeCommand<DeleteNetworkGroupCommandInput, void> {
-  async compose(params: DeleteNetworkGroupCommandInput, composer: CcApiComposer): Promise<void> {
+export class DeleteNetworkGroupCommand extends CcApiCompositeCommand<DeleteNetworkGroupCommandInput, undefined> {
+  async compose(params: DeleteNetworkGroupCommandInput, composer: CcApiComposer): Promise<undefined> {
     await composer.send(new DeleteNetworkGroupCommandInner(params));
     await waitForNetworkGroupDeletion(composer, params.ownerId, params.networkGroupId);
-    return null;
+    return undefined;
   }
 }
 
@@ -24,12 +24,12 @@ export class DeleteNetworkGroupCommand extends CcApiCompositeCommand<DeleteNetwo
  * @group NetworkGroup
  * @version 4
  */
-class DeleteNetworkGroupCommandInner extends CcApiSimpleCommand<DeleteNetworkGroupCommandInput, void> {
+class DeleteNetworkGroupCommandInner extends CcApiSimpleCommand<DeleteNetworkGroupCommandInput, undefined> {
   toRequestParams(params: DeleteNetworkGroupCommandInput) {
     return delete_(safeUrl`/v4/networkgroups/organisations/${params.ownerId}/networkgroups/${params.networkGroupId}`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

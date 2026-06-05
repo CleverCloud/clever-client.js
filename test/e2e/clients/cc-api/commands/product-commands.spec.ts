@@ -11,6 +11,7 @@ import type {
   ProductRuntime,
   ProductRuntimeFlavor,
 } from '../../../../../src/clients/cc-api/commands/product/product.types.js';
+import { expectToBeDefined } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
 describe('product commands', function () {
@@ -60,12 +61,14 @@ describe('product commands', function () {
   it('should get addon without versions', async () => {
     const response = await support.client.send(new GetProductAddonCommand({ id: 'mysql-addon', withVersions: false }));
 
+    expectToBeDefined(response);
     checkAddon(response, false);
   });
 
   it('should get addon with versions', async () => {
     const response = await support.client.send(new GetProductAddonCommand({ id: 'mysql-addon', withVersions: true }));
 
+    expectToBeDefined(response);
     checkAddon(response, false);
   });
 

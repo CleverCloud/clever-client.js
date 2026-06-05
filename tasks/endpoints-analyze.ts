@@ -96,14 +96,14 @@ async function run(): Promise<void> {
       console.log(`${styleText('green', '✔ No Diff found')}`);
     } else {
       const diffStrings: Array<string> = [];
-      if (diff.addedEndpoints?.length > 0) {
-        diffStrings.push(styleText('green', `+${diff.addedEndpoints.length}`));
+      if ((diff.addedEndpoints?.length ?? 0) > 0) {
+        diffStrings.push(styleText('green', `+${diff.addedEndpoints!.length}`));
       }
-      if (diff.deletedEndpoints?.length > 0) {
-        diffStrings.push(styleText('red', `-${diff.deletedEndpoints.length}`));
+      if ((diff.deletedEndpoints?.length ?? 0) > 0) {
+        diffStrings.push(styleText('red', `-${diff.deletedEndpoints!.length}`));
       }
-      if (diff.modifiedEndpoints?.length > 0) {
-        diffStrings.push(styleText('blue', `~${diff.modifiedEndpoints.length}`));
+      if ((diff.modifiedEndpoints?.length ?? 0) > 0) {
+        diffStrings.push(styleText('blue', `~${diff.modifiedEndpoints!.length}`));
       }
 
       console.log(`${styleText('yellow', '! Diff found:')} ${diffStrings.join(' ')}`);

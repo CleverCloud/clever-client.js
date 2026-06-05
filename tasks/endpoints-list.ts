@@ -61,8 +61,9 @@ async function run(): Promise<void> {
     let keptCount = 0;
     let commandCount = 0;
     endpoints.forEach(({ source, endpoint }) => {
-      const alreadyExist = existingCommands.get(endpoint.id)?.commandClassName.trim().length > 0;
-      const comment = existingCommands.get(endpoint.id)?.comment ?? '';
+      const existingCommand = existingCommands.get(endpoint.id);
+      const alreadyExist = (existingCommand?.commandClassName.trim().length ?? 0) > 0;
+      const comment = existingCommand?.comment ?? '';
 
       commandCount++;
       if (alreadyExist) {
@@ -75,13 +76,13 @@ async function run(): Promise<void> {
         sourceId: source.id,
         endpointId: endpoint.id,
         isUsed,
-        namespace: alreadyExist ? existingCommands.get(endpoint.id).namespace : '',
-        target: alreadyExist ? existingCommands.get(endpoint.id).target : '',
-        action: alreadyExist ? existingCommands.get(endpoint.id).action : '',
-        commandClassName: alreadyExist ? existingCommands.get(endpoint.id).commandClassName : '',
-        composite: alreadyExist ? existingCommands.get(endpoint.id).composite : false,
-        autoOwner: alreadyExist ? existingCommands.get(endpoint.id).autoOwner : false,
-        legacy: alreadyExist ? existingCommands.get(endpoint.id).legacy : false,
+        namespace: alreadyExist ? existingCommand!.namespace : '',
+        target: alreadyExist ? existingCommand!.target : '',
+        action: alreadyExist ? existingCommand!.action : '',
+        commandClassName: alreadyExist ? existingCommand!.commandClassName : '',
+        composite: alreadyExist ? existingCommand!.composite : false,
+        autoOwner: alreadyExist ? existingCommand!.autoOwner : false,
+        legacy: alreadyExist ? existingCommand!.legacy : false,
         comment,
       });
       totalCommandsCount++;

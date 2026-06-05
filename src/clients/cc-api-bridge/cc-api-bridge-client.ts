@@ -31,7 +31,7 @@ export class CcApiBridgeClient extends CcClient<CcApiBridgeType> {
   constructor(config?: CcApiBridgeClientConfig) {
     super(
       merge({ baseUrl: 'https://api-bridge.clever-cloud.com' }, config),
-      config?.oauthTokens == null ? null : new CcAuthOauthV1Plaintext(config.oauthTokens),
+      config?.oauthTokens == null ? undefined : new CcAuthOauthV1Plaintext(config.oauthTokens),
     );
   }
 }

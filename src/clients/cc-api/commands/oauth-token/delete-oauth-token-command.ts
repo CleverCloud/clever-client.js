@@ -11,12 +11,12 @@ import type { DeleteTokenCommandInput } from './delete-oauth-token-command.types
  * @group Token
  * @version 2
  */
-export class DeleteOauthTokenCommand extends CcApiSimpleCommand<DeleteTokenCommandInput, void> {
+export class DeleteOauthTokenCommand extends CcApiSimpleCommand<DeleteTokenCommandInput, undefined> {
   toRequestParams(params: DeleteTokenCommandInput) {
     return delete_(`/v2/self/tokens/${params.token}`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

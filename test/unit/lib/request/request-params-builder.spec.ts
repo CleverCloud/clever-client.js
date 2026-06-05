@@ -277,6 +277,6 @@ function expectRequestParams(actual: Partial<CcRequestParams>, expected: Partial
   expect(actual.body).toEqual(expected.body);
 }
 
-function getHeadersEntries(headers: Headers) {
+function getHeadersEntries(headers: Headers | undefined) {
   return Array.from(headers?.entries() ?? []);
 }

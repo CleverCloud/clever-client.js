@@ -44,11 +44,11 @@ export class FileStore<T> implements Store<T> {
    * @returns The stored data, or null if file doesn't exist
    * @throws {Error} If reading or parsing the file fails
    */
-  read(): T | null {
+  read(): T | undefined {
     if (fs.existsSync(this.#filePath)) {
       return JSON.parse(fs.readFileSync(this.#filePath).toString()) as T;
     }
-    return null;
+    return undefined;
   }
 
   /**

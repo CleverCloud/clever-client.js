@@ -39,7 +39,7 @@ export class ResourceIdResolver {
   /**
    * In-memory cache of resource mappings
    */
-  #index: ResourceIdIndex;
+  #index: ResourceIdIndex | undefined;
 
   /**
    * Creates a new ResourceIdResolver instance
@@ -103,10 +103,6 @@ export class ResourceIdResolver {
     requiredAddonIdType: AddonIdType,
     requestConfig?: CcRequestConfigPartial,
   ): Promise<string> {
-    if (addonId == null) {
-      return null;
-    }
-
     const resolvedAddonId = await this.#resolveAddonId(addonId, requiredAddonIdType, requestConfig);
 
     if (resolvedAddonId == null) {
@@ -120,6 +116,19 @@ export class ResourceIdResolver {
   }
 
   //-- Private methods ------
+
+  /**
+   * Returns the in-memory index, guarding against access before initialization.
+   *
+   * @returns The resource index
+   * @throws {Error} If the index has not been initialized yet
+   */
+  #getIndex(): ResourceIdIndex {
+    if (this.#index == null) {
+      throw new Error('Resource id index has not been initialized');
+    }
+    return this.#index;
+  }
 
   /**
    * Internal method to resolve owner ID and resource metadata.
@@ -152,7 +161,7 @@ export class ResourceIdResolver {
         id: resourceId.applicationId,
         kind: 'application',
         ownerId: await this.#resolve(
-          () => this.#index.ownerIdIndex.applicationIds,
+          () => this.#getIndex().ownerIdIndex.applicationIds,
           resourceId.applicationId,
           requestConfig,
         ),
@@ -164,7 +173,7 @@ export class ResourceIdResolver {
         id: resourceId.addonProviderId,
         kind: 'addon provider',
         ownerId: await this.#resolve(
-          () => this.#index.ownerIdIndex.addonProviderIds,
+          () => this.#getIndex().ownerIdIndex.addonProviderIds,
           resourceId.addonProviderId,
           requestConfig,
         ),
@@ -176,7 +185,7 @@ export class ResourceIdResolver {
         id: resourceId.oauthConsumerKey,
         kind: 'oauth consumer',
         ownerId: await this.#resolve(
-          () => this.#index.ownerIdIndex.oauthConsumerIds,
+          () => this.#getIndex().ownerIdIndex.oauthConsumerIds,
           resourceId.oauthConsumerKey,
           requestConfig,
         ),
@@ -189,13 +198,13 @@ export class ResourceIdResolver {
         return {
           id: addonId,
           kind: 'addon',
-          ownerId: await this.#resolve(() => this.#index.ownerIdIndex.addonIds, addonId, requestConfig),
+          ownerId: await this.#resolve(() => this.#getIndex().ownerIdIndex.addonIds, addonId, requestConfig),
         };
       }
       return {
         id: addonId,
         kind: 'addon',
-        ownerId: await this.#resolve(() => this.#index.ownerIdIndex.addonRealIds, addonId, requestConfig),
+        ownerId: await this.#resolve(() => this.#getIndex().ownerIdIndex.addonRealIds, addonId, requestConfig),
       };
     }
 
@@ -217,7 +226,7 @@ export class ResourceIdResolver {
     requestConfig?: CcRequestConfigPartial,
   ): Promise<string> {
     if (addonId == null) {
-      return null;
+      return null as unknown as string;
     }
     const addonIdType = getAddonIdType(addonId);
 
@@ -226,10 +235,10 @@ export class ResourceIdResolver {
     }
 
     if (addonIdType === 'ADDON_ID') {
-      return await this.#resolve(() => this.#index.addonsIndex.addonIds, addonId, requestConfig);
+      return await this.#resolve(() => this.#getIndex().addonsIndex.addonIds, addonId, requestConfig);
     }
 
-    return await this.#resolve(() => this.#index.addonsIndex.addonRealIds, addonId, requestConfig);
+    return await this.#resolve(() => this.#getIndex().addonsIndex.addonRealIds, addonId, requestConfig);
   }
 
   /**
@@ -279,7 +288,7 @@ export class ResourceIdResolver {
       cache: { mode: 'reload' },
     });
     this.#indexSummary(summary);
-    return this.#indexStore.write(this.#index);
+    return this.#indexStore.write(this.#getIndex());
   }
 
   #indexSummary(summaries: GetOrganisationSummariesCommandOutput): void {
@@ -287,19 +296,19 @@ export class ResourceIdResolver {
 
     for (const organisation of summaries) {
       organisation.applications?.forEach((application) => {
-        this.#index.ownerIdIndex.applicationIds[application.id] = organisation.id;
+        this.#getIndex().ownerIdIndex.applicationIds[application.id] = organisation.id;
       });
       organisation.addons?.forEach((addon) => {
-        this.#index.ownerIdIndex.addonIds[addon.id] = organisation.id;
-        this.#index.ownerIdIndex.addonRealIds[addon.realId] = organisation.id;
-        this.#index.addonsIndex.addonIds[addon.id] = addon.realId;
-        this.#index.addonsIndex.addonRealIds[addon.realId] = addon.id;
+        this.#getIndex().ownerIdIndex.addonIds[addon.id] = organisation.id;
+        this.#getIndex().ownerIdIndex.addonRealIds[addon.realId] = organisation.id;
+        this.#getIndex().addonsIndex.addonIds[addon.id] = addon.realId;
+        this.#getIndex().addonsIndex.addonRealIds[addon.realId] = addon.id;
       });
       organisation.providers?.forEach((provider) => {
-        this.#index.ownerIdIndex.addonProviderIds[provider.id] = organisation.id;
+        this.#getIndex().ownerIdIndex.addonProviderIds[provider.id] = organisation.id;
       });
       organisation.consumers?.forEach((consumer) => {
-        this.#index.ownerIdIndex.oauthConsumerIds[consumer.key] = organisation.id;
+        this.#getIndex().ownerIdIndex.oauthConsumerIds[consumer.key] = organisation.id;
       });
     }
   }

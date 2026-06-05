@@ -12,7 +12,7 @@ export function transformProfile(payload: any): Profile {
     zipcode: payload.zipcode,
     country: payload.country,
     avatar: payload.avatar,
-    creationDate: normalizeDate(payload.creationDate),
+    creationDate: normalizeDate(payload.creationDate)!,
     lang: payload.lang,
     emailValidated: payload.emailValidated,
     isLinkedToGitHub: payload.oauthApps != null && payload.oauthApps.includes('github'),

@@ -18,7 +18,7 @@ export class ListProductRuntimeCommand extends CcApiSimpleCommand<
   ListProductRuntimeCommandOutput
 > {
   toRequestParams(params: ListProductRuntimeCommandInput) {
-    let queryParams: QueryParams = null;
+    let queryParams: QueryParams | undefined;
     if (params != null && typeof params === 'object') {
       queryParams = new QueryParams().append('for', params.ownerId);
     }

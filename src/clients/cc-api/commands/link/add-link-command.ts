@@ -15,15 +15,15 @@ import type {
  * @group Link
  * @version 2
  */
-export class AddLinkCommand extends CcApiCompositeCommand<AddLinkCommandInput, void> {
-  async compose(params: AddLinkCommandInput, composer: CcApiComposer): Promise<void> {
+export class AddLinkCommand extends CcApiCompositeCommand<AddLinkCommandInput, undefined> {
+  async compose(params: AddLinkCommandInput, composer: CcApiComposer): Promise<undefined> {
     if ('targetApplicationId' in params) {
       await composer.send(new AddApplicationToApplicationLinkCommand(params));
     } else {
       await composer.send(new AddApplicationToAddonLinkCommand(params));
     }
 
-    return null;
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {
@@ -40,12 +40,16 @@ export class AddLinkCommand extends CcApiCompositeCommand<AddLinkCommandInput, v
  */
 export class AddApplicationToApplicationLinkCommand extends CcApiSimpleCommand<
   AddApplicationToApplicationLinkCommandInput,
-  void
+  undefined
 > {
   toRequestParams(params: AddApplicationToApplicationLinkCommandInput) {
     return put(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/dependencies/${params.targetApplicationId}`,
     );
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }
 
@@ -54,7 +58,10 @@ export class AddApplicationToApplicationLinkCommand extends CcApiSimpleCommand<
  * @group Link
  * @version 2
  */
-export class AddApplicationToAddonLinkCommand extends CcApiSimpleCommand<AddApplicationToAddonLinkCommandInput, void> {
+export class AddApplicationToAddonLinkCommand extends CcApiSimpleCommand<
+  AddApplicationToAddonLinkCommandInput,
+  undefined
+> {
   toRequestParams(params: AddApplicationToAddonLinkCommandInput) {
     return postJson(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/addons`,
@@ -66,5 +73,9 @@ export class AddApplicationToAddonLinkCommand extends CcApiSimpleCommand<AddAppl
     return {
       addonId: { property: 'targetAddonId', type: 'ADDON_ID' },
     };
+  }
+
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

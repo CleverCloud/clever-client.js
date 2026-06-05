@@ -382,34 +382,34 @@ function createCcApiClient(user: E2eUser, auth: Auth, debug: boolean): CcApiClie
   });
 }
 
-function getBaseUrl(user: E2eUser, auth: Auth): string | null {
+function getBaseUrl(user: E2eUser, auth: Auth): string | undefined {
   if (IS_NODE) {
     if (USE_LOCAL_API_BRIDGE) {
       return 'http://localhost:8080';
     }
-    return null;
+    return undefined;
   }
   // if running in browser, we use the proxified URLs
   return `/cc-api-${user.userName}-${auth}`;
 }
 
-function getCcApiAuth(user: E2eUser, auth: Auth): CcApiAuth {
+function getCcApiAuth(user: E2eUser, auth: Auth): CcApiAuth | undefined {
   // if running in browser, no auth (authentication will be done by the proxy)
   if (!IS_NODE) {
-    return null;
+    return undefined;
   }
 
   if (auth === 'api-token') {
     return {
       type: 'api-token',
-      apiToken: user.apiToken,
+      apiToken: user.apiToken!,
     };
   }
 
   if (auth === 'oauth-v1') {
     return {
       type: 'oauth-v1',
-      oauthTokens: user.oauthTokens,
+      oauthTokens: user.oauthTokens!,
     };
   }
 }

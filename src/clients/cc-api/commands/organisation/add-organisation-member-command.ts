@@ -9,7 +9,7 @@ import type { AddOrganisationMemberCommandInput } from './add-organisation-membe
  * @group Organisation
  * @version 2
  */
-export class AddOrganisationMemberCommand extends CcApiSimpleCommand<AddOrganisationMemberCommandInput, void> {
+export class AddOrganisationMemberCommand extends CcApiSimpleCommand<AddOrganisationMemberCommandInput, undefined> {
   toRequestParams(params: AddOrganisationMemberCommandInput) {
     return post(
       safeUrl`/v2/organisations/${params.organisationId}/members`,
@@ -22,7 +22,7 @@ export class AddOrganisationMemberCommand extends CcApiSimpleCommand<AddOrganisa
     );
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 }

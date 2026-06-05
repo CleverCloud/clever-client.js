@@ -262,7 +262,7 @@ describe('network-group commands', function () {
   });
 
   it('should search network groups', async () => {
-    const createdNetworkGroup = await support.createNetworkGroup(null, 'myNg-network group');
+    const createdNetworkGroup = await support.createNetworkGroup(undefined, 'myNg-network group');
     const member = await support.client.send(
       new CreateNetworkGroupMemberCommand({
         ownerId: support.organisationId,
@@ -293,7 +293,7 @@ describe('network-group commands', function () {
   });
 
   it('should search network groups with type filters', async () => {
-    const createdNetworkGroup = await support.createNetworkGroup(null, 'myNg-network group');
+    const createdNetworkGroup = await support.createNetworkGroup(undefined, 'myNg-network group');
     const member = await support.client.send(
       new CreateNetworkGroupMemberCommand({
         ownerId: support.organisationId,

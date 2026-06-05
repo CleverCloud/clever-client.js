@@ -9,13 +9,13 @@ import type { DeleteAddonCommandInput } from './delete-addon-command.types.js';
  * @group Addon
  * @version 2
  */
-export class DeleteAddonCommand extends CcApiSimpleCommand<DeleteAddonCommandInput, void> {
+export class DeleteAddonCommand extends CcApiSimpleCommand<DeleteAddonCommandInput, undefined> {
   toRequestParams(params: DeleteAddonCommandInput) {
     return delete_(safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}`);
   }
 
-  transformCommandOutput(): void {
-    return null;
+  transformCommandOutput(): undefined {
+    return undefined;
   }
 
   getIdsToResolve(): IdResolve {

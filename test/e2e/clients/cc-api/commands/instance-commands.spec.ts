@@ -39,7 +39,7 @@ describe('instance commands', { timeout: 60000 }, () => {
     expect(response[0].state).toBeTypeOf('string');
     expect(response[0].hypervisorId).toBeTypeOf('string');
     checkDateFormat(response[0].creationDate);
-    checkDateFormat(response[0].deletionDate);
+    checkDateFormat(response[0].deletionDate!);
     expect(response[0].network.ip).toBeTypeOf('string');
     expect(response[0].network.port).toBeTypeOf('number');
     expect(response[0].isBuildVm).toBe(false);
@@ -65,7 +65,7 @@ describe('instance commands', { timeout: 60000 }, () => {
     expect(response.state).toBeTypeOf('string');
     expect(response.hypervisorId).toBeTypeOf('string');
     checkDateFormat(response.creationDate);
-    checkDateFormat(response.deletionDate);
+    checkDateFormat(response.deletionDate!);
     expect(response.network.ip).toBeTypeOf('string');
     expect(response.network.port).toBeTypeOf('number');
     expect(response.isBuildVm).toBe(false);
