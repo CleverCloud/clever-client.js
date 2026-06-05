@@ -86,7 +86,7 @@
     "test:unit:node": "vitest run --project node-unit",
     "test:unit:node:watch": "vitest --project node-unit",
     "test:unit:watch": "vitest --project node-unit --project browser-unit",
-    "typecheck": "tsgo -p tsconfig.ci.json"
+    "typecheck": "tsgo -p tsconfig.json"
   },
   "dependencies": {
     "component-emitter": "^1.3.0",

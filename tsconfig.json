@@ -10,7 +10,7 @@
     "checkJs": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": false,
     "noUncheckedIndexedAccess": false,
