@@ -1,3 +1,4 @@
+// @ts-ignore - JS-only package that ships no type declarations
 import { cleverCloud } from '@clevercloud/eslint-config';
 import eslint from '@eslint/js';
 import { defineConfig } from 'eslint/config';
