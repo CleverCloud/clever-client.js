@@ -77,17 +77,17 @@
     "format:check": "prettier . --check",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "prepack:dev": "npm run build",
-    "prepack:prod": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build",
-    "prepack": "[ \"$DEV\" == \"true\" ] && npm run prepack:dev || npm run prepack:prod",
-    "test": "npm run test:unit",
-    "test:unit": "npm run test:unit:browser && npm run test:unit:node",
-    "test:unit:watch": "npm run test:unit:browser:watch && npm run test:unit:node:watch",
+    "prepack:dev": "pnpm run build",
+    "prepack:prod": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
+    "prepack": "[ \"$DEV\" == \"true\" ] && pnpm run prepack:dev || pnpm run prepack:prod",
+    "test": "pnpm run test:unit",
+    "test:unit": "pnpm run test:unit:browser && pnpm run test:unit:node",
+    "test:unit:watch": "pnpm run test:unit:browser:watch && pnpm run test:unit:node:watch",
     "test:unit:browser": "web-test-runner --config test-browser-wtr.config.unit.js",
     "test:unit:browser:watch": "web-test-runner --config test-browser-wtr.config.unit.js --watch",
     "test:unit:node": "mocha --config test-node-mocha.config.unit.cjs",
     "test:unit:node:watch": "mocha --config test-node-mocha.config.unit.cjs --parallel --watch",
-    "test:e2e": "npm run test:e2e:browser && npm run test:e2e:node",
+    "test:e2e": "pnpm run test:e2e:browser && pnpm run test:e2e:node",
     "test:e2e:browser": "web-test-runner --config test-browser-wtr.config.e2e.js",
     "test:e2e:node": "mocha --config test-node-mocha.config.e2e.cjs",
     "typecheck": "tsc -p tsconfig.ci.json"
@@ -136,13 +136,11 @@
     "mocha": "^11.7.5",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.3.0",
+    "rollup": "^4.60.4",
     "rollup-plugin-dts": "^6.2.3",
     "safe-stringify": "^1.2.0",
     "tinyglobby": "^0.2.15",
     "totp-generator": "^2.0.0",
     "typescript": "^5.9.3"
-  },
-  "volta": {
-    "node": "22.7.0"
   }
 }

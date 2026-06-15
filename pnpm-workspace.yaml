@@ -1,0 +1,9 @@
+allowBuilds:
+  unrs-resolver: false
+minimumReleaseAge: 10080
+# Pin to the versions resolved by the old npm lockfile: newer releases change the
+# OpenAPI types and break the typecheck of tasks/lib/endpoint-parse.js. Keep the
+# pnpm migration version-neutral; bump these deliberately in a separate change.
+overrides:
+  '@scalar/openapi-parser': 0.23.2
+  '@scalar/openapi-types': 0.5.1

@@ -22,7 +22,7 @@ This library provides command-pattern clients for all Clever Cloud services with
 ## Installation
 
 ```bash
-npm install @clevercloud/client
+pnpm install @clevercloud/client
 ```
 
 ## Quick Start

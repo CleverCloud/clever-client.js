@@ -9,6 +9,10 @@ permissions:
   id-token: write # Required for OIDC
   contents: read
 
+# Set via the workflow env (not $GITHUB_ENV, which GitHub forbids for NODE_OPTIONS).
+env:
+  NODE_OPTIONS: '--max-old-space-size=16384'
+
 jobs:
   publish:
     name: 'Publish'
@@ -31,12 +35,8 @@ jobs:
         uses: actions/checkout@v5
         with:
           ref: ${{ github.ref_name }}
-      - name: '[Prepare] Setup Node.js'
-        uses: actions/setup-node@v6
-        with:
-          node-version: 'lts/*'
-      - name: '[Prepare] Install dependencies'
-        run: npm ci
+      - name: '[Prepare] Setup'
+        uses: ./.github/actions/ci-setup
       - name: '[Publish] version ${{ github.ref_name }} with tag ${{ steps.npm_tag.outputs.tag }}'
         run: |
-          npm publish --access public --tag ${{ steps.npm_tag.outputs.tag }} --provenance
+          pnpm publish --access public --tag ${{ steps.npm_tag.outputs.tag }} --provenance --no-git-checks

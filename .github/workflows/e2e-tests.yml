@@ -19,13 +19,8 @@ jobs:
     steps:
       - name: '[Prepare] Checkout'
         uses: actions/checkout@v5
-      - name: '[Prepare] Setup Node.js'
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: 'package.json'
-          cache: 'npm'
-      - name: '[Prepare] Install dependencies'
-        run: npm ci
+      - name: '[Prepare] Setup'
+        uses: ./.github/actions/ci-setup
 
       - name: '[E2E tests] Browser tests'
         env:
@@ -39,7 +34,7 @@ jobs:
           TEST_USER_WITHOUT_GITHUB_EMAIL: ${{ secrets.TEST_USER_WITHOUT_GITHUB_EMAIL }}
           TEST_USER_WITHOUT_GITHUB_PASSWORD: ${{ secrets.TEST_USER_WITHOUT_GITHUB_PASSWORD }}
           TEST_USER_WITHOUT_GITHUB_TOTP_SECRET: ${{ secrets.TEST_USER_WITHOUT_GITHUB_TOTP_SECRET }}
-        run: npm run test:e2e:browser
+        run: pnpm run test:e2e:browser
       - name: '[E2E tests] Node tests'
         env:
           # consumer console
@@ -52,4 +47,4 @@ jobs:
           TEST_USER_WITHOUT_GITHUB_EMAIL: ${{ secrets.TEST_USER_WITHOUT_GITHUB_EMAIL }}
           TEST_USER_WITHOUT_GITHUB_PASSWORD: ${{ secrets.TEST_USER_WITHOUT_GITHUB_PASSWORD }}
           TEST_USER_WITHOUT_GITHUB_TOTP_SECRET: ${{ secrets.TEST_USER_WITHOUT_GITHUB_TOTP_SECRET }}
-        run: npm run test:e2e:node
+        run: pnpm run test:e2e:node

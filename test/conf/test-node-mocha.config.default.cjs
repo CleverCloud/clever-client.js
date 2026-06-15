@@ -3,7 +3,7 @@
  * @returns {boolean}
  */
 function isTestFile(arg) {
-  return arg.match(/\.js?$/) != null;
+  return arg.match(/\.spec\.js$/) != null;
 }
 
 /**
