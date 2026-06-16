@@ -1,5 +1,5 @@
-import { expect } from 'chai';
 import { TOTP } from 'totp-generator';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { ConfirmAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.js';
 import { CreateAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
 import { DeleteAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
@@ -11,11 +11,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('auth commands', function () {
   const support = e2eSupport({ auth: 'oauth-v1' });
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -31,18 +31,18 @@ describe('auth commands', function () {
     await createMfa();
 
     const response = await support.client.send(new DeleteAuthMfaCommand({ kind: 'TOTP', password: support.password }));
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should create auth mfa', async () => {
     const response = await support.client.send(new CreateAuthMfaCommand({ kind: 'TOTP', password: support.password }));
 
     const url = new URL(response.url);
-    expect(url.protocol).to.equal('otpauth:');
-    expect(url.host).to.equal('totp');
-    expect(url.searchParams.get('issuer')).to.equal('Clever Cloud');
-    expect(url.searchParams.get('algorithm')).to.equal('SHA1');
-    expect(url.searchParams.get('secret')).to.be.a('string');
+    expect(url.protocol).toBe('otpauth:');
+    expect(url.host).toBe('totp');
+    expect(url.searchParams.get('issuer')).toBe('Clever Cloud');
+    expect(url.searchParams.get('algorithm')).toBe('SHA1');
+    expect(url.searchParams.get('secret')).toBeTypeOf('string');
   });
 
   it('should confirm mfa', async () => {
@@ -58,7 +58,7 @@ describe('auth commands', function () {
       }),
     );
 
-    expect(confirmResponse).to.be.null;
+    expect(confirmResponse).toBeNull();
   });
 
   it('should get mfa backup codes', async () => {
@@ -68,7 +68,7 @@ describe('auth commands', function () {
       new GetAuthMfaBackupCodesCommand({ kind: 'TOTP', password: support.password }),
     );
 
-    expect(response).to.have.lengthOf(10);
+    expect(response).toHaveLength(10);
   });
 
   it('should update password', async () => {
@@ -79,7 +79,7 @@ describe('auth commands', function () {
         new UpdateAuthPasswordCommand({ oldPassword, newPassword, revokeTokens: false }),
       );
 
-      expect(response).to.be.null;
+      expect(response).toBeNull();
     } finally {
       await support.client.send(
         new UpdateAuthPasswordCommand({ oldPassword: newPassword, newPassword: oldPassword, revokeTokens: false }),

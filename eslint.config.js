@@ -14,10 +14,21 @@ export default [
       sourceType: 'module',
       globals: globals.browser,
     },
+    rules: {
+      ...cleverCloud.configs.browser.rules,
+      'import-x/extensions': ['error', 'always', { ignorePackages: true }],
+    },
   },
   {
     ...cleverCloud.configs.node,
-    files: ['eslint.config.js', 'rollup.config.js', 'tasks/**/*.js', 'test-*.config.*.*js', 'test/**/*.*js'],
+    files: [
+      'eslint.config.js',
+      'rollup.config.js',
+      'vitest.config.js',
+      'tasks/**/*.js',
+      'test-*.config.*.*js',
+      'test/**/*.*js',
+    ],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
@@ -29,14 +40,7 @@ export default [
         'off',
         { devDependencies: true, optionalDependencies: false, peerDependencies: false },
       ],
-    },
-  },
-  // Inject Mocha globals into tests
-  {
-    name: 'mocha-context',
-    files: ['test/**/*.js'],
-    languageOptions: {
-      globals: globals.mocha,
+      'import-x/extensions': ['error', 'always', { ignorePackages: true }],
     },
   },
   // Specific rules for generated client files

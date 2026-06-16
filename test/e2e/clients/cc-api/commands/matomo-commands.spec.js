@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { GetMatomoInfoCommand } from '../../../../../src/clients/cc-api/commands/matomo/get-matomo-info-command.js';
 import { RebootMatomoCommand } from '../../../../../src/clients/cc-api/commands/matomo/reboot-matomo-command.js';
 import { RebuildMatomoCommand } from '../../../../../src/clients/cc-api/commands/matomo/rebuild-matomo-command.js';
@@ -7,7 +7,7 @@ import { e2eSupport } from '../e2e-support.js';
 describe('matomo commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
@@ -15,7 +15,7 @@ describe('matomo commands', function () {
     await support.deleteAddons();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -27,20 +27,20 @@ describe('matomo commands', function () {
     });
     const response = await support.client.send(new GetMatomoInfoCommand({ addonId: addon.id }));
 
-    expect(response.id).to.equal(addon.realId);
-    expect(response.addonId).to.equal(addon.id);
-    expect(response.name).to.equal(addon.name);
-    expect(response.ownerId).to.equal(support.organisationId);
-    expect(response.plan).to.be.a('string');
-    expect(response.version).to.be.a('string');
-    expect(response.phpVersion).to.be.a('string');
-    expect(response.accessUrl).to.be.a('string');
-    expect(response.availableVersions).to.be.an('array');
-    expect(response.resources.entrypoint).to.be.a('string');
-    expect(response.resources.mysqlId).to.be.a('string');
-    expect(response.resources.redisId).to.be.a('string');
-    expect(response.resources.kvId == null || typeof response.resources.kvId === 'string').to.be.true;
-    expect(response.environment).to.be.a('array');
+    expect(response.id).toBe(addon.realId);
+    expect(response.addonId).toBe(addon.id);
+    expect(response.name).toBe(addon.name);
+    expect(response.ownerId).toBe(support.organisationId);
+    expect(response.plan).toBeTypeOf('string');
+    expect(response.version).toBeTypeOf('string');
+    expect(response.phpVersion).toBeTypeOf('string');
+    expect(response.accessUrl).toBeTypeOf('string');
+    expect(response.availableVersions).toBeInstanceOf(Array);
+    expect(response.resources.entrypoint).toBeTypeOf('string');
+    expect(response.resources.mysqlId).toBeTypeOf('string');
+    expect(response.resources.redisId).toBeTypeOf('string');
+    expect(response.resources.kvId == null || typeof response.resources.kvId === 'string').toBe(true);
+    expect(response.environment).toBeInstanceOf(Array);
   });
 
   it('should reboot matomo', async () => {
@@ -51,7 +51,7 @@ describe('matomo commands', function () {
     });
     const response = await support.client.send(new RebootMatomoCommand({ addonId: addon.id }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should rebuild matomo', async () => {
@@ -62,6 +62,6 @@ describe('matomo commands', function () {
     });
     const response = await support.client.send(new RebuildMatomoCommand({ addonId: addon.id }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 });

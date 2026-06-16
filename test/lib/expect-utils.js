@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect } from 'vitest';
 
 /**
  * Takes in a function and checks for error
@@ -12,7 +12,7 @@ export async function expectPromiseThrows(promise, verify) {
   } catch (error) {
     err = error;
   }
-  expect(err).not.to.equal(null, 'An error was expected but not thrown');
+  expect(err, 'An error was expected but not thrown').not.toBeNull();
   verify?.(err);
 }
 
@@ -28,7 +28,7 @@ export async function expectAsyncFunctionThrows(fn, verify) {
   } catch (error) {
     err = error;
   }
-  expect(err).not.to.equal(null, 'An error was expected but not thrown');
+  expect(err, 'An error was expected but not thrown').not.toBeNull();
   verify?.(err);
 }
 
@@ -37,6 +37,6 @@ export async function expectAsyncFunctionThrows(fn, verify) {
  */
 export function checkDateFormat(date) {
   if (date != null) {
-    expect(date).to.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z$/);
+    expect(date).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z$/);
   }
 }

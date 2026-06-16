@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { GetConfigProviderCommand } from '../../../../../src/clients/cc-api/commands/config-provider/get-config-provider-command.js';
 import { UpdateConfigProviderCommand } from '../../../../../src/clients/cc-api/commands/config-provider/update-config-provider-command.js';
 import { e2eSupport } from '../e2e-support.js';
@@ -6,11 +6,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('config-provider commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -23,8 +23,8 @@ describe('config-provider commands', function () {
 
     const response = await support.client.send(new GetConfigProviderCommand({ addonId: addon.id }));
 
-    expect(response).to.be.an('array');
-    expect(response).to.have.lengthOf(0);
+    expect(response).toBeInstanceOf(Array);
+    expect(response).toHaveLength(0);
   });
 
   it('should get config provider', async () => {
@@ -41,9 +41,9 @@ describe('config-provider commands', function () {
 
     const response = await support.client.send(new GetConfigProviderCommand({ addonId: addon.id }));
 
-    expect(response).to.be.an('array');
-    expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder([
+    expect(response).toBeInstanceOf(Array);
+    expect(response).toHaveLength(2);
+    expect(response).toEqualInAnyOrder([
       { name: 'var1', value: 'value1' },
       { name: 'var2', value: 'value2' },
     ]);
@@ -71,9 +71,9 @@ describe('config-provider commands', function () {
       }),
     );
 
-    expect(response).to.be.an('array');
-    expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder([
+    expect(response).toBeInstanceOf(Array);
+    expect(response).toHaveLength(2);
+    expect(response).toEqualInAnyOrder([
       { name: 'var1', value: 'new value1' },
       { name: 'var3', value: 'value3' },
     ]);

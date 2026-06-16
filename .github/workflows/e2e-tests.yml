@@ -14,6 +14,9 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      options: --user 1001
     if: contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')
 
     steps:

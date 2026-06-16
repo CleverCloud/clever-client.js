@@ -1,7 +1,7 @@
 /**
  * @import { EmailNotificationTarget, WebhookNotificationUrl } from '../../../../../src/clients/cc-api/commands/notification/notification.types.js'
  */
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { DeleteOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/delete-oauth-consumer-command.js';
 import { GetOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.js';
 import { ListOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/list-oauth-consumer-command.js';
@@ -12,11 +12,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('oauth consumers commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -26,13 +26,13 @@ describe('oauth consumers commands', function () {
 
   it('should create oauth consumer', async () => {
     const response = await support.createTestOauthConsumer();
-    expect(response.key).to.be.a('string');
-    expect(response.name).to.equal('test-consumer');
-    expect(response.description).to.equal('test consumer description');
-    expect(response.url).to.equal('https://example.com');
-    expect(response.picture).to.equal('https://example.com');
-    expect(response.baseUrl).to.equal('https://example.com');
-    expect(response.rights).to.deep.equal({
+    expect(response.key).toBeTypeOf('string');
+    expect(response.name).toBe('test-consumer');
+    expect(response.description).toBe('test consumer description');
+    expect(response.url).toBe('https://example.com');
+    expect(response.picture).toBe('https://example.com');
+    expect(response.baseUrl).toBe('https://example.com');
+    expect(response.rights).toEqual({
       accessOrganisations: true,
       accessOrganisationsBills: false,
       accessOrganisationsConsumptionStatistics: false,
@@ -53,7 +53,7 @@ describe('oauth consumers commands', function () {
 
     const response = await support.client.send(new DeleteOauthConsumerCommand({ oauthConsumerKey: consumer.key }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should update oauth consumer', async () => {
@@ -67,13 +67,13 @@ describe('oauth consumers commands', function () {
       }),
     );
 
-    expect(response.key).to.be.equal(consumer.key);
-    expect(response.name).to.equal('test-consumer');
-    expect(response.description).to.equal('updated description');
-    expect(response.url).to.equal('https://example.com');
-    expect(response.picture).to.equal('https://example.com');
-    expect(response.baseUrl).to.equal('https://example.com');
-    expect(response.rights).to.deep.equal({
+    expect(response.key).toBe(consumer.key);
+    expect(response.name).toBe('test-consumer');
+    expect(response.description).toBe('updated description');
+    expect(response.url).toBe('https://example.com');
+    expect(response.picture).toBe('https://example.com');
+    expect(response.baseUrl).toBe('https://example.com');
+    expect(response.rights).toEqual({
       accessOrganisations: true,
       accessOrganisationsBills: false,
       accessOrganisationsConsumptionStatistics: false,
@@ -99,14 +99,14 @@ describe('oauth consumers commands', function () {
       }),
     );
 
-    expect(response.key).to.be.equal(consumer.key);
-    expect(response.name).to.equal('test-consumer');
-    expect(response.description).to.equal('test consumer description');
-    expect(response.url).to.equal('https://example.com');
-    expect(response.picture).to.equal('https://example.com');
-    expect(response.baseUrl).to.equal('https://example.com');
-    expect(response.secret).to.be.a('string');
-    expect(response.rights).to.deep.equal({
+    expect(response.key).toBe(consumer.key);
+    expect(response.name).toBe('test-consumer');
+    expect(response.description).toBe('test consumer description');
+    expect(response.url).toBe('https://example.com');
+    expect(response.picture).toBe('https://example.com');
+    expect(response.baseUrl).toBe('https://example.com');
+    expect(response.secret).toBeTypeOf('string');
+    expect(response.rights).toEqual({
       accessOrganisations: true,
       accessOrganisationsBills: false,
       accessOrganisationsConsumptionStatistics: false,
@@ -132,14 +132,14 @@ describe('oauth consumers commands', function () {
       }),
     );
 
-    expect(response.key).to.be.equal(consumer.key);
-    expect(response.name).to.equal('test-consumer');
-    expect(response.description).to.equal('test consumer description');
-    expect(response.url).to.equal('https://example.com');
-    expect(response.picture).to.equal('https://example.com');
-    expect(response.baseUrl).to.equal('https://example.com');
-    expect(response.secret).to.be.undefined;
-    expect(response.rights).to.deep.equal({
+    expect(response.key).toBe(consumer.key);
+    expect(response.name).toBe('test-consumer');
+    expect(response.description).toBe('test consumer description');
+    expect(response.url).toBe('https://example.com');
+    expect(response.picture).toBe('https://example.com');
+    expect(response.baseUrl).toBe('https://example.com');
+    expect(response.secret).toBeUndefined();
+    expect(response.rights).toEqual({
       accessOrganisations: true,
       accessOrganisationsBills: false,
       accessOrganisationsConsumptionStatistics: false,
@@ -166,10 +166,10 @@ describe('oauth consumers commands', function () {
       }),
     );
 
-    expect(response).to.have.lengthOf(2);
-    expect(response.map((c) => c.key)).to.deep.equalInAnyOrder([consumer1.key, consumer2.key]);
-    expect(response[0].secret).to.be.a('string');
-    expect(response[1].secret).to.be.a('string');
+    expect(response).toHaveLength(2);
+    expect(response.map((c) => c.key)).toEqualInAnyOrder([consumer1.key, consumer2.key]);
+    expect(response[0].secret).toBeTypeOf('string');
+    expect(response[1].secret).toBeTypeOf('string');
   });
 
   it('should list oauth consumers without secret', async () => {
@@ -183,9 +183,9 @@ describe('oauth consumers commands', function () {
       }),
     );
 
-    expect(response).to.have.lengthOf(2);
-    expect(response.map((c) => c.key)).to.deep.equalInAnyOrder([consumer1.key, consumer2.key]);
-    expect(response[0].secret).to.be.undefined;
-    expect(response[1].secret).to.be.undefined;
+    expect(response).toHaveLength(2);
+    expect(response.map((c) => c.key)).toEqualInAnyOrder([consumer1.key, consumer2.key]);
+    expect(response[0].secret).toBeUndefined();
+    expect(response[1].secret).toBeUndefined();
   });
 });

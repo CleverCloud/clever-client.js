@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { GetPulsarInfoCommand } from '../../../../../src/clients/cc-api/commands/pulsar/get-pulsar-info-command.js';
 import { e2eSupport } from '../e2e-support.js';
 
@@ -6,11 +6,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe.skip('pulsar commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -29,27 +29,27 @@ describe.skip('pulsar commands', function () {
 
     const response = await support.client.send(new GetPulsarInfoCommand({ addonId: addon.id }));
 
-    expect(response.id).to.equal(addon.realId);
-    expect(response.tenant).to.be.a('string');
-    expect(response.namespace).to.be.a('string');
-    expect(response.cluster.id).to.be.a('string');
-    expect(response.cluster.url).to.be.a('string');
-    expect(response.cluster.pulsarPort).to.be.a('number');
-    expect(response.cluster.pulsarTlsPort).to.be.a('number');
-    expect(response.cluster.webPort).to.be.a('number');
-    expect(response.cluster.webTlsPort).to.be.a('number');
-    expect(response.cluster.version).to.be.a('string');
-    expect(response.cluster.available).to.be.a('boolean');
-    expect(response.cluster.zone).to.be.a('string');
-    expect(response.cluster.supportColdStorage).to.be.a('boolean');
-    expect(response.cluster.supportedPlans).to.be.an('array');
-    expect(response.token).to.be.a('string');
-    expect(response.creationDate).to.be.a('string');
-    expect(response.askForDeletionDate).to.be.null;
-    expect(response.deletionDate).to.be.null;
-    expect(response.status).to.be.a('string');
-    expect(response.plan).to.be.a('string');
-    expect(response.coldStorageLinked).to.be.a('boolean');
-    expect(response.coldStorageMustBeProvided).to.be.a('boolean');
+    expect(response.id).toBe(addon.realId);
+    expect(response.tenant).toBeTypeOf('string');
+    expect(response.namespace).toBeTypeOf('string');
+    expect(response.cluster.id).toBeTypeOf('string');
+    expect(response.cluster.url).toBeTypeOf('string');
+    expect(response.cluster.pulsarPort).toBeTypeOf('number');
+    expect(response.cluster.pulsarTlsPort).toBeTypeOf('number');
+    expect(response.cluster.webPort).toBeTypeOf('number');
+    expect(response.cluster.webTlsPort).toBeTypeOf('number');
+    expect(response.cluster.version).toBeTypeOf('string');
+    expect(response.cluster.available).toBeTypeOf('boolean');
+    expect(response.cluster.zone).toBeTypeOf('string');
+    expect(response.cluster.supportColdStorage).toBeTypeOf('boolean');
+    expect(response.cluster.supportedPlans).toBeInstanceOf(Array);
+    expect(response.token).toBeTypeOf('string');
+    expect(response.creationDate).toBeTypeOf('string');
+    expect(response.askForDeletionDate).toBeNull();
+    expect(response.deletionDate).toBeNull();
+    expect(response.status).toBeTypeOf('string');
+    expect(response.plan).toBeTypeOf('string');
+    expect(response.coldStorageLinked).toBeTypeOf('boolean');
+    expect(response.coldStorageMustBeProvided).toBeTypeOf('boolean');
   });
 });

@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { DeleteAddonCommand } from '../../../../../src/clients/cc-api/commands/addon/delete-addon-command.js';
 import { GetAddonCommand } from '../../../../../src/clients/cc-api/commands/addon/get-addon-command.js';
 import { GetAddonSsoCommand } from '../../../../../src/clients/cc-api/commands/addon/get-addon-sso-command.js';
@@ -8,11 +8,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('addon commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -24,26 +24,26 @@ describe('addon commands', function () {
     const response = await support.createTestAddon();
 
     checkDateFormat(response.creationDate);
-    expect(response.id).to.match(/addon_.+/);
-    expect(response.realId).to.match(/config_.+/);
-    expect(response.name).to.equal('test-addon');
-    expect(response.zone).to.equal('par');
-    expect(response.plan.id).to.match(/plan_.+/);
-    expect(response.provider.id).to.equal('config-provider');
+    expect(response.id).toMatch(/addon_.+/);
+    expect(response.realId).toMatch(/config_.+/);
+    expect(response.name).toBe('test-addon');
+    expect(response.zone).toBe('par');
+    expect(response.plan.id).toMatch(/plan_.+/);
+    expect(response.provider.id).toBe('config-provider');
   });
 
   it('should delete addon', async () => {
     const addon = await support.createTestAddon();
 
     const response = await support.client.send(new DeleteAddonCommand({ addonId: addon.id }));
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should get addon null', async () => {
     const response = await support.client.send(
       new GetAddonCommand({ ownerId: support.organisationId, addonId: 'addon_00000000-0000-0000-0000-000000000000' }),
     );
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should get addon', async () => {
@@ -52,7 +52,7 @@ describe('addon commands', function () {
     const response = await support.client.send(
       new GetAddonCommand({ ownerId: support.organisationId, addonId: addon.id }),
     );
-    expect(response).to.deep.equalInAnyOrder(addon);
+    expect(response).toEqualInAnyOrder(addon);
   });
 
   it('should get addon sso null', async () => {
@@ -63,7 +63,7 @@ describe('addon commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should get addon sso', async () => {
@@ -73,12 +73,12 @@ describe('addon commands', function () {
       new GetAddonSsoCommand({ ownerId: support.organisationId, addonId: addon.id }),
     );
 
-    expect(response.url).to.be.a('string');
-    expect(response.id).to.equal(addon.realId);
-    expect(response.timestamp).to.be.a('number');
-    expect(response.token).to.be.a('string');
-    expect(response.signature).to.be.a('string');
-    expect(response.email).to.be.a('string');
-    expect(response.userId).to.equal(support.organisationId);
+    expect(response.url).toBeTypeOf('string');
+    expect(response.id).toBe(addon.realId);
+    expect(response.timestamp).toBeTypeOf('number');
+    expect(response.token).toBeTypeOf('string');
+    expect(response.signature).toBeTypeOf('string');
+    expect(response.email).toBeTypeOf('string');
+    expect(response.userId).toBe(support.organisationId);
   });
 });

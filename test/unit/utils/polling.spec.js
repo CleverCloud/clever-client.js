@@ -1,12 +1,9 @@
-import { expect } from 'chai';
-import * as hanbi from 'hanbi';
+import { describe, expect, it, vi } from 'vitest';
 import { Polling } from '../../../src/utils/polling.js';
 import { expectPromiseThrows } from '../../lib/expect-utils.js';
 
 describe('polling', () => {
-  it('should not timeout and return the right value', async function () {
-    this.timeout(1_100);
-
+  it('should not timeout and return the right value', async () => {
     let count = 0;
 
     const polling = new Polling(
@@ -22,12 +19,10 @@ describe('polling', () => {
     );
     const result = await polling.start();
 
-    expect(result).to.equal('value');
-  });
+    expect(result).toBe('value');
+  }, 1_100);
 
-  it('should fail with interrupted when stopping', async function () {
-    this.timeout(1_100);
-
+  it('should fail with interrupted when stopping', async () => {
     const polling = new Polling(
       async () => {
         return { stop: false };
@@ -41,19 +36,17 @@ describe('polling', () => {
     polling.stop();
 
     await expectPromiseThrows(pollingPromise, (err) => {
-      expect(err.message).to.equal('Interrupted');
+      expect(err.message).toBe('Interrupted');
     });
-  });
+  }, 1_100);
 
-  it('should tick the right amount of time', async function () {
-    this.timeout(1_100);
-
-    const spy = hanbi.spy();
+  it('should tick the right amount of time', async () => {
+    const spy = vi.fn();
 
     let count = 0;
     const polling = new Polling(
       async () => {
-        spy.handler();
+        spy();
         count++;
         if (count === 3) {
           return { stop: true, value: 'value' };
@@ -65,8 +58,8 @@ describe('polling', () => {
     );
     await polling.start();
 
-    expect(spy.callCount).to.equal(3);
-  });
+    expect(spy).toHaveBeenCalledTimes(3);
+  }, 1_100);
 });
 
 /**

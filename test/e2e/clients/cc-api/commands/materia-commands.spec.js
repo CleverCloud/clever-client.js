@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { GetMateriaInfoCommand } from '../../../../../src/clients/cc-api/commands/materia/get-materia-info-command.js';
 import { e2eSupport } from '../e2e-support.js';
 
@@ -7,11 +7,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe.skip('materia commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -28,15 +28,15 @@ describe.skip('materia commands', function () {
 
     const response = await support.client.send(new GetMateriaInfoCommand({ addonId: addon.id }));
 
-    expect(response.id).to.equal(addon.realId);
-    expect(response.clusterId).to.be.a('string');
-    expect(response.ownerId).to.equal(support.organisationId);
-    expect(response.kind).to.equal('KV');
-    expect(response.plan).to.be.a('string');
-    expect(response.host).to.be.a('string');
-    expect(response.port).to.be.a('number');
-    expect(response.token).to.be.a('string');
-    expect(response.tokenId).to.be.a('string');
-    expect(response.status).to.be.a('string');
+    expect(response.id).toBe(addon.realId);
+    expect(response.clusterId).toBeTypeOf('string');
+    expect(response.ownerId).toBe(support.organisationId);
+    expect(response.kind).toBe('KV');
+    expect(response.plan).toBeTypeOf('string');
+    expect(response.host).toBeTypeOf('string');
+    expect(response.port).toBeTypeOf('number');
+    expect(response.token).toBeTypeOf('string');
+    expect(response.tokenId).toBeTypeOf('string');
+    expect(response.status).toBeTypeOf('string');
   });
 });

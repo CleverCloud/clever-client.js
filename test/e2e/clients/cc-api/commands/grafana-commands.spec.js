@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { DisableGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/disable-grafana-command.js';
 import { EnableGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/enable-grafana-command.js';
 import { GetGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/get-grafana-command.js';
@@ -8,11 +8,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('grafana commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -24,7 +24,7 @@ describe('grafana commands', function () {
 
     const response = await support.client.send(new DisableGrafanaCommand({ ownerId: support.organisationId }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should enable grafana', async () => {
@@ -35,7 +35,7 @@ describe('grafana commands', function () {
 
     const response = await support.client.send(new EnableGrafanaCommand({ ownerId: support.organisationId }));
 
-    expect(response.id).to.be.a('number');
+    expect(response.id).toBeTypeOf('number');
   });
 
   it('should get grafana', async () => {
@@ -46,7 +46,7 @@ describe('grafana commands', function () {
 
     const response = await support.client.send(new GetGrafanaCommand({ ownerId: support.organisationId }));
 
-    expect(response.id).to.be.a('number');
+    expect(response.id).toBeTypeOf('number');
   });
 
   it('should reset grafana', async () => {
@@ -57,6 +57,6 @@ describe('grafana commands', function () {
 
     const response = await support.client.send(new ResetGrafanaCommand({ ownerId: support.organisationId }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 });

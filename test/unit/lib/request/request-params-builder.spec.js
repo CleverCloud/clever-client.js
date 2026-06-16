@@ -1,7 +1,7 @@
 /**
  * @import { CcRequestParams } from '../../../../src/types/request.types.js'
  */
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../../src/lib/request/query-params.js';
 import {
@@ -277,11 +277,11 @@ describe('RequestParamsBuilder', () => {
  * @param {Partial<CcRequestParams>} expected
  */
 function expectRequestParams(actual, expected) {
-  expect(actual.method).to.equal(expected.method);
-  expect(actual.url).to.equal(expected.url);
-  expect(actual.queryParams?.toObject()).to.deep.equal(expected.queryParams?.toObject());
-  expect(getHeadersEntries(actual.headers)).to.deep.equal(getHeadersEntries(expected.headers));
-  expect(actual.body).to.deep.equal(expected.body);
+  expect(actual.method).toBe(expected.method);
+  expect(actual.url).toBe(expected.url);
+  expect(actual.queryParams?.toObject()).toEqual(expected.queryParams?.toObject());
+  expect(getHeadersEntries(actual.headers)).toEqual(getHeadersEntries(expected.headers));
+  expect(actual.body).toEqual(expected.body);
 }
 
 /** @param {Headers} headers */

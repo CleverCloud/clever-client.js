@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { GetGithubLinkTransactionIdCommand } from '../../../../../src/clients/cc-api/commands/github/get-github-link-transaction-id-command.js';
 import { GetGithubUsernameCommand } from '../../../../../src/clients/cc-api/commands/github/get-github-username-command.js';
 import { ListGithubApplicationCommand } from '../../../../../src/clients/cc-api/commands/github/list-github-application-command.js';
@@ -13,7 +13,7 @@ describe('github commands', function () {
         .getClient({ user: 'test-user-without-github' })
         .send(new GetGithubLinkTransactionIdCommand());
 
-      expect(response.transactionId).to.be.a('string');
+      expect(response.transactionId).toBeTypeOf('string');
     });
 
     it('should get username', async () => {
@@ -21,7 +21,7 @@ describe('github commands', function () {
         .getClient({ user: 'test-user-without-github' })
         .send(new GetGithubUsernameCommand());
 
-      expect(response).to.be.null;
+      expect(response).toBeNull();
     });
 
     it('list applications should be empty', async () => {
@@ -29,7 +29,7 @@ describe('github commands', function () {
         .getClient({ user: 'test-user-without-github' })
         .send(new ListGithubApplicationCommand());
 
-      expect(response).to.be.an('array').that.is.empty;
+      expect(response).toHaveLength(0);
     });
   });
 
@@ -39,13 +39,13 @@ describe('github commands', function () {
         .getClient({ user: 'test-user-without-github' })
         .send(new GetGithubLinkTransactionIdCommand());
 
-      expect(response.transactionId).to.be.a('string');
+      expect(response.transactionId).toBeTypeOf('string');
     });
 
     it('should get username', async () => {
       const response = await support.getClient({ user: 'test-user-with-github' }).send(new GetGithubUsernameCommand());
 
-      expect(response).to.be.a('string');
+      expect(response).toBeTypeOf('string');
     });
 
     it('should get applications', async () => {
@@ -53,14 +53,14 @@ describe('github commands', function () {
         .getClient({ user: 'test-user-with-github' })
         .send(new ListGithubApplicationCommand());
 
-      expect(response).to.be.an('array');
-      expect(response[0].id).to.be.a('string');
-      expect(response[0].owner).to.be.a('string');
-      expect(response[0].name).to.be.a('string');
-      expect(response[0]).to.ownProperty('description');
-      expect(response[0].gitUrl).to.be.a('string');
-      expect(response[0].defaultBranch).to.be.a('string');
-      expect(response[0].private).to.be.a('boolean');
+      expect(response).toBeInstanceOf(Array);
+      expect(response[0].id).toBeTypeOf('string');
+      expect(response[0].owner).toBeTypeOf('string');
+      expect(response[0].name).toBeTypeOf('string');
+      expect(response[0]).toHaveProperty('description');
+      expect(response[0].gitUrl).toBeTypeOf('string');
+      expect(response[0].defaultBranch).toBeTypeOf('string');
+      expect(response[0].private).toBeTypeOf('boolean');
     });
   });
 });

@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { AddListKeyElementCommand } from '../../../../../src/clients/redis-http/commands/list-key/add-list-key-element-command.js';
 import { CreateListKeyCommand } from '../../../../../src/clients/redis-http/commands/list-key/create-list-key-command.js';
 import { GetListKeyElementCommand } from '../../../../../src/clients/redis-http/commands/list-key/get-list-key-element-command.js';
@@ -9,7 +9,7 @@ import { e2eSupport } from '../e2e-support.js';
 describe('hash-key commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
@@ -25,14 +25,14 @@ describe('hash-key commands', function () {
       new AddListKeyElementCommand({ key: 'test', value: 'v2', position: 'head' }),
     );
 
-    expect(response).to.deep.equal({ key: 'test', value: 'v2', index: 0 });
+    expect(response).toEqual({ key: 'test', value: 'v2', index: 0 });
   });
 
   it('should create list key', async () => {
     const key = { key: 'test', elements: ['v1'] };
     const response = await support.client.send(new CreateListKeyCommand(key));
 
-    expect(response).to.deep.equal(key);
+    expect(response).toEqual(key);
   });
 
   it('should get list key element', async () => {
@@ -41,7 +41,7 @@ describe('hash-key commands', function () {
 
     const response = await support.client.send(new GetListKeyElementCommand({ key: 'test', index: 1 }));
 
-    expect(response).to.deep.equal({ key: 'test', value: 'v2', index: 1 });
+    expect(response).toEqual({ key: 'test', value: 'v2', index: 1 });
   });
 
   it('should scan list key', async () => {
@@ -50,9 +50,9 @@ describe('hash-key commands', function () {
 
     const response = await support.client.send(new ScanListKeyCommand({ key: 'test' }));
 
-    expect(response.key).to.equal('test');
-    expect(response.cursor).to.be.a('number');
-    expect(response.elements).to.deep.equalInAnyOrder([
+    expect(response.key).toBe('test');
+    expect(response.cursor).toBeTypeOf('number');
+    expect(response.elements).toEqualInAnyOrder([
       { index: 0, value: 'v1' },
       { index: 1, value: 'v2' },
     ]);
@@ -70,6 +70,6 @@ describe('hash-key commands', function () {
       }),
     );
 
-    expect(response).to.deep.equal({ key: 'test', index: 0, value: 'v2' });
+    expect(response).toEqual({ key: 'test', index: 0, value: 'v2' });
   });
 });

@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { CheckVatNumberCommand } from '../../../../../src/clients/cc-api/commands/vat-number/check-vat-number-command.js';
 import { e2eSupport } from '../e2e-support.js';
 
@@ -6,11 +6,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe.skip('vat number commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -22,7 +22,7 @@ describe.skip('vat number commands', function () {
       }),
     );
 
-    expect(response).to.deep.equal({
+    expect(response).toEqual({
       valid: false,
     });
   });
@@ -35,7 +35,7 @@ describe.skip('vat number commands', function () {
       }),
     );
 
-    expect(response).to.deep.equal({
+    expect(response).toEqual({
       valid: true,
       name: 'SA LE SLIP FRANCAIS',
       address: '6 RUE DE PARADIS\n75010 PARIS',

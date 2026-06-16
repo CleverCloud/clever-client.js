@@ -1,4 +1,5 @@
 allowBuilds:
+  esbuild: set this to true or false
   unrs-resolver: false
 minimumReleaseAge: 10080
 # Pin to the versions resolved by the old npm lockfile: newer releases change the

@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { DeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/deploy-application-command.js';
 import { CancelDeploymentCommand } from '../../../../../src/clients/cc-api/commands/deployment/cancel-deployment-command.js';
 import {
@@ -13,11 +13,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('deployment commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -36,17 +36,17 @@ describe('deployment commands', function () {
       }),
     );
 
-    expect(deployments).to.be.an('array');
-    expect(deployments).to.have.lengthOf(1);
-    expect(deployments[0].id).to.equal(deployment.deploymentId);
-    expect(deployments[0].applicationId).to.equal(application.id);
-    expect(deployments[0].index).to.equal(1);
+    expect(deployments).toBeInstanceOf(Array);
+    expect(deployments).toHaveLength(1);
+    expect(deployments[0].id).toBe(deployment.deploymentId);
+    expect(deployments[0].applicationId).toBe(application.id);
+    expect(deployments[0].index).toBe(1);
     checkDateFormat(deployments[0].date);
-    expect(deployments[0].state).to.be.a('string');
-    expect(deployments[0].action).to.equal('DEPLOY');
-    expect(deployments[0].cause).to.be.a('string');
-    expect(deployments[0].instances).to.equal(1);
-    expect(deployments[0].author.id).to.equal(support.userId);
+    expect(deployments[0].state).toBeTypeOf('string');
+    expect(deployments[0].action).toBe('DEPLOY');
+    expect(deployments[0].cause).toBeTypeOf('string');
+    expect(deployments[0].instances).toBe(1);
+    expect(deployments[0].author.id).toBe(support.userId);
   });
 
   it('should list all app deployments', async () => {
@@ -61,17 +61,17 @@ describe('deployment commands', function () {
       }),
     );
 
-    expect(deployments).to.be.an('array');
-    expect(deployments).to.have.lengthOf(1);
-    expect(deployments[0].id).to.equal(deployment.deploymentId);
-    expect(deployments[0].applicationId).to.equal(application.id);
-    expect(deployments[0].index).to.equal(1);
+    expect(deployments).toBeInstanceOf(Array);
+    expect(deployments).toHaveLength(1);
+    expect(deployments[0].id).toBe(deployment.deploymentId);
+    expect(deployments[0].applicationId).toBe(application.id);
+    expect(deployments[0].index).toBe(1);
     checkDateFormat(deployments[0].date);
-    expect(deployments[0].state).to.be.a('string');
-    expect(deployments[0].action).to.equal('DEPLOY');
-    expect(deployments[0].cause).to.be.a('string');
-    expect(deployments[0].instances).to.equal(1);
-    expect(deployments[0].author.id).to.equal(support.userId);
+    expect(deployments[0].state).toBeTypeOf('string');
+    expect(deployments[0].action).toBe('DEPLOY');
+    expect(deployments[0].cause).toBeTypeOf('string');
+    expect(deployments[0].instances).toBe(1);
+    expect(deployments[0].author.id).toBe(support.userId);
   });
 
   it('should get legacy deployment', async () => {
@@ -86,15 +86,15 @@ describe('deployment commands', function () {
       }),
     );
 
-    expect(response.id).to.equal(deployment.deploymentId);
-    expect(response.applicationId).to.equal(application.id);
-    expect(response.index).to.equal(1);
+    expect(response.id).toBe(deployment.deploymentId);
+    expect(response.applicationId).toBe(application.id);
+    expect(response.index).toBe(1);
     checkDateFormat(response.date);
-    expect(response.state).to.be.a('string');
-    expect(response.action).to.equal('DEPLOY');
-    expect(response.cause).to.be.a('string');
-    expect(response.instances).to.equal(1);
-    expect(response.author.id).to.equal(support.userId);
+    expect(response.state).toBeTypeOf('string');
+    expect(response.action).toBe('DEPLOY');
+    expect(response.cause).toBeTypeOf('string');
+    expect(response.instances).toBe(1);
+    expect(response.author.id).toBe(support.userId);
   });
 
   it('should get deployment', async () => {
@@ -112,21 +112,21 @@ describe('deployment commands', function () {
       { interval: 500, delay: 1000, timeout: 5000 },
     );
 
-    expect(response.id).to.equal(deployment.deploymentId);
-    expect(response.applicationId).to.equal(application.id);
+    expect(response.id).toBe(deployment.deploymentId);
+    expect(response.applicationId).toBe(application.id);
     checkDateFormat(response.startDate);
-    expect(response.state).to.be.a('string');
-    expect(response.steps).to.be.an('array');
-    expect(response.steps[0].state).to.equal('QUEUED');
+    expect(response.state).toBeTypeOf('string');
+    expect(response.steps).toBeInstanceOf(Array);
+    expect(response.steps[0].state).toBe('QUEUED');
     checkDateFormat(response.steps[0].date);
-    expect(response.steps).to.be.an('array');
-    expect(response.origin.action).to.equal('DEPLOY');
-    expect(response.origin.cause).to.be.a('string');
-    expect(response.origin.source).to.be.a('string');
-    expect(response.origin.authorId).to.equal(support.userId);
-    expect(response.origin.constraints).to.be.an('array');
-    expect(response.origin.priority).to.be.a('string');
-    expect(response.hasDedicatedBuild).to.be.a('boolean');
+    expect(response.steps).toBeInstanceOf(Array);
+    expect(response.origin.action).toBe('DEPLOY');
+    expect(response.origin.cause).toBeTypeOf('string');
+    expect(response.origin.source).toBeTypeOf('string');
+    expect(response.origin.authorId).toBe(support.userId);
+    expect(response.origin.constraints).toBeInstanceOf(Array);
+    expect(response.origin.priority).toBeTypeOf('string');
+    expect(response.hasDedicatedBuild).toBeTypeOf('boolean');
   });
 
   it('should cancel deployment', async () => {
@@ -141,7 +141,7 @@ describe('deployment commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   /**

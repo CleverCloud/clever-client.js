@@ -1,7 +1,7 @@
 /**
  * @import { Instance } from '../../../../../src/clients/cc-api/commands/instance/instance.types.js';
  */
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { DeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/deploy-application-command.js';
 import { GetApplicationInstanceCommand } from '../../../../../src/clients/cc-api/commands/instance/get-application-instance-command.js';
 import { ListApplicationInstanceCommand } from '../../../../../src/clients/cc-api/commands/instance/list-application-instance-command.js';
@@ -9,16 +9,14 @@ import { Polling } from '../../../../../src/utils/polling.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
-describe('instance commands', function () {
-  this.timeout(60000);
-
+describe('instance commands', { timeout: 60000 }, () => {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -32,21 +30,21 @@ describe('instance commands', function () {
 
     const response = await waitForInstances(application.id);
 
-    expect(response).to.be.an('array');
-    expect(response[0].id).to.be.a('string');
-    expect(response[0].ownerId).to.equal(support.organisationId);
-    expect(response[0].applicationId).to.equal(application.id);
-    expect(response[0].deploymentId).to.equal(deployment.deploymentId);
-    expect(response[0].name).to.be.a('string');
-    expect(response[0].flavor).to.equal('XS');
-    expect(response[0].index).to.equal(0);
-    expect(response[0].state).to.be.a('string');
-    expect(response[0].hypervisorId).to.be.a('string');
+    expect(response).toBeInstanceOf(Array);
+    expect(response[0].id).toBeTypeOf('string');
+    expect(response[0].ownerId).toBe(support.organisationId);
+    expect(response[0].applicationId).toBe(application.id);
+    expect(response[0].deploymentId).toBe(deployment.deploymentId);
+    expect(response[0].name).toBeTypeOf('string');
+    expect(response[0].flavor).toBe('XS');
+    expect(response[0].index).toBe(0);
+    expect(response[0].state).toBeTypeOf('string');
+    expect(response[0].hypervisorId).toBeTypeOf('string');
     checkDateFormat(response[0].creationDate);
     checkDateFormat(response[0].deletionDate);
-    expect(response[0].network.ip).to.be.a('string');
-    expect(response[0].network.port).to.be.a('number');
-    expect(response[0].isBuildVm).to.equal(false);
+    expect(response[0].network.ip).toBeTypeOf('string');
+    expect(response[0].network.port).toBeTypeOf('number');
+    expect(response[0].isBuildVm).toBe(false);
   });
 
   it('should get application instance', async () => {
@@ -59,20 +57,20 @@ describe('instance commands', function () {
       new GetApplicationInstanceCommand({ applicationId: application.id, instanceId: instances[0].id }),
     );
 
-    expect(response.id).to.be.a('string');
-    expect(response.ownerId).to.equal(support.organisationId);
-    expect(response.applicationId).to.equal(application.id);
-    expect(response.deploymentId).to.equal(deployment.deploymentId);
-    expect(response.name).to.be.a('string');
-    expect(response.flavor).to.equal('XS');
-    expect(response.index).to.equal(0);
-    expect(response.state).to.be.a('string');
-    expect(response.hypervisorId).to.be.a('string');
+    expect(response.id).toBeTypeOf('string');
+    expect(response.ownerId).toBe(support.organisationId);
+    expect(response.applicationId).toBe(application.id);
+    expect(response.deploymentId).toBe(deployment.deploymentId);
+    expect(response.name).toBeTypeOf('string');
+    expect(response.flavor).toBe('XS');
+    expect(response.index).toBe(0);
+    expect(response.state).toBeTypeOf('string');
+    expect(response.hypervisorId).toBeTypeOf('string');
     checkDateFormat(response.creationDate);
     checkDateFormat(response.deletionDate);
-    expect(response.network.ip).to.be.a('string');
-    expect(response.network.port).to.be.a('number');
-    expect(response.isBuildVm).to.equal(false);
+    expect(response.network.ip).toBeTypeOf('string');
+    expect(response.network.port).toBeTypeOf('number');
+    expect(response.isBuildVm).toBe(false);
   });
 
   /**

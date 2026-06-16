@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { DeleteApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/delete-application-command.js';
 import { DeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/deploy-application-command.js';
 import { GetApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/get-application-command.js';
@@ -10,11 +10,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('application commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -25,9 +25,9 @@ describe('application commands', function () {
   it('should create application', async () => {
     const application = await support.createTestApplication();
 
-    expect(application.id).to.match(/app_.+/);
-    expect(application.ownerId).to.equal(support.organisationId);
-    expect(application.zone).to.equal('par');
+    expect(application.id).toMatch(/app_.+/);
+    expect(application.ownerId).toBe(support.organisationId);
+    expect(application.zone).toBe('par');
   });
 
   it('should deploy application', async () => {
@@ -35,7 +35,7 @@ describe('application commands', function () {
 
     const deployment = await support.client.send(new DeployApplicationCommand({ applicationId: application.id }));
 
-    expect(deployment.deploymentId).to.match(/deployment_.+/);
+    expect(deployment.deploymentId).toMatch(/deployment_.+/);
   });
 
   it('should undeploy application', async () => {
@@ -44,7 +44,7 @@ describe('application commands', function () {
 
     const response = await support.client.send(new UndeployApplicationCommand({ applicationId: application.id }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should update buildFlavor', async () => {
@@ -58,7 +58,7 @@ describe('application commands', function () {
       }),
     );
 
-    expect(updatedApplication.buildFlavor.name).to.equal('L');
+    expect(updatedApplication.buildFlavor.name).toBe('L');
   });
 
   it('should update branch', async () => {
@@ -72,7 +72,7 @@ describe('application commands', function () {
       }),
     );
 
-    expect(updatedApplication.branch).to.equal('test');
+    expect(updatedApplication.branch).toBe('test');
   });
 
   it('should delete application', async () => {
@@ -80,7 +80,7 @@ describe('application commands', function () {
 
     const response = await support.client.send(new DeleteApplicationCommand({ applicationId: application.id }));
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should get application', async () => {
@@ -89,7 +89,7 @@ describe('application commands', function () {
       new GetApplicationCommand({ applicationId: application.id, withBranches: true }),
     );
 
-    expect(response).to.deep.equalInAnyOrder(application);
+    expect(response).toEqualInAnyOrder(application);
   });
 
   it('should list applications', async () => {
@@ -100,7 +100,7 @@ describe('application commands', function () {
       new ListApplicationCommand({ ownerId: support.organisationId, withBranches: true }),
     );
 
-    expect(response).to.deep.equalInAnyOrder([application1, application2]);
+    expect(response).toEqualInAnyOrder([application1, application2]);
   });
 
   it('should list applications empty', async () => {
@@ -108,15 +108,15 @@ describe('application commands', function () {
       new ListApplicationCommand({ ownerId: support.organisationId, withBranches: false }),
     );
 
-    expect(response).to.have.length(0);
+    expect(response).toHaveLength(0);
   });
 
   it('should create FTP application', async () => {
     const application = await support.createFtpApplication();
 
-    expect(application.id).to.match(/app_.+/);
-    expect(application.ownerId).to.equal(support.organisationId);
-    expect(application.deployment.type).to.equal('FTP');
+    expect(application.id).toMatch(/app_.+/);
+    expect(application.ownerId).toBe(support.organisationId);
+    expect(application.deployment.type).toBe('FTP');
   });
 
   it('should get FTP application', async () => {
@@ -125,8 +125,8 @@ describe('application commands', function () {
       new GetApplicationCommand({ applicationId: application.id, withBranches: false }),
     );
 
-    expect(response.id).to.equal(application.id);
-    expect(response.deployment.type).to.equal('FTP');
+    expect(response.id).toBe(application.id);
+    expect(response.deployment.type).toBe('FTP');
   });
 
   it('should list FTP application', async () => {
@@ -135,7 +135,7 @@ describe('application commands', function () {
       new ListApplicationCommand({ ownerId: support.organisationId, withBranches: false }),
     );
 
-    expect(response.map((a) => a.id)).to.include(application.id);
-    expect(response.find((a) => a.id === application.id)?.deployment.type).to.equal('FTP');
+    expect(response.map((a) => a.id)).toContain(application.id);
+    expect(response.find((a) => a.id === application.id)?.deployment.type).toBe('FTP');
   });
 });

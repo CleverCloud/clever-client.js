@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { ListBackupCommand } from '../../../../../src/clients/cc-api/commands/backup/list-backup-command.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
 import { STATIC_MYSQL_ADDON_ID, e2eSupport } from '../e2e-support.js';
@@ -9,14 +9,14 @@ describe('backup commands', function () {
   it('should list backups without commands', async () => {
     const response = await support.client.send(new ListBackupCommand({ addonId: STATIC_MYSQL_ADDON_ID }));
 
-    expect(response).to.be.an('array');
-    expect(response[0].backupId).to.be.a('string');
-    expect(response[0].entityId).to.be.a('string');
-    expect(response[0].status).to.be.a('string');
+    expect(response).toBeInstanceOf(Array);
+    expect(response[0].backupId).toBeTypeOf('string');
+    expect(response[0].entityId).toBeTypeOf('string');
+    expect(response[0].status).toBeTypeOf('string');
     checkDateFormat(response[0].creationDate);
     checkDateFormat(response[0].expirationDate);
-    expect(response[0].downloadUrl).to.be.a('string');
-    expect(response[0].commands).to.be.undefined;
+    expect(response[0].downloadUrl).toBeTypeOf('string');
+    expect(response[0].commands).toBeUndefined();
   });
 
   it('should list backups with commands', async () => {
@@ -24,15 +24,15 @@ describe('backup commands', function () {
       new ListBackupCommand({ addonId: STATIC_MYSQL_ADDON_ID, withCommands: true }),
     );
 
-    expect(response).to.be.an('array');
-    expect(response[0].backupId).to.be.a('string');
-    expect(response[0].entityId).to.be.a('string');
-    expect(response[0].status).to.be.a('string');
+    expect(response).toBeInstanceOf(Array);
+    expect(response[0].backupId).toBeTypeOf('string');
+    expect(response[0].entityId).toBeTypeOf('string');
+    expect(response[0].status).toBeTypeOf('string');
     checkDateFormat(response[0].creationDate);
     checkDateFormat(response[0].expirationDate);
-    expect(response[0].downloadUrl).to.be.a('string');
-    expect(response[0].commands.restoreCommand).to.be.a('string');
-    expect(response[0].commands.password).to.be.a('string');
-    expect(response[0].commands.deleteCommand).to.be.undefined;
+    expect(response[0].downloadUrl).toBeTypeOf('string');
+    expect(response[0].commands.restoreCommand).toBeTypeOf('string');
+    expect(response[0].commands.password).toBeTypeOf('string');
+    expect(response[0].commands.deleteCommand).toBeUndefined();
   });
 });

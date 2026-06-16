@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { GetWarpTokenCommand } from '../../../../../src/clients/cc-api/commands/warp-token/get-warp-token-command.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
@@ -6,11 +6,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('warp token commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -23,11 +23,11 @@ describe('warp token commands', function () {
       }),
     );
 
-    expect(response.token).to.be.a('string');
+    expect(response.token).toBeTypeOf('string');
     checkDateFormat(response.expiresAt);
     checkDateFormat(response.createdAt);
     expect(response.scope).to.be.equal('READ');
-    expect(response.applications).to.deep.equalInAnyOrder(['metrics']);
+    expect(response.applications).toEqualInAnyOrder(['metrics']);
   });
 
   it('should get access logs token', async () => {
@@ -43,7 +43,7 @@ describe('warp token commands', function () {
     checkDateFormat(response.expiresAt);
     checkDateFormat(response.createdAt);
     expect(response.scope).to.be.equal('READ');
-    expect(response.applications).to.deep.equalInAnyOrder(['metrics.accesslogs']);
+    expect(response.applications).toEqualInAnyOrder(['metrics.accesslogs']);
   });
 
   it('should get metrics token for application', async () => {
@@ -60,7 +60,7 @@ describe('warp token commands', function () {
     checkDateFormat(response.expiresAt);
     checkDateFormat(response.createdAt);
     expect(response.scope).to.be.equal('READ');
-    expect(response.applications).to.deep.equalInAnyOrder(['metrics']);
+    expect(response.applications).toEqualInAnyOrder(['metrics']);
   });
 
   it('should get access logs token for application', async () => {
@@ -73,10 +73,10 @@ describe('warp token commands', function () {
       }),
     );
 
-    expect(response.token).to.be.a('string');
+    expect(response.token).toBeTypeOf('string');
     checkDateFormat(response.expiresAt);
     checkDateFormat(response.createdAt);
     expect(response.scope).to.be.equal('READ');
-    expect(response.applications).to.deep.equalInAnyOrder(['metrics.accesslogs']);
+    expect(response.applications).toEqualInAnyOrder(['metrics.accesslogs']);
   });
 });

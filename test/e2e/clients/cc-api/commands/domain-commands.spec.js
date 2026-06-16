@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { CreateDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/create-domain-command.js';
 import { DeleteDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/delete-domain-command.js';
 import { GetPrimaryDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/get-primary-domain-command.js';
@@ -10,11 +10,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('domain commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -32,7 +32,7 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should delete domain', async () => {
@@ -51,7 +51,7 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should get primary domain', async () => {
@@ -75,8 +75,8 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response.isPrimary).to.equal(true);
-    expect(response.domain).to.equal('foo.com/');
+    expect(response.isPrimary).toBe(true);
+    expect(response.domain).toBe('foo.com/');
   });
 
   it('should list domains', async () => {
@@ -94,9 +94,9 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).to.be.an('array');
-    expect(response).to.have.lengthOf(2);
-    expect(response).to.deep.equalInAnyOrder([
+    expect(response).toBeInstanceOf(Array);
+    expect(response).toHaveLength(2);
+    expect(response).toEqualInAnyOrder([
       {
         domain: `app-${application.id.replace('app_', '')}.cleverapps.io/`,
         isPrimary: false,
@@ -121,7 +121,7 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should unset primary domain', async () => {
@@ -145,6 +145,6 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 });

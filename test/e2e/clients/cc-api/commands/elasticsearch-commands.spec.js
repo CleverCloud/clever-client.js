@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { GetElasticsearchInfoCommand } from '../../../../../src/clients/cc-api/commands/elasticsearch/get-elasticsearch-info-command.js';
 import { e2eSupport } from '../e2e-support.js';
 
@@ -7,11 +7,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe.skip('elasticsearch commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -35,27 +35,27 @@ describe.skip('elasticsearch commands', function () {
 
     const response = await support.client.send(new GetElasticsearchInfoCommand({ addonId: addon.id }));
 
-    expect(response.id).to.be.a('string');
-    expect(response.ownerId).to.equal(support.organisationId);
-    expect(response.addonId).to.equal(addon.id);
-    expect(response.plan).to.equal('XS');
-    expect(response.zone).to.equal('par');
-    expect(response.config.host).to.be.a('string');
-    expect(response.config.user).to.be.a('string');
-    expect(response.config.password).to.be.a('string');
-    expect(response.config.apmUser).to.be.a('string');
-    expect(response.config.apmPassword).to.be.a('string');
-    expect(response.config.apmAuthToken).to.be.a('string');
-    expect(response.config.kibanaUser).to.be.a('string');
-    expect(response.version).to.equal('8');
-    expect(response.backups.kibanaSnapshotsUrl).to.be.a('string');
-    expect(response.kibanaApplication).to.be.undefined;
-    expect(response.apmApplication).to.be.undefined;
-    expect(response.services).to.deep.equalInAnyOrder([
+    expect(response.id).toBeTypeOf('string');
+    expect(response.ownerId).toBe(support.organisationId);
+    expect(response.addonId).toBe(addon.id);
+    expect(response.plan).toBe('XS');
+    expect(response.zone).toBe('par');
+    expect(response.config.host).toBeTypeOf('string');
+    expect(response.config.user).toBeTypeOf('string');
+    expect(response.config.password).toBeTypeOf('string');
+    expect(response.config.apmUser).toBeTypeOf('string');
+    expect(response.config.apmPassword).toBeTypeOf('string');
+    expect(response.config.apmAuthToken).toBeTypeOf('string');
+    expect(response.config.kibanaUser).toBeTypeOf('string');
+    expect(response.version).toBe('8');
+    expect(response.backups.kibanaSnapshotsUrl).toBeTypeOf('string');
+    expect(response.kibanaApplication).toBeUndefined();
+    expect(response.apmApplication).toBeUndefined();
+    expect(response.services).toEqualInAnyOrder([
       { name: 'kibana', enabled: false },
       { name: 'apm', enabled: false },
     ]);
-    expect(response.features).to.deep.equalInAnyOrder([
+    expect(response.features).toEqualInAnyOrder([
       { name: 'kibana', enabled: false },
       { name: 'apm', enabled: false },
       { name: 'encryption', enabled: false },

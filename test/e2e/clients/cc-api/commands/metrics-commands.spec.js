@@ -2,7 +2,7 @@
  * @import { RequestLocation } from '../../../../../src/clients/cc-api/commands/metrics/stream-requests-command.types.js';
  * @import { CcStream } from '../../../../../src/lib/stream/cc-stream.js';
  */
-import { expect } from 'chai';
+import { afterEach, describe, expect, it } from 'vitest';
 import { GetHeatMapCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-heat-map-command.js';
 import { GetMetricsCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-metrics-command.js';
 import { GetStatusCodeDistributionCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-status-code-distribution-command.js';
@@ -19,23 +19,23 @@ describe('metrics commands', function () {
       new GetMetricsCommand({ addonId: STATIC_MYSQL_ADDON_ID, metrics: ['mem'] }),
     );
 
-    expect(response.mem).to.be.an('array');
-    expect(response.mem[0].timestamp).to.be.a('number');
-    expect(response.mem[0].value).to.be.a('number');
+    expect(response.mem).toBeInstanceOf(Array);
+    expect(response.mem[0].timestamp).toBeTypeOf('number');
+    expect(response.mem[0].value).toBeTypeOf('number');
   });
 
   it('should get addon metrics', async () => {
     const response = await support.client.send(new GetMetricsCommand({ addonId: STATIC_MYSQL_ADDON_ID }));
 
-    expect(response.cpu).to.be.an('array');
-    expect(response.cpu[0].timestamp).to.be.a('number');
-    expect(response.cpu[0].value).to.be.a('number');
-    expect(response.mem).to.be.an('array');
-    expect(response.mem[0].timestamp).to.be.a('number');
-    expect(response.mem[0].value).to.be.a('number');
-    expect(response.load1).to.be.an('array');
-    expect(response.load1[0].timestamp).to.be.a('number');
-    expect(response.load1[0].value).to.be.a('number');
+    expect(response.cpu).toBeInstanceOf(Array);
+    expect(response.cpu[0].timestamp).toBeTypeOf('number');
+    expect(response.cpu[0].value).toBeTypeOf('number');
+    expect(response.mem).toBeInstanceOf(Array);
+    expect(response.mem[0].timestamp).toBeTypeOf('number');
+    expect(response.mem[0].value).toBeTypeOf('number');
+    expect(response.load1).toBeInstanceOf(Array);
+    expect(response.load1[0].timestamp).toBeTypeOf('number');
+    expect(response.load1[0].value).toBeTypeOf('number');
   });
 
   it('should get application status code distribution', async () => {

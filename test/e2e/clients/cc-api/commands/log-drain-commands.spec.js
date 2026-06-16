@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { CreateLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/create-log-drain-command.js';
 import { DeleteLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/delete-log-drain-command.js';
 import { DisableLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/disable-log-drain-command.js';
@@ -11,11 +11,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('log-drain commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -41,16 +41,16 @@ describe('log-drain commands', function () {
       }),
     );
 
-    expect(response.id).to.be.a('string');
-    expect(response.applicationId).to.equal(application.id);
+    expect(response.id).toBeTypeOf('string');
+    expect(response.applicationId).toBe(application.id);
     checkDateFormat(response.updatedAt);
-    expect(response.status).to.equal('ENABLED');
-    expect(response.target.type).to.equal('RAW_HTTP');
-    expect(response.target.url).to.equal('https://example.com');
+    expect(response.status).toBe('ENABLED');
+    expect(response.target.type).toBe('RAW_HTTP');
+    expect(response.target.url).toBe('https://example.com');
     if (response.target.type === 'RAW_HTTP') {
-      expect(response.target.credentials).to.be.an('object');
-      expect(response.target.credentials.username).to.equal('username');
-      expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
+      expect(response.target.credentials).toBeTypeOf('object');
+      expect(response.target.credentials.username).toBe('username');
+      expect(response.target.credentials.password).toBeTypeOf('string'); // API returns masked password
     }
   });
 
@@ -75,7 +75,7 @@ describe('log-drain commands', function () {
 
     // Verify the drain was deleted by checking it no longer exists
     const drains = await support.client.send(new ListLogDrainCommand({ applicationId: application.id }));
-    expect(drains.find((d) => d.id === drain.id)).to.be.undefined;
+    expect(drains.find((d) => d.id === drain.id)).toBeUndefined();
   });
 
   it('should get log drain', async () => {
@@ -99,16 +99,16 @@ describe('log-drain commands', function () {
       new GetLogDrainCommand({ applicationId: application.id, drainId: drain.id }),
     );
 
-    expect(response.id).to.be.a('string');
-    expect(response.applicationId).to.equal(application.id);
+    expect(response.id).toBeTypeOf('string');
+    expect(response.applicationId).toBe(application.id);
     checkDateFormat(response.updatedAt);
-    expect(response.status).to.equal('ENABLED');
-    expect(response.target.type).to.equal('RAW_HTTP');
-    expect(response.target.url).to.equal('https://example.com');
+    expect(response.status).toBe('ENABLED');
+    expect(response.target.type).toBe('RAW_HTTP');
+    expect(response.target.url).toBe('https://example.com');
     if (response.target.type === 'RAW_HTTP') {
-      expect(response.target.credentials).to.be.an('object');
-      expect(response.target.credentials.username).to.equal('username');
-      expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
+      expect(response.target.credentials).toBeTypeOf('object');
+      expect(response.target.credentials.username).toBe('username');
+      expect(response.target.credentials.password).toBeTypeOf('string'); // API returns masked password
     }
   });
 
@@ -141,9 +141,9 @@ describe('log-drain commands', function () {
 
     const response = await support.client.send(new ListLogDrainCommand({ applicationId: application.id }));
 
-    expect(response).to.be.an('array');
-    expect(response).to.have.lengthOf(2);
-    expect(response.map((r) => r.id)).to.deep.equalInAnyOrder([drain1.id, drain2.id]);
+    expect(response).toBeInstanceOf(Array);
+    expect(response).toHaveLength(2);
+    expect(response.map((r) => r.id)).toEqualInAnyOrder([drain1.id, drain2.id]);
   });
 
   it('should disable log drain', async () => {
@@ -167,11 +167,11 @@ describe('log-drain commands', function () {
       new DisableLogDrainCommand({ applicationId: application.id, drainId: drain.id }),
     );
 
-    expect(response.id).to.be.a('string');
-    expect(response.applicationId).to.equal(application.id);
+    expect(response.id).toBeTypeOf('string');
+    expect(response.applicationId).toBe(application.id);
     checkDateFormat(response.updatedAt);
-    expect(response.status).to.equal('DISABLED');
-    expect(response.target).to.be.an('object');
+    expect(response.status).toBe('DISABLED');
+    expect(response.target).toBeTypeOf('object');
   });
 
   it('should enable log drain', async () => {
@@ -199,16 +199,16 @@ describe('log-drain commands', function () {
       new EnableLogDrainCommand({ applicationId: application.id, drainId: drain.id }),
     );
 
-    expect(response.id).to.be.a('string');
-    expect(response.applicationId).to.equal(application.id);
+    expect(response.id).toBeTypeOf('string');
+    expect(response.applicationId).toBe(application.id);
     checkDateFormat(response.updatedAt);
-    expect(response.status).to.equal('ENABLED');
-    expect(response.target.type).to.equal('RAW_HTTP');
-    expect(response.target.url).to.equal('https://example.com');
+    expect(response.status).toBe('ENABLED');
+    expect(response.target.type).toBe('RAW_HTTP');
+    expect(response.target.url).toBe('https://example.com');
     if (response.target.type === 'RAW_HTTP') {
-      expect(response.target.credentials).to.be.an('object');
-      expect(response.target.credentials.username).to.equal('username');
-      expect(response.target.credentials.password).to.be.a('string'); // API returns masked password
+      expect(response.target.credentials).toBeTypeOf('object');
+      expect(response.target.credentials.username).toBe('username');
+      expect(response.target.credentials.password).toBeTypeOf('string'); // API returns masked password
     }
   });
 
@@ -226,10 +226,10 @@ describe('log-drain commands', function () {
       }),
     );
 
-    expect(response.id).to.be.a('string');
-    expect(response.applicationId).to.equal(application.id);
-    expect(response.status).to.equal('ENABLED');
-    expect(response.target).to.deep.equal({
+    expect(response.id).toBeTypeOf('string');
+    expect(response.applicationId).toBe(application.id);
+    expect(response.status).toBe('ENABLED');
+    expect(response.target).toEqual({
       type: 'RAW_HTTP',
       url: 'https://example.com',
     });
@@ -249,8 +249,8 @@ describe('log-drain commands', function () {
       }),
     );
 
-    expect(response.id).to.be.a('string');
-    expect(response.applicationId).to.equal(application.id);
-    expect(response.status).to.equal('ENABLED');
+    expect(response.id).toBeTypeOf('string');
+    expect(response.applicationId).toBe(application.id);
+    expect(response.status).toBe('ENABLED');
   });
 });

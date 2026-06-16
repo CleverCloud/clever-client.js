@@ -1,9 +1,7 @@
 /**
  * @import {OauthTokens} from '../../../../src/types/auth.types.js'
  */
-import { use } from 'chai';
 import { CcApiBridgeClient } from '../../../../src/clients/cc-api-bridge/cc-api-bridge-client.js';
-import { deepEqualInAnyOrder } from '../../../lib/deep-equal-in-any-order/deep-equal-in-any-order.js';
 import { getE2eUser } from '../../../lib/e2e-test-users.js';
 
 /**
@@ -14,8 +12,6 @@ import { getE2eUser } from '../../../lib/e2e-test-users.js';
 const IS_NODE = globalThis.process != null;
 const USER = getE2eUser('test-user-with-github');
 const USE_LOCAL_API_BRIDGE = false;
-
-use(deepEqualInAnyOrder);
 
 /**
  * @param {{debug?: boolean }} [config]

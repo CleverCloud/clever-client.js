@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { DeleteUserSettingCommand } from '../../../../../src/clients/cc-api/commands/user-setting/delete-user-setting-command.js';
 import { GetUserSettingCommand } from '../../../../../src/clients/cc-api/commands/user-setting/get-user-setting-command.js';
 import { SetUserSettingCommand } from '../../../../../src/clients/cc-api/commands/user-setting/set-user-setting-command.js';
@@ -7,11 +7,11 @@ import { e2eSupport } from '../e2e-support.js';
 describe('user setting commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await support.cleanup();
   });
 
@@ -33,7 +33,7 @@ describe('user setting commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should get user setting', async () => {
@@ -52,7 +52,7 @@ describe('user setting commands', function () {
       }),
     );
 
-    expect(response).to.equal('world');
+    expect(response).toBe('world');
   });
 
   it('should get user setting null', async () => {
@@ -63,7 +63,7 @@ describe('user setting commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should delete user setting', async () => {
@@ -82,7 +82,7 @@ describe('user setting commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 
   it('should delete user setting when not exist', async () => {
@@ -93,6 +93,6 @@ describe('user setting commands', function () {
       }),
     );
 
-    expect(response).to.be.null;
+    expect(response).toBeNull();
   });
 });

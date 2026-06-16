@@ -11,16 +11,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm run prepack` - Smart prepack (dev or prod based on DEV env var)
 
 ### Testing
+Tests run on Vitest. The same `*.spec.js` files run in both Node.js and a real browser (Vitest browser mode, Playwright/Chromium), defined as four projects in `vitest.config.js`: `node-unit`, `browser-unit`, `node-e2e`, `browser-e2e`.
 - `pnpm run test` - Run all unit tests (browser + Node.js)
 - `pnpm run test:unit` - Same as test (unit tests only)
-- `pnpm run test:unit:browser` - Browser unit tests with Web Test Runner
+- `pnpm run test:unit:browser` - Browser unit tests
 - `pnpm run test:unit:browser:watch` - Watch mode for browser unit tests
-- `pnpm run test:unit:node` - Node.js unit tests with Mocha
+- `pnpm run test:unit:node` - Node.js unit tests
 - `pnpm run test:unit:node:watch` - Watch mode for Node.js unit tests
 - `pnpm run test:unit:watch` - Watch mode for unit tests (both environments)
 - `pnpm run test:e2e` - End-to-end tests (browser + Node.js)
 - `pnpm run test:e2e:browser` - Browser e2e tests
 - `pnpm run test:e2e:node` - Node.js e2e tests
+
+Browser tests require Playwright Chromium: `npx playwright install chromium`.
 
 ### Linting & Formatting
 - `pnpm run lint` - ESLint check
@@ -101,15 +104,15 @@ Real-time data via Server-Sent Events:
 - `src/utils/` - Utility functions
 - `test/unit/` - Unit tests
 - `test/e2e/` - End-to-end tests
-- `test/lib/mock-api/` - Mock API server for testing
 - `esm/` - Legacy functional client
 - `tasks/` - Build and analysis scripts
 
 ### Testing Environment
-- **Unit tests**: Mocha (Node.js) + Web Test Runner (browser)
-- **E2E tests**: Both browser and Node.js environments
-- **Mock API**: Custom mock server for testing API interactions
-- Tests are located parallel to source files with `.spec.js` extension
+- **Runner**: Vitest, with the same specs run in Node.js and a real browser (Vitest browser mode, Playwright/Chromium). Configured as four projects in `vitest.config.js`.
+- **Assertions**: Vitest (`expect`); spies/stubs via `vitest`. A custom `toEqualInAnyOrder` matcher (order-insensitive deep equality) lives in `test/lib/deep-equal-in-any-order/` and is registered for all projects via `test/setup/vite-matchers.js`.
+- **Mock API**: Provided by the [`@clevercloud/doublure`](https://www.npmjs.com/package/@clevercloud/doublure) package; tests use its `doublureHooks` (`@clevercloud/doublure/testing`) and the browser is bridged via its Vitest plugin (`@clevercloud/doublure/vitest`).
+- **E2E**: Node uses `test/e2e/global-setup.node.js` (login/logout) with token hand-off to workers; the browser uses the proxy/login Vite plugin in `test/lib/e2e-proxy.browser.js`.
+- Tests are located parallel to source files with `.spec.js` extension. Use `*.node.spec.js` / `*.browser.spec.js` to restrict a spec to one environment.
 
 ### Build System
 - **Rollup**: Bundling and distribution

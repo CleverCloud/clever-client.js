@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { AddSetKeyElementCommand } from '../../../../../src/clients/redis-http/commands/set-key/add-set-key-element-command.js';
 import { CreateSetKeyCommand } from '../../../../../src/clients/redis-http/commands/set-key/create-set-key-command.js';
 import { DeleteSetKeyElementCommand } from '../../../../../src/clients/redis-http/commands/set-key/delete-set-key-element-command.js';
@@ -8,7 +8,7 @@ import { e2eSupport } from '../e2e-support.js';
 describe('set-key commands', function () {
   const support = e2eSupport();
 
-  before(async () => {
+  beforeAll(async () => {
     await support.prepare();
   });
 
@@ -22,14 +22,14 @@ describe('set-key commands', function () {
 
     const response = await support.client.send(new AddSetKeyElementCommand({ key: 'test', element: 'v2' }));
 
-    expect(response).to.deep.equal({ key: 'test', element: 'v2', added: true });
+    expect(response).toEqual({ key: 'test', element: 'v2', added: true });
   });
 
   it('should create set key', async () => {
     const key = { key: 'test', elements: ['v1'] };
     const response = await support.client.send(new CreateSetKeyCommand(key));
 
-    expect(response).to.deep.equal(key);
+    expect(response).toEqual(key);
   });
 
   it('should delete set key element', async () => {
@@ -38,7 +38,7 @@ describe('set-key commands', function () {
 
     const response = await support.client.send(new DeleteSetKeyElementCommand({ key: 'test', element: 'v2' }));
 
-    expect(response).to.deep.equal({ key: 'test', element: 'v2', deleted: true });
+    expect(response).toEqual({ key: 'test', element: 'v2', deleted: true });
   });
 
   it('should scan set key', async () => {
@@ -47,8 +47,8 @@ describe('set-key commands', function () {
 
     const response = await support.client.send(new ScanSetKeyCommand({ key: 'test' }));
 
-    expect(response.key).to.equal('test');
-    expect(response.cursor).to.be.a('number');
-    expect(response.elements).to.deep.equalInAnyOrder(['v1', 'v2']);
+    expect(response.key).toBe('test');
+    expect(response.cursor).toBeTypeOf('number');
+    expect(response.elements).toEqualInAnyOrder(['v1', 'v2']);
   });
 });

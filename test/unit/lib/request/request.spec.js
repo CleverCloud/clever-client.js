@@ -1,30 +1,29 @@
 /**
  * @import { CcRequest, CcResponse } from '../../../../src/types/request.types.js'
- * @import { MockCtrl } from '../../../lib/mock-api/mock-ctrl.js'
+ * @import { NewScenario } from '@clevercloud/doublure'
  */
-import { expect } from 'chai';
-import * as hanbi from 'hanbi';
+import { doublureHooks } from '@clevercloud/doublure/testing';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CcClientError, CcRequestError } from '../../../../src/lib/error/cc-client-errors.js';
 import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../../src/lib/request/query-params.js';
 import { sendRequest as originalSendRequest } from '../../../../src/lib/request/request.js';
 import { expectPromiseThrows } from '../../../lib/expect-utils.js';
-import { mockTestHooks } from '../../../lib/mock-api/support/mock-test-hooks.js';
 
 describe('request', () => {
-  /** @type {MockCtrl} */
-  let apiMockCtrl;
+  /** @type {NewScenario} */
+  let newScenario;
 
-  const hooks = mockTestHooks();
+  const hooks = doublureHooks();
 
-  before(async () => {
-    apiMockCtrl = await hooks.before();
+  beforeAll(async () => {
+    newScenario = await hooks.before();
   });
   beforeEach(hooks.beforeEach);
   afterEach(() => {
-    hanbi.restore();
+    vi.restoreAllMocks();
   });
-  after(hooks.after);
+  afterAll(hooks.after);
 
   /**
    *
@@ -39,7 +38,7 @@ describe('request', () => {
       debug: false,
       method: 'GET',
       ...request,
-      url: request.url.startsWith('http') ? request.url : `${apiMockCtrl.mockClient.baseUrl}${request.url}`,
+      url: request.url.startsWith('http') ? request.url : `${newScenario.mockClient.baseUrl}${request.url}`,
     });
   }
 
@@ -47,8 +46,7 @@ describe('request', () => {
     it('should successfully make a GET request', async () => {
       const responseBody = { data: 'test response' };
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/api/test' })
         .respond({ status: 200, body: responseBody })
         .thenCall(() =>
@@ -59,11 +57,11 @@ describe('request', () => {
           }),
         )
         .verify((calls) => {
-          expect(calls.count).to.equal(1);
-          expect(calls.first.method).to.equal('GET');
-          expect(calls.first.path).to.equal('/api/test');
-          expect(calls.first.headers.accept).to.equal('application/json');
-          expect(calls.first.response).to.deep.equal({ status: 200, body: responseBody });
+          expect(calls.count).toBe(1);
+          expect(calls.first.method).toBe('GET');
+          expect(calls.first.path).toBe('/api/test');
+          expect(calls.first.headers.accept).toBe('application/json');
+          expect(calls.first.response).toEqual({ status: 200, body: responseBody });
         });
     });
 
@@ -73,8 +71,7 @@ describe('request', () => {
         .append('param2', 'value2')
         .append('param2', 'value3');
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/api/test' })
         .respond({ status: 200 })
         .thenCall(() =>
@@ -85,15 +82,14 @@ describe('request', () => {
           }),
         )
         .verify((calls) => {
-          expect(calls.count).to.equal(1);
-          expect(calls.first.queryParams.param1).to.equal('value1');
-          expect(calls.first.queryParams.param2).to.deep.equal(['value2', 'value3']);
+          expect(calls.count).toBe(1);
+          expect(calls.first.queryParams.param1).toBe('value1');
+          expect(calls.first.queryParams.param2).toEqual(['value2', 'value3']);
         });
     });
 
     it('should make a GET request with headers', async () => {
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/api/test' })
         .respond({ status: 200 })
         .thenCall(() =>
@@ -104,8 +100,8 @@ describe('request', () => {
           }),
         )
         .verify((calls) => {
-          expect(calls.count).to.equal(1);
-          expect(calls.first.headers['x-custom']).to.equal('x-value');
+          expect(calls.count).toBe(1);
+          expect(calls.first.headers['x-custom']).toBe('x-value');
         });
     });
 
@@ -113,8 +109,7 @@ describe('request', () => {
       const requestBody = { request: 'body' };
       const responseBody = { response: 'body' };
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'POST', path: '/api/test' })
         .respond({ status: 201, body: responseBody })
         .thenCall(() =>
@@ -126,14 +121,14 @@ describe('request', () => {
           }),
         )
         .verify((calls) => {
-          expect(calls.count).to.equal(1);
-          expect(calls.first.method).to.equal('POST');
-          expect(calls.first.path).to.equal('/api/test');
-          expect(calls.first.body).to.deep.equal(requestBody);
-          expect(calls.first.path).to.equal('/api/test');
-          expect(calls.first.headers.accept).to.equal('application/json');
-          expect(calls.first.headers['content-type']).to.equal('application/json');
-          expect(calls.first.response).to.deep.equal({ status: 201, body: responseBody });
+          expect(calls.count).toBe(1);
+          expect(calls.first.method).toBe('POST');
+          expect(calls.first.path).toBe('/api/test');
+          expect(calls.first.body).toEqual(requestBody);
+          expect(calls.first.path).toBe('/api/test');
+          expect(calls.first.headers.accept).toBe('application/json');
+          expect(calls.first.headers['content-type']).toBe('application/json');
+          expect(calls.first.response).toEqual({ status: 201, body: responseBody });
         });
     });
 
@@ -141,8 +136,7 @@ describe('request', () => {
       const requestBody = 'request body';
       const responseBody = { response: 'body' };
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'POST', path: '/api/test' })
         .respond({ status: 201, body: responseBody })
         .thenCall(() =>
@@ -154,12 +148,12 @@ describe('request', () => {
           }),
         )
         .verify((calls) => {
-          expect(calls.count).to.equal(1);
-          expect(calls.first.method).to.equal('POST');
-          expect(calls.first.path).to.equal('/api/test');
-          expect(calls.first.body).to.deep.equal(requestBody);
-          expect(calls.first.headers['content-type']).to.equal('text/plain');
-          expect(calls.first.response).to.deep.equal({ status: 201, body: responseBody });
+          expect(calls.count).toBe(1);
+          expect(calls.first.method).toBe('POST');
+          expect(calls.first.path).toBe('/api/test');
+          expect(calls.first.body).toEqual(requestBody);
+          expect(calls.first.headers['content-type']).toBe('text/plain');
+          expect(calls.first.response).toEqual({ status: 201, body: responseBody });
         });
     });
 
@@ -167,8 +161,7 @@ describe('request', () => {
       const requestBody = { request: 'body' };
       const responseBody = { response: 'body' };
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'PUT', path: '/api/test' })
         .respond({ status: 200, body: responseBody })
         .thenCall(() =>
@@ -180,13 +173,13 @@ describe('request', () => {
           }),
         )
         .verify((calls) => {
-          expect(calls.count).to.equal(1);
-          expect(calls.first.method).to.equal('PUT');
-          expect(calls.first.path).to.equal('/api/test');
-          expect(calls.first.body).to.deep.equal(requestBody);
-          expect(calls.first.headers.accept).to.equal('application/json');
-          expect(calls.first.headers['content-type']).to.equal('application/json');
-          expect(calls.first.response).to.deep.equal({ status: 200, body: responseBody });
+          expect(calls.count).toBe(1);
+          expect(calls.first.method).toBe('PUT');
+          expect(calls.first.path).toBe('/api/test');
+          expect(calls.first.body).toEqual(requestBody);
+          expect(calls.first.headers.accept).toBe('application/json');
+          expect(calls.first.headers['content-type']).toBe('application/json');
+          expect(calls.first.response).toEqual({ status: 200, body: responseBody });
         });
     });
 
@@ -194,8 +187,7 @@ describe('request', () => {
       const requestBody = { request: 'body' };
       const responseBody = { response: 'body' };
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'PATCH', path: '/api/test' })
         .respond({ status: 200, body: responseBody })
         .thenCall(() =>
@@ -207,19 +199,18 @@ describe('request', () => {
           }),
         )
         .verify((calls) => {
-          expect(calls.count).to.equal(1);
-          expect(calls.first.method).to.equal('PATCH');
-          expect(calls.first.path).to.equal('/api/test');
-          expect(calls.first.body).to.deep.equal(requestBody);
-          expect(calls.first.headers.accept).to.equal('application/json');
-          expect(calls.first.headers['content-type']).to.equal('application/json');
-          expect(calls.first.response).to.deep.equal({ status: 200, body: responseBody });
+          expect(calls.count).toBe(1);
+          expect(calls.first.method).toBe('PATCH');
+          expect(calls.first.path).toBe('/api/test');
+          expect(calls.first.body).toEqual(requestBody);
+          expect(calls.first.headers.accept).toBe('application/json');
+          expect(calls.first.headers['content-type']).toBe('application/json');
+          expect(calls.first.response).toEqual({ status: 200, body: responseBody });
         });
     });
 
     it('should successfully make a DELETE request', async () => {
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'DELETE', path: '/api/test' })
         .respond({ status: 204 })
         .thenCall(() =>
@@ -229,16 +220,15 @@ describe('request', () => {
           }),
         )
         .verify((calls) => {
-          expect(calls.count).to.equal(1);
-          expect(calls.first.method).to.equal('DELETE');
-          expect(calls.first.path).to.equal('/api/test');
-          expect(calls.first.response).to.deep.equal({ status: 204 });
+          expect(calls.count).toBe(1);
+          expect(calls.first.method).toBe('DELETE');
+          expect(calls.first.path).toBe('/api/test');
+          expect(calls.first.response).toEqual({ status: 204 });
         });
     });
 
     it('should successfully make a HEAD request', async () => {
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'HEAD', path: '/api/test' })
         .respond({ status: 200 })
         .thenCall(() =>
@@ -248,18 +238,17 @@ describe('request', () => {
           }),
         )
         .verify((calls) => {
-          expect(calls.count).to.equal(1);
-          expect(calls.first.method).to.equal('HEAD');
-          expect(calls.first.path).to.equal('/api/test');
-          expect(calls.first.response).to.deep.equal({ status: 200 });
+          expect(calls.count).toBe(1);
+          expect(calls.first.method).toBe('HEAD');
+          expect(calls.first.path).toBe('/api/test');
+          expect(calls.first.response).toEqual({ status: 200 });
         });
     });
 
     it('should handle JSON response', async () => {
       const responseBody = { response: 'body' };
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/api/json' })
         .respond({ status: 200, body: responseBody })
         .thenCall(() =>
@@ -270,16 +259,15 @@ describe('request', () => {
           }),
         )
         .verify((calls) => {
-          expect(calls.count).to.equal(1);
-          expect(calls.first.response).to.deep.equal({ status: 200, body: responseBody });
+          expect(calls.count).toBe(1);
+          expect(calls.first.response).toEqual({ status: 200, body: responseBody });
         });
     });
 
     it('should handle plain text response', async () => {
       const responseBody = 'response body';
 
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/api/json' })
         .respond({ status: 200, body: responseBody })
         .thenCall(() =>
@@ -290,14 +278,13 @@ describe('request', () => {
           }),
         )
         .verify((calls) => {
-          expect(calls.count).to.equal(1);
-          expect(calls.first.response).to.deep.equal({ status: 200, body: responseBody });
+          expect(calls.count).toBe(1);
+          expect(calls.first.response).toEqual({ status: 200, body: responseBody });
         });
     });
 
     it('should handle network errors', async () => {
-      const stub = hanbi.stubMethod(globalThis, 'fetch');
-      stub.callsFake(() => {
+      vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
         throw new TypeError('Failed to fetch');
       });
 
@@ -307,9 +294,9 @@ describe('request', () => {
           url: 'https://example.com/api/error',
         }),
         (error) => {
-          expect(error).to.be.instanceOf(CcRequestError);
-          expect(error.code).to.equal('NETWORK_ERROR');
-          expect(error.message).to.include('A network error occurred');
+          expect(error).toBeInstanceOf(CcRequestError);
+          expect(error.code).toBe('NETWORK_ERROR');
+          expect(error.message).toContain('A network error occurred');
         },
       );
     });
@@ -321,16 +308,15 @@ describe('request', () => {
           url: 'http://:\\invalid-url',
         }),
         (error) => {
-          expect(error).to.be.instanceOf(CcRequestError);
-          expect(error.code).to.equal('INVALID_URL');
-          expect(error.message).to.include('Invalid URL');
+          expect(error).toBeInstanceOf(CcRequestError);
+          expect(error.code).toBe('INVALID_URL');
+          expect(error.message).toContain('Invalid URL');
         },
       );
     });
 
     it('should handle unexpected errors', async () => {
-      const stub = hanbi.stubMethod(globalThis, 'fetch');
-      stub.callsFake(() => {
+      vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
         throw new TypeError('Unexpected Test error');
       });
 
@@ -341,16 +327,16 @@ describe('request', () => {
           headers: new HeadersBuilder().build(),
         }),
         (error) => {
-          expect(error).to.be.instanceOf(CcRequestError);
-          expect(error.code).to.equal('UNEXPECTED_ERROR');
-          expect(error.message).to.include('An unexpected error occurred');
+          expect(error).toBeInstanceOf(CcRequestError);
+          expect(error.code).toBe('UNEXPECTED_ERROR');
+          expect(error.message).toContain('An unexpected error occurred');
         },
       );
     });
 
     it('should set CORS mode when specified', async () => {
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 201 });
-      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 201 });
+      const spy = vi.spyOn(globalThis, 'fetch');
 
       await sendRequest({
         method: 'GET',
@@ -358,14 +344,14 @@ describe('request', () => {
         cors: true,
       });
 
-      expect(spy.lastCall.args[1].mode).to.equal('cors');
+      expect(spy.mock.lastCall[1].mode).toBe('cors');
     });
   });
 
   describe('cache', () => {
     it('should use cached response', async () => {
       const responseBody = { data: 'test response' };
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
       await sendRequest({
         method: 'GET',
         url: `/api/test`,
@@ -373,7 +359,7 @@ describe('request', () => {
         cache: { ttl: 1000 },
       });
 
-      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+      const spy = vi.spyOn(globalThis, 'fetch');
 
       const response = await sendRequest({
         method: 'GET',
@@ -382,13 +368,12 @@ describe('request', () => {
         cache: { ttl: 1000 },
       });
 
-      expect(spy.callCount).to.equal(0);
-      expect(response.body).to.deep.equal(responseBody);
+      expect(spy).toHaveBeenCalledTimes(0);
+      expect(response.body).toEqual(responseBody);
     });
 
     it('should not use cached response', async () => {
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/api/test' })
         .respond({ status: 200, body: { data: 'test response' } });
       await sendRequest({
@@ -398,7 +383,7 @@ describe('request', () => {
         cache: { ttl: 1000 },
       });
 
-      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+      const spy = vi.spyOn(globalThis, 'fetch');
 
       await sendRequest({
         method: 'GET',
@@ -407,12 +392,11 @@ describe('request', () => {
         cache: null,
       });
 
-      expect(spy.callCount).to.equal(1);
+      expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should reload cached response', async () => {
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/api/test' })
         .respond({ status: 200, body: { data: 'test response' } });
       await sendRequest({
@@ -423,11 +407,8 @@ describe('request', () => {
       });
 
       const newResponseBody = { data: 'fresh new test response' };
-      await apiMockCtrl
-        .mock()
-        .when({ method: 'GET', path: '/api/test' })
-        .respond({ status: 200, body: newResponseBody });
-      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: newResponseBody });
+      const spy = vi.spyOn(globalThis, 'fetch');
 
       const response = await sendRequest({
         method: 'GET',
@@ -436,25 +417,25 @@ describe('request', () => {
         cache: { mode: 'reload', ttl: 1000 },
       });
 
-      expect(spy.callCount).to.equal(1);
-      expect(response.body).to.deep.equal(newResponseBody);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(response.body).toEqual(newResponseBody);
 
-      spy.reset();
+      spy.mockClear();
       const response2 = await sendRequest({
         method: 'GET',
         url: `/api/test`,
         headers: new HeadersBuilder().acceptJson().build(),
         cache: { ttl: 1000 },
       });
-      expect(spy.callCount).to.equal(0);
-      expect(response2.body).to.deep.equal(newResponseBody);
+      expect(spy).toHaveBeenCalledTimes(0);
+      expect(response2.body).toEqual(newResponseBody);
     });
 
     it('should NOT share cache between different query params', async () => {
       const responseBody = { data: 'response' };
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
 
-      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+      const spy = vi.spyOn(globalThis, 'fetch');
 
       const result1 = await sendRequest({
         method: 'GET',
@@ -473,14 +454,14 @@ describe('request', () => {
       });
 
       // Each unique query param set should hit the network independently
-      expect(spy.callCount).to.equal(2);
-      expect(result1.body).to.deep.equal(responseBody);
-      expect(result2.body).to.deep.equal(responseBody);
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(result1.body).toEqual(responseBody);
+      expect(result2.body).toEqual(responseBody);
     });
 
     it('should share cache for same query params', async () => {
       const responseBody = { data: 'cached' };
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
 
       await sendRequest({
         method: 'GET',
@@ -490,7 +471,7 @@ describe('request', () => {
         cache: { ttl: 1000 },
       });
 
-      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+      const spy = vi.spyOn(globalThis, 'fetch');
 
       const response = await sendRequest({
         method: 'GET',
@@ -500,69 +481,68 @@ describe('request', () => {
         cache: { ttl: 1000 },
       });
 
-      expect(spy.callCount).to.equal(0);
-      expect(response.body).to.deep.equal(responseBody);
+      expect(spy).toHaveBeenCalledTimes(0);
+      expect(response.body).toEqual(responseBody);
     });
   });
 
   describe('dedupe', () => {
     it('concurrent same request should make only 1 fetch call', async () => {
       const responseBody = { data: 'test response' };
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
 
-      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+      const spy = vi.spyOn(globalThis, 'fetch');
 
       const [result1, result2] = await Promise.all([
         sendRequest({ url: '/api/test' }),
         sendRequest({ url: '/api/test' }),
       ]);
 
-      expect(spy.callCount).to.equal(1);
-      expect(result1.body).to.deep.equal(responseBody);
-      expect(result2.body).to.deep.equal(responseBody);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(result1.body).toEqual(responseBody);
+      expect(result2.body).toEqual(responseBody);
     });
 
     it('concurrent different requests should make 2 fetch calls', async () => {
       const response1Body = { data: 'response 1' };
       const response2Body = { data: 'response 2' };
-      await apiMockCtrl
-        .mock()
+      await newScenario()
         .when({ method: 'GET', path: '/api/test1' })
         .respond({ status: 200, body: response1Body })
         .when({ method: 'GET', path: '/api/test2' })
         .respond({ status: 200, body: response2Body });
 
-      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+      const spy = vi.spyOn(globalThis, 'fetch');
 
       const [result1, result2] = await Promise.all([
         sendRequest({ url: '/api/test1' }),
         sendRequest({ url: '/api/test2' }),
       ]);
 
-      expect(spy.callCount).to.equal(2);
-      expect(result1.body).to.deep.equal(response1Body);
-      expect(result2.body).to.deep.equal(response2Body);
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(result1.body).toEqual(response1Body);
+      expect(result2.body).toEqual(response2Body);
     });
 
     it('sequential same request should make 2 fetch calls (dedupe only applies while pending)', async () => {
       const responseBody = { data: 'test response' };
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
 
-      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+      const spy = vi.spyOn(globalThis, 'fetch');
 
       const result1 = await sendRequest({ url: '/api/test' });
       const result2 = await sendRequest({ url: '/api/test' });
 
-      expect(spy.callCount).to.equal(2);
-      expect(result1.body).to.deep.equal(responseBody);
-      expect(result2.body).to.deep.equal(responseBody);
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(result1.body).toEqual(responseBody);
+      expect(result2.body).toEqual(responseBody);
     });
 
     it('concurrent requests with different query params should make separate fetch calls', async () => {
       const responseBody = { data: 'response' };
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
 
-      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+      const spy = vi.spyOn(globalThis, 'fetch');
 
       const [result1, result2] = await Promise.all([
         sendRequest({ url: '/api/test', queryParams: new QueryParams().set('page', 'a') }),
@@ -570,33 +550,31 @@ describe('request', () => {
       ]);
 
       // Different query params should NOT be deduplicated together
-      expect(spy.callCount).to.equal(2);
-      expect(result1.body).to.deep.equal(responseBody);
-      expect(result2.body).to.deep.equal(responseBody);
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(result1.body).toEqual(responseBody);
+      expect(result2.body).toEqual(responseBody);
     });
 
     it('concurrent requests with same query params should be deduplicated to a single fetch', async () => {
       const responseBody = { data: 'deduped' };
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody });
 
-      const spy = hanbi.spyMethod(globalThis, 'fetch').passThrough();
+      const spy = vi.spyOn(globalThis, 'fetch');
 
       const [result1, result2] = await Promise.all([
         sendRequest({ url: '/api/test', queryParams: new QueryParams().set('page', '1') }),
         sendRequest({ url: '/api/test', queryParams: new QueryParams().set('page', '1') }),
       ]);
 
-      expect(spy.callCount).to.equal(1);
-      expect(result1.body).to.deep.equal(responseBody);
-      expect(result2.body).to.deep.equal(responseBody);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(result1.body).toEqual(responseBody);
+      expect(result2.body).toEqual(responseBody);
     });
   });
 
   describe('timeout', () => {
-    it('should timeout', async function () {
-      this.timeout(50);
-
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 20);
+    it('should timeout', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 20);
 
       await expectPromiseThrows(
         sendRequest({
@@ -605,23 +583,21 @@ describe('request', () => {
           timeout: 10,
         }),
         (error) => {
-          expect(error).to.be.instanceOf(CcClientError);
-          expect(error.code).to.equal('TIMEOUT_EXCEEDED');
-          expect(error.message).to.include(`Timeout of 10 ms exceeded`);
+          expect(error).toBeInstanceOf(CcClientError);
+          expect(error.code).toBe('TIMEOUT_EXCEEDED');
+          expect(error.message).toContain(`Timeout of 10 ms exceeded`);
         },
       );
-    });
+    }, 50);
 
-    it('should not timeout', async function () {
-      this.timeout(50);
-
-      await apiMockCtrl.mock().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 20);
+    it('should not timeout', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 20);
 
       await sendRequest({
         method: 'GET',
         url: `/api/test`,
         timeout: 50,
       });
-    });
+    }, 50);
   });
 });
