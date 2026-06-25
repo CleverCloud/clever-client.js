@@ -95,6 +95,23 @@ export async function waitForNetworkGroupPeerDeletion(composer, ownerId, network
 }
 
 /**
+ * Returns a copy of the given member with its `kind` normalized to uppercase.
+ *
+ * The Clever Cloud API may return the member `kind` in lower or mixed case; this
+ * guarantees it is always one of `'APPLICATION' | 'ADDON' | 'EXTERNAL'`.
+ *
+ * @template {{ kind: string }} T
+ * @param {T} member
+ * @returns {T & { kind: NetworkGroupMember['kind'] }}
+ */
+export function normalizeMemberKind(member) {
+  return {
+    ...member,
+    kind: /** @type {NetworkGroupMember['kind']} */ (member.kind.toUpperCase()),
+  };
+}
+
+/**
  *
  * @param {string} ngId The Network Group ID
  * @param {string} memberId The member ID

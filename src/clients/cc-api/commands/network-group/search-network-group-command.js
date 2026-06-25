@@ -6,6 +6,7 @@ import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { normalizeMemberKind } from './network-group-utils.js';
 
 /**
  *
@@ -25,11 +26,17 @@ export class SearchNetworkGroupCommand extends CcApiSimpleCommand {
 
   /** @type {CcApiSimpleCommand<SearchNetworkGroupCommandInput, SearchNetworkGroupCommandOutput>['transformCommandOutput']} */
   transformCommandOutput(response) {
+    const normalized = response.map(
+      /** @param {NetworkGroupComponent} item */ (item) => (item.type === 'Member' ? normalizeMemberKind(item) : item),
+    );
+
     if (this.params.types == null || this.params.types.length === 0) {
-      return response;
+      return normalized;
     }
 
-    return response.filter(/** @param {NetworkGroupComponent} item */ (item) => this.params.types.includes(item.type));
+    return normalized.filter(
+      /** @param {NetworkGroupComponent} item */ (item) => this.params.types.includes(item.type),
+    );
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
