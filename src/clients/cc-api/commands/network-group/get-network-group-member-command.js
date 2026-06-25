@@ -4,6 +4,7 @@
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { normalizeMemberKind } from './network-group-utils.js';
 
 /**
  *
@@ -18,6 +19,11 @@ export class GetNetworkGroupMemberCommand extends CcApiSimpleCommand {
     return get(
       safeUrl`/v4/networkgroups/organisations/${params.ownerId}/networkgroups/${params.networkGroupId}/members/${params.memberId}`,
     );
+  }
+
+  /** @type {CcApiSimpleCommand<GetNetworkGroupMemberCommandInput, GetNetworkGroupMemberCommandOutput>['transformCommandOutput']} */
+  transformCommandOutput(response) {
+    return normalizeMemberKind(response);
   }
 
   /** @type {CcApiSimpleCommand<?, ?>['getEmptyResponsePolicy']} */
