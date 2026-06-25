@@ -1,5 +1,12 @@
 # Clever Client changelog
 
+## [12.5.1](https://github.com/CleverCloud/clever-client.js/compare/12.5.0...12.5.1) (2026-06-25)
+
+
+### 🐛 Bug Fixes
+
+* **network-group:** normalize `member.kind` field ([734c2d0](https://github.com/CleverCloud/clever-client.js/commit/734c2d0e5b798dbd180d732bbf55f635c0d205db))
+
 ## [12.5.0](https://github.com/CleverCloud/clever-client.js/compare/12.4.0...12.5.0) (2026-06-02)
 
 
