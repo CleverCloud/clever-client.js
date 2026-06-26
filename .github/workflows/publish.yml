@@ -14,9 +14,29 @@ env:
   NODE_OPTIONS: '--max-old-space-size=16384'
 
 jobs:
+  get-playwright-version:
+    name: 'Get Playwright version'
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.pw.outputs.version }}
+    steps:
+      - name: '[Prepare] Checkout'
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref_name }}
+      - name: '[Prepare] Setup'
+        uses: ./.github/actions/ci-setup
+      - name: '[Prepare] Derive Playwright version'
+        id: pw
+        uses: ./.github/actions/get-playwright-version
+
   publish:
     name: 'Publish'
+    needs: get-playwright-version
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.get-playwright-version.outputs.version }}-noble
+      options: --user 1001
     steps:
       - name: '[Prepare] Decode version from tag'
         id: version_regex
