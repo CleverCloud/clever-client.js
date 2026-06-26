@@ -1,0 +1,25 @@
+name: Get Playwright version
+description: 'Derive the installed Playwright version so the Playwright Docker image tag stays in sync (run after dependencies are installed)'
+
+outputs:
+  version:
+    description: 'Resolved Playwright version, e.g. 1.60.0'
+    value: ${{ steps.derive.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    # The Playwright Docker image tag must match the installed Playwright
+    # version, otherwise Playwright throws a version-mismatch error. We derive
+    # it from the installed dependency so it stays in sync automatically and the
+    # container jobs reference it through `needs`.
+    - name: Derive Playwright version
+      id: derive
+      shell: bash
+      run: |
+        PLAYWRIGHT_VERSION="$(pnpm why playwright --depth 0 --json | jq -r '.[0].version')"
+        if ! [[ "$PLAYWRIGHT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "::error::Unexpected Playwright version: '$PLAYWRIGHT_VERSION'"
+          exit 1
+        fi
+        echo "version=$PLAYWRIGHT_VERSION" >> "$GITHUB_OUTPUT"

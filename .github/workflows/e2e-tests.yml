@@ -12,10 +12,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  get-playwright-version:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')
+    outputs:
+      version: ${{ steps.pw.outputs.version }}
+    steps:
+      - name: '[Prepare] Checkout'
+        uses: actions/checkout@v5
+      - name: '[Prepare] Setup'
+        uses: ./.github/actions/ci-setup
+      - name: '[Prepare] Derive Playwright version'
+        id: pw
+        uses: ./.github/actions/get-playwright-version
+
   test:
+    needs: get-playwright-version
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      image: mcr.microsoft.com/playwright:v${{ needs.get-playwright-version.outputs.version }}-noble
       options: --user 1001
     if: contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')
 
