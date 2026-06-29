@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   DomainParseError,
+  domainToUrl,
   getDomainUrl,
   getHostWithWildcard,
   isTestDomain,
@@ -116,6 +117,29 @@ describe('domains', () => {
     it('should include www for wildcard domains', () => {
       const wildcardUrl = getDomainUrl('example.com', '/path', true, false);
       expect(wildcardUrl).toBe('https://www.example.com/path');
+    });
+  });
+
+  describe('domainToUrl()', () => {
+    it('should build an HTTPS URL from a simple domain with path', () => {
+      const url = domainToUrl('example.com/path');
+      expect(url).toBe('https://example.com/path');
+    });
+
+    it('should build a www HTTPS URL from a wildcard domain', () => {
+      const url = domainToUrl('*.example.com');
+      expect(url).toBe('https://www.example.com/');
+    });
+
+    it('should derive an HTTP URL for a test subdomain', () => {
+      const url = domainToUrl('sub.app.cleverapps.io');
+      expect(url).toBe('http://sub.app.cleverapps.io/');
+    });
+
+    it('should throw DomainParseError for an invalid domain', () => {
+      const domainToUrlCallback = () => domainToUrl('');
+      expect(domainToUrlCallback).toThrow(DomainParseError);
+      expect(domainToUrlCallback).toThrow(expect.objectContaining({ code: 'empty' }));
     });
   });
 

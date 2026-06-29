@@ -73,6 +73,21 @@ export function getDomainUrl(hostname, pathPrefix, isWildcard, isHttpOnly) {
 }
 
 /**
+ * Parses a `domainWithPath` and builds its browsable URL in one step.
+ *
+ * The scheme is derived from the domain: test subdomains (e.g. `sub.app.cleverapps.io`)
+ * are HTTP only, everything else uses HTTPS.
+ *
+ * @param {string} domainWithPath
+ * @returns {string}
+ */
+export function domainToUrl(domainWithPath) {
+  const { hostname, pathname, isWildcard } = parseDomain(domainWithPath);
+  const isHttpOnly = isTestDomainWithSubdomain(hostname);
+  return getDomainUrl(hostname, pathname, isWildcard, isHttpOnly);
+}
+
+/**
  * @param {string} hostname
  * @return {boolean}
  */
