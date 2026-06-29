@@ -1,5 +1,17 @@
 # Clever Client changelog
 
+## [12.6.0](https://github.com/CleverCloud/clever-client.js/compare/12.5.1...12.6.0) (2026-06-29)
+
+
+### 🚀 Features
+
+* **domains:** add domainToUrl helper ([f98df3a](https://github.com/CleverCloud/clever-client.js/commit/f98df3a94cacd9bd37245154a108f566e0a70dc7))
+
+
+### 🐛 Bug Fixes
+
+* **domains:** require label boundary in isTestDomain ([27f330d](https://github.com/CleverCloud/clever-client.js/commit/27f330d9d81108ef8c4a0053e9ee18a0cb3cd7f5))
+
 ## [12.5.1](https://github.com/CleverCloud/clever-client.js/compare/12.5.0...12.5.1) (2026-06-25)
 
 
