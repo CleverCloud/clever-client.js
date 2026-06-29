@@ -129,6 +129,11 @@ describe('domains', () => {
       const isTestDomainResult = isTestDomain('example.com');
       expect(isTestDomainResult).toBe(false);
     });
+
+    it('should return false for domain ending with cleverapps.io without a label boundary', () => {
+      const isTestDomainResult = isTestDomain('mycleverapps.io');
+      expect(isTestDomainResult).toBe(false);
+    });
   });
 
   describe('isTestDomainWithSubdomain()', () => {
