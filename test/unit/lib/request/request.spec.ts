@@ -476,6 +476,110 @@ describe('request', () => {
       expect(spy).toHaveBeenCalledTimes(0);
       expect(response.body).toEqual(responseBody);
     });
+
+    it('should NOT cache a 5xx response', async () => {
+      await newScenario()
+        .when({ method: 'GET', path: '/api/test-5xx' })
+        .respond({ status: 503, body: { message: 'transient error' } });
+      await sendRequest({
+        method: 'GET',
+        url: `/api/test-5xx`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        cache: { ttl: 1000 },
+      });
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+
+      const response = await sendRequest({
+        method: 'GET',
+        url: `/api/test-5xx`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        cache: { ttl: 1000 },
+      });
+
+      // a 5xx must be retried, never replayed from cache
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(response.status).toBe(503);
+    });
+
+    it('should still cache a 4xx response', async () => {
+      const responseBody = { message: 'not found' };
+      await newScenario().when({ method: 'GET', path: '/api/test-4xx' }).respond({ status: 404, body: responseBody });
+      await sendRequest({
+        method: 'GET',
+        url: `/api/test-4xx`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        cache: { ttl: 1000 },
+      });
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+
+      const response = await sendRequest({
+        method: 'GET',
+        url: `/api/test-4xx`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        cache: { ttl: 1000 },
+      });
+
+      expect(spy).toHaveBeenCalledTimes(0);
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual(responseBody);
+    });
+
+    it('a retried entry after a 5xx is cached and expires on its own schedule', async () => {
+      const ttl = 500;
+      const responseBody = { data: 'ok' };
+
+      // first call gets the 503, every subsequent one gets the 200 (last response repeats
+      // once the array is exhausted)
+      await newScenario()
+        .when({ method: 'GET', path: '/api/test-retry-after-5xx' })
+        .respond([
+          { status: 503, body: { message: 'transient error' } },
+          { status: 200, body: responseBody },
+        ]);
+
+      const failed = await sendRequest({
+        method: 'GET',
+        url: `/api/test-retry-after-5xx`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        cache: { ttl },
+      });
+      expect(failed.status).toBe(503);
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+
+      const retried = await sendRequest({
+        method: 'GET',
+        url: `/api/test-retry-after-5xx`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        cache: { ttl },
+      });
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(retried.status).toBe(200);
+
+      // still within ttl: served from cache, unaffected by the earlier 503
+      const cached = await sendRequest({
+        method: 'GET',
+        url: `/api/test-retry-after-5xx`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        cache: { ttl },
+      });
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(cached.body).toEqual(responseBody);
+
+      // past its own ttl: expires and refetches normally
+      await new Promise((resolve) => setTimeout(resolve, ttl + 150));
+
+      const fresh = await sendRequest({
+        method: 'GET',
+        url: `/api/test-retry-after-5xx`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        cache: { ttl },
+      });
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(fresh.status).toBe(200);
+    });
   });
 
   describe('dedupe', () => {
