@@ -580,6 +580,41 @@ describe('request', () => {
       expect(spy).toHaveBeenCalledTimes(2);
       expect(fresh.status).toBe(200);
     });
+
+    it('should NOT cache a network-level rejection: the next call retries', async () => {
+      const responseBody = { data: 'ok' };
+      await newScenario()
+        .when({ method: 'GET', path: '/api/test-network-error' })
+        .respond({ status: 200, body: responseBody });
+
+      vi.spyOn(globalThis, 'fetch').mockImplementationOnce(() => {
+        throw new TypeError('Failed to fetch');
+      });
+
+      await expectPromiseThrows(
+        sendRequest({
+          method: 'GET',
+          url: `/api/test-network-error`,
+          headers: new HeadersBuilder().acceptJson().build(),
+          cache: { ttl: 1000 },
+        }),
+        (error: CcRequestError) => {
+          expect(error).toBeInstanceOf(CcRequestError);
+          expect(error.code).toBe('NETWORK_ERROR');
+        },
+      );
+
+      // the rejected request must not have been cached: this call hits the network again
+      const response = await sendRequest({
+        method: 'GET',
+        url: `/api/test-network-error`,
+        headers: new HeadersBuilder().acceptJson().build(),
+        cache: { ttl: 1000 },
+      });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(responseBody);
+    });
   });
 
   describe('dedupe', () => {
