@@ -32,12 +32,19 @@ export function withCache<T>(
     return cache.get(cacheKey);
   }
 
-  const promise = createPromise();
+  // never cache a rejection: drop it immediately so the next call retries
+  const promise = createPromise().catch((error) => {
+    cache.delete(cacheKey);
+    throw error;
+  });
 
   if (cacheParams.method === 'get' && cacheDelay !== NO_CACHE) {
     cache.set(cacheKey, promise);
     setTimeout(() => {
-      cache.delete(cacheKey);
+      // identity guard: don't evict a newer entry that replaced this one after a retry
+      if (cache.get(cacheKey) === promise) {
+        cache.delete(cacheKey);
+      }
     }, cacheDelay);
   }
 
