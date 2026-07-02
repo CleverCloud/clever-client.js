@@ -1,0 +1,415 @@
+import { CcApiClient } from '../../../../src/clients/cc-api/cc-api-client.js';
+import type { Addon } from '../../../../src/clients/cc-api/commands/addon/addon.types.js';
+import { CreateAddonCommand } from '../../../../src/clients/cc-api/commands/addon/create-addon-command.js';
+import type { CreateAddonCommandInput } from '../../../../src/clients/cc-api/commands/addon/create-addon-command.types.js';
+import { DeleteAddonCommand } from '../../../../src/clients/cc-api/commands/addon/delete-addon-command.js';
+import { GetAddonCommand } from '../../../../src/clients/cc-api/commands/addon/get-addon-command.js';
+import { CreateApplicationCommand } from '../../../../src/clients/cc-api/commands/application/create-application-command.js';
+import { DeleteApplicationCommand } from '../../../../src/clients/cc-api/commands/application/delete-application-command.js';
+import { GetApplicationCommand } from '../../../../src/clients/cc-api/commands/application/get-application-command.js';
+import { DeleteLogDrainCommand } from '../../../../src/clients/cc-api/commands/log-drain/delete-log-drain-command.js';
+import { ListLogDrainCommand } from '../../../../src/clients/cc-api/commands/log-drain/list-log-drain-command.js';
+import { CreateNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/create-network-group-command.js';
+import { DeleteNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/delete-network-group-command.js';
+import { GetNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/get-network-group-command.js';
+import { CreateOauthConsumerCommand } from '../../../../src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.js';
+import { DeleteOauthConsumerCommand } from '../../../../src/clients/cc-api/commands/oauth-consumer/delete-oauth-consumer-command.js';
+import { GetOauthConsumerCommand } from '../../../../src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.js';
+import { CreateOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/create-organisation-command.js';
+import type { CreateOrganisationCommandInput } from '../../../../src/clients/cc-api/commands/organisation/create-organisation-command.types.js';
+import { DeleteOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/delete-organisation-command.js';
+import { GetOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/get-organisation-command.js';
+import type { Organisation } from '../../../../src/clients/cc-api/commands/organisation/organisation.types.js';
+import { GetProfileCommand } from '../../../../src/clients/cc-api/commands/profile/get-profile-command.js';
+import type { CcApiAuth } from '../../../../src/clients/cc-api/types/cc-api.types.js';
+import { merge } from '../../../../src/lib/utils.js';
+import { getE2eUser } from '../../../lib/e2e-test-users.js';
+import type { E2eUser, E2eUserName } from '../../../lib/e2e.types.js';
+
+type Auth = 'api-token' | 'oauth-v1';
+
+const IS_NODE = globalThis.process != null;
+
+const DEFAULT_USER: E2eUserName = 'test-user-with-github';
+const DEFAULT_AUTH: Auth = 'api-token';
+const USE_LOCAL_API_BRIDGE = false;
+
+// todo: get all that from env. (and inject them nicely for browser test)
+export const STATIC_MYSQL_ADDON_ID = 'addon_2066c7dd-5891-420a-ae3c-2334405c3bf1';
+export const STATIC_INVOICE_ID = 'F20250718-021327';
+export const STATIC_ORGANISATION_ID = 'orga_3659ccc6-1b06-4393-83d6-52dc3d72416d';
+export const STATIC_LOGS_APPLICATION = 'app_1f5472ee-d87f-495e-9a76-24028e3624eb';
+
+export function e2eSupport(config?: { user?: E2eUserName; auth?: Auth; debug?: boolean }) {
+  const conf = merge({ user: DEFAULT_USER, auth: DEFAULT_AUTH, debug: false }, config);
+  const e2eUser = getE2eUser(conf.user);
+  let client: CcApiClient;
+
+  let organisationId: string;
+  let userId: string;
+  let cleanupTasks: Array<{
+    type: 'application' | 'addon' | 'ng' | 'consumer' | 'organisation' | 'drain';
+    id: string;
+    applicationId?: string;
+  }> = [];
+
+  return {
+    isNode: IS_NODE,
+    getClient({ user, auth }: { user?: E2eUserName; auth?: Auth }): CcApiClient {
+      return createCcApiClient(getE2eUser(user ?? DEFAULT_USER), auth ?? DEFAULT_AUTH, conf.debug);
+    },
+    get client() {
+      if (client == null) {
+        client = createCcApiClient(e2eUser, conf.auth, conf.debug);
+      }
+      return client;
+    },
+    get email() {
+      return e2eUser.email;
+    },
+    get password() {
+      return e2eUser.password;
+    },
+    get newTemporaryPassword() {
+      return e2eUser.newTemporaryPassword;
+    },
+    get userId() {
+      if (userId == null) {
+        throw new Error('userId not set. Run prepare() first.');
+      }
+      return userId;
+    },
+    get organisationId() {
+      if (organisationId == null) {
+        throw new Error('organisationId not set. Run prepare() first.');
+      }
+      return organisationId;
+    },
+    async prepare() {
+      // const organisation = await client.send(
+      //   new CreateOrganisationCommand({
+      //     // todo: add test run id to make the link with the GitHub action
+      //     name: 'test organisation',
+      //     description: 'used for clever-client.js e2e tests',
+      //     address: 'test address',
+      //     city: 'Nantes',
+      //     zipcode: '44000',
+      //     customerFullName: 'Clever Cloud',
+      //     country: 'FR',
+      //   }),
+      // );
+      // organisationId = organisation.id;
+      // return organisationId;
+
+      // for now we use personal orga
+      const self = await this.client.send(new GetProfileCommand());
+      organisationId = self.id;
+      userId = self.id;
+    },
+    async cleanup() {
+      await Promise.allSettled([
+        this.deleteOrganisations(),
+        this.deleteApplications(),
+        this.deleteAddons(),
+        this.deleteConsumers(),
+        this.deleteAddonProviders(),
+        this.deleteNetworkGroups(),
+      ]);
+      // await client.send(new DeleteOrganisationCommand({ organisationId }));
+    },
+    async deleteOrganisations() {
+      const organisations = cleanupTasks.filter((task) => task.type === 'organisation');
+      await Promise.allSettled(
+        organisations.map((organisation) =>
+          this.client
+            .send(new GetOrganisationCommand({ organisationId: organisation.id }))
+            .then((a) => a && this.client.send(new DeleteOrganisationCommand({ organisationId: organisation.id }))),
+        ),
+      );
+      cleanupTasks = cleanupTasks.filter((task) => task.type !== 'organisation');
+    },
+    async deleteApplications() {
+      // const applications = await this.client.send(new ListApplicationCommand({ ownerId: organisationId }));
+
+      const applications = cleanupTasks.filter((task) => task.type === 'application');
+
+      await Promise.allSettled(
+        applications.map((application) =>
+          this.client
+            .send(
+              new GetApplicationCommand({
+                ownerId: organisationId,
+                applicationId: application.id,
+                withBranches: false,
+              }),
+            )
+            .then(async (application) => {
+              if (application != null) {
+                const drains = await this.client.send(
+                  new ListLogDrainCommand({ ownerId: organisationId, applicationId: application.id }),
+                );
+                if (drains.length > 0) {
+                  await Promise.allSettled(
+                    drains.map((drain) =>
+                      this.client.send(
+                        new DeleteLogDrainCommand({
+                          ownerId: organisationId,
+                          applicationId: application.id,
+                          drainId: drain.id,
+                        }),
+                      ),
+                    ),
+                  );
+                }
+
+                await this.client.send(
+                  new DeleteApplicationCommand({ ownerId: organisationId, applicationId: application.id }),
+                );
+              }
+            }),
+        ),
+      );
+      cleanupTasks = cleanupTasks.filter((task) => task.type !== 'application');
+    },
+    async deleteAddons() {
+      // const addons = await this.client.send(new ListAddonCommand({ ownerId: organisationId }));
+
+      const addons = cleanupTasks.filter((task) => task.type === 'addon');
+      await Promise.allSettled(
+        addons.map((addon) =>
+          this.client
+            .send(new GetAddonCommand({ ownerId: organisationId, addonId: addon.id }))
+            .then((a) => a && this.client.send(new DeleteAddonCommand({ ownerId: organisationId, addonId: addon.id }))),
+        ),
+      );
+      cleanupTasks = cleanupTasks.filter((task) => task.type !== 'addon');
+    },
+    async deleteNetworkGroups() {
+      // const networkGroups = await this.client.send(new ListNetworkGroupCommand({ ownerId: organisationId }));
+
+      const networkGroups = cleanupTasks.filter((task) => task.type === 'ng');
+      await Promise.allSettled(
+        networkGroups.map((ng) =>
+          this.client
+            .send(new GetNetworkGroupCommand({ ownerId: organisationId, networkGroupId: ng.id }))
+            .then(
+              (a) =>
+                a &&
+                this.client.send(new DeleteNetworkGroupCommand({ ownerId: organisationId, networkGroupId: ng.id })),
+            ),
+        ),
+      );
+      cleanupTasks = cleanupTasks.filter((task) => task.type !== 'ng');
+    },
+    async deleteConsumers() {
+      // const consumers = await this.client.send(new ListOauthConsumerCommand({ ownerId: organisationId }));
+
+      const consumers = cleanupTasks.filter((task) => task.type === 'consumer');
+      await Promise.allSettled(
+        consumers.map((consumer) =>
+          this.client
+            .send(
+              new GetOauthConsumerCommand({
+                ownerId: organisationId,
+                oauthConsumerKey: consumer.id,
+                withSecret: false,
+              }),
+            )
+            .then(
+              (a) =>
+                a &&
+                this.client.send(
+                  new DeleteOauthConsumerCommand({ ownerId: organisationId, oauthConsumerKey: consumer.id }),
+                ),
+            ),
+        ),
+      );
+      cleanupTasks = cleanupTasks.filter((task) => task.type !== 'consumer');
+    },
+    async deleteAddonProviders() {},
+    async createTestOrganisation(organisation?: CreateOrganisationCommandInput): Promise<Organisation> {
+      const createdOrganisation = await this.client.send(
+        new CreateOrganisationCommand(
+          organisation ?? {
+            name: 'name',
+            description: 'description',
+            address: 'address',
+            city: 'city',
+            zipcode: 'zipcode',
+            customerFullName: 'customerFullName',
+            country: 'FR',
+          },
+        ),
+      );
+      cleanupTasks.push({ type: 'organisation', id: createdOrganisation.id });
+      return createdOrganisation;
+    },
+    async createTestApplication(name = 'test-application', ownerId = organisationId) {
+      const application = await this.client.send(
+        new CreateApplicationCommand({
+          ownerId,
+          name,
+          zone: 'par',
+          minInstances: 1,
+          maxInstances: 1,
+          minFlavor: 'xs',
+          maxFlavor: 'xs',
+          buildFlavor: 's',
+          instance: { slug: 'node' },
+          deploy: 'git',
+          branch: 'master',
+          oauthApp: {
+            type: 'github',
+            id: '991317993',
+          },
+          environment: [
+            { name: 'ENV_VAR_1', value: 'value1' },
+            { name: 'ENV_VAR_2', value: 'value2' },
+          ],
+        }),
+      );
+
+      cleanupTasks.push({ type: 'application', id: application.id });
+
+      return application;
+    },
+    async createFtpApplication(name = 'test-application-ftp', ownerId = organisationId) {
+      const application = await this.client.send(
+        new CreateApplicationCommand({
+          ownerId,
+          name,
+          zone: 'par',
+          minInstances: 1,
+          maxInstances: 1,
+          minFlavor: 'xs',
+          maxFlavor: 'xs',
+          buildFlavor: 's',
+          instance: { slug: 'php' },
+          deploy: 'ftp',
+        }),
+      );
+      cleanupTasks.push({ type: 'application', id: application.id });
+      return application;
+    },
+    async createTestAddon(addon?: Partial<CreateAddonCommandInput>): Promise<Addon> {
+      const createdAddon = await this.client.send(
+        new CreateAddonCommand(
+          addon
+            ? {
+                ...{
+                  ownerId: organisationId,
+                  name: 'test-addon',
+                  providerId: 'config-provider',
+                  planId: 'plan_5d8e9596-dd73-4b73-84d9-e165372c5324',
+                  zone: 'par',
+                  options: {},
+                },
+                ...addon,
+              }
+            : {
+                ownerId: organisationId,
+                name: 'test-addon',
+                providerId: 'config-provider',
+                planId: 'plan_5d8e9596-dd73-4b73-84d9-e165372c5324',
+                zone: 'par',
+                options: {},
+              },
+        ),
+      );
+      cleanupTasks.push({ type: 'addon', id: createdAddon.id });
+      return createdAddon;
+    },
+    async createNetworkGroup(memberId?: string, label?: string) {
+      const networkGroup = await this.client.send(
+        new CreateNetworkGroupCommand({
+          ownerId: organisationId,
+          label,
+          members:
+            memberId != null
+              ? [
+                  {
+                    id: memberId,
+                    label: 'my member',
+                  },
+                ]
+              : [],
+        }),
+      );
+      cleanupTasks.push({ type: 'ng', id: networkGroup.id });
+      return networkGroup;
+    },
+    async createTestOauthConsumer() {
+      const consumer = await this.client.send(
+        new CreateOauthConsumerCommand({
+          ownerId: organisationId,
+          name: 'test-consumer',
+          description: 'test consumer description',
+          url: 'https://example.com',
+          picture: 'https://example.com',
+          baseUrl: 'https://example.com',
+          rights: {
+            accessOrganisations: true,
+            accessOrganisationsBills: false,
+            accessOrganisationsCreditCount: true,
+            accessOrganisationsConsumptionStatistics: false,
+            accessPersonalInformation: true,
+            manageOrganisations: true,
+            manageOrganisationsServices: true,
+            manageOrganisationsApplications: false,
+            manageOrganisationsMembers: true,
+            managePersonalInformation: false,
+            manageSshKeys: true,
+          },
+        }),
+      );
+      cleanupTasks.push({ type: 'consumer', id: consumer.key });
+      return consumer;
+    },
+  };
+}
+
+function createCcApiClient(user: E2eUser, auth: Auth, debug: boolean): CcApiClient {
+  const defaultRequestConfig = { debug };
+
+  if (USE_LOCAL_API_BRIDGE && auth === 'oauth-v1') {
+    throw new Error('oauth-v1 is not supported with local api bridge');
+  }
+
+  return new CcApiClient({
+    defaultRequestConfig,
+    baseUrl: getBaseUrl(user, auth),
+    authMethod: getCcApiAuth(user, auth),
+  });
+}
+
+function getBaseUrl(user: E2eUser, auth: Auth): string | undefined {
+  if (IS_NODE) {
+    if (USE_LOCAL_API_BRIDGE) {
+      return 'http://localhost:8080';
+    }
+    return undefined;
+  }
+  // if running in browser, we use the proxified URLs
+  return `/cc-api-${user.userName}-${auth}`;
+}
+
+function getCcApiAuth(user: E2eUser, auth: Auth): CcApiAuth | undefined {
+  // if running in browser, no auth (authentication will be done by the proxy)
+  if (!IS_NODE) {
+    return undefined;
+  }
+
+  if (auth === 'api-token') {
+    return {
+      type: 'api-token',
+      apiToken: user.apiToken!,
+    };
+  }
+
+  if (auth === 'oauth-v1') {
+    return {
+      type: 'oauth-v1',
+      oauthTokens: user.oauthTokens!,
+    };
+  }
+}

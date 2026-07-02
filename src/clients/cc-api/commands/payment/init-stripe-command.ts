@@ -1,0 +1,20 @@
+import { post } from '../../../../lib/request/request-params-builder.js';
+import { safeUrl } from '../../../../lib/utils.js';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { transformInvoice } from '../invoice/invoice-transform.js';
+import type { InitStripeCommandInput, InitStripeCommandOutput } from './init-stripe-command.types.js';
+
+/**
+ * @endpoint [POST] /v4/billing/organisations/:XXX/invoices/:XXX/payments/stripe
+ * @group Payment
+ * @version 4
+ */
+export class InitStripeCommand extends CcApiSimpleCommand<InitStripeCommandInput, InitStripeCommandOutput> {
+  toRequestParams(params: InitStripeCommandInput) {
+    return post(safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/${params.invoiceNumber}/payments/stripe`);
+  }
+
+  transformCommandOutput(response: unknown): InitStripeCommandOutput {
+    return transformInvoice(response);
+  }
+}

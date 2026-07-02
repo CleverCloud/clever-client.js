@@ -1,29 +1,16 @@
 {
-  "include": [
-    "esm/**/*",
-    "src/**/*",
-    "tasks/endpoints-*.js",
-    "tasks/lib/api-analyze.js",
-    "test/**/*",
-    "vitest.config.js"
-  ],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "NodeNext",
+    "allowImportingTsExtensions": true,
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "strict": true,
-    "strictNullChecks": false,
-    "noUncheckedIndexedAccess": false,
-    "noImplicitOverride": false,
-    "noPropertyAccessFromIndexSignature": false,
-    "allowUnusedLabels": false,
-    "allowUnreachableCode": false,
     "useUnknownInCatchVariables": false
   }
 }

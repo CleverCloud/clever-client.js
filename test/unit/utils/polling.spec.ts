@@ -1,0 +1,70 @@
+import { describe, expect, it, vi } from 'vitest';
+import { Polling } from '../../../src/utils/polling.js';
+import { expectPromiseThrows } from '../../lib/expect-utils.js';
+
+describe('polling', () => {
+  it('should not timeout and return the right value', async () => {
+    let count = 0;
+
+    const polling = new Polling(
+      async () => {
+        await sleep(1);
+        count++;
+        if (count === 3) {
+          return { stop: true, value: 'value' };
+        }
+        return { stop: false };
+      },
+      100,
+      1_000,
+    );
+    const result = await polling.start();
+
+    expect(result).toBe('value');
+  }, 1_100);
+
+  it('should fail with interrupted when stopping', async () => {
+    const polling = new Polling(
+      async () => {
+        await sleep(1);
+        return { stop: false };
+      },
+      100,
+      1_000,
+    );
+    const pollingPromise = polling.start();
+    await sleep(200);
+
+    polling.stop();
+
+    await expectPromiseThrows(pollingPromise, (err: Error) => {
+      expect(err.message).toBe('Interrupted');
+    });
+  }, 1_100);
+
+  it('should tick the right amount of time', async () => {
+    const spy = vi.fn();
+
+    let count = 0;
+    const polling = new Polling(
+      async () => {
+        spy();
+        await sleep(1);
+        count++;
+        if (count === 3) {
+          return { stop: true, value: 'value' };
+        }
+        return { stop: false };
+      },
+      100,
+      1_000,
+    );
+    await polling.start();
+
+    expect(spy).toHaveBeenCalledTimes(3);
+  }, 1_100);
+});
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

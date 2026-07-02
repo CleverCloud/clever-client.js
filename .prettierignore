@@ -2,3 +2,7 @@
 **/*.md
 data
 pnpm-lock.yaml
+
+# Build output
+dist
+build
