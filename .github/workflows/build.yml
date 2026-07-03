@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: '[Prepare] Setup'
@@ -50,7 +50,7 @@ jobs:
       version: ${{ steps.pw.outputs.version }}
     steps:
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
       - name: '[Prepare] Derive Playwright version'
@@ -65,7 +65,7 @@ jobs:
       options: --user 1001
     steps:
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
 
@@ -79,7 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
 
