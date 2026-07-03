@@ -6,9 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Building
 - `pnpm run build` - Build the project with Rollup
-- `pnpm run prepack:dev` - Development build only
-- `pnpm run prepack:prod` - Full production build with format check, lint, typecheck, tests
-- `pnpm run prepack` - Smart prepack (dev or prod based on DEV env var)
+- `pnpm run prepack` - Build before packing/publishing (alias of `build`; quality gates run in PR CI, not at pack time)
 
 ### Testing
 Tests run on Vitest. The same `*.spec.js` files run in both Node.js and a real browser (Vitest browser mode, Playwright/Chromium), defined as four projects in `vitest.config.js`: `node-unit`, `browser-unit`, `node-e2e`, `browser-e2e`.
