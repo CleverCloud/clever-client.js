@@ -30,7 +30,7 @@ jobs:
         id: pw
         uses: ./.github/actions/get-playwright-version
 
-  test:
+  e2e-tests:
     needs: get-playwright-version
     runs-on: ubuntu-latest
     container:

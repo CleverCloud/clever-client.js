@@ -57,7 +57,7 @@ jobs:
         id: pw
         uses: ./.github/actions/get-playwright-version
 
-  tests:
+  unit-tests:
     needs: get-playwright-version
     runs-on: ubuntu-latest
     container:
