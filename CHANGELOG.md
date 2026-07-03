@@ -1,5 +1,13 @@
 # Clever Client changelog
 
+## [12.6.1](https://github.com/CleverCloud/clever-client.js/compare/12.6.0...12.6.1) (2026-07-03)
+
+
+### 🐛 Bug Fixes
+
+* **esm:** never cache a rejected promise in withCache() ([307a9da](https://github.com/CleverCloud/clever-client.js/commit/307a9dabca04b6a0ff5fa74b3f877d295d6de8ff))
+* **request:** never cache 5xx responses in requestWithCache ([aeaf807](https://github.com/CleverCloud/clever-client.js/commit/aeaf807c93464fb4ba7a91764768cd894bb0dd4c))
+
 ## [12.6.0](https://github.com/CleverCloud/clever-client.js/compare/12.5.1...12.6.0) (2026-06-29)
 
 
