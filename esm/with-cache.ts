@@ -17,6 +17,12 @@ function getKey(cacheParams: Record<string, any>): string {
   return JSON.stringify(objectKey);
 }
 
+function safeDeleteFromCache<T>(cacheKey: string, promise: Promise<T>) {
+  if (cache.get(cacheKey) === promise) {
+    cache.delete(cacheKey);
+  }
+}
+
 export const NO_CACHE = 0;
 export const ONE_SECOND = 1000;
 export const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -32,12 +38,17 @@ export function withCache<T>(
     return cache.get(cacheKey);
   }
 
-  const promise = createPromise();
+  // never cache a rejection: drop it immediately so the next call retries
+  const promise = createPromise().catch((error) => {
+    safeDeleteFromCache(cacheKey, promise);
+    throw error;
+  });
 
   if (cacheParams.method === 'get' && cacheDelay !== NO_CACHE) {
     cache.set(cacheKey, promise);
     setTimeout(() => {
-      cache.delete(cacheKey);
+      // identity guard: don't evict a newer entry that replaced this one after a retry
+      safeDeleteFromCache(cacheKey, promise);
     }, cacheDelay);
   }
 

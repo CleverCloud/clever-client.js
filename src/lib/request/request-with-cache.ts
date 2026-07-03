@@ -32,7 +32,8 @@ export async function requestWithCache<CommandOutput>(
   // cache miss
   const response = await handler<CommandOutput>(request);
 
-  if (request.cache.ttl > 0) {
+  // store to cache (but never cache a 5xx response)
+  if (request.cache.ttl > 0 && response.status < 500) {
     CACHE.set(cacheKey, {
       response: { ...response, cacheHit: true },
       expiresAt: Date.now() + request.cache.ttl,
