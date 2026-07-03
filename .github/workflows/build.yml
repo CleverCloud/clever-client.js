@@ -51,8 +51,6 @@ jobs:
     steps:
       - name: '[Prepare] Checkout'
         uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
       - name: '[Prepare] Derive Playwright version'
@@ -68,8 +66,6 @@ jobs:
     steps:
       - name: '[Prepare] Checkout'
         uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
 
@@ -84,8 +80,6 @@ jobs:
     steps:
       - name: '[Prepare] Checkout'
         uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
 
