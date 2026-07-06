@@ -7,10 +7,6 @@ on:
     branches:
       - master
 
-# Set via the workflow env (not $GITHUB_ENV, which GitHub forbids for NODE_OPTIONS).
-env:
-  NODE_OPTIONS: '--max-old-space-size=16384'
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
