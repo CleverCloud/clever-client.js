@@ -1,4 +1,5 @@
 import { normalizeDate } from '../../../../lib/utils.js';
+import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
 import type {
   ElasticsearchDrainTarget,
   LogDrain,
@@ -6,6 +7,8 @@ import type {
   LogDrainKind,
   LogDrainStatus,
   LogDrainTarget,
+  LogDrainTlsVerification,
+  OvhTcpDrainTarget,
   RawHttpDrainTarget,
   SyslogTcpDrainTarget,
   SyslogUdpDrainTarget,
@@ -22,22 +25,25 @@ interface ApiLogDrainPayload {
 }
 
 interface ApiRecipientPayload {
-  type: 'RAW_HTTP' | 'SYSLOG_TCP' | 'SYSLOG_UDP' | 'DATADOG' | 'ELASTICSEARCH' | 'NEWRELIC';
+  type: 'RAW_HTTP' | 'SYSLOG_TCP' | 'SYSLOG_UDP' | 'OVH_TCP' | 'DATADOG' | 'ELASTICSEARCH' | 'NEWRELIC' | 'BETTERSTACK';
   url: string;
   username?: string;
   password?: string;
   apiKey?: string;
   index?: string;
   rfc5424StructuredDataParameters?: string;
+  token?: string;
+  sourceToken?: string;
+  tlsVerification?: LogDrainTlsVerification;
 }
 
 /**
- * Transform API v4 log drain payload to client format
+ * Transform API v4 log drain payload to client format.
+ * `ref` mirrors back whichever of `applicationId`/`addonId` the caller used to identify the drain.
  */
-export function transformLogDrain(payload: ApiLogDrainPayload): LogDrain {
-  return {
+export function transformLogDrain(payload: ApiLogDrainPayload, ref: ApplicationOrAddonId): LogDrain {
+  const common = {
     id: payload.id,
-    applicationId: payload.resourceId,
     // status.date is the date when the drain's current status was set (changes when status changes)
     updatedAt: normalizeDate(payload.status.date)!,
     status: payload.status.status,
@@ -49,6 +55,68 @@ export function transformLogDrain(payload: ApiLogDrainPayload): LogDrain {
     },
     backlog: payload.backlog,
   };
+
+  return 'applicationId' in ref ? { ...common, applicationId: ref.applicationId } : { ...common, addonId: ref.addonId };
+}
+
+/**
+ * Build the API v4 request body to create a log drain
+ */
+export function buildLogDrainCreatePayload(
+  kind: LogDrainKind,
+  target: LogDrainTarget,
+): { kind: LogDrainKind; recipient: ApiRecipientPayload } {
+  const body: { kind: LogDrainKind; recipient: ApiRecipientPayload } = {
+    kind,
+    recipient: {
+      type: target.type,
+      url: target.url,
+    },
+  };
+
+  // RAW_HTTP and ELASTICSEARCH: credentials
+  if (target.type === 'RAW_HTTP' || target.type === 'ELASTICSEARCH') {
+    if (target.credentials != null) {
+      body.recipient.username = target.credentials.username;
+      body.recipient.password = target.credentials.password;
+    }
+  }
+
+  // ELASTICSEARCH: index (renamed from indexPrefix) and tlsVerification
+  if (target.type === 'ELASTICSEARCH') {
+    if (target.indexPrefix != null) {
+      body.recipient.index = target.indexPrefix;
+    }
+    if (target.tlsVerification != null) {
+      body.recipient.tlsVerification = target.tlsVerification;
+    }
+  }
+
+  // NEWRELIC: apiKey
+  if (target.type === 'NEWRELIC') {
+    body.recipient.apiKey = target.apiKey;
+  }
+
+  // BETTERSTACK: sourceToken
+  if (target.type === 'BETTERSTACK') {
+    body.recipient.sourceToken = target.sourceToken;
+  }
+
+  // OVH_TCP: token
+  if (target.type === 'OVH_TCP') {
+    if (target.token != null) {
+      body.recipient.token = target.token;
+    }
+  }
+
+  // Syslog/OVH_TCP: RFC 5424 structured data parameters
+  if (target.type === 'SYSLOG_TCP' || target.type === 'SYSLOG_UDP' || target.type === 'OVH_TCP') {
+    if (target.rfc5424StructuredDataParameters != null) {
+      body.recipient.rfc5424StructuredDataParameters = target.rfc5424StructuredDataParameters;
+    }
+  }
+
+  return body;
 }
 
 /**
@@ -69,23 +137,27 @@ export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainT
       }
       return target;
     }
-    case 'SYSLOG_TCP': {
-      const target: SyslogTcpDrainTarget = {
-        type: 'SYSLOG_TCP',
+    case 'SYSLOG_TCP':
+    case 'SYSLOG_UDP': {
+      const target: SyslogTcpDrainTarget | SyslogUdpDrainTarget = {
+        type: payload.type,
         url: payload.url,
       };
       if (payload.rfc5424StructuredDataParameters) {
-        target.structuredDataParameters = payload.rfc5424StructuredDataParameters;
+        target.rfc5424StructuredDataParameters = payload.rfc5424StructuredDataParameters;
       }
       return target;
     }
-    case 'SYSLOG_UDP': {
-      const target: SyslogUdpDrainTarget = {
-        type: 'SYSLOG_UDP',
+    case 'OVH_TCP': {
+      const target: OvhTcpDrainTarget = {
+        type: 'OVH_TCP',
         url: payload.url,
       };
+      if (payload.token) {
+        target.token = payload.token;
+      }
       if (payload.rfc5424StructuredDataParameters) {
-        target.structuredDataParameters = payload.rfc5424StructuredDataParameters;
+        target.rfc5424StructuredDataParameters = payload.rfc5424StructuredDataParameters;
       }
       return target;
     }
@@ -108,6 +180,9 @@ export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainT
       if (payload.index) {
         target.indexPrefix = payload.index;
       }
+      if (payload.tlsVerification) {
+        target.tlsVerification = payload.tlsVerification;
+      }
       return target;
     }
     case 'NEWRELIC':
@@ -115,6 +190,12 @@ export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainT
         type: 'NEWRELIC',
         url: payload.url,
         apiKey: payload.apiKey!,
+      };
+    case 'BETTERSTACK':
+      return {
+        type: 'BETTERSTACK',
+        url: payload.url,
+        sourceToken: payload.sourceToken!,
       };
   }
 }

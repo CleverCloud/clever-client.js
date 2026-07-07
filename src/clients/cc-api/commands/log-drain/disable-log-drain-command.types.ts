@@ -1,7 +1,7 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
+import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
 import type { LogDrain } from './log-drain.types.js';
 
-export type DisableLogDrainCommandInput = ApplicationId & {
+export type DisableLogDrainCommandInput = ApplicationOrAddonId & {
   drainId: string;
 };
 

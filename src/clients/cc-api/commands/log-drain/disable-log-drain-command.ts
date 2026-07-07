@@ -7,8 +7,8 @@ import type { DisableLogDrainCommandInput, DisableLogDrainCommandOutput } from '
 import { waitForLogDrainDisabled } from './log-drain-utils.js';
 
 /**
- * @endpoint [PUT] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX/disable
- * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
+ * @endpoint [PUT] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX/disable
+ * @endpoint [GET] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX
  * @group LogDrain
  * @version 4
  */
@@ -18,19 +18,21 @@ export class DisableLogDrainCommand extends CcApiCompositeCommand<
 > {
   async compose(params: DisableLogDrainCommandInput, composer: CcApiComposer): Promise<DisableLogDrainCommandOutput> {
     await composer.send(new InnerDisableLogDrainCommand(params));
-    return waitForLogDrainDisabled(composer, params.ownerId!, params.applicationId, params.drainId);
+    return waitForLogDrainDisabled(composer, params, params.drainId);
   }
 }
 
 /**
- * @endpoint [PUT] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX/disable
+ * @endpoint [PUT] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX/disable
  * @group LogDrain
  * @version 4
  */
 class InnerDisableLogDrainCommand extends CcApiSimpleCommand<DisableLogDrainCommandInput, undefined> {
   toRequestParams(params: DisableLogDrainCommandInput) {
+    const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;
+
     return put(
-      safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains/${params.drainId}/disable`,
+      safeUrl`/v4/drains/organisations/${params.ownerId}/resources/${resourceId}/drains/${params.drainId}/disable`,
     );
   }
 
@@ -41,6 +43,7 @@ class InnerDisableLogDrainCommand extends CcApiSimpleCommand<DisableLogDrainComm
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
+      addonId: 'REAL_ADDON_ID',
     };
   }
 }

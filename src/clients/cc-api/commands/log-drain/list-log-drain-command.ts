@@ -7,14 +7,16 @@ import type { ListLogDrainCommandInput, ListLogDrainCommandOutput } from './list
 import { transformLogDrain } from './log-drain-transform.js';
 
 /**
- * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains
+ * @endpoint [GET] /v4/drains/organisations/:XXX/resources/:XXX/drains
  * @group LogDrain
  * @version 4
  */
 export class ListLogDrainCommand extends CcApiSimpleCommand<ListLogDrainCommandInput, ListLogDrainCommandOutput> {
   toRequestParams(params: ListLogDrainCommandInput) {
+    const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;
+
     return get(
-      safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains`,
+      safeUrl`/v4/drains/organisations/${params.ownerId}/resources/${resourceId}/drains`,
       new QueryParams()
         .set('status', params.status)
         .set('executionStatus', params.executionStatus)
@@ -23,10 +25,13 @@ export class ListLogDrainCommand extends CcApiSimpleCommand<ListLogDrainCommandI
   }
 
   transformCommandOutput(response: unknown): ListLogDrainCommandOutput {
-    return sortBy((response as Array<Parameters<typeof transformLogDrain>[0]>).map(transformLogDrain), {
-      key: 'updatedAt',
-      order: 'desc',
-    });
+    return sortBy(
+      (response as Array<Parameters<typeof transformLogDrain>[0]>).map((item) => transformLogDrain(item, this.params)),
+      {
+        key: 'updatedAt',
+        order: 'desc',
+      },
+    );
   }
 
   getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
@@ -36,6 +41,7 @@ export class ListLogDrainCommand extends CcApiSimpleCommand<ListLogDrainCommandI
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
+      addonId: 'REAL_ADDON_ID',
     };
   }
 }

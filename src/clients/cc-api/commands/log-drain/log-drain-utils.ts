@@ -1,8 +1,8 @@
 import type { Composer } from '../../../../types/command.types.js';
 import { isTimeoutError, Polling } from '../../../../utils/polling.js';
-import type { CcApiType } from '../../types/cc-api.types.js';
+import type { ApplicationOrAddonId, CcApiType } from '../../types/cc-api.types.js';
 import { GetLogDrainCommand } from './get-log-drain-command.js';
-import type { LogDrain } from './log-drain.types.js';
+import type { LogDrain, LogDrainStatus } from './log-drain.types.js';
 
 const POLLING_TIMEOUT_MS = 30_000;
 const POLLING_INTERVAL_MS = 1000;
@@ -12,11 +12,10 @@ const POLLING_INTERVAL_MS = 1000;
  */
 export async function waitForLogDrainEnabled(
   composer: Composer<CcApiType>,
-  ownerId: string,
-  applicationId: string,
+  resource: ApplicationOrAddonId,
   drainId: string,
 ): Promise<LogDrain> {
-  return waitForState(composer, ownerId, applicationId, drainId, 'ENABLED', 'enabled');
+  return waitForState(() => composer.send(new GetLogDrainCommand({ ...resource, drainId })), 'ENABLED', 'enabled');
 }
 
 /**
@@ -24,27 +23,23 @@ export async function waitForLogDrainEnabled(
  */
 export async function waitForLogDrainDisabled(
   composer: Composer<CcApiType>,
-  ownerId: string,
-  applicationId: string,
+  resource: ApplicationOrAddonId,
   drainId: string,
 ): Promise<LogDrain> {
-  return waitForState(composer, ownerId, applicationId, drainId, 'DISABLED', 'disabled');
+  return waitForState(() => composer.send(new GetLogDrainCommand({ ...resource, drainId })), 'DISABLED', 'disabled');
 }
 
 /**
- * Wait for a log drain to reach a specific state
+ * Wait for a log drain (fetched via `fetchDrain`) to reach a specific state
  */
-async function waitForState(
-  composer: Composer<CcApiType>,
-  ownerId: string,
-  applicationId: string,
-  drainId: string,
-  targetState: string,
+async function waitForState<T extends { status: LogDrainStatus }>(
+  fetchDrain: () => Promise<T | null>,
+  targetState: LogDrainStatus,
   stateLabel: string,
-): Promise<LogDrain> {
+): Promise<T> {
   const polling = new Polling(
     async () => {
-      const result = await composer.send(new GetLogDrainCommand({ ownerId, applicationId, drainId }));
+      const result = await fetchDrain();
       if (result == null) {
         return { stop: false };
       }

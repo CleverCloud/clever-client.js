@@ -6,24 +6,25 @@ import type { GetLogDrainCommandInput, GetLogDrainCommandOutput } from './get-lo
 import { transformLogDrain } from './log-drain-transform.js';
 
 /**
- * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
+ * @endpoint [GET] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX
  * @group LogDrain
  * @version 4
  */
 export class GetLogDrainCommand extends CcApiSimpleCommand<GetLogDrainCommandInput, GetLogDrainCommandOutput> {
   toRequestParams(params: GetLogDrainCommandInput) {
-    return get(
-      safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains/${params.drainId}`,
-    );
+    const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;
+
+    return get(safeUrl`/v4/drains/organisations/${params.ownerId}/resources/${resourceId}/drains/${params.drainId}`);
   }
 
   transformCommandOutput(response: unknown): GetLogDrainCommandOutput {
-    return transformLogDrain(response as Parameters<typeof transformLogDrain>[0]);
+    return transformLogDrain(response as Parameters<typeof transformLogDrain>[0], this.params);
   }
 
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
+      addonId: 'REAL_ADDON_ID',
     };
   }
 }
