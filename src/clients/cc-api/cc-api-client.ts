@@ -135,7 +135,7 @@ export class CcApiClient extends CcClient<CcApiType> {
       return params;
     }
 
-    const resolvedIds: { ownerId?: string; addonId?: string } = {};
+    const resolvedIds: Record<string, string> = {};
 
     if (idsToResolve.ownerId) {
       resolvedIds.ownerId = await this.#resourceIdResolver.resolveOwnerId(params as ResourceId, requestConfig);
@@ -150,11 +150,14 @@ export class CcApiClient extends CcClient<CcApiType> {
             }
           : idsToResolve.addonId;
 
-      resolvedIds.addonId = await this.#resourceIdResolver.resolveAddonId(
-        (params as Record<string, string>)[addonIdResolve.property],
-        addonIdResolve.type,
-        requestConfig,
-      );
+      const rawAddonId = (params as Record<string, string>)[addonIdResolve.property];
+      if (rawAddonId != null) {
+        resolvedIds[addonIdResolve.property] = await this.#resourceIdResolver.resolveAddonId(
+          rawAddonId,
+          addonIdResolve.type,
+          requestConfig,
+        );
+      }
     }
 
     return { ...(params as Record<string, unknown>), ...resolvedIds };
