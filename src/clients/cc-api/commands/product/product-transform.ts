@@ -65,7 +65,7 @@ function transformAddonVersionCluster(cluster: any): ProductAddonClusterVersion 
     label: cluster.label,
     zone: cluster.zone,
     version: cluster.version,
-    features: sortBy(cluster.version, 'name'),
+    features: sortBy(cluster.features, 'name'),
   };
 }
 
