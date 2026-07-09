@@ -1,3 +1,4 @@
+import { bearerAuthorizationHeader } from '../../utils/auth-utils.ts';
 import { CcAuth } from './cc-auth.js';
 
 /**
@@ -26,6 +27,6 @@ export class CcAuthApiToken extends CcAuth {
    * @returns The token in the format 'Bearer <api-token>'
    */
   getAuthorization(): string {
-    return `Bearer ${this.#apiToken}`;
+    return bearerAuthorizationHeader(this.#apiToken);
   }
 }
