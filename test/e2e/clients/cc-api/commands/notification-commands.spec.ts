@@ -51,10 +51,15 @@ describe('notification commands', function () {
     const targets: Array<EmailNotificationTarget> = [
       {
         type: 'email',
-        emailAddresses: ['test1@example.com', 'test2@example.com'],
+        emailAddress: 'test1@example.com',
+      },
+      {
+        type: 'email',
+        emailAddress: 'test2@example.com',
       },
       {
         type: 'user',
+        userId: support.userId,
       },
       {
         type: 'organisation',
@@ -82,14 +87,14 @@ describe('notification commands', function () {
       new CreateEmailNotificationCommand({
         ownerId: support.organisationId,
         name: 'hook 1',
-        targets: [{ type: 'user' }],
+        targets: [{ type: 'user', userId: support.userId }],
       }),
     );
     const notification2 = await support.client.send(
       new CreateEmailNotificationCommand({
         ownerId: support.organisationId,
         name: 'hook 2',
-        targets: [{ type: 'user' }],
+        targets: [{ type: 'user', userId: support.userId }],
       }),
     );
 
@@ -111,7 +116,7 @@ describe('notification commands', function () {
       new CreateEmailNotificationCommand({
         ownerId: support.organisationId,
         name: 'hook 1',
-        targets: [{ type: 'user' }],
+        targets: [{ type: 'user', userId: support.userId }],
       }),
     );
 

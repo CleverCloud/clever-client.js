@@ -19,7 +19,7 @@ function transformTarget(payload: any): EmailNotificationTarget {
     case 'email':
       return {
         type: 'email',
-        emailAddresses: payload.target.split(','),
+        emailAddress: payload.target,
       };
     case 'organisation':
       return {
@@ -28,6 +28,7 @@ function transformTarget(payload: any): EmailNotificationTarget {
     case 'userid':
       return {
         type: 'user',
+        userId: payload.target,
       };
     default:
       throw new Error(`Unknown notification target type: ${payload.type}`);

@@ -22,7 +22,7 @@ export class CreateEmailNotificationCommand extends CcApiSimpleCommand<
         case 'email':
           return {
             type: 'email',
-            target: target.emailAddresses.join(','),
+            target: target.emailAddress,
           };
         case 'organisation':
           return {
@@ -31,6 +31,7 @@ export class CreateEmailNotificationCommand extends CcApiSimpleCommand<
         case 'user':
           return {
             type: 'userid',
+            target: target.userId,
           };
       }
     });

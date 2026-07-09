@@ -43,11 +43,12 @@ export type EmailNotificationTarget =
 
 export interface EmailNotificationTargetEmail {
   type: 'email';
-  emailAddresses: Array<string>;
+  emailAddress: string;
 }
 
 export interface EmailNotificationTargetUser {
   type: 'user';
+  userId: string;
 }
 
 export interface EmailNotificationTargetOrganisation {
