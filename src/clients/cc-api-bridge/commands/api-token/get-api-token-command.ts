@@ -1,0 +1,20 @@
+import { get } from '../../../../lib/request/request-params-builder.js';
+import { safeUrl } from '../../../../lib/utils.js';
+import { CcApiBridgeCommand } from '../../lib/cc-api-bridge-command.js';
+import type { GetApiTokenCommandInput, GetApiTokenCommandOutput } from './get-api-token-command.types.js';
+
+/**
+ * Get an API token
+ *
+ * @endpoint [GET] /api-tokens/:XXX
+ * @group ApiToken
+ */
+export class GetApiTokenCommand extends CcApiBridgeCommand<GetApiTokenCommandInput, GetApiTokenCommandOutput> {
+  toRequestParams(params: GetApiTokenCommandInput) {
+    return get(safeUrl`/api-tokens/${params.apiTokenId}`);
+  }
+
+  getEmptyResponsePolicy(status: number) {
+    return { isEmpty: status === 404 };
+  }
+}

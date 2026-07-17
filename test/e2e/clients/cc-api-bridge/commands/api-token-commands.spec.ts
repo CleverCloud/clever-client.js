@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import type { ApiToken } from '../../../../../src/clients/cc-api-bridge/commands/api-token/api-token.types.js';
 import { CreateApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.js';
 import { DeleteApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/delete-api-token-command.js';
+import { GetApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/get-api-token-command.js';
 import { ListApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/list-api-token-command.js';
 import { UpdateApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/update-api-token-command.js';
 import { e2eSupport } from '../e2e-support.js';
@@ -53,6 +54,18 @@ describe('api-token commands', function () {
     expect(tokenFormList!.expirationDate).toBe(tokenCreated.expirationDate);
     expect(tokenFormList!.ip).toBeTypeOf('string');
     expect(tokenFormList!.state).toBe('ACTIVE');
+
+    // get
+    const tokenFromGet = await support.client.send(new GetApiTokenCommand({ apiTokenId: tokenCreated.apiTokenId }));
+    expect(tokenFromGet.apiTokenId).toBe(tokenCreated.apiTokenId);
+    expect(tokenFromGet.name).toBe(tokenCreated.name);
+    expect(tokenFromGet.description).toBe(tokenCreated.description);
+    expect(tokenFromGet.userId).toBeTypeOf('string');
+    expect(tokenFromGet.state).toBe('ACTIVE');
+
+    // get with unknown id resolves to null
+    const unknownToken = await support.client.send(new GetApiTokenCommand({ apiTokenId: 'unknown-token-id' }));
+    expect(unknownToken).toBeNull();
 
     // update
     const updateResponse = await support.client.send(
