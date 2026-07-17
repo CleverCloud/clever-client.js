@@ -2,6 +2,13 @@ import type { CcRequest, CcResponse } from '../../types/request.types.js';
 import type { SimpleCommand } from '../command/command.js';
 import { CcHttpError } from './cc-client-errors.js';
 
+/**
+ * Error code reported for any rate-limited request, regardless of which backend produced it.
+ * This is the wire code already used natively by v4/OVD-backed endpoints; legacy v2 (cc-api)
+ * rate-limit responses are normalized to it as well, see {@link isRateLimitError}.
+ */
+const TOO_MANY_REQUESTS_ERROR_CODE = 'clever.core.too-many-requests';
+
 export function handleHttpErrors(
   request: CcRequest,
   response: CcResponse<unknown>,
@@ -16,8 +23,11 @@ export function handleHttpErrors(
       parsedErrorMessage == null || parsedErrorMessage.length === 0
         ? `Error ${response.status}`
         : `[${response.status}]: ${parsedErrorMessage}`;
-    // eventually ask command to transform error code
-    const errorCode = transformErrorCode(parsedErrorCode, command);
+    // rate limiting is a cross-cutting, transport-level concern: report it with a single,
+    // predictable code instead of leaving it to each command's own error-code mapping
+    const errorCode = isRateLimitError(response, parsedErrorCode)
+      ? TOO_MANY_REQUESTS_ERROR_CODE
+      : transformErrorCode(parsedErrorCode, command);
 
     // throw error
     throw new CcHttpError(errorMessage, errorCode, request, response);
@@ -51,6 +61,17 @@ function parseErrorCode(response: CcResponse<unknown>): string | undefined {
   }
 
   return undefined;
+}
+
+function isRateLimitError(response: CcResponse<unknown>, parsedErrorCode: string | undefined): boolean {
+  // v4 endpoints (and a few legacy ones) use the standard "Too Many Requests" status
+  if (response.status === 429) {
+    return true;
+  }
+  // Most legacy v2 (cc-api) endpoints report rate limiting as a 403 response whose body `id` is
+  // (coincidentally) also 403 — that numeric id identifies the `RATE_LIMIT_HIT` error specifically,
+  // it isn't derived from the HTTP status, and no other cc-api error uses it.
+  return response.status === 403 && parsedErrorCode === '403';
 }
 
 function transformErrorCode(errorCode: string | undefined, command?: SimpleCommand<string, unknown, unknown>): string {
