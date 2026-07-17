@@ -44,4 +44,19 @@ describe('price system commands', function () {
     expect(response.countable[0].pricePlans[0].maxQuantity).toBeTypeOf('number');
     expect(response.countable[0].pricePlans[0].price).toBeTypeOf('number');
   });
+
+  it('should get the public price system when ownerId is omitted', async () => {
+    const response = await support.client.send(
+      new GetPriceSystemCommand({
+        zone: 'par',
+        currency: 'EUR',
+      }),
+    );
+
+    expect(response.currency).toBe('EUR');
+    expect(response.runtime).toBeInstanceOf(Array);
+    expect(response.runtime[0].id).toBeTypeOf('string');
+    expect(response.countable).toBeInstanceOf(Array);
+    expect(response.countable[0].id).toBeTypeOf('string');
+  });
 });
