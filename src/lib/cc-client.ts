@@ -53,7 +53,7 @@ const DEFAULT_STREAM_CONFIG: CcStreamConfig = {
  * - Handle request/response lifecycle
  * - Manage authentication
  * - Transform request parameters and responses
- * - Handle errors and empty responses
+ * - Handle errors
  *
  * @example
  * ```typescript
@@ -294,12 +294,6 @@ export class CcClient<Api extends string> {
     // apply hook
     if (this.#hooks.onResponse != null) {
       await this.#hooks.onResponse(response, request);
-    }
-
-    // special case for null response
-    const emptyResponsePolicy = command.getEmptyResponsePolicy(response.status, response.body);
-    if (emptyResponsePolicy?.isEmpty) {
-      return (emptyResponsePolicy.emptyValue ?? null) as CommandOutput;
     }
 
     // handle http errors

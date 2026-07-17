@@ -22,8 +22,4 @@ export class ListWebhookNotificationCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ListWebhookNotificationCommandOutput {
     return sortBy(response as ListWebhookNotificationCommandOutput, 'name', 'createdAt');
   }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
 }

@@ -18,8 +18,4 @@ export class ListTcpRedirectionNamespaceCommand extends CcApiSimpleCommand<
   toRequestParams(params: ListTcpRedirectionNamespaceCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/namespaces`);
   }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
 }

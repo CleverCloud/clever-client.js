@@ -12,8 +12,4 @@ export class GetGrafanaCommand extends CcApiSimpleCommand<GetGrafanaCommandInput
   toRequestParams(params: GetGrafanaCommandInput) {
     return get(safeUrl`/v4/saas/grafana/${params.ownerId}`);
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

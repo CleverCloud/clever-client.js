@@ -24,8 +24,4 @@ export class ListInvoiceCommand extends CcApiSimpleCommand<ListInvoiceCommandInp
   transformCommandOutput(response: unknown): ListInvoiceCommandOutput {
     return sortBy((response as Array<unknown>).map(transformInvoiceSummary), 'emissionDate');
   }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
 }

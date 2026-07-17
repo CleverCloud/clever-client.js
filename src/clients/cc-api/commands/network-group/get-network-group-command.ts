@@ -24,8 +24,4 @@ export class GetNetworkGroupCommand extends CcApiSimpleCommand<
       members: networkGroup.members.map(normalizeMemberKind),
     };
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

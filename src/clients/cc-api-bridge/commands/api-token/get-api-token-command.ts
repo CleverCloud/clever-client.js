@@ -13,8 +13,4 @@ export class GetApiTokenCommand extends CcApiBridgeCommand<GetApiTokenCommandInp
   toRequestParams(params: GetApiTokenCommandInput) {
     return get(safeUrl`/api-tokens/${params.apiTokenId}`);
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

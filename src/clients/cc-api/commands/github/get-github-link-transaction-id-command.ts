@@ -14,8 +14,4 @@ export class GetGithubLinkTransactionIdCommand extends CcApiSimpleCommand<
   toRequestParams() {
     return get(`/v2/github`);
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

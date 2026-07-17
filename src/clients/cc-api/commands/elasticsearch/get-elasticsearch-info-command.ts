@@ -21,10 +21,6 @@ export class GetElasticsearchInfoCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/providers/es-addon/${params.addonId}`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetElasticsearchInfoCommandOutput {
     return transformElasticsearchInfo(response);
   }

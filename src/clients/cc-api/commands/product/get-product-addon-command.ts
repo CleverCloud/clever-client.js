@@ -18,9 +18,6 @@ export class GetProductAddonCommand extends CcApiCompositeCommand<
 > {
   async compose(params: GetProductAddonCommandInput, composer: CcApiComposer): Promise<GetProductAddonCommandOutput> {
     const addon = await composer.send(new GetProductAddonInnerCommand(params));
-    if (addon == null) {
-      return undefined;
-    }
 
     if (!params.withVersions) {
       return addon;
@@ -49,9 +46,5 @@ class GetProductAddonInnerCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): GetProductAddonCommandOutput {
     return transformAddonProviderFull(response);
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 }

@@ -57,8 +57,4 @@ class ListOauthConsumerInnerCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ListOauthConsumerCommandOutput {
     return sortBy((response as Array<unknown>).map(transformOauthConsumer), 'name');
   }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
 }

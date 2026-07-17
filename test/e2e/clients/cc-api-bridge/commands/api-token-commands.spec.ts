@@ -63,10 +63,6 @@ describe('api-token commands', function () {
     expect(tokenFromGet.userId).toBeTypeOf('string');
     expect(tokenFromGet.state).toBe('ACTIVE');
 
-    // get with unknown id resolves to null
-    const unknownToken = await support.client.send(new GetApiTokenCommand({ apiTokenId: 'unknown-token-id' }));
-    expect(unknownToken).toBeNull();
-
     // update
     const updateResponse = await support.client.send(
       new UpdateApiTokenCommand({

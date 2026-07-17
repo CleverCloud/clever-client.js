@@ -23,8 +23,4 @@ export class ListOrganisationMemberCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ListOrganisationMemberCommandOutput {
     return sortBy((response as Array<unknown>).map(transformOrganisationMember), 'name', 'email', 'id');
   }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
 }

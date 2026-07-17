@@ -27,8 +27,4 @@ export class GetProductRuntimeCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetProductRuntimeCommandOutput {
     return transformProductRuntime(response);
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

@@ -29,10 +29,6 @@ export class ListMigrationPreorderCommand extends CcApiSimpleCommand<
     return transformMigrationPreorder(response);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

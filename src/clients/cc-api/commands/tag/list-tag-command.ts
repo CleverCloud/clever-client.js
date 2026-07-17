@@ -21,10 +21,6 @@ export class ListTagCommand extends CcApiSimpleCommand<ListTagCommandInput, List
     return (response as ListTagCommandOutput)?.sort() ?? [];
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

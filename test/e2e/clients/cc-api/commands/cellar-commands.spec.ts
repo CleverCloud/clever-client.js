@@ -173,24 +173,6 @@ describe('cellar commands', function () {
     expect(response.updatedAt).toBeTypeOf('string');
   });
 
-  it('should get cellar bucket null', async () => {
-    const addon = await support.createTestAddon({
-      name: 'test-cellar-addon',
-      providerId: CELLAR_PROVIDER_ID,
-      planId: CELLAR_PLAN_ID,
-    });
-
-    const response = await support.client.send(
-      new GetCellarBucketCommand({
-        ownerId: support.organisationId,
-        addonId: addon.realId,
-        bucketName: 'non-existing-bucket',
-      }),
-    );
-
-    expect(response).toBeNull();
-  });
-
   it('should list cellar buckets', async () => {
     const addon = await support.createTestAddon({
       name: 'test-cellar-addon',
@@ -231,11 +213,6 @@ describe('cellar commands', function () {
     );
 
     expect(response).toBeUndefined();
-
-    const getResponse = await support.client.send(
-      new GetCellarBucketCommand({ ownerId: support.organisationId, addonId: addon.realId, bucketName }),
-    );
-    expect(getResponse).toBeNull();
   });
 
   it('should list cellar bucket objects', async () => {
@@ -256,29 +233,6 @@ describe('cellar commands', function () {
     expect(response.content).toEqual([]);
     expect(response.directories).toEqual([]);
     expect(response.cursor).toBeNull();
-  });
-
-  it('should get cellar bucket object null', async () => {
-    const addon = await support.createTestAddon({
-      name: 'test-cellar-addon',
-      providerId: CELLAR_PROVIDER_ID,
-      planId: CELLAR_PLAN_ID,
-    });
-    const bucketName = uniqueBucketName('get-object-null');
-    await support.client.send(
-      new CreateCellarBucketCommand({ ownerId: support.organisationId, addonId: addon.realId, name: bucketName }),
-    );
-
-    const response = await support.client.send(
-      new GetCellarObjectCommand({
-        ownerId: support.organisationId,
-        addonId: addon.realId,
-        bucketName,
-        objectKey: 'non-existing-object.txt',
-      }),
-    );
-
-    expect(response).toBeNull();
   });
 
   it('should get cellar bucket object upload url', async () => {
@@ -364,11 +318,5 @@ describe('cellar commands', function () {
     );
 
     expect(deleteResponse).toBeUndefined();
-
-    const afterDelete = await support.client.send(
-      new GetCellarObjectCommand({ ownerId: support.organisationId, addonId: addon.realId, bucketName, objectKey }),
-    );
-
-    expect(afterDelete).toBeNull();
   });
 });

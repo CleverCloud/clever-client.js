@@ -28,10 +28,6 @@ export class ListCellarObjectCommand extends CcApiSimpleCommand<
     );
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: { content: [], directories: [], cursor: null } };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

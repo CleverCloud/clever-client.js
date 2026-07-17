@@ -24,10 +24,6 @@ export class GetOtoroshiInfoCommand extends CcApiSimpleCommand<
     };
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetOtoroshiInfoCommandOutput {
     return transformOtoroshiInfo(response);
   }

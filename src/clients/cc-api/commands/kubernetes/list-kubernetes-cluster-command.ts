@@ -27,8 +27,4 @@ export class ListKubernetesClusterCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ListKubernetesClusterCommandOutput {
     return (response as Array<Parameters<typeof transformKubernetesCluster>[0]>).map(transformKubernetesCluster);
   }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
 }

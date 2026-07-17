@@ -2,11 +2,8 @@ import { CcAuthApiToken } from '../../lib/auth/cc-auth-api-token.js';
 import { CcAuthOauthV1Plaintext } from '../../lib/auth/cc-auth-oauth-v1-plaintext.js';
 import type { CcAuth } from '../../lib/auth/cc-auth.js';
 import { CcClient } from '../../lib/cc-client.js';
-import { SimpleCommand } from '../../lib/command/command.js';
-import { CcClientError } from '../../lib/error/cc-client-errors.js';
 import type { CcStream } from '../../lib/stream/cc-stream.js';
 import { merge } from '../../lib/utils.js';
-import type { Command } from '../../types/command.types.js';
 import type { CcRequestConfigPartial } from '../../types/request.types.js';
 import type { CcApiCompositeCommand, CcApiSimpleCommand, CcApiStreamCommand } from './lib/cc-api-command.js';
 import { ResourceIdResolver } from './lib/resource-id-resolver.js';
@@ -97,33 +94,6 @@ export class CcApiClient extends CcClient<CcApiType> {
     requestConfig?: CcRequestConfigPartial,
   ): Promise<unknown> {
     return this.#transformParams(command.params, command.getIdsToResolve(), requestConfig);
-  }
-
-  /**
-   * Sends a command to the API with special handling for resource resolution errors.
-   * If a command fails due to resource ID resolution but defines a 404 empty response policy,
-   * returns the empty value instead of throwing.
-   *
-   * @example
-   * // Command with empty response policy for 404
-   * const result = await client.send(new GetApplicationCommand('app_123'));
-   * // Returns null if app doesn't exist, instead of throwing
-   */
-  async send<CommandInput, CommandOutput>(
-    command: Command<CcApiType, CommandInput, CommandOutput>,
-    requestConfig?: CcRequestConfigPartial,
-  ): Promise<CommandOutput> {
-    try {
-      return await super.send(command, requestConfig);
-    } catch (e: unknown) {
-      if (command instanceof SimpleCommand && e instanceof CcClientError && e.code === 'CANNOT_RESOLVE_RESOURCE_ID') {
-        const emptyResponsePolicy = command.getEmptyResponsePolicy(404);
-        if (emptyResponsePolicy?.isEmpty) {
-          return (emptyResponsePolicy.emptyValue ?? null) as CommandOutput;
-        }
-      }
-      throw e;
-    }
   }
 
   async #transformParams(

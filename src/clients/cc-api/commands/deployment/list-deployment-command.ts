@@ -49,10 +49,6 @@ class ListOrganisationDeploymentCommand extends CcApiSimpleCommand<
       deployments.map((o) => transformDeploymentLegacy(o, applicationId)),
     );
   }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
 }
 
 /**
@@ -73,10 +69,6 @@ class ListApplicationDeploymentCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): Array<DeploymentLegacy> {
     return (response as Array<unknown>).map((o) => transformDeploymentLegacy(o, this.params.applicationId));
-  }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   getIdsToResolve(): IdResolve {

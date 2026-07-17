@@ -27,10 +27,6 @@ export class GetApplicationInstanceCommand extends CcApiSimpleCommand<
     return transformApplicationInstance(response);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

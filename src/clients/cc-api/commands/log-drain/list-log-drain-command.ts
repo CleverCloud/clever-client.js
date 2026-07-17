@@ -34,10 +34,6 @@ export class ListLogDrainCommand extends CcApiSimpleCommand<ListLogDrainCommandI
     );
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

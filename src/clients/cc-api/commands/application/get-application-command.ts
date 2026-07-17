@@ -20,9 +20,6 @@ export class GetApplicationCommand extends CcApiCompositeCommand<
   async compose(params: GetApplicationCommandInput, composer: CcApiComposer): Promise<GetApplicationCommandOutput> {
     const application = await composer.send(new GetApplicationInnerCommand(params));
 
-    if (application == null) {
-      return undefined;
-    }
     if (params.withBranches === true) {
       await consolidateApplicationWithBranches(application, composer);
     }
@@ -41,10 +38,6 @@ export class GetApplicationInnerCommand extends CcApiSimpleCommand<
 > {
   toRequestParams(params: GetApplicationCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}`);
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 
   transformCommandOutput(response: unknown): GetApplicationCommandOutput {

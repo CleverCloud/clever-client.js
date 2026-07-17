@@ -1,4 +1,5 @@
 import type { Composer } from '../../../../types/command.types.js';
+import { tolerateNotFound } from '../../../../utils/error-utils.ts';
 import { Polling } from '../../../../utils/polling.js';
 import type { CcApiType } from '../../types/cc-api.types.js';
 import { GetKubernetesClusterCommand } from './get-kubernetes-cluster-command.js';
@@ -21,7 +22,7 @@ export async function waitForKubernetesClusterDeletion(
 ): Promise<void> {
   const polling = new Polling(
     async () => {
-      const cluster = await composer.send(new GetKubernetesClusterCommand({ ownerId, clusterId }));
+      const cluster = await tolerateNotFound(composer.send(new GetKubernetesClusterCommand({ ownerId, clusterId })));
       return { stop: cluster == null || cluster.status === 'DELETED' };
     },
     POLLING_INTERVAL_MS,
@@ -41,7 +42,7 @@ export async function waitForKubernetesClusterActive(
 ): Promise<KubernetesCluster> {
   const polling = new Polling<KubernetesCluster>(
     async () => {
-      const cluster = await composer.send(new GetKubernetesClusterCommand({ ownerId, clusterId }));
+      const cluster = await tolerateNotFound(composer.send(new GetKubernetesClusterCommand({ ownerId, clusterId })));
       return cluster != null && (cluster.status === 'ACTIVE' || cluster.status === 'FAILED')
         ? { stop: true, value: cluster }
         : { stop: false };

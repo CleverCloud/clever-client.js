@@ -21,10 +21,6 @@ export class GetExposedEnvironmentCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/exposed_env`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetExposedEnvironmentCommandOutput {
     return sortBy(toArray(response as Record<string, string>), 'name');
   }

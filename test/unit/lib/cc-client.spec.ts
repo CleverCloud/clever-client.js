@@ -349,20 +349,6 @@ describe('clever-client', () => {
       expect(spy.mock.calls[0][1].url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
     });
 
-    it('should return `command.getEmptyResponse` when `getEmptyResponse.getEmptyResponsePolicy` returns an empty response', async () => {
-      const spy = vi.spyOn(client, 'send');
-      const command = simpleCommand(get('/path/subPath'));
-      vi.spyOn(command, 'getEmptyResponsePolicy').mockReturnValue({ isEmpty: true, emptyValue: 'empty response' });
-
-      await newScenario()
-        .when({ method: 'GET', path: '/path/subPath' })
-        .respond({ status: 200, body: 'body' })
-        .thenCall(() => client.send(command));
-
-      expect(spy).toHaveBeenCalledTimes(1);
-      expect(await spy.mock.results[0].value).toBe('empty response');
-    });
-
     it('should call `command.transformCommandOutput` with right parameters', async () => {
       const command = simpleCommand(get('/path/subPath'));
       const spy = vi.spyOn(command, 'transformCommandOutput');

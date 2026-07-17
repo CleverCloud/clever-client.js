@@ -25,10 +25,6 @@ export class ListLogCommand extends CcApiSimpleCommand<ListLogCommandInput, List
     );
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   transformCommandOutput(response: unknown): ListLogCommandOutput {
     return transformOldLogs(response);
   }

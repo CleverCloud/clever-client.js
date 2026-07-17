@@ -20,8 +20,4 @@ export class GetNetworkGroupPeerCommand extends CcApiSimpleCommand<
       safeUrl`/v4/networkgroups/organisations/${params.ownerId}/networkgroups/${params.networkGroupId}/peers/${params.peerId}`,
     );
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

@@ -13,12 +13,6 @@ describe('heptapod commands', function () {
     await support.cleanup();
   });
 
-  it('should get null heptapod price estimation on user organisation', async () => {
-    const response = await support.client.send(new GetHeptapodPriceEstimationCommand({ ownerId: support.userId }));
-
-    expect(response).toBeNull();
-  });
-
   it.skip('should get heptapod price estimation on organisation', async () => {
     const response = await support.client.send(
       new GetHeptapodPriceEstimationCommand({ ownerId: STATIC_ORGANISATION_ID }),

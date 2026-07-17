@@ -55,10 +55,6 @@ class ListDomainInnerCommand extends CcApiSimpleCommand<ListDomainCommandInput, 
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/vhosts`);
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   transformCommandOutput(response: unknown): Array<Domain> {
     return sortBy(
       (response as Array<unknown>).map((domain) => transformDomain(domain)),
@@ -81,10 +77,6 @@ class ListDomainInnerCommand extends CcApiSimpleCommand<ListDomainCommandInput, 
 class GetPrimaryDomainInnerCommand extends CcApiSimpleCommand<ApplicationId, Domain> {
   toRequestParams(params: ApplicationId) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/vhosts/favourite`);
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 
   transformCommandOutput(response: unknown): Domain {

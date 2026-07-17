@@ -23,8 +23,4 @@ export class GetProductAddonVersionsCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetProductAddonVersionsCommandOutput {
     return transformProductAddonVersions(response);
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

@@ -34,8 +34,4 @@ export class SearchNetworkGroupCommand extends CcApiSimpleCommand<
 
     return normalized.filter((item) => this.params.types!.includes(item.type));
   }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
 }

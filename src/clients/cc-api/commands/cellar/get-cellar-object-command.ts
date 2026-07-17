@@ -19,10 +19,6 @@ export class GetCellarObjectCommand extends CcApiSimpleCommand<
     );
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

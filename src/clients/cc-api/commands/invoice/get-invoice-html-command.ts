@@ -17,8 +17,4 @@ export class GetInvoiceHtmlCommand extends CcApiSimpleCommand<GetInvoiceHtmlComm
       headers: new HeadersBuilder().acceptTextHtml().build(),
     };
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

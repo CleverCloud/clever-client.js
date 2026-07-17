@@ -16,8 +16,4 @@ export class ListGithubSshKeyCommand extends CcApiSimpleCommand<void, ListGithub
   transformCommandOutput(response: unknown): ListGithubSshKeyCommandOutput {
     return sortBy(response as ListGithubSshKeyCommandOutput, 'name');
   }
-
-  getEmptyResponsePolicy(status: number, body: unknown): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404 && (body as { id?: number })?.id === 7301, emptyValue: [] };
-  }
 }

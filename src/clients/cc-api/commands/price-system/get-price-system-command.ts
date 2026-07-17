@@ -32,8 +32,4 @@ export class GetPriceSystemCommand extends CcApiSimpleCommand<GetPriceSystemComm
   transformCommandOutput(response: unknown): GetPriceSystemCommandOutput {
     return transformPriceSystem(response);
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

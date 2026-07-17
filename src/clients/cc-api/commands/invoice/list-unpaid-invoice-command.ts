@@ -20,10 +20,6 @@ export class ListUnpaidInvoiceCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/unpaid`);
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   transformCommandOutput(response: unknown): ListUnpaidInvoiceCommandOutput {
     return sortBy((response as Array<unknown>).map(transformInvoiceSummary), 'emissionDate');
   }

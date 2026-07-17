@@ -20,10 +20,6 @@ export class GetUserSettingCommand extends CcApiSimpleCommand<GetUserSettingComm
     };
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetUserSettingCommandOutput {
     return (response as { value: string }).value;
   }

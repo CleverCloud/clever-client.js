@@ -17,8 +17,4 @@ export class ListGithubApplicationCommand extends CcApiSimpleCommand<void, ListG
   transformCommandOutput(response: unknown): ListGithubApplicationCommandOutput {
     return sortBy((response as Array<unknown>).map(transformGithubApplication), 'name');
   }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
 }

@@ -20,10 +20,6 @@ export class ListCellarBucketCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v4/cellar/organisations/${params.ownerId}/cellar/${params.addonId}/buckets`);
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: { buckets: [], total: 0 } };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

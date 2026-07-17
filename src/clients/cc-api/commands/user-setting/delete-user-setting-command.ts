@@ -14,10 +14,6 @@ export class DeleteUserSettingCommand extends CcApiSimpleCommand<DeleteUserSetti
     return delete_(safeUrl`/v4/console/settings/${params.name}`, new QueryParams().append('env', this.params.env));
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(): undefined {
     return undefined;
   }

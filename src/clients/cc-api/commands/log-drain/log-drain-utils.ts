@@ -1,4 +1,5 @@
 import type { Composer } from '../../../../types/command.types.js';
+import { tolerateNotFound } from '../../../../utils/error-utils.ts';
 import { isTimeoutError, Polling } from '../../../../utils/polling.js';
 import type { ApplicationOrAddonId, CcApiType } from '../../types/cc-api.types.js';
 import { GetLogDrainCommand } from './get-log-drain-command.js';
@@ -39,7 +40,7 @@ async function waitForState<T extends { status: LogDrainStatus }>(
 ): Promise<T> {
   const polling = new Polling(
     async () => {
-      const result = await fetchDrain();
+      const result = await tolerateNotFound(fetchDrain());
       if (result == null) {
         return { stop: false };
       }

@@ -40,7 +40,7 @@ export class GetEnvironmentCommand extends CcApiCompositeCommand<
       ]);
 
       const result: GetEnvironmentCommandOutput = {
-        environment: sortBy(responses[0] ?? [], 'name'),
+        environment: sortBy(responses[0], 'name'),
       };
       if (params.includeLinkedApplications) {
         result.linkedApplicationsEnvironment = sortBy(responses[1] ?? [], 'applicationName');
@@ -80,10 +80,6 @@ class GetApplicationEnvironmentCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/env`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
@@ -102,10 +98,6 @@ class GetAddonEnvironmentCommand extends CcApiSimpleCommand<
 > {
   toRequestParams(params: GetAddonEnvironmentCommandInput): Partial<CcRequestParams> {
     return get(safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}/env`);
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 
   getIdsToResolve(): IdResolve {
@@ -127,10 +119,6 @@ class GetLinkedApplicationEnvironmentCommand extends CcApiSimpleCommand<
 > {
   toRequestParams(params: GetLinkedApplicationEnvironmentCommandInput): Partial<CcRequestParams> {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/dependencies/env`);
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 
   transformCommandOutput(response: unknown): Array<LinkedApplicationEnvironment> {
@@ -155,10 +143,6 @@ class GetLinkedAddonEnvironmentCommand extends CcApiSimpleCommand<
 > {
   toRequestParams(params: GetLinkedAddonEnvironmentCommandInput): Partial<CcRequestParams> {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/addons/env`);
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 
   transformCommandOutput(response: unknown): Array<LinkedAddonEnvironment> {

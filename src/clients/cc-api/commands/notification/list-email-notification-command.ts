@@ -23,8 +23,4 @@ export class ListEmailNotificationCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ListEmailNotificationCommandOutput {
     return sortBy((response as Array<unknown>).map(transformEmailNotification), 'name', 'createdAt');
   }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
 }

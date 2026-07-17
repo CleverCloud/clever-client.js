@@ -20,10 +20,6 @@ export class GetCellarCredentialsCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v4/cellar/organisations/${params.ownerId}/cellar/${params.addonId}/credentials`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

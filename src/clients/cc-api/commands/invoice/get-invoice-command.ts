@@ -14,10 +14,6 @@ export class GetInvoiceCommand extends CcApiSimpleCommand<GetInvoiceCommandInput
     return get(safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/${params.invoiceNumber}`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetInvoiceCommandOutput {
     return transformInvoice(response);
   }

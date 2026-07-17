@@ -25,10 +25,6 @@ export class GetAddonProviderCommand extends CcApiSimpleCommand<
     return transformAddonProvider(response);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

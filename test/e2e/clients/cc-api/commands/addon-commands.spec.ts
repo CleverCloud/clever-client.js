@@ -39,13 +39,6 @@ describe('addon commands', function () {
     expect(response).toBeNull();
   });
 
-  it('should get addon null', async () => {
-    const response = await support.client.send(
-      new GetAddonCommand({ ownerId: support.organisationId, addonId: 'addon_00000000-0000-0000-0000-000000000000' }),
-    );
-    expect(response).toBeNull();
-  });
-
   it('should get addon', async () => {
     const addon = await support.createTestAddon();
 
@@ -53,17 +46,6 @@ describe('addon commands', function () {
       new GetAddonCommand({ ownerId: support.organisationId, addonId: addon.id }),
     );
     expect(response).toEqualInAnyOrder(addon);
-  });
-
-  it('should get addon sso null', async () => {
-    const response = await support.client.send(
-      new GetAddonSsoCommand({
-        ownerId: support.organisationId,
-        addonId: 'addon_00000000-0000-0000-0000-000000000000',
-      }),
-    );
-
-    expect(response).toBeNull();
   });
 
   it('should get addon sso', async () => {

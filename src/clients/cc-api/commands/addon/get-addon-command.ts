@@ -15,10 +15,6 @@ export class GetAddonCommand extends CcApiSimpleCommand<GetAddonCommandInput, Ge
     return get(safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetAddonCommandOutput {
     return transformAddon(response);
   }

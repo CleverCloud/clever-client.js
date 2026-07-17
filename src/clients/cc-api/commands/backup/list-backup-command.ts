@@ -79,10 +79,6 @@ class ListBackupInnerCommand extends CcApiSimpleCommand<ListBackupCommandInput, 
     return get(safeUrl`/v2/backups/${params.ownerId}/${params.addonId}`);
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   transformCommandOutput(response: unknown): ListBackupInnerCommandOutput {
     return sortBy((response as Array<unknown>).map(transformBackup), { key: 'creationDate', order: 'desc' });
   }

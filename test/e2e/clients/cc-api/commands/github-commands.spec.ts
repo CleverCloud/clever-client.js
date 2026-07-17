@@ -15,22 +15,6 @@ describe('github commands', function () {
 
       expect(response.transactionId).toBeTypeOf('string');
     });
-
-    it('should get username', async () => {
-      const response = await support
-        .getClient({ user: 'test-user-without-github' })
-        .send(new GetGithubUsernameCommand());
-
-      expect(response).toBeNull();
-    });
-
-    it('list applications should be empty', async () => {
-      const response = await support
-        .getClient({ user: 'test-user-without-github' })
-        .send(new ListGithubApplicationCommand());
-
-      expect(response).toHaveLength(0);
-    });
   });
 
   describe('with linked account', function () {

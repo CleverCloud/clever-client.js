@@ -27,14 +27,7 @@ export class GetOauthConsumerCommand extends CcApiCompositeCommand<
       params.withSecret ? composer.send(new GetOauthConsumerSecretCommand(params)) : null,
     ]);
 
-    if (oauthConsumer == null) {
-      return undefined;
-    }
-
     if (params.withSecret) {
-      if (secret == null) {
-        return undefined;
-      }
       return {
         ...oauthConsumer,
         ...secret,
@@ -59,10 +52,6 @@ export class GetOauthConsumerCommand extends CcApiCompositeCommand<
 class GetOauthConsumerInnerCommand extends CcApiSimpleCommand<GetOauthConsumerCommandInput, OauthConsumer> {
   toRequestParams(params: GetOauthConsumerCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/consumers/${params.oauthConsumerKey}`);
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 
   transformCommandOutput(response: unknown): OauthConsumer {

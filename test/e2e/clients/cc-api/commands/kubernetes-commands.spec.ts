@@ -21,6 +21,7 @@ import { ResumeKubernetesClusterCommand } from '../../../../../src/clients/cc-ap
 import { UpdateKubernetesClusterCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/update-kubernetes-cluster-command.js';
 import { UpdateKubernetesClusterVersionCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/update-kubernetes-cluster-version-command.js';
 import { UpdateKubernetesNodeGroupCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/update-kubernetes-node-group-command.js';
+import { tolerateNotFound } from '../../../../../src/utils/error-utils.ts';
 import { e2eSupport } from '../e2e-support.js';
 
 // Kubernetes clusters are not addon-plan based (no `providerId`/`planId`): creation goes straight through
@@ -108,18 +109,6 @@ describe('kubernetes commands', function () {
     expect(cluster.name).toBe('test-cluster-get');
   });
 
-  it.skip('should return null when getting a non-existent kubernetes cluster', async () => {
-    const cluster = await support.client.send(
-      new GetKubernetesClusterCommand({
-        ownerId: support.organisationId,
-        // valid `kubernetes_<ulid>` shape (KubernetesId.zero) that is very unlikely to ever exist
-        clusterId: 'kubernetes_00000000000000000000000000',
-      }),
-    );
-
-    expect(cluster).toBeNull();
-  });
-
   it.skip('should list kubernetes clusters', async () => {
     const created = await createTestCluster('test-cluster-list');
 
@@ -166,8 +155,8 @@ describe('kubernetes commands', function () {
 
     expect(response).toBeUndefined();
 
-    const cluster = await support.client.send(
-      new GetKubernetesClusterCommand({ ownerId: support.organisationId, clusterId: created.id }),
+    const cluster = await tolerateNotFound(
+      support.client.send(new GetKubernetesClusterCommand({ ownerId: support.organisationId, clusterId: created.id })),
     );
     expect(cluster == null || cluster.status === 'DELETED').toBe(true);
 

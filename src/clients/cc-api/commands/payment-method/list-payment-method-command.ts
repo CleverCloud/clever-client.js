@@ -23,8 +23,4 @@ export class ListPaymentMethodCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ListPaymentMethodCommandOutput {
     return (response as Array<unknown>).map(transformPaymentMethod);
   }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
 }

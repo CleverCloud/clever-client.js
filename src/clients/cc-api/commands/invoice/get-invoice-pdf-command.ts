@@ -17,8 +17,4 @@ export class GetInvoicePdfCommand extends CcApiSimpleCommand<GetInvoicePdfComman
       headers: new HeadersBuilder().accept('application/pdf').build(),
     };
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

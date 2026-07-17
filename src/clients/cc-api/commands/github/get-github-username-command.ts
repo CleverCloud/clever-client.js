@@ -11,8 +11,4 @@ export class GetGithubUsernameCommand extends CcApiSimpleCommand<void, GetGithub
   toRequestParams() {
     return get(`/v2/github/username`);
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

@@ -19,10 +19,6 @@ export class ListMigrationCommand extends CcApiSimpleCommand<ListMigrationComman
     return sortBy((response as Array<unknown>).map(transformMigration), { key: 'requestDate', order: 'desc' });
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

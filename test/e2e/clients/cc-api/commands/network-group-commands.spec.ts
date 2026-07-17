@@ -41,17 +41,6 @@ describe('network-group commands', function () {
     expect(response).toEqualInAnyOrder(createdNetworkGroup);
   });
 
-  it('should get network group null', async () => {
-    const response = await support.client.send(
-      new GetNetworkGroupCommand({
-        ownerId: support.organisationId,
-        networkGroupId: 'ng_00000000-0000-0000-0000-000000000000',
-      }),
-    );
-
-    expect(response).toBeNull();
-  });
-
   it('should list network groups', async () => {
     const application = await support.createTestApplication();
     const ng1 = await support.createNetworkGroup(application.id);

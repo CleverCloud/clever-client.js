@@ -24,10 +24,6 @@ export class ListKubernetesDeploymentEventCommand extends CcApiSimpleCommand<
     );
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   transformCommandOutput(response: unknown): ListKubernetesDeploymentEventCommandOutput {
     return (response as Array<Parameters<typeof transformKubernetesDeploymentEvent>[0]>).map(
       transformKubernetesDeploymentEvent,

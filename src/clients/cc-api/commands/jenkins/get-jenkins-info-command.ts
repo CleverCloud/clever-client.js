@@ -27,10 +27,6 @@ export class GetJenkinsInfoCommand extends CcApiCompositeCommand<
       composer.send(new GetJenkinsUpdatesCommand(params)),
     ]);
 
-    if (internal == null || updates == null) {
-      return undefined;
-    }
-
     return {
       ...internal,
       updates,

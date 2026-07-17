@@ -23,8 +23,4 @@ export class GetNetworkGroupWireguardConfigurationCommand extends CcApiSimpleCom
       headers: new HeadersBuilder().acceptTextPlain().build(),
     };
   }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
 }

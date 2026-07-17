@@ -14,10 +14,6 @@ export class GetCellarInfoCommand extends CcApiSimpleCommand<GetCellarInfoComman
     return get(safeUrl`/v4/cellar/organisations/${params.ownerId}/cellar/${params.addonId}`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

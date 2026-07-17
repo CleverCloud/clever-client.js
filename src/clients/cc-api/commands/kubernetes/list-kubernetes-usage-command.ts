@@ -20,10 +20,6 @@ export class ListKubernetesUsageCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v4/kubernetes/organisations/${params.ownerId}/usage`);
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   transformCommandOutput(response: unknown): ListKubernetesUsageCommandOutput {
     return (response as Array<Parameters<typeof transformKubernetesClusterUsageItem>[0]>).map(
       transformKubernetesClusterUsageItem,

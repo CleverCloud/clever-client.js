@@ -34,10 +34,6 @@ export class GetLoadBalancerInfoCommand extends CcApiSimpleCommand<
     return sortBy((response as Array<unknown>).map(transformLoadBalancer), 'id');
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

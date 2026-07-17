@@ -25,10 +25,6 @@ export class ListAddonProviderFeatureCommand extends CcApiSimpleCommand<
     return sortBy((response as Array<unknown>).map(transformAddonProviderFeature), 'name');
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

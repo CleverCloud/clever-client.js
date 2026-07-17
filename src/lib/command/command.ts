@@ -76,19 +76,6 @@ export abstract class SimpleCommand<Api extends string, CommandInput, CommandOut
   abstract toRequestParams(_params: CommandInput): SelfOrPromise<Partial<CcRequestParams>>;
 
   /**
-   * Determines how to handle empty responses from the API.
-   *
-   * @param _status - The HTTP status code
-   * @param _body - The response body
-   * @returns Policy for handling empty responses:
-   *   - null: treat response as non-empty
-   *   - {isEmpty: true}: treat as empty, use emptyValue if provided
-   */
-  getEmptyResponsePolicy(_status: number, _body?: unknown): { isEmpty: boolean; emptyValue?: unknown } | null {
-    return null;
-  }
-
-  /**
    * Transforms the raw API response into the expected output format
    *
    * @param response - The raw response from the API

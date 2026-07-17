@@ -24,10 +24,6 @@ export class GetConfigProviderCommand extends CcApiSimpleCommand<
     return sortBy(response as GetConfigProviderCommandOutput, 'name');
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       addonId: 'REAL_ADDON_ID',

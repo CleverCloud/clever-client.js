@@ -24,10 +24,6 @@ export class GetApplicationBranchesCommand extends CcApiSimpleCommand<
     return (response as GetApplicationBranchesCommandOutput).sort();
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

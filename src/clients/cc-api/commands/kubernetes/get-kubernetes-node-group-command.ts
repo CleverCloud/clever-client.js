@@ -22,10 +22,6 @@ export class GetKubernetesNodeGroupCommand extends CcApiSimpleCommand<
     );
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetKubernetesNodeGroupCommandOutput {
     return transformKubernetesNodeGroup(response);
   }

@@ -20,10 +20,6 @@ export class GetKubernetesClusterCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v4/kubernetes/organisations/${params.ownerId}/clusters/${params.clusterId}`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetKubernetesClusterCommandOutput {
     return transformKubernetesCluster(response);
   }

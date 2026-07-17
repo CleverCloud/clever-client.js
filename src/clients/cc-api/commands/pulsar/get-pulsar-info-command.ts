@@ -18,20 +18,9 @@ import { transformPulsarCluster, transformPulsarInfo } from './pulsar-transform.
  * @group Pulsar
  * @version 4
  */
-export class GetPulsarInfoCommand extends CcApiCompositeCommand<
-  GetPulsarInfoCommandInput,
-  GetPulsarInfoCommandOutput | undefined
-> {
-  async compose(
-    params: GetPulsarInfoCommandInput,
-    composer: CcApiComposer,
-  ): Promise<GetPulsarInfoCommandOutput | undefined> {
+export class GetPulsarInfoCommand extends CcApiCompositeCommand<GetPulsarInfoCommandInput, GetPulsarInfoCommandOutput> {
+  async compose(params: GetPulsarInfoCommandInput, composer: CcApiComposer): Promise<GetPulsarInfoCommandOutput> {
     const pulsarInfo = await composer.send(new GetPulsarInfoInnerCommand(params));
-
-    if (pulsarInfo == null) {
-      return undefined;
-    }
-
     const pulsarCluster = await composer.send(new GetPulsarClusterCommand({ clusterId: pulsarInfo.clusterId }));
 
     return {
@@ -56,10 +45,6 @@ export class GetPulsarInfoCommand extends CcApiCompositeCommand<
 class GetPulsarInfoInnerCommand extends CcApiSimpleCommand<GetPulsarInfoCommandInput, GetPulsarInfoInnerCommandOutput> {
   toRequestParams(params: GetPulsarInfoCommandInput) {
     return get(safeUrl`/v4/addon-providers/addon-pulsar/addons/${params.addonId}`);
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 
   transformCommandOutput(response: unknown): GetPulsarInfoInnerCommandOutput {

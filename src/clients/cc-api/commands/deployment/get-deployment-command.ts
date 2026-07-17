@@ -21,10 +21,6 @@ export class GetDeploymentCommand extends CcApiSimpleCommand<GetDeploymentComman
     );
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
@@ -46,10 +42,6 @@ export class GetDeploymentCommandLegacy extends CcApiSimpleCommand<
     return get(
       safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/deployments/${params.deploymentId}`,
     );
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 
   transformCommandOutput(response: unknown): GetDeploymentCommandOutputLegacy {
