@@ -54,7 +54,7 @@ describe('oauth consumers commands', function () {
 
     const response = await support.client.send(new DeleteOauthConsumerCommand({ oauthConsumerKey: consumer.key }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should update oauth consumer', async () => {

@@ -51,7 +51,7 @@ describe('matomo commands', function () {
     });
     const response = await support.client.send(new RebootMatomoCommand({ addonId: addon.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should rebuild matomo', async () => {
@@ -62,6 +62,6 @@ describe('matomo commands', function () {
     });
     const response = await support.client.send(new RebuildMatomoCommand({ addonId: addon.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });

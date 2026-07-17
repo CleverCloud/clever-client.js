@@ -27,7 +27,7 @@ describe('grafana commands', function () {
 
     const response = await support.client.send(new DisableGrafanaCommand({ ownerId: support.organisationId }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should enable grafana', async () => {
@@ -66,6 +66,6 @@ describe('grafana commands', function () {
 
     const response = await support.client.send(new ResetGrafanaCommand({ ownerId: support.organisationId }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });

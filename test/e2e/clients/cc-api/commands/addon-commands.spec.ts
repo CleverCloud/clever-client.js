@@ -36,7 +36,7 @@ describe('addon commands', function () {
     const addon = await support.createTestAddon();
 
     const response = await support.client.send(new DeleteAddonCommand({ addonId: addon.id }));
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should get addon', async () => {

@@ -71,7 +71,7 @@ describe('organisation commands', function () {
 
     const response = await support.client.send(new DeleteOrganisationCommand({ organisationId: organisation.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should update organisation', async () => {
@@ -231,7 +231,7 @@ describe('organisation commands', function () {
         new UpdateOrganisationMemberCommand({ organisationId: organisation.id, memberId }),
       );
 
-      expect(response).toBeNull();
+      expect(response).toBeUndefined();
     });
 
     // cannot be automatised because of rate limiting
@@ -246,7 +246,7 @@ describe('organisation commands', function () {
         }),
       );
 
-      expect(response).toBeNull();
+      expect(response).toBeUndefined();
     });
   });
 

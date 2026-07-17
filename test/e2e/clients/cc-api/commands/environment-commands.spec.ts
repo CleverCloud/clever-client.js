@@ -207,7 +207,7 @@ describe('environment commands', function () {
         }),
       );
 
-      expect(response).toBeNull();
+      expect(response).toBeUndefined();
     });
 
     it('should update environment', async () => {

@@ -116,7 +116,7 @@ describe('profile commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   // cannot be automatised because we need to check email
@@ -127,7 +127,7 @@ describe('profile commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   // cannot be automatised because we need to check email
@@ -138,6 +138,6 @@ describe('profile commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });

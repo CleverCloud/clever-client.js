@@ -141,6 +141,6 @@ describe.skip('migration commands', function () {
       }),
     );
 
-    expect(result).toBeNull();
+    expect(result).toBeUndefined();
   });
 });

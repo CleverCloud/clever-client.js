@@ -72,7 +72,7 @@ describe('api-token commands', function () {
       }),
     );
 
-    expect(updateResponse).toBeNull();
+    expect(updateResponse).toBeUndefined();
     const apiTokenUpdated = await getApiToken(tokenCreated.apiTokenId);
     expect(apiTokenUpdated!.name).toBe('test-api-token-updated');
     expect(apiTokenUpdated!.description).toBe('test description updated');
@@ -81,7 +81,7 @@ describe('api-token commands', function () {
     const deleteResponse = await support.client.send(
       new DeleteApiTokenCommand({ apiTokenId: tokenCreated.apiTokenId }),
     );
-    expect(deleteResponse).toBeNull();
+    expect(deleteResponse).toBeUndefined();
     const apiTokenDeleted = await getApiToken(tokenCreated.apiTokenId);
     expect(apiTokenDeleted).toBeUndefined();
     createdTokenId = null;

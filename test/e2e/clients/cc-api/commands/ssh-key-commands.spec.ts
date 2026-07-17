@@ -47,7 +47,7 @@ describe('ssh-key commands', function () {
 
     const response = await support.client.send(new DeletePersonalSshKeyCommand({ name: 'test-key' }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should list github ssh key', async () => {

@@ -51,7 +51,7 @@ describe('metabase commands', function () {
     });
     const response = await support.client.send(new RebootMetabaseCommand({ addonId: addon.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should rebuild metabase', async () => {
@@ -62,7 +62,7 @@ describe('metabase commands', function () {
     });
     const response = await support.client.send(new RebuildMetabaseCommand({ addonId: addon.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should check metabase version', async () => {

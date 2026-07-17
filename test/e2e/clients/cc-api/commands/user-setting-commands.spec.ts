@@ -33,7 +33,7 @@ describe('user setting commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should get user setting', async () => {
@@ -71,6 +71,6 @@ describe('user setting commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });

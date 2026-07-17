@@ -141,7 +141,7 @@ describe('deployment commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   async function waitForDeployment(applicationId: string, deploymentId: string): Promise<void> {

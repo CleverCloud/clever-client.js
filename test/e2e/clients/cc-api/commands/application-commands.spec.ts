@@ -45,7 +45,7 @@ describe('application commands', function () {
 
     const response = await support.client.send(new UndeployApplicationCommand({ applicationId: application.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should update buildFlavor', async () => {
@@ -81,7 +81,7 @@ describe('application commands', function () {
 
     const response = await support.client.send(new DeleteApplicationCommand({ applicationId: application.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should get application', async () => {

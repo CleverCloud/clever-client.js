@@ -127,7 +127,7 @@ describe('notification commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should create webhook notification', async () => {
@@ -214,7 +214,7 @@ describe('notification commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should get notification info', async () => {

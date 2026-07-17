@@ -60,7 +60,7 @@ describe('otoroshi commands', function () {
     });
     const response = await support.client.send(new RebootOtoroshiCommand({ addonId: addon.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should rebuild otoroshi', async () => {
@@ -71,7 +71,7 @@ describe('otoroshi commands', function () {
     });
     const response = await support.client.send(new RebuildOtoroshiCommand({ addonId: addon.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should check otoroshi version', async () => {
@@ -128,7 +128,7 @@ describe('otoroshi commands', function () {
 
     const response = await support.client.send(new DeleteOtoroshiNetworkGroupCommand({ addonId: addon.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should get otoroshi config', async () => {

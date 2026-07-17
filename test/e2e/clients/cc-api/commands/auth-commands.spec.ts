@@ -32,7 +32,7 @@ describe('auth commands', function () {
     await createMfa();
 
     const response = await support.client.send(new DeleteAuthMfaCommand({ kind: 'TOTP', password: support.password }));
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should create auth mfa', async () => {
@@ -59,7 +59,7 @@ describe('auth commands', function () {
       }),
     );
 
-    expect(confirmResponse).toBeNull();
+    expect(confirmResponse).toBeUndefined();
   });
 
   it('should get mfa backup codes', async () => {
@@ -80,7 +80,7 @@ describe('auth commands', function () {
         new UpdateAuthPasswordCommand({ oldPassword, newPassword, revokeTokens: false }),
       );
 
-      expect(response).toBeNull();
+      expect(response).toBeUndefined();
     } finally {
       await support.client.send(
         new UpdateAuthPasswordCommand({ oldPassword: newPassword, newPassword: oldPassword, revokeTokens: false }),
