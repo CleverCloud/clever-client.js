@@ -6,7 +6,6 @@ import type {
   CcRequestConfigPartial,
   CcRequestParams,
   CcResponse,
-  HttpMethod,
 } from '../types/request.types.js';
 import type { WithRequired } from '../types/utils.types.js';
 import type { CcAuth } from './auth/cc-auth.js';
@@ -26,7 +25,7 @@ const DEFAULT_REQUEST_CONFIG: CcRequestConfig = {
   cache: null,
   debug: false,
 };
-const DEFAULT_REQUEST_PARAMS: Partial<CcRequestParams> & { method: HttpMethod } = {
+const DEFAULT_REQUEST_PARAMS: WithRequired<Partial<CcRequestParams>, 'method'> = {
   method: 'GET',
 };
 const DEFAULT_STREAM_CONFIG: CcStreamConfig = {
@@ -125,7 +124,7 @@ export class CcClient<Api extends string> {
       }
 
       const requestParams = await this._getCommandRequestParams(command, requestConfig);
-      const request = await this._prepareRequest(requestParams, requestConfig);
+      const request = await this._prepareRequest(command, requestParams, requestConfig);
       const response = await sendRequest<CommandOutput>(request);
       return await this._handleResponse(response, request, command);
     } catch (e) {
@@ -171,7 +170,7 @@ export class CcClient<Api extends string> {
     const streamConfigWithDefaults = mergeStreamConfig(this.#defaultStreamsConfig, requestAndStreamConfig);
     return command.createStream(async () => {
       const preparedRequestParams = await command.toRequestParams(transformedParams);
-      return this._prepareRequest(preparedRequestParams, requestAndStreamConfig);
+      return this._prepareRequest(command, preparedRequestParams, requestAndStreamConfig);
     }, streamConfigWithDefaults);
   }
 
@@ -240,11 +239,13 @@ export class CcClient<Api extends string> {
   /**
    * Prepares the final request by combining parameters, configuration, and authentication
    *
+   * @param command - The command to prepare request for
    * @param requestParams - The request parameters
    * @param requestConfig - Optional request configuration
    * @returns The prepared request
    */
   protected async _prepareRequest(
+    command: SimpleCommand<Api, unknown, unknown> | StreamCommand<Api, unknown, CcStream>,
     requestParams: Partial<CcRequestParams>,
     requestConfig?: CcRequestConfigPartial,
   ): Promise<CcRequest> {
@@ -259,8 +260,10 @@ export class CcClient<Api extends string> {
       await this.#hooks.onRequest(preparedRequestParams);
     }
 
-    // apply auth if auth method is defined
-    this.#auth?.applyOnRequestParams(preparedRequestParams);
+    // apply auth if auth method is defined and if command does not disable it
+    if (command.isAuthEnabled()) {
+      this.#auth?.applyOnRequestParams(preparedRequestParams);
+    }
 
     return {
       // params

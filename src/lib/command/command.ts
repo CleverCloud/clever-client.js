@@ -107,6 +107,16 @@ export abstract class SimpleCommand<Api extends string, CommandInput, CommandOut
   transformErrorCode(errorCode: string): string {
     return errorCode;
   }
+
+  /**
+   * Determines whether the client's authentication should be applied to this command's request.
+   * Override to return `false` for commands that must be sent unauthenticated.
+   *
+   * @returns Whether authentication should be applied
+   */
+  isAuthEnabled(): boolean {
+    return true;
+  }
 }
 
 /**

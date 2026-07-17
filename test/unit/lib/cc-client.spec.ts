@@ -114,10 +114,11 @@ class SpiedClient extends CcClient<'test'> {
     return super._getCommandRequestParams(command, requestConfig);
   }
   override async _prepareRequest(
-    requestParams: Parameters<CcClient<'test'>['_prepareRequest']>[0],
-    requestConfig: Parameters<CcClient<'test'>['_prepareRequest']>[1],
+    command: Parameters<CcClient<'test'>['_prepareRequest']>[0],
+    requestParams: Parameters<CcClient<'test'>['_prepareRequest']>[1],
+    requestConfig: Parameters<CcClient<'test'>['_prepareRequest']>[2],
   ): ReturnType<CcClient<'test'>['_prepareRequest']> {
-    return super._prepareRequest(requestParams, requestConfig);
+    return super._prepareRequest(command, requestParams, requestConfig);
   }
   override async _handleResponse<CommandOutput>(
     response: CcResponse<CommandOutput>,
@@ -202,9 +203,10 @@ describe('clever-client', () => {
         .thenCall(() => client.send(command, requestConfig));
 
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy.mock.calls[0][0].method).toBe('GET');
-      expect(spy.mock.calls[0][0].url).toBe('/path/subPath');
-      expect(spy.mock.calls[0][1]).toBe(requestConfig);
+      expect(spy.mock.calls[0][0]).toBe(command);
+      expect(spy.mock.calls[0][1].method).toBe('GET');
+      expect(spy.mock.calls[0][1].url).toBe('/path/subPath');
+      expect(spy.mock.calls[0][2]).toBe(requestConfig);
     });
 
     it('should call `command.toRequestParams` method with the transformed params', async () => {
@@ -237,6 +239,21 @@ describe('clever-client', () => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy.mock.calls[0][0].method).toBe('GET');
       expect(spy.mock.calls[0][0].url).toBe('/path/subPath');
+    });
+
+    it('should not call `auth.applyOnRequestParams()` when `command.isAuthEnabled()` returns `false`', async () => {
+      const auth = new CcAuthApiToken('token');
+      const spy = vi.spyOn(auth, 'applyOnRequestParams');
+      const client = createClient({}, auth);
+      const command = simpleCommand(get('/path/subPath'));
+      vi.spyOn(command, 'isAuthEnabled').mockReturnValue(false);
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 200 })
+        .thenCall(() => client.send(command));
+
+      expect(spy).not.toHaveBeenCalled();
     });
 
     it('should call onRequest hook function', async () => {
@@ -589,13 +606,53 @@ describe('clever-client', () => {
         .thenCall(() => startStream(stream));
 
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy.mock.calls[0][0]).toEqual({
+      expect(spy.mock.calls[0][0]).toBe(command);
+      expect(spy.mock.calls[0][1]).toEqual({
         url: '/path/subPath',
       });
-      expect(spy.mock.calls[0][1]).toEqual({
+      expect(spy.mock.calls[0][2]).toEqual({
         debug: true,
         cors: false,
       });
+    });
+
+    it('should call `auth.applyOnRequestParams()`', async () => {
+      const auth = new CcAuthApiToken('token');
+      const spy = vi.spyOn(auth, 'applyOnRequestParams');
+      const client = createClient({}, auth);
+      const command = streamCommand({ url: '/path/subPath' });
+
+      const stream = await client.stream(command);
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({
+          status: 200,
+          events: [{ type: 'message', event: 'END_OF_STREAM', data: '{"endedBy": "UNTIL_REACHED"}' }],
+        })
+        .thenCall(() => startStream(stream));
+
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call `auth.applyOnRequestParams()` when `command.isAuthEnabled()` returns `false`', async () => {
+      const auth = new CcAuthApiToken('token');
+      const spy = vi.spyOn(auth, 'applyOnRequestParams');
+      const client = createClient({}, auth);
+      const command = streamCommand({ url: '/path/subPath' });
+      vi.spyOn(command, 'isAuthEnabled').mockReturnValue(false);
+
+      const stream = await client.stream(command);
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({
+          status: 200,
+          events: [{ type: 'message', event: 'END_OF_STREAM', data: '{"endedBy": "UNTIL_REACHED"}' }],
+        })
+        .thenCall(() => startStream(stream));
+
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 

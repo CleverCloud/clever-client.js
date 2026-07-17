@@ -53,4 +53,14 @@ export abstract class StreamCommand<Api extends string, CommandInput, Stream ext
    * @returns The created stream instance
    */
   abstract createStream(_requestFactory: CcStreamRequestFactory, _config: CcStreamConfig): Stream;
+
+  /**
+   * Determines whether the client's authentication should be applied to this stream command's request.
+   * Override to return `false` for stream commands that must be sent unauthenticated.
+   *
+   * @returns Whether authentication should be applied
+   */
+  isAuthEnabled(): boolean {
+    return true;
+  }
 }
