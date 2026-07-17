@@ -4,6 +4,7 @@ import {
   domainToUrl,
   getDomainUrl,
   getHostWithWildcard,
+  guessPrimaryDomain,
   isTestDomain,
   isTestDomainWithSubdomain,
   parseDomain,
@@ -206,6 +207,42 @@ describe('domain-utils', () => {
     it('should return false for non-cleverapps.io domain', () => {
       const isTestWithSubdomain = isTestDomainWithSubdomain('sub.example.com');
       expect(isTestWithSubdomain).toBe(false);
+    });
+  });
+
+  describe('guessPrimaryDomain()', () => {
+    it('should return undefined for an empty list', () => {
+      expect(guessPrimaryDomain([])).toBeUndefined();
+    });
+
+    it('should prefer the first non test, non wildcard domain', () => {
+      const domains = ['app.cleverapps.io', '*.example.com', 'example.com', 'other.com'];
+      expect(guessPrimaryDomain(domains)).toBe('example.com');
+    });
+
+    it('should fall back to the first non test domain when every non test one is a wildcard', () => {
+      const domains = ['app.cleverapps.io', '*.example.com', '*.other.com'];
+      expect(guessPrimaryDomain(domains)).toBe('*.example.com');
+    });
+
+    it('should fall back to the first non wildcard domain when every domain is a test domain', () => {
+      const domains = ['*.app.cleverapps.io', 'sub.app.cleverapps.io'];
+      expect(guessPrimaryDomain(domains)).toBe('sub.app.cleverapps.io');
+    });
+
+    it('should fall back to the first domain when all are test wildcard domains', () => {
+      const domains = ['*.a.cleverapps.io', '*.b.cleverapps.io'];
+      expect(guessPrimaryDomain(domains)).toBe('*.a.cleverapps.io');
+    });
+
+    it('should preserve list order rather than sorting alphabetically', () => {
+      const domains = ['z-example.com', 'a-example.com'];
+      expect(guessPrimaryDomain(domains)).toBe('z-example.com');
+    });
+
+    it('should ignore the path prefix when detecting test domains', () => {
+      const domains = ['app.cleverapps.io/path', 'example.com/path'];
+      expect(guessPrimaryDomain(domains)).toBe('example.com/path');
     });
   });
 

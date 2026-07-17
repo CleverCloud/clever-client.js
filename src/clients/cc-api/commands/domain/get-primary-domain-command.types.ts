@@ -3,4 +3,4 @@ import type { Domain } from './domain.types.js';
 
 export type GetPrimaryDomainCommandInput = ApplicationId;
 
-export type GetPrimaryDomainCommandOutput = Domain;
+export type GetPrimaryDomainCommandOutput = Domain | undefined;

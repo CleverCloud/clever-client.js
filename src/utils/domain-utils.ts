@@ -43,6 +43,30 @@ export function parseDomain(domain: string): Domain {
   }
 }
 
+/**
+ * Guesses which domain should be the primary one among a list of domains, used as a
+ * fallback when an application has no favourite domain set.
+ *
+ * Domains are preferred in the following order:
+ * - the first non-test (see {@link isTestDomain}), non-wildcard domain
+ * - the first non-test domain
+ * - the first non-wildcard domain
+ * - the first domain
+ *
+ * @returns the guessed primary domain, or `undefined` when the list is empty
+ */
+export function guessPrimaryDomain(domains: Array<string>): string | undefined {
+  const parsed = domains.map((domain) => ({ domain, ...parseDomain(domain) }));
+
+  const guess =
+    parsed.find(({ hostname, isWildcard }) => !isTestDomain(hostname) && !isWildcard) ??
+    parsed.find(({ hostname }) => !isTestDomain(hostname)) ??
+    parsed.find(({ isWildcard }) => !isWildcard) ??
+    parsed.at(0);
+
+  return guess?.domain;
+}
+
 export class DomainParseError extends Error {
   code: 'empty' | 'invalid-wildcard' | 'invalid-format';
   cause?: unknown;

@@ -32,7 +32,7 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should delete domain', async () => {
@@ -51,7 +51,7 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should get primary domain', async () => {
@@ -75,8 +75,8 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response.isPrimary).toBe(true);
-    expect(response.domain).toBe('foo.com/');
+    expect(response?.isPrimary).toBe(true);
+    expect(response?.domain).toBe('foo.com/');
   });
 
   it('should list domains', async () => {
@@ -101,7 +101,8 @@ describe('domain commands', function () {
         domain: `app-${application.id.replace('app_', '')}.cleverapps.io/`,
         isPrimary: false,
       },
-      { domain: 'foo.com/', isPrimary: false },
+      // no favourite set: the guess promotes the non-test domain to primary
+      { domain: 'foo.com/', isPrimary: true },
     ]);
   });
 
@@ -121,7 +122,7 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should unset primary domain', async () => {
@@ -145,6 +146,6 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });
