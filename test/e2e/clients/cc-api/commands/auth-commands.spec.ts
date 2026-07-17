@@ -4,6 +4,7 @@ import { ConfirmAuthMfaCommand } from '../../../../../src/clients/cc-api/command
 import { CreateAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
 import { DeleteAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
 import { GetAuthMfaBackupCodesCommand } from '../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-backup-codes-command.js';
+import { RequestAuthPasswordResetCommand } from '../../../../../src/clients/cc-api/commands/auth/request-auth-password-reset-command.js';
 import { UpdateAuthPasswordCommand } from '../../../../../src/clients/cc-api/commands/auth/update-auth-password-command.js';
 import { GetProfileCommand } from '../../../../../src/clients/cc-api/commands/profile/get-profile-command.js';
 import { e2eSupport } from '../e2e-support.js';
@@ -85,6 +86,11 @@ describe('auth commands', function () {
         new UpdateAuthPasswordCommand({ oldPassword: newPassword, newPassword: oldPassword, revokeTokens: false }),
       );
     }
+  });
+
+  it('should request a password reset', async () => {
+    const response = await support.client.send(new RequestAuthPasswordResetCommand({ login: support.email }));
+    expect(response).toBeUndefined();
   });
 
   async function createMfa() {
