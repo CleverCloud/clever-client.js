@@ -1,0 +1,1213 @@
+filepath,interface,field,type,optional,comment,line_number,export_modifier,extends,readonly
+src/clients/cc-api/commands/addon/addon.types.d.ts,Addon,id,string,false,,4,export,,false
+src/clients/cc-api/commands/addon/addon.types.d.ts,Addon,name,string,false,,5,export,,false
+src/clients/cc-api/commands/addon/addon.types.d.ts,Addon,realId,string,false,,6,export,,false
+src/clients/cc-api/commands/addon/addon.types.d.ts,Addon,zone,string,false,renamed from region,8,export,,false
+src/clients/cc-api/commands/addon/addon.types.d.ts,Addon,zoneId,string,false,,9,export,,false
+src/clients/cc-api/commands/addon/addon.types.d.ts,Addon,provider,AddonProviderFull,false,,10,export,,false
+src/clients/cc-api/commands/addon/addon.types.d.ts,Addon,plan,AddonProviderPlan,false,,11,export,,false
+src/clients/cc-api/commands/addon/addon.types.d.ts,Addon,creationDate,string,false,transformed from number to date iso string,13,export,,false
+src/clients/cc-api/commands/addon/addon.types.d.ts,Addon,configKeys,Array<string>,false,,14,export,,false
+src/clients/cc-api/commands/addon/create-addon-command.types.d.ts,CreateAddonCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/addon/create-addon-command.types.d.ts,CreateAddonCommandInput,name,string,false,,5,export,,false
+src/clients/cc-api/commands/addon/create-addon-command.types.d.ts,CreateAddonCommandInput,zone,string,false,renamed from region,7,export,,false
+src/clients/cc-api/commands/addon/create-addon-command.types.d.ts,CreateAddonCommandInput,providerId,string,false,,8,export,,false
+src/clients/cc-api/commands/addon/create-addon-command.types.d.ts,CreateAddonCommandInput,planId,string,false,,9,export,,false
+src/clients/cc-api/commands/addon/create-addon-command.types.d.ts,CreateAddonCommandInput,options,"Record<string, string>",true,,10,export,,false
+src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,GetAddonSsoCommandOutput,url,string,false,,6,export,,false
+src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,GetAddonSsoCommandOutput,id,string,false,,7,export,,false
+src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,GetAddonSsoCommandOutput,timestamp,number,false,,8,export,,false
+src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,GetAddonSsoCommandOutput,token,string,false,,9,export,,false
+src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,GetAddonSsoCommandOutput,signature,string,false,,10,export,,false
+src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,GetAddonSsoCommandOutput,email,string,false,,11,export,,false
+src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,GetAddonSsoCommandOutput,userId,string,false,renamed from user_id,13,export,,false
+src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,GetAddonSsoCommandOutput,userInfoSignature,string,false,renamed from userinfo_signature,15,export,,false
+src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,GetAddonSsoCommandOutput,name,string,false,,16,export,,false
+src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,GetAddonSsoCommandOutput,navData,string,false,renamed from nav-data,18,export,,false
+src/clients/cc-api/commands/addon/list-addon-command.types.d.ts,ListAddonCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/addon/update-addon-command.types.d.ts,UpdateAddonCommandInput,name,string,false,,5,export,AddonId,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderFull,plans,Array<AddonProviderPlan>,false,,2,export,AddonProvider,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderFull,features,Array<AddonProviderFeature>,false,,3,export,AddonProvider,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,id,string,false,,7,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,name,string,false,,8,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,website,string,false,,9,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,supportEmail,string,false,,10,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,googlePlusName,string,false,,11,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,twitterName,string,false,,12,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,analyticsId,string,false,,13,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,shortDesc,string,false,,14,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,longDesc,string,false,,15,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,logoUrl,string,false,,16,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,status,AddonProviderStatus,false,,17,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,openInNewTab,boolean,false,,18,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,canUpgrade,boolean,false,,19,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProvider,zones,Array<string>,false,renamed from regions,21,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderPlan,id,string,false,,25,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderPlan,name,string,false,,26,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderPlan,slug,string,false,,27,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderPlan,price,number,false,,28,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderPlan,priceId,string,true,renamed from price_id,30,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderPlan,features,Array<AddonProviderPlanFeature>,false,,31,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderPlan,zones,Array<string>,false,,32,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderPlanFeature,value,string,false,,36,export,AddonProviderFeature,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderPlanFeature,computableValue,string,false,renamed from computable_value and fallback to value when null,38,export,AddonProviderFeature,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderFeature,name,string,false,,42,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderFeature,type,AddonProviderFeatureType,false,,43,export,,false
+src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,AddonProviderFeature,nameCode,string,false,renamed from name_code and fallback to name when null,45,export,,false
+src/clients/cc-api/commands/addon-provider/create-addon-provider-command.types.d.ts,CreateAddonProviderCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/addon-provider/create-addon-provider-command.types.d.ts,CreateAddonProviderCommandInput,id,string,false,,5,export,,false
+src/clients/cc-api/commands/addon-provider/create-addon-provider-command.types.d.ts,CreateAddonProviderCommandInput,name,string,false,,6,export,,false
+src/clients/cc-api/commands/addon-provider/create-addon-provider-command.types.d.ts,CreateAddonProviderCommandInput,api,"{
+    // renamed from config_vars
+    configVars: Array<string>;
+    // renamed from regions
+    zones: Array<string>;
+    password: string;
+    // renamed from sso_salt
+    ssoSalt: string;
+    production: {
+      // renamed from base_url
+      baseUrl: string;
+      // renamed from sso_url
+      ssoUrl: string;
+    };
+    test: {
+      // renamed from base_url
+      baseUrl: string;
+      // renamed from sso_url
+      ssoUrl: string;
+    };
+  }",false,,7,export,,false
+src/clients/cc-api/commands/addon-provider/create-addon-provider-feature-command.types.d.ts,CreateAddonProviderFeatureCommandInput,name,string,false,,5,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/create-addon-provider-feature-command.types.d.ts,CreateAddonProviderFeatureCommandInput,type,AddonProviderFeatureType,false,,6,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/create-addon-provider-plan-command.types.d.ts,CreateAddonProviderPlanCommandInput,name,string,false,,5,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/create-addon-provider-plan-command.types.d.ts,CreateAddonProviderPlanCommandInput,slug,string,false,,6,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/create-addon-provider-plan-command.types.d.ts,CreateAddonProviderPlanCommandInput,price,number,false,,7,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/create-addon-provider-plan-command.types.d.ts,CreateAddonProviderPlanCommandInput,features,"Array<{
+    name: string;
+    type: AddonProviderFeatureType;
+    value: string;
+  }>",true,,8,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/delete-addon-provider-feature-command.types.d.ts,DeleteAddonProviderFeatureCommandInput,name,string,false,,4,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/delete-addon-provider-plan-command.types.d.ts,DeleteAddonProviderPlanCommandInput,planId,string,false,,4,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,UpdateAddonProviderCommandInput,name,string,true,,5,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,UpdateAddonProviderCommandInput,website,string,true,,6,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,UpdateAddonProviderCommandInput,supportEmail,string,true,,7,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,UpdateAddonProviderCommandInput,googlePlusName,string,true,,8,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,UpdateAddonProviderCommandInput,twitterName,string,true,,9,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,UpdateAddonProviderCommandInput,analyticsId,string,true,,10,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,UpdateAddonProviderCommandInput,shortDesc,string,true,,11,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,UpdateAddonProviderCommandInput,longDesc,string,true,,12,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,UpdateAddonProviderCommandInput,logoUrl,string,true,,13,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-plan-command.types.d.ts,UpdateAddonProviderPlanCommandInput,planId,string,false,,5,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-plan-command.types.d.ts,UpdateAddonProviderPlanCommandInput,name,string,false,,6,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-plan-command.types.d.ts,UpdateAddonProviderPlanCommandInput,slug,string,false,,7,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-plan-command.types.d.ts,UpdateAddonProviderPlanCommandInput,price,number,false,,8,export,AddonProviderId,false
+src/clients/cc-api/commands/addon-provider/update-addon-provider-plan-command.types.d.ts,UpdateAddonProviderPlanCommandInput,features,"Array<{
+    name: string;
+    type: AddonProviderFeatureType;
+    value: string;
+  }>",true,,9,export,AddonProviderId,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,id,string,false,,6,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,ownerId,string,false,,7,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,name,string,false,,8,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,description,string,false,,9,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,zone,string,false,,10,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,zoneId,string,false,,11,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,instance,"{
+    type: string;
+    version: string;
+    variant: ProductRuntimeVariant;
+    minInstances: number;
+    maxInstances: number;
+    maxAllowedInstances: number;
+    minFlavor: ProductRuntimeFlavor;
+    maxFlavor: ProductRuntimeFlavor;
+    flavors: Array<ProductRuntimeFlavor>;
+    // renamed from defaultEnv, and converted from Record<string, string>
+    defaultEnvironment: Array<EnvironmentVariable>;
+    lifetime: ApplicationLifetime;
+  }",false,,12,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,deployment,"{
+    shutdownable: boolean;
+    type: ApplicationDeploymentType;
+    repoState: ApplicationRepositoryState;
+    url: string;
+    httpUrl: string;
+  }",false,,26,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,domains,Array<Domain>,false,renamed from vhosts,34,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,creationDate,string,false,converted from number to date iso string,36,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,lastDeploy,number,false,renamed from last_deploy,38,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,archived,boolean,false,,39,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,stickySessions,boolean,false,,40,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,homogeneous,boolean,false,,41,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,favourite,boolean,false,,42,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,cancelOnPush,boolean,false,,43,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,oauthApp,ApplicationOauthApp,true,,44,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,separateBuild,boolean,false,,45,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,buildFlavor,ProductRuntimeFlavor,false,,46,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,state,ApplicationState,false,,47,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,commitId,string,false,,48,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,appliance,null,false,,49,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,branch,string,false,,50,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,branches,Array<string>,true,,51,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,forceHttps,boolean,false,converted from ENABLED/DISABLED to boolean,53,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,Application,environment,Array<EnvironmentVariable>,false,renamed from env,55,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,ApplicationOauthAppGithub,type,'github',false,,74,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,ApplicationOauthAppGithub,secret,string,false,,75,export,,false
+src/clients/cc-api/commands/application/application.types.d.ts,ApplicationOauthAppGithub,webhookUrl,string,false,,76,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,applianceId,string,true,,5,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,archived,boolean,true,,6,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,branch,string,true,,7,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,buildFlavor,string,true,,8,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,cancelOnPush,boolean,true,,9,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,deploy,string,true,,10,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,description,string,true,,11,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,environment,Array<EnvironmentVariable>,true,"renamed from env and converted from Record<string, string>",13,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,favourite,boolean,true,,14,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,forceHttps,boolean,true,converted from ENABLED|DISABLED to boolean,16,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,homogeneous,boolean,true,,17,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,instance,ApplicationInstance | ApplicationInstanceSlug,false,,18,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,instanceLifetime,ApplicationLifetime,true,,19,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,maxFlavor,string,true,,20,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,maxInstances,number,true,,21,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,minFlavor,string,false,,22,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,minInstances,number,true,,23,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,name,string,false,,24,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,oauthApp,ApplicationOauthApp,true,,25,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,ownerId,string,false,,26,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,publicGitRepositoryUrl,string,true,,27,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,separateBuild,boolean,true,,28,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,shutdownable,boolean,true,,29,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,stickySessions,boolean,true,,30,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,tags,Array<string>,true,,31,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationCommandInput,zone,string,true,,32,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,ApplicationInstanceSlug,slug,string,false,,38,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,ApplicationInstance,type,string,false,,42,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,ApplicationInstance,version,string,false,,43,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,ApplicationInstance,variant,string,false,,44,export,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,ApplicationOauthAppGithub,type,'github',false,,50,,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,ApplicationOauthAppGithub,id,string,false,,51,,,false
+src/clients/cc-api/commands/application/create-application-command.types.d.ts,CreateApplicationInnerCommandInput,instance,ApplicationInstance,false,,55,export,Omit,false
+src/clients/cc-api/commands/application/deploy-application-command.types.d.ts,DeployApplicationCommandInput,commit,string,true,,4,export,ApplicationId,false
+src/clients/cc-api/commands/application/deploy-application-command.types.d.ts,DeployApplicationCommandInput,useCache,boolean,true,,5,export,ApplicationId,false
+src/clients/cc-api/commands/application/deploy-application-command.types.d.ts,DeployApplicationCommandOutput,deploymentId,string,false,,9,export,,false
+src/clients/cc-api/commands/application/get-application-command.types.d.ts,GetApplicationCommandInput,withBranches,boolean,true,,5,export,ApplicationId,false
+src/clients/cc-api/commands/application/list-application-command.types.d.ts,ListApplicationCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/application/list-application-command.types.d.ts,ListApplicationCommandInput,withBranches,boolean,false,,5,export,,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,archived,boolean,true,,6,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,branch,string,true,,7,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,buildFlavor,string,true,,8,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,cancelOnPush,boolean,true,,9,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,deploy,string,true,,10,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,description,string,true,,11,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,environment,Array<EnvironmentVariable>,true,"renamed from env and converted from Record<string, string>",13,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,favourite,boolean,true,,14,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,forceHttps,boolean,true,converted from ENABLED|DISABLED to boolean,16,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,homogeneous,boolean,true,,17,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,instanceLifetime,ApplicationLifetime,true,,18,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,maxFlavor,string,true,,19,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,maxInstances,number,true,,20,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,minFlavor,string,true,,21,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,minInstances,number,true,,22,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,name,string,true,,23,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,separateBuild,boolean,true,,24,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,shutdownable,boolean,true,,25,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,stickySessions,boolean,true,,26,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,tags,Array<string>,true,,27,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationCommandInput,zone,string,true,,28,export,ApplicationId,false
+src/clients/cc-api/commands/application/update-application-command.types.d.ts,UpdateApplicationBranchCommandInput,branch,string,false,,37,export,ApplicationId,false
+src/clients/cc-api/commands/auth/confirm-auth-mfa-command.types.d.ts,ConfirmAuthMfaCommandInput,kind,MFAKind,false,,4,export,,false
+src/clients/cc-api/commands/auth/confirm-auth-mfa-command.types.d.ts,ConfirmAuthMfaCommandInput,code,string,false,,5,export,,false
+src/clients/cc-api/commands/auth/confirm-auth-mfa-command.types.d.ts,ConfirmAuthMfaCommandInput,password,string,false,,6,export,,false
+src/clients/cc-api/commands/auth/confirm-auth-mfa-command.types.d.ts,ConfirmAuthMfaCommandInput,revokeTokens,boolean,true,,7,export,,false
+src/clients/cc-api/commands/auth/create-auth-mfa-command.types.d.ts,CreateAuthMfaCommandInput,kind,MFAKind,false,,4,export,,false
+src/clients/cc-api/commands/auth/create-auth-mfa-command.types.d.ts,CreateAuthMfaCommandInput,password,string,false,,5,export,,false
+src/clients/cc-api/commands/auth/create-auth-mfa-command.types.d.ts,CreateAuthMfaCommandOutput,url,string,false,,9,export,,false
+src/clients/cc-api/commands/auth/delete-auth-mfa-command.types.d.ts,DeleteAuthMfaCommandInput,kind,MFAKind,false,,4,export,,false
+src/clients/cc-api/commands/auth/delete-auth-mfa-command.types.d.ts,DeleteAuthMfaCommandInput,password,string,false,,5,export,,false
+src/clients/cc-api/commands/auth/get-auth-mfa-backup-codes-command.types.d.ts,GetAuthMfaBackupCodesCommandInput,kind,MFAKind,false,,4,export,,false
+src/clients/cc-api/commands/auth/get-auth-mfa-backup-codes-command.types.d.ts,GetAuthMfaBackupCodesCommandInput,password,string,false,,5,export,,false
+src/clients/cc-api/commands/auth/update-auth-password-command.types.d.ts,UpdateAuthPasswordCommandInput,oldPassword,string,false,,2,export,,false
+src/clients/cc-api/commands/auth/update-auth-password-command.types.d.ts,UpdateAuthPasswordCommandInput,newPassword,string,false,,3,export,,false
+src/clients/cc-api/commands/auth/update-auth-password-command.types.d.ts,UpdateAuthPasswordCommandInput,revokeTokens,boolean,true,renamed from dropTokens,5,export,,false
+src/clients/cc-api/commands/backup/backup.types.d.ts,Backup,commands,BackupCommands,true,,2,export,BackupBase,false
+src/clients/cc-api/commands/backup/backup.types.d.ts,BackupBase,backupId,string,false,renamed from backup_id,7,export,,false
+src/clients/cc-api/commands/backup/backup.types.d.ts,BackupBase,entityId,string,false,renamed from entity_id,9,export,,false
+src/clients/cc-api/commands/backup/backup.types.d.ts,BackupBase,status,string,false,,10,export,,false
+src/clients/cc-api/commands/backup/backup.types.d.ts,BackupBase,creationDate,string,false,"renamed from creation_date, transformed from iso string with 6 digits microseconds to 3 digits milliseconds",12,export,,false
+src/clients/cc-api/commands/backup/backup.types.d.ts,BackupBase,expirationDate,string,true,"renamed from delete_at, transformed from iso string with 6 digits microseconds to 3 digits milliseconds",14,export,,false
+src/clients/cc-api/commands/backup/backup.types.d.ts,BackupBase,downloadUrl,string,false,renamed from download_url (or from link for elasticsearch addons),16,export,,false
+src/clients/cc-api/commands/backup/backup.types.d.ts,BackupCommands,restoreCommand,string,true,,20,export,,false
+src/clients/cc-api/commands/backup/backup.types.d.ts,BackupCommands,password,string,true,,21,export,,false
+src/clients/cc-api/commands/backup/backup.types.d.ts,BackupCommands,deleteCommand,string,true,,22,export,,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,ListBackupCommandInput,withCommands,boolean,true,,5,export,AddonId,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,InnerBackup,restoreCommand,string,true,renamed from restore_command,14,export,BackupBase,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,InnerBackup,deleteCommand,string,true,renamed from delete_command,16,export,BackupBase,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,GetAddonDetailsInnerCommandInput,addonProviderId,string,false,,20,export,,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,GetAddonDetailsInnerCommandInput,addonId,string,false,,21,export,,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,GetAddonDetailsInnerCommandOutput,id,string,false,,25,export,,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,GetAddonDetailsInnerCommandOutput,providerId,string,false,,26,export,,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,GetAddonDetailsInnerCommandOutput,host,string,false,,27,export,,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,GetAddonDetailsInnerCommandOutput,port,number,false,,28,export,,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,GetAddonDetailsInnerCommandOutput,user,string,false,,29,export,,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,GetAddonDetailsInnerCommandOutput,password,string,false,,30,export,,false
+src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,GetAddonDetailsInnerCommandOutput,database,string,false,,31,export,,false
+src/clients/cc-api/commands/config-provider/get-config-provider-command.types.d.ts,GetConfigProviderCommandInput,addonId,string,false,,4,export,,false
+src/clients/cc-api/commands/config-provider/update-config-provider-command.types.d.ts,UpdateConfigProviderCommandInput,addonId,string,false,,4,export,,false
+src/clients/cc-api/commands/config-provider/update-config-provider-command.types.d.ts,UpdateConfigProviderCommandInput,environment,Array<EnvironmentVariable>,false,,5,export,,false
+src/clients/cc-api/commands/credits/activate-coupon-command.types.d.ts,ActivateCouponCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/credits/activate-coupon-command.types.d.ts,ActivateCouponCommandInput,couponName,string,false,,5,export,,false
+src/clients/cc-api/commands/credits/credits.types.d.ts,Credits,prepaidCredit,number,false,,2,export,,false
+src/clients/cc-api/commands/credits/credits.types.d.ts,Credits,freeCredit,number,false,,3,export,,false
+src/clients/cc-api/commands/credits/credits.types.d.ts,Credits,currency,string,false,,4,export,,false
+src/clients/cc-api/commands/credits/credits.types.d.ts,CouponUsage,couponName,string,false,renamed from coupon_name,9,export,,false
+src/clients/cc-api/commands/credits/credits.types.d.ts,CouponUsage,usageDate,string,false,,10,export,,false
+src/clients/cc-api/commands/credits/credits.types.d.ts,CouponUsage,freeCreditsStartDate,string,false,,11,export,,false
+src/clients/cc-api/commands/credits/credits.types.d.ts,CouponUsage,freeCreditsEndDate,string,false,,12,export,,false
+src/clients/cc-api/commands/credits/credits.types.d.ts,CouponUsage,appliedByUserId,string,false,,13,export,,false
+src/clients/cc-api/commands/credits/get-credits-summary-command.types.d.ts,GetCreditsSummaryCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/deployment/cancel-deployment-command.types.d.ts,CancelDeploymentCommandInput,deploymentId,string,false,,4,export,ApplicationId,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,Deployment,id,string,false,,2,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,Deployment,ownerId,string,false,,3,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,Deployment,applicationId,string,false,,4,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,Deployment,startDate,string,false,,5,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,Deployment,state,DeploymentState,false,,6,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,Deployment,steps,Array<DeploymentStep>,false,,7,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,Deployment,version,"{
+    commitId: string;
+  }",false,,8,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,Deployment,origin,"{
+    action: DeploymentAction;
+    cause: string;
+    source: string;
+    authorId: string;
+    constraints: Array<string>;
+    priority: 'ADMIN' | 'URGENT' | 'DEFAULT';
+  }",false,,11,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,Deployment,hasDedicatedBuild,boolean,false,,19,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentStep,state,DeploymentState,false,,27,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentStep,date,string,false,,28,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentLegacy,id,string,false,,32,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentLegacy,applicationId,string,false,,33,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentLegacy,index,number,false,,34,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentLegacy,date,string,false,,35,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentLegacy,state,"Omit<DeploymentState, 'QUEUED'>",false,,36,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentLegacy,action,DeploymentAction,false,,37,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentLegacy,commit,string,false,,38,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentLegacy,cause,string,false,,39,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentLegacy,instances,number,false,,40,export,,false
+src/clients/cc-api/commands/deployment/deployment.types.d.ts,DeploymentLegacy,author,{ id: string; name: string },false,,41,export,,false
+src/clients/cc-api/commands/deployment/get-deployment-command.types.d.ts,GetDeploymentCommandInput,deploymentId,string,false,,5,export,ApplicationId,false
+src/clients/cc-api/commands/deployment/list-deployment-command.types.d.ts,ListOrganisationDeploymentCommandInput,ownerId,string,false,,7,export,,false
+src/clients/cc-api/commands/deployment/list-deployment-command.types.d.ts,ListOrganisationDeploymentCommandInput,limit,number,true,,8,export,,false
+src/clients/cc-api/commands/deployment/list-deployment-command.types.d.ts,ListApplicationDeploymentCommandInput,limit,number,true,,12,export,ApplicationId,false
+src/clients/cc-api/commands/deployment/list-deployment-command.types.d.ts,ListApplicationDeploymentCommandInput,offset,number,true,,13,export,ApplicationId,false
+src/clients/cc-api/commands/deployment/list-deployment-command.types.d.ts,ListApplicationDeploymentCommandInput,action,DeploymentAction,true,,14,export,ApplicationId,false
+src/clients/cc-api/commands/domain/create-domain-command.types.d.ts,CreateDomainCommandInput,domain,string,false,,4,export,ApplicationId,false
+src/clients/cc-api/commands/domain/delete-domain-command.types.d.ts,DeleteDomainCommandInput,domain,string,false,,4,export,ApplicationId,false
+src/clients/cc-api/commands/domain/domain.types.d.ts,Domain,domain,string,false,,2,export,,false
+src/clients/cc-api/commands/domain/domain.types.d.ts,Domain,isPrimary,boolean,false,,3,export,,false
+src/clients/cc-api/commands/domain/set-primary-domain-command.types.d.ts,SetPrimaryDomainCommandInput,domain,string,false,,4,export,ApplicationId,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,id,string,false,,2,export,,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,ownerId,string,false,renamed from owner_id,4,export,,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,version,string,false,,5,export,,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,addonId,string,false,renamed from app_id,7,export,,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,plan,string,false,,8,export,,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,zone,string,false,,9,export,,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,config,"{
+    host: string;
+    user: string;
+    password: string;
+    // renamed from apm_user
+    apmUser: string;
+    // renamed from apm_password
+    apmPassword: string;
+    // renamed from apm_auth_token
+    apmAuthToken: string;
+    // renamed from kibana_user
+    kibanaUser: string;
+    // renamed from kibana_password
+    kibanaPassword: string;
+  }",false,,10,export,,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,backups,"{
+    // renamed from kibana_snapshots_url
+    kibanaSnapshotsUrl: string;
+  }",false,,25,export,,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,kibanaApplication,string,false,renamed from kibana_application,30,export,,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,apmApplication,string,false,renamed from apm_application,32,export,,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,services,Array<{ name: string; enabled: boolean }>,false,,33,export,,false
+src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,ElasticsearchInfo,features,Array<{ name: string; enabled: boolean }>,false,,34,export,,false
+src/clients/cc-api/commands/elasticsearch/get-elasticsearch-info-command.types.d.ts,GetElasticsearchInfoCommandInput,addonId,string,false,,4,export,,false
+src/clients/cc-api/commands/environment/create-or-update-environment-variable-command.types.d.ts,CreateOrUpdateEnvironmentVariableCommandInput,name,string,false,,5,export,ApplicationId,false
+src/clients/cc-api/commands/environment/create-or-update-environment-variable-command.types.d.ts,CreateOrUpdateEnvironmentVariableCommandInput,value,string,false,,6,export,ApplicationId,false
+src/clients/cc-api/commands/environment/delete-environment-variable-command.types.d.ts,DeleteEnvironmentVariableCommandInput,name,string,false,,5,export,ApplicationId,false
+src/clients/cc-api/commands/environment/environment.types.d.ts,GetEnvironmentCommandOutput,environment,Array<EnvironmentVariable>,false,,4,export,,false
+src/clients/cc-api/commands/environment/environment.types.d.ts,GetEnvironmentCommandOutput,linkedApplicationsEnvironment,Array<LinkedApplicationEnvironment>,true,,5,export,,false
+src/clients/cc-api/commands/environment/environment.types.d.ts,GetEnvironmentCommandOutput,linkedAddonsEnvironment,Array<LinkedAddonEnvironment>,true,,6,export,,false
+src/clients/cc-api/commands/environment/environment.types.d.ts,LinkedApplicationEnvironment,applicationId,string,false,,10,export,,false
+src/clients/cc-api/commands/environment/environment.types.d.ts,LinkedApplicationEnvironment,applicationName,string,false,,11,export,,false
+src/clients/cc-api/commands/environment/environment.types.d.ts,LinkedApplicationEnvironment,environment,Array<EnvironmentVariable>,false,,12,export,,false
+src/clients/cc-api/commands/environment/environment.types.d.ts,LinkedAddonEnvironment,addonId,string,false,,16,export,,false
+src/clients/cc-api/commands/environment/environment.types.d.ts,LinkedAddonEnvironment,addonName,string,false,,17,export,,false
+src/clients/cc-api/commands/environment/environment.types.d.ts,LinkedAddonEnvironment,addonProviderId,string,false,,18,export,,false
+src/clients/cc-api/commands/environment/environment.types.d.ts,LinkedAddonEnvironment,environment,Array<EnvironmentVariable>,false,,19,export,,false
+src/clients/cc-api/commands/environment/get-environment-command.types.d.ts,GetEnvironmentCommandInputApplication,includeLinkedApplications,boolean,true,,6,export,ApplicationId,false
+src/clients/cc-api/commands/environment/get-environment-command.types.d.ts,GetEnvironmentCommandInputApplication,includeLinkedAddons,boolean,true,,7,export,ApplicationId,false
+src/clients/cc-api/commands/environment/update-environment-command.types.d.ts,UpdateEnvironmentCommandInput,environment,Array<EnvironmentVariable>,false,,5,export,ApplicationId,false
+src/clients/cc-api/commands/environment/update-exposed-environment-command.types.d.ts,UpdateExposedEnvironmentCommandInput,environment,Array<EnvironmentVariable>,false,,5,export,ApplicationId,false
+src/clients/cc-api/commands/github/get-github-link-transaction-id-command.types.d.ts,GetGithubLinkTransactionIdCommandOutput,transactionId,string,false,,2,export,,false
+src/clients/cc-api/commands/github/get-github-link-transaction-id-command.types.d.ts,GetGithubLinkTransactionIdCommandOutput,redirectUri,string,false,,3,export,,false
+src/clients/cc-api/commands/github/github.types.d.ts,GithubApplication,id,string,false,,2,export,,false
+src/clients/cc-api/commands/github/github.types.d.ts,GithubApplication,owner,string,false,,3,export,,false
+src/clients/cc-api/commands/github/github.types.d.ts,GithubApplication,name,string,false,,4,export,,false
+src/clients/cc-api/commands/github/github.types.d.ts,GithubApplication,description,string,false,,5,export,,false
+src/clients/cc-api/commands/github/github.types.d.ts,GithubApplication,gitUrl,string,false,,6,export,,false
+src/clients/cc-api/commands/github/github.types.d.ts,GithubApplication,defaultBranch,string,false,,7,export,,false
+src/clients/cc-api/commands/github/github.types.d.ts,GithubApplication,private,boolean,false,renamed from priv,9,export,,false
+src/clients/cc-api/commands/grafana/disable-grafana-command.types.d.ts,DisableGrafanaCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/grafana/enable-grafana-command.types.d.ts,EnableGrafanaCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/grafana/get-grafana-command.types.d.ts,GetGrafanaCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/grafana/get-grafana-command.types.d.ts,GetGrafanaCommandOutput,id,number,false,,6,export,,false
+src/clients/cc-api/commands/grafana/reset-grafana-command.types.d.ts,ResetGrafanaCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.types.d.ts,GetHeptapodPriceEstimationCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.types.d.ts,GetHeptapodPriceEstimationCommandOutput,publicActiveUsers,number,false,renamed from public_active_users,7,export,,false
+src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.types.d.ts,GetHeptapodPriceEstimationCommandOutput,privateActiveUsers,number,false,renamed from private_active_users,9,export,,false
+src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.types.d.ts,GetHeptapodPriceEstimationCommandOutput,storage,number,false,,10,export,,false
+src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.types.d.ts,GetHeptapodPriceEstimationCommandOutput,price,number,false,,11,export,,false
+src/clients/cc-api/commands/instance/get-application-instance-command.types.d.ts,GetApplicationInstanceCommandInput,instanceId,string,false,,5,export,ApplicationId,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,id,string,false,,2,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,ownerId,string,false,,3,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,applicationId,string,false,,4,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,deploymentId,string,false,,5,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,name,string,false,,6,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,flavor,string,false,,7,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,index,number,false,,8,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,state,InstanceState,false,,9,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,hypervisorId,string,false,,10,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,creationDate,string,false,,11,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,deletionDate,string,true,,12,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,network,"{
+    ip: string;
+    port: number;
+  }",false,,13,export,,false
+src/clients/cc-api/commands/instance/instance.types.d.ts,Instance,isBuildVm,boolean,false,,17,export,,false
+src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,ListApplicationInstanceCommandInput,since,Date | number | string,true,,5,export,ApplicationId,false
+src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,ListApplicationInstanceCommandInput,until,Date | number | string,true,,6,export,ApplicationId,false
+src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,ListApplicationInstanceCommandInput,includeState,Array<InstanceState>,true,,7,export,ApplicationId,false
+src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,ListApplicationInstanceCommandInput,excludeState,Array<InstanceState>,true,,8,export,ApplicationId,false
+src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,ListApplicationInstanceCommandInput,deploymentId,string,true,,9,export,ApplicationId,false
+src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,ListApplicationInstanceCommandInput,limit,number,true,,10,export,ApplicationId,false
+src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,ListApplicationInstanceCommandInput,order,'DESC' | 'ASC',true,,11,export,ApplicationId,false
+src/clients/cc-api/commands/invoice/get-invoice-command.types.d.ts,GetInvoiceCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/invoice/get-invoice-command.types.d.ts,GetInvoiceCommandInput,invoiceNumber,string,false,,5,export,,false
+src/clients/cc-api/commands/invoice/get-invoice-html-command.types.d.ts,GetInvoiceHtmlCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/invoice/get-invoice-html-command.types.d.ts,GetInvoiceHtmlCommandInput,invoiceNumber,string,false,,3,export,,false
+src/clients/cc-api/commands/invoice/get-invoice-pdf-command.types.d.ts,GetInvoicePdfCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/invoice/get-invoice-pdf-command.types.d.ts,GetInvoicePdfCommandInput,invoiceNumber,string,false,,3,export,,false
+src/clients/cc-api/commands/invoice/get-invoice-url.types.d.ts,GetInvoiceUrlInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/invoice/get-invoice-url.types.d.ts,GetInvoiceUrlInput,invoiceNumber,string,false,,3,export,,false
+src/clients/cc-api/commands/invoice/get-invoice-url.types.d.ts,GetInvoiceUrlInput,format,'html' | 'pdf',false,,4,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,invoiceNumber,string,false,renamed from invoice_number,3,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,kind,string,false,,4,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,origin,'automatic' | 'manual',false,,5,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,category,string,true,,6,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,address,InvoiceAddress,false,,7,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,emissionDate,string,false,renamed from emission_date,9,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,payDate,string,true,renamed from pay_date,11,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,status,InvoiceStatus,false,,12,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,consumptionStartDate,string,false,renamed from consumption_begin_date,14,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,consumptionEndDate,string,false,renamed from consumption_end_date,16,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,currency,string,false,,17,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,kpiComputeMonths,number,false,renamed from kpi_compute_months,19,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,priceFactor,number,false,renamed from price_factor,21,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,discount,number,false,,22,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,vatPercent,number,false,renamed from vat_percent,24,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,uptimes,Array<InvoiceUptime>,false,,25,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,countables,Array<InvoiceCountable>,false,,26,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,vendorConsumption,Array<InvoiceVendorConsumption>,false,renamed from vendor_consumption,28,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,classic,Array<InvoiceClassic>,false,,29,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,unusable,Array<InvoiceUnusable>,false,,30,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,creditBalanceAtEmission,InvoiceMoney,false,renamed from credit_balance_at_emission,32,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,freeCreditsAvailableThisPeriod,Array<InvoiceCouponRemains>,false,renamed from free_credits_available_this_period,34,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,freeCreditsAvailableNextPeriod,Array<InvoiceCouponRemains>,false,renamed from free_credits_available_next_period,36,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,totalPendingUpfrontBeforeEmission,InvoiceMoney,false,renamed from total_pending_upfront_before_emission,38,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,upfrontCreditAmount,InvoiceMoney,false,renamed from upfront_credit_amount,40,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,customerOrderId,string,true,renamed from customer_order_id,42,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,paymentProvider,string,true,renamed from payment_provider,44,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,paymentMethodId,string,true,renamed from payment_method_id,46,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,providerTransactionId,string,true,renamed from provider_transaction_id,48,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,providerLastResponse,string,true,renamed from provider_last_response,50,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,vatDeclarationId,string,true,renamed from vat_declaration_id,52,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,wannabeInvoiceId,string,true,renamed from wannabe_invoice_id,54,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,totalTaxExcluded,InvoiceMoney,false,renamed from total_tax_excluded,56,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,Invoice,totalTax,InvoiceMoney,false,renamed from total_tax,58,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,invoiceNumber,string,false,renamed from invoice_number,63,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,kind,string,false,,64,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,category,string,true,,65,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,address,InvoiceAddress,false,,66,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,emissionDate,string,false,renamed from emission_date,68,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,payDate,string,true,renamed from pay_date,70,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,status,InvoiceStatus,false,,71,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,currency,string,false,,72,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,kpiComputeMonths,number,false,renamed from kpi_compute_months,74,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,priceFactor,number,false,renamed from price_factor,76,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,discount,number,false,,77,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,vatPercent,number,false,renamed from vat_percent,79,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,totalTaxExcluded,InvoiceMoney,false,renamed from total_tax_excluded,81,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,totalTax,InvoiceMoney,false,renamed from total_tax,83,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,paymentProvider,string,true,renamed from payment_provider,85,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,transactionId,string,true,renamed from transaction_id,87,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,customerOrderId,string,true,renamed from customer_order_id,89,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceSummary,invoiceDayPlan,number,true,renamed from invoice_day_plan,91,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceAddress,id,string,false,renamed from address_id,98,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceAddress,name,string,false,,99,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceAddress,company,string,false,,100,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceAddress,address,string,false,,101,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceAddress,city,string,false,,102,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceAddress,zipcode,string,false,,103,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceAddress,country,string,true,renamed from country_alpha2,105,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceAddress,vatNumber,string,true,renamed from vat_number,107,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceAddress,vatPercent,number,false,renamed from vat_percent,109,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceAddress,customerCostCenter,string,true,renamed from customer_cost_center,111,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceAddress,customerPurchaseOrder,string,true,renamed from customer_purchase_order,113,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptime,id,string,false,renamed from item_id,118,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptime,price,InvoiceMoney,false,,119,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptime,applicationId,string,false,renamed from app_id,121,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptime,ownerId,string,false,renamed from owner_id,123,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptime,details,Array<InvoiceUptimeDetail>,false,,124,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptime,category,String,false,,125,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptime,subCategory,String,false,renamed from sub_category,127,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptimeDetail,instanceId,string,false,renamed from instance_id,132,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptimeDetail,flavorName,string,false,renamed from flavor_name,134,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptimeDetail,zone,string,false,renamed from zone_id,136,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptimeDetail,policyId,string,false,renamed from runtime_policy_id,138,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptimeDetail,price,InvoiceMoney,false,,139,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptimeDetail,consumptionStartDate,string,false,renamed from consumption_start,141,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUptimeDetail,consumptionEndDate,string,false,renamed from consumption_end,143,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,id,string,false,renamed from item_id,148,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,price,InvoiceMoney,false,,149,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,applicationId,string,false,renamed from app_id,151,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,ownerId,string,false,renamed from owner_id,153,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,service,string,false,renamed from service,155,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,unitName,string,false,renamed from unit_name,157,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,zone,string,false,renamed from zone_id,159,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,policyId,string,false,renamed from policy_id,161,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,quantity,number,false,,162,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,planId,string,false,renamed from plan_id,164,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,duration,string,true,,165,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,detailsPrice,InvoiceMoney,false,renamed from details_price,167,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,details,Array<InvoiceCountableDetail>,false,,168,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,category,string,false,,169,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountable,subCategory,string,false,renamed from sub_category,171,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountableDetail,consumptionStartDate,string,false,renamed from consumption_start,176,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountableDetail,consumptionEndDate,string,false,renamed from consumption_end,178,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountableDetail,planId,string,false,renamed from plan_id,180,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountableDetail,quantity,number,false,,181,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCountableDetail,price,InvoiceMoney,false,,182,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceVendorConsumption,itemId,string,false,renamed from item_id,187,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceVendorConsumption,price,InvoiceMoney,false,,188,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceVendorConsumption,vendorId,string,false,renamed from vendor_id,190,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceVendorConsumption,ownerId,string,false,renamed from owner_id,192,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceVendorConsumption,applicationId,string,false,renamed from app_id,194,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceClassic,id,string,false,renamed from item_id,199,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceClassic,unitPrice,InvoiceMoney,false,renamed from unit_price,201,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceClassic,quantity,number,false,,202,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceClassic,priceFactor,number,true,renamed from price_factor,204,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceClassic,discount,number,true,,205,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceClassic,description,string,false,,206,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceClassic,subDescription,string,true,renamed from sub_description,208,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceClassic,classicBillingItemId,string,true,renamed from classic_billing_item_id,210,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceClassic,ownerId,string,false,renamed from owner_id,212,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceClassic,category,string,false,,213,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceClassic,subCategory,string,false,renamed from sub_category,215,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUnusable,id,string,false,renamed from item_id,220,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUnusable,zone,string,false,renamed from zone_id,222,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUnusable,flavorName,string,false,renamed from flavor_name,224,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUnusable,host,string,false,renamed from host,226,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUnusable,imageType,string,true,renamed from image_type,228,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUnusable,consumptionStartDate,string,false,renamed from start_date,230,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceUnusable,consumptionEndDate,string,false,renamed from end_date,232,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceMoney,amount,number,false,,236,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceMoney,currency,string,false,,237,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCouponRemains,name,string,false,,241,export,,false
+src/clients/cc-api/commands/invoice/invoice.types.d.ts,InvoiceCouponRemains,remaining,InvoiceMoney,false,,242,export,,false
+src/clients/cc-api/commands/invoice/list-invoice-command.types.d.ts,ListInvoiceCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/invoice/list-invoice-command.types.d.ts,ListInvoiceCommandInput,since,string | number | Date,true,,5,export,,false
+src/clients/cc-api/commands/invoice/list-invoice-command.types.d.ts,ListInvoiceCommandInput,until,string | number | Date,true,,6,export,,false
+src/clients/cc-api/commands/invoice/list-invoice-command.types.d.ts,ListInvoiceCommandInput,limit,number,true,,7,export,,false
+src/clients/cc-api/commands/invoice/list-unpaid-invoice-command.types.d.ts,ListUnpaidInvoiceCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/jenkins/get-jenkins-info-command.types.d.ts,GetJenkinsInfoCommandInput,addonId,string,false,,4,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,id,string,false,,2,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,addonId,string,false,renamed from app_id,4,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,plan,'OLD_S' | 'OLD_M' | 'OLD_L' | 'OLD_XL' | 'XS' | 'S' | 'M' | 'L' | 'XL',false,,5,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,zone,string,false,,6,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,creationDate,string,false,renamed from creation_date and converted to ISO format (without [UTC]),8,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,status,'ACTIVE' | 'DELETED' | 'QUOTA_EXCEEDED' | 'TO_DELETE',false,,9,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,deletionDate,string,true,renamed from deletion_date and converted to ISO format (without [UTC]),11,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,host,string,false,,12,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,user,string,false,,13,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,password,string,false,,14,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,version,string,false,,15,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,artifactoryUrl,string,true,renamed from artifactory_url,17,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,artifactoryUser,string,true,renamed from artifactory_user,19,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,artifactoryPassword,string,true,renamed from artifactory_password,21,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,features,Array<{ name: string; enabled: boolean }>,false,,22,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsInfo,updates,JenkinsUpdates,false,,23,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsUpdates,manageLink,string,false,,27,export,,false
+src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,JenkinsUpdates,versions,"{
+    current: string;
+    available: string;
+  }",false,,28,export,,false
+src/clients/cc-api/commands/link/add-link-command.types.d.ts,AddApplicationToApplicationLinkCommandInput,targetApplicationId,string,false,,6,export,ApplicationId,false
+src/clients/cc-api/commands/link/add-link-command.types.d.ts,AddApplicationToAddonLinkCommandInput,targetAddonId,string,false,,9,export,ApplicationId,false
+src/clients/cc-api/commands/link/link.types.d.ts,LinkToApplication,type,'link-to-application',false,,7,export,,false
+src/clients/cc-api/commands/link/link.types.d.ts,LinkToApplication,application,Application,false,,8,export,,false
+src/clients/cc-api/commands/link/link.types.d.ts,LinkToAddon,type,'link-to-addon',false,,12,export,,false
+src/clients/cc-api/commands/link/link.types.d.ts,LinkToAddon,addon,Addon,false,,13,export,,false
+src/clients/cc-api/commands/link/remove-link-command.types.d.ts,RemoveApplicationToApplicationLinkCommandInput,targetApplicationId,string,false,,8,export,ApplicationId,false
+src/clients/cc-api/commands/link/remove-link-command.types.d.ts,RemoveApplicationToAddonLinkCommandInput,targetAddonId,string,false,,11,export,ApplicationId,false
+src/clients/cc-api/commands/load-balancer/load-balancer.types.d.ts,LoadBalancer,id,string,false,,2,export,,false
+src/clients/cc-api/commands/load-balancer/load-balancer.types.d.ts,LoadBalancer,zone,string,false,renamed from name,4,export,,false
+src/clients/cc-api/commands/load-balancer/load-balancer.types.d.ts,LoadBalancer,zoneId,string,false,,5,export,,false
+src/clients/cc-api/commands/load-balancer/load-balancer.types.d.ts,LoadBalancer,dns,"{
+    cname: string;
+    a: Array<string>;
+  }",false,,6,export,,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,ListLogCommandInput,limit,number,true,,4,export,AddonId,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,ListLogCommandInput,order,'ASC' | 'DESC',true,,5,export,AddonId,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,ListLogCommandInput,since,Date | string | number,true,,6,export,AddonId,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,ListLogCommandInput,until,Date | string | number,true,,7,export,AddonId,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,ListLogCommandInput,filter,string,true,,8,export,AddonId,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,ListLogCommandInput,deploymentId,string,true,,9,export,AddonId,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,OldLog,id,string,false,,15,export,,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,OldLog,date,string,false,,16,export,,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,OldLog,message,string,false,,17,export,,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,OldLog,type,string,false,,18,export,,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,OldLog,severity,string,false,,19,export,,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,OldLog,program,string,false,,20,export,,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,OldLog,deploymentId,string,false,,21,export,,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,OldLog,sourceHost,string,false,,22,export,,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,OldLog,sourceIp,string,false,,23,export,,false
+src/clients/cc-api/commands/log/list-log-command.types.d.ts,OldLog,zone,string,false,,24,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,LogDrain,id,string,false,,2,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,LogDrain,applicationId,string,false,renamed from appId,4,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,LogDrain,target,LogDrainTarget,false,,5,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,LogDrain,createdAt,string,false,converted to iso date,7,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,LogDrain,lastEdit,string,false,converted to iso date,9,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,LogDrain,token,string,false,,10,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,LogDrain,state,LogDrainState,false,,11,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,LogDrain,updatedBy,string,true,,12,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,HttpDrainTarget,type,'HTTP',false,renamed from drainType,27,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,HttpDrainTarget,url,string,false,,28,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,HttpDrainTarget,credentials,"{
+    username: string;
+    password: string;
+  }",true,,29,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,SyslogTcpDrainTarget,type,'TCPSyslog',false,,36,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,SyslogTcpDrainTarget,url,string,false,,37,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,SyslogTcpDrainTarget,structuredDataParameters,string,true,RFC 5424,39,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,SyslogUdpDrainTarget,type,'UDPSyslog',false,,43,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,SyslogUdpDrainTarget,url,string,false,,44,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,SyslogUdpDrainTarget,structuredDataParameters,string,true,RFC 5424,46,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,DatadogHttpDrainTarget,type,'DatadogHTTP',false,,50,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,DatadogHttpDrainTarget,url,string,false,,51,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,ElasticSearchDrainTarget,type,'ElasticSearch',false,,55,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,ElasticSearchDrainTarget,url,string,false,,56,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,ElasticSearchDrainTarget,credentials,"{
+    username: string;
+    password: string;
+  }",true,,57,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,ElasticSearchDrainTarget,indexPrefix,string,true,,61,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,NewRelicHttpDrainTarget,type,'NewRelicHTTP',false,,65,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,NewRelicHttpDrainTarget,url,string,false,,66,export,,false
+src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,NewRelicHttpDrainTarget,apiKey,string,false,,67,export,,false
+src/clients/cc-api/commands/materia/materia.types.d.ts,MateriaInfo,id,string,false,,2,export,,false
+src/clients/cc-api/commands/materia/materia.types.d.ts,MateriaInfo,clusterId,string,false,,3,export,,false
+src/clients/cc-api/commands/materia/materia.types.d.ts,MateriaInfo,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/materia/materia.types.d.ts,MateriaInfo,kind,'KV',false,,5,export,,false
+src/clients/cc-api/commands/materia/materia.types.d.ts,MateriaInfo,plan,'ALPHA',false,,6,export,,false
+src/clients/cc-api/commands/materia/materia.types.d.ts,MateriaInfo,host,string,false,,7,export,,false
+src/clients/cc-api/commands/materia/materia.types.d.ts,MateriaInfo,port,number,false,,8,export,,false
+src/clients/cc-api/commands/materia/materia.types.d.ts,MateriaInfo,token,string,false,,9,export,,false
+src/clients/cc-api/commands/materia/materia.types.d.ts,MateriaInfo,tokenId,string,false,,10,export,,false
+src/clients/cc-api/commands/materia/materia.types.d.ts,MateriaInfo,status,'PROVISIONING' | 'PROVISIONED' | 'TO_DELETE' | 'DELETING' | 'DELETED',false,,11,export,,false
+src/clients/cc-api/commands/matomo/get-matomo-info-command.types.d.ts,GetMatomoInfoCommandInput,addonId,string,false,,4,export,,false
+src/clients/cc-api/commands/matomo/matomo.types.d.ts,MatomoInfo,id,string,false,renamed from resourceId,5,export,,false
+src/clients/cc-api/commands/matomo/matomo.types.d.ts,MatomoInfo,addonId,string,false,,6,export,,false
+src/clients/cc-api/commands/matomo/matomo.types.d.ts,MatomoInfo,name,string,false,,7,export,,false
+src/clients/cc-api/commands/matomo/matomo.types.d.ts,MatomoInfo,ownerId,string,false,,8,export,,false
+src/clients/cc-api/commands/matomo/matomo.types.d.ts,MatomoInfo,plan,'BETA',false,,9,export,,false
+src/clients/cc-api/commands/matomo/matomo.types.d.ts,MatomoInfo,version,string,false,,10,export,,false
+src/clients/cc-api/commands/matomo/matomo.types.d.ts,MatomoInfo,phpVersion,string,false,,11,export,,false
+src/clients/cc-api/commands/matomo/matomo.types.d.ts,MatomoInfo,accessUrl,string,false,,12,export,,false
+src/clients/cc-api/commands/matomo/matomo.types.d.ts,MatomoInfo,availableVersions,Array<string>,false,,13,export,,false
+src/clients/cc-api/commands/matomo/matomo.types.d.ts,MatomoInfo,resources,"{
+    entrypoint: string;
+    mysqlId: string;
+    redisId: string;
+  }",false,,14,export,,false
+src/clients/cc-api/commands/matomo/matomo.types.d.ts,MatomoInfo,environment,Array<EnvironmentVariable>,false,"renamed from envVars. transformed from Record<string, string> to Array<EnvironmentVariable>",20,export,,false
+src/clients/cc-api/commands/metrics/metrics.types.d.ts,MetricData,timestamp,number,false,,8,export,,false
+src/clients/cc-api/commands/metrics/metrics.types.d.ts,MetricData,value,number,false,,9,export,,false
+src/clients/cc-api/commands/migration/cancel-migration-command.types.d.ts,CancelMigrationCommandInput,migrationId,string,false,,4,export,AddonId,false
+src/clients/cc-api/commands/migration/get-migration-command.types.d.ts,GetMigrationCommandInput,migrationId,string,false,,5,export,AddonId,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,ListMigrationPreorderCommandInput,planId,string,false,,4,export,AddonId,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,ListMigrationPreorderCommandOutput,ownerId,string,false,,8,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,ListMigrationPreorderCommandOutput,target,string,false,,9,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,ListMigrationPreorderCommandOutput,emissionDate,string,false,,10,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,ListMigrationPreorderCommandOutput,name,string,false,,11,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,ListMigrationPreorderCommandOutput,company,string,false,,12,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,ListMigrationPreorderCommandOutput,VAT,string,false,,13,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,ListMigrationPreorderCommandOutput,type,MigrationPreorderType,false,,14,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,ListMigrationPreorderCommandOutput,lines,Array<MigrationPreorderLine>,false,,15,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,MigrationPreorderLine,type,'Credits',false,,19,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,MigrationPreorderLine,description,string,false,,20,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,MigrationPreorderLine,quantity,number,false,,21,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,MigrationPreorderLine,tva,number,false,,22,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,MigrationPreorderLine,priceUnitHt,number,false,renamed from price_unit_ht,24,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,MigrationPreorderLine,priceTotalHt,number,false,renamed from price_total_ht,26,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,MigrationPreorderLine,pack,null | string,false,,27,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,MigrationPreorderLine,dropQuantity,number,false,,28,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,MigrationPreorderLine,coupon,null | number,false,,29,export,,false
+src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,MigrationPreorderLine,discount,number,false,,30,export,,false
+src/clients/cc-api/commands/migration/migration.types.d.ts,Migration,id,string,false,,2,export,,false
+src/clients/cc-api/commands/migration/migration.types.d.ts,Migration,requestDate,string,false,,3,export,,false
+src/clients/cc-api/commands/migration/migration.types.d.ts,Migration,steps,Array<MigrationStep>,false,,4,export,,false
+src/clients/cc-api/commands/migration/migration.types.d.ts,Migration,status,MigrationStatus,false,,5,export,,false
+src/clients/cc-api/commands/migration/migration.types.d.ts,MigrationStep,value,MigrationStepType,false,,9,export,,false
+src/clients/cc-api/commands/migration/migration.types.d.ts,MigrationStep,status,MigrationStatus,false,,10,export,,false
+src/clients/cc-api/commands/migration/migration.types.d.ts,MigrationStep,startDate,string,false,,11,export,,false
+src/clients/cc-api/commands/migration/migration.types.d.ts,MigrationStep,endDate,string,true,,12,export,,false
+src/clients/cc-api/commands/migration/migration.types.d.ts,MigrationStep,message,string,true,,13,export,,false
+src/clients/cc-api/commands/migration/start-migration-command.types.d.ts,StartMigrationCommandInput,planId,string,false,,5,export,AddonId,false
+src/clients/cc-api/commands/migration/start-migration-command.types.d.ts,StartMigrationCommandInput,zone,string,false,,6,export,AddonId,false
+src/clients/cc-api/commands/migration/start-migration-command.types.d.ts,StartMigrationCommandInput,version,string,false,,7,export,AddonId,false
+src/clients/cc-api/commands/network-group/create-network-group-command.types.d.ts,CreateNetworkGroupCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-command.types.d.ts,CreateNetworkGroupCommandInput,label,string,true,,5,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-command.types.d.ts,CreateNetworkGroupCommandInput,description,string,true,,6,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-command.types.d.ts,CreateNetworkGroupCommandInput,tags,Array<string>,true,,7,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-command.types.d.ts,CreateNetworkGroupCommandInput,members,"Array<{
+    id: string;
+    label?: string;
+  }>",true,,8,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-command.types.d.ts,CreateNetworkGroupCommandInnerInput,networkGroupId,string,false,,17,export,CreateNetworkGroupCommandInput,false
+src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,CreateNetworkGroupExternalPeerCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,CreateNetworkGroupExternalPeerCommandInput,networkGroupId,string,false,,5,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,CreateNetworkGroupExternalPeerCommandInput,label,string,false,,6,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,CreateNetworkGroupExternalPeerCommandInput,ip,string,true,,7,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,CreateNetworkGroupExternalPeerCommandInput,port,number,true,,8,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,CreateNetworkGroupExternalPeerCommandInput,peerRole,'CLIENT',false,,9,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,CreateNetworkGroupExternalPeerCommandInput,publicKey,string,false,,10,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,CreateNetworkGroupExternalPeerCommandInput,hostname,string,true,,11,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,CreateNetworkGroupExternalPeerCommandInput,parentEvent,string,true,,12,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,CreateNetworkGroupExternalPeerCommandInput,parentMember,string,false,,13,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,CreateNetworkGroupExternalPeerCommandInnerOutput,peerId,string,false,,19,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-member-command.types.d.ts,CreateNetworkGroupMemberCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-member-command.types.d.ts,CreateNetworkGroupMemberCommandInput,networkGroupId,string,false,,5,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-member-command.types.d.ts,CreateNetworkGroupMemberCommandInput,memberId,string,false,,6,export,,false
+src/clients/cc-api/commands/network-group/create-network-group-member-command.types.d.ts,CreateNetworkGroupMemberCommandInput,label,string,true,,7,export,,false
+src/clients/cc-api/commands/network-group/delete-network-group-command.types.d.ts,DeleteNetworkGroupCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/network-group/delete-network-group-command.types.d.ts,DeleteNetworkGroupCommandInput,networkGroupId,string,false,,3,export,,false
+src/clients/cc-api/commands/network-group/delete-network-group-external-peer-command.types.d.ts,DeleteNetworkGroupExternalPeerCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/network-group/delete-network-group-external-peer-command.types.d.ts,DeleteNetworkGroupExternalPeerCommandInput,networkGroupId,string,false,,3,export,,false
+src/clients/cc-api/commands/network-group/delete-network-group-external-peer-command.types.d.ts,DeleteNetworkGroupExternalPeerCommandInput,externalPeerId,string,false,,4,export,,false
+src/clients/cc-api/commands/network-group/delete-network-group-member-command.types.d.ts,DeleteNetworkGroupMemberCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/network-group/delete-network-group-member-command.types.d.ts,DeleteNetworkGroupMemberCommandInput,networkGroupId,string,false,,3,export,,false
+src/clients/cc-api/commands/network-group/delete-network-group-member-command.types.d.ts,DeleteNetworkGroupMemberCommandInput,memberId,string,false,,4,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-command.types.d.ts,GetNetworkGroupCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-command.types.d.ts,GetNetworkGroupCommandInput,networkGroupId,string,false,,5,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-member-command.types.d.ts,GetNetworkGroupMemberCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-member-command.types.d.ts,GetNetworkGroupMemberCommandInput,networkGroupId,string,false,,5,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-member-command.types.d.ts,GetNetworkGroupMemberCommandInput,memberId,string,false,,6,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-peer-command.types.d.ts,GetNetworkGroupPeerCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-peer-command.types.d.ts,GetNetworkGroupPeerCommandInput,networkGroupId,string,false,,5,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-peer-command.types.d.ts,GetNetworkGroupPeerCommandInput,peerId,string,false,,6,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,GetNetworkGroupWireguardConfigurationCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,GetNetworkGroupWireguardConfigurationCommandInput,networkGroupId,string,false,,3,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,GetNetworkGroupWireguardConfigurationCommandInput,peerId,string,false,,4,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,GetNetworkGroupWireguardConfigurationCommandOutput,ngId,string,false,,8,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,GetNetworkGroupWireguardConfigurationCommandOutput,peerId,string,false,,9,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,GetNetworkGroupWireguardConfigurationCommandOutput,peers,"[
+    {
+      peer_id: string;
+      peer_ip: string;
+      peer_hostname: string;
+    },
+  ]",false,,10,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,GetNetworkGroupWireguardConfigurationCommandOutput,configuration,string,false,,17,export,,false
+src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,GetNetworkGroupWireguardConfigurationCommandOutput,version,number,false,,18,export,,false
+src/clients/cc-api/commands/network-group/list-network-group-command.types.d.ts,ListNetworkGroupCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroup,id,string,false,,13,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroup,ownerId,string,false,,14,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroup,label,string,false,,15,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroup,description,string,true,,16,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroup,networkIp,string,false,,17,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroup,lastAllocatedIp,string,false,,18,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroup,tags,Array<string>,false,,19,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroup,peers,Array<NetworkGroupPeer>,false,,20,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroup,members,Array<NetworkGroupMember>,false,,21,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroup,version,number,false,,22,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupPeerBase,id,string,false,,28,,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupPeerBase,label,string,true,,29,,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupPeerBase,publicKey,string,false,,30,,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupPeerBase,endpoint,NetworkGroupEndpoint,false,,31,,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupPeerBase,hostname,string,false,,32,,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupPeerBase,parentMember,string,false,,33,,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupPeerBase,parentEvent,string,true,,34,,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupPeerClever,hv,string,false,,38,export,TypedComponent,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupMember,id,string,false,,44,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupMember,label,string,false,,45,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupMember,domainName,string,false,,46,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupMember,kind,'APPLICATION' | 'ADDON' | 'EXTERNAL',false,,47,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupEndpointServer,type,'ServerEndpoint',false,,53,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupEndpointServer,ngTerm,"{
+    host: string;
+    port: number;
+  }",false,,54,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupEndpointServer,publicTerm,"{
+    host: string;
+    port: number;
+  }",false,,58,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupEndpointClient,type,'ClientEndpoint',false,,65,export,,false
+src/clients/cc-api/commands/network-group/network-group.types.d.ts,NetworkGroupEndpointClient,ngIp,string,false,,66,export,,false
+src/clients/cc-api/commands/network-group/search-network-group-command.types.d.ts,SearchNetworkGroupCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/network-group/search-network-group-command.types.d.ts,SearchNetworkGroupCommandInput,query,string,false,,5,export,,false
+src/clients/cc-api/commands/network-group/search-network-group-command.types.d.ts,SearchNetworkGroupCommandInput,types,Array<NetworkGroupComponentType>,true,,6,export,,false
+src/clients/cc-api/commands/notification/create-email-notification-command.types.d.ts,CreateEmailNotificationCommandInput,ownerId,string,false,,9,export,,false
+src/clients/cc-api/commands/notification/create-email-notification-command.types.d.ts,CreateEmailNotificationCommandInput,name,string,false,,10,export,,false
+src/clients/cc-api/commands/notification/create-email-notification-command.types.d.ts,CreateEmailNotificationCommandInput,targets,Array<EmailNotificationTarget>,false,,11,export,,false
+src/clients/cc-api/commands/notification/create-email-notification-command.types.d.ts,CreateEmailNotificationCommandInput,events,Array<NotificationEventType | NotificationMetaEventType>,true,,12,export,,false
+src/clients/cc-api/commands/notification/create-email-notification-command.types.d.ts,CreateEmailNotificationCommandInput,scope,Array<string>,true,,13,export,,false
+src/clients/cc-api/commands/notification/create-webhook-notification-command.types.d.ts,CreateWebhookNotificationCommandInput,ownerId,string,false,,9,export,,false
+src/clients/cc-api/commands/notification/create-webhook-notification-command.types.d.ts,CreateWebhookNotificationCommandInput,name,string,false,,10,export,,false
+src/clients/cc-api/commands/notification/create-webhook-notification-command.types.d.ts,CreateWebhookNotificationCommandInput,urls,Array<WebhookNotificationUrl>,false,,11,export,,false
+src/clients/cc-api/commands/notification/create-webhook-notification-command.types.d.ts,CreateWebhookNotificationCommandInput,events,Array<NotificationEventType | NotificationMetaEventType>,true,,12,export,,false
+src/clients/cc-api/commands/notification/create-webhook-notification-command.types.d.ts,CreateWebhookNotificationCommandInput,scope,Array<string>,true,,13,export,,false
+src/clients/cc-api/commands/notification/delete-email-notification-command.types.d.ts,DeleteEmailNotificationCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/notification/delete-email-notification-command.types.d.ts,DeleteEmailNotificationCommandInput,emailNotificationId,string,false,,3,export,,false
+src/clients/cc-api/commands/notification/delete-webhook-notification-command.types.d.ts,DeleteWebhookNotificationCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/notification/delete-webhook-notification-command.types.d.ts,DeleteWebhookNotificationCommandInput,webhookNotificationId,string,false,,3,export,,false
+src/clients/cc-api/commands/notification/get-notification-info-command.types.d.ts,GetNotificationInfoCommandOutput,formats,Array<WebhookNotificationFormat>,false,,8,export,GetNotificationInfoEventsCommandOutput,false
+src/clients/cc-api/commands/notification/get-notification-info-command.types.d.ts,GetNotificationInfoEventsCommandOutput,events,Array<NotificationEventType>,false,,12,export,,false
+src/clients/cc-api/commands/notification/get-notification-info-command.types.d.ts,GetNotificationInfoEventsCommandOutput,metaEvents,"Record<NotificationMetaEventType, Array<NotificationEventType>>",false,,13,export,,false
+src/clients/cc-api/commands/notification/list-email-notification-command.types.d.ts,ListEmailNotificationCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/notification/list-webhook-notification-command.types.d.ts,ListWebhookNotificationCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotification,id,string,false,,2,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotification,ownerId,string,false,,3,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotification,name,string,true,,4,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotification,urls,Array<WebhookNotificationUrl>,false,,5,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotification,events,Array<NotificationEventType | NotificationMetaEventType>,true,,6,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotification,scope,Array<string>,true,,7,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotification,createdAt,string,false,,8,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotification,failures,Array<WebhookNotificationRequestFailure>,false,,9,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotification,state,'ENABLED' | 'DISABLED',false,,10,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotificationUrl,format,WebhookNotificationFormat,false,,14,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotificationUrl,url,string,false,,15,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotificationRequestFailure,url,String,false,,21,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotificationRequestFailure,networkFailure,string,true,,22,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotificationRequestFailure,status,number,true,,23,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotificationRequestFailure,partialBody,string,true,,24,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,WebhookNotificationRequestFailure,createdAt,string,true,,25,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,EmailNotification,id,string,false,,29,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,EmailNotification,ownerId,string,false,,30,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,EmailNotification,name,string,true,,31,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,EmailNotification,targets,Array<EmailNotificationTarget>,false,renamed from notified,33,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,EmailNotification,events,Array<NotificationEventType | NotificationMetaEventType>,true,,34,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,EmailNotification,scope,Array<string>,true,,35,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,EmailNotification,createdAt,string,false,,36,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,EmailNotificationTargetEmail,type,'email',false,,45,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,EmailNotificationTargetEmail,emailAddresses,Array<string>,false,,46,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,EmailNotificationTargetUser,type,'user',false,,50,export,,false
+src/clients/cc-api/commands/notification/notification.types.d.ts,EmailNotificationTargetOrganisation,type,'organisation',false,,54,export,,false
+src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.types.d.ts,CreateOauthConsumerCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.types.d.ts,CreateOauthConsumerCommandInput,name,string,false,,5,export,,false
+src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.types.d.ts,CreateOauthConsumerCommandInput,description,string,false,,6,export,,false
+src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.types.d.ts,CreateOauthConsumerCommandInput,url,string,false,,7,export,,false
+src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.types.d.ts,CreateOauthConsumerCommandInput,picture,string,false,,8,export,,false
+src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.types.d.ts,CreateOauthConsumerCommandInput,baseUrl,string,false,,9,export,,false
+src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.types.d.ts,CreateOauthConsumerCommandInput,rights,"Record<AccessRights | ManageRights, boolean>",false,,10,export,,false
+src/clients/cc-api/commands/oauth-consumer/delete-oauth-consumer-command.types.d.ts,DeleteOauthConsumerCommandInput,ownerId,string,true,,2,export,,false
+src/clients/cc-api/commands/oauth-consumer/delete-oauth-consumer-command.types.d.ts,DeleteOauthConsumerCommandInput,oauthConsumerKey,string,false,,3,export,,false
+src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.types.d.ts,GetOauthConsumerCommandInput,ownerId,string,true,,4,export,,false
+src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.types.d.ts,GetOauthConsumerCommandInput,oauthConsumerKey,string,false,,5,export,,false
+src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.types.d.ts,GetOauthConsumerCommandInput,withSecret,boolean,false,,6,export,,false
+src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-secret-command.types.d.ts,GetOauthConsumerSecretCommandInput,ownerId,string,true,,2,export,,false
+src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-secret-command.types.d.ts,GetOauthConsumerSecretCommandInput,oauthConsumerKey,string,false,,3,export,,false
+src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-secret-command.types.d.ts,GetOauthConsumerSecretCommandOutput,secret,string,false,,7,export,,false
+src/clients/cc-api/commands/oauth-consumer/list-oauth-consumer-command.types.d.ts,ListOauthConsumerCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/oauth-consumer/list-oauth-consumer-command.types.d.ts,ListOauthConsumerCommandInput,withSecret,boolean,false,,5,export,,false
+src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,OauthConsumer,name,string,false,,2,export,,false
+src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,OauthConsumer,description,string,false,,3,export,,false
+src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,OauthConsumer,key,string,false,,4,export,,false
+src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,OauthConsumer,url,string,false,,5,export,,false
+src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,OauthConsumer,picture,string,false,,6,export,,false
+src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,OauthConsumer,baseUrl,string,false,,7,export,,false
+src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,OauthConsumer,rights,"Record<OauthConsumerRights, boolean>",false,,8,export,,false
+src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,OauthConsumer,secret,string,true,,9,export,,false
+src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,UpdateOauthConsumerCommandInput,ownerId,string,true,,4,export,,false
+src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,UpdateOauthConsumerCommandInput,oauthConsumerKey,string,false,,5,export,,false
+src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,UpdateOauthConsumerCommandInput,name,string,false,,6,export,,false
+src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,UpdateOauthConsumerCommandInput,description,string,false,,7,export,,false
+src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,UpdateOauthConsumerCommandInput,url,string,false,,8,export,,false
+src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,UpdateOauthConsumerCommandInput,picture,string,false,,9,export,,false
+src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,UpdateOauthConsumerCommandInput,baseUrl,string,false,,10,export,,false
+src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,UpdateOauthConsumerCommandInput,rights,"Record<AccessRights | ManageRights, boolean>",false,,11,export,,false
+src/clients/cc-api/commands/oauth-token/delete-oauth-token-command.types.d.ts,DeleteTokenCommandInput,token,string,false,,2,export,,false
+src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,OauthToken,token,string,false,,6,export,,false
+src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,OauthToken,consumer,OauthConsumer,false,,7,export,,false
+src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,OauthToken,creationDate,string,false,converted to iso,9,export,,false
+src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,OauthToken,expirationDate,string,false,converted to iso,11,export,,false
+src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,OauthToken,lastUtilisationDate,string,false,renamed from lastUtilisation and converted to iso,13,export,,false
+src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,OauthToken,rights,"Record<OauthConsumerRights, boolean>",false,,14,export,,false
+src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,OauthToken,employeeId,string,true,,15,export,,false
+src/clients/cc-api/commands/organisation/add-organisation-member-command.types.d.ts,AddOrganisationMemberCommandInput,organisationId,string,false,,4,export,,false
+src/clients/cc-api/commands/organisation/add-organisation-member-command.types.d.ts,AddOrganisationMemberCommandInput,role,OrganisationMemberRole,false,,5,export,,false
+src/clients/cc-api/commands/organisation/add-organisation-member-command.types.d.ts,AddOrganisationMemberCommandInput,email,string,false,,6,export,,false
+src/clients/cc-api/commands/organisation/add-organisation-member-command.types.d.ts,AddOrganisationMemberCommandInput,job,string,true,,7,export,,false
+src/clients/cc-api/commands/organisation/add-organisation-member-command.types.d.ts,AddOrganisationMemberCommandInput,invitationKey,string,true,,8,export,,false
+src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,CreateOrganisationBase,name,string,false,,8,,,false
+src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,CreateOrganisationBase,description,string,false,,9,,,false
+src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,CreateOrganisationBase,address,string,false,,10,,,false
+src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,CreateOrganisationBase,city,string,false,,11,,,false
+src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,CreateOrganisationBase,zipcode,string,false,,12,,,false
+src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,CreateOrganisationBase,customerFullName,string,false,,13,,,false
+src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,CreateOrganisationBase,billingEmailAddress,string,true,renamed from billingEmail,15,,,false
+src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,CreateOrganisationBase,contacts,"Array<{
+    // renamed from contact_type
+    contactType: 'security' | 'privacy' | 'abuse';
+    // renamed from email_address
+    emailAddress: string;
+    // renamed from phone_number
+    phoneNumber: string;
+  }>",true,,16,,,false
+src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,CreateOrganisationStandard,country,string,false,,27,export,CreateOrganisationBase,false
+src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,CreateOrganisationCompany,company,string,false,,31,export,CreateOrganisationBase,false
+src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,CreateOrganisationCompany,VAT,string,false,,32,export,CreateOrganisationBase,false
+src/clients/cc-api/commands/organisation/delete-organisation-command.types.d.ts,DeleteOrganisationCommandInput,organisationId,string,false,,2,export,,false
+src/clients/cc-api/commands/organisation/get-organisation-command.types.d.ts,GetOrganisationCommandInput,organisationId,string,false,,4,export,,false
+src/clients/cc-api/commands/organisation/list-organisation-command.types.d.ts,ListOrganisationCommandInput,withPersonalOrganisation,boolean,false,,4,export,,false
+src/clients/cc-api/commands/organisation/list-organisation-member-command.types.d.ts,ListOrganisationMemberCommandInput,organisationId,string,false,,4,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,id,string,false,,4,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,name,string,false,,5,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,avatar,string,false,,6,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,applications,Array<ApplicationSummary>,false,,7,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,addons,Array<AddonSummary>,false,,8,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,consumers,Array<ConsumerSummary>,false,,9,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,providers,Array<ProviderSummary>,false,,10,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,role,'NONE' | 'ADMIN' | 'ACCOUNTING' | 'DEVELOPER' | 'MANAGER',false,,11,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,vatState,string,false,,12,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,canPay,boolean,false,,13,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,canSEPA,boolean,false,,14,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,cleverEnterprise,boolean,false,,15,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,emergencyNumber,string,false,,16,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,isPersonal,boolean,false,,17,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationSummary,isTrusted,boolean,false,,18,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,id,string,false,,22,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,name,string,false,,23,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,instanceType,string,false,,24,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,instanceVariant,string,false,,25,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,variantSlug,string,false,,26,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,archived,false,false,,27,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,homogeneous,false,false,,28,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,variantLogoUrl,string,false,,29,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,state,string,false,,30,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,commit,string,false,,31,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,systemTags,Array<string>,false,,32,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ApplicationSummary,customerTags,Array<string>,false,,33,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,AddonSummary,id,string,false,,37,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,AddonSummary,name,string,false,,38,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,AddonSummary,realId,string,false,,39,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,AddonSummary,providerId,string,false,,40,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,AddonSummary,logoUrl,string,false,,41,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,AddonSummary,systemTags,Array<string>,false,,42,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,AddonSummary,customerTags,Array<string>,false,,43,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ConsumerSummary,name,string,false,,47,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ConsumerSummary,key,string,false,,48,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ConsumerSummary,picture,string,false,,49,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ProviderSummary,id,string,false,,53,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,ProviderSummary,name,string,false,,54,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,id,string,false,,58,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,name,string,false,,59,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,description,string,false,,60,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,billingEmailAddress,string,false,renamed from billingEmail,62,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,address,string,false,,63,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,city,string,false,,64,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,zipcode,string,false,,65,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,country,string,false,,66,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,company,string,false,,67,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,VAT,string,false,,68,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,avatar,string,false,,69,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,vatState,'INVALID' | 'PENDING_VALIDATION' | 'VALID' | 'NOT_NEEDED' | 'NOT_APPLICABLE',false,,70,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,customerFullName,string,false,,71,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,canPay,boolean,false,,72,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,cleverEnterprise,boolean,false,,73,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,emergencyNumber,string,false,,74,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,canSEPA,boolean,false,,75,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,Organisation,isTrusted,boolean,false,,76,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationMember,id,string,false,,80,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationMember,email,string,false,,81,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationMember,name,string,false,,82,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationMember,avatar,string,false,,83,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationMember,preferredMFA,MFAKind,false,,84,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationMember,role,OrganisationMemberRole,false,,85,export,,false
+src/clients/cc-api/commands/organisation/organisation.types.d.ts,OrganisationMember,job,string,true,,86,export,,false
+src/clients/cc-api/commands/organisation/remove-organisation-member-command.types.d.ts,RemoveOrganisationMemberCommandInput,organisationId,string,false,,2,export,,false
+src/clients/cc-api/commands/organisation/remove-organisation-member-command.types.d.ts,RemoveOrganisationMemberCommandInput,memberId,string,false,,3,export,,false
+src/clients/cc-api/commands/organisation/update-organisation-avatar-command.types.d.ts,UpdateOrganisationAvatarCommandInput,organisationId,string,false,,2,export,,false
+src/clients/cc-api/commands/organisation/update-organisation-avatar-command.types.d.ts,UpdateOrganisationAvatarCommandInput,mimeType,'image/bmp' | 'image/gif' | 'image/jpeg' | 'image/png' | 'image/tiff',false,,3,export,,false
+src/clients/cc-api/commands/organisation/update-organisation-avatar-command.types.d.ts,UpdateOrganisationAvatarCommandInput,data,Blob,false,,4,export,,false
+src/clients/cc-api/commands/organisation/update-organisation-avatar-command.types.d.ts,UpdateOrganisationAvatarCommandOutput,url,string,false,,8,export,,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationBase,organisationId,string,false,,8,,,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationBase,name,string,false,,9,,,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationBase,description,string,false,,10,,,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationBase,address,string,false,,11,,,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationBase,city,string,false,,12,,,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationBase,zipcode,string,false,,13,,,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationBase,customerFullName,string,false,,14,,,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationBase,billingEmailAddress,string,true,renamed from billingEmail,16,,,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationBase,contacts,"Array<{
+    // renamed from contact_type
+    contactType: 'security' | 'privacy' | 'abuse';
+    // renamed from email_address
+    emailAddress: string;
+    // renamed from phone_number
+    phoneNumber: string;
+  }>",true,,17,,,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationStandard,country,string,false,,28,export,UpdateOrganisationBase,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationCompany,company,string,false,,32,export,UpdateOrganisationBase,false
+src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,UpdateOrganisationCompany,VAT,string,false,,33,export,UpdateOrganisationBase,false
+src/clients/cc-api/commands/organisation/update-organisation-member-command.types.d.ts,UpdateOrganisationMemberCommandInput,organisationId,string,false,,4,export,,false
+src/clients/cc-api/commands/organisation/update-organisation-member-command.types.d.ts,UpdateOrganisationMemberCommandInput,memberId,string,false,,5,export,,false
+src/clients/cc-api/commands/organisation/update-organisation-member-command.types.d.ts,UpdateOrganisationMemberCommandInput,role,OrganisationMemberRole,true,,6,export,,false
+src/clients/cc-api/commands/organisation/update-organisation-member-command.types.d.ts,UpdateOrganisationMemberCommandInput,job,string,true,,7,export,,false
+src/clients/cc-api/commands/payment/authorize-paypal-command.types.d.ts,AuthorizePaypalCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/payment/authorize-paypal-command.types.d.ts,AuthorizePaypalCommandInput,invoiceNumber,string,false,,5,export,,false
+src/clients/cc-api/commands/payment/authorize-paypal-command.types.d.ts,AuthorizePaypalCommandInput,transactionId,string,false,,6,export,,false
+src/clients/cc-api/commands/payment/authorize-stripe-command.types.d.ts,AuthorizeStripeCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/payment/authorize-stripe-command.types.d.ts,AuthorizeStripeCommandInput,invoiceNumber,string,false,,5,export,,false
+src/clients/cc-api/commands/payment/authorize-stripe-command.types.d.ts,AuthorizeStripeCommandInput,intentId,string,false,,6,export,,false
+src/clients/cc-api/commands/payment/get-stripe-intent-command.types.d.ts,GetStripeIntentCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/payment/get-stripe-intent-command.types.d.ts,GetStripeIntentCommandOutput,id,string,false,,6,export,,false
+src/clients/cc-api/commands/payment/get-stripe-intent-command.types.d.ts,GetStripeIntentCommandOutput,clientSecret,string,false,,7,export,,false
+src/clients/cc-api/commands/payment/get-stripe-intent-command.types.d.ts,GetStripeIntentCommandOutput,customer,string,false,,8,export,,false
+src/clients/cc-api/commands/payment/init-paypal-command.types.d.ts,InitPaypalCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/payment/init-paypal-command.types.d.ts,InitPaypalCommandInput,invoiceNumber,string,false,,3,export,,false
+src/clients/cc-api/commands/payment/init-paypal-command.types.d.ts,InitPaypalCommandOutput,url,string,false,,7,export,,false
+src/clients/cc-api/commands/payment/init-stripe-command.types.d.ts,InitStripeCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/payment/init-stripe-command.types.d.ts,InitStripeCommandInput,invoiceNumber,string,false,,5,export,,false
+src/clients/cc-api/commands/payment-method/create-payment-method-command.types.d.ts,CreatePaymentMethodCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/payment-method/create-payment-method-command.types.d.ts,CreatePaymentMethodCommandInput,id,string,false,,5,export,,false
+src/clients/cc-api/commands/payment-method/delete-payment-method-command.types.d.ts,DeletePaymentMethodCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/payment-method/delete-payment-method-command.types.d.ts,DeletePaymentMethodCommandInput,token,string,false,,3,export,,false
+src/clients/cc-api/commands/payment-method/list-payment-method-command.types.d.ts,ListPaymentMethodCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/payment-method/payment-method.types.d.ts,PaymentMethod,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/payment-method/payment-method.types.d.ts,PaymentMethod,type,string,false,,3,export,,false
+src/clients/cc-api/commands/payment-method/payment-method.types.d.ts,PaymentMethod,token,string,false,,4,export,,false
+src/clients/cc-api/commands/payment-method/payment-method.types.d.ts,PaymentMethod,primary,boolean,false,renamed from isDefault,6,export,,false
+src/clients/cc-api/commands/payment-method/payment-method.types.d.ts,PaymentMethod,number,string,false,,7,export,,false
+src/clients/cc-api/commands/payment-method/set-primary-payment-method-command.types.d.ts,SetPrimaryPaymentMethodCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/payment-method/set-primary-payment-method-command.types.d.ts,SetPrimaryPaymentMethodCommandInput,id,string,false,,5,export,,false
+src/clients/cc-api/commands/price-system/get-price-system-command.types.d.ts,GetPriceSystemCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/price-system/get-price-system-command.types.d.ts,GetPriceSystemCommandInput,zone,string,false,,5,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,PriceSystem,zone,string,true,renamed from zone_id,3,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,PriceSystem,currency,string,false,,4,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,PriceSystem,runtime,Array<RuntimePricePolicy>,false,,5,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,PriceSystem,countable,Array<CountablePricePolicy>,false,,6,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,RuntimePricePolicy,id,string,false,renamed from runtime_policy_id,11,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,RuntimePricePolicy,source,string,false,,12,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,RuntimePricePolicy,flavor,string,false,,13,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,RuntimePricePolicy,timeUnit,string,false,renamed from time_unit,15,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,RuntimePricePolicy,price,number,false,,16,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,RuntimePricePolicy,priceId,string,false,renamed from slug_id and transformed to lower case,18,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,CountablePricePolicy,id,string,false,renamed from countable_policy_id,23,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,CountablePricePolicy,service,string,false,,24,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,CountablePricePolicy,dataUnit,string,false,renamed from data_unit,26,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,CountablePricePolicy,dataQuantityForPrice,BillableQuantity,false,renamed from data_quantity_for_price,28,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,CountablePricePolicy,timeIntervalForPrice,BillableTime,true,renamed from time_interval_for_price,30,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,CountablePricePolicy,pricePlans,Array<CountablePricePlan>,false,renamed from price_plans,32,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,BillableQuantity,secability,'SECABLE' | 'INSECABLE',false,,36,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,BillableQuantity,quantity,number,false,,37,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,BillableTime,secability,'SECABLE' | 'INSECABLE',false,,41,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,BillableTime,interval,number,false,,42,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,CountablePricePlan,planId,string,false,renamed from plan_id,47,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,CountablePricePlan,maxQuantity,number,true,renamed from max_quantity,49,export,,false
+src/clients/cc-api/commands/price-system/price-system.types.d.ts,CountablePricePlan,price,number,false,,50,export,,false
+src/clients/cc-api/commands/product/get-product-addon-command.types.d.ts,GetProductAddonCommandInput,id,string,false,,4,export,,false
+src/clients/cc-api/commands/product/get-product-addon-command.types.d.ts,GetProductAddonCommandInput,withVersions,boolean,false,,5,export,,false
+src/clients/cc-api/commands/product/get-product-addon-command.types.d.ts,GetProductAddonCommandInput,ownerId,string,true,,6,export,,false
+src/clients/cc-api/commands/product/get-product-addon-versions-command.types.d.ts,GetProductAddonVersionsCommandInput,id,string,false,,4,export,,false
+src/clients/cc-api/commands/product/get-product-runtime-command.types.d.ts,GetProductRuntimeCommandInput,type,string,false,,4,export,,false
+src/clients/cc-api/commands/product/get-product-runtime-command.types.d.ts,GetProductRuntimeCommandInput,version,string,false,,5,export,,false
+src/clients/cc-api/commands/product/get-product-runtime-command.types.d.ts,GetProductRuntimeCommandInput,ownerId,string,true,,6,export,,false
+src/clients/cc-api/commands/product/list-product-addon-command.types.d.ts,ListProductAddonCommandInput,withVersions,boolean,false,,4,export,,false
+src/clients/cc-api/commands/product/list-product-addon-command.types.d.ts,ListProductAddonCommandInput,ownerId,string,true,,5,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,type,string,false,,4,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,version,string,false,,5,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,name,string,false,,6,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,variant,ProductRuntimeVariant,false,,7,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,description,string,false,,8,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,enabled,boolean,false,,9,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,comingSoon,boolean,false,,10,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,maxInstances,number,false,,11,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,tags,Array<string>,false,,12,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,deployments,Array<string>,false,,13,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,flavors,Array<ProductRuntimeFlavor>,false,,14,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,defaultFlavor,ProductRuntimeFlavor,false,,15,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntime,buildFlavor,ProductRuntimeFlavor,false,,16,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeVariant,id,string,false,,20,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeVariant,slug,string,false,,21,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeVariant,name,string,false,,22,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeVariant,deployType,string,false,,23,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeVariant,logo,string,false,,24,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,name,string,false,,28,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,mem,number,false,,29,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,cpus,number,false,,30,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,gpus,number,false,,31,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,disk,number,false,,32,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,price,number,false,,33,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,available,boolean,false,,34,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,microservice,boolean,false,,35,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,machineLearning,boolean,false,renamed from machine_learning,37,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,nice,number,false,,38,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,priceId,string,false,renamed from price_id,40,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,memory,"{
+    unit: string;
+    value: number;
+    formatted: string;
+  }",false,,41,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,cpuFactor,number,false,,46,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductRuntimeFlavor,memFactor,number,false,,47,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductAddon,versions,ProductAddonVersions,true,,51,export,AddonProviderFull,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductAddonVersions,clusters,Array<ProductAddonClusterVersion>,false,,55,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductAddonVersions,dedicated,"Record<string, ProductAddonDedicatedVersion>",false,,56,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductAddonVersions,defaultDedicatedVersion,string,false,,57,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductAddonClusterVersion,id,string,false,,61,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductAddonClusterVersion,label,string,false,,62,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductAddonClusterVersion,zone,string,false,,63,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductAddonClusterVersion,version,string,false,,64,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductAddonClusterVersion,features,"Array<{
+    name: string;
+    enabled: boolean;
+  }>",false,,65,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductAddonDedicatedVersion,features,"Array<{
+    name: string;
+    enabled: boolean;
+  }>",false,,72,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ProductElasticsearchInfo,services,"{
+    apm: ElasticsearchServiceInfo;
+    kibana: ElasticsearchServiceInfo;
+  }",false,,79,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ElasticsearchServiceInfo,name,string,false,,86,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ElasticsearchServiceInfo,mem,number,false,,87,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ElasticsearchServiceInfo,cpus,number,false,,88,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ElasticsearchServiceInfo,gpus,number,false,,89,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ElasticsearchServiceInfo,price,number,false,,90,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ElasticsearchServiceInfo,available,boolean,false,,91,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ElasticsearchServiceInfo,microservice,boolean,false,,92,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ElasticsearchServiceInfo,nice,number,false,,93,export,,false
+src/clients/cc-api/commands/product/product.types.d.ts,ElasticsearchServiceInfo,priceId,string,false,renamed from price_id and transformed to lower case,95,export,,false
+src/clients/cc-api/commands/profile/create-profile-email-address-command.types.d.ts,CreateProfileEmailAddressCommandInput,address,string,false,,2,export,,false
+src/clients/cc-api/commands/profile/delete-profile-email-address-command.types.d.ts,DeleteProfileEmailAddressCommandInput,address,string,false,,2,export,,false
+src/clients/cc-api/commands/profile/list-profile-email-address-command.types.d.ts,ListProfileEmailAddressCommandOutput,primaryAddress,ProfileEmailAddress,false,,2,export,,false
+src/clients/cc-api/commands/profile/list-profile-email-address-command.types.d.ts,ListProfileEmailAddressCommandOutput,secondaryAddresses,Array<ProfileEmailAddress>,false,,3,export,,false
+src/clients/cc-api/commands/profile/list-profile-email-address-command.types.d.ts,ProfileEmailAddress,address,string,false,,7,export,,false
+src/clients/cc-api/commands/profile/list-profile-email-address-command.types.d.ts,ProfileEmailAddress,verified,boolean,false,,8,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,id,string,false,,4,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,email,string,false,,5,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,name,string,false,,6,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,phone,string,false,,7,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,address,string,false,,8,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,city,string,false,,9,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,zipcode,string,false,,10,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,country,string,false,,11,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,avatar,string,false,,12,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,creationDate,string,false,,13,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,lang,string,false,,14,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,emailValidated,boolean,false,,15,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,isLinkedToGitHub,boolean,false,,16,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,admin,boolean,false,,17,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,canPay,boolean,false,,18,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,preferredMFA,MFAKind,false,,19,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,hasPassword,boolean,false,,20,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,partnerId,string,false,,21,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,partnerName,string,false,,22,export,,false
+src/clients/cc-api/commands/profile/profile.types.d.ts,Profile,partnerConsoleUrl,string,false,,23,export,,false
+src/clients/cc-api/commands/profile/set-profile-primary-email-address-command.types.d.ts,SetProfilePrimaryEmailAddressCommandInput,address,string,false,,2,export,,false
+src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,UpdateProfileAvatarCommandOutput,url,string,false,,6,export,,false
+src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,UpdateProfileAvatarCommandInputExternal,type,'externalSource',false,,10,export,,false
+src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,UpdateProfileAvatarCommandInputExternal,source,'github' | 'gravatar',false,,11,export,,false
+src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,UpdateProfileAvatarCommandInputData,type,'dataSource',false,,15,export,,false
+src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,UpdateProfileAvatarCommandInputData,mimeType,'image/bmp' | 'image/gif' | 'image/jpeg' | 'image/png' | 'image/tiff',false,,16,export,,false
+src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,UpdateProfileAvatarCommandInputData,data,Blob,false,,17,export,,false
+src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,UpdateProfileCommandInput,name,string,true,,4,export,,false
+src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,UpdateProfileCommandInput,phone,string,true,,5,export,,false
+src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,UpdateProfileCommandInput,address,string,true,,6,export,,false
+src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,UpdateProfileCommandInput,city,string,true,,7,export,,false
+src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,UpdateProfileCommandInput,zipcode,string,true,,8,export,,false
+src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,UpdateProfileCommandInput,country,string,true,,9,export,,false
+src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,UpdateProfileCommandInput,lang,string,true,,10,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoCommandInput,addonId,string,false,,4,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoCommandOutput,cluster,GetPulsarClusterInnerCommandOutput,false,,8,export,Omit,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,id,string,false,,12,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,tenant,string,false,,13,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,namespace,string,false,,14,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,clusterId,string,false,renamed from cluster_id,16,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,token,string,false,,17,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,creationDate,string,false,renamed from creation_date,19,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,askForDeletionDate,string,true,renamed from ask_for_deletion_date,21,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,deletionDate,string,true,renamed from deletion_date,23,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,status,'ACTIVE' | 'TO_DELETE' | 'NAMESPACE_DELETED' | 'COLD_STORAGE_DELETED' | 'DELETED',false,,24,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,plan,PulsarPlan,false,,25,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,coldStorageId,string,true,renamed from cold_storage_id,27,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,coldStorageLinked,boolean,false,renamed from cold_storage_linked,29,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarInfoInnerCommandOutput,coldStorageMustBeProvided,boolean,false,renamed from cold_storage_must_be_provided,31,export,,false
+src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,GetPulsarClusterInnerCommandInput,clusterId,string,false,,35,export,,false
+src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,PulsarInfo,id,string,false,,2,export,,false
+src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,PulsarInfo,url,string,false,,3,export,,false
+src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,PulsarInfo,pulsarPort,number,false,renamed from pulsar_port,5,export,,false
+src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,PulsarInfo,pulsarTlsPort,number,true,renamed from pulsar_tls_port,7,export,,false
+src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,PulsarInfo,webPort,number,true,renamed from web_port,9,export,,false
+src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,PulsarInfo,webTlsPort,number,true,renamed from web_tls_port,11,export,,false
+src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,PulsarInfo,version,string,false,,12,export,,false
+src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,PulsarInfo,available,boolean,false,,13,export,,false
+src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,PulsarInfo,zone,string,false,,14,export,,false
+src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,PulsarInfo,supportColdStorage,boolean,false,renamed from support_cold_storage,16,export,,false
+src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,PulsarInfo,supportedPlans,Array<PulsarPlan>,false,renamed from supported_plans,18,export,,false
+src/clients/cc-api/commands/ssh-key/create-personal-ssh-key-command.types.d.ts,CreatePersonalSshKeyCommandInput,name,string,false,,4,export,,false
+src/clients/cc-api/commands/ssh-key/create-personal-ssh-key-command.types.d.ts,CreatePersonalSshKeyCommandInput,key,string,false,,5,export,,false
+src/clients/cc-api/commands/ssh-key/delete-personal-ssh-key-command.types.d.ts,DeletePersonalSshKeyCommandInput,name,string,false,,2,export,,false
+src/clients/cc-api/commands/ssh-key/ssh-key.types.d.ts,SshKey,name,string,false,,2,export,,false
+src/clients/cc-api/commands/ssh-key/ssh-key.types.d.ts,SshKey,key,string,false,,3,export,,false
+src/clients/cc-api/commands/ssh-key/ssh-key.types.d.ts,SshKey,fingerprint,string,false,,4,export,,false
+src/clients/cc-api/commands/tcp-redirection/create-tcp-redirection-command.types.d.ts,CreateTcpRedirectionCommandInput,namespace,TcpRedirectionNamespace,true,,5,export,ApplicationId,false
+src/clients/cc-api/commands/tcp-redirection/delete-tcp-redirection-command.types.d.ts,DeleteTcpRedirectionCommandInput,namespace,TcpRedirectionNamespace,false,,5,export,ApplicationId,false
+src/clients/cc-api/commands/tcp-redirection/delete-tcp-redirection-command.types.d.ts,DeleteTcpRedirectionCommandInput,port,number,false,,6,export,ApplicationId,false
+src/clients/cc-api/commands/tcp-redirection/list-tcp-redirection-namespace-command.types.d.ts,ListTcpRedirectionNamespaceCommandInput,ownerId,string,false,,4,export,,false
+src/clients/cc-api/commands/tcp-redirection/tcp-redirection.types.d.ts,TcpRedirection,namespace,TcpRedirectionNamespace,false,,2,export,,false
+src/clients/cc-api/commands/tcp-redirection/tcp-redirection.types.d.ts,TcpRedirection,port,number,false,,3,export,,false
+src/clients/cc-api/commands/user-setting/delete-user-setting-command.types.d.ts,DeleteUserSettingCommandInput,env,string,true,,2,export,,false
+src/clients/cc-api/commands/user-setting/delete-user-setting-command.types.d.ts,DeleteUserSettingCommandInput,name,string,false,,3,export,,false
+src/clients/cc-api/commands/user-setting/get-user-setting-command.types.d.ts,GetUserSettingCommandInput,env,string,true,,2,export,,false
+src/clients/cc-api/commands/user-setting/get-user-setting-command.types.d.ts,GetUserSettingCommandInput,name,string,false,,3,export,,false
+src/clients/cc-api/commands/user-setting/set-user-setting-command.types.d.ts,SetUserSettingCommandInput,env,string,true,,2,export,,false
+src/clients/cc-api/commands/user-setting/set-user-setting-command.types.d.ts,SetUserSettingCommandInput,name,string,false,,3,export,,false
+src/clients/cc-api/commands/user-setting/set-user-setting-command.types.d.ts,SetUserSettingCommandInput,value,string,false,,4,export,,false
+src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,CheckVatNumberCommandInput,country,string,false,,2,export,,false
+src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,CheckVatNumberCommandInput,vatNumber,string,false,,3,export,,false
+src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,CheckVatNumberValid,valid,true,false,,9,export,,false
+src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,CheckVatNumberValid,name,string,false,,10,export,,false
+src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,CheckVatNumberValid,address,string,false,,11,export,,false
+src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,CheckVatNumberInvalid,valid,false,false,,15,export,,false
+src/clients/cc-api/commands/warp-token/get-warp-token-command.types.d.ts,GetWarpTokenCommandInput,ownerId,string,false,,2,export,,false
+src/clients/cc-api/commands/warp-token/get-warp-token-command.types.d.ts,GetWarpTokenCommandInput,tokenKind,'METRICS' | 'ACCESS_LOGS',false,,3,export,,false
+src/clients/cc-api/commands/zone/zone.types.d.ts,Zone,id,string,false,,2,export,,false
+src/clients/cc-api/commands/zone/zone.types.d.ts,Zone,name,string,false,,3,export,,false
+src/clients/cc-api/commands/zone/zone.types.d.ts,Zone,country,string,false,,4,export,,false
+src/clients/cc-api/commands/zone/zone.types.d.ts,Zone,countryCode,string,false,,5,export,,false
+src/clients/cc-api/commands/zone/zone.types.d.ts,Zone,city,string,false,,6,export,,false
+src/clients/cc-api/commands/zone/zone.types.d.ts,Zone,displayName,string,false,,7,export,,false
+src/clients/cc-api/commands/zone/zone.types.d.ts,Zone,lat,number,false,,8,export,,false
+src/clients/cc-api/commands/zone/zone.types.d.ts,Zone,lon,number,false,,9,export,,false
+src/clients/cc-api/commands/zone/zone.types.d.ts,Zone,outboundIPs,Array<string>,false,,10,export,,false
+src/clients/cc-api/commands/zone/zone.types.d.ts,Zone,tags,Array<string>,false,,11,export,,false

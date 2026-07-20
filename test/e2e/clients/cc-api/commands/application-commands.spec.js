@@ -58,7 +58,7 @@ describe('application commands', function () {
       }),
     );
 
-    expect(updatedApplication.buildFlavor.name).to.equal('L');
+    expect(updatedApplication.theBuildFlavor.name).to.equal('L');
   });
 
   it('should update branch', async () => {

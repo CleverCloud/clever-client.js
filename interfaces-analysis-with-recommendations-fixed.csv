@@ -1,0 +1,981 @@
+interface,field,recommendation,type,optional,comment,export_modifier,extends,readonly,filepath,line_number
+Addon,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/addon/addon.types.d.ts,4
+Addon,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/addon/addon.types.d.ts,5
+Addon,realId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon/addon.types.d.ts,6
+Addon,zone,✅ KEEP (already renamed from API format),string,false,renamed from region,export,,false,src/clients/cc-api/commands/addon/addon.types.d.ts,8
+Addon,zoneId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon/addon.types.d.ts,9
+Addon,provider,✅ KEEP,AddonProviderFull,false,,export,,false,src/clients/cc-api/commands/addon/addon.types.d.ts,10
+Addon,plan,✅ KEEP,AddonProviderPlan,false,,export,,false,src/clients/cc-api/commands/addon/addon.types.d.ts,11
+Addon,creationDate,🔄 RENAME: createdAt (standardize to 'At' suffix),string,false,transformed from number to date iso string,export,,false,src/clients/cc-api/commands/addon/addon.types.d.ts,13
+Addon,configKeys,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/addon/addon.types.d.ts,14
+CreateAddonCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon/create-addon-command.types.d.ts,4
+CreateAddonCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/addon/create-addon-command.types.d.ts,5
+CreateAddonCommandInput,zone,✅ KEEP (already renamed from API format),string,false,renamed from region,export,,false,src/clients/cc-api/commands/addon/create-addon-command.types.d.ts,7
+CreateAddonCommandInput,providerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon/create-addon-command.types.d.ts,8
+CreateAddonCommandInput,planId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon/create-addon-command.types.d.ts,9
+GetAddonSsoCommandOutput,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,6
+GetAddonSsoCommandOutput,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,7
+GetAddonSsoCommandOutput,timestamp,🔄 RENAME: createdAt or updatedAt (generic timestamp needs context),number,false,,export,,false,src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,8
+GetAddonSsoCommandOutput,token,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,9
+GetAddonSsoCommandOutput,signature,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,10
+GetAddonSsoCommandOutput,email,🔄 RENAME: emailAddress (be explicit),string,false,,export,,false,src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,11
+GetAddonSsoCommandOutput,userId,✅ KEEP,string,false,renamed from user_id,export,,false,src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,13
+GetAddonSsoCommandOutput,userInfoSignature,✅ KEEP (already renamed from API format),string,false,renamed from userinfo_signature,export,,false,src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,15
+GetAddonSsoCommandOutput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,16
+GetAddonSsoCommandOutput,navData,✅ KEEP (already renamed from API format),string,false,renamed from nav-data,export,,false,src/clients/cc-api/commands/addon/get-addon-sso-command.types.d.ts,18
+ListAddonCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon/list-addon-command.types.d.ts,4
+UpdateAddonCommandInput,name,📝 CLARIFY: too generic,string,false,,export,AddonId,false,src/clients/cc-api/commands/addon/update-addon-command.types.d.ts,5
+AddonProviderFull,plans,✅ KEEP,Array<AddonProviderPlan>,false,,export,AddonProvider,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,2
+AddonProviderFull,features,✅ KEEP,Array<AddonProviderFeature>,false,,export,AddonProvider,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,3
+AddonProvider,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,7
+AddonProvider,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,8
+AddonProvider,website,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,9
+AddonProvider,supportEmail,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,10
+AddonProvider,googlePlusName,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,11
+AddonProvider,twitterName,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,12
+AddonProvider,analyticsId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,13
+AddonProvider,shortDesc,🔄 RENAME: shortDescription (avoid abbreviating description),string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,14
+AddonProvider,longDesc,🔄 RENAME: networkGroup* (ng is unclear),string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,15
+AddonProvider,logoUrl,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,16
+AddonProvider,status,"📝 REVIEW: use status"" for operational/lifecycle",AddonProviderStatus,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,17
+AddonProvider,openInNewTab,🔄 RENAME: isOpenInNewTab (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,18
+AddonProvider,canUpgrade,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,19
+AddonProvider,zones,✅ KEEP,Array<string>,false,renamed from regions,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,21
+AddonProviderPlan,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,25
+AddonProviderPlan,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,26
+AddonProviderPlan,slug,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,27
+AddonProviderPlan,price,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,28
+AddonProviderPlan,priceId,✅ KEEP,string,true,renamed from price_id,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,30
+AddonProviderPlan,features,✅ KEEP,Array<AddonProviderPlanFeature>,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,31
+AddonProviderPlan,zones,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,32
+AddonProviderPlanFeature,value,📝 CLARIFY: too generic,string,false,,export,AddonProviderFeature,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,36
+AddonProviderPlanFeature,computableValue,✅ KEEP (already renamed from API format),string,false,renamed from computable_value and fallback to value when null,export,AddonProviderFeature,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,38
+AddonProviderFeature,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,42
+AddonProviderFeature,type,📝 CLARIFY: too generic,AddonProviderFeatureType,false,,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,43
+AddonProviderFeature,nameCode,✅ KEEP (already renamed from API format),string,false,renamed from name_code and fallback to name when null,export,,false,src/clients/cc-api/commands/addon-provider/addon-provider.types.d.ts,45
+CreateAddonProviderCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/create-addon-provider-command.types.d.ts,4
+CreateAddonProviderCommandInput,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/addon-provider/create-addon-provider-command.types.d.ts,5
+CreateAddonProviderCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/addon-provider/create-addon-provider-command.types.d.ts,6
+CreateAddonProviderFeatureCommandInput,name,📝 CLARIFY: too generic,string,false,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/create-addon-provider-feature-command.types.d.ts,5
+CreateAddonProviderFeatureCommandInput,type,📝 CLARIFY: too generic,AddonProviderFeatureType,false,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/create-addon-provider-feature-command.types.d.ts,6
+CreateAddonProviderPlanCommandInput,name,📝 CLARIFY: too generic,string,false,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/create-addon-provider-plan-command.types.d.ts,5
+CreateAddonProviderPlanCommandInput,slug,✅ KEEP,string,false,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/create-addon-provider-plan-command.types.d.ts,6
+CreateAddonProviderPlanCommandInput,price,✅ KEEP,number,false,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/create-addon-provider-plan-command.types.d.ts,7
+DeleteAddonProviderFeatureCommandInput,name,📝 CLARIFY: too generic,string,false,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/delete-addon-provider-feature-command.types.d.ts,4
+DeleteAddonProviderPlanCommandInput,planId,✅ KEEP,string,false,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/delete-addon-provider-plan-command.types.d.ts,4
+UpdateAddonProviderCommandInput,name,📝 CLARIFY: too generic,string,true,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,5
+UpdateAddonProviderCommandInput,website,✅ KEEP,string,true,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,6
+UpdateAddonProviderCommandInput,supportEmail,✅ KEEP,string,true,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,7
+UpdateAddonProviderCommandInput,googlePlusName,✅ KEEP,string,true,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,8
+UpdateAddonProviderCommandInput,twitterName,✅ KEEP,string,true,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,9
+UpdateAddonProviderCommandInput,analyticsId,✅ KEEP,string,true,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,10
+UpdateAddonProviderCommandInput,shortDesc,🔄 RENAME: shortDescription (avoid abbreviating description),string,true,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,11
+UpdateAddonProviderCommandInput,longDesc,🔄 RENAME: networkGroup* (ng is unclear),string,true,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,12
+UpdateAddonProviderCommandInput,logoUrl,✅ KEEP,string,true,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.d.ts,13
+UpdateAddonProviderPlanCommandInput,planId,✅ KEEP,string,false,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-plan-command.types.d.ts,5
+UpdateAddonProviderPlanCommandInput,name,📝 CLARIFY: too generic,string,false,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-plan-command.types.d.ts,6
+UpdateAddonProviderPlanCommandInput,slug,✅ KEEP,string,false,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-plan-command.types.d.ts,7
+UpdateAddonProviderPlanCommandInput,price,✅ KEEP,number,false,,export,AddonProviderId,false,src/clients/cc-api/commands/addon-provider/update-addon-provider-plan-command.types.d.ts,8
+Application,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,6
+Application,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,7
+Application,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,8
+Application,description,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,9
+Application,zone,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,10
+Application,zoneId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,11
+Application,domains,✅ KEEP,Array<Domain>,false,renamed from vhosts,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,34
+Application,creationDate,🔄 RENAME: createdAt (standardize to 'At' suffix),string,false,converted from number to date iso string,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,36
+Application,lastDeploy,✅ KEEP (already renamed from API format),number,false,renamed from last_deploy,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,38
+Application,archived,🔄 RENAME: isArchived (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,39
+Application,stickySessions,🔄 RENAME: isStickySessions (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,40
+Application,homogeneous,🔄 RENAME: isHomogeneous (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,41
+Application,favourite,🔄 RENAME: isFavorite (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,42
+Application,cancelOnPush,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,43
+Application,oauthApp,✅ KEEP,ApplicationOauthApp,true,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,44
+Application,separateBuild,🔄 RENAME: isSeparateBuild (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,45
+Application,buildFlavor,✅ KEEP,ProductRuntimeFlavor,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,46
+Application,state,"📝 REVIEW: use state"" for data/resource state",ApplicationState,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,47
+Application,commitId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,48
+Application,appliance,✅ KEEP,null,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,49
+Application,branch,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,50
+Application,branches,✅ KEEP,Array<string>,true,,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,51
+Application,forceHttps,🔄 RENAME: isForceHttps (boolean should have is/has/can prefix),boolean,false,converted from ENABLED/DISABLED to boolean,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,53
+Application,environment,🔄 RENAME: environments (array should be plural),Array<EnvironmentVariable>,false,renamed from env,export,,false,src/clients/cc-api/commands/application/application.types.d.ts,55
+CreateApplicationCommandInput,favourite,🔄 RENAME: isFavorite (boolean should have is/has/can prefix),boolean,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,14
+CreateApplicationCommandInput,forceHttps,🔄 RENAME: isForceHttps (boolean should have is/has/can prefix),boolean,true,converted from ENABLED|DISABLED to boolean,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,16
+CreateApplicationCommandInput,homogeneous,🔄 RENAME: isHomogeneous (boolean should have is/has/can prefix),boolean,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,17
+CreateApplicationCommandInput,instance,✅ KEEP,ApplicationInstance | ApplicationInstanceSlug,false,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,18
+CreateApplicationCommandInput,instanceLifetime,✅ KEEP,ApplicationLifetime,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,19
+CreateApplicationCommandInput,maxFlavor,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,20
+CreateApplicationCommandInput,maxInstances,✅ KEEP,number,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,21
+CreateApplicationCommandInput,minFlavor,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,22
+CreateApplicationCommandInput,minInstances,✅ KEEP,number,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,23
+CreateApplicationCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,24
+CreateApplicationCommandInput,oauthApp,✅ KEEP,ApplicationOauthApp,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,25
+CreateApplicationCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,26
+CreateApplicationCommandInput,publicGitRepositoryUrl,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,27
+CreateApplicationCommandInput,separateBuild,🔄 RENAME: isSeparateBuild (boolean should have is/has/can prefix),boolean,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,28
+CreateApplicationCommandInput,shutdownable,🔄 RENAME: canShutdown (boolean should have is/has/can prefix),boolean,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,29
+CreateApplicationCommandInput,stickySessions,🔄 RENAME: isStickySessions (boolean should have is/has/can prefix),boolean,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,30
+CreateApplicationCommandInput,tags,✅ KEEP,Array<string>,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,31
+CreateApplicationCommandInput,zone,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,32
+ApplicationInstanceSlug,slug,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,38
+ApplicationInstance,type,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,42
+ApplicationInstance,version,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,43
+ApplicationInstance,variant,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/application/create-application-command.types.d.ts,44
+UpdateApplicationCommandInput,favourite,🔄 RENAME: isFavorite (boolean should have is/has/can prefix),boolean,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,14
+UpdateApplicationCommandInput,forceHttps,🔄 RENAME: isForceHttps (boolean should have is/has/can prefix),boolean,true,converted from ENABLED|DISABLED to boolean,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,16
+UpdateApplicationCommandInput,homogeneous,🔄 RENAME: isHomogeneous (boolean should have is/has/can prefix),boolean,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,17
+UpdateApplicationCommandInput,instanceLifetime,✅ KEEP,ApplicationLifetime,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,18
+UpdateApplicationCommandInput,maxFlavor,✅ KEEP,string,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,19
+UpdateApplicationCommandInput,maxInstances,✅ KEEP,number,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,20
+UpdateApplicationCommandInput,minFlavor,✅ KEEP,string,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,21
+UpdateApplicationCommandInput,minInstances,✅ KEEP,number,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,22
+UpdateApplicationCommandInput,name,📝 CLARIFY: too generic,string,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,23
+UpdateApplicationCommandInput,separateBuild,🔄 RENAME: isSeparateBuild (boolean should have is/has/can prefix),boolean,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,24
+UpdateApplicationCommandInput,shutdownable,🔄 RENAME: canShutdown (boolean should have is/has/can prefix),boolean,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,25
+UpdateApplicationCommandInput,stickySessions,🔄 RENAME: isStickySessions (boolean should have is/has/can prefix),boolean,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,26
+UpdateApplicationCommandInput,tags,✅ KEEP,Array<string>,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,27
+UpdateApplicationCommandInput,zone,✅ KEEP,string,true,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,28
+UpdateApplicationBranchCommandInput,branch,✅ KEEP,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/application/update-application-command.types.d.ts,37
+ConfirmAuthMfaCommandInput,kind,✅ KEEP,MFAKind,false,,export,,false,src/clients/cc-api/commands/auth/confirm-auth-mfa-command.types.d.ts,4
+ConfirmAuthMfaCommandInput,code,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/auth/confirm-auth-mfa-command.types.d.ts,5
+ConfirmAuthMfaCommandInput,password,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/auth/confirm-auth-mfa-command.types.d.ts,6
+ConfirmAuthMfaCommandInput,revokeTokens,🔄 RENAME: isRevokeTokens (boolean should have is/has/can prefix),boolean,true,,export,,false,src/clients/cc-api/commands/auth/confirm-auth-mfa-command.types.d.ts,7
+CreateAuthMfaCommandInput,kind,✅ KEEP,MFAKind,false,,export,,false,src/clients/cc-api/commands/auth/create-auth-mfa-command.types.d.ts,4
+CreateAuthMfaCommandInput,password,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/auth/create-auth-mfa-command.types.d.ts,5
+CreateAuthMfaCommandOutput,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/auth/create-auth-mfa-command.types.d.ts,9
+DeleteAuthMfaCommandInput,kind,✅ KEEP,MFAKind,false,,export,,false,src/clients/cc-api/commands/auth/delete-auth-mfa-command.types.d.ts,4
+DeleteAuthMfaCommandInput,password,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/auth/delete-auth-mfa-command.types.d.ts,5
+GetAuthMfaBackupCodesCommandInput,kind,✅ KEEP,MFAKind,false,,export,,false,src/clients/cc-api/commands/auth/get-auth-mfa-backup-codes-command.types.d.ts,4
+GetAuthMfaBackupCodesCommandInput,password,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/auth/get-auth-mfa-backup-codes-command.types.d.ts,5
+UpdateAuthPasswordCommandInput,oldPassword,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/auth/update-auth-password-command.types.d.ts,2
+UpdateAuthPasswordCommandInput,newPassword,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/auth/update-auth-password-command.types.d.ts,3
+UpdateAuthPasswordCommandInput,revokeTokens,🔄 RENAME: isRevokeTokens (boolean should have is/has/can prefix),boolean,true,renamed from dropTokens,export,,false,src/clients/cc-api/commands/auth/update-auth-password-command.types.d.ts,5
+Backup,commands,✅ KEEP,BackupCommands,true,,export,BackupBase,false,src/clients/cc-api/commands/backup/backup.types.d.ts,2
+BackupBase,backupId,✅ KEEP,string,false,renamed from backup_id,export,,false,src/clients/cc-api/commands/backup/backup.types.d.ts,7
+BackupBase,entityId,✅ KEEP,string,false,renamed from entity_id,export,,false,src/clients/cc-api/commands/backup/backup.types.d.ts,9
+BackupBase,status,"📝 REVIEW: use status"" for operational/lifecycle",string,false,,export,,false,src/clients/cc-api/commands/backup/backup.types.d.ts,10
+BackupBase,downloadUrl,✅ KEEP,string,false,renamed from download_url (or from link for elasticsearch addons),export,,false,src/clients/cc-api/commands/backup/backup.types.d.ts,16
+BackupCommands,restoreCommand,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/backup/backup.types.d.ts,20
+BackupCommands,password,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/backup/backup.types.d.ts,21
+BackupCommands,deleteCommand,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/backup/backup.types.d.ts,22
+ListBackupCommandInput,withCommands,🔄 RENAME: isWithCommands (boolean should have is/has/can prefix),boolean,true,,export,AddonId,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,5
+InnerBackup,restoreCommand,✅ KEEP (already renamed from API format),string,true,renamed from restore_command,export,BackupBase,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,14
+InnerBackup,deleteCommand,✅ KEEP (already renamed from API format),string,true,renamed from delete_command,export,BackupBase,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,16
+GetAddonDetailsInnerCommandInput,addonProviderId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,20
+GetAddonDetailsInnerCommandInput,addonId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,21
+GetAddonDetailsInnerCommandOutput,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,25
+GetAddonDetailsInnerCommandOutput,providerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,26
+GetAddonDetailsInnerCommandOutput,host,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,27
+GetAddonDetailsInnerCommandOutput,port,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,28
+GetAddonDetailsInnerCommandOutput,user,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,29
+GetAddonDetailsInnerCommandOutput,password,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,30
+GetAddonDetailsInnerCommandOutput,database,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/backup/list-backup-command.types.d.ts,31
+GetConfigProviderCommandInput,addonId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/config-provider/get-config-provider-command.types.d.ts,4
+UpdateConfigProviderCommandInput,addonId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/config-provider/update-config-provider-command.types.d.ts,4
+UpdateConfigProviderCommandInput,environment,🔄 RENAME: environments (array should be plural),Array<EnvironmentVariable>,false,,export,,false,src/clients/cc-api/commands/config-provider/update-config-provider-command.types.d.ts,5
+ActivateCouponCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/credits/activate-coupon-command.types.d.ts,4
+ActivateCouponCommandInput,couponName,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/credits/activate-coupon-command.types.d.ts,5
+Credits,prepaidCredit,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/credits/credits.types.d.ts,2
+Credits,freeCredit,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/credits/credits.types.d.ts,3
+Credits,currency,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/credits/credits.types.d.ts,4
+CouponUsage,couponName,✅ KEEP (already renamed from API format),string,false,renamed from coupon_name,export,,false,src/clients/cc-api/commands/credits/credits.types.d.ts,9
+CouponUsage,usageDate,🔄 RENAME: usedAt (standardize to 'At' suffix),string,false,,export,,false,src/clients/cc-api/commands/credits/credits.types.d.ts,10
+CouponUsage,freeCreditsStartDate,🔄 RENAME: freeCreditsStartAt (standardize to 'At' suffix),string,false,,export,,false,src/clients/cc-api/commands/credits/credits.types.d.ts,11
+CouponUsage,freeCreditsEndDate,🔄 RENAME: freeCreditsEndAt (standardize to 'At' suffix),string,false,,export,,false,src/clients/cc-api/commands/credits/credits.types.d.ts,12
+CouponUsage,appliedByUserId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/credits/credits.types.d.ts,13
+GetCreditsSummaryCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/credits/get-credits-summary-command.types.d.ts,4
+CancelDeploymentCommandInput,deploymentId,✅ KEEP,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/deployment/cancel-deployment-command.types.d.ts,4
+Deployment,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,2
+Deployment,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,3
+Deployment,applicationId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,4
+Deployment,startDate,🔄 RENAME: startsAt (standardize to 'At' suffix),string,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,5
+Deployment,state,"📝 REVIEW: use state"" for data/resource state",DeploymentState,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,6
+Deployment,steps,✅ KEEP,Array<DeploymentStep>,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,7
+Deployment,hasDedicatedBuild,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,19
+DeploymentStep,state,"📝 REVIEW: use state"" for data/resource state",DeploymentState,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,27
+DeploymentStep,date,🔄 RENAME: [context]At (e.g.,string,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,28
+DeploymentLegacy,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,32
+DeploymentLegacy,applicationId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,33
+DeploymentLegacy,index,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,34
+DeploymentLegacy,date,🔄 RENAME: [context]At (e.g.,string,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,35
+DeploymentLegacy,action,✅ KEEP,DeploymentAction,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,37
+DeploymentLegacy,commit,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,38
+DeploymentLegacy,cause,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,39
+DeploymentLegacy,instances,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,40
+DeploymentLegacy,author,✅ KEEP,{ id: string; name: string },false,,export,,false,src/clients/cc-api/commands/deployment/deployment.types.d.ts,41
+GetDeploymentCommandInput,deploymentId,✅ KEEP,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/deployment/get-deployment-command.types.d.ts,5
+ListOrganisationDeploymentCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/deployment/list-deployment-command.types.d.ts,7
+ListOrganisationDeploymentCommandInput,limit,✅ KEEP,number,true,,export,,false,src/clients/cc-api/commands/deployment/list-deployment-command.types.d.ts,8
+ListApplicationDeploymentCommandInput,limit,✅ KEEP,number,true,,export,ApplicationId,false,src/clients/cc-api/commands/deployment/list-deployment-command.types.d.ts,12
+ListApplicationDeploymentCommandInput,offset,✅ KEEP,number,true,,export,ApplicationId,false,src/clients/cc-api/commands/deployment/list-deployment-command.types.d.ts,13
+ListApplicationDeploymentCommandInput,action,✅ KEEP,DeploymentAction,true,,export,ApplicationId,false,src/clients/cc-api/commands/deployment/list-deployment-command.types.d.ts,14
+CreateDomainCommandInput,domain,✅ KEEP,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/domain/create-domain-command.types.d.ts,4
+DeleteDomainCommandInput,domain,✅ KEEP,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/domain/delete-domain-command.types.d.ts,4
+Domain,domain,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/domain/domain.types.d.ts,2
+Domain,isPrimary,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/domain/domain.types.d.ts,3
+SetPrimaryDomainCommandInput,domain,✅ KEEP,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/domain/set-primary-domain-command.types.d.ts,4
+ElasticsearchInfo,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,2
+ElasticsearchInfo,ownerId,✅ KEEP,string,false,renamed from owner_id,export,,false,src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,4
+ElasticsearchInfo,version,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,5
+ElasticsearchInfo,addonId,✅ KEEP,string,false,renamed from app_id,export,,false,src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,7
+ElasticsearchInfo,plan,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,8
+ElasticsearchInfo,zone,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,9
+ElasticsearchInfo,kibanaApplication,✅ KEEP (already renamed from API format),string,false,renamed from kibana_application,export,,false,src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,30
+ElasticsearchInfo,apmApplication,📝 CLARIFY: spell out APM (Application Performance Monitoring?),string,false,renamed from apm_application,export,,false,src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,32
+ElasticsearchInfo,services,✅ KEEP,Array<{ name: string; enabled: boolean }>,false,,export,,false,src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,33
+ElasticsearchInfo,features,✅ KEEP,Array<{ name: string; enabled: boolean }>,false,,export,,false,src/clients/cc-api/commands/elasticsearch/elasticsearch.types.d.ts,34
+GetElasticsearchInfoCommandInput,addonId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/elasticsearch/get-elasticsearch-info-command.types.d.ts,4
+CreateOrUpdateEnvironmentVariableCommandInput,name,📝 CLARIFY: too generic,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/environment/create-or-update-environment-variable-command.types.d.ts,5
+CreateOrUpdateEnvironmentVariableCommandInput,value,📝 CLARIFY: too generic,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/environment/create-or-update-environment-variable-command.types.d.ts,6
+DeleteEnvironmentVariableCommandInput,name,📝 CLARIFY: too generic,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/environment/delete-environment-variable-command.types.d.ts,5
+GetEnvironmentCommandOutput,environment,🔄 RENAME: environments (array should be plural),Array<EnvironmentVariable>,false,,export,,false,src/clients/cc-api/commands/environment/environment.types.d.ts,4
+GetEnvironmentCommandOutput,linkedApplicationsEnvironment,🔄 RENAME: linkedApplicationsEnvironments (array should have plural name),Array<LinkedApplicationEnvironment>,true,,export,,false,src/clients/cc-api/commands/environment/environment.types.d.ts,5
+GetEnvironmentCommandOutput,linkedAddonsEnvironment,🔄 RENAME: linkedAddonsEnvironments (array should have plural name),Array<LinkedAddonEnvironment>,true,,export,,false,src/clients/cc-api/commands/environment/environment.types.d.ts,6
+LinkedApplicationEnvironment,applicationId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/environment/environment.types.d.ts,10
+LinkedApplicationEnvironment,applicationName,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/environment/environment.types.d.ts,11
+LinkedApplicationEnvironment,environment,🔄 RENAME: environments (array should be plural),Array<EnvironmentVariable>,false,,export,,false,src/clients/cc-api/commands/environment/environment.types.d.ts,12
+LinkedAddonEnvironment,addonId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/environment/environment.types.d.ts,16
+LinkedAddonEnvironment,addonName,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/environment/environment.types.d.ts,17
+LinkedAddonEnvironment,addonProviderId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/environment/environment.types.d.ts,18
+LinkedAddonEnvironment,environment,🔄 RENAME: environments (array should be plural),Array<EnvironmentVariable>,false,,export,,false,src/clients/cc-api/commands/environment/environment.types.d.ts,19
+GetEnvironmentCommandInputApplication,includeLinkedApplications,🔄 RENAME: isIncludeLinkedApplications (boolean should have is/has/can prefix),boolean,true,,export,ApplicationId,false,src/clients/cc-api/commands/environment/get-environment-command.types.d.ts,6
+GetEnvironmentCommandInputApplication,includeLinkedAddons,🔄 RENAME: isIncludeLinkedAddons (boolean should have is/has/can prefix),boolean,true,,export,ApplicationId,false,src/clients/cc-api/commands/environment/get-environment-command.types.d.ts,7
+UpdateEnvironmentCommandInput,environment,🔄 RENAME: environments (array should be plural),Array<EnvironmentVariable>,false,,export,ApplicationId,false,src/clients/cc-api/commands/environment/update-environment-command.types.d.ts,5
+UpdateExposedEnvironmentCommandInput,environment,🔄 RENAME: environments (array should be plural),Array<EnvironmentVariable>,false,,export,ApplicationId,false,src/clients/cc-api/commands/environment/update-exposed-environment-command.types.d.ts,5
+GetGithubLinkTransactionIdCommandOutput,transactionId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/github/get-github-link-transaction-id-command.types.d.ts,2
+GetGithubLinkTransactionIdCommandOutput,redirectUri,🔄 RENAME: redirectUrl (standardize to Url suffix),string,false,,export,,false,src/clients/cc-api/commands/github/get-github-link-transaction-id-command.types.d.ts,3
+GithubApplication,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/github/github.types.d.ts,2
+GithubApplication,owner,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/github/github.types.d.ts,3
+GithubApplication,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/github/github.types.d.ts,4
+GithubApplication,description,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/github/github.types.d.ts,5
+GithubApplication,gitUrl,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/github/github.types.d.ts,6
+GithubApplication,defaultBranch,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/github/github.types.d.ts,7
+GithubApplication,private,🔄 RENAME: isPrivate (boolean should have is/has/can prefix),boolean,false,renamed from priv,export,,false,src/clients/cc-api/commands/github/github.types.d.ts,9
+DisableGrafanaCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/grafana/disable-grafana-command.types.d.ts,2
+EnableGrafanaCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/grafana/enable-grafana-command.types.d.ts,4
+GetGrafanaCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/grafana/get-grafana-command.types.d.ts,2
+GetGrafanaCommandOutput,id,✅ KEEP (primary identifier),number,false,,export,,false,src/clients/cc-api/commands/grafana/get-grafana-command.types.d.ts,6
+ResetGrafanaCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/grafana/reset-grafana-command.types.d.ts,2
+GetHeptapodPriceEstimationCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.types.d.ts,2
+GetHeptapodPriceEstimationCommandOutput,publicActiveUsers,✅ KEEP (already renamed from API format),number,false,renamed from public_active_users,export,,false,src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.types.d.ts,7
+GetHeptapodPriceEstimationCommandOutput,privateActiveUsers,✅ KEEP (already renamed from API format),number,false,renamed from private_active_users,export,,false,src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.types.d.ts,9
+GetHeptapodPriceEstimationCommandOutput,storage,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.types.d.ts,10
+GetHeptapodPriceEstimationCommandOutput,price,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.types.d.ts,11
+GetApplicationInstanceCommandInput,instanceId,✅ KEEP,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/instance/get-application-instance-command.types.d.ts,5
+Instance,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,2
+Instance,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,3
+Instance,applicationId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,4
+Instance,deploymentId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,5
+Instance,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,6
+Instance,flavor,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,7
+Instance,index,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,8
+Instance,state,"📝 REVIEW: use ""state"" for data/resource state",InstanceState,false,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,9
+Instance,hypervisorId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,10
+Instance,creationDate,🔄 RENAME: createdAt (standardize to 'At' suffix),string,false,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,11
+Instance,deletionDate,🔄 RENAME: deletedAt (standardize to 'At' suffix),string,true,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,12
+Instance,isBuildVm,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/instance/instance.types.d.ts,17
+ListApplicationInstanceCommandInput,since,✅ KEEP,Date | number | string,true,,export,ApplicationId,false,src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,5
+ListApplicationInstanceCommandInput,until,✅ KEEP,Date | number | string,true,,export,ApplicationId,false,src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,6
+ListApplicationInstanceCommandInput,includeState,✅ KEEP (data/resource state),Array<InstanceState>,true,,export,ApplicationId,false,src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,7
+ListApplicationInstanceCommandInput,excludeState,✅ KEEP (data/resource state),Array<InstanceState>,true,,export,ApplicationId,false,src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,8
+ListApplicationInstanceCommandInput,deploymentId,✅ KEEP,string,true,,export,ApplicationId,false,src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,9
+ListApplicationInstanceCommandInput,limit,✅ KEEP,number,true,,export,ApplicationId,false,src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,10
+ListApplicationInstanceCommandInput,order,✅ KEEP,'DESC' | 'ASC',true,,export,ApplicationId,false,src/clients/cc-api/commands/instance/list-application-instance-command.types.d.ts,11
+GetInvoiceCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/get-invoice-command.types.d.ts,4
+GetInvoiceCommandInput,invoiceNumber,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/get-invoice-command.types.d.ts,5
+GetInvoiceHtmlCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/get-invoice-html-command.types.d.ts,2
+GetInvoiceHtmlCommandInput,invoiceNumber,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/get-invoice-html-command.types.d.ts,3
+GetInvoicePdfCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/get-invoice-pdf-command.types.d.ts,2
+GetInvoicePdfCommandInput,invoiceNumber,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/get-invoice-pdf-command.types.d.ts,3
+GetInvoiceUrlInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/get-invoice-url.types.d.ts,2
+GetInvoiceUrlInput,invoiceNumber,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/get-invoice-url.types.d.ts,3
+GetInvoiceUrlInput,format,✅ KEEP,'html' | 'pdf',false,,export,,false,src/clients/cc-api/commands/invoice/get-invoice-url.types.d.ts,4
+Invoice,invoiceNumber,✅ KEEP (already renamed from API format),string,false,renamed from invoice_number,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,3
+Invoice,kind,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,4
+Invoice,origin,✅ KEEP,'automatic' | 'manual',false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,5
+Invoice,category,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,6
+Invoice,address,✅ KEEP,InvoiceAddress,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,7
+Invoice,emissionDate,🔄 RENAME: emittedAt (standardize to 'At' suffix),string,false,renamed from emission_date,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,9
+Invoice,payDate,🔄 RENAME: paidAt (standardize to 'At' suffix),string,true,renamed from pay_date,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,11
+Invoice,status,"📝 REVIEW: use status"" for operational/lifecycle",InvoiceStatus,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,12
+Invoice,consumptionStartDate,🔄 RENAME: consumptionStartAt (standardize to 'At' suffix),string,false,renamed from consumption_begin_date,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,14
+Invoice,consumptionEndDate,🔄 RENAME: consumptionEndAt (standardize to 'At' suffix),string,false,renamed from consumption_end_date,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,16
+Invoice,currency,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,17
+Invoice,kpiComputeMonths,📝 CLARIFY: spell out KPI (Key Performance Indicator?),number,false,renamed from kpi_compute_months,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,19
+Invoice,priceFactor,✅ KEEP (already renamed from API format),number,false,renamed from price_factor,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,21
+Invoice,discount,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,22
+Invoice,vatPercent,✅ KEEP (already renamed from API format),number,false,renamed from vat_percent,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,24
+Invoice,uptimes,✅ KEEP,Array<InvoiceUptime>,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,25
+Invoice,countables,✅ KEEP,Array<InvoiceCountable>,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,26
+Invoice,vendorConsumption,🔄 RENAME: vendorConsumptions (array should have plural name),Array<InvoiceVendorConsumption>,false,renamed from vendor_consumption,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,28
+Invoice,classic,🔄 RENAME: classics (array should have plural name),Array<InvoiceClassic>,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,29
+Invoice,unusable,🔄 RENAME: unusables (array should have plural name),Array<InvoiceUnusable>,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,30
+Invoice,creditBalanceAtEmission,📝 CLARIFY: check if date/time field,InvoiceMoney,false,renamed from credit_balance_at_emission,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,32
+Invoice,freeCreditsAvailableThisPeriod,🔄 RENAME: freeCreditsAvailableThisPeriods (array should have plural name),Array<InvoiceCouponRemains>,false,renamed from free_credits_available_this_period,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,34
+Invoice,freeCreditsAvailableNextPeriod,🔄 RENAME: freeCreditsAvailableNextPeriods (array should have plural name),Array<InvoiceCouponRemains>,false,renamed from free_credits_available_next_period,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,36
+Invoice,totalPendingUpfrontBeforeEmission,🔄 RENAME: networkGroup* (ng is unclear),InvoiceMoney,false,renamed from total_pending_upfront_before_emission,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,38
+Invoice,upfrontCreditAmount,✅ KEEP (already renamed from API format),InvoiceMoney,false,renamed from upfront_credit_amount,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,40
+Invoice,customerOrderId,✅ KEEP,string,true,renamed from customer_order_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,42
+Invoice,paymentProvider,✅ KEEP (already renamed from API format),string,true,renamed from payment_provider,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,44
+Invoice,paymentMethodId,✅ KEEP,string,true,renamed from payment_method_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,46
+Invoice,providerTransactionId,✅ KEEP,string,true,renamed from provider_transaction_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,48
+Invoice,providerLastResponse,✅ KEEP (already renamed from API format),string,true,renamed from provider_last_response,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,50
+Invoice,vatDeclarationId,✅ KEEP,string,true,renamed from vat_declaration_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,52
+Invoice,wannabeInvoiceId,✅ KEEP,string,true,renamed from wannabe_invoice_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,54
+Invoice,totalTaxExcluded,✅ KEEP (already renamed from API format),InvoiceMoney,false,renamed from total_tax_excluded,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,56
+Invoice,totalTax,✅ KEEP (already renamed from API format),InvoiceMoney,false,renamed from total_tax,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,58
+InvoiceSummary,invoiceNumber,✅ KEEP (already renamed from API format),string,false,renamed from invoice_number,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,63
+InvoiceSummary,kind,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,64
+InvoiceSummary,category,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,65
+InvoiceSummary,address,✅ KEEP,InvoiceAddress,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,66
+InvoiceSummary,emissionDate,🔄 RENAME: emittedAt (standardize to 'At' suffix),string,false,renamed from emission_date,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,68
+InvoiceSummary,payDate,🔄 RENAME: paidAt (standardize to 'At' suffix),string,true,renamed from pay_date,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,70
+InvoiceSummary,status,"📝 REVIEW: use ""status"" for operational/lifecycle",InvoiceStatus,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,71
+InvoiceSummary,currency,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,72
+InvoiceSummary,kpiComputeMonths,📝 CLARIFY: spell out KPI (Key Performance Indicator?),number,false,renamed from kpi_compute_months,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,74
+InvoiceSummary,priceFactor,✅ KEEP (already renamed from API format),number,false,renamed from price_factor,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,76
+InvoiceSummary,discount,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,77
+InvoiceSummary,vatPercent,✅ KEEP (already renamed from API format),number,false,renamed from vat_percent,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,79
+InvoiceSummary,totalTaxExcluded,✅ KEEP (already renamed from API format),InvoiceMoney,false,renamed from total_tax_excluded,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,81
+InvoiceSummary,totalTax,✅ KEEP (already renamed from API format),InvoiceMoney,false,renamed from total_tax,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,83
+InvoiceSummary,paymentProvider,✅ KEEP (already renamed from API format),string,true,renamed from payment_provider,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,85
+InvoiceSummary,transactionId,✅ KEEP,string,true,renamed from transaction_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,87
+InvoiceSummary,customerOrderId,✅ KEEP,string,true,renamed from customer_order_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,89
+InvoiceSummary,invoiceDayPlan,✅ KEEP (already renamed from API format),number,true,renamed from invoice_day_plan,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,91
+InvoiceAddress,id,✅ KEEP (primary identifier),string,false,renamed from address_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,98
+InvoiceAddress,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,99
+InvoiceAddress,company,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,100
+InvoiceAddress,address,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,101
+InvoiceAddress,city,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,102
+InvoiceAddress,zipcode,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,103
+InvoiceAddress,country,✅ KEEP (already renamed from API format),string,true,renamed from country_alpha2,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,105
+InvoiceAddress,vatNumber,✅ KEEP (already renamed from API format),string,true,renamed from vat_number,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,107
+InvoiceAddress,vatPercent,✅ KEEP (already renamed from API format),number,false,renamed from vat_percent,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,109
+InvoiceAddress,customerCostCenter,✅ KEEP (already renamed from API format),string,true,renamed from customer_cost_center,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,111
+InvoiceAddress,customerPurchaseOrder,✅ KEEP (already renamed from API format),string,true,renamed from customer_purchase_order,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,113
+InvoiceUptime,id,✅ KEEP (primary identifier),string,false,renamed from item_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,118
+InvoiceUptime,price,✅ KEEP,InvoiceMoney,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,119
+InvoiceUptime,applicationId,✅ KEEP,string,false,renamed from app_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,121
+InvoiceUptime,ownerId,✅ KEEP,string,false,renamed from owner_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,123
+InvoiceUptime,details,✅ KEEP,Array<InvoiceUptimeDetail>,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,124
+InvoiceUptime,category,✅ KEEP,String,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,125
+InvoiceUptime,subCategory,✅ KEEP (already renamed from API format),String,false,renamed from sub_category,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,127
+InvoiceUptimeDetail,instanceId,✅ KEEP,string,false,renamed from instance_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,132
+InvoiceUptimeDetail,flavorName,✅ KEEP (already renamed from API format),string,false,renamed from flavor_name,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,134
+InvoiceUptimeDetail,zone,✅ KEEP (already renamed from API format),string,false,renamed from zone_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,136
+InvoiceUptimeDetail,policyId,✅ KEEP,string,false,renamed from runtime_policy_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,138
+InvoiceUptimeDetail,price,✅ KEEP,InvoiceMoney,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,139
+InvoiceUptimeDetail,consumptionStartDate,🔄 RENAME: consumptionStartAt (standardize to 'At' suffix),string,false,renamed from consumption_start,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,141
+InvoiceUptimeDetail,consumptionEndDate,🔄 RENAME: consumptionEndAt (standardize to 'At' suffix),string,false,renamed from consumption_end,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,143
+InvoiceCountable,id,✅ KEEP (primary identifier),string,false,renamed from item_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,148
+InvoiceCountable,price,✅ KEEP,InvoiceMoney,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,149
+InvoiceCountable,applicationId,✅ KEEP,string,false,renamed from app_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,151
+InvoiceCountable,ownerId,✅ KEEP,string,false,renamed from owner_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,153
+InvoiceCountable,service,✅ KEEP (already renamed from API format),string,false,renamed from service,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,155
+InvoiceCountable,unitName,✅ KEEP (already renamed from API format),string,false,renamed from unit_name,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,157
+InvoiceCountable,zone,✅ KEEP (already renamed from API format),string,false,renamed from zone_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,159
+InvoiceCountable,policyId,✅ KEEP,string,false,renamed from policy_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,161
+InvoiceCountable,quantity,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,162
+InvoiceCountable,planId,✅ KEEP,string,false,renamed from plan_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,164
+InvoiceCountable,duration,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,165
+InvoiceCountable,detailsPrice,✅ KEEP (already renamed from API format),InvoiceMoney,false,renamed from details_price,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,167
+InvoiceCountable,details,✅ KEEP,Array<InvoiceCountableDetail>,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,168
+InvoiceCountable,category,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,169
+InvoiceCountable,subCategory,✅ KEEP (already renamed from API format),string,false,renamed from sub_category,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,171
+InvoiceCountableDetail,consumptionStartDate,🔄 RENAME: consumptionStartAt (standardize to 'At' suffix),string,false,renamed from consumption_start,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,176
+InvoiceCountableDetail,consumptionEndDate,🔄 RENAME: consumptionEndAt (standardize to 'At' suffix),string,false,renamed from consumption_end,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,178
+InvoiceCountableDetail,planId,✅ KEEP,string,false,renamed from plan_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,180
+InvoiceCountableDetail,quantity,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,181
+InvoiceCountableDetail,price,✅ KEEP,InvoiceMoney,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,182
+InvoiceVendorConsumption,itemId,✅ KEEP,string,false,renamed from item_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,187
+InvoiceVendorConsumption,price,✅ KEEP,InvoiceMoney,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,188
+InvoiceVendorConsumption,vendorId,✅ KEEP,string,false,renamed from vendor_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,190
+InvoiceVendorConsumption,ownerId,✅ KEEP,string,false,renamed from owner_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,192
+InvoiceVendorConsumption,applicationId,✅ KEEP,string,false,renamed from app_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,194
+InvoiceClassic,id,✅ KEEP (primary identifier),string,false,renamed from item_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,199
+InvoiceClassic,unitPrice,✅ KEEP (already renamed from API format),InvoiceMoney,false,renamed from unit_price,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,201
+InvoiceClassic,quantity,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,202
+InvoiceClassic,priceFactor,✅ KEEP (already renamed from API format),number,true,renamed from price_factor,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,204
+InvoiceClassic,discount,✅ KEEP,number,true,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,205
+InvoiceClassic,description,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,206
+InvoiceClassic,subDescription,✅ KEEP (already renamed from API format),string,true,renamed from sub_description,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,208
+InvoiceClassic,classicBillingItemId,🔄 RENAME: networkGroup* (ng is unclear),string,true,renamed from classic_billing_item_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,210
+InvoiceClassic,ownerId,✅ KEEP,string,false,renamed from owner_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,212
+InvoiceClassic,category,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,213
+InvoiceClassic,subCategory,✅ KEEP (already renamed from API format),string,false,renamed from sub_category,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,215
+InvoiceUnusable,id,✅ KEEP (primary identifier),string,false,renamed from item_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,220
+InvoiceUnusable,zone,✅ KEEP (already renamed from API format),string,false,renamed from zone_id,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,222
+InvoiceUnusable,flavorName,✅ KEEP (already renamed from API format),string,false,renamed from flavor_name,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,224
+InvoiceUnusable,host,✅ KEEP (already renamed from API format),string,false,renamed from host,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,226
+InvoiceUnusable,imageType,✅ KEEP (already renamed from API format),string,true,renamed from image_type,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,228
+InvoiceUnusable,consumptionStartDate,🔄 RENAME: consumptionStartAt (standardize to 'At' suffix),string,false,renamed from start_date,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,230
+InvoiceUnusable,consumptionEndDate,🔄 RENAME: consumptionEndAt (standardize to 'At' suffix),string,false,renamed from end_date,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,232
+InvoiceMoney,amount,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,236
+InvoiceMoney,currency,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,237
+InvoiceCouponRemains,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,241
+InvoiceCouponRemains,remaining,🔄 RENAME: networkGroup* (ng is unclear),InvoiceMoney,false,,export,,false,src/clients/cc-api/commands/invoice/invoice.types.d.ts,242
+ListInvoiceCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/list-invoice-command.types.d.ts,4
+ListInvoiceCommandInput,since,✅ KEEP,string | number | Date,true,,export,,false,src/clients/cc-api/commands/invoice/list-invoice-command.types.d.ts,5
+ListInvoiceCommandInput,until,✅ KEEP,string | number | Date,true,,export,,false,src/clients/cc-api/commands/invoice/list-invoice-command.types.d.ts,6
+ListInvoiceCommandInput,limit,✅ KEEP,number,true,,export,,false,src/clients/cc-api/commands/invoice/list-invoice-command.types.d.ts,7
+ListUnpaidInvoiceCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/invoice/list-unpaid-invoice-command.types.d.ts,4
+GetJenkinsInfoCommandInput,addonId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/jenkins/get-jenkins-info-command.types.d.ts,4
+JenkinsInfo,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,2
+JenkinsInfo,addonId,✅ KEEP,string,false,renamed from app_id,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,4
+JenkinsInfo,plan,✅ KEEP,'OLD_S' | 'OLD_M' | 'OLD_L' | 'OLD_XL' | 'XS' | 'S' | 'M' | 'L' | 'XL',false,,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,5
+JenkinsInfo,zone,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,6
+JenkinsInfo,creationDate,🔄 RENAME: createdAt (standardize to 'At' suffix),string,false,renamed from creation_date and converted to ISO format (without [UTC]),export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,8
+JenkinsInfo,status,"📝 REVIEW: use status"" for operational/lifecycle",'ACTIVE' | 'DELETED' | 'QUOTA_EXCEEDED' | 'TO_DELETE',false,,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,9
+JenkinsInfo,deletionDate,🔄 RENAME: deletedAt (standardize to 'At' suffix),string,true,renamed from deletion_date and converted to ISO format (without [UTC]),export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,11
+JenkinsInfo,host,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,12
+JenkinsInfo,user,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,13
+JenkinsInfo,password,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,14
+JenkinsInfo,version,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,15
+JenkinsInfo,artifactoryUrl,✅ KEEP,string,true,renamed from artifactory_url,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,17
+JenkinsInfo,artifactoryUser,✅ KEEP (already renamed from API format),string,true,renamed from artifactory_user,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,19
+JenkinsInfo,artifactoryPassword,✅ KEEP (already renamed from API format),string,true,renamed from artifactory_password,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,21
+JenkinsInfo,features,✅ KEEP,Array<{ name: string; enabled: boolean }>,false,,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,22
+JenkinsInfo,updates,📝 CLARIFY: check if date/time field,JenkinsUpdates,false,,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,23
+JenkinsUpdates,manageLink,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/jenkins/jenkins.types.d.ts,27
+AddApplicationToApplicationLinkCommandInput,targetApplicationId,✅ KEEP,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/link/add-link-command.types.d.ts,6
+AddApplicationToAddonLinkCommandInput,targetAddonId,✅ KEEP,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/link/add-link-command.types.d.ts,9
+LinkToApplication,type,📝 CLARIFY: too generic,'link-to-application',false,,export,,false,src/clients/cc-api/commands/link/link.types.d.ts,7
+LinkToApplication,application,✅ KEEP,Application,false,,export,,false,src/clients/cc-api/commands/link/link.types.d.ts,8
+LinkToAddon,type,📝 CLARIFY: too generic,'link-to-addon',false,,export,,false,src/clients/cc-api/commands/link/link.types.d.ts,12
+LinkToAddon,addon,✅ KEEP,Addon,false,,export,,false,src/clients/cc-api/commands/link/link.types.d.ts,13
+RemoveApplicationToApplicationLinkCommandInput,targetApplicationId,✅ KEEP,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/link/remove-link-command.types.d.ts,8
+RemoveApplicationToAddonLinkCommandInput,targetAddonId,✅ KEEP,string,false,,export,ApplicationId,false,src/clients/cc-api/commands/link/remove-link-command.types.d.ts,11
+LoadBalancer,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/load-balancer/load-balancer.types.d.ts,2
+LoadBalancer,zone,✅ KEEP (already renamed from API format),string,false,renamed from name,export,,false,src/clients/cc-api/commands/load-balancer/load-balancer.types.d.ts,4
+LoadBalancer,zoneId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/load-balancer/load-balancer.types.d.ts,5
+ListLogCommandInput,limit,✅ KEEP,number,true,,export,AddonId,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,4
+ListLogCommandInput,order,✅ KEEP,'ASC' | 'DESC',true,,export,AddonId,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,5
+ListLogCommandInput,since,✅ KEEP,Date | string | number,true,,export,AddonId,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,6
+ListLogCommandInput,until,✅ KEEP,Date | string | number,true,,export,AddonId,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,7
+ListLogCommandInput,filter,📝 CLARIFY: too generic,string,true,,export,AddonId,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,8
+ListLogCommandInput,deploymentId,✅ KEEP,string,true,,export,AddonId,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,9
+OldLog,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,15
+OldLog,date,🔄 RENAME: [context]At (e.g.,string,false,,export,,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,16
+OldLog,message,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,17
+OldLog,type,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,18
+OldLog,severity,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,19
+OldLog,program,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,20
+OldLog,deploymentId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,21
+OldLog,sourceHost,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,22
+OldLog,sourceIp,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,23
+OldLog,zone,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/log/list-log-command.types.d.ts,24
+LogDrain,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,2
+LogDrain,applicationId,✅ KEEP,string,false,renamed from appId,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,4
+LogDrain,target,✅ KEEP,LogDrainTarget,false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,5
+LogDrain,createdAt,✅ KEEP,string,false,converted to iso date,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,7
+LogDrain,lastEdit,✅ KEEP,string,false,converted to iso date,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,9
+LogDrain,token,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,10
+LogDrain,state,"📝 REVIEW: use state"" for data/resource state",LogDrainState,false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,11
+LogDrain,updatedBy,📝 CLARIFY: check if date/time field,string,true,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,12
+HttpDrainTarget,type,📝 CLARIFY: too generic,'HTTP',false,renamed from drainType,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,27
+HttpDrainTarget,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,28
+SyslogTcpDrainTarget,type,📝 CLARIFY: too generic,'TCPSyslog',false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,36
+SyslogTcpDrainTarget,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,37
+SyslogTcpDrainTarget,structuredDataParameters,✅ KEEP,string,true,RFC 5424,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,39
+SyslogUdpDrainTarget,type,📝 CLARIFY: too generic,'UDPSyslog',false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,43
+SyslogUdpDrainTarget,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,44
+SyslogUdpDrainTarget,structuredDataParameters,✅ KEEP,string,true,RFC 5424,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,46
+DatadogHttpDrainTarget,type,📝 CLARIFY: too generic,'DatadogHTTP',false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,50
+DatadogHttpDrainTarget,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,51
+ElasticSearchDrainTarget,type,📝 CLARIFY: too generic,'ElasticSearch',false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,55
+ElasticSearchDrainTarget,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,56
+ElasticSearchDrainTarget,indexPrefix,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,61
+NewRelicHttpDrainTarget,type,📝 CLARIFY: too generic,'NewRelicHTTP',false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,65
+NewRelicHttpDrainTarget,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,66
+NewRelicHttpDrainTarget,apiKey,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/log-drain/log-drain.types.d.ts,67
+MateriaInfo,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/materia/materia.types.d.ts,2
+MateriaInfo,clusterId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/materia/materia.types.d.ts,3
+MateriaInfo,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/materia/materia.types.d.ts,4
+MateriaInfo,kind,✅ KEEP,'KV',false,,export,,false,src/clients/cc-api/commands/materia/materia.types.d.ts,5
+MateriaInfo,plan,✅ KEEP,'ALPHA',false,,export,,false,src/clients/cc-api/commands/materia/materia.types.d.ts,6
+MateriaInfo,host,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/materia/materia.types.d.ts,7
+MateriaInfo,port,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/materia/materia.types.d.ts,8
+MateriaInfo,token,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/materia/materia.types.d.ts,9
+MateriaInfo,tokenId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/materia/materia.types.d.ts,10
+MateriaInfo,status,"📝 REVIEW: use ""status"" for operational/lifecycle",'PROVISIONING' | 'PROVISIONED' | 'TO_DELETE' | 'DELETING' | 'DELETED',false,,export,,false,src/clients/cc-api/commands/materia/materia.types.d.ts,11
+GetMatomoInfoCommandInput,addonId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/matomo/get-matomo-info-command.types.d.ts,4
+MatomoInfo,id,✅ KEEP (primary identifier),string,false,renamed from resourceId,export,,false,src/clients/cc-api/commands/matomo/matomo.types.d.ts,5
+MatomoInfo,addonId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/matomo/matomo.types.d.ts,6
+MetricData,timestamp,🔄 RENAME: createdAt or updatedAt (generic timestamp needs context),number,false,,export,,false,src/clients/cc-api/commands/metrics/metrics.types.d.ts,8
+MetricData,value,📝 CLARIFY: too generic,number,false,,export,,false,src/clients/cc-api/commands/metrics/metrics.types.d.ts,9
+CancelMigrationCommandInput,migrationId,✅ KEEP,string,false,,export,AddonId,false,src/clients/cc-api/commands/migration/cancel-migration-command.types.d.ts,4
+GetMigrationCommandInput,migrationId,✅ KEEP,string,false,,export,AddonId,false,src/clients/cc-api/commands/migration/get-migration-command.types.d.ts,5
+ListMigrationPreorderCommandInput,planId,✅ KEEP,string,false,,export,AddonId,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,4
+ListMigrationPreorderCommandOutput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,8
+ListMigrationPreorderCommandOutput,target,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,9
+ListMigrationPreorderCommandOutput,emissionDate,🔄 RENAME: emittedAt (standardize to 'At' suffix),string,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,10
+ListMigrationPreorderCommandOutput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,11
+ListMigrationPreorderCommandOutput,company,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,12
+ListMigrationPreorderCommandOutput,VAT,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,13
+ListMigrationPreorderCommandOutput,type,📝 CLARIFY: too generic,MigrationPreorderType,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,14
+ListMigrationPreorderCommandOutput,lines,✅ KEEP,Array<MigrationPreorderLine>,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,15
+MigrationPreorderLine,type,📝 CLARIFY: too generic,'Credits',false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,19
+MigrationPreorderLine,description,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,20
+MigrationPreorderLine,quantity,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,21
+MigrationPreorderLine,tva,🔄 RENAME: vat* (use English term,number,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,22
+MigrationPreorderLine,priceUnitHt,✅ KEEP (already renamed from API format),number,false,renamed from price_unit_ht,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,24
+MigrationPreorderLine,priceTotalHt,✅ KEEP (already renamed from API format),number,false,renamed from price_total_ht,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,26
+MigrationPreorderLine,pack,✅ KEEP,null | string,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,27
+MigrationPreorderLine,dropQuantity,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,28
+MigrationPreorderLine,coupon,✅ KEEP,null | number,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,29
+MigrationPreorderLine,discount,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/migration/list-migration-preorder-command.types.d.ts,30
+Migration,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/migration/migration.types.d.ts,2
+Migration,requestDate,🔄 RENAME: requestedAt (standardize to 'At' suffix),string,false,,export,,false,src/clients/cc-api/commands/migration/migration.types.d.ts,3
+Migration,steps,✅ KEEP,Array<MigrationStep>,false,,export,,false,src/clients/cc-api/commands/migration/migration.types.d.ts,4
+Migration,status,"📝 REVIEW: use ""status"" for operational/lifecycle",MigrationStatus,false,,export,,false,src/clients/cc-api/commands/migration/migration.types.d.ts,5
+MigrationStep,value,📝 CLARIFY: too generic,MigrationStepType,false,,export,,false,src/clients/cc-api/commands/migration/migration.types.d.ts,9
+MigrationStep,status,"📝 REVIEW: use ""status"" for operational/lifecycle",MigrationStatus,false,,export,,false,src/clients/cc-api/commands/migration/migration.types.d.ts,10
+MigrationStep,startDate,🔄 RENAME: startsAt (standardize to 'At' suffix),string,false,,export,,false,src/clients/cc-api/commands/migration/migration.types.d.ts,11
+MigrationStep,endDate,🔄 RENAME: endsAt (standardize to 'At' suffix),string,true,,export,,false,src/clients/cc-api/commands/migration/migration.types.d.ts,12
+MigrationStep,message,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/migration/migration.types.d.ts,13
+StartMigrationCommandInput,planId,✅ KEEP,string,false,,export,AddonId,false,src/clients/cc-api/commands/migration/start-migration-command.types.d.ts,5
+StartMigrationCommandInput,zone,✅ KEEP,string,false,,export,AddonId,false,src/clients/cc-api/commands/migration/start-migration-command.types.d.ts,6
+StartMigrationCommandInput,version,✅ KEEP,string,false,,export,AddonId,false,src/clients/cc-api/commands/migration/start-migration-command.types.d.ts,7
+CreateNetworkGroupCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-command.types.d.ts,4
+CreateNetworkGroupCommandInput,label,📝 CLARIFY: too generic,string,true,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-command.types.d.ts,5
+CreateNetworkGroupCommandInput,description,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-command.types.d.ts,6
+CreateNetworkGroupCommandInput,tags,✅ KEEP,Array<string>,true,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-command.types.d.ts,7
+CreateNetworkGroupCommandInnerInput,networkGroupId,✅ KEEP,string,false,,export,CreateNetworkGroupCommandInput,false,src/clients/cc-api/commands/network-group/create-network-group-command.types.d.ts,17
+CreateNetworkGroupExternalPeerCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,4
+CreateNetworkGroupExternalPeerCommandInput,networkGroupId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,5
+CreateNetworkGroupExternalPeerCommandInput,label,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,6
+CreateNetworkGroupExternalPeerCommandInput,ip,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,7
+CreateNetworkGroupExternalPeerCommandInput,port,✅ KEEP,number,true,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,8
+CreateNetworkGroupExternalPeerCommandInput,peerRole,✅ KEEP,'CLIENT',false,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,9
+CreateNetworkGroupExternalPeerCommandInput,publicKey,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,10
+CreateNetworkGroupExternalPeerCommandInput,hostname,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,11
+CreateNetworkGroupExternalPeerCommandInput,parentEvent,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,12
+CreateNetworkGroupExternalPeerCommandInput,parentMember,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,13
+CreateNetworkGroupExternalPeerCommandInnerOutput,peerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.types.d.ts,19
+CreateNetworkGroupMemberCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-member-command.types.d.ts,4
+CreateNetworkGroupMemberCommandInput,networkGroupId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-member-command.types.d.ts,5
+CreateNetworkGroupMemberCommandInput,memberId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-member-command.types.d.ts,6
+CreateNetworkGroupMemberCommandInput,label,📝 CLARIFY: too generic,string,true,,export,,false,src/clients/cc-api/commands/network-group/create-network-group-member-command.types.d.ts,7
+DeleteNetworkGroupCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/delete-network-group-command.types.d.ts,2
+DeleteNetworkGroupCommandInput,networkGroupId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/delete-network-group-command.types.d.ts,3
+DeleteNetworkGroupExternalPeerCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/delete-network-group-external-peer-command.types.d.ts,2
+DeleteNetworkGroupExternalPeerCommandInput,networkGroupId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/delete-network-group-external-peer-command.types.d.ts,3
+DeleteNetworkGroupExternalPeerCommandInput,externalPeerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/delete-network-group-external-peer-command.types.d.ts,4
+DeleteNetworkGroupMemberCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/delete-network-group-member-command.types.d.ts,2
+DeleteNetworkGroupMemberCommandInput,networkGroupId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/delete-network-group-member-command.types.d.ts,3
+DeleteNetworkGroupMemberCommandInput,memberId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/delete-network-group-member-command.types.d.ts,4
+GetNetworkGroupCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-command.types.d.ts,4
+GetNetworkGroupCommandInput,networkGroupId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-command.types.d.ts,5
+GetNetworkGroupMemberCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-member-command.types.d.ts,4
+GetNetworkGroupMemberCommandInput,networkGroupId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-member-command.types.d.ts,5
+GetNetworkGroupMemberCommandInput,memberId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-member-command.types.d.ts,6
+GetNetworkGroupPeerCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-peer-command.types.d.ts,4
+GetNetworkGroupPeerCommandInput,networkGroupId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-peer-command.types.d.ts,5
+GetNetworkGroupPeerCommandInput,peerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-peer-command.types.d.ts,6
+GetNetworkGroupWireguardConfigurationCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,2
+GetNetworkGroupWireguardConfigurationCommandInput,networkGroupId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,3
+GetNetworkGroupWireguardConfigurationCommandInput,peerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,4
+GetNetworkGroupWireguardConfigurationCommandOutput,ngId,🔄 RENAME: networkGroup* (ng is unclear),string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,8
+GetNetworkGroupWireguardConfigurationCommandOutput,peerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,9
+GetNetworkGroupWireguardConfigurationCommandOutput,configuration,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,17
+GetNetworkGroupWireguardConfigurationCommandOutput,version,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.types.d.ts,18
+ListNetworkGroupCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/list-network-group-command.types.d.ts,4
+NetworkGroup,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,13
+NetworkGroup,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,14
+NetworkGroup,label,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,15
+NetworkGroup,description,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,16
+NetworkGroup,networkIp,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,17
+NetworkGroup,lastAllocatedIp,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,18
+NetworkGroup,tags,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,19
+NetworkGroup,peers,✅ KEEP,Array<NetworkGroupPeer>,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,20
+NetworkGroup,members,✅ KEEP,Array<NetworkGroupMember>,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,21
+NetworkGroup,version,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,22
+NetworkGroupPeerBase,id,✅ KEEP (primary identifier),string,false,,,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,28
+NetworkGroupPeerBase,label,📝 CLARIFY: too generic,string,true,,29,,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts
+NetworkGroupPeerBase,publicKey,✅ KEEP,string,false,,30,,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts
+NetworkGroupPeerBase,endpoint,✅ KEEP,NetworkGroupEndpoint,false,,31,,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts
+NetworkGroupPeerBase,hostname,✅ KEEP,string,false,,32,,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts
+NetworkGroupPeerBase,parentMember,✅ KEEP,string,false,,33,,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts
+NetworkGroupPeerBase,parentEvent,✅ KEEP,string,true,,34,,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts
+NetworkGroupPeerClever,hv,🔄 RENAME: spell out (hv is unclear - hypervisor?),string,false,,export,TypedComponent,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,38
+NetworkGroupMember,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,44
+NetworkGroupMember,label,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,45
+NetworkGroupMember,domainName,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,46
+NetworkGroupMember,kind,✅ KEEP,'APPLICATION' | 'ADDON' | 'EXTERNAL',false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,47
+NetworkGroupEndpointServer,type,📝 CLARIFY: too generic,'ServerEndpoint',false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,53
+NetworkGroupEndpointClient,type,📝 CLARIFY: too generic,'ClientEndpoint',false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,65
+NetworkGroupEndpointClient,ngIp,🔄 RENAME: networkGroup* (ng is unclear),string,false,,export,,false,src/clients/cc-api/commands/network-group/network-group.types.d.ts,66
+SearchNetworkGroupCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/search-network-group-command.types.d.ts,4
+SearchNetworkGroupCommandInput,query,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/network-group/search-network-group-command.types.d.ts,5
+SearchNetworkGroupCommandInput,types,✅ KEEP,Array<NetworkGroupComponentType>,true,,export,,false,src/clients/cc-api/commands/network-group/search-network-group-command.types.d.ts,6
+CreateEmailNotificationCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/notification/create-email-notification-command.types.d.ts,9
+CreateEmailNotificationCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/notification/create-email-notification-command.types.d.ts,10
+CreateEmailNotificationCommandInput,targets,✅ KEEP,Array<EmailNotificationTarget>,false,,export,,false,src/clients/cc-api/commands/notification/create-email-notification-command.types.d.ts,11
+CreateEmailNotificationCommandInput,events,✅ KEEP,Array<NotificationEventType | NotificationMetaEventType>,true,,export,,false,src/clients/cc-api/commands/notification/create-email-notification-command.types.d.ts,12
+CreateEmailNotificationCommandInput,scope,📝 CLARIFY: too generic,Array<string>,true,,export,,false,src/clients/cc-api/commands/notification/create-email-notification-command.types.d.ts,13
+CreateWebhookNotificationCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/notification/create-webhook-notification-command.types.d.ts,9
+CreateWebhookNotificationCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/notification/create-webhook-notification-command.types.d.ts,10
+CreateWebhookNotificationCommandInput,urls,📝 CLARIFY: too generic,Array<WebhookNotificationUrl>,false,,export,,false,src/clients/cc-api/commands/notification/create-webhook-notification-command.types.d.ts,11
+CreateWebhookNotificationCommandInput,events,✅ KEEP,Array<NotificationEventType | NotificationMetaEventType>,true,,export,,false,src/clients/cc-api/commands/notification/create-webhook-notification-command.types.d.ts,12
+ListEmailNotificationCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/notification/list-email-notification-command.types.d.ts,4
+ListWebhookNotificationCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/notification/list-webhook-notification-command.types.d.ts,4
+WebhookNotification,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,2
+WebhookNotification,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,3
+WebhookNotification,name,📝 CLARIFY: too generic,string,true,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,4
+WebhookNotification,urls,📝 CLARIFY: too generic,Array<WebhookNotificationUrl>,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,5
+WebhookNotification,events,✅ KEEP,Array<NotificationEventType | NotificationMetaEventType>,true,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,6
+WebhookNotification,scope,📝 CLARIFY: too generic,Array<string>,true,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,7
+WebhookNotification,createdAt,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,8
+WebhookNotification,failures,✅ KEEP,Array<WebhookNotificationRequestFailure>,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,9
+WebhookNotification,state,"📝 REVIEW: use ""state"" for data/resource state",'ENABLED' | 'DISABLED',false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,10
+WebhookNotificationUrl,format,✅ KEEP,WebhookNotificationFormat,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,14
+WebhookNotificationUrl,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,15
+WebhookNotificationRequestFailure,url,📝 CLARIFY: too generic,String,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,21
+WebhookNotificationRequestFailure,networkFailure,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,22
+WebhookNotificationRequestFailure,status,"📝 REVIEW: use status"" for operational/lifecycle",number,true,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,23
+WebhookNotificationRequestFailure,partialBody,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,24
+WebhookNotificationRequestFailure,createdAt,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,25
+EmailNotification,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,29
+EmailNotification,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,30
+EmailNotification,name,📝 CLARIFY: too generic,string,true,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,31
+EmailNotification,targets,✅ KEEP,Array<EmailNotificationTarget>,false,renamed from notified,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,33
+EmailNotification,events,✅ KEEP,Array<NotificationEventType | NotificationMetaEventType>,true,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,34
+EmailNotification,scope,📝 CLARIFY: too generic,Array<string>,true,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,35
+EmailNotification,createdAt,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,36
+EmailNotificationTargetEmail,type,📝 CLARIFY: too generic,'email',false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,45
+EmailNotificationTargetEmail,emailAddresses,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,46
+EmailNotificationTargetUser,type,📝 CLARIFY: too generic,'user',false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,50
+EmailNotificationTargetOrganisation,type,📝 CLARIFY: too generic,'organisation',false,,export,,false,src/clients/cc-api/commands/notification/notification.types.d.ts,54
+CreateOauthConsumerCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.types.d.ts,4
+CreateOauthConsumerCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.types.d.ts,5
+CreateOauthConsumerCommandInput,description,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.types.d.ts,6
+DeleteOauthConsumerCommandInput,ownerId,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/oauth-consumer/delete-oauth-consumer-command.types.d.ts,2
+DeleteOauthConsumerCommandInput,oauthConsumerKey,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/delete-oauth-consumer-command.types.d.ts,3
+GetOauthConsumerCommandInput,ownerId,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.types.d.ts,4
+GetOauthConsumerCommandInput,oauthConsumerKey,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.types.d.ts,5
+GetOauthConsumerCommandInput,withSecret,🔄 RENAME: isWithSecret (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.types.d.ts,6
+GetOauthConsumerSecretCommandInput,ownerId,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-secret-command.types.d.ts,2
+GetOauthConsumerSecretCommandInput,oauthConsumerKey,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-secret-command.types.d.ts,3
+GetOauthConsumerSecretCommandOutput,secret,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-secret-command.types.d.ts,7
+ListOauthConsumerCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/list-oauth-consumer-command.types.d.ts,4
+ListOauthConsumerCommandInput,withSecret,🔄 RENAME: isWithSecret (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/list-oauth-consumer-command.types.d.ts,5
+OauthConsumer,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,2
+OauthConsumer,description,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,3
+OauthConsumer,key,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,4
+OauthConsumer,secret,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/oauth-consumer/oauth-consumer.types.d.ts,9
+UpdateOauthConsumerCommandInput,ownerId,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,4
+UpdateOauthConsumerCommandInput,oauthConsumerKey,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,5
+UpdateOauthConsumerCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,6
+UpdateOauthConsumerCommandInput,description,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,7
+UpdateOauthConsumerCommandInput,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,8
+UpdateOauthConsumerCommandInput,picture,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,9
+UpdateOauthConsumerCommandInput,baseUrl,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.types.d.ts,10
+DeleteTokenCommandInput,token,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-token/delete-oauth-token-command.types.d.ts,2
+OauthToken,token,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,6
+OauthToken,consumer,✅ KEEP,OauthConsumer,false,,export,,false,src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,7
+OauthToken,creationDate,🔄 RENAME: createdAt (standardize to 'At' suffix),string,false,converted to iso,export,,false,src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,9
+OauthToken,expirationDate,🔄 RENAME: expiresAt (standardize to 'At' suffix),string,false,converted to iso,export,,false,src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,11
+OauthToken,lastUtilisationDate,🔄 RENAME: lastUsedAt (standardize to 'At' suffix),string,false,renamed from lastUtilisation and converted to iso,export,,false,src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,13
+OauthToken,employeeId,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/oauth-token/list-oauth-token-command.types.d.ts,15
+AddOrganisationMemberCommandInput,organisationId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/add-organisation-member-command.types.d.ts,4
+AddOrganisationMemberCommandInput,role,✅ KEEP,OrganisationMemberRole,false,,export,,false,src/clients/cc-api/commands/organisation/add-organisation-member-command.types.d.ts,5
+AddOrganisationMemberCommandInput,email,🔄 RENAME: emailAddress (be explicit),string,false,,export,,false,src/clients/cc-api/commands/organisation/add-organisation-member-command.types.d.ts,6
+AddOrganisationMemberCommandInput,job,🔄 RENAME: jobTitle or role (job is too generic),string,true,,export,,false,src/clients/cc-api/commands/organisation/add-organisation-member-command.types.d.ts,7
+AddOrganisationMemberCommandInput,invitationKey,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/organisation/add-organisation-member-command.types.d.ts,8
+CreateOrganisationBase,name,📝 CLARIFY: too generic,string,false,,8,,,false,src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts
+CreateOrganisationBase,description,✅ KEEP,string,false,,9,,,false,src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts
+CreateOrganisationBase,address,✅ KEEP,string,false,,10,,,false,src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts
+CreateOrganisationBase,city,✅ KEEP,string,false,,11,,,false,src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts
+CreateOrganisationBase,zipcode,✅ KEEP,string,false,,12,,,false,src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts
+CreateOrganisationBase,customerFullName,✅ KEEP,string,false,,13,,,false,src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts
+CreateOrganisationBase,billingEmailAddress,🔄 RENAME: networkGroup* (ng is unclear),string,true,renamed from billingEmail,15,,,false,src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts
+CreateOrganisationStandard,country,✅ KEEP,string,false,,export,CreateOrganisationBase,false,src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,27
+CreateOrganisationCompany,company,✅ KEEP,string,false,,export,CreateOrganisationBase,false,src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,31
+CreateOrganisationCompany,VAT,✅ KEEP,string,false,,export,CreateOrganisationBase,false,src/clients/cc-api/commands/organisation/create-organisation-command.types.d.ts,32
+DeleteOrganisationCommandInput,organisationId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/delete-organisation-command.types.d.ts,2
+GetOrganisationCommandInput,organisationId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/get-organisation-command.types.d.ts,4
+ListOrganisationCommandInput,withPersonalOrganisation,🔄 RENAME: isWithPersonalOrganisation (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/organisation/list-organisation-command.types.d.ts,4
+ListOrganisationMemberCommandInput,organisationId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/list-organisation-member-command.types.d.ts,4
+OrganisationSummary,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,4
+OrganisationSummary,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,5
+OrganisationSummary,avatar,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,6
+OrganisationSummary,applications,✅ KEEP,Array<ApplicationSummary>,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,7
+OrganisationSummary,addons,✅ KEEP,Array<AddonSummary>,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,8
+OrganisationSummary,consumers,✅ KEEP,Array<ConsumerSummary>,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,9
+OrganisationSummary,providers,✅ KEEP,Array<ProviderSummary>,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,10
+OrganisationSummary,role,✅ KEEP,'NONE' | 'ADMIN' | 'ACCOUNTING' | 'DEVELOPER' | 'MANAGER',false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,11
+OrganisationSummary,vatState,✅ KEEP (data/resource state),string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,12
+OrganisationSummary,canPay,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,13
+OrganisationSummary,canSEPA,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,14
+OrganisationSummary,cleverEnterprise,🔄 RENAME: isCleverEnterprise (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,15
+OrganisationSummary,emergencyNumber,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,16
+OrganisationSummary,isPersonal,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,17
+OrganisationSummary,isTrusted,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,18
+ApplicationSummary,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,22
+ApplicationSummary,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,23
+ApplicationSummary,instanceType,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,24
+ApplicationSummary,instanceVariant,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,25
+ApplicationSummary,variantSlug,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,26
+ApplicationSummary,archived,✅ KEEP,false,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,27
+ApplicationSummary,homogeneous,✅ KEEP,false,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,28
+ApplicationSummary,variantLogoUrl,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,29
+ApplicationSummary,state,"📝 REVIEW: use ""state"" for data/resource state",string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,30
+ApplicationSummary,commit,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,31
+ApplicationSummary,systemTags,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,32
+ApplicationSummary,customerTags,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,33
+AddonSummary,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,37
+AddonSummary,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,38
+AddonSummary,realId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,39
+AddonSummary,providerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,40
+AddonSummary,logoUrl,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,41
+AddonSummary,systemTags,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,42
+AddonSummary,customerTags,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,43
+ConsumerSummary,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,47
+ConsumerSummary,key,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,48
+ConsumerSummary,picture,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,49
+ProviderSummary,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,53
+ProviderSummary,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,54
+Organisation,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,58
+Organisation,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,59
+Organisation,description,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,60
+Organisation,billingEmailAddress,🔄 RENAME: networkGroup* (ng is unclear),string,false,renamed from billingEmail,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,62
+Organisation,address,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,63
+Organisation,city,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,64
+Organisation,zipcode,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,65
+Organisation,country,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,66
+Organisation,company,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,67
+Organisation,VAT,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,68
+Organisation,avatar,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,69
+Organisation,vatState,✅ KEEP (data/resource state),'INVALID' | 'PENDING_VALIDATION' | 'VALID' | 'NOT_NEEDED' | 'NOT_APPLICABLE',false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,70
+Organisation,customerFullName,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,71
+Organisation,canPay,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,72
+Organisation,cleverEnterprise,🔄 RENAME: isCleverEnterprise (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,73
+Organisation,emergencyNumber,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,74
+Organisation,canSEPA,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,75
+Organisation,isTrusted,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,76
+OrganisationMember,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,80
+OrganisationMember,email,🔄 RENAME: emailAddress (be explicit),string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,81
+OrganisationMember,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,82
+OrganisationMember,avatar,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,83
+OrganisationMember,preferredMFA,✅ KEEP,MFAKind,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,84
+OrganisationMember,role,✅ KEEP,OrganisationMemberRole,false,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,85
+OrganisationMember,job,🔄 RENAME: jobTitle or role (job is too generic),string,true,,export,,false,src/clients/cc-api/commands/organisation/organisation.types.d.ts,86
+RemoveOrganisationMemberCommandInput,organisationId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/remove-organisation-member-command.types.d.ts,2
+RemoveOrganisationMemberCommandInput,memberId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/remove-organisation-member-command.types.d.ts,3
+UpdateOrganisationAvatarCommandInput,organisationId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/update-organisation-avatar-command.types.d.ts,2
+UpdateOrganisationAvatarCommandInput,mimeType,✅ KEEP,'image/bmp' | 'image/gif' | 'image/jpeg' | 'image/png' | 'image/tiff',false,,export,,false,src/clients/cc-api/commands/organisation/update-organisation-avatar-command.types.d.ts,3
+UpdateOrganisationAvatarCommandInput,data,📝 CLARIFY: too generic,Blob,false,,export,,false,src/clients/cc-api/commands/organisation/update-organisation-avatar-command.types.d.ts,4
+UpdateOrganisationAvatarCommandOutput,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/organisation/update-organisation-avatar-command.types.d.ts,8
+UpdateOrganisationBase,organisationId,✅ KEEP,string,false,,,,false,src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,8
+UpdateOrganisationBase,name,📝 CLARIFY: too generic,string,false,,9,,,false,src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts
+UpdateOrganisationBase,description,✅ KEEP,string,false,,10,,,false,src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts
+UpdateOrganisationBase,address,✅ KEEP,string,false,,11,,,false,src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts
+UpdateOrganisationBase,city,✅ KEEP,string,false,,12,,,false,src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts
+UpdateOrganisationBase,zipcode,✅ KEEP,string,false,,13,,,false,src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts
+UpdateOrganisationBase,customerFullName,✅ KEEP,string,false,,14,,,false,src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts
+UpdateOrganisationBase,billingEmailAddress,🔄 RENAME: networkGroup* (ng is unclear),string,true,renamed from billingEmail,16,,,false,src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts
+UpdateOrganisationStandard,country,✅ KEEP,string,false,,export,UpdateOrganisationBase,false,src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,28
+UpdateOrganisationCompany,company,✅ KEEP,string,false,,export,UpdateOrganisationBase,false,src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,32
+UpdateOrganisationCompany,VAT,✅ KEEP,string,false,,export,UpdateOrganisationBase,false,src/clients/cc-api/commands/organisation/update-organisation-command.types.d.ts,33
+UpdateOrganisationMemberCommandInput,organisationId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/update-organisation-member-command.types.d.ts,4
+UpdateOrganisationMemberCommandInput,memberId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/organisation/update-organisation-member-command.types.d.ts,5
+UpdateOrganisationMemberCommandInput,role,✅ KEEP,OrganisationMemberRole,true,,export,,false,src/clients/cc-api/commands/organisation/update-organisation-member-command.types.d.ts,6
+UpdateOrganisationMemberCommandInput,job,🔄 RENAME: jobTitle or role (job is too generic),string,true,,export,,false,src/clients/cc-api/commands/organisation/update-organisation-member-command.types.d.ts,7
+AuthorizePaypalCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/authorize-paypal-command.types.d.ts,4
+AuthorizePaypalCommandInput,invoiceNumber,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/authorize-paypal-command.types.d.ts,5
+AuthorizePaypalCommandInput,transactionId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/authorize-paypal-command.types.d.ts,6
+AuthorizeStripeCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/authorize-stripe-command.types.d.ts,4
+AuthorizeStripeCommandInput,invoiceNumber,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/authorize-stripe-command.types.d.ts,5
+AuthorizeStripeCommandInput,intentId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/authorize-stripe-command.types.d.ts,6
+GetStripeIntentCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/get-stripe-intent-command.types.d.ts,2
+GetStripeIntentCommandOutput,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/payment/get-stripe-intent-command.types.d.ts,6
+GetStripeIntentCommandOutput,clientSecret,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/get-stripe-intent-command.types.d.ts,7
+GetStripeIntentCommandOutput,customer,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/get-stripe-intent-command.types.d.ts,8
+InitPaypalCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/init-paypal-command.types.d.ts,2
+InitPaypalCommandInput,invoiceNumber,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/init-paypal-command.types.d.ts,3
+InitPaypalCommandOutput,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/payment/init-paypal-command.types.d.ts,7
+InitStripeCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/init-stripe-command.types.d.ts,4
+InitStripeCommandInput,invoiceNumber,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment/init-stripe-command.types.d.ts,5
+CreatePaymentMethodCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment-method/create-payment-method-command.types.d.ts,4
+CreatePaymentMethodCommandInput,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/payment-method/create-payment-method-command.types.d.ts,5
+DeletePaymentMethodCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment-method/delete-payment-method-command.types.d.ts,2
+DeletePaymentMethodCommandInput,token,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment-method/delete-payment-method-command.types.d.ts,3
+ListPaymentMethodCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment-method/list-payment-method-command.types.d.ts,4
+PaymentMethod,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment-method/payment-method.types.d.ts,2
+PaymentMethod,type,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/payment-method/payment-method.types.d.ts,3
+PaymentMethod,token,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment-method/payment-method.types.d.ts,4
+PaymentMethod,primary,🔄 RENAME: isPrimary (boolean should have is/has/can prefix),boolean,false,renamed from isDefault,export,,false,src/clients/cc-api/commands/payment-method/payment-method.types.d.ts,6
+PaymentMethod,number,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment-method/payment-method.types.d.ts,7
+SetPrimaryPaymentMethodCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/payment-method/set-primary-payment-method-command.types.d.ts,4
+SetPrimaryPaymentMethodCommandInput,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/payment-method/set-primary-payment-method-command.types.d.ts,5
+GetPriceSystemCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/price-system/get-price-system-command.types.d.ts,4
+GetPriceSystemCommandInput,zone,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/price-system/get-price-system-command.types.d.ts,5
+PriceSystem,zone,✅ KEEP (already renamed from API format),string,true,renamed from zone_id,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,3
+PriceSystem,currency,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,4
+PriceSystem,runtime,🔄 RENAME: runtimes (array should have plural name),Array<RuntimePricePolicy>,false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,5
+PriceSystem,countable,🔄 RENAME: countables (array should have plural name),Array<CountablePricePolicy>,false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,6
+RuntimePricePolicy,id,✅ KEEP (primary identifier),string,false,renamed from runtime_policy_id,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,11
+RuntimePricePolicy,source,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,12
+RuntimePricePolicy,flavor,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,13
+RuntimePricePolicy,timeUnit,📝 CLARIFY: check if date/time field,string,false,renamed from time_unit,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,15
+RuntimePricePolicy,price,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,16
+RuntimePricePolicy,priceId,✅ KEEP,string,false,renamed from slug_id and transformed to lower case,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,18
+CountablePricePolicy,id,✅ KEEP (primary identifier),string,false,renamed from countable_policy_id,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,23
+CountablePricePolicy,service,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,24
+CountablePricePolicy,dataUnit,✅ KEEP (already renamed from API format),string,false,renamed from data_unit,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,26
+CountablePricePolicy,dataQuantityForPrice,✅ KEEP (already renamed from API format),BillableQuantity,false,renamed from data_quantity_for_price,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,28
+CountablePricePolicy,timeIntervalForPrice,✅ KEEP (already renamed from API format),BillableTime,true,renamed from time_interval_for_price,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,30
+CountablePricePolicy,pricePlans,✅ KEEP,Array<CountablePricePlan>,false,renamed from price_plans,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,32
+BillableQuantity,secability,✅ KEEP,'SECABLE' | 'INSECABLE',false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,36
+BillableQuantity,quantity,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,37
+BillableTime,secability,✅ KEEP,'SECABLE' | 'INSECABLE',false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,41
+BillableTime,interval,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,42
+CountablePricePlan,planId,✅ KEEP,string,false,renamed from plan_id,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,47
+CountablePricePlan,maxQuantity,✅ KEEP (already renamed from API format),number,true,renamed from max_quantity,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,49
+CountablePricePlan,price,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/price-system/price-system.types.d.ts,50
+GetProductAddonCommandInput,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/product/get-product-addon-command.types.d.ts,4
+GetProductAddonCommandInput,withVersions,🔄 RENAME: isWithVersions (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/product/get-product-addon-command.types.d.ts,5
+GetProductAddonCommandInput,ownerId,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/product/get-product-addon-command.types.d.ts,6
+GetProductAddonVersionsCommandInput,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/product/get-product-addon-versions-command.types.d.ts,4
+GetProductRuntimeCommandInput,type,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/product/get-product-runtime-command.types.d.ts,4
+GetProductRuntimeCommandInput,version,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/product/get-product-runtime-command.types.d.ts,5
+GetProductRuntimeCommandInput,ownerId,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/product/get-product-runtime-command.types.d.ts,6
+ListProductAddonCommandInput,withVersions,🔄 RENAME: isWithVersions (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/product/list-product-addon-command.types.d.ts,4
+ListProductAddonCommandInput,ownerId,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/product/list-product-addon-command.types.d.ts,5
+ProductRuntime,type,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,4
+ProductRuntime,version,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,5
+ProductRuntime,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,6
+ProductRuntime,variant,✅ KEEP,ProductRuntimeVariant,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,7
+ProductRuntime,description,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,8
+ProductRuntime,enabled,🔄 RENAME: isEnabled (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,9
+ProductRuntime,comingSoon,🔄 RENAME: isComingSoon (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,10
+ProductRuntime,maxInstances,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,11
+ProductRuntime,tags,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,12
+ProductRuntime,deployments,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,13
+ProductRuntime,flavors,✅ KEEP,Array<ProductRuntimeFlavor>,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,14
+ProductRuntime,defaultFlavor,✅ KEEP,ProductRuntimeFlavor,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,15
+ProductRuntime,buildFlavor,✅ KEEP,ProductRuntimeFlavor,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,16
+ProductRuntimeVariant,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,20
+ProductRuntimeVariant,slug,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,21
+ProductRuntimeVariant,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,22
+ProductRuntimeVariant,deployType,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,23
+ProductRuntimeVariant,logo,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,24
+ProductAddonVersions,defaultDedicatedVersion,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,57
+ProductAddonClusterVersion,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,61
+ProductAddonClusterVersion,label,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,62
+ProductAddonClusterVersion,zone,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,63
+ProductAddonClusterVersion,version,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,64
+ElasticsearchServiceInfo,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,86
+ElasticsearchServiceInfo,mem,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,87
+ElasticsearchServiceInfo,cpus,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,88
+ElasticsearchServiceInfo,gpus,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,89
+ElasticsearchServiceInfo,price,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,90
+ElasticsearchServiceInfo,available,🔄 RENAME: isAvailable (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,91
+ElasticsearchServiceInfo,microservice,🔄 RENAME: isMicroservice (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,92
+ElasticsearchServiceInfo,nice,🔄 RENAME: priority or niceLevel (nice is unclear),number,false,,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,93
+ElasticsearchServiceInfo,priceId,✅ KEEP,string,false,renamed from price_id and transformed to lower case,export,,false,src/clients/cc-api/commands/product/product.types.d.ts,95
+CreateProfileEmailAddressCommandInput,address,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/create-profile-email-address-command.types.d.ts,2
+DeleteProfileEmailAddressCommandInput,address,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/delete-profile-email-address-command.types.d.ts,2
+ListProfileEmailAddressCommandOutput,primaryAddress,✅ KEEP,ProfileEmailAddress,false,,export,,false,src/clients/cc-api/commands/profile/list-profile-email-address-command.types.d.ts,2
+ListProfileEmailAddressCommandOutput,secondaryAddresses,✅ KEEP,Array<ProfileEmailAddress>,false,,export,,false,src/clients/cc-api/commands/profile/list-profile-email-address-command.types.d.ts,3
+ProfileEmailAddress,address,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/list-profile-email-address-command.types.d.ts,7
+ProfileEmailAddress,verified,🔄 RENAME: isVerified (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/profile/list-profile-email-address-command.types.d.ts,8
+Profile,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,4
+Profile,email,🔄 RENAME: emailAddress (be explicit),string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,5
+Profile,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,6
+Profile,phone,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,7
+Profile,address,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,8
+Profile,city,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,9
+Profile,zipcode,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,10
+Profile,country,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,11
+Profile,avatar,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,12
+Profile,creationDate,🔄 RENAME: createdAt (standardize to 'At' suffix),string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,13
+Profile,lang,🔄 RENAME: networkGroup* (ng is unclear),string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,14
+Profile,emailValidated,🔄 RENAME: isEmailValidated (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,15
+Profile,isLinkedToGitHub,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,16
+Profile,admin,🔄 RENAME: isAdmin (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,17
+Profile,canPay,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,18
+Profile,preferredMFA,✅ KEEP,MFAKind,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,19
+Profile,hasPassword,✅ KEEP,boolean,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,20
+Profile,partnerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,21
+Profile,partnerName,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,22
+Profile,partnerConsoleUrl,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/profile.types.d.ts,23
+SetProfilePrimaryEmailAddressCommandInput,address,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/profile/set-profile-primary-email-address-command.types.d.ts,2
+UpdateProfileAvatarCommandOutput,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,6
+UpdateProfileAvatarCommandInputExternal,type,📝 CLARIFY: too generic,'externalSource',false,,export,,false,src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,10
+UpdateProfileAvatarCommandInputExternal,source,✅ KEEP,'github' | 'gravatar',false,,export,,false,src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,11
+UpdateProfileAvatarCommandInputData,type,📝 CLARIFY: too generic,'dataSource',false,,export,,false,src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,15
+UpdateProfileAvatarCommandInputData,mimeType,✅ KEEP,'image/bmp' | 'image/gif' | 'image/jpeg' | 'image/png' | 'image/tiff',false,,export,,false,src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,16
+UpdateProfileAvatarCommandInputData,data,📝 CLARIFY: too generic,Blob,false,,export,,false,src/clients/cc-api/commands/profile/update-profile-avatar-command.types.d.ts,17
+UpdateProfileCommandInput,name,📝 CLARIFY: too generic,string,true,,export,,false,src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,4
+UpdateProfileCommandInput,phone,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,5
+UpdateProfileCommandInput,address,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,6
+UpdateProfileCommandInput,city,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,7
+UpdateProfileCommandInput,zipcode,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,8
+UpdateProfileCommandInput,country,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,9
+UpdateProfileCommandInput,lang,🔄 RENAME: networkGroup* (ng is unclear),string,true,,export,,false,src/clients/cc-api/commands/profile/update-profile-command.types.d.ts,10
+GetPulsarInfoCommandInput,addonId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,4
+GetPulsarInfoCommandOutput,cluster,✅ KEEP,GetPulsarClusterInnerCommandOutput,false,,export,Omit,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,8
+GetPulsarInfoInnerCommandOutput,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,12
+GetPulsarInfoInnerCommandOutput,tenant,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,13
+GetPulsarInfoInnerCommandOutput,namespace,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,14
+GetPulsarInfoInnerCommandOutput,clusterId,✅ KEEP,string,false,renamed from cluster_id,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,16
+GetPulsarInfoInnerCommandOutput,token,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,17
+GetPulsarInfoInnerCommandOutput,creationDate,🔄 RENAME: createdAt (standardize to 'At' suffix),string,false,renamed from creation_date,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,19
+GetPulsarInfoInnerCommandOutput,askForDeletionDate,🔄 RENAME: askForDeletionAt (standardize to 'At' suffix),string,true,renamed from ask_for_deletion_date,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,21
+GetPulsarInfoInnerCommandOutput,deletionDate,🔄 RENAME: deletedAt (standardize to 'At' suffix),string,true,renamed from deletion_date,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,23
+GetPulsarInfoInnerCommandOutput,status,"📝 REVIEW: use status"" for operational/lifecycle",'ACTIVE' | 'TO_DELETE' | 'NAMESPACE_DELETED' | 'COLD_STORAGE_DELETED' | 'DELETED',false,,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,24
+GetPulsarInfoInnerCommandOutput,plan,✅ KEEP,PulsarPlan,false,,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,25
+GetPulsarInfoInnerCommandOutput,coldStorageId,✅ KEEP,string,true,renamed from cold_storage_id,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,27
+GetPulsarInfoInnerCommandOutput,coldStorageLinked,🔄 RENAME: isColdStorageLinked (boolean should have is/has/can prefix),boolean,false,renamed from cold_storage_linked,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,29
+GetPulsarInfoInnerCommandOutput,coldStorageMustBeProvided,🔄 RENAME: isColdStorageMustBeProvided (boolean should have is/has/can prefix),boolean,false,renamed from cold_storage_must_be_provided,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,31
+GetPulsarClusterInnerCommandInput,clusterId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/pulsar/get-pulsar-info-command.types.d.ts,35
+PulsarInfo,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,2
+PulsarInfo,url,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,3
+PulsarInfo,pulsarPort,✅ KEEP (already renamed from API format),number,false,renamed from pulsar_port,export,,false,src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,5
+PulsarInfo,pulsarTlsPort,✅ KEEP (already renamed from API format),number,true,renamed from pulsar_tls_port,export,,false,src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,7
+PulsarInfo,webPort,✅ KEEP (already renamed from API format),number,true,renamed from web_port,export,,false,src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,9
+PulsarInfo,webTlsPort,✅ KEEP (already renamed from API format),number,true,renamed from web_tls_port,export,,false,src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,11
+PulsarInfo,version,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,12
+PulsarInfo,available,🔄 RENAME: isAvailable (boolean should have is/has/can prefix),boolean,false,,export,,false,src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,13
+PulsarInfo,zone,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,14
+PulsarInfo,supportColdStorage,🔄 RENAME: supportsColdStorage (verb agreement),boolean,false,renamed from support_cold_storage,export,,false,src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,16
+PulsarInfo,supportedPlans,✅ KEEP,Array<PulsarPlan>,false,renamed from supported_plans,export,,false,src/clients/cc-api/commands/pulsar/pulsar.types.d.ts,18
+CreatePersonalSshKeyCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/ssh-key/create-personal-ssh-key-command.types.d.ts,4
+CreatePersonalSshKeyCommandInput,key,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/ssh-key/create-personal-ssh-key-command.types.d.ts,5
+DeletePersonalSshKeyCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/ssh-key/delete-personal-ssh-key-command.types.d.ts,2
+SshKey,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/ssh-key/ssh-key.types.d.ts,2
+SshKey,key,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/ssh-key/ssh-key.types.d.ts,3
+SshKey,fingerprint,🔄 RENAME: networkGroup* (ng is unclear),string,false,,export,,false,src/clients/cc-api/commands/ssh-key/ssh-key.types.d.ts,4
+CreateTcpRedirectionCommandInput,namespace,✅ KEEP,TcpRedirectionNamespace,true,,export,ApplicationId,false,src/clients/cc-api/commands/tcp-redirection/create-tcp-redirection-command.types.d.ts,5
+DeleteTcpRedirectionCommandInput,namespace,✅ KEEP,TcpRedirectionNamespace,false,,export,ApplicationId,false,src/clients/cc-api/commands/tcp-redirection/delete-tcp-redirection-command.types.d.ts,5
+DeleteTcpRedirectionCommandInput,port,✅ KEEP,number,false,,export,ApplicationId,false,src/clients/cc-api/commands/tcp-redirection/delete-tcp-redirection-command.types.d.ts,6
+ListTcpRedirectionNamespaceCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/tcp-redirection/list-tcp-redirection-namespace-command.types.d.ts,4
+TcpRedirection,namespace,✅ KEEP,TcpRedirectionNamespace,false,,export,,false,src/clients/cc-api/commands/tcp-redirection/tcp-redirection.types.d.ts,2
+TcpRedirection,port,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/tcp-redirection/tcp-redirection.types.d.ts,3
+DeleteUserSettingCommandInput,env,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/user-setting/delete-user-setting-command.types.d.ts,2
+DeleteUserSettingCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/user-setting/delete-user-setting-command.types.d.ts,3
+GetUserSettingCommandInput,env,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/user-setting/get-user-setting-command.types.d.ts,2
+GetUserSettingCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/user-setting/get-user-setting-command.types.d.ts,3
+SetUserSettingCommandInput,env,✅ KEEP,string,true,,export,,false,src/clients/cc-api/commands/user-setting/set-user-setting-command.types.d.ts,2
+SetUserSettingCommandInput,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/user-setting/set-user-setting-command.types.d.ts,3
+SetUserSettingCommandInput,value,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/user-setting/set-user-setting-command.types.d.ts,4
+CheckVatNumberCommandInput,country,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,2
+CheckVatNumberCommandInput,vatNumber,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,3
+CheckVatNumberValid,valid,✅ KEEP,true,false,,export,,false,src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,9
+CheckVatNumberValid,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,10
+CheckVatNumberValid,address,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,11
+CheckVatNumberInvalid,valid,✅ KEEP,false,false,,export,,false,src/clients/cc-api/commands/vat-number/check-vat-number-command.types.d.ts,15
+GetWarpTokenCommandInput,ownerId,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/warp-token/get-warp-token-command.types.d.ts,2
+GetWarpTokenCommandInput,tokenKind,✅ KEEP,'METRICS' | 'ACCESS_LOGS',false,,export,,false,src/clients/cc-api/commands/warp-token/get-warp-token-command.types.d.ts,3
+Zone,id,✅ KEEP (primary identifier),string,false,,export,,false,src/clients/cc-api/commands/zone/zone.types.d.ts,2
+Zone,name,📝 CLARIFY: too generic,string,false,,export,,false,src/clients/cc-api/commands/zone/zone.types.d.ts,3
+Zone,country,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/zone/zone.types.d.ts,4
+Zone,countryCode,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/zone/zone.types.d.ts,5
+Zone,city,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/zone/zone.types.d.ts,6
+Zone,displayName,✅ KEEP,string,false,,export,,false,src/clients/cc-api/commands/zone/zone.types.d.ts,7
+Zone,lat,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/zone/zone.types.d.ts,8
+Zone,lon,✅ KEEP,number,false,,export,,false,src/clients/cc-api/commands/zone/zone.types.d.ts,9
+Zone,outboundIPs,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/zone/zone.types.d.ts,10
+Zone,tags,✅ KEEP,Array<string>,false,,export,,false,src/clients/cc-api/commands/zone/zone.types.d.ts,11

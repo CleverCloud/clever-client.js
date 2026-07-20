@@ -73,6 +73,7 @@
     "endpoints-analyze": "node tasks/endpoints-analyze.js",
     "endpoints-generate": "node tasks/endpoints-generate.js",
     "endpoints-list": "node tasks/endpoints-list.js",
+    "extract-interfaces": "node scripts/extract-interfaces.js",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "lint": "eslint",

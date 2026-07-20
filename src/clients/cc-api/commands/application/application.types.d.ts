@@ -37,13 +37,13 @@ export interface Application {
   // renamed from last_deploy
   lastDeploy: number;
   archived: boolean;
-  stickySessions: boolean;
+  enableStickySessions: boolean;
   homogeneous: boolean;
   favourite: boolean;
   cancelOnPush: boolean;
   oauthApp?: ApplicationOauthApp;
   separateBuild: boolean;
-  buildFlavor: ProductRuntimeFlavor;
+  theBuildFlavor: ProductRuntimeFlavor;
   state: ApplicationState;
   commitId: string;
   appliance: null;
