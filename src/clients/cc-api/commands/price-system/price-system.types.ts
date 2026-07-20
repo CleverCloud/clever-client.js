@@ -32,14 +32,17 @@ export interface CountablePricePolicy {
   pricePlans: Array<CountablePricePlan>;
 }
 
+export type Secability = 'secable' | 'insecable';
+
 export interface BillableQuantity {
-  secability: 'SECABLE' | 'INSECABLE';
+  secability: Secability;
   quantity: number;
 }
 
 export interface BillableTime {
-  secability: 'SECABLE' | 'INSECABLE';
-  interval: number;
+  secability: Secability;
+  // ISO-8601 duration
+  interval: string;
 }
 
 export interface CountablePricePlan {
