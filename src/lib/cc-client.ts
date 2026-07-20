@@ -17,7 +17,7 @@ import { sendRequest } from './request/request.js';
 import type { CcStream } from './stream/cc-stream.js';
 import type { CcStreamConfig, CcStreamConfigPartial, RetryConfig } from './stream/cc-stream.types.js';
 import type { StreamCommand } from './stream/stream-command.js';
-import { mergeRequestConfig, mergeRequestConfigPartial } from './utils.js';
+import { isAbsoluteUrl, isUrlWithinBaseUrl, mergeRequestConfig, mergeRequestConfigPartial } from './utils.js';
 
 const DEFAULT_REQUEST_CONFIG: CcRequestConfig = {
   cors: false,
@@ -145,11 +145,13 @@ export class CcClient<Api extends string> {
   getUrl(getUrl: GetUrl<Api, unknown>): URL {
     const url = getUrl.get(getUrl.params);
 
-    const left = this.#baseUrl.endsWith('/') ? this.#baseUrl : this.#baseUrl + '/';
-    const right = url.startsWith('/') ? url.slice(1) : url;
-    const result = new URL(left + right, globalThis.location?.href);
+    const resolvedUrl = this.#resolveUrl(url);
+    const result = new URL(resolvedUrl, globalThis.location?.href);
 
-    this.#auth?.applyOnUrl(result);
+    // apply auth only if the URL does not point outside of the client base URL
+    if (isUrlWithinBaseUrl(this.#baseUrl, resolvedUrl)) {
+      this.#auth?.applyOnUrl(result);
+    }
 
     return result;
   }
@@ -260,8 +262,11 @@ export class CcClient<Api extends string> {
       await this.#hooks.onRequest(preparedRequestParams);
     }
 
-    // apply auth if auth method is defined and if command does not disable it
-    if (command.isAuthEnabled()) {
+    const url = this.#resolveUrl(preparedRequestParams.url ?? '');
+
+    // apply auth if auth method is defined, if command does not disable it,
+    // and if the command does not target a URL outside of the client base URL
+    if (command.isAuthEnabled() && isUrlWithinBaseUrl(this.#baseUrl, url)) {
       this.#auth?.applyOnRequestParams(preparedRequestParams);
     }
 
@@ -272,7 +277,7 @@ export class CcClient<Api extends string> {
       // config
       ...mergeRequestConfig(this.#defaultRequestsConfig, requestConfig),
       // url
-      url: this.#baseUrl + preparedRequestParams.url,
+      url,
     };
   }
 
@@ -300,6 +305,25 @@ export class CcClient<Api extends string> {
     handleHttpErrors(request, response, command);
 
     return command.transformCommandOutput(response.body);
+  }
+
+  /**
+   * Resolves a command URL against the client base URL.
+   * Absolute URLs (starting with `http://` or `https://`) are returned untouched so that a command can target
+   * another origin than the one the client is configured with.
+   *
+   * @param url - The URL provided by the command, either absolute or relative to the base URL
+   * @returns The resolved URL
+   */
+  #resolveUrl(url: string): string {
+    if (isAbsoluteUrl(url)) {
+      return url;
+    }
+
+    const left = this.#baseUrl.endsWith('/') ? this.#baseUrl.slice(0, -1) : this.#baseUrl;
+    const right = url.startsWith('/') ? url : '/' + url;
+
+    return left + right;
   }
 }
 

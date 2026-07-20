@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   combineWithSignal,
+  isAbsoluteUrl,
+  isUrlWithinBaseUrl,
   merge,
   mergeRequestConfig,
   mergeRequestConfigPartial,
@@ -108,6 +110,116 @@ describe('Utils', () => {
     it('should handle empty string values', () => {
       const result = safeUrl`https://example.com/${''}`;
       expect(result).toBe('https://example.com/');
+    });
+  });
+
+  describe('isAbsoluteUrl', () => {
+    it('should return true for an http url', () => {
+      expect(isAbsoluteUrl('http://example.com/path')).toBe(true);
+    });
+
+    it('should return true for an https url', () => {
+      expect(isAbsoluteUrl('https://example.com/path')).toBe(true);
+    });
+
+    it('should return true whatever the scheme case', () => {
+      expect(isAbsoluteUrl('HTTPS://example.com/path')).toBe(true);
+    });
+
+    it('should return false for a root relative url', () => {
+      expect(isAbsoluteUrl('/path/subPath')).toBe(false);
+    });
+
+    it('should return false for a relative url', () => {
+      expect(isAbsoluteUrl('path/subPath')).toBe(false);
+    });
+
+    it('should return false for an empty url', () => {
+      expect(isAbsoluteUrl('')).toBe(false);
+    });
+
+    it('should return false for a protocol relative url', () => {
+      expect(isAbsoluteUrl('//example.com/path')).toBe(false);
+    });
+
+    it('should return false when the scheme is not at the start of the url', () => {
+      expect(isAbsoluteUrl('/redirect?to=https://example.com')).toBe(false);
+    });
+
+    it('should return false for a non http scheme', () => {
+      expect(isAbsoluteUrl('ws://example.com/path')).toBe(false);
+    });
+  });
+
+  describe('isUrlWithinBaseUrl', () => {
+    it('should return true when the url is the base url itself', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api')).toBe(true);
+    });
+
+    it('should return true when the url is a sub path of the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api/2')).toBe(true);
+    });
+
+    it('should return false when the url only shares a path prefix with the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api2')).toBe(false);
+    });
+
+    it('should return true when the url adds a query string to the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api?foo=bar')).toBe(true);
+    });
+
+    it('should return true when the url adds a fragment to the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api#foo')).toBe(true);
+    });
+
+    it('should ignore the trailing slash of the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api/', 'https://example.com/api/2')).toBe(true);
+      expect(isUrlWithinBaseUrl('https://example.com/api/', 'https://example.com/api')).toBe(true);
+      expect(isUrlWithinBaseUrl('https://example.com/api/', 'https://example.com/api2')).toBe(false);
+    });
+
+    it('should return false when the url targets another host', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://evil.com/api/2')).toBe(false);
+    });
+
+    it('should return false when the url targets a host having the base url host as prefix', () => {
+      expect(isUrlWithinBaseUrl('https://example.com', 'https://example.com.evil.com/api')).toBe(false);
+    });
+
+    it('should return false when the url targets another scheme', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'http://example.com/api/2')).toBe(false);
+    });
+
+    it('should return false when the url targets another port', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com:8080/api/2')).toBe(false);
+    });
+
+    it('should resolve dot segments escaping the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api/../other')).toBe(false);
+    });
+
+    it('should resolve dot segments staying within the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api/sub/../2')).toBe(true);
+    });
+
+    it('should resolve dot segments of the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/other/../api', 'https://example.com/api/2')).toBe(true);
+    });
+
+    it('should ignore the default port of the scheme', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com:443/api/2')).toBe(true);
+    });
+
+    it('should ignore the host case', () => {
+      expect(isUrlWithinBaseUrl('https://EXAMPLE.com/api', 'https://example.com/api/2')).toBe(true);
+    });
+
+    it('should keep the path case significant', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/API/2')).toBe(false);
+    });
+
+    it('should return false when the url cannot be parsed', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'not an url')).toBe(false);
     });
   });
 

@@ -256,6 +256,45 @@ describe('clever-client', () => {
       expect(spy).not.toHaveBeenCalled();
     });
 
+    it('should not call `auth.applyOnRequestParams()` when the command targets another origin', async () => {
+      const auth = new CcAuthApiToken('token');
+      const spy = vi.spyOn(auth, 'applyOnRequestParams');
+      const client = createClient({}, auth);
+      const command = simpleCommand(get('https://example.com/path/subPath'));
+
+      await expectPromiseThrows(client.send(command), () => {
+        expect(spy).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should not call `auth.applyOnRequestParams()` when the command targets a sibling path of the baseUrl', async () => {
+      const auth = new CcAuthApiToken('token');
+      const spy = vi.spyOn(auth, 'applyOnRequestParams');
+      const client = new SpiedClient({ baseUrl: `${newScenario.mockClient.baseUrl}/api` }, auth);
+      const command = simpleCommand(get(`${newScenario.mockClient.baseUrl}/api2/subPath`));
+
+      await newScenario()
+        .when({ method: 'GET', path: '/api2/subPath' })
+        .respond({ status: 200 })
+        .thenCall(() => client.send(command));
+
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('should call `auth.applyOnRequestParams()` when the command targets a sub path of the baseUrl', async () => {
+      const auth = new CcAuthApiToken('token');
+      const spy = vi.spyOn(auth, 'applyOnRequestParams');
+      const client = new SpiedClient({ baseUrl: `${newScenario.mockClient.baseUrl}/api` }, auth);
+      const command = simpleCommand(get(`${newScenario.mockClient.baseUrl}/api/subPath`));
+
+      await newScenario()
+        .when({ method: 'GET', path: '/api/subPath' })
+        .respond({ status: 200 })
+        .thenCall(() => client.send(command));
+
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
     it('should call onRequest hook function', async () => {
       const spy = vi.fn<OnRequestHook>();
       const client = createClient({
@@ -306,6 +345,36 @@ describe('clever-client', () => {
       await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200 })
+        .thenCall(() => client.send(command));
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      const result = (await spy.mock.results[0].value) as CcRequest;
+      expect(result.url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
+    });
+
+    it('should not prepend url with baseUrl when the command url is absolute', async () => {
+      const spy = vi.spyOn(client, '_prepareRequest');
+      const absoluteUrl = `${newScenario.mockClient.baseUrl}/path/subPath`;
+      const command = simpleCommand(get(absoluteUrl));
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 200, body: 'body' })
+        .thenCall(() => client.send(command));
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      const result = (await spy.mock.results[0].value) as CcRequest;
+      expect(result.url).toBe(absoluteUrl);
+    });
+
+    it('should not duplicate the slash between baseUrl and a relative url', async () => {
+      const client = new SpiedClient({ baseUrl: `${newScenario.mockClient.baseUrl}/` });
+      const spy = vi.spyOn(client, '_prepareRequest');
+      const command = simpleCommand(get('/path/subPath'));
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 200, body: 'body' })
         .thenCall(() => client.send(command));
 
       expect(spy).toHaveBeenCalledTimes(1);
@@ -486,6 +555,14 @@ describe('clever-client', () => {
       expect(url.toString()).toBe(`${newScenario.mockClient.baseUrl}/example`);
     });
 
+    it('should not prepend baseUrl when the url is absolute', () => {
+      const gu = getUrl('https://example.com/example');
+
+      const url = client.getUrl(gu);
+
+      expect(url.toString()).toBe('https://example.com/example');
+    });
+
     it('should construct the right url with auth', () => {
       const gu = getUrl('example');
       const auth = new CcAuthApiToken('token');
@@ -497,6 +574,18 @@ describe('clever-client', () => {
 
       expect(spy).toHaveBeenCalledTimes(1);
       expect(url.toString()).toBe(`${newScenario.mockClient.baseUrl}/example?auth=token`);
+    });
+
+    it('should not apply auth when the url points outside of the baseUrl', () => {
+      const gu = getUrl('https://example.com/example');
+      const auth = new CcAuthApiToken('token');
+      const spy = vi.spyOn(auth, 'applyOnUrl');
+      const client = createClient({}, auth);
+
+      const url = client.getUrl(gu);
+
+      expect(spy).not.toHaveBeenCalled();
+      expect(url.toString()).toBe('https://example.com/example');
     });
   });
 

@@ -115,6 +115,54 @@ export function safeUrl(strings: TemplateStringsArray, ...values: Array<unknown>
 }
 
 /**
+ * Checks whether a URL is absolute (starts with `http://` or `https://`).
+ * Absolute URLs are used as is by clients, instead of being appended to the client base URL.
+ *
+ * @param url - The URL to check
+ * @returns Whether the URL is absolute
+ */
+export function isAbsoluteUrl(url: string): boolean {
+  return /^https?:\/\//i.test(url);
+}
+
+/**
+ * Checks whether a URL sits under a base URL, on a path segment boundary.
+ * This is used to decide whether credentials may be sent along with a request: a command targeting another
+ * origin, or a sibling path outside the base URL, must not receive the client credentials.
+ *
+ * Both URLs are parsed before being compared, so dot segments are resolved and the scheme, the host and the
+ * port are compared on their normalized form. The path comparison is segment aware, so `https://example.com/api`
+ * contains `https://example.com/api/2` but not `https://example.com/api2`.
+ *
+ * A URL that cannot be parsed is considered outside of the base URL.
+ *
+ * @param baseUrl - The base URL delimiting the scope
+ * @param url - The URL to check
+ * @returns Whether the URL sits under the base URL
+ */
+export function isUrlWithinBaseUrl(baseUrl: string, url: string): boolean {
+  let parsedBaseUrl: URL;
+  let parsedUrl: URL;
+  try {
+    parsedBaseUrl = new URL(baseUrl, globalThis.location?.href);
+    parsedUrl = new URL(url, globalThis.location?.href);
+  } catch {
+    return false;
+  }
+
+  // `origin` is not used here because it collapses to the opaque value `null` for non special schemes,
+  // which would make two unrelated URLs compare as equal
+  if (parsedUrl.protocol !== parsedBaseUrl.protocol || parsedUrl.host !== parsedBaseUrl.host) {
+    return false;
+  }
+
+  const basePath = parsedBaseUrl.pathname.endsWith('/') ? parsedBaseUrl.pathname.slice(0, -1) : parsedBaseUrl.pathname;
+
+  // the path either is the base path itself, or continues on a segment boundary
+  return parsedUrl.pathname === basePath || parsedUrl.pathname.startsWith(basePath + '/');
+}
+
+/**
  * Encodes a string to base64 with proper UTF-8 handling.
  * Safely handles non-ASCII characters by first encoding to UTF-8
  * before performing the base64 transformation.
