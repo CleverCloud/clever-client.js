@@ -7,17 +7,23 @@ on:
     branches:
       - master
 
-# Set via the workflow env (not $GITHUB_ENV, which GitHub forbids for NODE_OPTIONS).
-env:
-  NODE_OPTIONS: '--max-old-space-size=16384'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
-  code-quality:
+  gate:
     runs-on: ubuntu-latest
+    if: github.head_ref != 'changeset-release/master' || github.event.pull_request.head.repo.full_name != github.repository
+    steps:
+      - run: 'true'
 
+  code-quality:
+    needs: gate
+    runs-on: ubuntu-latest
     steps:
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: '[Prepare] Setup'
@@ -34,32 +40,28 @@ jobs:
         run: pnpm run format:check
 
   get-playwright-version:
+    needs: gate
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.pw.outputs.version }}
     steps:
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v7
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
       - name: '[Prepare] Derive Playwright version'
         id: pw
         uses: ./.github/actions/get-playwright-version
 
-  tests:
+  unit-tests:
     needs: get-playwright-version
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v${{ needs.get-playwright-version.outputs.version }}-noble
       options: --user 1001
-
     steps:
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v7
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
 
@@ -69,13 +71,11 @@ jobs:
         run: pnpm run test:unit:node
 
   build:
+    needs: gate
     runs-on: ubuntu-latest
-
     steps:
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v7
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
 

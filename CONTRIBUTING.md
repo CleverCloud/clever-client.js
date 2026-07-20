@@ -10,9 +10,7 @@ The scope should be the name of the component affected.
 If many components are affected, consider the following options:
 * split into multiple commits
 * use the main module.
-* avoid specifying any scope and add some details instead. However, you must understand that details won't be dumped into the CHANGELOG.
-
-If none of these options suits your need, you can follow [this how-to](https://github.com/googleapis/release-please#what-if-my-pr-contains-multiple-fixes-or-features) that will let you generate multiple CHANGELOG entries with one single commit.
+* avoid specifying any scope and add some details instead.
 
 To help you respect the rules, you should install a commit linter with the following command:
 
@@ -20,6 +18,18 @@ To help you respect the rules, you should install a commit linter with the follo
 cd ${PATH_TO_THE_REPOSITORY_ROOT}
 git config core.hooksPath '.githooks'
 ```
+
+## Adding a changeset
+
+Releases and `CHANGELOG.md` are driven by [Changesets](https://github.com/changesets/changesets), independently from commit messages. Nothing enforces this in CI, but if your PR changes `src/` or `esm/`, please add a changeset describing the change from the point of view of someone consuming `@clevercloud/client`:
+
+```shell
+pnpm changeset
+```
+
+This asks for a bump type (patch/minor/major) and a free-form summary, then writes a `.changeset/*.md` file — commit it alongside your code change. Need several changelog entries or bump types in one PR? Run the command again, or edit the generated files directly; each `.changeset/*.md` file becomes its own entry, so there's no need to work around anything at the commit-message level.
+
+CI keeps a `Release` PR up to date that bumps `package.json` and compiles pending changesets into `CHANGELOG.md`; merging it tags and publishes the release.
 
 ## How to test
 

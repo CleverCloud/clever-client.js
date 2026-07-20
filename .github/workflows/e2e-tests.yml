@@ -4,39 +4,41 @@ on:
     types: [labeled, unlabeled, opened, synchronize, reopened]
     paths-ignore:
       - '**/*.md'
-    branches-ignore:
-      - 'release-please--**'
 
 concurrency:
-  group: preview-${{ github.event.pull_request.number }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'run-e2e-tests') && (github.head_ref != 'changeset-release/master' || github.event.pull_request.head.repo.full_name != github.repository)
+    steps:
+      - run: 'true'
+
   get-playwright-version:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')
+    needs: gate
     outputs:
       version: ${{ steps.pw.outputs.version }}
     steps:
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
       - name: '[Prepare] Derive Playwright version'
         id: pw
         uses: ./.github/actions/get-playwright-version
 
-  test:
+  e2e-tests:
     needs: get-playwright-version
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v${{ needs.get-playwright-version.outputs.version }}-noble
       options: --user 1001
-    if: contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')
-
     steps:
       - name: '[Prepare] Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
 
