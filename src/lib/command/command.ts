@@ -76,12 +76,13 @@ export abstract class SimpleCommand<Api extends string, CommandInput, CommandOut
   abstract toRequestParams(_params: CommandInput): SelfOrPromise<Partial<CcRequestParams>>;
 
   /**
-   * Transforms the raw API response into the expected output format
+   * Transforms the raw API response into the expected output format.
+   * May be asynchronous, the client awaits the result.
    *
    * @param response - The raw response from the API
    * @returns The processed response in the expected format
    */
-  transformCommandOutput(response: unknown): CommandOutput {
+  transformCommandOutput(response: unknown): SelfOrPromise<CommandOutput> {
     return response as CommandOutput;
   }
 
