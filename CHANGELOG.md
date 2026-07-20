@@ -1,506 +1,487 @@
 # Clever Client changelog
 
-## [12.6.1](https://github.com/CleverCloud/clever-client.js/compare/12.6.0...12.6.1) (2026-07-03)
+## 12.6.2
 
+### Patch Changes
+
+- [#229](https://github.com/CleverCloud/clever-client.js/pull/229) [`c0b1c21`](https://github.com/CleverCloud/clever-client.js/commit/c0b1c215df8c6037b5e5fa5abd844bcff6c84173) - Release git tags are now prefixed with `v`
+
+  Releases are now published with Changesets instead of release-please. The only user-visible consequence is the git tag format: tags are now named `v12.6.1` instead of `12.6.1`. Anything pinning this package by git tag (submodules, install-from-git URLs, CI checkouts) needs to be updated accordingly. The npm package name and its versioning scheme are unchanged.
+
+## [12.6.1](https://github.com/CleverCloud/clever-client.js/compare/12.6.0...12.6.1) (2026-07-03)
 
 ### 🐛 Bug Fixes
 
-* **esm:** never cache a rejected promise in withCache() ([307a9da](https://github.com/CleverCloud/clever-client.js/commit/307a9dabca04b6a0ff5fa74b3f877d295d6de8ff))
-* **request:** never cache 5xx responses in requestWithCache ([aeaf807](https://github.com/CleverCloud/clever-client.js/commit/aeaf807c93464fb4ba7a91764768cd894bb0dd4c))
+- **esm:** never cache a rejected promise in withCache() ([307a9da](https://github.com/CleverCloud/clever-client.js/commit/307a9dabca04b6a0ff5fa74b3f877d295d6de8ff))
+- **request:** never cache 5xx responses in requestWithCache ([aeaf807](https://github.com/CleverCloud/clever-client.js/commit/aeaf807c93464fb4ba7a91764768cd894bb0dd4c))
 
 ## [12.6.0](https://github.com/CleverCloud/clever-client.js/compare/12.5.1...12.6.0) (2026-06-29)
 
-
 ### 🚀 Features
 
-* **domains:** add domainToUrl helper ([f98df3a](https://github.com/CleverCloud/clever-client.js/commit/f98df3a94cacd9bd37245154a108f566e0a70dc7))
-
+- **domains:** add domainToUrl helper ([f98df3a](https://github.com/CleverCloud/clever-client.js/commit/f98df3a94cacd9bd37245154a108f566e0a70dc7))
 
 ### 🐛 Bug Fixes
 
-* **domains:** require label boundary in isTestDomain ([27f330d](https://github.com/CleverCloud/clever-client.js/commit/27f330d9d81108ef8c4a0053e9ee18a0cb3cd7f5))
+- **domains:** require label boundary in isTestDomain ([27f330d](https://github.com/CleverCloud/clever-client.js/commit/27f330d9d81108ef8c4a0053e9ee18a0cb3cd7f5))
 
 ## [12.5.1](https://github.com/CleverCloud/clever-client.js/compare/12.5.0...12.5.1) (2026-06-25)
 
-
 ### 🐛 Bug Fixes
 
-* **network-group:** normalize `member.kind` field ([734c2d0](https://github.com/CleverCloud/clever-client.js/commit/734c2d0e5b798dbd180d732bbf55f635c0d205db))
+- **network-group:** normalize `member.kind` field ([734c2d0](https://github.com/CleverCloud/clever-client.js/commit/734c2d0e5b798dbd180d732bbf55f635c0d205db))
 
 ## [12.5.0](https://github.com/CleverCloud/clever-client.js/compare/12.4.0...12.5.0) (2026-06-02)
 
-
 ### 🚀 Features
 
-* **metrics:** add command to fetch HTTP status code distribution ([f640219](https://github.com/CleverCloud/clever-client.js/commit/f640219a18cde4d544d44ede743fec2a272a89a5))
-* **metrics:** add command to fetch the requests heat map ([84dc71c](https://github.com/CleverCloud/clever-client.js/commit/84dc71c93d9415148a82f3a2382b133a1a246912))
-* **metrics:** add command to stream live requests ([8a27505](https://github.com/CleverCloud/clever-client.js/commit/8a2750585f79b5e5504a4e75808cc5432f4a6501))
-* **metrics:** allow converting metric timestamps to milliseconds or microseconds ([966a31d](https://github.com/CleverCloud/clever-client.js/commit/966a31daafce9781afd7b320a8f100b3db8c66ce))
-* **metrics:** migrate warp token command to v4 stats API ([25adb84](https://github.com/CleverCloud/clever-client.js/commit/25adb8443c0995e943e97bf67da886d07818e4db))
+- **metrics:** add command to fetch HTTP status code distribution ([f640219](https://github.com/CleverCloud/clever-client.js/commit/f640219a18cde4d544d44ede743fec2a272a89a5))
+- **metrics:** add command to fetch the requests heat map ([84dc71c](https://github.com/CleverCloud/clever-client.js/commit/84dc71c93d9415148a82f3a2382b133a1a246912))
+- **metrics:** add command to stream live requests ([8a27505](https://github.com/CleverCloud/clever-client.js/commit/8a2750585f79b5e5504a4e75808cc5432f4a6501))
+- **metrics:** allow converting metric timestamps to milliseconds or microseconds ([966a31d](https://github.com/CleverCloud/clever-client.js/commit/966a31daafce9781afd7b320a8f100b3db8c66ce))
+- **metrics:** migrate warp token command to v4 stats API ([25adb84](https://github.com/CleverCloud/clever-client.js/commit/25adb8443c0995e943e97bf67da886d07818e4db))
 
 ## [12.4.0](https://github.com/CleverCloud/clever-client.js/compare/12.3.1...12.4.0) (2026-05-21)
 
-
 ### 🚀 Features
 
-* **cc-client:** add `dedupe` feature to request config ([1a5d835](https://github.com/CleverCloud/clever-client.js/commit/1a5d835574501ffb42b1025d0c5e69e62901ba01))
-
+- **cc-client:** add `dedupe` feature to request config ([1a5d835](https://github.com/CleverCloud/clever-client.js/commit/1a5d835574501ffb42b1025d0c5e69e62901ba01))
 
 ### 🐛 Bug Fixes
 
-* **cc-client:** cache & dedupe query params properly ([7762c5b](https://github.com/CleverCloud/clever-client.js/commit/7762c5b9072389114ebb693b7deb9f7c457561de)), closes [#213](https://github.com/CleverCloud/clever-client.js/issues/213)
-* **Otoroshi Commands:** remove `environment` and add `api.swaggerUrl` ([88e3a5c](https://github.com/CleverCloud/clever-client.js/commit/88e3a5c6ef27667a935f46dbc2518931aec5d838))
+- **cc-client:** cache & dedupe query params properly ([7762c5b](https://github.com/CleverCloud/clever-client.js/commit/7762c5b9072389114ebb693b7deb9f7c457561de)), closes [#213](https://github.com/CleverCloud/clever-client.js/issues/213)
+- **Otoroshi Commands:** remove `environment` and add `api.swaggerUrl` ([88e3a5c](https://github.com/CleverCloud/clever-client.js/commit/88e3a5c6ef27667a935f46dbc2518931aec5d838))
 
 ## [12.3.1](https://github.com/CleverCloud/clever-client.js/compare/12.3.0...12.3.1) (2026-05-13)
 
-
 ### 🐛 Bug Fixes
 
-* **application-commands:** support `ftp` applications ([c43d119](https://github.com/CleverCloud/clever-client.js/commit/c43d119a7aed8383311e7c7b05748424d372de3b)), closes [#209](https://github.com/CleverCloud/clever-client.js/issues/209)
-* **cc-api-client:** use deletionDate from payload for instance deletionDate ([d4d5ddd](https://github.com/CleverCloud/clever-client.js/commit/d4d5ddddbcde48a2f32a48ea140f63a4a9fe4b7a))
+- **application-commands:** support `ftp` applications ([c43d119](https://github.com/CleverCloud/clever-client.js/commit/c43d119a7aed8383311e7c7b05748424d372de3b)), closes [#209](https://github.com/CleverCloud/clever-client.js/issues/209)
+- **cc-api-client:** use deletionDate from payload for instance deletionDate ([d4d5ddd](https://github.com/CleverCloud/clever-client.js/commit/d4d5ddddbcde48a2f32a48ea140f63a4a9fe4b7a))
 
 ## [12.3.0](https://github.com/CleverCloud/clever-client.js/compare/12.2.0...12.3.0) (2026-04-27)
 
-
 ### 🚀 Features
 
-* **cc-api-client:** expose resourceIdResolver as a public getter ([7d27bea](https://github.com/CleverCloud/clever-client.js/commit/7d27bea4e4b00fbf9dfbce8fb26691e13ac1e189))
-
+- **cc-api-client:** expose resourceIdResolver as a public getter ([7d27bea](https://github.com/CleverCloud/clever-client.js/commit/7d27bea4e4b00fbf9dfbce8fb26691e13ac1e189))
 
 ### 🐛 Bug Fixes
 
-* **network-group:** allow using `realId` to add addons as members ([1ddf53a](https://github.com/CleverCloud/clever-client.js/commit/1ddf53a5839768e92e36c174f907bc7558765648)), closes [#204](https://github.com/CleverCloud/clever-client.js/issues/204)
+- **network-group:** allow using `realId` to add addons as members ([1ddf53a](https://github.com/CleverCloud/clever-client.js/commit/1ddf53a5839768e92e36c174f907bc7558765648)), closes [#204](https://github.com/CleverCloud/clever-client.js/issues/204)
 
 ## [12.2.0](https://github.com/CleverCloud/clever-client.js/compare/12.1.0...12.2.0) (2026-04-22)
 
-
 ### 🚀 Features
 
-* **network-groups:** add helpers to filter out unsupported add-ons ([11cda0e](https://github.com/CleverCloud/clever-client.js/commit/11cda0eabbb574148fcf0dde77cf108955629271))
+- **network-groups:** add helpers to filter out unsupported add-ons ([11cda0e](https://github.com/CleverCloud/clever-client.js/commit/11cda0eabbb574148fcf0dde77cf108955629271))
 
 ## [12.1.0](https://github.com/CleverCloud/clever-client.js/compare/12.0.0...12.1.0) (2026-04-01)
 
-
 ### 🚀 Features
 
-* **keycloak:** add keycloak commands ([a51a193](https://github.com/CleverCloud/clever-client.js/commit/a51a193bc9fc01f2304f72c6fa615b58289d3768)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
-* **matomo:** add `RebootMatomoCommand` & `RebuildMatomoCommand` ([e27a368](https://github.com/CleverCloud/clever-client.js/commit/e27a3683f4d6cee00882b46bef7934aa9663de6e)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
-* **matomo:** add `resouce.kvId` to `GetMatomoInfoCommand` output ([a48b8d0](https://github.com/CleverCloud/clever-client.js/commit/a48b8d0f577a5204b4944d470d91c75e4a681169))
-* **metabase:** add commands ([106437b](https://github.com/CleverCloud/clever-client.js/commit/106437b974dda4eeda596c2ecb60ab6b6e775689)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
-* **otoroshi:** add commands ([bac615d](https://github.com/CleverCloud/clever-client.js/commit/bac615d076c869b7accefc455e241b1a2bc19943)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
-
+- **keycloak:** add keycloak commands ([a51a193](https://github.com/CleverCloud/clever-client.js/commit/a51a193bc9fc01f2304f72c6fa615b58289d3768)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
+- **matomo:** add `RebootMatomoCommand` & `RebuildMatomoCommand` ([e27a368](https://github.com/CleverCloud/clever-client.js/commit/e27a3683f4d6cee00882b46bef7934aa9663de6e)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
+- **matomo:** add `resouce.kvId` to `GetMatomoInfoCommand` output ([a48b8d0](https://github.com/CleverCloud/clever-client.js/commit/a48b8d0f577a5204b4944d470d91c75e4a681169))
+- **metabase:** add commands ([106437b](https://github.com/CleverCloud/clever-client.js/commit/106437b974dda4eeda596c2ecb60ab6b6e775689)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
+- **otoroshi:** add commands ([bac615d](https://github.com/CleverCloud/clever-client.js/commit/bac615d076c869b7accefc455e241b1a2bc19943)), closes [#156](https://github.com/CleverCloud/clever-client.js/issues/156)
 
 ### 🐛 Bug Fixes
 
-* **events:** use ws:// when API host is http:// (dev mode support) ([ced37b3](https://github.com/CleverCloud/clever-client.js/commit/ced37b35f7eaa99697aabaff3fde31da1f457f49))
-* **GetMatomoInfoCommand:** stop sorting available versions ([57fbc9e](https://github.com/CleverCloud/clever-client.js/commit/57fbc9e5476a4c8203c2d3face0a86a71bf2e7d2))
+- **events:** use ws:// when API host is http:// (dev mode support) ([ced37b3](https://github.com/CleverCloud/clever-client.js/commit/ced37b35f7eaa99697aabaff3fde31da1f457f49))
+- **GetMatomoInfoCommand:** stop sorting available versions ([57fbc9e](https://github.com/CleverCloud/clever-client.js/commit/57fbc9e5476a4c8203c2d3face0a86a71bf2e7d2))
 
 ## [12.0.0](https://github.com/CleverCloud/clever-client.js/compare/11.5.0...12.0.0) (2026-03-17)
 
-
 ### ⚠ BREAKING CHANGES
 
-* **network-group:** use text/plain Accept header for WireGuard configuration endpoint
+- **network-group:** use text/plain Accept header for WireGuard configuration endpoint
 
 ### 🐛 Bug Fixes
 
-* **network-group:** use text/plain Accept header for WireGuard configuration endpoint ([9ac9354](https://github.com/CleverCloud/clever-client.js/commit/9ac9354ddd993ac0872c13da04e0fc2023e1453e))
+- **network-group:** use text/plain Accept header for WireGuard configuration endpoint ([9ac9354](https://github.com/CleverCloud/clever-client.js/commit/9ac9354ddd993ac0872c13da04e0fc2023e1453e))
 
 ## [11.5.0](https://github.com/CleverCloud/clever-client.js/compare/11.4.1...11.5.0) (2026-03-05)
 
-
 ### 🚀 Features
 
-* **cc-api:** add `GetNetworkGroupWireguardConfigurationUrlCommand` ([22374c9](https://github.com/CleverCloud/clever-client.js/commit/22374c94b183a3880006f5b0f007d8b8a79e06c7))
+- **cc-api:** add `GetNetworkGroupWireguardConfigurationUrlCommand` ([22374c9](https://github.com/CleverCloud/clever-client.js/commit/22374c94b183a3880006f5b0f007d8b8a79e06c7))
 
 ## [11.4.1](https://github.com/CleverCloud/clever-client.js/compare/11.4.0...11.4.1) (2026-02-18)
 
-
 ### 🐛 Bug Fixes
 
-* **deployment:** deployment commit id can be undefined ([e29eee3](https://github.com/CleverCloud/clever-client.js/commit/e29eee389927ad365791212abf32521be9fb83b0))
-* **e2e:** increase timeouts to handle slow API responses ([c52ffd6](https://github.com/CleverCloud/clever-client.js/commit/c52ffd6193712d020298fa3eeb1609f5333814ee))
-* **e2e:** use Promise.allSettled in cleanup to prevent early abort ([37c49fb](https://github.com/CleverCloud/clever-client.js/commit/37c49fb29beab7bc4d43cd3034c3ca659320b7dc))
+- **deployment:** deployment commit id can be undefined ([e29eee3](https://github.com/CleverCloud/clever-client.js/commit/e29eee389927ad365791212abf32521be9fb83b0))
+- **e2e:** increase timeouts to handle slow API responses ([c52ffd6](https://github.com/CleverCloud/clever-client.js/commit/c52ffd6193712d020298fa3eeb1609f5333814ee))
+- **e2e:** use Promise.allSettled in cleanup to prevent early abort ([37c49fb](https://github.com/CleverCloud/clever-client.js/commit/37c49fb29beab7bc4d43cd3034c3ca659320b7dc))
 
 ## [11.4.0](https://github.com/CleverCloud/clever-client.js/compare/11.3.0...11.4.0) (2025-12-15)
 
-
 ### 🚀 Features
 
-* **cc-api/commands:** add `GetZoneCommand` ([c16a46b](https://github.com/CleverCloud/clever-client.js/commit/c16a46b5a7f568120d04e83190fcb4b58d9cebd7))
-* **esm/api/v4/product:** add optional `ownerId` queryParam to `getZone` ([a0325b6](https://github.com/CleverCloud/clever-client.js/commit/a0325b6a74f999315d565128da4668a17e8922f0))
+- **cc-api/commands:** add `GetZoneCommand` ([c16a46b](https://github.com/CleverCloud/clever-client.js/commit/c16a46b5a7f568120d04e83190fcb4b58d9cebd7))
+- **esm/api/v4/product:** add optional `ownerId` queryParam to `getZone` ([a0325b6](https://github.com/CleverCloud/clever-client.js/commit/a0325b6a74f999315d565128da4668a17e8922f0))
 
 ## [11.3.0](https://github.com/CleverCloud/clever-client.js/compare/11.2.1...11.3.0) (2025-11-14)
 
-
 ### 🚀 Features
 
-* **base-client:** add sse support ([12cd0f3](https://github.com/CleverCloud/clever-client.js/commit/12cd0f320b1effe2994898fa5db869726f38ae16))
-* **cc-api-client:** add logs stream commands ([0b9bb35](https://github.com/CleverCloud/clever-client.js/commit/0b9bb35f3d57dbc365b8db69395161f45a41b64b))
+- **base-client:** add sse support ([12cd0f3](https://github.com/CleverCloud/clever-client.js/commit/12cd0f320b1effe2994898fa5db869726f38ae16))
+- **cc-api-client:** add logs stream commands ([0b9bb35](https://github.com/CleverCloud/clever-client.js/commit/0b9bb35f3d57dbc365b8db69395161f45a41b64b))
 
 ## [11.2.1](https://github.com/CleverCloud/clever-client.js/compare/11.2.0...11.2.1) (2025-11-13)
 
-
 ### 🐛 Bug Fixes
 
-* add missing package-lock update ([4808b4b](https://github.com/CleverCloud/clever-client.js/commit/4808b4b004026636cedcd25fbd0b86a43fd81710))
-* **sse:** only update lastId for non-empty event IDs ([aa1fab8](https://github.com/CleverCloud/clever-client.js/commit/aa1fab88c020f85122f45cc8a1ffff8c23900393))
+- add missing package-lock update ([4808b4b](https://github.com/CleverCloud/clever-client.js/commit/4808b4b004026636cedcd25fbd0b86a43fd81710))
+- **sse:** only update lastId for non-empty event IDs ([aa1fab8](https://github.com/CleverCloud/clever-client.js/commit/aa1fab88c020f85122f45cc8a1ffff8c23900393))
 
 ## [11.2.0](https://github.com/CleverCloud/clever-client.js/compare/11.1.1...11.2.0) (2025-09-16)
 
-
 ### 🚀 Features
 
-* add publicGitRepositoryUrl support ([c7d5b41](https://github.com/CleverCloud/clever-client.js/commit/c7d5b412409e127c6de13749d12ca786d72c9e4d)), closes [#166](https://github.com/CleverCloud/clever-client.js/issues/166)
-* reduce CreateApplicationCommandInput required params ([f178581](https://github.com/CleverCloud/clever-client.js/commit/f178581746e24d16f92ea4ace7d860b83954a829))
-
+- add publicGitRepositoryUrl support ([c7d5b41](https://github.com/CleverCloud/clever-client.js/commit/c7d5b412409e127c6de13749d12ca786d72c9e4d)), closes [#166](https://github.com/CleverCloud/clever-client.js/issues/166)
+- reduce CreateApplicationCommandInput required params ([f178581](https://github.com/CleverCloud/clever-client.js/commit/f178581746e24d16f92ea4ace7d860b83954a829))
 
 ### 🐛 Bug Fixes
 
-* correctly rebuild apps ([762e131](https://github.com/CleverCloud/clever-client.js/commit/762e131efb005a797d8695e1469a893c209d0fac))
+- correctly rebuild apps ([762e131](https://github.com/CleverCloud/clever-client.js/commit/762e131efb005a797d8695e1469a893c209d0fac))
 
 ## [11.1.1](https://github.com/CleverCloud/clever-client.js/compare/11.1.0...11.1.1) (2025-09-11)
 
-
 ### 🐛 Bug Fixes
 
-* set required node version to `&gt;=22` ([4e8c395](https://github.com/CleverCloud/clever-client.js/commit/4e8c3955dc6a5c3c75bc2be63f9a10a408d377e5))
+- set required node version to `&gt;=22` ([4e8c395](https://github.com/CleverCloud/clever-client.js/commit/4e8c3955dc6a5c3c75bc2be63f9a10a408d377e5))
 
 ## [11.1.0](https://github.com/CleverCloud/clever-client.js/compare/11.0.1...11.1.0) (2025-09-10)
 
-
 ### 🚀 Features
 
-* implement base client library ([46bde34](https://github.com/CleverCloud/clever-client.js/commit/46bde344e4d25094617834be871e145c2b06f60d))
-* implement cc-api client ([dfb9d91](https://github.com/CleverCloud/clever-client.js/commit/dfb9d91c7ad1bbf39e2d19d916b3aa378cc9f96a))
-* implement cc-api-bridge client ([7f6342d](https://github.com/CleverCloud/clever-client.js/commit/7f6342ddfc66922e4256d0a9911c2af5d35cddc0))
-* implement redis-http client ([f83ebcf](https://github.com/CleverCloud/clever-client.js/commit/f83ebcfecb44f41f440c76cf5fc0e68b40d12c17))
-
+- implement base client library ([46bde34](https://github.com/CleverCloud/clever-client.js/commit/46bde344e4d25094617834be871e145c2b06f60d))
+- implement cc-api client ([dfb9d91](https://github.com/CleverCloud/clever-client.js/commit/dfb9d91c7ad1bbf39e2d19d916b3aa378cc9f96a))
+- implement cc-api-bridge client ([7f6342d](https://github.com/CleverCloud/clever-client.js/commit/7f6342ddfc66922e4256d0a9911c2af5d35cddc0))
+- implement redis-http client ([f83ebcf](https://github.com/CleverCloud/clever-client.js/commit/f83ebcfecb44f41f440c76cf5fc0e68b40d12c17))
 
 ### 🐛 Bug Fixes
 
-* fix some types ([884a1e4](https://github.com/CleverCloud/clever-client.js/commit/884a1e4e31c77be032e89d5bc72f3432cf9ec2d8))
-* **legacy:** make the id param optional when handling /self and /organisations/:XXX ([1734ef0](https://github.com/CleverCloud/clever-client.js/commit/1734ef0c263a742cfce656024bb4b138c196391f))
+- fix some types ([884a1e4](https://github.com/CleverCloud/clever-client.js/commit/884a1e4e31c77be032e89d5bc72f3432cf9ec2d8))
+- **legacy:** make the id param optional when handling /self and /organisations/:XXX ([1734ef0](https://github.com/CleverCloud/clever-client.js/commit/1734ef0c263a742cfce656024bb4b138c196391f))
 
 ## [11.0.1](https://github.com/CleverCloud/clever-client.js/compare/11.0.0...11.0.1) (2025-06-30)
 
-
 ### 🐛 Bug Fixes
 
-* fix plaintext OAuth for old logs and event API ([1c2c7d3](https://github.com/CleverCloud/clever-client.js/commit/1c2c7d3d004e78a6a1448aade1aec2f9b49b08bb))
+- fix plaintext OAuth for old logs and event API ([1c2c7d3](https://github.com/CleverCloud/clever-client.js/commit/1c2c7d3d004e78a6a1448aade1aec2f9b49b08bb))
 
 ## [11.0.0](https://github.com/CleverCloud/clever-client.js/compare/10.1.0...11.0.0) (2025-06-30)
 
-
 ### ⚠ BREAKING CHANGES
 
-* this requires Node.js 21+ if you use the event API You also need to these imports:
-    * `@clevercloud/client/esm/streams/events.browser.js`
-    * `@clevercloud/client/esm/streams/events.node.js`
+- this requires Node.js 21+ if you use the event API You also need to these imports:
+  - `@clevercloud/client/esm/streams/events.browser.js`
+  - `@clevercloud/client/esm/streams/events.node.js`
     to this:
-    * `@clevercloud/client/esm/streams/events.js`
+  - `@clevercloud/client/esm/streams/events.js`
 
 ### 🚀 Features
 
-* add API call analysis scripts ([49f01da](https://github.com/CleverCloud/clever-client.js/commit/49f01da276afd1494ee5e7402dc6f0c3550d451f))
-* use OAuth plaintext instead of hmac512 and remove `oauth-1.0a` ([e2a6886](https://github.com/CleverCloud/clever-client.js/commit/e2a6886c3029a7536bda4af242e4cf484b926422))
-
+- add API call analysis scripts ([49f01da](https://github.com/CleverCloud/clever-client.js/commit/49f01da276afd1494ee5e7402dc6f0c3550d451f))
+- use OAuth plaintext instead of hmac512 and remove `oauth-1.0a` ([e2a6886](https://github.com/CleverCloud/clever-client.js/commit/e2a6886c3029a7536bda4af242e4cf484b926422))
 
 ### 🧹 Miscellaneous Chores
 
-* replace `ws` with native WebSocket support for Node.js ([e8dbfe3](https://github.com/CleverCloud/clever-client.js/commit/e8dbfe3dbf3d1190fc74a4c14a9def00f023079c))
+- replace `ws` with native WebSocket support for Node.js ([e8dbfe3](https://github.com/CleverCloud/clever-client.js/commit/e8dbfe3dbf3d1190fc74a4c14a9def00f023079c))
 
 ## 10.1.0 (2025-04-04)
 
-* feat(zones): add ownerId query param (#141)
-* fix: use correct query param name for fetchHeatmapPoints
+- feat(zones): add ownerId query param (#141)
+- fix: use correct query param name for fetchHeatmapPoints
 
 ## 10.0.0 (2025-03-25)
 
 ### ⚠ BREAKING CHANGES
 
-* build: remove cjs client generation (#124)
-* chore(legacy-client): remove legacy client (#125)
-* chore(access-logs-metrics): remove useless functions
+- build: remove cjs client generation (#124)
+- chore(legacy-client): remove legacy client (#125)
+- chore(access-logs-metrics): remove useless functions
 
 ### Features
 
-* logs: introduce new `ResourceLogStream` class for new SSE addon logs
+- logs: introduce new `ResourceLogStream` class for new SSE addon logs
 
 ### Refactor
 
-* build: add prettier (#121)
-* build: upgrade eslint (#122)
-* build: add typechecking (#123)
+- build: add prettier (#121)
+- build: upgrade eslint (#122)
+- build: add typechecking (#123)
 
 ## 9.2.1 (2025-03-04)
 
-* fix: fix grafana management methods
+- fix: fix grafana management methods
 
 ## 9.2.0 (2025-02-26)
 
-* feat: add `stats.fetchHeatmapPoints`
-* feat: add `saas.resetGrafanaOrganisation`
-* feat: add `saas.deleteGrafanaOrganisation`
-* feat: add `saas.createGrafanaOrganisation`
-* feat: add `saas.getGrafanaOrganisation`
-* feat: add `billing.getPriceSystem`
-* feat: add `instance.getAllApplicationInstances`
-* feat: add `loadBalancers.getDefaultLoadBalancersDnsInfo`
-* feat: add `saas.getHeptapodPricePrevision`
-* feat: add `providers.getEsOptionsFlavors`
-* feat: add `materia.getMateriaKvInfo`
-* feat: add `billing.getOrganisationPriceSystem`
-* feat: add `billing.getCreditsSummary`
-* chore: include esm/api in sources
-* refactor(diag-domain-config.types): remove `private` from `DiagSummary`
+- feat: add `stats.fetchHeatmapPoints`
+- feat: add `saas.resetGrafanaOrganisation`
+- feat: add `saas.deleteGrafanaOrganisation`
+- feat: add `saas.createGrafanaOrganisation`
+- feat: add `saas.getGrafanaOrganisation`
+- feat: add `billing.getPriceSystem`
+- feat: add `instance.getAllApplicationInstances`
+- feat: add `loadBalancers.getDefaultLoadBalancersDnsInfo`
+- feat: add `saas.getHeptapodPricePrevision`
+- feat: add `providers.getEsOptionsFlavors`
+- feat: add `materia.getMateriaKvInfo`
+- feat: add `billing.getOrganisationPriceSystem`
+- feat: add `billing.getCreditsSummary`
+- chore: include esm/api in sources
+- refactor(diag-domain-config.types): remove `private` from `DiagSummary`
 
 ## 9.1.0 (2024-10-16)
 
-* feat(esm/utils): add `diagDomainConfig`
+- feat(esm/utils): add `diagDomainConfig`
 
 ## 9.0.0 (2024-09-11)
 
 ⚠ BREAKING CHANGES
 
-* refactor(oauth): rely on global crypto instead of using a conditionnal `import('node:crypto')`
+- refactor(oauth): rely on global crypto instead of using a conditionnal `import('node:crypto')`
 
 ## 8.3.0 (2024-06-26)
 
-* feat(streams): new accesslogs API
-* feat(sse): flatten reason object and add a mandatory type
+- feat(streams): new accesslogs API
+- feat(sse): flatten reason object and add a mandatory type
 
 ## 8.2.0 (2024-02-27)
 
-* feat: allow error handling from legacy client
-* feat: support repeatable query params
-* fix(sse): fix OAuth signature when a query param is repeated
+- feat: allow error handling from legacy client
+- feat: support repeatable query params
+- fix(sse): fix OAuth signature when a query param is repeated
 
 ## 8.1.2 (2024-02-15)
 
-* fix(stream): fix query params with ApplicationLogStream
+- fix(stream): fix query params with ApplicationLogStream
 
 ## 8.1.1 (2024-02-13)
 
-* fix(sse): use query parameters in OAuth signature
+- fix(sse): use query parameters in OAuth signature
 
 ## 8.1.0 (2024-02-07)
 
-* fix(stream): consider `ENOTFOUND` (macOS DNS error) as retryable for ApplicationLogStream
-* feat(stream): make `retryCount` public on ApplicationLogStream
-* fix(stream): prevent uncaught errors on retry with ApplicationLogStream (firefox)
-* fix(stream): consider browser network errors as retryable
-* feat(stream): add a `connectionTimeout` param on ApplicationLogStream (default: 5s)
+- fix(stream): consider `ENOTFOUND` (macOS DNS error) as retryable for ApplicationLogStream
+- feat(stream): make `retryCount` public on ApplicationLogStream
+- fix(stream): prevent uncaught errors on retry with ApplicationLogStream (firefox)
+- fix(stream): consider browser network errors as retryable
+- feat(stream): add a `connectionTimeout` param on ApplicationLogStream (default: 5s)
 
 ## 8.0.3 (2024-01-30)
 
-* chore: make the options param of the on method optional
-* fix: always clear timeouts in `stream.abstract` close method (logs SSE and events WS)
-* fix: various fixes on ApplicationLogStream (see https://github.com/CleverCloud/clever-client.js/pull/93)
-  * introduce new errors `NetworkError`, `HttpError` with `status` property and `ServerError`
-  * Clear heartbeat `setInterval` properly
-  * Make sure `start.then()` resolves with a `reason` not being an `Error` object
-  * Make sure `start.catch()` rejects with an `Error` object
-  * Fix the `getBytes` bug
-  * Fix the `last-event-id`
-  * Remove the double retry caused by inner pause/resume
-  * Fix lastContact when no logs are emitted
-  * Mark some errors as retryable and some not
+- chore: make the options param of the on method optional
+- fix: always clear timeouts in `stream.abstract` close method (logs SSE and events WS)
+- fix: various fixes on ApplicationLogStream (see https://github.com/CleverCloud/clever-client.js/pull/93)
+  - introduce new errors `NetworkError`, `HttpError` with `status` property and `ServerError`
+  - Clear heartbeat `setInterval` properly
+  - Make sure `start.then()` resolves with a `reason` not being an `Error` object
+  - Make sure `start.catch()` rejects with an `Error` object
+  - Fix the `getBytes` bug
+  - Fix the `last-event-id`
+  - Remove the double retry caused by inner pause/resume
+  - Fix lastContact when no logs are emitted
+  - Mark some errors as retryable and some not
 
 ### For devs
 
-* test: introduce a test suite for ApplicationLogStream
+- test: introduce a test suite for ApplicationLogStream
 
 ## 8.0.2 (2023-10-31)
 
-* fix: abort controller behaviour with `sse-parse` used by `ApplicationLogsStream` (Node.js < 18.16)
+- fix: abort controller behaviour with `sse-parse` used by `ApplicationLogsStream` (Node.js < 18.16)
 
 ## 8.0.1 (2023-10-17)
 
-* adjust esm/cjs build to transform dynamic imports into Node.js compatible syntax
+- adjust esm/cjs build to transform dynamic imports into Node.js compatible syntax
 
 ## 8.0.0 (2023-10-17)
 
 ### ⚠ BREAKING CHANGES
 
-* Update project to Node.js 18.5
-* Replace `oauth.browser.js` and `oauth.node.js` with one browser/Node.js compatible file: `oauth.js`
-  * You may need to adjust your bundler's settings to assume `crypto` as a global
-* Delete `request.superagent.js` and make `request.fetch.js` compatible with Node.js
-* Move project from CJS to ESM
-  * Files are is still distributed in `esm` and `cjs` directories
-  * The `cjs` will be removed in a later major release
-  * There are still some Node.js specific files we need to replace with browser/Node.js compatible versions
+- Update project to Node.js 18.5
+- Replace `oauth.browser.js` and `oauth.node.js` with one browser/Node.js compatible file: `oauth.js`
+  - You may need to adjust your bundler's settings to assume `crypto` as a global
+- Delete `request.superagent.js` and make `request.fetch.js` compatible with Node.js
+- Move project from CJS to ESM
+  - Files are is still distributed in `esm` and `cjs` directories
+  - The `cjs` will be removed in a later major release
+  - There are still some Node.js specific files we need to replace with browser/Node.js compatible versions
 
 ### Features
 
-* Introduce new `ApplicationLogsStream` class for new SSE logs (v4)
+- Introduce new `ApplicationLogsStream` class for new SSE logs (v4)
 
 ## 7.11.0 (2023-01-09)
 
-* Improve error handling on fetch request
-* Generate-client:
-  * Handle invalid `delete` function name
-  * Handle `requestBody.content` when only described as a `$ref`
+- Improve error handling on fetch request
+- Generate-client:
+  - Handle invalid `delete` function name
+  - Handle `requestBody.content` when only described as a `$ref`
 
 ## 7.10.0 (2022-03-23)
 
-* Add new utils `getOrgaPaymentMethodsError` and `getAllOrgaPaymentMethodsErrors`
+- Add new utils `getOrgaPaymentMethodsError` and `getAllOrgaPaymentMethodsErrors`
 
 ## 7.9.0 (2022-02-24)
 
-* Change OVD `openapi.json` URL
+- Change OVD `openapi.json` URL
 
 ## 7.8.1 (2022-02-15)
 
-* Rollback `cc-client-version` header for all calls
+- Rollback `cc-client-version` header for all calls
 
 ## 7.8.0 (2022-02-15)
 
-* Add support for remote OVD OpenAPI
-* Add `cc-client-version` header for all calls
-* Add network group routes in `api/v4/network-group.js`
+- Add support for remote OVD OpenAPI
+- Add `cc-client-version` header for all calls
+- Add network group routes in `api/v4/network-group.js`
 
 ## 7.7.0 (2022-01-05)
 
-* utils/env-var:
-  * add a json parser and return valid values
-  * add a strict mode validation
-  * add a warning error for Java validation
+- utils/env-var:
+  - add a json parser and return valid values
+  - add a strict mode validation
+  - add a warning error for Java validation
 
 ## 7.6.0 (2021-08-03)
 
-* Add Jenkins addon provider v4 endpoint to get available updates
-  * Add `GET /v4/addon-providers/jenkins/addons/{addonIdOrRealId} in `api/v4/addon-providers.js` with `
+- Add Jenkins addon provider v4 endpoint to get available updates
+  - Add `GET /v4/addon-providers/jenkins/addons/{addonIdOrRealId} in `api/v4/addon-providers.js`with`
     getJenkinsUpdates()`
 
 ## 7.5.0 (2021-06-30)
 
-* Add new addon providers v4 endpoints
-  * Add `GET /v4/addon-providers/{addonProviderId}/addons/{addonIdOrRealId} in `api/v4/addon-providers.js` with `
+- Add new addon providers v4 endpoints
+  - Add `GET /v4/addon-providers/{addonProviderId}/addons/{addonIdOrRealId} in `api/v4/addon-providers.js`with`
     getAddon()`
-  * Add `GET /v4/addon-providers/{addonProviderId}/clusters/{clusterId} in `api/v4/addon-providers.js` with `
+  - Add `GET /v4/addon-providers/{addonProviderId}/clusters/{clusterId} in `api/v4/addon-providers.js`with`
     getCluster()`
 
 ## 7.4.0 (2021-04-13)
 
-* Add new billing API endpoints
-  * Add `GET /organisations/{id}/namespaces` in `api/v4/billing.js` with `getNamespaces()`
-  * Add `GET /billing/organisations/{id}/invoices` in `api/v4/billing.js` with `getAllInvoices()`
-  * Add `GET /billing/organisations/{id}/invoices/unpaid` in `api/v4/billing.js` with `getAllUnpaidInvoices()`
-  * Add `GET /billing/organisations/{id}/invoices/{invoiceNumber}{type}` in `api/v4/billing.js` with `getInvoice()`
-  * Add `GET /billing/organisations/{id}/payments/methods` in `api/v4/billing.js` with `getPaymentMethods()`
-  * Add `POST /billing/organisations/{id}/payments/methods` in `api/v4/billing.js` with `createPaymentMethod()`
-  * Add `PUT /billing/organisations/{id}/payments/methods/default` in `api/v4/billing.js`
+- Add new billing API endpoints
+  - Add `GET /organisations/{id}/namespaces` in `api/v4/billing.js` with `getNamespaces()`
+  - Add `GET /billing/organisations/{id}/invoices` in `api/v4/billing.js` with `getAllInvoices()`
+  - Add `GET /billing/organisations/{id}/invoices/unpaid` in `api/v4/billing.js` with `getAllUnpaidInvoices()`
+  - Add `GET /billing/organisations/{id}/invoices/{invoiceNumber}{type}` in `api/v4/billing.js` with `getInvoice()`
+  - Add `GET /billing/organisations/{id}/payments/methods` in `api/v4/billing.js` with `getPaymentMethods()`
+  - Add `POST /billing/organisations/{id}/payments/methods` in `api/v4/billing.js` with `createPaymentMethod()`
+  - Add `PUT /billing/organisations/{id}/payments/methods/default` in `api/v4/billing.js`
     with `setDefaultPaymentMethod()`
-  * Add `DELETE /billing/organisations/{id}/payments/methods/{methodId}` in `api/v4/billing.js`
+  - Add `DELETE /billing/organisations/{id}/payments/methods/{methodId}` in `api/v4/billing.js`
     with `deletePaymentMethod()`
-  * Add `POST /billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal` in `api/v4/billing.js`
+  - Add `POST /billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal` in `api/v4/billing.js`
     with `initPaypalPayment()`
-  * Add `PUT /billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal/{payerId}` in `api/v4/billing.js`
+  - Add `PUT /billing/organisations/{id}/invoices/{invoiceNumber}/payments/paypal/{payerId}` in `api/v4/billing.js`
     with `authorizePaypalPayment()`
-  * Add `POST /billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe` in `api/v4/billing.js`
+  - Add `POST /billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe` in `api/v4/billing.js`
     with `initStripePayment()`
-  * Add `PUT /billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe/{paymentId}` in `api/v4/billing.js`
+  - Add `PUT /billing/organisations/{id}/invoices/{invoiceNumber}/payments/stripe/{paymentId}` in `api/v4/billing.js`
     with `authorizeStripePayment()`
-  * Add `GET /billing/organisations/{id}/payments/stripe/intent` in `api/v4/billing.js` with `getStripePaymentIntent()`
+  - Add `GET /billing/organisations/{id}/payments/stripe/intent` in `api/v4/billing.js` with `getStripePaymentIntent()`
 
 ## 7.3.2 (2021-03-05)
 
-* Update superagent
+- Update superagent
 
 ## 7.3.1 (2021-03-05)
 
-* Update dependencies
+- Update dependencies
 
 ## 7.3.0 (2021-03-05)
 
-* Add `execWarpscript()` function for browsers with fetch
-* Add new Warp10 requests around access logs
-  * `getStatusCodesFromWarp10()`
-  * `getRequestsFromWarp10()`
-  * `getAccessLogsHeatmapFromWarp10()`
-  * `getAccessLogsDotmapFromWarp10()`
-* Add `withCache()` helper function
-* Add `withOptions()` helper function
-* Add timeout support for browser based request (API and Warp10)
+- Add `execWarpscript()` function for browsers with fetch
+- Add new Warp10 requests around access logs
+  - `getStatusCodesFromWarp10()`
+  - `getRequestsFromWarp10()`
+  - `getAccessLogsHeatmapFromWarp10()`
+  - `getAccessLogsDotmapFromWarp10()`
+- Add `withCache()` helper function
+- Add `withOptions()` helper function
+- Add timeout support for browser based request (API and Warp10)
 
 ## 7.2.0 (2021-01-26)
 
-* Add new addon-providers API `GET /v4/addon-providers/{providerId}` in `api/v4/addon-providers.js`
+- Add new addon-providers API `GET /v4/addon-providers/{providerId}` in `api/v4/addon-providers.js`
   with `getAddonProvider()`.
-* Fix client generation with new `/v4` routes
+- Fix client generation with new `/v4` routes
 
 ## 7.1.0 (2020-11-26)
 
-* Expose app statuses
+- Expose app statuses
 
 ## 7.0.0 (2020-10-05)
 
-* replace jest by [@web/test-runner](https://modern-web.dev/guides/test-runner/getting-started/)
-* Add new zones API `GET /v4/product/zones` in `api/v4/product.js` with `getAllZones()`.
+- replace jest by [@web/test-runner](https://modern-web.dev/guides/test-runner/getting-started/)
+- Add new zones API `GET /v4/product/zones` in `api/v4/product.js` with `getAllZones()`.
 
 ### ⚠️ BREAKING CHANGES
 
-* Move `GET /products/zones` to `api/product` with `getAllZones()`
-  * Used to be `api/unknown` with `todo_getZones()`
+- Move `GET /products/zones` to `api/product` with `getAllZones()`
+  - Used to be `api/unknown` with `todo_getZones()`
 
-In order to support both v2 *and* v4 endpoints we changed the way we handle the version prefix.
+In order to support both v2 _and_ v4 endpoints we changed the way we handle the version prefix.
 
-* You no longer need to configure it as part of the `API_HOST` when you call `prefixUrl(API_HOST)` in
+- You no longer need to configure it as part of the `API_HOST` when you call `prefixUrl(API_HOST)` in
   your `sendToApi()`.
-* You only need to defined the origin with no trailing slash. Example for production: `'https://api.clever-cloud.com'`.
-* All v2 service modules that you imported from `esm/api` or `cjs/api` were moved to `esm/api/v2` or `cjs/api/v2`.
+- You only need to defined the origin with no trailing slash. Example for production: `'https://api.clever-cloud.com'`.
+- All v2 service modules that you imported from `esm/api` or `cjs/api` were moved to `esm/api/v2` or `cjs/api/v2`.
 
 ## 6.0.0 (2020-05-26)
 
-* Add exponential backoff to the newly refactored `LogsStream` and `EventsStream`.
-* Add docs about how to use those streams.
+- Add exponential backoff to the newly refactored `LogsStream` and `EventsStream`.
+- Add docs about how to use those streams.
 
 ### ⚠️ BREAKING CHANGES
 
-* Expose logs with a new `EventEmitter`/`EventTarget` compatible API
-* Expose events with a new `EventEmitter`/`EventTarget` compatible API
+- Expose logs with a new `EventEmitter`/`EventTarget` compatible API
+- Expose events with a new `EventEmitter`/`EventTarget` compatible API
 
 ## 5.1.0 (2020-03-27)
 
-* Add `payment` param to `addTcpRedir()` in `api/application`
+- Add `payment` param to `addTcpRedir()` in `api/application`
 
 ## 5.0.1 (2020-03-27)
 
 Fix missing `/self` vs `/organisations/{id}`:
 
-* Rename `POST /self/addons/preorders` to `api/addon` with `preorder()`
-  * Used to be `api/addon` with `todo_preorderSelfAddon()`
-* Rename `GET /organisations/{id}/applications/{appId}/deployments/{deploymentId}/instances` to `api/application`
+- Rename `POST /self/addons/preorders` to `api/addon` with `preorder()`
+  - Used to be `api/addon` with `todo_preorderSelfAddon()`
+- Rename `GET /organisations/{id}/applications/{appId}/deployments/{deploymentId}/instances` to `api/application`
   with `cancelDeployment()`
-  * Used to be `api/application` with `getAllDeploymentInstances()`
+  - Used to be `api/application` with `getAllDeploymentInstances()`
 
 ## 5.0.0 (2020-03-27)
 
 ### ⚠️ BREAKING CHANGES
 
-* Rename `POST /organisations/{id}/addons/preorders` to `api/addon` with `preorder()`
-  * Used to be `api/addon` with `todo_preorderAddonByOrgaId()`
-* Move `GET /products/addonproviders` to `api/product` with `getAllAddonProviders()`
-  * Used to be `api/unknown` with `todo_getAddonProviders()`
-* Move `GET /products/prices` to `api/product` with `getCreditPrice()`
-  * Used to be `api/unknown` with `todo_getExcahngeRates()`
-* Rename `GET /self/applications/{appId}/deployments/{deploymentId}/instances` to `api/application`
+- Rename `POST /organisations/{id}/addons/preorders` to `api/addon` with `preorder()`
+  - Used to be `api/addon` with `todo_preorderAddonByOrgaId()`
+- Move `GET /products/addonproviders` to `api/product` with `getAllAddonProviders()`
+  - Used to be `api/unknown` with `todo_getAddonProviders()`
+- Move `GET /products/prices` to `api/product` with `getCreditPrice()`
+  - Used to be `api/unknown` with `todo_getExcahngeRates()`
+- Rename `GET /self/applications/{appId}/deployments/{deploymentId}/instances` to `api/application`
   with `cancelDeployment()`
-  * Used to be `api/application` with `getAllDeploymentInstances()`
+  - Used to be `api/application` with `getAllDeploymentInstances()`
 
 ## 4.2.0 (2020-03-26)
 
-* Add `GET /organisations/{id}/namespaces` in `api/organisation.js` with `getNamespaces()`
-* Add `GET /organisations/{id}/applications/{appId}/tcpRedirs` in `api/application.js` with `getTcpRedirs()`
-* Add `POST /organisations/{id}/applications/{appId}/tcpRedirs` in `api/application.js` with `addTcpRedir()`
-* Add `DELETE /organisations/{id}/applications/{appId}/tcpRedirs/{sourcePort}` in `api/application.js`
+- Add `GET /organisations/{id}/namespaces` in `api/organisation.js` with `getNamespaces()`
+- Add `GET /organisations/{id}/applications/{appId}/tcpRedirs` in `api/application.js` with `getTcpRedirs()`
+- Add `POST /organisations/{id}/applications/{appId}/tcpRedirs` in `api/application.js` with `addTcpRedir()`
+- Add `DELETE /organisations/{id}/applications/{appId}/tcpRedirs/{sourcePort}` in `api/application.js`
   with `removeTcpRedir()`
 
 ## 4.1.0 (2020-03-20)
 
-* Add `delay` param to `getContinuousAccessLogsFromWarp10()`
+- Add `delay` param to `getContinuousAccessLogsFromWarp10()`
 
 ## 4.0.0 (2020-03-19)
 
@@ -509,38 +490,38 @@ Fix missing `/self` vs `/organisations/{id}`:
 Seems like a milliseconds API for access logs on Warp10 was not a good idea.
 We changed it to be in microseconds and update the date util.
 
-* Make inner `getAccessLogsFromWarp10()` accept `from` and `to` in microseconds.
-* Make `getAccessLogsFromWarp10InBatches()` accept `from` and `to` in microseconds.
-* Rename date util `toISOStringWithMicrosecondPrecision()` into `toMicroIsoString()`.
-* Remove date util `asWarp10Timespan()`.
-* Remove date util `ONE_HOUR`.
-* Introduce date util `toMicroTimestamp()`.
-* Introduce date util `ONE_HOUR_MICROS`.
-* Introduce date util `ONE_SECOND_MICROS`.
+- Make inner `getAccessLogsFromWarp10()` accept `from` and `to` in microseconds.
+- Make `getAccessLogsFromWarp10InBatches()` accept `from` and `to` in microseconds.
+- Rename date util `toISOStringWithMicrosecondPrecision()` into `toMicroIsoString()`.
+- Remove date util `asWarp10Timespan()`.
+- Remove date util `ONE_HOUR`.
+- Introduce date util `toMicroTimestamp()`.
+- Introduce date util `ONE_HOUR_MICROS`.
+- Introduce date util `ONE_SECOND_MICROS`.
 
 ## 3.1.2 (2020-03-18)
 
-* Fix access logs continuous mechanism in `getContinuousAccessLogsFromWarp10()` use microseconds precision
+- Fix access logs continuous mechanism in `getContinuousAccessLogsFromWarp10()` use microseconds precision
 
 ## 3.1.1 (2020-03-18)
 
-* Fix access logs continuous mechanism in `getContinuousAccessLogsFromWarp10()`
+- Fix access logs continuous mechanism in `getContinuousAccessLogsFromWarp10()`
 
 ## 3.1.0 (2020-03-18)
 
-* Add `GET /w10tokens/accessLogs/read/{orgaId}` in `api/warp-10.js` with `getWarp10AccessLogsToken()`
-* Add access-logs requests (via Warp10) in `access-logs.js`
-  * `getAccessLogsFromWarp10InBatches()` to fetch history access logs in batches (1h windows)
-  * `getContinuousAccessLogsFromWarp10()` to fetch contiuous access logs in small batches
-* Add `execWarpscript()` function for node with superagent
-* Update `prefixUrl()`, when `url` is `undefined` it defaults to `''`
-* Update dev and peer deps
+- Add `GET /w10tokens/accessLogs/read/{orgaId}` in `api/warp-10.js` with `getWarp10AccessLogsToken()`
+- Add access-logs requests (via Warp10) in `access-logs.js`
+  - `getAccessLogsFromWarp10InBatches()` to fetch history access logs in batches (1h windows)
+  - `getContinuousAccessLogsFromWarp10()` to fetch contiuous access logs in small batches
+- Add `execWarpscript()` function for node with superagent
+- Update `prefixUrl()`, when `url` is `undefined` it defaults to `''`
+- Update dev and peer deps
 
 ## 3.0.0 (2020-03-06)
 
 ### ⚠️ BREAKING CHANGES
 
-* Fix the serialization/parsing of env-vars
+- Fix the serialization/parsing of env-vars
 
 Please read [PR 18](https://github.com/CleverCloud/clever-client.js/pull/18) for more details.
 
