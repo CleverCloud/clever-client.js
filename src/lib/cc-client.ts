@@ -217,9 +217,12 @@ export class CcClient<Api extends string> {
   ): Promise<CommandOutput> {
     const transformedParams = await this._transformCommandParams(command, requestConfig);
 
+    // the composite command states the configuration its sub-commands need, the caller configuration still wins over it
+    const composedRequestConfig = mergeRequestConfigPartial(command.getRequestConfig(), requestConfig);
+
     return command.compose(transformedParams, {
       send: (command, commandRequestConfig) =>
-        this.send(command, mergeRequestConfigPartial(requestConfig, commandRequestConfig)),
+        this.send(command, mergeRequestConfigPartial(composedRequestConfig, commandRequestConfig)),
     });
   }
 
@@ -270,12 +273,15 @@ export class CcClient<Api extends string> {
       this.#auth?.applyOnRequestParams(preparedRequestParams);
     }
 
+    // the command states the configuration its endpoint needs, the caller configuration still wins over it
+    const resolvedRequestConfig = mergeRequestConfigPartial(command.getRequestConfig(), requestConfig);
+
     return {
       // params
       ...DEFAULT_REQUEST_PARAMS,
       ...preparedRequestParams,
       // config
-      ...mergeRequestConfig(this.#defaultRequestsConfig, requestConfig),
+      ...mergeRequestConfig(this.#defaultRequestsConfig, resolvedRequestConfig),
       // url
       url,
     };

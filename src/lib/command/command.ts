@@ -1,5 +1,5 @@
 import type { Composer } from '../../types/command.types.js';
-import type { CcRequestParams } from '../../types/request.types.js';
+import type { CcRequestConfigPartial, CcRequestParams } from '../../types/request.types.js';
 import type { SelfOrPromise } from '../../types/utils.types.js';
 
 //--
@@ -43,6 +43,20 @@ export abstract class AbstractCommand<Api extends string, CommandInput> {
    * Must be implemented by a concrete class.
    */
   abstract get api(): Api;
+
+  /**
+   * Gets the request configuration this command needs.
+   * Override for commands whose endpoint only works with a specific configuration, like a command targeting
+   * another origin, which browsers only reach with CORS enabled.
+   *
+   * It takes precedence over the client default configuration, but the configuration given to `send()` still
+   * wins, so that a caller can always override it explicitly.
+   *
+   * @returns The request configuration, or `undefined` to only rely on the client and caller configuration
+   */
+  getRequestConfig(): CcRequestConfigPartial | undefined {
+    return undefined;
+  }
 }
 
 /**

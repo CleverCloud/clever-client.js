@@ -256,6 +256,35 @@ describe('clever-client', () => {
       expect(spy).not.toHaveBeenCalled();
     });
 
+    it('should apply the request config returned by `command.getRequestConfig()` over the client config', async () => {
+      const client = createClient({ defaultRequestConfig: { timeout: 10 } });
+      const spy = vi.spyOn(client, '_handleResponse');
+      const command = simpleCommand(get('/path/subPath'));
+      vi.spyOn(command, 'getRequestConfig').mockReturnValue({ cors: true, timeout: 1000 });
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 200 })
+        .thenCall(() => client.send(command));
+
+      expect(spy.mock.calls[0][1].cors).toBe(true);
+      expect(spy.mock.calls[0][1].timeout).toBe(1000);
+    });
+
+    it('should apply the `send()` request config over the one returned by `command.getRequestConfig()`', async () => {
+      const spy = vi.spyOn(client, '_handleResponse');
+      const command = simpleCommand(get('/path/subPath'));
+      vi.spyOn(command, 'getRequestConfig').mockReturnValue({ cors: true, timeout: 1000 });
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 200 })
+        .thenCall(() => client.send(command, { timeout: 500 }));
+
+      expect(spy.mock.calls[0][1].cors).toBe(true);
+      expect(spy.mock.calls[0][1].timeout).toBe(500);
+    });
+
     it('should not call `auth.applyOnRequestParams()` when the command targets another origin', async () => {
       const auth = new CcAuthApiToken('token');
       const spy = vi.spyOn(auth, 'applyOnRequestParams');
@@ -535,6 +564,28 @@ describe('clever-client', () => {
         debug: true,
       });
     });
+
+    it('composer should merge the request config returned by `command.getRequestConfig()`, the caller config winning', async () => {
+      const command = new (class MyCommand extends TestCompositeCommand {
+        override async compose(
+          _params: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[0],
+          composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
+        ) {
+          void composer.send(simpleCommand(get('/path/subPath')));
+          return Promise.resolve('result');
+        }
+
+        override getRequestConfig() {
+          return { cors: true, timeout: 1000 };
+        }
+      })();
+      const spy = vi.spyOn(client, 'send');
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
+
+      await client.send(command, { timeout: 500 });
+
+      expect(spy.mock.lastCall![1]).toEqual({ cors: true, timeout: 500 });
+    });
   });
 
   describe('get url', () => {
@@ -641,6 +692,19 @@ describe('clever-client', () => {
       expect(spy.mock.calls[0][1].debug).toBe(true); // command config
       expect(spy.mock.calls[0][1].healthcheckInterval).toBe(10); // client config
       expect(spy.mock.calls[0][1].heartbeatPeriod).toBe(2_500); // default config
+    });
+
+    it('should apply the request config returned by `command.getRequestConfig()`, the caller config winning', async () => {
+      const client = createClient({ defaultRequestConfig: { timeout: 10 } });
+      const command = streamCommand({ url: '/path/subPath' });
+      vi.spyOn(command, 'getRequestConfig').mockReturnValue({ cors: true, timeout: 1000 });
+      const spy = vi.spyOn(command, 'createStream');
+
+      await client.stream(command, { timeout: 500 });
+      const request = await spy.mock.calls[0][0]();
+
+      expect(request.cors).toBe(true);
+      expect(request.timeout).toBe(500);
     });
 
     it('should call `command.toRequestParams` method with right params', async () => {

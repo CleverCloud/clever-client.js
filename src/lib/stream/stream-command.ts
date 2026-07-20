@@ -1,4 +1,4 @@
-import type { CcRequestParams } from '../../types/request.types.js';
+import type { CcRequestConfigPartial, CcRequestParams } from '../../types/request.types.js';
 import type { SelfOrPromise } from '../../types/utils.types.js';
 import type { CcStream } from './cc-stream.js';
 import type { CcStreamConfig, CcStreamRequestFactory } from './cc-stream.types.js';
@@ -62,5 +62,19 @@ export abstract class StreamCommand<Api extends string, CommandInput, Stream ext
    */
   isAuthEnabled(): boolean {
     return true;
+  }
+
+  /**
+   * Gets the request configuration this stream command needs.
+   * Override for stream commands whose endpoint only works with a specific configuration, like a stream command
+   * targeting another origin, which browsers only reach with CORS enabled.
+   *
+   * It takes precedence over the client default configuration, but the configuration given to `stream()` still
+   * wins, so that a caller can always override it explicitly.
+   *
+   * @returns The request configuration, or `undefined` to only rely on the client and caller configuration
+   */
+  getRequestConfig(): CcRequestConfigPartial | undefined {
+    return undefined;
   }
 }
