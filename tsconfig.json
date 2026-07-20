@@ -4,6 +4,9 @@
     "target": "ES2023",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "NodeNext",
+    // resolve the `#dom-parser` subpath import to the TypeScript sources rather than to the built
+    // `dist/` files, which do not exist when types are checked
+    "customConditions": ["clever-client-source"],
     "allowImportingTsExtensions": true,
     "allowJs": true,
     "checkJs": true,

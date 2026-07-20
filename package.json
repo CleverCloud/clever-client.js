@@ -63,6 +63,16 @@
       "default": "./dist/esm/*"
     }
   },
+  "imports": {
+    "#dom-parser": {
+      "clever-client-source": {
+        "node": "./src/lib/xml/dom-parser.node.ts",
+        "default": "./src/lib/xml/dom-parser.browser.ts"
+      },
+      "node": "./dist/src/lib/xml/dom-parser.node.js",
+      "default": "./dist/src/lib/xml/dom-parser.browser.js"
+    }
+  },
   "scripts": {
     "api-usage-analyze": "node --experimental-strip-types tasks/api-usage-analyze.ts -i ../console3 -i ../clever-components -i ../clever-tools",
     "build": "node --experimental-strip-types tasks/clean-dist.ts && tsgo -p tsconfig.build.json",
@@ -93,7 +103,13 @@
     "fetch-event-stream": "^0.1.6"
   },
   "peerDependencies": {
-    "eventsource": "^4.0.0"
+    "eventsource": "^4.0.0",
+    "linkedom": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "linkedom": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@babel/parser": "^7.28.5",
@@ -127,6 +143,7 @@
     "fs-extra": "^11.3.2",
     "globals": "^16.5.0",
     "http-proxy-3": "^1.23.3",
+    "linkedom": "catalog:",
     "playwright": "^1.60.0",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.3.0",

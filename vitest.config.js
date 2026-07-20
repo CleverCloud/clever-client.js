@@ -4,6 +4,7 @@
 
 import { vitestPlugin as mockApiPlugin } from '@clevercloud/doublure/vitest';
 import { playwright } from '@vitest/browser-playwright';
+import { defaultClientConditions, defaultServerConditions } from 'vite';
 import { defaultExclude, defineConfig } from 'vitest/config';
 // NB: this `import` keeps the `.js` specifier (NodeNext maps it to the `.ts` source when this
 // config is loaded in Node). The `setupFiles` / `globalSetup` paths below, by contrast, must use
@@ -31,10 +32,21 @@ if (TEST_RUNTIME != null && TEST_RUNTIME !== 'node' && TEST_RUNTIME !== 'browser
   throw new Error(`Invalid env TEST_RUNTIME="${TEST_RUNTIME}": expected "node" or "browser" (or unset to run both).`);
 }
 
+/**
+ * The `#dom-parser` subpath import points at `dist/` for consumers of the published package (see
+ * `imports` in `package.json`). Tests run on the sources, so this condition points it back at
+ * `src/`. Every project repeats it: a `resolve` set on the root config does not reach them.
+ */
+const RESOLVE_FROM_SOURCES = {
+  resolve: { conditions: ['clever-client-source', ...defaultClientConditions] },
+  ssr: { resolve: { conditions: ['clever-client-source', ...defaultServerConditions] } },
+};
+
 /** @type {TestProjectConfiguration[]} */
 const allProjects = [
   // ---------- UNIT ----------
   {
+    ...RESOLVE_FROM_SOURCES,
     test: {
       name: 'node-unit',
       environment: 'node',
@@ -48,6 +60,7 @@ const allProjects = [
     },
   },
   {
+    ...RESOLVE_FROM_SOURCES,
     plugins: [mockApiPlugin()],
     test: {
       name: 'browser-unit',
@@ -62,6 +75,7 @@ const allProjects = [
   },
   // ---------- E2E ----------
   {
+    ...RESOLVE_FROM_SOURCES,
     test: {
       name: 'node-e2e',
       environment: 'node',
@@ -77,6 +91,7 @@ const allProjects = [
     },
   },
   {
+    ...RESOLVE_FROM_SOURCES,
     plugins: [e2eProxyPlugin()],
     test: {
       name: 'browser-e2e',
