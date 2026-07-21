@@ -4,12 +4,31 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { UpdateOrganisationMemberCommandInput } from './update-organisation-member-command.types.js';
 
 /**
+ * The error codes this command can produce, to compare against `error.code`.
+ *
+ * - `NOT_FOUND`: the member is not part of the organisation
+ * - `UNAUTHORISED_ADDITION`: the current user is not allowed to edit the members of this organisation
+ * - `UNAUTHORISED_ROLE_ASSIGNMENT`: the current user is not allowed to assign the old or the new role
+ */
+export const UPDATE_ORGANISATION_MEMBER_ERROR_CODES = {
+  NOT_FOUND: 'clever.organisation.member.not-found',
+  UNAUTHORISED_ADDITION: 'clever.organisation.member.unauthorised-addition',
+  UNAUTHORISED_ROLE_ASSIGNMENT: 'clever.organisation.member.unauthorised-role-assignment',
+} as const;
+
+export type UpdateOrganisationMemberErrorCode =
+  (typeof UPDATE_ORGANISATION_MEMBER_ERROR_CODES)[keyof typeof UPDATE_ORGANISATION_MEMBER_ERROR_CODES];
+
+const API_ERROR_CODES: Record<string, UpdateOrganisationMemberErrorCode> = {
+  '6451': UPDATE_ORGANISATION_MEMBER_ERROR_CODES.UNAUTHORISED_ADDITION,
+  '6453': UPDATE_ORGANISATION_MEMBER_ERROR_CODES.UNAUTHORISED_ROLE_ASSIGNMENT,
+  '6501': UPDATE_ORGANISATION_MEMBER_ERROR_CODES.NOT_FOUND,
+};
+
+/**
  * Updates the role or the job title of an organisation member.
  *
- * Common error codes:
- * - `clever.organisation.member.not-found`: the member is not part of the organisation
- * - `clever.organisation.member.unauthorised-addition`: the current user is not allowed to edit the members of this organisation
- * - `clever.organisation.member.unauthorised-role-assignment`: the current user is not allowed to assign the old or the new role
+ * Common error codes: see {@link UPDATE_ORGANISATION_MEMBER_ERROR_CODES}
  *
  * @endpoint [PUT] /v2/organisations/:XXX/members/:XXX
  * @group Organisation
@@ -31,15 +50,6 @@ export class UpdateOrganisationMemberCommand extends CcApiSimpleCommand<
   }
 
   transformErrorCode(errorCode: string) {
-    if (errorCode === '6451') {
-      return 'clever.organisation.member.unauthorised-addition';
-    }
-    if (errorCode === '6453') {
-      return 'clever.organisation.member.unauthorised-role-assignment';
-    }
-    if (errorCode === '6501') {
-      return 'clever.organisation.member.not-found';
-    }
-    return errorCode;
+    return API_ERROR_CODES[errorCode] ?? errorCode;
   }
 }

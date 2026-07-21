@@ -4,12 +4,31 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CreateProfileEmailAddressCommandInput } from './create-profile-email-address-command.types.js';
 
 /**
+ * The error codes this command can produce, to compare against `error.code`.
+ *
+ * - `INVALID_FORMAT`: the email address format is invalid
+ * - `ALREADY_DEFINED`: the email address already belongs to the user
+ * - `ALREADY_USED`: the email address already belongs to another user
+ */
+export const CREATE_PROFILE_EMAIL_ADDRESS_ERROR_CODES = {
+  INVALID_FORMAT: 'clever.profile.email-address.invalid-format',
+  ALREADY_DEFINED: 'clever.profile.email-address.already-defined',
+  ALREADY_USED: 'clever.profile.email-address.already-used',
+} as const;
+
+export type CreateProfileEmailAddressErrorCode =
+  (typeof CREATE_PROFILE_EMAIL_ADDRESS_ERROR_CODES)[keyof typeof CREATE_PROFILE_EMAIL_ADDRESS_ERROR_CODES];
+
+const API_ERROR_CODES: Record<string, CreateProfileEmailAddressErrorCode> = {
+  '550': CREATE_PROFILE_EMAIL_ADDRESS_ERROR_CODES.INVALID_FORMAT,
+  '101': CREATE_PROFILE_EMAIL_ADDRESS_ERROR_CODES.ALREADY_DEFINED,
+  '1004': CREATE_PROFILE_EMAIL_ADDRESS_ERROR_CODES.ALREADY_USED,
+};
+
+/**
  * Adds a new email address to the user profile.
  *
- * Common error codes:
- * - `clever.profile.email-address.invalid-format`: the email adresse format is invalid
- * - `clever.profile.email-address.already-defined`: the email adresse already belongs to the user
- * - `clever.profile.email-address.invalid-format`: the email adresse already belongs to another user
+ * Common error codes: see {@link CREATE_PROFILE_EMAIL_ADDRESS_ERROR_CODES}
  *
  * @endpoint [PUT] /v2/self/emails/:XXX
  * @group Profile
@@ -28,15 +47,6 @@ export class CreateProfileEmailAddressCommand extends CcApiSimpleCommand<
   }
 
   transformErrorCode(errorCode: string) {
-    if (errorCode === '550') {
-      return 'clever.profile.email-address.invalid-format';
-    }
-    if (errorCode === '101') {
-      return 'clever.profile.email-address.already-defined';
-    }
-    if (errorCode === '1004') {
-      return 'clever.profile.email-address.already-used';
-    }
-    return errorCode;
+    return API_ERROR_CODES[errorCode] ?? errorCode;
   }
 }

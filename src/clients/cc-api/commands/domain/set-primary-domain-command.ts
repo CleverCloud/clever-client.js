@@ -5,10 +5,27 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { SetPrimaryDomainCommandInput } from './set-primary-domain-command.types.js';
 
 /**
+ * The error codes this command can produce, to compare against `error.code`.
+ *
+ * - `NOT_FOUND`: the given domain is not one of the application's domains
+ */
+export const SET_PRIMARY_DOMAIN_ERROR_CODES = {
+  NOT_FOUND: 'clever.domain.not-found',
+} as const;
+
+export type SetPrimaryDomainErrorCode =
+  (typeof SET_PRIMARY_DOMAIN_ERROR_CODES)[keyof typeof SET_PRIMARY_DOMAIN_ERROR_CODES];
+
+const API_ERROR_CODES: Record<string, SetPrimaryDomainErrorCode> = {
+  // The endpoint answers with the generic "invalid application data" code when the given fqdn does not
+  // match any of the application's vhosts, which is the only way this command can produce it.
+  '3004': SET_PRIMARY_DOMAIN_ERROR_CODES.NOT_FOUND,
+};
+
+/**
  * Marks one of the application's domains as its primary domain.
  *
- * Common error codes:
- * - `clever.domain.not-found`: the given domain is not one of the application's domains
+ * Common error codes: see {@link SET_PRIMARY_DOMAIN_ERROR_CODES}
  *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite
  * @group Domain
@@ -26,12 +43,7 @@ export class SetPrimaryDomainCommand extends CcApiSimpleCommand<SetPrimaryDomain
   }
 
   transformErrorCode(errorCode: string) {
-    // The endpoint answers with the generic "invalid application data" code when the given fqdn does not
-    // match any of the application's vhosts, which is the only way this command can produce it.
-    if (errorCode === '3004') {
-      return 'clever.domain.not-found';
-    }
-    return errorCode;
+    return API_ERROR_CODES[errorCode] ?? errorCode;
   }
 
   getIdsToResolve(): IdResolve {

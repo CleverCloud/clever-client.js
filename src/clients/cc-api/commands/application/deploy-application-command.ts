@@ -9,10 +9,25 @@ import type {
 } from './deploy-application-command.types.js';
 
 /**
+ * The error codes this command can produce, to compare against `error.code`.
+ *
+ * - `NEVER_DEPLOYED`: the application has never been deployed, there is no commit to deploy
+ */
+export const DEPLOY_APPLICATION_ERROR_CODES = {
+  NEVER_DEPLOYED: 'clever.application.never-deployed',
+} as const;
+
+export type DeployApplicationErrorCode =
+  (typeof DEPLOY_APPLICATION_ERROR_CODES)[keyof typeof DEPLOY_APPLICATION_ERROR_CODES];
+
+const API_ERROR_CODES: Record<string, DeployApplicationErrorCode> = {
+  '4014': DEPLOY_APPLICATION_ERROR_CODES.NEVER_DEPLOYED,
+};
+
+/**
  * Deploys an application.
  *
- * Common error codes:
- * - `clever.application.never-deployed`: the application has never been deployed, there is no commit to deploy
+ * Common error codes: see {@link DEPLOY_APPLICATION_ERROR_CODES}
  *
  * @endpoint [POST] /v2/organisations/:XXX/applications/:XXX/instances
  * @group Application
@@ -40,10 +55,7 @@ export class DeployApplicationCommand extends CcApiSimpleCommand<
   }
 
   transformErrorCode(errorCode: string) {
-    if (errorCode === '4014') {
-      return 'clever.application.never-deployed';
-    }
-    return errorCode;
+    return API_ERROR_CODES[errorCode] ?? errorCode;
   }
 
   getIdsToResolve(): IdResolve {

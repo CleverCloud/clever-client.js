@@ -5,11 +5,28 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { AddOrganisationMemberCommandInput } from './add-organisation-member-command.types.js';
 
 /**
+ * The error codes this command can produce, to compare against `error.code`.
+ *
+ * - `UNAUTHORISED_ADDITION`: the current user is not allowed to add a member to this organisation
+ * - `UNAUTHORISED_ROLE_ASSIGNMENT`: the current user is not allowed to assign this role
+ */
+export const ADD_ORGANISATION_MEMBER_ERROR_CODES = {
+  UNAUTHORISED_ADDITION: 'clever.organisation.member.unauthorised-addition',
+  UNAUTHORISED_ROLE_ASSIGNMENT: 'clever.organisation.member.unauthorised-role-assignment',
+} as const;
+
+export type AddOrganisationMemberErrorCode =
+  (typeof ADD_ORGANISATION_MEMBER_ERROR_CODES)[keyof typeof ADD_ORGANISATION_MEMBER_ERROR_CODES];
+
+const API_ERROR_CODES: Record<string, AddOrganisationMemberErrorCode> = {
+  '6451': ADD_ORGANISATION_MEMBER_ERROR_CODES.UNAUTHORISED_ADDITION,
+  '6453': ADD_ORGANISATION_MEMBER_ERROR_CODES.UNAUTHORISED_ROLE_ASSIGNMENT,
+};
+
+/**
  * Adds a member to an organisation.
  *
- * Common error codes:
- * - `clever.organisation.member.unauthorised-addition`: the current user is not allowed to add a member to this organisation
- * - `clever.organisation.member.unauthorised-role-assignment`: the current user is not allowed to assign this role
+ * Common error codes: see {@link ADD_ORGANISATION_MEMBER_ERROR_CODES}
  *
  * @endpoint [POST] /v2/organisations/:XXX/members
  * @group Organisation
@@ -33,12 +50,6 @@ export class AddOrganisationMemberCommand extends CcApiSimpleCommand<AddOrganisa
   }
 
   transformErrorCode(errorCode: string) {
-    if (errorCode === '6451') {
-      return 'clever.organisation.member.unauthorised-addition';
-    }
-    if (errorCode === '6453') {
-      return 'clever.organisation.member.unauthorised-role-assignment';
-    }
-    return errorCode;
+    return API_ERROR_CODES[errorCode] ?? errorCode;
   }
 }
