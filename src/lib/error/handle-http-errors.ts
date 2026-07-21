@@ -5,9 +5,9 @@ import { CcHttpError } from './cc-client-errors.js';
 /**
  * Error code reported for any rate-limited request, regardless of which backend produced it.
  * This is the wire code already used natively by v4/OVD-backed endpoints; legacy v2 (cc-api)
- * rate-limit responses are normalized to it as well, see {@link isRateLimitError}.
+ * rate-limit responses are normalized to it as well, see {@link isRateLimitResponse}.
  */
-const TOO_MANY_REQUESTS_ERROR_CODE = 'clever.core.too-many-requests';
+export const TOO_MANY_REQUESTS_ERROR_CODE = 'clever.core.too-many-requests';
 
 export function handleHttpErrors(
   request: CcRequest,
@@ -25,7 +25,7 @@ export function handleHttpErrors(
         : `[${response.status}]: ${parsedErrorMessage}`;
     // rate limiting is a cross-cutting, transport-level concern: report it with a single,
     // predictable code instead of leaving it to each command's own error-code mapping
-    const errorCode = isRateLimitError(response, parsedErrorCode)
+    const errorCode = isRateLimitResponse(response, parsedErrorCode)
       ? TOO_MANY_REQUESTS_ERROR_CODE
       : transformErrorCode(parsedErrorCode, command);
 
@@ -63,7 +63,7 @@ function parseErrorCode(response: CcResponse<unknown>): string | undefined {
   return undefined;
 }
 
-function isRateLimitError(response: CcResponse<unknown>, parsedErrorCode: string | undefined): boolean {
+function isRateLimitResponse(response: CcResponse<unknown>, parsedErrorCode: string | undefined): boolean {
   // v4 endpoints (and a few legacy ones) use the standard "Too Many Requests" status
   if (response.status === 429) {
     return true;
