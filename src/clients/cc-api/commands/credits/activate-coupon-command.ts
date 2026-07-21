@@ -1,5 +1,6 @@
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
+import type { ApiErrorInfo } from '../../../../types/command.types.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { ActivateCouponCommandInput, ActivateCouponCommandOutput } from './activate-coupon-command.types.js';
 import { transformCouponUsage } from './credits-transform.js';
@@ -52,7 +53,7 @@ export class ActivateCouponCommand extends CcApiSimpleCommand<ActivateCouponComm
     return transformCouponUsage(response);
   }
 
-  transformErrorCode(errorCode: string) {
-    return API_ERROR_CODES[errorCode] ?? errorCode;
+  transformErrorCode({ code }: ApiErrorInfo) {
+    return API_ERROR_CODES[code] ?? code;
   }
 }

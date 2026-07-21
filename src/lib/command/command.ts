@@ -1,4 +1,4 @@
-import type { Composer } from '../../types/command.types.js';
+import type { ApiErrorInfo, Composer } from '../../types/command.types.js';
 import type { CcRequestConfigPartial, CcRequestParams } from '../../types/request.types.js';
 import type { SelfOrPromise } from '../../types/utils.types.js';
 
@@ -101,13 +101,13 @@ export abstract class SimpleCommand<Api extends string, CommandInput, CommandOut
   }
 
   /**
-   * Transforms API error codes into client-specific error codes
+   * Transforms an API error into a client-specific error code.
    *
-   * @param errorCode - The error code from the API
+   * @param error - What could be parsed from the error response: its code, its message and its HTTP status
    * @returns The transformed error code for client use
    */
-  transformErrorCode(errorCode: string): string {
-    return errorCode;
+  transformErrorCode(error: ApiErrorInfo): string {
+    return error.code;
   }
 
   /**

@@ -1,5 +1,6 @@
 import { put } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
+import type { ApiErrorInfo } from '../../../../types/command.types.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CreateProfileEmailAddressCommandInput } from './create-profile-email-address-command.types.js';
 
@@ -46,7 +47,7 @@ export class CreateProfileEmailAddressCommand extends CcApiSimpleCommand<
     return undefined;
   }
 
-  transformErrorCode(errorCode: string) {
-    return API_ERROR_CODES[errorCode] ?? errorCode;
+  transformErrorCode({ code }: ApiErrorInfo) {
+    return API_ERROR_CODES[code] ?? code;
   }
 }

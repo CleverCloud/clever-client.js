@@ -27,7 +27,7 @@ export function handleHttpErrors(
     // predictable code instead of leaving it to each command's own error-code mapping
     const errorCode = isRateLimitResponse(response, parsedErrorCode)
       ? TOO_MANY_REQUESTS_ERROR_CODE
-      : transformErrorCode(parsedErrorCode, command);
+      : transformErrorCode(parsedErrorCode, parsedErrorMessage, response.status, command);
 
     // throw error
     throw new CcHttpError(errorMessage, errorCode, request, response);
@@ -74,9 +74,14 @@ function isRateLimitResponse(response: CcResponse<unknown>, parsedErrorCode: str
   return response.status === 403 && parsedErrorCode === '403';
 }
 
-function transformErrorCode(errorCode: string | undefined, command?: SimpleCommand<string, unknown, unknown>): string {
+function transformErrorCode(
+  errorCode: string | undefined,
+  errorMessage: string | undefined,
+  status: number,
+  command?: SimpleCommand<string, unknown, unknown>,
+): string {
   if (errorCode == null || command == null) {
     return 'unknown_error';
   }
-  return command.transformErrorCode(errorCode);
+  return command.transformErrorCode({ code: errorCode, message: errorMessage, status });
 }

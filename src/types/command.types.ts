@@ -18,6 +18,21 @@ export type Command<Api extends string, CommandInput, CommandOutput> =
   | CompositeCommand<Api, CommandInput, CommandOutput>;
 
 /**
+ * The parts of an HTTP error response a command may need to figure out which error code to report.
+ *
+ * Most commands only look at `code`, but some endpoints reuse a single code for several distinct
+ * failures and only the message or the status tells them apart.
+ */
+export interface ApiErrorInfo {
+  /** The error code parsed from the response body (its `code` or `id` field). */
+  code: string;
+  /** The error message parsed from the response body, when there is one. */
+  message?: string;
+  /** The HTTP status code of the response. */
+  status: number;
+}
+
+/**
  * A subset of the CcClient interface that only includes the send method.
  * Used for composing commands that need to make additional API calls.
  *

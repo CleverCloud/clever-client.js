@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { SimpleCommand } from '../../../../src/lib/command/command.js';
 import { CcHttpError } from '../../../../src/lib/error/cc-client-errors.js';
 import { handleHttpErrors } from '../../../../src/lib/error/handle-http-errors.js';
+import type { ApiErrorInfo } from '../../../../src/types/command.types.js';
 import type { CcRequest, CcRequestParams, CcResponse } from '../../../../src/types/request.types.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,14 +12,14 @@ abstract class TestSimpleCommand extends SimpleCommand<'test', void, any> {
   }
 }
 
-function command(transformErrorCode: (errorCode: string) => string): TestSimpleCommand {
+function command(transformErrorCode: (error: ApiErrorInfo) => string): TestSimpleCommand {
   return new (class extends TestSimpleCommand {
     toRequestParams(): Partial<CcRequestParams> {
       return {};
     }
 
-    transformErrorCode(errorCode: string): string {
-      return transformErrorCode(errorCode);
+    transformErrorCode(error: ApiErrorInfo): string {
+      return transformErrorCode(error);
     }
   })();
 }
@@ -66,9 +67,33 @@ describe('handleHttpErrors', () => {
   });
 
   it('should still delegate non-rate-limit error codes to the command', () => {
-    const cmd = command((errorCode) => (errorCode === '550' ? 'clever.some.mapped-code' : errorCode));
+    const cmd = command(({ code }) => (code === '550' ? 'clever.some.mapped-code' : code));
     expect(() => handleHttpErrors(REQUEST, response(550, { id: 550, message: 'boom' }), cmd)).toThrow(
       expect.objectContaining({ code: 'clever.some.mapped-code' }),
+    );
+  });
+
+  it('should give the command the error message and the HTTP status alongside the code', () => {
+    const cmd = command(({ code, message, status }) => `${code}/${message}/${status}`);
+    expect(() => handleHttpErrors(REQUEST, response(409, { id: 4004, message: 'already exists' }), cmd)).toThrow(
+      expect.objectContaining({ code: '4004/already exists/409' }),
+    );
+  });
+
+  // an endpoint that reuses one code for several failures can still tell them apart by message
+  it('should let the command map a single error code to several client codes', () => {
+    const cmd = command(({ message }) =>
+      message === 'app has never been deployed' ? 'clever.app.never-deployed' : 'clever.app.unknown-failure',
+    );
+    expect(() =>
+      handleHttpErrors(REQUEST, response(400, { id: 4002, message: 'app has never been deployed' }), cmd),
+    ).toThrow(expect.objectContaining({ code: 'clever.app.never-deployed' }));
+  });
+
+  it('should not call the command when the response carries no error code', () => {
+    const cmd = command(() => 'clever.some.mapped-code');
+    expect(() => handleHttpErrors(REQUEST, response(400, { message: 'boom' }), cmd)).toThrow(
+      expect.objectContaining({ code: 'unknown_error' }),
     );
   });
 

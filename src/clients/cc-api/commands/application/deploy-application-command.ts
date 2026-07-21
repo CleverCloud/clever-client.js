@@ -1,6 +1,7 @@
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
+import type { ApiErrorInfo } from '../../../../types/command.types.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type {
@@ -54,8 +55,8 @@ export class DeployApplicationCommand extends CcApiSimpleCommand<
     };
   }
 
-  transformErrorCode(errorCode: string) {
-    return API_ERROR_CODES[errorCode] ?? errorCode;
+  transformErrorCode({ code }: ApiErrorInfo) {
+    return API_ERROR_CODES[code] ?? code;
   }
 
   getIdsToResolve(): IdResolve {
