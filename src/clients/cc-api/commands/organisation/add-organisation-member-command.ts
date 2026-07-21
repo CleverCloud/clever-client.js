@@ -5,6 +5,12 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { AddOrganisationMemberCommandInput } from './add-organisation-member-command.types.js';
 
 /**
+ * Adds a member to an organisation.
+ *
+ * Common error codes:
+ * - `clever.organisation.member.unauthorised-addition`: the current user is not allowed to add a member to this organisation
+ * - `clever.organisation.member.unauthorised-role-assignment`: the current user is not allowed to assign this role
+ *
  * @endpoint [POST] /v2/organisations/:XXX/members
  * @group Organisation
  * @version 2
@@ -24,5 +30,15 @@ export class AddOrganisationMemberCommand extends CcApiSimpleCommand<AddOrganisa
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  transformErrorCode(errorCode: string) {
+    if (errorCode === '6451') {
+      return 'clever.organisation.member.unauthorised-addition';
+    }
+    if (errorCode === '6453') {
+      return 'clever.organisation.member.unauthorised-role-assignment';
+    }
+    return errorCode;
   }
 }

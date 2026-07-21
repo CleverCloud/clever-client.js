@@ -9,6 +9,11 @@ import type {
 } from './deploy-application-command.types.js';
 
 /**
+ * Deploys an application.
+ *
+ * Common error codes:
+ * - `clever.application.never-deployed`: the application has never been deployed, there is no commit to deploy
+ *
  * @endpoint [POST] /v2/organisations/:XXX/applications/:XXX/instances
  * @group Application
  * @version 2
@@ -32,6 +37,13 @@ export class DeployApplicationCommand extends CcApiSimpleCommand<
     return {
       deploymentId: (response as { deploymentId: string }).deploymentId,
     };
+  }
+
+  transformErrorCode(errorCode: string) {
+    if (errorCode === '4014') {
+      return 'clever.application.never-deployed';
+    }
+    return errorCode;
   }
 
   getIdsToResolve(): IdResolve {
