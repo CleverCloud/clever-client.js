@@ -2,15 +2,6 @@ import { sortBy } from '../../../../lib/utils.js';
 import type { CountablePricePolicy, PriceSystem } from './price-system.types.js';
 
 export function transformPriceSystem(payload: any): PriceSystem {
-  sortBy(
-    [].map((p: any) => ({
-      planId: p.plan_id,
-      maxQuantity: p.max_quantity,
-      price: p.price,
-    })),
-    'price',
-  );
-
   return {
     zone: payload.zone_id,
     currency: payload.currency,
@@ -42,7 +33,8 @@ function transformCountable(payload: any): CountablePricePolicy {
         maxQuantity: p.max_quantity,
         price: p.price,
       })),
-      'price',
+      // Price plans are contiguous quantity intervals; `null` means "no limit" and must come last.
+      (o) => o.maxQuantity ?? Infinity,
     ),
   };
 }
