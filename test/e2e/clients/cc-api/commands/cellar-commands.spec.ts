@@ -12,6 +12,7 @@ import { GetCellarObjectUploadUrlCommand } from '../../../../../src/clients/cc-a
 import { ListCellarBucketCommand } from '../../../../../src/clients/cc-api/commands/cellar/list-cellar-bucket-command.js';
 import { ListCellarObjectCommand } from '../../../../../src/clients/cc-api/commands/cellar/list-cellar-object-command.js';
 import { RenewCellarCredentialsCommand } from '../../../../../src/clients/cc-api/commands/cellar/renew-cellar-credentials-command.js';
+import { UploadCellarObjectCommand } from '../../../../../src/clients/cc-api/commands/cellar/upload-cellar-object-command.js';
 import { e2eSupport } from '../e2e-support.js';
 
 const CELLAR_PROVIDER_ID = 'cellar-addon';
@@ -259,10 +260,7 @@ describe('cellar commands', function () {
     expect(response.url.length).toBeGreaterThan(0);
   });
 
-  // uploading the object body is out of scope for this client (see GetCellarObjectUploadUrlCommand doc), but the
-  // e2e test does it anyway with a raw fetch (mirroring cc-cellar-explorer.client.js) so it can exercise the get /
-  // download-url / delete commands against a real object instead of only their 404 paths
-  it('should get, get a download url for, and delete a cellar bucket object', async () => {
+  it('should upload, get, get a download url for, and delete a cellar bucket object', async () => {
     const addon = await support.createTestAddon({
       name: 'test-cellar-addon',
       providerId: CELLAR_PROVIDER_ID,
@@ -273,20 +271,18 @@ describe('cellar commands', function () {
     await support.client.send(
       new CreateCellarBucketCommand({ ownerId: support.organisationId, addonId: addon.realId, name: bucketName }),
     );
-    const uploadUrl = await support.client.send(
-      new GetCellarObjectUploadUrlCommand({
+    const uploadResponse = await support.client.send(
+      new UploadCellarObjectCommand({
         ownerId: support.organisationId,
         addonId: addon.realId,
         bucketName,
         objectKey,
+        content: 'hello cellar',
+        contentType: 'text/plain',
       }),
     );
-    const uploadResponse = await fetch(uploadUrl.url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: 'hello cellar',
-    });
-    expect(uploadResponse.ok).toBe(true);
+
+    expect(uploadResponse).toBeUndefined();
 
     const object = await support.client.send(
       new GetCellarObjectCommand({ ownerId: support.organisationId, addonId: addon.realId, bucketName, objectKey }),
