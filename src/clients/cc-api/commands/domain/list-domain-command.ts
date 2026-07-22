@@ -1,6 +1,7 @@
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { guessPrimaryDomain } from '../../../../utils/domain-utils.js';
+import { tolerateNotFound } from '../../../../utils/error-utils.ts';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { ApplicationId, CcApiComposer } from '../../types/cc-api.types.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
@@ -18,7 +19,7 @@ export class ListDomainCommand extends CcApiCompositeCommand<ListDomainCommandIn
   async compose(params: ListDomainCommandInput, composer: CcApiComposer): Promise<ListDomainCommandOutput> {
     const [rawDomains, primaryDomain] = await Promise.all([
       composer.send(new ListDomainInnerCommand(params)),
-      composer.send(new GetPrimaryDomainInnerCommand(params)),
+      tolerateNotFound(composer.send(new GetPrimaryDomainInnerCommand(params))),
     ]);
 
     const domains = rawDomains.map((domain) => ({
