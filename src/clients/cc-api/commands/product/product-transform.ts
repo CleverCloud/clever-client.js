@@ -40,9 +40,9 @@ export function transformProductRuntimeFlavor(payload: any): ProductRuntimeFlavo
     nice: payload.nice,
     priceId: payload.price_id.toLowerCase(),
     memory: {
-      unit: payload.unit,
-      value: payload.value,
-      formatted: payload.formatted,
+      unit: payload.memory.unit,
+      value: payload.memory.value,
+      formatted: payload.memory.formatted,
     },
     cpuFactor: payload.cpuFactor,
     memFactor: payload.memFactor,
