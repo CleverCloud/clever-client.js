@@ -40,7 +40,7 @@ export class CreateEmailNotificationCommand extends CcApiSimpleCommand<
       name: params.name,
       notified,
       events: params.events,
-      scope: params.scope,
+      scope: params.scopes,
     });
   }
 

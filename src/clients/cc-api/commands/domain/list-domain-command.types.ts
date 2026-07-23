@@ -3,4 +3,5 @@ import type { Domain } from './domain.types.js';
 
 export type ListDomainCommandInput = ApplicationId;
 
+// transformed: sorted by domain
 export type ListDomainCommandOutput = Array<Domain>;

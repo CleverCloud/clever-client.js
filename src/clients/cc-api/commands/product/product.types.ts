@@ -6,11 +6,16 @@ export interface ProductRuntime {
   name: string;
   variant: ProductRuntimeVariant;
   description: string;
-  enabled: boolean;
-  comingSoon: boolean;
+  // renamed from enabled
+  isEnabled: boolean;
+  // renamed from comingSoon
+  isComingSoon: boolean;
   maxInstances: number;
+  // transformed: sorted
   tags: Array<string>;
+  // transformed: sorted
   deployments: Array<string>;
+  // transformed: sorted by price
   flavors: Array<ProductRuntimeFlavor>;
   defaultFlavor: ProductRuntimeFlavor;
   buildFlavor: ProductRuntimeFlavor;
@@ -31,12 +36,16 @@ export interface ProductRuntimeFlavor {
   gpus: number;
   disk: number;
   price: number;
-  available: boolean;
-  microservice: boolean;
+  // renamed from available
+  isAvailable: boolean;
+  // renamed from microservice
+  isSharedCpu: boolean;
   // renamed from machine_learning
-  machineLearning: boolean;
-  nice: number;
+  isMachineLearning: boolean;
+  // renamed from nice
+  cpuPriorityOffset: number;
   // renamed from price_id
+  // transformed: lowercased
   priceId: string;
   memory: {
     unit: string;
@@ -52,6 +61,7 @@ export interface ProductAddon extends AddonProviderFull {
 }
 
 export interface ProductAddonVersions {
+  // transformed: sorted by label
   clusters: Array<ProductAddonClusterVersion>;
   dedicated: Record<string, ProductAddonDedicatedVersion>;
   defaultDedicatedVersion: string;
@@ -62,16 +72,18 @@ export interface ProductAddonClusterVersion {
   label: string;
   zone: string;
   version: string;
+  // transformed: each entry's enabled renamed to isEnabled, sorted by name
   features: Array<{
     name: string;
-    enabled: boolean;
+    isEnabled: boolean;
   }>;
 }
 
 export interface ProductAddonDedicatedVersion {
+  // transformed: each entry's enabled renamed to isEnabled, sorted by name
   features: Array<{
     name: string;
-    enabled: boolean;
+    isEnabled: boolean;
   }>;
 }
 
@@ -88,9 +100,13 @@ export interface ElasticsearchServiceInfo {
   cpus: number;
   gpus: number;
   price: number;
-  available: boolean;
-  microservice: boolean;
-  nice: number;
-  // renamed from price_id and transformed to lower case
+  // renamed from available
+  isAvailable: boolean;
+  // renamed from microservice
+  isSharedCpu: boolean;
+  // renamed from nice
+  cpuPriorityOffset: number;
+  // renamed from price_id
+  // transformed: lowercased
   priceId: string;
 }

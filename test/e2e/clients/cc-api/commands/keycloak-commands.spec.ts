@@ -81,7 +81,7 @@ describe('keycloak commands', function () {
 
     expect(response.installed).toBeTypeOf('string');
     expect(response.latest).toBeTypeOf('string');
-    expect(response.available).toContain(response.latest);
+    expect(response.availableVersions).toContain(response.latest);
     expect(response.needUpdate).toBeTypeOf('boolean');
   });
 

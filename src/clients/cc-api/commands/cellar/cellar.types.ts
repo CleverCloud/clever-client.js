@@ -9,7 +9,9 @@ export interface CellarInfo {
   ownerId: string;
   plan: string;
   status: CellarStatus;
-  creationDate: string;
+  // renamed from creationDate
+  // transformed: converted to an ISO date string
+  createdAt: string;
   traffic: {
     inbound: number;
     outbound: number;
@@ -78,7 +80,8 @@ export interface CellarDirectory {
 }
 
 export interface CellarObjectList {
-  content: Array<CellarObjectItem>;
+  // renamed from content
+  items: Array<CellarObjectItem>;
   directories: Array<CellarDirectory>;
   cursor: string | null;
 }

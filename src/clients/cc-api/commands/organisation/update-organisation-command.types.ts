@@ -30,5 +30,6 @@ export interface UpdateOrganisationStandard extends UpdateOrganisationBase {
 
 export interface UpdateOrganisationCompany extends UpdateOrganisationBase {
   company: string;
-  VAT: string;
+  // renamed from VAT
+  vat: string;
 }

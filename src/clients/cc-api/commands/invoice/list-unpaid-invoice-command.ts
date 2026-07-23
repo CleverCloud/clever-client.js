@@ -21,6 +21,6 @@ export class ListUnpaidInvoiceCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): ListUnpaidInvoiceCommandOutput {
-    return sortBy((response as Array<unknown>).map(transformInvoiceSummary), 'emissionDate');
+    return sortBy((response as Array<unknown>).map(transformInvoiceSummary), 'emittedAt');
   }
 }

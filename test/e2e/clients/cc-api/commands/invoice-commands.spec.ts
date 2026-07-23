@@ -26,10 +26,10 @@ describe('invoice commands', function () {
 
     expect(response).toBeTypeOf('object');
     expect(response.invoiceNumber).toBe(invoiceNumber);
-    checkDateFormat(response.emissionDate);
-    checkDateFormat(response.payDate!);
-    checkDateFormat(response.consumptionStartDate);
-    checkDateFormat(response.consumptionEndDate);
+    checkDateFormat(response.emittedAt);
+    checkDateFormat(response.paidAt!);
+    checkDateFormat(response.consumptionStartedAt);
+    checkDateFormat(response.consumptionEndedAt);
   });
 
   it('should get invoice as HTML', async () => {

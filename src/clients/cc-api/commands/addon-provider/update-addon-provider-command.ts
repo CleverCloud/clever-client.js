@@ -18,10 +18,17 @@ export class UpdateAddonProviderCommand extends CcApiSimpleCommand<
   UpdateAddonProviderCommandOutput
 > {
   toRequestParams(params: UpdateAddonProviderCommandInput) {
-    return put(
-      safeUrl`/v2/organisations/${params.ownerId}/addonproviders/${params.addonProviderId}`,
-      omit(params, 'ownerId', 'addonProviderId'),
-    );
+    const body: Record<string, unknown> = {
+      ...omit(params, 'ownerId', 'addonProviderId', 'shortDescription', 'longDescription'),
+    };
+    if (params.shortDescription != null) {
+      body.shortDesc = params.shortDescription;
+    }
+    if (params.longDescription != null) {
+      body.longDesc = params.longDescription;
+    }
+
+    return put(safeUrl`/v2/organisations/${params.ownerId}/addonproviders/${params.addonProviderId}`, body);
   }
 
   transformCommandOutput(response: unknown): UpdateAddonProviderCommandOutput {

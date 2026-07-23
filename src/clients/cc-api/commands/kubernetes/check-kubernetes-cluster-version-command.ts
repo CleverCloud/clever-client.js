@@ -5,6 +5,7 @@ import type {
   CheckKubernetesClusterVersionCommandInput,
   CheckKubernetesClusterVersionCommandOutput,
 } from './check-kubernetes-cluster-version-command.types.js';
+import { transformKubernetesClusterVersionCheck } from './kubernetes-transform.js';
 
 /**
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX/version/check
@@ -20,12 +21,6 @@ export class CheckKubernetesClusterVersionCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): CheckKubernetesClusterVersionCommandOutput {
-    const res = response as CheckKubernetesClusterVersionCommandOutput;
-    return {
-      installed: res.installed,
-      available: res.available,
-      latest: res.latest,
-      needUpdate: res.needUpdate,
-    };
+    return transformKubernetesClusterVersionCheck(response);
   }
 }

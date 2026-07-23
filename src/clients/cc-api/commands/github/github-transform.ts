@@ -8,6 +8,6 @@ export function transformGithubApplication(payload: any): GithubApplication {
     description: payload.description,
     gitUrl: payload.gitUrl,
     defaultBranch: payload.defaultBranch,
-    private: payload.priv,
+    isPrivate: payload.priv,
   };
 }

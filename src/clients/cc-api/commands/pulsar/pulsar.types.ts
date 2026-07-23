@@ -10,10 +10,12 @@ export interface PulsarInfo {
   // renamed from web_tls_port
   webTlsPort?: number;
   version: string;
-  available: boolean;
+  // renamed from available
+  isAvailable: boolean;
+  // transformed: lowercased
   zone: string;
   // renamed from support_cold_storage
-  supportColdStorage: boolean;
+  isColdStorageSupported: boolean;
   // renamed from supported_plans
   supportedPlans: Array<PulsarPlan>;
 }

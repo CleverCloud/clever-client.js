@@ -2,6 +2,7 @@ import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { GetNetworkGroupCommandInput, GetNetworkGroupCommandOutput } from './get-network-group-command.types.js';
+import { transformNetworkGroupPeer } from './network-group-transform.js';
 import { normalizeMemberKind } from './network-group-utils.js';
 
 /**
@@ -22,6 +23,7 @@ export class GetNetworkGroupCommand extends CcApiSimpleCommand<
     return {
       ...networkGroup,
       members: networkGroup.members.map(normalizeMemberKind),
+      peers: networkGroup.peers.map(transformNetworkGroupPeer),
     };
   }
 }

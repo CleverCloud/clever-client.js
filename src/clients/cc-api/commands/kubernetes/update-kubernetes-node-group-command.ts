@@ -26,7 +26,7 @@ export class UpdateKubernetesNodeGroupCommand extends CcApiSimpleCommand<
         tag: params.tag,
         minNodeCount: params.minNodeCount,
         maxNodeCount: params.maxNodeCount,
-        autoscalingEnabled: params.autoscalingEnabled,
+        autoscalingEnabled: params.isAutoscalingEnabled,
       },
     );
   }

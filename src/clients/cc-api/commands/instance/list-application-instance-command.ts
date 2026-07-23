@@ -33,7 +33,7 @@ export class ListApplicationInstanceCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): ListApplicationInstanceCommandOutput {
-    return sortBy((response as Array<unknown>).map(transformApplicationInstance), 'creationDate', 'index');
+    return sortBy((response as Array<unknown>).map(transformApplicationInstance), 'createdAt', 'index');
   }
 
   getIdsToResolve(): IdResolve {

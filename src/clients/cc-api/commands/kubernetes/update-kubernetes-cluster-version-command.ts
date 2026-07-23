@@ -24,7 +24,7 @@ export class UpdateKubernetesClusterVersionCommand extends CcApiCompositeCommand
     composer: CcApiComposer,
   ): Promise<UpdateKubernetesClusterVersionCommandOutput> {
     const cluster = await composer.send(new UpdateKubernetesClusterVersionCommandInner(params));
-    if (params.waitForActive) {
+    if (params.shouldWaitForActive) {
       return waitForKubernetesClusterActive(composer, params.ownerId, params.clusterId);
     }
     return cluster;

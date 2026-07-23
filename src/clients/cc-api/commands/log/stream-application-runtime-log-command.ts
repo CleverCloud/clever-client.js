@@ -26,7 +26,7 @@ export class StreamApplicationRuntimeLogCommand extends AbstractLogsStreamComman
         .append('deploymentId', params.deploymentId)
         .append('filter', params.filter)
         .append('instanceId', params.instanceId)
-        .append('field', params.field)
+        .append('field', params.fields)
         .append('throttleElements', params.throttleElements)
         .append('throttlePerInMilliseconds', params.throttlePerInMilliseconds),
     };

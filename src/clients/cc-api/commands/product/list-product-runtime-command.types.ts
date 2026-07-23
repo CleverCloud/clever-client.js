@@ -4,4 +4,5 @@ export type ListProductRuntimeCommandInput = void | {
   ownerId?: string;
 };
 
+// transformed: sorted by name
 export type ListProductRuntimeCommandOutput = Array<ProductRuntime>;

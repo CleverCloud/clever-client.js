@@ -1,4 +1,4 @@
 export interface DeleteUserSettingCommandInput {
-  env?: string;
+  environment?: string;
   name: string;
 }

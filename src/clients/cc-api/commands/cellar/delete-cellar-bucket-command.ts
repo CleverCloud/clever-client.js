@@ -14,7 +14,7 @@ export class DeleteCellarBucketCommand extends CcApiSimpleCommand<DeleteCellarBu
   toRequestParams(params: DeleteCellarBucketCommandInput) {
     return delete_(
       safeUrl`/v4/cellar/organisations/${params.ownerId}/cellar/${params.addonId}/buckets/${params.bucketName}`,
-      new QueryParams().append('purgeObjects', params.purgeObjects),
+      new QueryParams().append('purgeObjects', params.shouldPurgeObjects),
     );
   }
 

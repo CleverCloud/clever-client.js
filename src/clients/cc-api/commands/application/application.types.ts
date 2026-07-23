@@ -18,40 +18,55 @@ export interface Application {
     maxAllowedInstances: number;
     minFlavor: ProductRuntimeFlavor;
     maxFlavor: ProductRuntimeFlavor;
+    // transformed: sorted by price
     flavors: Array<ProductRuntimeFlavor>;
-    // renamed from defaultEnv, and converted from Record<string, string>
+    // renamed from defaultEnv
+    // transformed: converted from a Record<string, string> to an array, sorted by name
     defaultEnvironment: Array<EnvironmentVariable>;
     lifetime: ApplicationLifetime;
   };
   deployment: {
-    shutdownable: boolean;
+    // renamed from shutdownable
+    canShutdown: boolean;
     type: ApplicationDeploymentType;
     repoState: ApplicationRepositoryState;
     url: string;
     httpUrl?: string;
   };
   // renamed from vhosts
+  // transformed: each entry reduced to its fqdn, sorted by domain
   domains: Array<Domain>;
-  // converted from number to date iso string
-  creationDate: string;
+  // renamed from creationDate
+  // transformed: converted to an ISO date string
+  createdAt: string;
   // renamed from last_deploy
-  lastDeploy: number;
-  archived: boolean;
-  stickySessions: boolean;
-  homogeneous: boolean;
-  favourite: boolean;
+  lastDeployedAt: number;
+  // renamed from archived
+  isArchived: boolean;
+  // renamed from stickySessions
+  hasStickySessions: boolean;
+  // renamed from homogeneous
+  // transformed: inverted boolean
+  isZeroDowntimeDeploymentEnabled: boolean;
+  // renamed from favourite
+  isFavourite: boolean;
   cancelOnPush: boolean;
+  // renamed from oauthService, and built from the webhookSecret and webhookUrl payload fields
   oauthApp?: ApplicationOauthApp;
-  separateBuild: boolean;
+  // renamed from separateBuild
+  hasSeparatedBuild: boolean;
   buildFlavor: ProductRuntimeFlavor;
   state: ApplicationState;
   commitId: string;
   appliance: null;
   branch: string;
+  // transformed: sorted
   branches?: Array<string>;
-  // converted from ENABLED/DISABLED to boolean
-  forceHttps: boolean;
+  // renamed from forceHttps
+  // transformed: converted from ENABLED/DISABLED to a boolean
+  shouldForceHttps: boolean;
   // renamed from env
+  // transformed: sorted by name
   environment: Array<EnvironmentVariable>;
 }
 

@@ -11,14 +11,14 @@ export function transformPulsarInfo(payload: any): GetPulsarInfoInnerCommandOutp
     namespace: payload.namespace,
     clusterId: payload.cluster_id,
     token: payload.token,
-    creationDate: normalizeDate(payload.creation_date)!,
-    askForDeletionDate: normalizeDate(payload.ask_for_deletion_date)!,
-    deletionDate: normalizeDate(payload.deletion_date)!,
+    createdAt: normalizeDate(payload.creation_date)!,
+    askForDeletionAt: normalizeDate(payload.ask_for_deletion_date)!,
+    deletedAt: normalizeDate(payload.deletion_date)!,
     status: payload.status,
     plan: payload.plan,
     coldStorageId: payload.cold_storage_id,
-    coldStorageLinked: payload.cold_storage_linked,
-    coldStorageMustBeProvided: payload.cold_storage_must_be_provided,
+    isColdStorageLinked: payload.cold_storage_linked,
+    isColdStorageMustBeProvided: payload.cold_storage_must_be_provided,
   };
 }
 
@@ -31,9 +31,9 @@ export function transformPulsarCluster(payload: any): GetPulsarClusterInnerComma
     webPort: payload.web_port,
     webTlsPort: payload.web_tls_port,
     version: payload.version,
-    available: payload.available,
+    isAvailable: payload.available,
     zone: payload.zone.toLowerCase(),
-    supportColdStorage: payload.support_cold_storage,
+    isColdStorageSupported: payload.support_cold_storage,
     supportedPlans: payload.supported_plans,
   };
 }

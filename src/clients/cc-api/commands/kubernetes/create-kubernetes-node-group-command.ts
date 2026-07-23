@@ -27,7 +27,7 @@ export class CreateKubernetesNodeGroupCommand extends CcApiSimpleCommand<
       maxNodeCount: params.maxNodeCount,
       taints: params.taints,
       labels: params.labels,
-      autoscalingEnabled: params.autoscalingEnabled,
+      autoscalingEnabled: params.isAutoscalingEnabled,
     });
   }
 

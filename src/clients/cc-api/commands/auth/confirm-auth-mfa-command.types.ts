@@ -4,5 +4,5 @@ export interface ConfirmAuthMfaCommandInput {
   kind: MFAKind;
   code: string;
   password: string;
-  revokeTokens?: boolean;
+  shouldRevokeTokens?: boolean;
 }

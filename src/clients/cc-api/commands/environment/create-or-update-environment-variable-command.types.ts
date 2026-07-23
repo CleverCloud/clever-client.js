@@ -6,4 +6,5 @@ export interface CreateOrUpdateEnvironmentVariableCommandInput extends Applicati
   value: string;
 }
 
+// transformed: read from the payload's env, sorted by name
 export type CreateOrUpdateEnvironmentVariableCommandOutput = Array<EnvironmentVariable>;

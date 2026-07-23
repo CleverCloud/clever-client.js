@@ -23,7 +23,7 @@ export class StreamApplicationAccessLogCommand extends AbstractLogsStreamCommand
         .append('limit', this._computeLimit())
         .append('since', normalizeDate(params.since))
         .append('until', normalizeDate(params.until))
-        .append('field', params.field)
+        .append('field', params.fields)
         .append('throttleElements', params.throttleElements)
         .append('throttlePerInMilliseconds', params.throttlePerInMilliseconds),
     };

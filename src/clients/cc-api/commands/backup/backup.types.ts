@@ -8,11 +8,14 @@ export interface BackupBase {
   // renamed from entity_id
   entityId: string;
   status: string;
-  // renamed from creation_date, transformed from iso string with 6 digits microseconds to 3 digits milliseconds
-  creationDate: string;
-  // renamed from delete_at, transformed from iso string with 6 digits microseconds to 3 digits milliseconds
-  expirationDate?: string;
-  // renamed from download_url (or from link for elasticsearch addons)
+  // renamed from creation_date
+  // transformed: converted from an ISO string with 6 digits microseconds to 3 digits milliseconds
+  createdAt: string;
+  // renamed from delete_at
+  // transformed: converted from an ISO string with 6 digits microseconds to 3 digits milliseconds
+  expiresAt?: string;
+  // renamed from download_url
+  // transformed: falls back to link for elasticsearch addons
   downloadUrl: string;
 }
 

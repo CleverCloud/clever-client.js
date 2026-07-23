@@ -44,7 +44,6 @@ interface ApiRecipientPayload {
 export function transformLogDrain(payload: ApiLogDrainPayload, ref: ApplicationOrAddonId): LogDrain {
   const common = {
     id: payload.id,
-    // status.date is the date when the drain's current status was set (changes when status changes)
     updatedAt: normalizeDate(payload.status.date)!,
     status: payload.status.status,
     updatedBy: payload.status.authorId!,

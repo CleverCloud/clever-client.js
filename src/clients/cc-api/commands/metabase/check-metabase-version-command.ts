@@ -6,6 +6,7 @@ import type {
   CheckMetabaseVersionCommandInput,
   CheckMetabaseVersionCommandOutput,
 } from './check-metabase-version-command.types.js';
+import { transformMetabaseVersionCheck } from './metabase-transform.js';
 
 /**
  * @endpoint [GET] /v4/addon-providers/addon-metabase/addons/:XXX/version/check
@@ -27,12 +28,6 @@ export class CheckMetabaseVersionCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): CheckMetabaseVersionCommandOutput {
-    const res = response as CheckMetabaseVersionCommandOutput;
-    return {
-      installed: res.installed,
-      available: res.available,
-      needUpdate: res.needUpdate,
-      latest: res.latest,
-    };
+    return transformMetabaseVersionCheck(response);
   }
 }

@@ -4,4 +4,5 @@ export interface GetConfigProviderCommandInput {
   addonId: string;
 }
 
+// transformed: sorted by name
 export type GetConfigProviderCommandOutput = Array<EnvironmentVariable>;

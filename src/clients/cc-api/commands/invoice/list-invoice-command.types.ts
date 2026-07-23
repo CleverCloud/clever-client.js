@@ -7,4 +7,5 @@ export interface ListInvoiceCommandInput {
   limit?: number;
 }
 
+// transformed: sorted by emittedAt
 export type ListInvoiceCommandOutput = Array<InvoiceSummary>;

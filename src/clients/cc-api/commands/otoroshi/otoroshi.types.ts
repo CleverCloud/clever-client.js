@@ -1,4 +1,5 @@
 export interface OtoroshiInfo {
+  // renamed from resourceId
   id: string;
   addonId: string;
   name: string;

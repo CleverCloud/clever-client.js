@@ -21,7 +21,7 @@ export class ConfirmAuthMfaCommand extends CcApiSimpleCommand<ConfirmAuthMfaComm
         .build(),
       body: {
         code: params.code,
-        revokeTokens: params.revokeTokens,
+        revokeTokens: params.shouldRevokeTokens,
       },
     };
   }

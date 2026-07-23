@@ -11,6 +11,7 @@ export interface CheckVatNumberValid {
   address: string;
 }
 
+// transformed: reduced to the valid flag, an invalid number carries no name nor address
 export interface CheckVatNumberInvalid {
   valid: false;
 }

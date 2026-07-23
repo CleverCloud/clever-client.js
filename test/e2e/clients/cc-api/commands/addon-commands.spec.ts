@@ -23,7 +23,7 @@ describe('addon commands', function () {
   it('should create addon', async () => {
     const response = await support.createTestAddon();
 
-    checkDateFormat(response.creationDate);
+    checkDateFormat(response.createdAt);
     expect(response.id).toMatch(/addon_.+/);
     expect(response.realId).toMatch(/config_.+/);
     expect(response.name).toBe('test-addon');
@@ -60,7 +60,7 @@ describe('addon commands', function () {
     expect(response.timestamp).toBeTypeOf('number');
     expect(response.token).toBeTypeOf('string');
     expect(response.signature).toBeTypeOf('string');
-    expect(response.email).toBeTypeOf('string');
+    expect(response.emailAddress).toBeTypeOf('string');
     expect(response.userId).toBe(support.organisationId);
   });
 });

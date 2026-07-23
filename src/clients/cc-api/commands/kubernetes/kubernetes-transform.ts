@@ -1,31 +1,62 @@
 import { normalizeDate } from '../../../../lib/utils.js';
 import type {
   KubernetesCluster,
+  KubernetesClusterFeatures,
   KubernetesClusterUsageItem,
+  KubernetesClusterVersionCheck,
   KubernetesDeploymentEvent,
   KubernetesNodeGroup,
+  KubernetesProduct,
   KubernetesQuota,
 } from './kubernetes.types.js';
+
+export function transformKubernetesProduct(payload: any): KubernetesProduct {
+  return {
+    topologies: payload.topologies,
+    versions: {
+      availableVersions: payload.versions.available,
+      default: payload.versions.default,
+    },
+  };
+}
+
+export function transformKubernetesClusterVersionCheck(payload: any): KubernetesClusterVersionCheck {
+  return {
+    availableVersions: payload.available,
+    installed: payload.installed,
+    latest: payload.latest,
+    needUpdate: payload.needUpdate,
+  };
+}
 
 export function transformKubernetesCluster(payload: any): KubernetesCluster {
   return {
     id: payload.id,
-    // renamed from tenantId, see kubernetes.types.ts
     ownerId: payload.tenantId,
     name: payload.name,
     description: payload.description,
     tags: payload.tags,
     status: payload.status,
-    // renamed from creationDate, see kubernetes.types.ts
     createdAt: normalizeDate(payload.creationDate)!,
     version: payload.version,
     topologyConfig: payload.topologyConfig,
     locationId: payload.locationId,
-    features: payload.features,
+    features: transformKubernetesClusterFeatures(payload.features),
     nodeGroups: payload.nodeGroups,
     standaloneNodeGroups: payload.standaloneNodeGroups,
     loadBalancers: payload.loadBalancers,
     storageUsageBytes: payload.storageUsageBytes,
+  };
+}
+
+function transformKubernetesClusterFeatures(payload: any): KubernetesClusterFeatures | null {
+  if (payload == null) {
+    return null;
+  }
+  return {
+    isCsi: payload.csi,
+    registries: payload.registries,
+    isAutoscalingEnabled: payload.autoscalingEnabled,
   };
 }
 
@@ -46,14 +77,13 @@ export function transformKubernetesNodeGroup(payload: any): KubernetesNodeGroup 
     createdAt: normalizeDate(payload.createdAt)!,
     updatedAt: normalizeDate(payload.updatedAt),
     status: payload.status,
-    autoscalingEnabled: payload.autoscalingEnabled,
+    isAutoscalingEnabled: payload.autoscalingEnabled,
   };
 }
 
 export function transformKubernetesQuota(payload: any): KubernetesQuota {
   return {
     id: payload.id,
-    // renamed from tenantId, see kubernetes.types.ts
     ownerId: payload.tenantId,
     tags: payload.tags,
     quotas: payload.quotas,

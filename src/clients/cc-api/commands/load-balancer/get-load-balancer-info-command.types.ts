@@ -5,4 +5,5 @@ export type GetLoadBalancerInfoCommandInput = ApplicationOrAddonId & {
   kind?: 'default' | 'private';
 };
 
+// transformed: sorted by id
 export type GetLoadBalancerInfoCommandOutput = Array<LoadBalancer>;

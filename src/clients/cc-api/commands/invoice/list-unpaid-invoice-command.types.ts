@@ -4,4 +4,5 @@ export interface ListUnpaidInvoiceCommandInput {
   ownerId: string;
 }
 
+// transformed: sorted by emittedAt
 export type ListUnpaidInvoiceCommandOutput = Array<InvoiceSummary>;

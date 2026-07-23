@@ -1,5 +1,6 @@
 import { sortBy } from '../../../../lib/utils.js';
 import { toArray } from '../../../../utils/environment-utils.js';
+import type { CheckMetabaseVersionCommandOutput } from './check-metabase-version-command.types.js';
 import type { MetabaseInfo } from './metabase.types.js';
 
 export function transformMetabaseInfo(response: any): MetabaseInfo {
@@ -15,5 +16,14 @@ export function transformMetabaseInfo(response: any): MetabaseInfo {
     availableVersions: response.availableVersions,
     resources: response.resources,
     environment: sortBy(toArray(response.envVars), 'name'),
+  };
+}
+
+export function transformMetabaseVersionCheck(response: any): CheckMetabaseVersionCommandOutput {
+  return {
+    installed: response.installed,
+    availableVersions: response.available,
+    latest: response.latest,
+    needUpdate: response.needUpdate,
   };
 }

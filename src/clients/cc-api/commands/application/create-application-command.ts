@@ -54,13 +54,13 @@ export class CreateApplicationCommand extends CcApiCompositeCommand<
       const slug = paramsWithDefaults.instance.slug;
       const runtimes = await composer.send(new ListProductRuntimeCommand());
       const runtime = runtimes
-        .filter((t) => t.enabled)
+        .filter((t) => t.isEnabled)
         .filter((t) => t.variant != null && t.variant.slug === slug)
         .sort((a, b) => b.version.localeCompare(a.version))[0];
 
       if (runtime == null) {
         const supportedSlugs = runtimes
-          .filter((t) => t.enabled)
+          .filter((t) => t.isEnabled)
           .map((t) => t.variant.slug)
           .sort((a, b) => a.localeCompare(b));
 
@@ -89,7 +89,7 @@ export class CreateApplicationCommand extends CcApiCompositeCommand<
     }
 
     if ((innerParams.buildFlavor?.length ?? 0) > 0) {
-      innerParams.separateBuild = true;
+      innerParams.hasSeparatedBuild = true;
     }
 
     const application = await composer.send(new CreateApplicationInnerCommand(innerParams));
@@ -113,15 +113,15 @@ class CreateApplicationInnerCommand extends CcApiSimpleCommand<
       instanceVersion: params.instance.version,
       instanceVariant: params.instance.variant,
       applianceId: params.applianceId,
-      archived: params.archived,
+      archived: params.isArchived,
       branch: params.branch,
       buildFlavor: params.buildFlavor,
       cancelOnPush: params.cancelOnPush,
       deploy: params.deploy,
       description: params.description,
       env: toNameValueObject(params.environment ?? []),
-      favourite: params.favourite,
-      homogeneous: params.homogeneous,
+      favourite: params.isFavourite,
+      homogeneous: params.isZeroDowntimeDeploymentEnabled == null ? undefined : !params.isZeroDowntimeDeploymentEnabled,
       instance: params.instance,
       instanceLifetime: params.instanceLifetime,
       maxFlavor: params.maxFlavor,
@@ -131,15 +131,15 @@ class CreateApplicationInnerCommand extends CcApiSimpleCommand<
       name: params.name,
       ownerId: params.ownerId,
       publicGitRepositoryUrl: params.publicGitRepositoryUrl,
-      separateBuild: params.separateBuild,
-      shutdownable: params.shutdownable,
-      stickySessions: params.stickySessions,
+      separateBuild: params.hasSeparatedBuild,
+      shutdownable: params.canShutdown,
+      stickySessions: params.hasStickySessions,
       tags: params.tags,
       zone: params.zone,
     };
 
-    if (params.forceHttps != null) {
-      body.forceHttps = params.forceHttps ? 'ENABLED' : 'DISABLED';
+    if (params.shouldForceHttps != null) {
+      body.forceHttps = params.shouldForceHttps ? 'ENABLED' : 'DISABLED';
     }
     if (params.oauthApp?.type === 'github') {
       body.oauthService = 'github';

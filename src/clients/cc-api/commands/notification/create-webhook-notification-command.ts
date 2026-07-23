@@ -5,6 +5,7 @@ import type {
   CreateWebhookNotificationCommandInput,
   CreateWebhookNotificationCommandOutput,
 } from './create-webhook-notification-command.types.js';
+import { transformWebhookNotification } from './notification-transform.js';
 
 /**
  * @endpoint [POST] /v2/notifications/webhooks/:XXX
@@ -20,7 +21,11 @@ export class CreateWebhookNotificationCommand extends CcApiSimpleCommand<
       name: params.name,
       urls: params.urls,
       events: params.events,
-      scope: params.scope,
+      scope: params.scopes,
     });
+  }
+
+  transformCommandOutput(response: unknown): CreateWebhookNotificationCommandOutput {
+    return transformWebhookNotification(response);
   }
 }

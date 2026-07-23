@@ -1,6 +1,7 @@
 import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
 
 export interface KeycloakInfo {
+  // renamed from resourceId
   id: string;
   addonId: string;
   name: string;
@@ -22,5 +23,7 @@ export interface KeycloakInfo {
   features: {
     networkGroup?: { id: string };
   };
+  // renamed from envVars
+  // transformed: converted from a Record<string, string> to an array, sorted by name
   environment: Array<EnvironmentVariable>;
 }

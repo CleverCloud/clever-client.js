@@ -52,13 +52,13 @@ describe.skip('elasticsearch commands', function () {
     expect(response.kibanaApplication).toBeUndefined();
     expect(response.apmApplication).toBeUndefined();
     expect(response.services).toEqualInAnyOrder([
-      { name: 'kibana', enabled: false },
-      { name: 'apm', enabled: false },
+      { name: 'kibana', isEnabled: false },
+      { name: 'apm', isEnabled: false },
     ]);
     expect(response.features).toEqualInAnyOrder([
-      { name: 'kibana', enabled: false },
-      { name: 'apm', enabled: false },
-      { name: 'encryption', enabled: false },
+      { name: 'kibana', isEnabled: false },
+      { name: 'apm', isEnabled: false },
+      { name: 'encryption', isEnabled: false },
     ]);
   });
 });

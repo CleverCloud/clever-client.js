@@ -21,6 +21,6 @@ export class ListOrganisationMemberCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): ListOrganisationMemberCommandOutput {
-    return sortBy((response as Array<unknown>).map(transformOrganisationMember), 'name', 'email', 'id');
+    return sortBy((response as Array<unknown>).map(transformOrganisationMember), 'name', 'emailAddress', 'id');
   }
 }

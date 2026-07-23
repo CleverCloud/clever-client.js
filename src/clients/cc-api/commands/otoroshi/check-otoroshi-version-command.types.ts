@@ -4,7 +4,8 @@ export interface CheckOtoroshiVersionCommandInput {
 
 export type CheckOtoroshiVersionCommandOutput = {
   installed: string;
-  available: Array<string>;
+  // renamed from available
+  availableVersions: Array<string>;
   latest: string;
   needUpdate: boolean;
 };

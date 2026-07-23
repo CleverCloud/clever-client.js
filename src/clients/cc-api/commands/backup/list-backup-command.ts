@@ -80,7 +80,7 @@ class ListBackupInnerCommand extends CcApiSimpleCommand<ListBackupCommandInput, 
   }
 
   transformCommandOutput(response: unknown): ListBackupInnerCommandOutput {
-    return sortBy((response as Array<unknown>).map(transformBackup), { key: 'creationDate', order: 'desc' });
+    return sortBy((response as Array<unknown>).map(transformBackup), { key: 'createdAt', order: 'desc' });
   }
 
   getIdsToResolve(): IdResolve {

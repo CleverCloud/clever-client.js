@@ -10,14 +10,14 @@ import {
 const simpleOrga: Orga = {
   id: 'orga_???',
   name: '???',
-  cleverEnterprise: false,
+  isPremium: false,
   isTrusted: false,
 };
 const simpleOrgaFoo = { ...simpleOrga, id: 'orga_foo' };
 const simpleOrgaBar = { ...simpleOrga, id: 'orga_bar' };
-const premiumOrga = { ...simpleOrga, cleverEnterprise: true };
+const premiumOrga = { ...simpleOrga, isPremium: true };
 const trustedOrga = { ...simpleOrga, isTrusted: true };
-const premiumAndTrustedOrga = { ...simpleOrga, cleverEnterprise: true, isTrusted: true };
+const premiumAndTrustedOrga = { ...simpleOrga, isPremium: true, isTrusted: true };
 
 const simpleCard: PaymentMethod = {
   type: 'CREDITCARD',

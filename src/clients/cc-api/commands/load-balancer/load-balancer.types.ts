@@ -5,6 +5,7 @@ export interface LoadBalancer {
   zoneId: string;
   dns: {
     cname: string;
-    a: Array<string>;
+    // renamed from a
+    aRecords: Array<string>;
   };
 }

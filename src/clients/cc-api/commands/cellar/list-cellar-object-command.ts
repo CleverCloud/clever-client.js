@@ -3,6 +3,7 @@ import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { transformCellarObjectList } from './cellar-transform.js';
 import type {
   ListCellarObjectCommandInput,
   ListCellarObjectCommandOutput,
@@ -26,6 +27,10 @@ export class ListCellarObjectCommand extends CcApiSimpleCommand<
         .append('count', params.count)
         .append('withMetadata', params.withMetadata),
     );
+  }
+
+  transformCommandOutput(response: unknown): ListCellarObjectCommandOutput {
+    return transformCellarObjectList(response);
   }
 
   getIdsToResolve(): IdResolve {

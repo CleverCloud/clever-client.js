@@ -5,4 +5,5 @@ export interface UpdateEnvironmentCommandInput extends ApplicationId {
   environment: Array<EnvironmentVariable>;
 }
 
+// transformed: read from the payload's env, sorted by name
 export type UpdateEnvironmentCommandOutput = Array<EnvironmentVariable>;

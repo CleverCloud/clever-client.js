@@ -5,6 +5,7 @@ import type {
   GetNetworkGroupPeerCommandInput,
   GetNetworkGroupPeerCommandOutput,
 } from './get-network-group-peer-command.types.js';
+import { transformNetworkGroupPeer } from './network-group-transform.js';
 
 /**
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX
@@ -19,5 +20,9 @@ export class GetNetworkGroupPeerCommand extends CcApiSimpleCommand<
     return get(
       safeUrl`/v4/networkgroups/organisations/${params.ownerId}/networkgroups/${params.networkGroupId}/peers/${params.peerId}`,
     );
+  }
+
+  transformCommandOutput(response: unknown): GetNetworkGroupPeerCommandOutput {
+    return transformNetworkGroupPeer(response);
   }
 }

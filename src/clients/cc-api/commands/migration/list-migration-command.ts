@@ -16,7 +16,7 @@ export class ListMigrationCommand extends CcApiSimpleCommand<ListMigrationComman
   }
 
   transformCommandOutput(response: unknown): ListMigrationCommandOutput {
-    return sortBy((response as Array<unknown>).map(transformMigration), { key: 'requestDate', order: 'desc' });
+    return sortBy((response as Array<unknown>).map(transformMigration), { key: 'requestedAt', order: 'desc' });
   }
 
   getIdsToResolve(): IdResolve {

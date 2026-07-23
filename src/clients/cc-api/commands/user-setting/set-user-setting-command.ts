@@ -15,7 +15,7 @@ export class SetUserSettingCommand extends CcApiSimpleCommand<SetUserSettingComm
     return {
       method: 'PUT',
       url: safeUrl`/v4/console/settings/${params.name}`,
-      queryParams: new QueryParams().append('env', this.params.env),
+      queryParams: new QueryParams().append('env', this.params.environment),
       body: params.value,
       headers: new HeadersBuilder().acceptTextPlain().acceptJson().contentTypeTextPlain().build(),
     };

@@ -4,4 +4,5 @@ export interface ListAddonCommandInput {
   ownerId: string;
 }
 
+// transformed: sorted by name
 export type ListAddonCommandOutput = Array<Addon>;

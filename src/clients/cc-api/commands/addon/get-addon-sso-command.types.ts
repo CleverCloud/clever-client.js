@@ -8,7 +8,8 @@ export interface GetAddonSsoCommandOutput {
   timestamp: number;
   token: string;
   signature: string;
-  email: string;
+  // renamed from email
+  emailAddress: string;
   // renamed from user_id
   userId: string;
   // renamed from userinfo_signature

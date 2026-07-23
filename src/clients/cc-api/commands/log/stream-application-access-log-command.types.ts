@@ -4,7 +4,7 @@ export interface StreamApplicationAccessLogCommandInput extends ApplicationId {
   since?: string | number | Date;
   until?: string | number | Date;
   limit?: number;
-  field?: Array<string>;
+  fields?: Array<string>;
   throttleElements?: number;
   throttlePerInMilliseconds?: number;
 }

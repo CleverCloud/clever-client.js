@@ -17,6 +17,7 @@ export interface MatomoInfo {
     redisId: string;
     kvId?: string;
   };
-  // renamed from envVars. transformed from Record<string, string> to Array<EnvironmentVariable>
+  // renamed from envVars
+  // transformed: converted from a Record<string, string> to an array, sorted by name
   environment: Array<EnvironmentVariable>;
 }

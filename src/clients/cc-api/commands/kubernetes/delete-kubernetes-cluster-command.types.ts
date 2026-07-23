@@ -4,5 +4,5 @@ export interface DeleteKubernetesClusterCommandInput {
   /**
    * If true, wait until the cluster reaches the DELETED status before resolving.
    */
-  wait?: boolean;
+  shouldWait?: boolean;
 }

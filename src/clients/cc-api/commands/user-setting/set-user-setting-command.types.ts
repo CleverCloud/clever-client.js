@@ -1,5 +1,5 @@
 export interface SetUserSettingCommandInput {
-  env?: string;
+  environment?: string;
   name: string;
   value: string;
 }

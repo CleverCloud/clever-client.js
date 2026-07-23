@@ -24,7 +24,14 @@ export function transformElasticsearchInfo(response: any): ElasticsearchInfo {
     },
     kibanaApplication: response.kibana_application,
     apmApplication: response.apm_application,
-    services: sortBy(response.services, 'name'),
-    features: sortBy(response.features, 'name'),
+    services: transformNamedFlags(response.services),
+    features: transformNamedFlags(response.features),
   };
+}
+
+function transformNamedFlags(payload: Array<any>): Array<{ name: string; isEnabled: boolean }> {
+  return sortBy(
+    payload.map((item: any) => ({ name: item.name, isEnabled: item.enabled })),
+    'name',
+  );
 }

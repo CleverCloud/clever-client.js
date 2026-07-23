@@ -42,7 +42,7 @@ export class UpdateOrganisationMemberCommand extends CcApiSimpleCommand<
   toRequestParams(params: UpdateOrganisationMemberCommandInput) {
     return put(safeUrl`/v2/organisations/${params.organisationId}/members/${params.memberId}`, {
       role: params.role,
-      job: params.job,
+      job: params.jobTitle,
     });
   }
 

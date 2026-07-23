@@ -46,15 +46,15 @@ describe('organisation commands', function () {
     expect(response.zipcode).toBe('zipcode');
     expect(response.country).toBe('FRANCE');
     expect(response).toHaveProperty('company');
-    expect(response).toHaveProperty('VAT');
+    expect(response).toHaveProperty('vat');
     expect(response).toHaveProperty('avatar');
     expect(response.vatState).toBeTypeOf('string');
     expect(response.customerFullName).toBeTypeOf('string');
     expect(response.customerFullName).toBe('customerFullName');
     expect(response.canPay).toBeTypeOf('boolean');
-    expect(response.cleverEnterprise).toBeTypeOf('boolean');
+    expect(response.isPremium).toBeTypeOf('boolean');
     expect(response).toHaveProperty('emergencyNumber');
-    expect(response.canSEPA).toBeTypeOf('boolean');
+    expect(response.canPayWithSEPA).toBeTypeOf('boolean');
     expect(response.isTrusted).toBeTypeOf('boolean');
   });
 
@@ -103,15 +103,15 @@ describe('organisation commands', function () {
     expect(response.zipcode).toBe('zipcode');
     expect(response.country).toBe('FRANCE');
     expect(response).toHaveProperty('company');
-    expect(response).toHaveProperty('VAT');
+    expect(response).toHaveProperty('vat');
     expect(response).toHaveProperty('avatar');
     expect(response.vatState).toBeTypeOf('string');
     expect(response.customerFullName).toBeTypeOf('string');
     expect(response.customerFullName).toBe('customerFullName');
     expect(response.canPay).toBeTypeOf('boolean');
-    expect(response.cleverEnterprise).toBeTypeOf('boolean');
+    expect(response.isPremium).toBeTypeOf('boolean');
     expect(response).toHaveProperty('emergencyNumber');
-    expect(response.canSEPA).toBeTypeOf('boolean');
+    expect(response.canPayWithSEPA).toBeTypeOf('boolean');
     expect(response.isTrusted).toBeTypeOf('boolean');
   });
 
@@ -141,15 +141,15 @@ describe('organisation commands', function () {
     expect(response.zipcode).toBe('zipcode');
     expect(response.country).toBe('FRANCE');
     expect(response).toHaveProperty('company');
-    expect(response).toHaveProperty('VAT');
+    expect(response).toHaveProperty('vat');
     expect(response).toHaveProperty('avatar');
     expect(response.vatState).toBeTypeOf('string');
     expect(response.customerFullName).toBeTypeOf('string');
     expect(response.customerFullName).toBe('customerFullName');
     expect(response.canPay).toBeTypeOf('boolean');
-    expect(response.cleverEnterprise).toBeTypeOf('boolean');
+    expect(response.isPremium).toBeTypeOf('boolean');
     expect(response).toHaveProperty('emergencyNumber');
-    expect(response.canSEPA).toBeTypeOf('boolean');
+    expect(response.canPayWithSEPA).toBeTypeOf('boolean');
     expect(response.isTrusted).toBeTypeOf('boolean');
   });
 
@@ -215,7 +215,7 @@ describe('organisation commands', function () {
 
       expect(response).toHaveLength(1);
       expect(response[0].id).toMatch(/^user_.+/);
-      expect(response[0].email).toBeTypeOf('string');
+      expect(response[0].emailAddress).toBeTypeOf('string');
       expect(response[0].name).toBeTypeOf('string');
       expect(response[0].avatar).toBeTypeOf('string');
       expect(response[0].preferredMFA).toBeTypeOf('string');
@@ -241,7 +241,7 @@ describe('organisation commands', function () {
       const response = await support.client.send(
         new AddOrganisationMemberCommand({
           organisationId: organisation.id,
-          email: 'frontend-ci@clever-cloud.com',
+          emailAddress: 'frontend-ci@clever-cloud.com',
           role: 'DEVELOPER',
         }),
       );

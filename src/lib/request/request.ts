@@ -44,7 +44,7 @@ async function doRequest<CommandOutput>(request: CcRequest): Promise<CcResponse<
       method: request.method,
       headers: request.headers,
       body,
-      mode: request.cors ? 'cors' : 'same-origin',
+      mode: request.isCorsEnabled ? 'cors' : 'same-origin',
       signal: request.signal,
     });
     const duration = new Date().getTime() - now;
@@ -54,7 +54,7 @@ async function doRequest<CommandOutput>(request: CcRequest): Promise<CcResponse<
       headers: fetchResponse.headers,
       body: (await getResponseBody(request, fetchResponse)) as CommandOutput,
       requestDuration: duration,
-      cacheHit: false,
+      hasHitCache: false,
     };
   } catch (error: unknown) {
     if (error instanceof CcRequestError) {

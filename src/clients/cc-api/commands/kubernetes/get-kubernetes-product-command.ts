@@ -1,6 +1,7 @@
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { GetKubernetesProductCommandOutput } from './get-kubernetes-product-command.types.js';
+import { transformKubernetesProduct } from './kubernetes-transform.js';
 
 /**
  * @endpoint [GET] /v4/kubernetes-product
@@ -10,5 +11,9 @@ import type { GetKubernetesProductCommandOutput } from './get-kubernetes-product
 export class GetKubernetesProductCommand extends CcApiSimpleCommand<void, GetKubernetesProductCommandOutput> {
   toRequestParams() {
     return get('/v4/kubernetes-product');
+  }
+
+  transformCommandOutput(response: unknown): GetKubernetesProductCommandOutput {
+    return transformKubernetesProduct(response);
   }
 }

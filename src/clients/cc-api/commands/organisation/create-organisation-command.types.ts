@@ -29,5 +29,6 @@ export interface CreateOrganisationStandard extends CreateOrganisationBase {
 
 export interface CreateOrganisationCompany extends CreateOrganisationBase {
   company: string;
-  VAT: string;
+  // renamed from VAT
+  vat: string;
 }

@@ -73,7 +73,7 @@ export function e2eSupport(config?: { debug?: boolean }) {
 }
 
 function createRedisHttpClient(backendUrl: string, debug: boolean): RedisHttpClient {
-  const defaultRequestConfig = { debug };
+  const defaultRequestConfig = { isDebugEnabled: debug };
 
   return new RedisHttpClient({
     defaultRequestConfig,

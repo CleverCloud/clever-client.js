@@ -24,10 +24,10 @@ describe('request', () => {
 
   async function sendRequest(request: Partial<CcRequest>): Promise<CcResponse<unknown>> {
     return originalSendRequest({
-      cors: false,
+      isCorsEnabled: false,
       timeout: 0,
       cache: null,
-      debug: false,
+      isDebugEnabled: false,
       method: 'GET',
       ...request,
       url: request.url!.startsWith('http') ? request.url! : `${newScenario.mockClient.baseUrl}${request.url}`,
@@ -333,7 +333,7 @@ describe('request', () => {
       await sendRequest({
         method: 'GET',
         url: `/api/test`,
-        cors: true,
+        isCorsEnabled: true,
       });
 
       expect(spy.mock.lastCall![1]!.mode).toBe('cors');

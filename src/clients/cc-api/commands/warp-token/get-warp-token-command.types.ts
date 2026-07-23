@@ -18,7 +18,9 @@ export type WarpTokenApplication = 'metrics' | 'metrics.accesslogs' | 'addon-api
 
 export interface GetWarpTokenCommandOutput {
   token: string;
+  // transformed: converted to an ISO date string
   expiresAt: string;
+  // transformed: converted to an ISO date string
   createdAt: string;
   scope: 'READ';
   applications: Array<WarpTokenApplication>;

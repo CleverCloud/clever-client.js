@@ -10,7 +10,7 @@ export interface CreateWebhookNotificationCommandInput {
   name: string;
   urls: Array<WebhookNotificationUrl>;
   events?: Array<NotificationEventType | NotificationMetaEventType>;
-  scope?: Array<string>;
+  scopes?: Array<string>;
 }
 
 export type CreateWebhookNotificationCommandOutput = WebhookNotification;

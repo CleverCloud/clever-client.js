@@ -35,7 +35,8 @@ interface NetworkGroupPeerBase {
 }
 
 export interface NetworkGroupPeerClever extends TypedComponent<'CleverPeer', NetworkGroupPeerBase> {
-  hv: string;
+  // renamed from hv
+  hypervisor: string;
 }
 
 export type NetworkGroupPeerExternal = TypedComponent<'ExternalPeer', NetworkGroupPeerBase>;
@@ -44,6 +45,7 @@ export interface NetworkGroupMember {
   id: string;
   label: string;
   domainName: string;
+  // transformed: uppercased
   kind: 'APPLICATION' | 'ADDON' | 'EXTERNAL';
 }
 
@@ -51,7 +53,8 @@ export type NetworkGroupEndpoint = NetworkGroupEndpointServer | NetworkGroupEndp
 
 export interface NetworkGroupEndpointServer {
   type: 'ServerEndpoint';
-  ngTerm: {
+  // renamed from ngTerm
+  networkGroupTerm: {
     host: string;
     port: number;
   };
@@ -63,5 +66,6 @@ export interface NetworkGroupEndpointServer {
 
 export interface NetworkGroupEndpointClient {
   type: 'ClientEndpoint';
-  ngIp: string;
+  // renamed from ngIp
+  networkGroupIp: string;
 }

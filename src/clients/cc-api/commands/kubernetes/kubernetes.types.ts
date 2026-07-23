@@ -51,9 +51,11 @@ export interface KubernetesDistributedComponents {
 }
 
 export interface KubernetesClusterFeatures {
-  csi?: boolean | null;
+  // renamed from csi
+  isCsi?: boolean | null;
   registries?: string | null;
-  autoscalingEnabled?: boolean | null;
+  // renamed from autoscalingEnabled
+  isAutoscalingEnabled?: boolean | null;
 }
 
 export interface KubernetesClusterNode {
@@ -101,6 +103,7 @@ export interface KubernetesCluster {
   tags: Array<string>;
   status: KubernetesClusterStatus;
   // renamed from creationDate
+  // transformed: converted to an ISO date string
   createdAt: string;
   version: string;
   topologyConfig: KubernetesTopologyConfig;
@@ -120,11 +123,13 @@ export interface KubernetesProductTopology {
 
 export interface KubernetesProduct {
   topologies: Array<KubernetesProductTopology>;
-  versions: { available: Array<string>; default: string };
+  // transformed: available renamed to availableVersions
+  versions: { availableVersions: Array<string>; default: string };
 }
 
 export interface KubernetesClusterVersionCheck {
-  available: Array<string>;
+  // renamed from available
+  availableVersions: Array<string>;
   installed: string;
   latest: string;
   needUpdate: boolean;
@@ -146,7 +151,7 @@ export interface KubernetesNodeGroupCreationPayload {
   maxNodeCount?: number;
   taints?: Array<KubernetesTaint>;
   labels?: Record<string, string>;
-  autoscalingEnabled?: boolean;
+  isAutoscalingEnabled?: boolean;
 }
 
 export interface KubernetesNodeGroup {
@@ -162,10 +167,13 @@ export interface KubernetesNodeGroup {
   maxNodeCount: number;
   taints: Array<KubernetesTaint>;
   labels: Record<string, string>;
+  // transformed: converted to an ISO date string
   createdAt: string;
+  // transformed: converted to an ISO date string
   updatedAt: string | null;
   status: KubernetesNodeGroupStatus;
-  autoscalingEnabled: boolean;
+  // renamed from autoscalingEnabled
+  isAutoscalingEnabled: boolean;
 }
 
 export interface KubernetesQuotaDimension {
@@ -202,7 +210,9 @@ export interface KubernetesClusterUsageItem {
   itemType: string;
   cpuMillicores: number;
   ramBytes: number;
+  // transformed: converted to an ISO date string
   createdAt: string | null;
+  // transformed: converted to an ISO date string
   deactivatedAt: string | null;
 }
 
@@ -224,6 +234,7 @@ export interface KubernetesDeploymentEvent {
   stepName: string | null;
   status: KubernetesDeploymentEventStatus;
   detail: string | null;
+  // transformed: converted to an ISO date string
   createdAt: string;
   nodeGroupId: string | null;
 }

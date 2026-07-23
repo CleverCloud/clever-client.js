@@ -260,28 +260,28 @@ describe('clever-client', () => {
       const client = createClient({ defaultRequestConfig: { timeout: 10 } });
       const spy = vi.spyOn(client, '_handleResponse');
       const command = simpleCommand(get('/path/subPath'));
-      vi.spyOn(command, 'getRequestConfig').mockReturnValue({ cors: true, timeout: 1000 });
+      vi.spyOn(command, 'getRequestConfig').mockReturnValue({ isCorsEnabled: true, timeout: 1000 });
 
       await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200 })
         .thenCall(() => client.send(command));
 
-      expect(spy.mock.calls[0][1].cors).toBe(true);
+      expect(spy.mock.calls[0][1].isCorsEnabled).toBe(true);
       expect(spy.mock.calls[0][1].timeout).toBe(1000);
     });
 
     it('should apply the `send()` request config over the one returned by `command.getRequestConfig()`', async () => {
       const spy = vi.spyOn(client, '_handleResponse');
       const command = simpleCommand(get('/path/subPath'));
-      vi.spyOn(command, 'getRequestConfig').mockReturnValue({ cors: true, timeout: 1000 });
+      vi.spyOn(command, 'getRequestConfig').mockReturnValue({ isCorsEnabled: true, timeout: 1000 });
 
       await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200 })
         .thenCall(() => client.send(command, { timeout: 500 }));
 
-      expect(spy.mock.calls[0][1].cors).toBe(true);
+      expect(spy.mock.calls[0][1].isCorsEnabled).toBe(true);
       expect(spy.mock.calls[0][1].timeout).toBe(500);
     });
 
@@ -547,21 +547,25 @@ describe('clever-client', () => {
           _params: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[0],
           composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
         ) {
-          void composer.send(simpleCommand(get('/path/subPath')), { cors: true, cache: { ttl: 100 }, timeout: 1000 });
+          void composer.send(simpleCommand(get('/path/subPath')), {
+            isCorsEnabled: true,
+            cache: { ttl: 100 },
+            timeout: 1000,
+          });
           return Promise.resolve('result');
         }
       })();
       const spy = vi.spyOn(client, 'send');
       await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
 
-      await client.send(command, { cors: false, cache: { mode: 'reload', ttl: 500 }, debug: true });
+      await client.send(command, { isCorsEnabled: false, cache: { mode: 'reload', ttl: 500 }, isDebugEnabled: true });
 
       expect(spy).toHaveBeenCalledTimes(2);
       expect(spy.mock.lastCall![1]).toEqual({
         cache: { mode: 'reload', ttl: 100 },
-        cors: true,
+        isCorsEnabled: true,
         timeout: 1000,
-        debug: true,
+        isDebugEnabled: true,
       });
     });
 
@@ -576,7 +580,7 @@ describe('clever-client', () => {
         }
 
         override getRequestConfig() {
-          return { cors: true, timeout: 1000 };
+          return { isCorsEnabled: true, timeout: 1000 };
         }
       })();
       const spy = vi.spyOn(client, 'send');
@@ -584,7 +588,7 @@ describe('clever-client', () => {
 
       await client.send(command, { timeout: 500 });
 
-      expect(spy.mock.lastCall![1]).toEqual({ cors: true, timeout: 500 });
+      expect(spy.mock.lastCall![1]).toEqual({ isCorsEnabled: true, timeout: 500 });
     });
   });
 
@@ -644,7 +648,7 @@ describe('clever-client', () => {
     it('should call `_transformStreamParams` method with right params', async () => {
       client = createClient({
         defaultRequestConfig: {
-          cors: false,
+          isCorsEnabled: false,
           timeout: 10,
         },
       });
@@ -652,20 +656,20 @@ describe('clever-client', () => {
       const command = streamCommand({ url: '/path/subPath' });
 
       await client.stream(command, {
-        debug: true,
-        cors: true,
+        isDebugEnabled: true,
+        isCorsEnabled: true,
       });
 
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy.mock.calls[0][0]).toBe(command);
-      expect(spy.mock.calls[0][1]!.debug).toBe(true);
-      expect(spy.mock.calls[0][1]!.cors).toBe(true);
+      expect(spy.mock.calls[0][1]!.isDebugEnabled).toBe(true);
+      expect(spy.mock.calls[0][1]!.isCorsEnabled).toBe(true);
     });
 
     it('should call `createStream` method with right params', async () => {
       client = createClient({
         defaultRequestConfig: {
-          cors: true,
+          isCorsEnabled: true,
           timeout: 10,
         },
         defaultStreamConfig: {
@@ -680,8 +684,8 @@ describe('clever-client', () => {
       const spy = vi.spyOn(command, 'createStream');
 
       await client.stream(command, {
-        debug: true,
-        cors: false,
+        isDebugEnabled: true,
+        isCorsEnabled: false,
         retry: { maxRetryCount: 100 },
       });
 
@@ -689,7 +693,7 @@ describe('clever-client', () => {
       expect(spy.mock.calls[0][1].retry!.maxRetryCount).toBe(100); // command config
       expect(spy.mock.calls[0][1].retry!.backoffFactor).toBe(10); // client config
       expect(spy.mock.calls[0][1].retry!.initRetryTimeout).toBe(1_000); // default config
-      expect(spy.mock.calls[0][1].debug).toBe(true); // command config
+      expect(spy.mock.calls[0][1].isDebugEnabled).toBe(true); // command config
       expect(spy.mock.calls[0][1].healthcheckInterval).toBe(10); // client config
       expect(spy.mock.calls[0][1].heartbeatPeriod).toBe(2_500); // default config
     });
@@ -697,13 +701,13 @@ describe('clever-client', () => {
     it('should apply the request config returned by `command.getRequestConfig()`, the caller config winning', async () => {
       const client = createClient({ defaultRequestConfig: { timeout: 10 } });
       const command = streamCommand({ url: '/path/subPath' });
-      vi.spyOn(command, 'getRequestConfig').mockReturnValue({ cors: true, timeout: 1000 });
+      vi.spyOn(command, 'getRequestConfig').mockReturnValue({ isCorsEnabled: true, timeout: 1000 });
       const spy = vi.spyOn(command, 'createStream');
 
       await client.stream(command, { timeout: 500 });
       const request = await spy.mock.calls[0][0]();
 
-      expect(request.cors).toBe(true);
+      expect(request.isCorsEnabled).toBe(true);
       expect(request.timeout).toBe(500);
     });
 
@@ -732,8 +736,8 @@ describe('clever-client', () => {
       const spy = vi.spyOn(client, '_prepareRequest');
 
       const stream = await client.stream(command, {
-        debug: true,
-        cors: false,
+        isDebugEnabled: true,
+        isCorsEnabled: false,
       });
 
       await newScenario()
@@ -750,8 +754,8 @@ describe('clever-client', () => {
         url: '/path/subPath',
       });
       expect(spy.mock.calls[0][2]).toEqual({
-        debug: true,
-        cors: false,
+        isDebugEnabled: true,
+        isCorsEnabled: false,
       });
     });
 

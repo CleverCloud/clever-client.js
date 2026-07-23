@@ -17,7 +17,7 @@ export class DeleteKubernetesClusterCommand extends CcApiCompositeCommand<
 > {
   async compose(params: DeleteKubernetesClusterCommandInput, composer: CcApiComposer): Promise<undefined> {
     await composer.send(new DeleteKubernetesClusterCommandInner(params));
-    if (params.wait) {
+    if (params.shouldWait) {
       await waitForKubernetesClusterDeletion(composer, params.ownerId, params.clusterId);
     }
     return undefined;

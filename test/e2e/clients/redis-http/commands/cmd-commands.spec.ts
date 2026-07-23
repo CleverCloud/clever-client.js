@@ -23,7 +23,7 @@ describe('cmd commands', function () {
   it('should run cli command', async () => {
     const response = await support.client.send(new CmdCliSendCommand({ commandLine: 'PING' }));
 
-    expect(response.success).toBe(true);
+    expect(response.isSuccess).toBe(true);
     expect(response.result).toBeInstanceOf(Array);
     expect(response.result[0]).toBe(`"PONG"`);
   });

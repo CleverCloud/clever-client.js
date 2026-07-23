@@ -22,7 +22,7 @@ describe('set-key commands', function () {
 
     const response = await support.client.send(new AddSetKeyElementCommand({ key: 'test', element: 'v2' }));
 
-    expect(response).toEqual({ key: 'test', element: 'v2', added: true });
+    expect(response).toEqual({ key: 'test', element: 'v2', wasAdded: true });
   });
 
   it('should create set key', async () => {
@@ -38,7 +38,7 @@ describe('set-key commands', function () {
 
     const response = await support.client.send(new DeleteSetKeyElementCommand({ key: 'test', element: 'v2' }));
 
-    expect(response).toEqual({ key: 'test', element: 'v2', deleted: true });
+    expect(response).toEqual({ key: 'test', element: 'v2', wasDeleted: true });
   });
 
   it('should scan set key', async () => {

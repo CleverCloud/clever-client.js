@@ -5,8 +5,10 @@ export interface ListBackupCommandInput extends AddonId {
   withCommands?: boolean;
 }
 
+// transformed: sorted by createdAt, most recent first
 export type ListBackupCommandOutput = Array<Backup>;
 
+// transformed: sorted by createdAt, most recent first
 export type ListBackupInnerCommandOutput = Array<InnerBackup>;
 
 export interface InnerBackup extends BackupBase {

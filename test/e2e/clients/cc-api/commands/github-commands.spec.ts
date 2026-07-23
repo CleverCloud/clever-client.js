@@ -44,7 +44,7 @@ describe('github commands', function () {
       expect(response[0]).toHaveProperty('description');
       expect(response[0].gitUrl).toBeTypeOf('string');
       expect(response[0].defaultBranch).toBeTypeOf('string');
-      expect(response[0].private).toBeTypeOf('boolean');
+      expect(response[0].isPrivate).toBeTypeOf('boolean');
     });
   });
 });

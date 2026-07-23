@@ -1,9 +1,14 @@
 interface LogDrainCommon {
   id: string;
+  // renamed from recipient
   target: LogDrainTarget;
   kind: LogDrainKind;
+  // renamed from status.date, the date when the drain's current status was set
+  // transformed: converted to an ISO date string
   updatedAt: string;
+  // renamed from status.status
   status: LogDrainStatus;
+  // renamed from status.authorId
   updatedBy: string;
   execution: {
     status: LogDrainExecutionStatus;
@@ -16,7 +21,9 @@ interface LogDrainCommon {
 }
 
 export interface LogDrain extends LogDrainCommon {
+  // transformed: mirrored back from the command input, the payload only carries a resourceId
   applicationId?: string;
+  // transformed: mirrored back from the command input, the payload only carries a resourceId
   addonId?: string;
 }
 
@@ -81,6 +88,7 @@ export interface ElasticsearchDrainTarget {
     username: string;
     password: string;
   };
+  // renamed from index
   indexPrefix?: string;
   tlsVerification?: LogDrainTlsVerification;
 }

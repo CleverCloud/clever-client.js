@@ -16,19 +16,22 @@ export interface GetPulsarInfoInnerCommandOutput {
   clusterId: string;
   token: string;
   // renamed from creation_date
-  creationDate: string;
+  // transformed: converted to an ISO date string
+  createdAt: string;
   // renamed from ask_for_deletion_date
-  askForDeletionDate?: string;
+  // transformed: converted to an ISO date string
+  askForDeletionAt?: string;
   // renamed from deletion_date
-  deletionDate?: string;
+  // transformed: converted to an ISO date string
+  deletedAt?: string;
   status: 'ACTIVE' | 'TO_DELETE' | 'NAMESPACE_DELETED' | 'COLD_STORAGE_DELETED' | 'DELETED';
   plan: PulsarPlan;
   // renamed from cold_storage_id
   coldStorageId?: string;
   // renamed from cold_storage_linked
-  coldStorageLinked: boolean;
+  isColdStorageLinked: boolean;
   // renamed from cold_storage_must_be_provided
-  coldStorageMustBeProvided: boolean;
+  isColdStorageMustBeProvided: boolean;
 }
 
 export interface GetPulsarClusterInnerCommandInput {

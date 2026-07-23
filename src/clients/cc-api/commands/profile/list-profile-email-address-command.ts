@@ -19,12 +19,12 @@ export class ListProfileEmailAddressCommand extends CcApiCompositeCommand<void, 
 
     return {
       primaryAddress: {
-        address: profile.email,
-        verified: profile.emailValidated,
+        address: profile.emailAddress,
+        isVerified: profile.isEmailValidated,
       },
       secondaryAddresses: secondaryEmailAddresses.map((address) => ({
         address,
-        verified: true,
+        isVerified: true,
       })),
     };
   }

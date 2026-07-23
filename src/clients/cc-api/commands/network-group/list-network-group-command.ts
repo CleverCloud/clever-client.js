@@ -5,6 +5,7 @@ import type {
   ListNetworkGroupCommandInput,
   ListNetworkGroupCommandOutput,
 } from './list-network-group-command.types.js';
+import { transformNetworkGroupPeer } from './network-group-transform.js';
 import { normalizeMemberKind } from './network-group-utils.js';
 
 /**
@@ -24,6 +25,7 @@ export class ListNetworkGroupCommand extends CcApiSimpleCommand<
     return (response as ListNetworkGroupCommandOutput).map((networkGroup) => ({
       ...networkGroup,
       members: networkGroup.members.map(normalizeMemberKind),
+      peers: networkGroup.peers.map(transformNetworkGroupPeer),
     }));
   }
 }

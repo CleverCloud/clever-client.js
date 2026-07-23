@@ -336,81 +336,81 @@ describe('Utils', () => {
     it('should merge request config with null config', () => {
       const config = mergeRequestConfig(
         {
-          cors: true,
+          isCorsEnabled: true,
           timeout: 0,
           cache: null,
-          debug: true,
+          isDebugEnabled: true,
         },
         // @ts-expect-error testing null override config
         null,
       );
       expect(config).toEqual({
-        cors: true,
+        isCorsEnabled: true,
         timeout: 0,
         cache: null,
-        debug: true,
+        isDebugEnabled: true,
       });
     });
 
     it('should merge request config with empty config', () => {
       const config = mergeRequestConfig(
         {
-          cors: true,
+          isCorsEnabled: true,
           timeout: 0,
           cache: null,
-          debug: true,
+          isDebugEnabled: true,
         },
         {},
       );
       expect(config).toEqual({
-        cors: true,
+        isCorsEnabled: true,
         timeout: 0,
         cache: null,
-        debug: true,
+        isDebugEnabled: true,
       });
     });
 
     it('should merge request config with config', () => {
       const config = mergeRequestConfig(
         {
-          cors: true,
+          isCorsEnabled: true,
           timeout: 0,
           cache: null,
-          debug: true,
+          isDebugEnabled: true,
         },
         {
-          cors: false,
+          isCorsEnabled: false,
           timeout: 10,
           cache: { ttl: 1000 },
-          debug: false,
+          isDebugEnabled: false,
         },
       );
       expect(config).toEqual({
-        cors: false,
+        isCorsEnabled: false,
         timeout: 10,
         cache: { ttl: 1000 },
-        debug: false,
+        isDebugEnabled: false,
       });
     });
 
     it('should merge request config with partial config', () => {
       const config = mergeRequestConfig(
         {
-          cors: true,
+          isCorsEnabled: true,
           timeout: 0,
           cache: null,
-          debug: true,
+          isDebugEnabled: true,
         },
         {
           cache: { ttl: 1000 },
-          debug: false,
+          isDebugEnabled: false,
         },
       );
       expect(config).toEqual({
-        cors: true,
+        isCorsEnabled: true,
         timeout: 0,
         cache: { ttl: 1000 },
-        debug: false,
+        isDebugEnabled: false,
       });
     });
 
@@ -418,10 +418,10 @@ describe('Utils', () => {
       it('should not merge null cache with undefined cache', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: null,
-            debug: true,
+            isDebugEnabled: true,
           },
           {},
         );
@@ -431,10 +431,10 @@ describe('Utils', () => {
       it('should not merge cache with undefined cache', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: { ttl: 1000 },
-            debug: true,
+            isDebugEnabled: true,
           },
           {},
         );
@@ -444,10 +444,10 @@ describe('Utils', () => {
       it('should merge cache with null cache', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: { ttl: 1000 },
-            debug: true,
+            isDebugEnabled: true,
           },
           {
             cache: null,
@@ -459,10 +459,10 @@ describe('Utils', () => {
       it('should merge null cache with cache', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: null,
-            debug: true,
+            isDebugEnabled: true,
           },
           {
             cache: { ttl: 10 },
@@ -474,10 +474,10 @@ describe('Utils', () => {
       it('should merge null cache with partial cache (use `0` ttl)', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: null,
-            debug: true,
+            isDebugEnabled: true,
           },
           {
             cache: { mode: 'reload' },
@@ -489,10 +489,10 @@ describe('Utils', () => {
       it('should merge cache with partial cache', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: { ttl: 1000 },
-            debug: true,
+            isDebugEnabled: true,
           },
           {
             cache: { mode: 'reload' },
@@ -510,18 +510,21 @@ describe('Utils', () => {
     });
 
     it('should merge partial config with undefined', () => {
-      const config = mergeRequestConfigPartial({ cors: true }, undefined);
-      expect(config).toEqual({ cors: true });
+      const config = mergeRequestConfigPartial({ isCorsEnabled: true }, undefined);
+      expect(config).toEqual({ isCorsEnabled: true });
     });
 
     it('should merge partial config with empty config', () => {
-      const config = mergeRequestConfigPartial({ cors: true }, {});
-      expect(config).toEqual({ cors: true });
+      const config = mergeRequestConfigPartial({ isCorsEnabled: true }, {});
+      expect(config).toEqual({ isCorsEnabled: true });
     });
 
     it('should merge partial config with partial config', () => {
-      const config = mergeRequestConfigPartial({ cors: true, debug: true }, { cors: false, timeout: 10 });
-      expect(config).toEqual({ cors: false, timeout: 10, debug: true });
+      const config = mergeRequestConfigPartial(
+        { isCorsEnabled: true, isDebugEnabled: true },
+        { isCorsEnabled: false, timeout: 10 },
+      );
+      expect(config).toEqual({ isCorsEnabled: false, timeout: 10, isDebugEnabled: true });
     });
 
     describe('cache config', () => {

@@ -4,5 +4,5 @@ export interface UpdateOrganisationMemberCommandInput {
   organisationId: string;
   memberId: string;
   role?: OrganisationMemberRole;
-  job?: string;
+  jobTitle?: string;
 }

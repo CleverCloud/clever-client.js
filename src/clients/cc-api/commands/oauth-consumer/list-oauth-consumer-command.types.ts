@@ -5,4 +5,5 @@ export interface ListOauthConsumerCommandInput {
   withSecret: boolean;
 }
 
+// transformed: sorted by name
 export type ListOauthConsumerCommandOutput = Array<OauthConsumer>;

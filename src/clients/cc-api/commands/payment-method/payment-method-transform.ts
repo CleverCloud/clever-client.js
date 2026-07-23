@@ -5,7 +5,7 @@ export function transformPaymentMethod(payload: any): PaymentMethod {
     ownerId: payload.ownerId,
     type: payload.type,
     token: payload.token,
-    primary: payload.isDefault,
+    isPrimary: payload.isDefault,
     number: payload.number,
   };
 }

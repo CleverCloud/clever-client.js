@@ -52,10 +52,10 @@ describe('cc-stream', () => {
         stubs.request();
         const requestUrl = request.url ?? '';
         return {
-          cors: false,
+          isCorsEnabled: false,
           timeout: 0,
           cache: null,
-          debug: false,
+          isDebugEnabled: false,
           method: 'GET',
           ...request,
           url: requestUrl.startsWith('http') ? requestUrl : `${newScenario.mockClient.baseUrl}${requestUrl}`,
@@ -63,7 +63,7 @@ describe('cc-stream', () => {
       },
       {
         retry: null,
-        debug: false,
+        isDebugEnabled: false,
         heartbeatPeriod: 20,
         healthcheckInterval: 10,
         ...config,
@@ -202,9 +202,9 @@ describe('cc-stream', () => {
         url: `${newScenario.mockClient.baseUrl}/`,
         headers: new HeadersBuilder().acceptEventStream().build(),
         cache: { ttl: 100 },
-        cors: false,
+        isCorsEnabled: false,
         timeout: 0,
-        debug: false,
+        isDebugEnabled: false,
       },
       <CommandOutput>() =>
         Promise.resolve({
@@ -212,7 +212,7 @@ describe('cc-stream', () => {
           headers: new Headers(),
           body: 'body' as CommandOutput,
           requestDuration: 0,
-          cacheHit: false,
+          hasHitCache: false,
         }),
     );
 

@@ -1,27 +1,31 @@
 import { sortBy } from '../../../../lib/utils.js';
 import type { GetOrganisationSummariesCommandOutput } from './get-organisation-summaries-command.types.js';
-import type { Organisation, OrganisationMember, OrganisationSummary } from './organisation.types.js';
+import type {
+  ApplicationSummary,
+  Organisation,
+  OrganisationMember,
+  OrganisationSummary,
+} from './organisation.types.js';
 
 export function transformOrganisation(payload: any): Organisation {
   return {
     id: payload.id,
     name: payload.name,
     description: payload.description,
-    // transform billingEmail to billingEmailAddress
     billingEmailAddress: payload.billingEmail,
     address: payload.address,
     city: payload.city,
     zipcode: payload.zipcode,
     country: payload.country,
     company: payload.company,
-    VAT: payload.VAT,
+    vat: payload.VAT,
     avatar: payload.avatar,
     vatState: payload.vatState,
     customerFullName: payload.customerFullName,
     canPay: payload.canPay,
-    cleverEnterprise: payload.cleverEnterprise,
+    isPremium: payload.cleverEnterprise,
     emergencyNumber: payload.emergencyNumber,
-    canSEPA: payload.canSEPA,
+    canPayWithSEPA: payload.canSEPA,
     isTrusted: payload.isTrusted,
   };
 }
@@ -29,12 +33,12 @@ export function transformOrganisation(payload: any): Organisation {
 export function transformOrganisationMember(payload: any): OrganisationMember {
   return {
     id: payload.member.id,
-    email: payload.member.email,
+    emailAddress: payload.member.email,
     name: payload.member.name,
     avatar: payload.member.avatar,
     preferredMFA: payload.member.preferredMFA,
     role: payload.role,
-    job: payload.job,
+    jobTitle: payload.job,
   };
 }
 
@@ -47,20 +51,37 @@ export function transformOrganisationSummaries(payload: any): GetOrganisationSum
   return [transformOrganisationSummary(payload.user, true), ...sortBy(organisations, 'name')];
 }
 
+function transformApplicationSummary(payload: any): ApplicationSummary {
+  return {
+    id: payload.id,
+    name: payload.name,
+    instanceType: payload.instanceType,
+    instanceVariant: payload.instanceVariant,
+    variantSlug: payload.variantSlug,
+    isArchived: payload.archived,
+    isZeroDowntimeDeploymentEnabled: !payload.homogeneous,
+    variantLogoUrl: payload.variantLogoUrl,
+    state: payload.state,
+    commit: payload.commit,
+    systemTags: payload.systemTags,
+    customerTags: payload.customerTags,
+  };
+}
+
 function transformOrganisationSummary(payload: any, isPersonal: boolean): OrganisationSummary {
   return {
     id: payload.id,
     name: payload.name,
     avatar: payload.avatar,
-    applications: sortBy(payload.applications ?? [], 'name', 'id'),
+    applications: sortBy((payload.applications ?? []).map(transformApplicationSummary), 'name', 'id'),
     addons: sortBy(payload.addons ?? [], 'name', 'id'),
     consumers: sortBy(payload.consumers ?? [], 'name', 'key'),
     providers: sortBy(payload.providers ?? [], 'name', 'id'),
     role: payload.role,
     vatState: payload.vatState,
     canPay: payload.canPay,
-    canSEPA: payload.canSEPA,
-    cleverEnterprise: payload.cleverEnterprise,
+    canPayWithSEPA: payload.canSEPA,
+    isPremium: payload.cleverEnterprise,
     emergencyNumber: payload.emergencyNumber,
     isTrusted: payload.isTrusted,
     isPersonal: isPersonal,

@@ -3,7 +3,7 @@ import type { Application, ApplicationLifetime } from './application.types.js';
 
 export interface CreateApplicationCommandInput {
   applianceId?: string;
-  archived?: boolean;
+  isArchived?: boolean;
   branch?: string;
   buildFlavor?: string;
   cancelOnPush?: boolean;
@@ -11,10 +11,11 @@ export interface CreateApplicationCommandInput {
   description?: string;
   // renamed from env and converted from Record<string, string>
   environment?: Array<EnvironmentVariable>;
-  favourite?: boolean;
+  isFavourite?: boolean;
   // converted from ENABLED|DISABLED to boolean
-  forceHttps?: boolean;
-  homogeneous?: boolean;
+  shouldForceHttps?: boolean;
+  // inverted from homogeneous
+  isZeroDowntimeDeploymentEnabled?: boolean;
   instance: ApplicationInstance | ApplicationInstanceSlug;
   instanceLifetime?: ApplicationLifetime;
   maxFlavor?: string;
@@ -25,9 +26,9 @@ export interface CreateApplicationCommandInput {
   oauthApp?: ApplicationOauthApp;
   ownerId: string;
   publicGitRepositoryUrl?: string;
-  separateBuild?: boolean;
-  shutdownable?: boolean;
-  stickySessions?: boolean;
+  hasSeparatedBuild?: boolean;
+  canShutdown?: boolean;
+  hasStickySessions?: boolean;
   tags?: Array<string>;
   zone?: string;
 }

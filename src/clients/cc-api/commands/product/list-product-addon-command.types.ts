@@ -5,4 +5,5 @@ export interface ListProductAddonCommandInput {
   ownerId?: string;
 }
 
+// transformed: sorted by name
 export type ListProductAddonCommandOutput = Array<ProductAddon>;

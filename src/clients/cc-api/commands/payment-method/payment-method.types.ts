@@ -3,6 +3,6 @@ export interface PaymentMethod {
   type: string;
   token: string;
   // renamed from isDefault
-  primary: boolean;
+  isPrimary: boolean;
   number: string;
 }

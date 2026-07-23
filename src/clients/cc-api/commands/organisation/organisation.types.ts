@@ -4,16 +4,23 @@ export interface OrganisationSummary {
   id: string;
   name: string;
   avatar: string;
+  // transformed: sorted by name, then id
   applications: Array<ApplicationSummary>;
+  // transformed: sorted by name, then id
   addons: Array<AddonSummary>;
+  // transformed: sorted by name, then key
   consumers: Array<ConsumerSummary>;
+  // transformed: sorted by name, then id
   providers: Array<ProviderSummary>;
   role: 'NONE' | 'ADMIN' | 'ACCOUNTING' | 'DEVELOPER' | 'MANAGER';
   vatState: string;
   canPay: boolean;
-  canSEPA: boolean;
-  cleverEnterprise: boolean;
+  // renamed from canSEPA
+  canPayWithSEPA: boolean;
+  // renamed from cleverEnterprise
+  isPremium: boolean;
   emergencyNumber: string;
+  // transformed: true for the summary built from the payload's user, the payload does not carry it
   isPersonal: boolean;
   isTrusted: boolean;
 }
@@ -24,8 +31,11 @@ export interface ApplicationSummary {
   instanceType: string;
   instanceVariant: string;
   variantSlug: string;
-  archived: false;
-  homogeneous: false;
+  // renamed from archived
+  isArchived: boolean;
+  // renamed from homogeneous
+  // transformed: inverted boolean
+  isZeroDowntimeDeploymentEnabled: boolean;
   variantLogoUrl: string;
   state: string;
   commit: string;
@@ -65,25 +75,34 @@ export interface Organisation {
   zipcode: string;
   country: string;
   company: string;
-  VAT: string;
+  // renamed from VAT
+  vat: string;
   avatar: string;
   vatState: 'INVALID' | 'PENDING_VALIDATION' | 'VALID' | 'NOT_NEEDED' | 'NOT_APPLICABLE';
   customerFullName: string;
   canPay: boolean;
-  cleverEnterprise: boolean;
+  // renamed from cleverEnterprise
+  isPremium: boolean;
   emergencyNumber: string;
-  canSEPA: boolean;
+  // renamed from canSEPA
+  canPayWithSEPA: boolean;
   isTrusted: boolean;
 }
 
 export interface OrganisationMember {
+  // renamed from member.id
   id: string;
-  email: string;
+  // renamed from member.email
+  emailAddress: string;
+  // renamed from member.name
   name: string;
+  // renamed from member.avatar
   avatar: string;
+  // renamed from member.preferredMFA
   preferredMFA: MFAKind;
   role: OrganisationMemberRole;
-  job?: string;
+  // renamed from job
+  jobTitle?: string;
 }
 
 export type OrganisationMemberRole = 'NONE' | 'ADMIN' | 'ACCOUNTING' | 'DEVELOPER' | 'MANAGER';

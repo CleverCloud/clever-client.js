@@ -24,7 +24,7 @@ export class ResumeKubernetesClusterCommand extends CcApiCompositeCommand<
     composer: CcApiComposer,
   ): Promise<ResumeKubernetesClusterCommandOutput> {
     const cluster = await composer.send(new ResumeKubernetesClusterCommandInner(params));
-    if (params.waitForActive) {
+    if (params.shouldWaitForActive) {
       return waitForKubernetesClusterActive(composer, params.ownerId, params.clusterId);
     }
     return cluster;

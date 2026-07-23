@@ -20,7 +20,7 @@ export class RequestAuthPasswordResetCommand extends CcApiSimpleCommand<
     const body = new URLSearchParams(
       pickNonNull({
         login: params.login,
-        drop_tokens: params.dropTokens ? 'true' : undefined,
+        drop_tokens: params.shouldDropTokens ? 'true' : undefined,
         partner_id: params.partnerId,
       }),
     ).toString();

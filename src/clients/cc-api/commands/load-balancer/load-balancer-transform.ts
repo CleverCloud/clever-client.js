@@ -7,7 +7,7 @@ export function transformLoadBalancer(payload: any): LoadBalancer {
     zoneId: payload.zoneId,
     dns: {
       cname: payload.dns.cname,
-      a: payload.dns.a,
+      aRecords: payload.dns.a,
     },
   };
 }

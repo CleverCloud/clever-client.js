@@ -71,7 +71,7 @@ describe('notification commands', function () {
         name: 'hook name',
         targets,
         events: ['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION'],
-        scope: [app1.id, app2.id],
+        scopes: [app1.id, app2.id],
       }),
     );
 
@@ -79,7 +79,7 @@ describe('notification commands', function () {
     expect(response.name).toBe('hook name');
     expect(response.targets).toEqualInAnyOrder(targets);
     expect(response.events).toEqualInAnyOrder(['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION']);
-    expect(response.scope).toEqualInAnyOrder([app1.id, app2.id]);
+    expect(response.scopes).toEqualInAnyOrder([app1.id, app2.id]);
   });
 
   it('should list email notifications', async () => {
@@ -158,7 +158,7 @@ describe('notification commands', function () {
         name: 'hook name',
         urls,
         events: ['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION'],
-        scope: [app1.id, app2.id],
+        scopes: [app1.id, app2.id],
       }),
     );
 
@@ -166,7 +166,7 @@ describe('notification commands', function () {
     expect(response.name).toBe('hook name');
     expect(response.urls).toEqualInAnyOrder(urls);
     expect(response.events).toEqualInAnyOrder(['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION']);
-    expect(response.scope).toEqualInAnyOrder([app1.id, app2.id]);
+    expect(response.scopes).toEqualInAnyOrder([app1.id, app2.id]);
   });
 
   it('should list webhook notifications', async () => {

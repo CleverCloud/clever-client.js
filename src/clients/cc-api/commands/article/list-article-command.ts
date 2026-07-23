@@ -120,6 +120,6 @@ class ListArticlePageCommand extends CcApiSimpleCommand<ListArticlePageCommandIn
   }
 
   getRequestConfig(): CcRequestConfigPartial {
-    return { cors: true, cache: { ttl: DEFAULT_CACHE_TTL } };
+    return { isCorsEnabled: true, cache: { ttl: DEFAULT_CACHE_TTL } };
   }
 }

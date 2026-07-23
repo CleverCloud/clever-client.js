@@ -55,7 +55,7 @@ describe('cellar commands', function () {
     expect(response.ownerId).toBe(support.organisationId);
     expect(response.plan).toBeTypeOf('string');
     expect(response.status).toBeTypeOf('string');
-    expect(response.creationDate).toBeTypeOf('string');
+    expect(response.createdAt).toBeTypeOf('string');
     expect(response.traffic.inbound).toBeTypeOf('number');
     expect(response.traffic.outbound).toBeTypeOf('number');
     expect(response.buckets.count).toBeTypeOf('number');
@@ -231,7 +231,7 @@ describe('cellar commands', function () {
       new ListCellarObjectCommand({ ownerId: support.organisationId, addonId: addon.realId, bucketName }),
     );
 
-    expect(response.content).toEqual([]);
+    expect(response.items).toEqual([]);
     expect(response.directories).toEqual([]);
     expect(response.cursor).toBeNull();
   });

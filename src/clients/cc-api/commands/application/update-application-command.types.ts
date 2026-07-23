@@ -3,7 +3,7 @@ import type { ApplicationId } from '../../types/cc-api.types.js';
 import type { Application, ApplicationLifetime } from './application.types.js';
 
 export interface UpdateApplicationCommandInput extends ApplicationId {
-  archived?: boolean;
+  isArchived?: boolean;
   branch?: string;
   buildFlavor?: string;
   cancelOnPush?: boolean;
@@ -11,19 +11,20 @@ export interface UpdateApplicationCommandInput extends ApplicationId {
   description?: string;
   // renamed from env and converted from Record<string, string>
   environment?: Array<EnvironmentVariable>;
-  favourite?: boolean;
+  isFavourite?: boolean;
   // converted from ENABLED|DISABLED to boolean
-  forceHttps?: boolean;
-  homogeneous?: boolean;
+  shouldForceHttps?: boolean;
+  // inverted from homogeneous
+  isZeroDowntimeDeploymentEnabled?: boolean;
   instanceLifetime?: ApplicationLifetime;
   maxFlavor?: string;
   maxInstances?: number;
   minFlavor?: string;
   minInstances?: number;
   name?: string;
-  separateBuild?: boolean;
-  shutdownable?: boolean;
-  stickySessions?: boolean;
+  hasSeparatedBuild?: boolean;
+  canShutdown?: boolean;
+  hasStickySessions?: boolean;
   tags?: Array<string>;
   zone?: string;
 }

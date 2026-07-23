@@ -6,4 +6,5 @@ export type ListLinkCommandInput = ListApplicationLinkCommandInput | ListAddonLi
 export type ListApplicationLinkCommandInput = ApplicationId;
 export type ListAddonLinkCommandInput = AddonId;
 
+// transformed: sorted by the linked resource's name, then id
 export type ListLinkCommandOutput = Array<Link>;

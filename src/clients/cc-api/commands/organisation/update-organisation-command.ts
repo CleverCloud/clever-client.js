@@ -17,8 +17,11 @@ export class UpdateOrganisationCommand extends CcApiSimpleCommand<
   UpdateOrganisationCommandOutput
 > {
   toRequestParams(params: UpdateOrganisationCommandInput) {
+    // the wire still spells the VAT number `VAT`
+    const vat = 'vat' in params ? { VAT: params.vat } : {};
     const body = {
-      ...omit(params, 'organisationId', 'billingEmailAddress', 'contacts'),
+      ...omit('vat' in params ? omit(params, 'vat') : params, 'organisationId', 'billingEmailAddress', 'contacts'),
+      ...vat,
       billingEmail: params.billingEmailAddress,
       contacts:
         params.contacts?.map((c) => ({

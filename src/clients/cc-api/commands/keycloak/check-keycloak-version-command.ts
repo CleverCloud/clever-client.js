@@ -6,6 +6,7 @@ import type {
   CheckKeycloakVersionCommandInput,
   CheckKeycloakVersionCommandOutput,
 } from './check-keycloak-version-command.types.js';
+import { transformKeycloakVersionCheck } from './keycloak-transform.js';
 
 /**
  * @endpoint [GET] /v4/addon-providers/addon-keycloak/addons/:XXX/version/check
@@ -27,12 +28,6 @@ export class CheckKeycloakVersionCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): CheckKeycloakVersionCommandOutput {
-    const res = response as CheckKeycloakVersionCommandOutput;
-    return {
-      installed: res.installed,
-      available: res.available,
-      latest: res.latest,
-      needUpdate: res.needUpdate,
-    };
+    return transformKeycloakVersionCheck(response);
   }
 }

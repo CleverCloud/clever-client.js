@@ -14,7 +14,7 @@ import {
 const REQUEST = {} as CcRequest;
 
 function response(status: number): CcResponse<unknown> {
-  return { status, headers: new Headers(), body: undefined, requestDuration: 0, cacheHit: false };
+  return { status, headers: new Headers(), body: undefined, requestDuration: 0, hasHitCache: false };
 }
 
 function httpError(status: number, code: string): CcHttpError {

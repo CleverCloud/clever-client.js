@@ -13,7 +13,7 @@ export class UpdateAuthPasswordCommand extends CcApiSimpleCommand<UpdateAuthPass
     return put(safeUrl`/v2/self/change_password`, {
       oldPassword: params.oldPassword,
       newPassword: params.newPassword,
-      dropTokens: params.revokeTokens,
+      dropTokens: params.shouldRevokeTokens,
     });
   }
 

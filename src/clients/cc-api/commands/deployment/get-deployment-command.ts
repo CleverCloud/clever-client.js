@@ -2,7 +2,7 @@ import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformDeploymentLegacy } from './deployment-transform.js';
+import { transformDeployment, transformDeploymentLegacy } from './deployment-transform.js';
 import type {
   GetDeploymentCommandInput,
   GetDeploymentCommandOutput,
@@ -19,6 +19,10 @@ export class GetDeploymentCommand extends CcApiSimpleCommand<GetDeploymentComman
     return get(
       safeUrl`/v4/orchestration/organisations/${params.ownerId}/applications/${params.applicationId}/deployments/${params.deploymentId}`,
     );
+  }
+
+  transformCommandOutput(response: unknown): GetDeploymentCommandOutput {
+    return transformDeployment(response);
   }
 
   getIdsToResolve(): IdResolve {

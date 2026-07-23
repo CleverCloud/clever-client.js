@@ -164,7 +164,7 @@ export class CcStream {
    * @param data - Optional data to include in the log
    */
   #debugLog(message: string, data?: unknown): void {
-    if (this.#config.debug) {
+    if (this.#config.isDebugEnabled) {
       const timestamp = new Date().toISOString();
       const logMessage = `[CcStream] [${timestamp}] ${message}`;
       if (data !== undefined) {

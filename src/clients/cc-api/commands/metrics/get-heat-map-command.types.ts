@@ -18,7 +18,9 @@ export interface HeatMapPoint {
   /** Latitude of the geographic cell the requests were aggregated into. */
   lat: number;
   /** Longitude of the geographic cell the requests were aggregated into. */
+  // renamed from long
   lon: number;
   /** Number of requests originating from this geographic cell over the time range. */
+  // renamed from accessCount
   count: number;
 }

@@ -6,5 +6,5 @@ export interface GithubApplication {
   gitUrl: string;
   defaultBranch: string;
   // renamed from priv
-  private: boolean;
+  isPrivate: boolean;
 }

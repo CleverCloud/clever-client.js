@@ -28,7 +28,7 @@ import { e2eSupport } from '../e2e-support.js';
 // the dedicated /v4/kubernetes/... endpoint (see cc-configure-kubernetes.smart.js / clever-tools' k8s.js),
 // so we can't reuse `support.createTestAddon()` like the otoroshi/network-group suites do. Clusters created
 // here are tracked and cleaned up locally instead. Stage B (node-group/quota/usage/events commands) can
-// append to this file and reuse `createTestCluster` below, passing `{ waitForActive: true }` when the test
+// append to this file and reuse `createTestCluster` below, passing `{ shouldWaitForActive: true }` when the test
 // needs a live cluster.
 describe('kubernetes commands', function () {
   const support = e2eSupport();
@@ -37,7 +37,7 @@ describe('kubernetes commands', function () {
 
   async function createTestCluster(
     name = 'test-cluster',
-    options: { waitForActive?: boolean } = {},
+    options: { shouldWaitForActive?: boolean } = {},
   ): Promise<KubernetesCluster> {
     const cluster = await support.client.send(
       new CreateKubernetesClusterCommand({
@@ -46,7 +46,7 @@ describe('kubernetes commands', function () {
         // XS is only valid for DEDICATED_COMPUTE server-side (TopologyConfig.validate in OVD); ALL_IN_ONE's
         // smallest allowed flavor is S.
         topologyConfig: { topology: 'ALL_IN_ONE', flavor: 'S', replicationFactor: 1 },
-        waitForActive: options.waitForActive,
+        shouldWaitForActive: options.shouldWaitForActive,
       }),
     );
     createdClusterIds.push(cluster.id);
@@ -63,7 +63,7 @@ describe('kubernetes commands', function () {
     await Promise.allSettled(
       createdClusterIds.map((clusterId) =>
         support.client.send(
-          new DeleteKubernetesClusterCommand({ ownerId: support.organisationId, clusterId, wait: true }),
+          new DeleteKubernetesClusterCommand({ ownerId: support.organisationId, clusterId, shouldWait: true }),
         ),
       ),
     );
@@ -83,7 +83,7 @@ describe('kubernetes commands', function () {
     expect(response.topologies[0].availableFlavors).toBeInstanceOf(Array);
     expect(response.topologies[0].replicationFactor.min).toBeTypeOf('number');
     expect(response.topologies[0].replicationFactor.max).toBeTypeOf('number');
-    expect(response.versions.available).toBeInstanceOf(Array);
+    expect(response.versions.availableVersions).toBeInstanceOf(Array);
     expect(response.versions.default).toBeTypeOf('string');
   });
 
@@ -150,7 +150,7 @@ describe('kubernetes commands', function () {
     const created = await createTestCluster('test-cluster-delete-wait');
 
     const response = await support.client.send(
-      new DeleteKubernetesClusterCommand({ ownerId: support.organisationId, clusterId: created.id, wait: true }),
+      new DeleteKubernetesClusterCommand({ ownerId: support.organisationId, clusterId: created.id, shouldWait: true }),
     );
 
     expect(response).toBeUndefined();
@@ -167,14 +167,14 @@ describe('kubernetes commands', function () {
   // These endpoints operate on a live cluster, so this test waits for real provisioning to reach ACTIVE
   // before exercising them — hence the much larger timeout than the other tests in this file.
   it.skip('should check/update the version, redeploy, get the kubeconfig and add persistent storage once the cluster is active', async () => {
-    const active = await createTestCluster('test-cluster-lifecycle', { waitForActive: true });
+    const active = await createTestCluster('test-cluster-lifecycle', { shouldWaitForActive: true });
 
     const versionCheck = await support.client.send(
       new CheckKubernetesClusterVersionCommand({ ownerId: support.organisationId, clusterId: active.id }),
     );
     expect(versionCheck.installed).toBeTypeOf('string');
     expect(versionCheck.latest).toBeTypeOf('string');
-    expect(versionCheck.available).toContain(versionCheck.latest);
+    expect(versionCheck.availableVersions).toContain(versionCheck.latest);
     expect(versionCheck.needUpdate).toBeTypeOf('boolean');
 
     const updatedVersion = await support.client.send(
@@ -182,7 +182,7 @@ describe('kubernetes commands', function () {
         ownerId: support.organisationId,
         clusterId: active.id,
         targetVersion: versionCheck.installed,
-        waitForActive: true,
+        shouldWaitForActive: true,
       }),
     );
     expect(updatedVersion.id).toBe(active.id);
@@ -192,7 +192,7 @@ describe('kubernetes commands', function () {
       new RedeployKubernetesClusterCommand({
         ownerId: support.organisationId,
         clusterId: active.id,
-        waitForActive: true,
+        shouldWaitForActive: true,
       }),
     );
     expect(redeployed.id).toBe(active.id);
@@ -213,7 +213,7 @@ describe('kubernetes commands', function () {
       new AddKubernetesPersistentStorageCommand({ ownerId: support.organisationId, clusterId: active.id }),
     );
     expect(withStorage.id).toBe(active.id);
-    expect(withStorage.features?.csi).toBe(true);
+    expect(withStorage.features?.isCsi).toBe(true);
   }, 600_000);
 
   // resume is only allowed from FAILED (see status-lifecycle.md in OVD); a freshly created cluster is
@@ -246,7 +246,7 @@ describe('kubernetes commands', function () {
   // Node groups and deployment events operate on a live cluster, so this test waits for real provisioning to
   // reach ACTIVE before exercising them, same as the version/kubeconfig/csi test above.
   it('should list, create, get, update and delete node groups, and list deployment events, on an active cluster', async () => {
-    const active = await createTestCluster('test-cluster-node-groups', { waitForActive: true });
+    const active = await createTestCluster('test-cluster-node-groups', { shouldWaitForActive: true });
 
     const nodeGroupsBefore = await support.client.send(
       new ListKubernetesNodeGroupCommand({ ownerId: support.organisationId, clusterId: active.id }),

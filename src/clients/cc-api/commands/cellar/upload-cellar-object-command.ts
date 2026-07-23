@@ -87,6 +87,6 @@ class UploadCellarObjectInnerCommand extends CcApiSimpleCommand<UploadCellarObje
 
   // the URL points at the API rather than at the page origin, so from a browser the request is cross-origin
   getRequestConfig(): CcRequestConfigPartial {
-    return { cors: true };
+    return { isCorsEnabled: true };
   }
 }

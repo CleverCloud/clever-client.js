@@ -6,14 +6,18 @@ export interface Invoice {
   category?: string;
   address: InvoiceAddress;
   // renamed from emission_date
-  emissionDate: string;
+  // transformed: converted to an ISO date string
+  emittedAt: string;
   // renamed from pay_date
-  payDate?: string;
+  // transformed: converted to an ISO date string
+  paidAt?: string;
   status: InvoiceStatus;
   // renamed from consumption_begin_date
-  consumptionStartDate: string;
+  // transformed: converted to an ISO date string
+  consumptionStartedAt: string;
   // renamed from consumption_end_date
-  consumptionEndDate: string;
+  // transformed: converted to an ISO date string
+  consumptionEndedAt: string;
   currency: string;
   // renamed from kpi_compute_months
   kpiComputeMonths: number;
@@ -25,9 +29,11 @@ export interface Invoice {
   uptimes: Array<InvoiceUptime>;
   countables: Array<InvoiceCountable>;
   // renamed from vendor_consumption
-  vendorConsumption: Array<InvoiceVendorConsumption>;
-  classic: Array<InvoiceClassic>;
-  unusable: Array<InvoiceUnusable>;
+  vendorConsumptions: Array<InvoiceVendorConsumption>;
+  // renamed from classic
+  extraItems: Array<InvoiceExtraItem>;
+  // renamed from unusable
+  unbilledUptimes: Array<InvoiceUnbilledUptime>;
   // renamed from credit_balance_at_emission
   creditBalanceAtEmission: InvoiceMoney;
   // renamed from free_credits_available_this_period
@@ -50,8 +56,6 @@ export interface Invoice {
   providerLastResponse?: string;
   // renamed from vat_declaration_id
   vatDeclarationId?: string;
-  // renamed from wannabe_invoice_id
-  wannabeInvoiceId?: string;
   // renamed from total_tax_excluded
   totalTaxExcluded: InvoiceMoney;
   // renamed from total_tax
@@ -65,9 +69,9 @@ export interface InvoiceSummary {
   category?: string;
   address: InvoiceAddress;
   // renamed from emission_date
-  emissionDate: string;
+  emittedAt: string;
   // renamed from pay_date
-  payDate?: string;
+  paidAt?: string;
   status: InvoiceStatus;
   currency: string;
   // renamed from kpi_compute_months
@@ -138,9 +142,11 @@ export interface InvoiceUptimeDetail {
   policyId: string;
   price: InvoiceMoney;
   // renamed from consumption_start
-  consumptionStartDate: string;
+  // transformed: converted to an ISO date string
+  consumptionStartedAt: string;
   // renamed from consumption_end
-  consumptionEndDate: string;
+  // transformed: converted to an ISO date string
+  consumptionEndedAt: string;
 }
 
 export interface InvoiceCountable {
@@ -151,7 +157,6 @@ export interface InvoiceCountable {
   applicationId: string;
   // renamed from owner_id
   ownerId: string;
-  // renamed from service
   service: string;
   // renamed from unit_name
   unitName: string;
@@ -173,9 +178,11 @@ export interface InvoiceCountable {
 
 export interface InvoiceCountableDetail {
   // renamed from consumption_start
-  consumptionStartDate: string;
+  // transformed: converted to an ISO date string
+  consumptionStartedAt: string;
   // renamed from consumption_end
-  consumptionEndDate: string;
+  // transformed: converted to an ISO date string
+  consumptionEndedAt: string;
   // renamed from plan_id
   planId: string;
   quantity: number;
@@ -194,7 +201,7 @@ export interface InvoiceVendorConsumption {
   applicationId: string;
 }
 
-export interface InvoiceClassic {
+export interface InvoiceExtraItem {
   // renamed from item_id
   id: string;
   // renamed from unit_price
@@ -215,21 +222,20 @@ export interface InvoiceClassic {
   subCategory: string;
 }
 
-export interface InvoiceUnusable {
+export interface InvoiceUnbilledUptime {
   // renamed from item_id
   id: string;
   // renamed from zone_id
   zone: string;
   // renamed from flavor_name
   flavorName: string;
-  // renamed from host
   host: string;
   // renamed from image_type
   imageType?: string;
   // renamed from start_date
-  consumptionStartDate: string;
+  consumptionStartedAt: string;
   // renamed from end_date
-  consumptionEndDate: string;
+  consumptionEndedAt: string;
 }
 
 export interface InvoiceMoney {

@@ -11,7 +11,7 @@ export interface CmdCliSendCommandOutput {
   /**
    * Whether the command execution was successful or not
    */
-  success: boolean;
+  isSuccess: boolean;
   /**
    * Result of the command split into an array of string
    */

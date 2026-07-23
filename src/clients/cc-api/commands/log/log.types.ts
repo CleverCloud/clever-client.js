@@ -4,6 +4,7 @@ export interface ApplicationRuntimeLog {
   commitId: string;
   deploymentId: string;
   instanceId: string;
+  // transformed: converted to an ISO date string
   date: string;
   zone: string;
   pid: number;
@@ -21,6 +22,7 @@ export interface AddonRuntimeLog {
   addonId: string;
   hostname: string;
   instanceId: string;
+  // transformed: converted to an ISO date string
   date: string;
   zone: string;
   pid: number;
@@ -34,6 +36,7 @@ export type ApplicationAccessLog = ApplicationAccessLogHttp;
 
 export interface ApplicationAccessLogBase<T> {
   id: string;
+  // transformed: converted to an ISO date string
   date: string;
   applicationId: string;
   instanceId: string;

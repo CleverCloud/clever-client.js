@@ -5,5 +5,5 @@ export interface ListProfileEmailAddressCommandOutput {
 
 export interface ProfileEmailAddress {
   address: string;
-  verified: boolean;
+  isVerified: boolean;
 }

@@ -5,7 +5,7 @@ export function transformPriceSystem(payload: any): PriceSystem {
   return {
     zone: payload.zone_id,
     currency: payload.currency,
-    runtime: sortBy(
+    runtimes: sortBy(
       payload.runtime.map((r: any) => ({
         id: r.runtime_policy_id,
         source: r.source,
@@ -16,7 +16,7 @@ export function transformPriceSystem(payload: any): PriceSystem {
       })),
       'price',
     ),
-    countable: sortBy(payload.countable.map(transformCountable), 'dataQuantityForPrice', 'timeIntervalForPrice'),
+    countables: sortBy(payload.countable.map(transformCountable), 'dataQuantityForPrice', 'timeIntervalForPrice'),
   };
 }
 

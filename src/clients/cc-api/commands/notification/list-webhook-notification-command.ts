@@ -5,6 +5,7 @@ import type {
   ListWebhookNotificationCommandInput,
   ListWebhookNotificationCommandOutput,
 } from './list-webhook-notification-command.types.js';
+import { transformWebhookNotification } from './notification-transform.js';
 
 /**
  * @endpoint [GET] /v2/notifications/webhooks/:XXX
@@ -20,6 +21,6 @@ export class ListWebhookNotificationCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): ListWebhookNotificationCommandOutput {
-    return sortBy(response as ListWebhookNotificationCommandOutput, 'name', 'createdAt');
+    return sortBy((response as Array<unknown>).map(transformWebhookNotification), 'name', 'createdAt');
   }
 }

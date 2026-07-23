@@ -22,5 +22,5 @@ export interface DeleteSetKeyElementCommandOutput extends WithKey {
   /**
    * `true` when the member has been deleted. `false` when the member was already absent.
    */
-  deleted: boolean;
+  wasDeleted: boolean;
 }

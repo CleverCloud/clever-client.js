@@ -1,6 +1,20 @@
 import { normalizeDate, sortBy } from '../../../../lib/utils.js';
 import type { GetNotificationInfoEventsCommandOutput } from './get-notification-info-command.types.js';
-import type { EmailNotification, EmailNotificationTarget } from './notification.types.js';
+import type { EmailNotification, EmailNotificationTarget, WebhookNotification } from './notification.types.js';
+
+export function transformWebhookNotification(payload: any): WebhookNotification {
+  return {
+    id: payload.id,
+    ownerId: payload.ownerId,
+    name: payload.name,
+    urls: payload.urls,
+    events: payload.events,
+    scopes: payload.scope,
+    createdAt: payload.createdAt,
+    failures: payload.failures,
+    state: payload.state,
+  };
+}
 
 export function transformEmailNotification(payload: any): EmailNotification {
   return {
@@ -9,7 +23,7 @@ export function transformEmailNotification(payload: any): EmailNotification {
     name: payload.name,
     targets: sortBy(payload.notified?.map(transformTarget) ?? [], 'type'),
     events: payload.events?.sort() ?? [],
-    scope: payload.scope?.sort() ?? [],
+    scopes: payload.scope?.sort() ?? [],
     createdAt: normalizeDate(payload.createdAt)!,
   };
 }

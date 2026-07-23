@@ -8,8 +8,8 @@ export interface UpdateAddonProviderCommandInput extends AddonProviderId {
   googlePlusName?: string;
   twitterName?: string;
   analyticsId?: string;
-  shortDesc?: string;
-  longDesc?: string;
+  shortDescription?: string;
+  longDescription?: string;
   logoUrl?: string;
 }
 

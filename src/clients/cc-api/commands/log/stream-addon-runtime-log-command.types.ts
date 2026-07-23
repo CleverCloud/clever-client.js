@@ -7,7 +7,7 @@ export interface StreamAddonRuntimeLogCommandInput extends AddonId {
   deploymentId?: string;
   filter?: string;
   instanceId?: Array<string>;
-  field?: Array<string>;
+  fields?: Array<string>;
   throttleElements?: number;
   throttlePerInMilliseconds?: number;
 }

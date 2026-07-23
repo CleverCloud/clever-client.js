@@ -27,7 +27,7 @@ function command(transformErrorCode: (error: ApiErrorInfo) => string): TestSimpl
 const REQUEST = {} as CcRequest;
 
 function response(status: number, body: unknown): CcResponse<unknown> {
-  return { status, headers: new Headers(), body, requestDuration: 0, cacheHit: false };
+  return { status, headers: new Headers(), body, requestDuration: 0, hasHitCache: false };
 }
 
 describe('handleHttpErrors', () => {

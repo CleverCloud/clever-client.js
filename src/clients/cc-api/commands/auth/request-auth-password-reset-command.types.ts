@@ -1,5 +1,5 @@
 export interface RequestAuthPasswordResetCommandInput {
   login: string;
-  dropTokens?: boolean;
+  shouldDropTokens?: boolean;
   partnerId?: string;
 }

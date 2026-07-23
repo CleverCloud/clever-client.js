@@ -77,13 +77,17 @@ describe('auth commands', function () {
     const newPassword = support.newTemporaryPassword!;
     try {
       const response = await support.client.send(
-        new UpdateAuthPasswordCommand({ oldPassword, newPassword, revokeTokens: false }),
+        new UpdateAuthPasswordCommand({ oldPassword, newPassword, shouldRevokeTokens: false }),
       );
 
       expect(response).toBeUndefined();
     } finally {
       await support.client.send(
-        new UpdateAuthPasswordCommand({ oldPassword: newPassword, newPassword: oldPassword, revokeTokens: false }),
+        new UpdateAuthPasswordCommand({
+          oldPassword: newPassword,
+          newPassword: oldPassword,
+          shouldRevokeTokens: false,
+        }),
       );
     }
   });

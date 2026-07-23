@@ -46,7 +46,7 @@ export interface CcRequestConfig {
   /**
    * Whether to enable CORS for the request
    */
-  cors: boolean;
+  isCorsEnabled: boolean;
 
   /**
    * Request timeout in milliseconds
@@ -67,7 +67,7 @@ export interface CcRequestConfig {
   /**
    * Debug configuration for request/response logging
    */
-  debug: boolean;
+  isDebugEnabled: boolean;
 }
 
 export interface CcRequestConfigPartial extends Partial<Omit<CcRequestConfig, 'cache'>> {
@@ -103,7 +103,7 @@ export interface CcResponse<CommandOutput> {
   /**
    * Whether the response was retrieved from the cache
    */
-  cacheHit: boolean;
+  hasHitCache: boolean;
 }
 
 /**

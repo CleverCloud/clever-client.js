@@ -20,10 +20,10 @@ import type { StreamCommand } from './stream/stream-command.js';
 import { isAbsoluteUrl, isUrlWithinBaseUrl, mergeRequestConfig, mergeRequestConfigPartial } from './utils.js';
 
 const DEFAULT_REQUEST_CONFIG: CcRequestConfig = {
-  cors: false,
+  isCorsEnabled: false,
   timeout: 0,
   cache: null,
-  debug: false,
+  isDebugEnabled: false,
 };
 const DEFAULT_REQUEST_PARAMS: WithRequired<Partial<CcRequestParams>, 'method'> = {
   method: 'GET',
@@ -37,7 +37,7 @@ const DEFAULT_STREAM_CONFIG: CcStreamConfig = {
   // The default Clever Cloud heartbeat period is 2 seconds. We add 500ms to handle potential latency.
   heartbeatPeriod: 2_000 + 500,
   healthcheckInterval: 1_000,
-  debug: false,
+  isDebugEnabled: false,
 };
 
 /**

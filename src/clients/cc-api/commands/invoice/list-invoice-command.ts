@@ -22,6 +22,6 @@ export class ListInvoiceCommand extends CcApiSimpleCommand<ListInvoiceCommandInp
   }
 
   transformCommandOutput(response: unknown): ListInvoiceCommandOutput {
-    return sortBy((response as Array<unknown>).map(transformInvoiceSummary), 'emissionDate');
+    return sortBy((response as Array<unknown>).map(transformInvoiceSummary), 'emittedAt');
   }
 }

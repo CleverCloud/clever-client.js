@@ -1,6 +1,7 @@
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { normalizeDate, pickNonNull } from '../../../../lib/utils.js';
 import { CcApiBridgeCommand } from '../../lib/cc-api-bridge-command.js';
+import { transformCreatedApiToken } from './api-token-transform.js';
 import type { CreateApiTokenCommandInput, CreateApiTokenCommandResponse } from './create-api-token-command.types.js';
 
 /**
@@ -17,13 +18,17 @@ export class CreateApiTokenCommand extends CcApiBridgeCommand<
     return post(
       `/api-tokens`,
       pickNonNull({
-        email: params.email,
+        email: params.emailAddress,
         password: params.password,
         mfaCode: params.mfaCode,
         name: params.name,
         description: params.description,
-        expirationDate: normalizeDate(params.expirationDate),
+        expirationDate: normalizeDate(params.expiresAt),
       }),
     );
+  }
+
+  transformCommandOutput(response: unknown): CreateApiTokenCommandResponse {
+    return transformCreatedApiToken(response);
   }
 }

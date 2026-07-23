@@ -60,12 +60,12 @@ async function loginUser(user: E2eUser): Promise<void> {
   const client = new CcApiBridgeClient({ oauthTokens: user.oauthTokens });
   const { apiTokenId, apiToken } = await client.send(
     new CreateApiTokenCommand({
-      email: user.email,
+      emailAddress: user.email,
       password: user.password,
       mfaCode: mfaCode,
       description: 'Temporary tokens for clever-client.js E2E tests',
       name: 'client.js E2E tests',
-      expirationDate: new Date(Date.now() + 1000 * 60 * 30),
+      expiresAt: new Date(Date.now() + 1000 * 60 * 30),
     }),
   );
   user.apiToken = apiToken;

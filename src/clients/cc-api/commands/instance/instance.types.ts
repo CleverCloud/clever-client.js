@@ -8,8 +8,12 @@ export interface Instance {
   index: number;
   state: InstanceState;
   hypervisorId: string;
-  creationDate: string;
-  deletionDate?: string;
+  // renamed from creationDate
+  // transformed: converted to an ISO date string
+  createdAt: string;
+  // renamed from deletionDate
+  // transformed: converted to an ISO date string
+  deletedAt?: string;
   network: {
     ip: string;
     port: number;

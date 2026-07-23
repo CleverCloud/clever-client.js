@@ -2,7 +2,8 @@ import type { MFAKind } from '../auth/auth.types.js';
 
 export interface Profile {
   id: string;
-  email: string;
+  // renamed from email
+  emailAddress: string;
   name: string;
   phone: string;
   address: string;
@@ -10,11 +11,17 @@ export interface Profile {
   zipcode: string;
   country: string;
   avatar: string;
-  creationDate: string;
+  // renamed from creationDate
+  // transformed: converted to an ISO date string
+  createdAt: string;
   lang: string;
-  emailValidated: boolean;
+  // renamed from emailValidated
+  isEmailValidated: boolean;
+  // renamed from oauthApps
+  // transformed: true when the list holds github
   isLinkedToGitHub: boolean;
-  admin: boolean;
+  // renamed from admin
+  isAdmin: boolean;
   canPay: boolean;
   preferredMFA: MFAKind;
   hasPassword: boolean;

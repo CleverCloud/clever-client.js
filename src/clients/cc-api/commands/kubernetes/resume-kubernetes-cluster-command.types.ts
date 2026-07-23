@@ -6,7 +6,7 @@ export interface ResumeKubernetesClusterCommandInput {
   /**
    * If true, wait until the cluster reaches the ACTIVE status before resolving.
    */
-  waitForActive?: boolean;
+  shouldWaitForActive?: boolean;
 }
 
 export type ResumeKubernetesClusterCommandOutput = KubernetesCluster;

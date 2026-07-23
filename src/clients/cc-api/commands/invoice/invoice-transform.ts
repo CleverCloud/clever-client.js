@@ -2,13 +2,13 @@ import { normalizeDate } from '../../../../lib/utils.js';
 import type {
   Invoice,
   InvoiceAddress,
-  InvoiceClassic,
   InvoiceCountable,
   InvoiceCountableDetail,
   InvoiceCouponRemains,
+  InvoiceExtraItem,
   InvoiceMoney,
   InvoiceSummary,
-  InvoiceUnusable,
+  InvoiceUnbilledUptime,
   InvoiceUptime,
   InvoiceUptimeDetail,
   InvoiceVendorConsumption,
@@ -21,11 +21,11 @@ export function transformInvoice(payload: any): Invoice {
     origin: payload.origin,
     category: payload.category,
     address: transformAddress(payload.address),
-    emissionDate: normalizeDate(payload.emission_date)!,
-    payDate: normalizeDate(payload.pay_date)!,
+    emittedAt: normalizeDate(payload.emission_date)!,
+    paidAt: normalizeDate(payload.pay_date)!,
     status: payload.status,
-    consumptionStartDate: normalizeDate(payload.consumption_begin_date)!,
-    consumptionEndDate: normalizeDate(payload.consumption_end_date)!,
+    consumptionStartedAt: normalizeDate(payload.consumption_begin_date)!,
+    consumptionEndedAt: normalizeDate(payload.consumption_end_date)!,
     currency: payload.currency,
     kpiComputeMonths: payload.kpi_compute_months,
     priceFactor: payload.price_factor,
@@ -33,9 +33,9 @@ export function transformInvoice(payload: any): Invoice {
     vatPercent: payload.vat_percent,
     uptimes: (payload.uptimes ?? []).map(transformUptime),
     countables: (payload.countables ?? []).map(transformCountable),
-    vendorConsumption: (payload.vendor_consumption ?? []).map(transformVendorConsumption),
-    classic: (payload.classic ?? []).map(transformClassic),
-    unusable: (payload.unusable ?? []).map(transformUnusable),
+    vendorConsumptions: (payload.vendor_consumption ?? []).map(transformVendorConsumption),
+    extraItems: (payload.classic ?? []).map(transformExtraItem),
+    unbilledUptimes: (payload.unusable ?? []).map(transformUnbilledUptime),
     creditBalanceAtEmission: transformMoney(payload.credit_balance_at_emission),
     freeCreditsAvailableThisPeriod: (payload.free_credits_available_this_period ?? []).map(transformCouponRemains),
     freeCreditsAvailableNextPeriod: (payload.free_credits_available_next_period ?? []).map(transformCouponRemains),
@@ -47,7 +47,6 @@ export function transformInvoice(payload: any): Invoice {
     providerTransactionId: payload.provider_transaction_id,
     providerLastResponse: payload.provider_last_response,
     vatDeclarationId: payload.vat_declaration_id,
-    wannabeInvoiceId: payload.wannabe_invoice_id,
     totalTaxExcluded: transformMoney(payload.total_tax_excluded),
     totalTax: transformMoney(payload.total_tax),
   };
@@ -59,8 +58,8 @@ export function transformInvoiceSummary(payload: any): InvoiceSummary {
     kind: payload.kind,
     category: payload.category,
     address: transformAddress(payload.address),
-    emissionDate: payload.emission_date,
-    payDate: payload.pay_date,
+    emittedAt: payload.emission_date,
+    paidAt: payload.pay_date,
     status: payload.status,
     currency: payload.currency,
     kpiComputeMonths: payload.kpi_compute_months,
@@ -125,8 +124,8 @@ function transformUptimeDetail(payload: any): InvoiceUptimeDetail {
     zone: payload.zone_id,
     policyId: payload.runtime_policy_id,
     price: transformMoney(payload.price),
-    consumptionStartDate: normalizeDate(payload.consumption_start)!,
-    consumptionEndDate: normalizeDate(payload.consumption_end)!,
+    consumptionStartedAt: normalizeDate(payload.consumption_start)!,
+    consumptionEndedAt: normalizeDate(payload.consumption_end)!,
   };
 }
 
@@ -152,8 +151,8 @@ function transformCountable(payload: any): InvoiceCountable {
 
 function transformCountableDetail(payload: any): InvoiceCountableDetail {
   return {
-    consumptionStartDate: normalizeDate(payload.consumption_start)!,
-    consumptionEndDate: normalizeDate(payload.consumption_end)!,
+    consumptionStartedAt: normalizeDate(payload.consumption_start)!,
+    consumptionEndedAt: normalizeDate(payload.consumption_end)!,
     planId: payload.plan_id,
     quantity: payload.quantity,
     price: transformMoney(payload.price),
@@ -170,7 +169,7 @@ function transformVendorConsumption(payload: any): InvoiceVendorConsumption {
   };
 }
 
-function transformClassic(payload: any): InvoiceClassic {
+function transformExtraItem(payload: any): InvoiceExtraItem {
   return {
     id: payload.item_id,
     unitPrice: transformMoney(payload.unit_price),
@@ -186,14 +185,14 @@ function transformClassic(payload: any): InvoiceClassic {
   };
 }
 
-function transformUnusable(payload: any): InvoiceUnusable {
+function transformUnbilledUptime(payload: any): InvoiceUnbilledUptime {
   return {
     id: payload.item_id,
     zone: payload.zone_id,
     flavorName: payload.flavor_name,
     host: payload.host,
     imageType: payload.image_type,
-    consumptionStartDate: payload.start_date,
-    consumptionEndDate: payload.end_date,
+    consumptionStartedAt: payload.start_date,
+    consumptionEndedAt: payload.end_date,
   };
 }

@@ -12,7 +12,7 @@ export function transformAddon(payload: any): Addon {
     zoneId: payload.zoneId,
     provider: payload.provider,
     plan: transformAddonProviderPlan(payload.plan),
-    creationDate: normalizeDate(payload.creationDate)!,
+    createdAt: normalizeDate(payload.creationDate)!,
     configKeys: payload.configKeys.sort(),
   };
 }
@@ -24,7 +24,7 @@ export function transformAddonSso(payload: any): GetAddonSsoCommandOutput {
     timestamp: payload.timestamp,
     token: payload.token,
     signature: payload.signature,
-    email: payload.email,
+    emailAddress: payload.email,
     name: payload.name,
     userId: payload.user_id,
     userInfoSignature: payload.userinfo_signature,

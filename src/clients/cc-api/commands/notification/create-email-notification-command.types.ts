@@ -10,7 +10,7 @@ export interface CreateEmailNotificationCommandInput {
   name: string;
   targets: Array<EmailNotificationTarget>;
   events?: Array<NotificationEventType | NotificationMetaEventType>;
-  scope?: Array<string>;
+  scopes?: Array<string>;
 }
 
 export type CreateEmailNotificationCommandOutput = EmailNotification;

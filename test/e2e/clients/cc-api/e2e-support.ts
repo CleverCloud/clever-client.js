@@ -369,7 +369,7 @@ export function e2eSupport(config?: { user?: E2eUserName; auth?: Auth; debug?: b
 }
 
 function createCcApiClient(user: E2eUser, auth: Auth, debug: boolean): CcApiClient {
-  const defaultRequestConfig = { debug };
+  const defaultRequestConfig = { isDebugEnabled: debug };
 
   if (USE_LOCAL_API_BRIDGE && auth === 'oauth-v1') {
     throw new Error('oauth-v1 is not supported with local api bridge');

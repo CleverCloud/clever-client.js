@@ -9,7 +9,9 @@ export interface Addon {
   zoneId: string;
   provider: AddonProviderFull;
   plan: AddonProviderPlan;
-  // transformed from number to date iso string
-  creationDate: string;
+  // renamed from creationDate
+  // transformed: converted to an ISO date string
+  createdAt: string;
+  // transformed: sorted
   configKeys: Array<string>;
 }

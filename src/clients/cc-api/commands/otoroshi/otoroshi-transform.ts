@@ -1,3 +1,4 @@
+import type { CheckOtoroshiVersionCommandOutput } from './check-otoroshi-version-command.types.js';
 import type { OtoroshiInfo } from './otoroshi.types.js';
 
 export function transformOtoroshiInfo(response: any): OtoroshiInfo {
@@ -15,5 +16,14 @@ export function transformOtoroshiInfo(response: any): OtoroshiInfo {
     features: response.features,
     api: response.api,
     initialCredentials: response.initialCredentials,
+  };
+}
+
+export function transformOtoroshiVersionCheck(response: any): CheckOtoroshiVersionCommandOutput {
+  return {
+    installed: response.installed,
+    availableVersions: response.available,
+    latest: response.latest,
+    needUpdate: response.needUpdate,
   };
 }

@@ -4,11 +4,13 @@ export interface JenkinsInfo {
   addonId: string;
   plan: 'OLD_S' | 'OLD_M' | 'OLD_L' | 'OLD_XL' | 'XS' | 'S' | 'M' | 'L' | 'XL';
   zone: string;
-  // renamed from creation_date and converted to ISO format (without [UTC])
-  creationDate: string;
+  // renamed from creation_date
+  // transformed: converted to an ISO date string (without [UTC])
+  createdAt: string;
   status: 'ACTIVE' | 'DELETED' | 'QUOTA_EXCEEDED' | 'TO_DELETE';
-  // renamed from deletion_date and converted to ISO format (without [UTC])
-  deletionDate?: string;
+  // renamed from deletion_date
+  // transformed: converted to an ISO date string (without [UTC])
+  deletedAt?: string;
   host: string;
   user: string;
   password: string;
@@ -19,7 +21,8 @@ export interface JenkinsInfo {
   artifactoryUser?: string;
   // renamed from artifactory_password
   artifactoryPassword?: string;
-  features: Array<{ name: string; enabled: boolean }>;
+  // transformed: each entry's enabled renamed to isEnabled, sorted by name
+  features: Array<{ name: string; isEnabled: boolean }>;
   updates: JenkinsUpdates;
 }
 

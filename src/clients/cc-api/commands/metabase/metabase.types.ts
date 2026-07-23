@@ -1,6 +1,7 @@
 import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
 
 export interface MetabaseInfo {
+  // renamed from resourceId
   id: string;
   addonId: string;
   name: string;
@@ -14,5 +15,7 @@ export interface MetabaseInfo {
     entrypoint: string;
     pgsqlId: string | null;
   };
+  // renamed from envVars
+  // transformed: converted from a Record<string, string> to an array, sorted by name
   environment: Array<EnvironmentVariable>;
 }

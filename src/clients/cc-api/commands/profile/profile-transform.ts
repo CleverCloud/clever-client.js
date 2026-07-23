@@ -4,7 +4,7 @@ import type { Profile } from './profile.types.js';
 export function transformProfile(payload: any): Profile {
   return {
     id: payload.id,
-    email: payload.email,
+    emailAddress: payload.email,
     name: payload.name,
     phone: payload.phone,
     address: payload.address,
@@ -12,11 +12,11 @@ export function transformProfile(payload: any): Profile {
     zipcode: payload.zipcode,
     country: payload.country,
     avatar: payload.avatar,
-    creationDate: normalizeDate(payload.creationDate)!,
+    createdAt: normalizeDate(payload.creationDate)!,
     lang: payload.lang,
-    emailValidated: payload.emailValidated,
+    isEmailValidated: payload.emailValidated,
     isLinkedToGitHub: payload.oauthApps != null && payload.oauthApps.includes('github'),
-    admin: payload.admin,
+    isAdmin: payload.admin,
     canPay: payload.canPay,
     preferredMFA: payload.preferredMFA,
     hasPassword: payload.hasPassword,

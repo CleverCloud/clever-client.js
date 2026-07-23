@@ -14,4 +14,9 @@ export class GetGithubLinkTransactionIdCommand extends CcApiSimpleCommand<
   toRequestParams() {
     return get(`/v2/github`);
   }
+
+  transformCommandOutput(response: unknown): GetGithubLinkTransactionIdCommandOutput {
+    const { transactionId, redirectUri } = response as { transactionId: string; redirectUri: string };
+    return { transactionId, redirectUrl: redirectUri };
+  }
 }

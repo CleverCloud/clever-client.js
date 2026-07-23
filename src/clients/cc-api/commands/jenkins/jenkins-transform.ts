@@ -7,8 +7,8 @@ export function transformJenkinsInfo(response: any): GetJenkinsInfoInnerCommandO
     addonId: response.app_id,
     plan: response.plan,
     zone: response.zone,
-    creationDate: normalizeDate(response.creation_date)!,
-    deletionDate: normalizeDate(response.deletion_date)!,
+    createdAt: normalizeDate(response.creation_date)!,
+    deletedAt: normalizeDate(response.deletion_date)!,
     status: response.status,
     host: response.host,
     user: response.user,
@@ -17,6 +17,9 @@ export function transformJenkinsInfo(response: any): GetJenkinsInfoInnerCommandO
     artifactoryUrl: response.artifactory_url,
     artifactoryUser: response.artifactory_user,
     artifactoryPassword: response.artifactory_password,
-    features: sortBy(response.features, 'name'),
+    features: sortBy(
+      (response.features ?? []).map((feature: any) => ({ name: feature.name, isEnabled: feature.enabled })),
+      'name',
+    ),
   };
 }

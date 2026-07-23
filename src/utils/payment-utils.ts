@@ -1,7 +1,7 @@
 export interface Orga {
   id: string;
   name: string;
-  cleverEnterprise: boolean;
+  isPremium: boolean;
   isTrusted: boolean;
 }
 
@@ -29,7 +29,7 @@ export function getOrgaPaymentMethodsError(orga: Orga, paymentMethodList: Array<
   }
 
   // Premium orgas are OK
-  if (orga.cleverEnterprise) {
+  if (orga.isPremium) {
     return null;
   }
 

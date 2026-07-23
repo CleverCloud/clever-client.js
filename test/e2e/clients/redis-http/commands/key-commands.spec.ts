@@ -24,7 +24,7 @@ describe('key commands', function () {
 
     const response = await support.client.send(new DeleteKeyCommand({ key: 'test' }));
 
-    expect(response).toEqual({ key: 'test', deleted: true });
+    expect(response).toEqual({ key: 'test', wasDeleted: true });
   });
 
   it('should scan keys', async () => {

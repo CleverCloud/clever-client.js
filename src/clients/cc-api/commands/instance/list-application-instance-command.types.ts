@@ -11,4 +11,5 @@ export interface ListApplicationInstanceCommandInput extends ApplicationId {
   order?: 'DESC' | 'ASC';
 }
 
+// transformed: sorted by createdAt, then index
 export type ListApplicationInstanceCommandOutput = Array<Instance>;

@@ -12,9 +12,11 @@ export interface RequestLocation {
   /** Latitude of the geographic cell the requests were aggregated into. */
   lat: number;
   /** Longitude of the geographic cell the requests were aggregated into. */
+  // renamed from long
   lon: number;
   /** Most frequent city among the requests aggregated into this geographic cell. */
   city: string;
   /** Number of requests originating from this geographic cell during the batch window. */
+  // renamed from accessCount
   count: number;
 }

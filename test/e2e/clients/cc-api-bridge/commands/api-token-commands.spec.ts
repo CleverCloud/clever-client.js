@@ -25,9 +25,9 @@ describe('api-token commands', function () {
       new CreateApiTokenCommand({
         name: 'test-api-token',
         description: 'test description',
-        email: support.email,
+        emailAddress: support.email,
         password: support.password,
-        expirationDate: new Date(new Date().getTime() + 1000 * 60 * 2),
+        expiresAt: new Date(new Date().getTime() + 1000 * 60 * 2),
       }),
     );
     createdTokenId = tokenCreated.apiTokenId;
@@ -36,8 +36,8 @@ describe('api-token commands', function () {
     expect(tokenCreated.apiTokenId).toBeTypeOf('string');
     expect(tokenCreated.name).toBe('test-api-token');
     expect(tokenCreated.description).toBe('test description');
-    expect(tokenCreated.creationDate).toBe(new Date(tokenCreated.creationDate).toISOString());
-    expect(tokenCreated.expirationDate).toBe(new Date(tokenCreated.expirationDate).toISOString());
+    expect(tokenCreated.createdAt).toBe(new Date(tokenCreated.createdAt).toISOString());
+    expect(tokenCreated.expiresAt).toBe(new Date(tokenCreated.expiresAt).toISOString());
     expect(tokenCreated.state).toBe('ACTIVE');
 
     // list
@@ -50,8 +50,8 @@ describe('api-token commands', function () {
     expect(tokenFormList!.name).toBe(tokenCreated.name);
     expect(tokenFormList!.description).toBe(tokenCreated.description);
     expect(tokenFormList!.userId).toBeTypeOf('string');
-    expect(tokenFormList!.creationDate).toBe(tokenCreated.creationDate);
-    expect(tokenFormList!.expirationDate).toBe(tokenCreated.expirationDate);
+    expect(tokenFormList!.createdAt).toBe(tokenCreated.createdAt);
+    expect(tokenFormList!.expiresAt).toBe(tokenCreated.expiresAt);
     expect(tokenFormList!.ip).toBeTypeOf('string');
     expect(tokenFormList!.state).toBe('ACTIVE');
 

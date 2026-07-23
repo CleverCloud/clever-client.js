@@ -1,6 +1,9 @@
 export interface Migration {
+  // renamed from migrationId
   id: string;
-  requestDate: string;
+  // renamed from requestDate
+  // transformed: converted to an ISO date string
+  requestedAt: string;
   steps: Array<MigrationStep>;
   status: MigrationStatus;
 }
@@ -8,8 +11,12 @@ export interface Migration {
 export interface MigrationStep {
   value: MigrationStepType;
   status: MigrationStatus;
-  startDate: string;
-  endDate?: string;
+  // renamed from startDate
+  // transformed: converted to an ISO date string
+  startsAt: string;
+  // renamed from endDate
+  // transformed: converted to an ISO date string
+  endsAt?: string;
   message?: string;
 }
 

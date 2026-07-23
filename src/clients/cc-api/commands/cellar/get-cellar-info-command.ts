@@ -2,6 +2,7 @@ import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { transformCellarInfo } from './cellar-transform.js';
 import type { GetCellarInfoCommandInput, GetCellarInfoCommandOutput } from './get-cellar-info-command.types.js';
 
 /**
@@ -19,5 +20,9 @@ export class GetCellarInfoCommand extends CcApiSimpleCommand<GetCellarInfoComman
       ownerId: true,
       addonId: 'REAL_ADDON_ID',
     };
+  }
+
+  transformCommandOutput(response: unknown): GetCellarInfoCommandOutput {
+    return transformCellarInfo(response);
   }
 }

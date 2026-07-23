@@ -30,6 +30,8 @@ export interface ElasticsearchInfo {
   kibanaApplication: string;
   // renamed from apm_application
   apmApplication: string;
-  services: Array<{ name: string; enabled: boolean }>;
-  features: Array<{ name: string; enabled: boolean }>;
+  // transformed: each entry's enabled renamed to isEnabled, sorted by name
+  services: Array<{ name: string; isEnabled: boolean }>;
+  // transformed: each entry's enabled renamed to isEnabled, sorted by name
+  features: Array<{ name: string; isEnabled: boolean }>;
 }

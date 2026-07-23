@@ -58,16 +58,46 @@ class UpdateApplicationInnerCommand extends CcApiSimpleCommand<
 > {
   toRequestParams(params: UpdateApplicationCommandInput) {
     const body: Record<string, unknown> = {
-      ...omit(params, 'ownerId', 'applicationId', 'environment'),
+      ...omit(
+        params,
+        'ownerId',
+        'applicationId',
+        'environment',
+        'isArchived',
+        'isFavourite',
+        'shouldForceHttps',
+        'isZeroDowntimeDeploymentEnabled',
+        'hasSeparatedBuild',
+        'canShutdown',
+        'hasStickySessions',
+      ),
     };
+    if (params.isArchived != null) {
+      body.archived = params.isArchived;
+    }
+    if (params.isFavourite != null) {
+      body.favourite = params.isFavourite;
+    }
+    if (params.isZeroDowntimeDeploymentEnabled != null) {
+      body.homogeneous = !params.isZeroDowntimeDeploymentEnabled;
+    }
+    if (params.hasSeparatedBuild != null) {
+      body.separateBuild = params.hasSeparatedBuild;
+    }
+    if (params.canShutdown != null) {
+      body.shutdownable = params.canShutdown;
+    }
+    if (params.hasStickySessions != null) {
+      body.stickySessions = params.hasStickySessions;
+    }
     if (params.environment != null) {
       body.env = toNameValueObject(params.environment);
     }
     if (params.instanceLifetime != null) {
       body.instanceLifetime = params.instanceLifetime;
     }
-    if (params.forceHttps != null) {
-      body.forceHttps = params.forceHttps ? 'ENABLED' : 'DISABLED';
+    if (params.shouldForceHttps != null) {
+      body.forceHttps = params.shouldForceHttps ? 'ENABLED' : 'DISABLED';
     }
 
     return put(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}`, body);

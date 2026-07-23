@@ -7,6 +7,8 @@ export interface Zone {
   displayName: string;
   lat: number;
   lon: number;
+  // transformed: sorted
   outboundIPs: Array<string>;
+  // transformed: sorted
   tags: Array<string>;
 }

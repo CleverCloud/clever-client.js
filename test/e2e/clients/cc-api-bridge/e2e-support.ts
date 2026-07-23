@@ -39,7 +39,7 @@ export function e2eSupport(config?: { debug?: boolean }) {
 }
 
 function createApiBridgeClient(auth: Auth, debug: boolean): CcApiBridgeClient {
-  const defaultRequestConfig = { debug };
+  const defaultRequestConfig = { isDebugEnabled: debug };
 
   return new CcApiBridgeClient({
     defaultRequestConfig,

@@ -39,8 +39,8 @@ export class AddOrganisationMemberCommand extends CcApiSimpleCommand<AddOrganisa
       safeUrl`/v2/organisations/${params.organisationId}/members`,
       {
         role: params.role,
-        email: params.email,
-        job: params.job,
+        email: params.emailAddress,
+        job: params.jobTitle,
       },
       new QueryParams().set('invitationKey', params.invitationKey),
     );

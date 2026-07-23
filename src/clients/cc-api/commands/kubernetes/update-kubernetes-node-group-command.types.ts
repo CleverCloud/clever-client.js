@@ -16,7 +16,7 @@ export interface UpdateKubernetesNodeGroupCommandInput {
   tag?: string;
   minNodeCount?: number;
   maxNodeCount?: number;
-  autoscalingEnabled?: boolean;
+  isAutoscalingEnabled?: boolean;
 }
 
 export type UpdateKubernetesNodeGroupCommandOutput = KubernetesNodeGroup;

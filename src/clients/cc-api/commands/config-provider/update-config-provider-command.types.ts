@@ -5,4 +5,5 @@ export interface UpdateConfigProviderCommandInput {
   environment: Array<EnvironmentVariable>;
 }
 
+// transformed: sorted by name
 export type UpdateConfigProviderCommandOutput = Array<EnvironmentVariable>;

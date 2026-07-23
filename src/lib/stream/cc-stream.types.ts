@@ -13,7 +13,7 @@ export interface CcStreamConfig {
   /** Interval for checking connection health in milliseconds */
   healthcheckInterval: number;
   /** Enable debug logging for stream operations */
-  debug: boolean;
+  isDebugEnabled: boolean;
 }
 
 /** Configuration options for CcStream instances where all properties are deeply optional */

@@ -15,7 +15,7 @@ export class GetUserSettingCommand extends CcApiSimpleCommand<GetUserSettingComm
     return {
       method: 'GET',
       url: safeUrl`/v4/console/settings/${params.name}`,
-      queryParams: new QueryParams().append('env', this.params.env),
+      queryParams: new QueryParams().append('env', this.params.environment),
       headers: new HeadersBuilder().acceptTextPlain().acceptJson().build(),
     };
   }

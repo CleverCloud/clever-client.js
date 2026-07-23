@@ -4,7 +4,8 @@ export interface WebhookNotification {
   name?: string;
   urls: Array<WebhookNotificationUrl>;
   events?: Array<NotificationEventType | NotificationMetaEventType>;
-  scope?: Array<string>;
+  // renamed from scope
+  scopes?: Array<string>;
   createdAt: string;
   failures: Array<WebhookNotificationRequestFailure>;
   state: 'ENABLED' | 'DISABLED';
@@ -30,9 +31,14 @@ export interface EmailNotification {
   ownerId: string;
   name?: string;
   // renamed from notified
+  // transformed: sorted by type
   targets: Array<EmailNotificationTarget>;
+  // transformed: sorted
   events?: Array<NotificationEventType | NotificationMetaEventType>;
-  scope?: Array<string>;
+  // renamed from scope
+  // transformed: sorted
+  scopes?: Array<string>;
+  // transformed: converted to an ISO date string
   createdAt: string;
 }
 
@@ -43,11 +49,14 @@ export type EmailNotificationTarget =
 
 export interface EmailNotificationTargetEmail {
   type: 'email';
+  // renamed from target
   emailAddress: string;
 }
 
 export interface EmailNotificationTargetUser {
+  // renamed from userid
   type: 'user';
+  // renamed from target
   userId: string;
 }
 

@@ -24,7 +24,7 @@ export class RedeployKubernetesClusterCommand extends CcApiCompositeCommand<
     composer: CcApiComposer,
   ): Promise<RedeployKubernetesClusterCommandOutput> {
     const cluster = await composer.send(new RedeployKubernetesClusterCommandInner(params));
-    if (params.waitForActive) {
+    if (params.shouldWaitForActive) {
       return waitForKubernetesClusterActive(composer, params.ownerId, params.clusterId);
     }
     return cluster;

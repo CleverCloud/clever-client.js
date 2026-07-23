@@ -27,12 +27,15 @@ export interface GetStatusCodeDistributionCommandOutput {
 
 export interface StatusCodeCounts {
   /** Total number of requests across all status codes. */
+  // transformed: summed over the kept status codes, the payload does not carry it
   total: number;
   /** Request count keyed by HTTP status code. */
+  // transformed: converted from an array of { code, count } to a record keyed by code
   statuses: Record<number, number>;
 }
 
 export interface StatusCodeDistributionByDate extends StatusCodeCounts {
   /** Date of the time bucket, as an ISO 8601 string. */
+  // transformed: converted to an ISO date string
   date: string;
 }

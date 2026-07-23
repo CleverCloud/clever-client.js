@@ -7,4 +7,5 @@ export type ListLogDrainCommandInput = ApplicationOrAddonId & {
   executionStatusNotIn?: Array<LogDrainExecutionStatus>;
 };
 
+// transformed: sorted by updatedAt, most recent first
 export type ListLogDrainCommandOutput = Array<LogDrain>;

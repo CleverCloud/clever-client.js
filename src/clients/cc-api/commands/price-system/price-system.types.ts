@@ -2,8 +2,12 @@ export interface PriceSystem {
   // renamed from zone_id
   zone?: string;
   currency: string;
-  runtime: Array<RuntimePricePolicy>;
-  countable: Array<CountablePricePolicy>;
+  // renamed from runtime
+  // transformed: sorted by price
+  runtimes: Array<RuntimePricePolicy>;
+  // renamed from countable
+  // transformed: sorted by dataQuantityForPrice, then timeIntervalForPrice
+  countables: Array<CountablePricePolicy>;
 }
 
 export interface RuntimePricePolicy {
@@ -14,7 +18,8 @@ export interface RuntimePricePolicy {
   // renamed from time_unit
   timeUnit: string;
   price: number;
-  // renamed from slug_id and transformed to lower case
+  // renamed from slug_id
+  // transformed: lowercased
   priceId: string;
 }
 
@@ -29,6 +34,7 @@ export interface CountablePricePolicy {
   // renamed from time_interval_for_price
   timeIntervalForPrice?: BillableTime;
   // renamed from price_plans
+  // transformed: sorted by maxQuantity, the unlimited plan last
   pricePlans: Array<CountablePricePlan>;
 }
 
