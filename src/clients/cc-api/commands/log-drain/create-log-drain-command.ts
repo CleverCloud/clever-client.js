@@ -9,6 +9,13 @@ import { buildLogDrainCreatePayload } from './log-drain-transform.js';
 import { waitForLogDrainEnabled } from './log-drain-utils.js';
 
 /**
+ * Creates a log drain on an application or an add-on, and waits until it starts shipping.
+ *
+ * Creation is asynchronous: the drain is persisted first, then enabled in the background. This command polls
+ * the drain once a second for up to 30 seconds and only resolves once it reports `ENABLED`, throwing if it has
+ * not got there in time. Unless `skipCheck` is set, the API also probes the target before persisting the drain
+ * and refuses to create it when the target cannot be reached.
+ *
  * @endpoint [POST] /v4/drains/organisations/:XXX/resources/:XXX/drains
  * @endpoint [GET] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX
  * @group LogDrain
@@ -25,6 +32,8 @@ export class CreateLogDrainCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Creates the log drain and returns its identifier, without waiting for it to start shipping.
+ *
  * @endpoint [POST] /v4/drains/organisations/:XXX/resources/:XXX/drains
  * @group LogDrain
  * @version 4

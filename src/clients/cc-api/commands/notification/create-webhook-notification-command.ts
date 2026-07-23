@@ -8,6 +8,8 @@ import type {
 import { transformWebhookNotification } from './notification-transform.js';
 
 /**
+ * Creates a webhook, which posts platform events to one or more URLs as they happen.
+ *
  * @endpoint [POST] /v2/notifications/webhooks/:XXX
  * @group Notification
  * @version 2

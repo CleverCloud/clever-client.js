@@ -8,6 +8,8 @@ import type {
 import { transformPaymentMethod } from './payment-method-transform.js';
 
 /**
+ * Lists the payment methods registered on an organisation.
+ *
  * @endpoint [GET] /v4/billing/organisations/:XXX/payments/methods
  * @group PaymentMethod
  * @version 4

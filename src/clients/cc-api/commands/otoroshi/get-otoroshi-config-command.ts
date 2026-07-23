@@ -9,6 +9,11 @@ import type {
 } from './get-otoroshi-config-command.types.js';
 
 /**
+ * Downloads the YAML configuration of an Otoroshi add-on.
+ *
+ * The response is served as `application/yaml`, so it comes back as raw text rather than as a
+ * parsed object.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-otoroshi/addons/:XXX/config.yaml
  * @group Otoroshi
  * @version 4

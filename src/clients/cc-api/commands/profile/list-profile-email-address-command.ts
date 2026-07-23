@@ -5,6 +5,11 @@ import { GetProfileCommand } from './get-profile-command.js';
 import type { ListProfileEmailAddressCommandOutput } from './list-profile-email-address-command.types.js';
 
 /**
+ * Lists every email address of the signed-in user, primary one included.
+ *
+ * The primary address only appears on the profile, the secondary ones behind their own endpoint, so
+ * both are fetched in parallel and merged.
+ *
  * @endpoint [GET] /v2/self
  * @endpoint [GET] /v2/self/emails
  * @group Profile
@@ -31,6 +36,8 @@ export class ListProfileEmailAddressCommand extends CcApiCompositeCommand<void, 
 }
 
 /**
+ * Lists the secondary email addresses of the signed-in user.
+ *
  * @endpoint [GET] /v2/self/emails
  * @group Profile
  * @version 2

@@ -9,6 +9,10 @@ import type {
 } from './get-addon-provider-command.types.js';
 
 /**
+ * Retrieves an add-on provider owned by an organisation.
+ *
+ * Only the provider description is returned: its plans and features are listed separately.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addonproviders/:XXX
  * @group AddonProvider
  * @version 2

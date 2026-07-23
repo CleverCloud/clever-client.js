@@ -10,7 +10,8 @@ import type { RequestLocation, StreamRequestsCommandInput } from './stream-reque
 
 /**
  * Streams live request locations for an owner, optionally restricted to a single application.
- * Each emitted batch aggregates the incoming requests by geographic cell over a short time window.
+ * Each emitted batch aggregates the incoming requests by geographic cell over a five-second window. Requests
+ * whose source IP address could not be geolocated are dropped, so a batch can come back empty.
  *
  * @endpoint [GET] /v4/stats/organisations/:XXX/requests-live
  * @group Metrics

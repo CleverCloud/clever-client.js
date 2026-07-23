@@ -6,6 +6,8 @@ import type { GetKeycloakInfoCommandInput, GetKeycloakInfoCommandOutput } from '
 import { transformKeycloakInfo } from './keycloak-transform.js';
 
 /**
+ * Retrieves a Keycloak add-on, with the URL to reach it, its initial credentials and the resources it is built on.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-keycloak/addons/:XXX
  * @group Keycloak
  * @version 4

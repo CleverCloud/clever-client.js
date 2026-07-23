@@ -9,6 +9,8 @@ import type {
 import { transformMetabaseVersionCheck } from './metabase-transform.js';
 
 /**
+ * Checks which Metabase versions an add-on can be moved to, and whether it is behind.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-metabase/addons/:XXX/version/check
  * @group Metabase
  * @version 4

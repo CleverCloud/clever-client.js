@@ -8,6 +8,11 @@ import type {
 import { transformKubernetesNodeGroup } from './kubernetes-transform.js';
 
 /**
+ * Adds a node group to an existing Kubernetes cluster.
+ *
+ * The nodes are booted asynchronously: the node group comes back in a pending state and only reaches
+ * its target node count once every machine has joined the cluster.
+ *
  * @endpoint [POST] /v4/kubernetes/organisations/:XXX/clusters/:XXX/node-groups
  * @group Kubernetes
  * @version 4

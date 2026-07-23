@@ -8,6 +8,11 @@ import type {
 import { transformHeptapodPriceEstimation } from './heptapod-price-estimation-transform.js';
 
 /**
+ * Estimates what the owner's Heptapod usage will cost over the current billing period.
+ *
+ * Heptapod is billed on active users and storage, so the estimate is derived from the usage
+ * recorded so far.
+ *
  * @endpoint [GET] /v2/saas/heptapod/:XXX/heptapod.host/price-prevision
  * @group Heptapod
  * @version 2

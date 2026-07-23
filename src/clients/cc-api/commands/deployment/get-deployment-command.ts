@@ -10,6 +10,8 @@ import type {
 } from './get-deployment-command.types.js';
 
 /**
+ * Retrieves a deployment of an application, with the states it went through and what triggered it.
+ *
  * @endpoint [GET] /v4/orchestration/organisations/:XXX/applications/:XXX/deployments/:XXX
  * @group Deployment
  * @version 4
@@ -33,6 +35,11 @@ export class GetDeploymentCommand extends CcApiSimpleCommand<GetDeploymentComman
 }
 
 /**
+ * Retrieves a deployment of an application from the legacy v2 API.
+ *
+ * The v2 shape is flatter than the v4 one: it carries the deployment number and its author, but not the steps
+ * or the placement details. Prefer `GetDeploymentCommand`.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/deployments/:XXX
  * @group Deployment
  * @version 2

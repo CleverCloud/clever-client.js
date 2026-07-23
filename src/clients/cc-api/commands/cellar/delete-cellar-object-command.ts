@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteCellarObjectCommandInput } from './delete-cellar-object-command.types.js';
 
 /**
+ * Removes one object from a bucket.
+ *
  * @endpoint [DELETE] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets/:XXX/objects/:XXX
  * @group Cellar
  * @version 4

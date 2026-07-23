@@ -8,6 +8,8 @@ import type {
 } from './list-cellar-bucket-command.types.js';
 
 /**
+ * Lists the buckets of a Cellar add-on.
+ *
  * @endpoint [GET] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets
  * @group Cellar
  * @version 4

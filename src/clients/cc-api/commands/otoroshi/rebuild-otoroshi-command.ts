@@ -5,6 +5,10 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { RebuildOtoroshiCommandInput } from './rebuild-otoroshi-command.types.js';
 
 /**
+ * Rebuilds the Otoroshi instance backing an add-on from scratch, keeping its data.
+ *
+ * Slower than a reboot, but it also picks up the platform changes a restart would not.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-otoroshi/addons/:XXX/rebuild
  * @group Otoroshi
  * @version 4

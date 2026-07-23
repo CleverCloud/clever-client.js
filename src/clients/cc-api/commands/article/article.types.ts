@@ -1,4 +1,8 @@
+/**
+ * A post from the Clever Cloud blog, as published in its RSS feed.
+ */
 export interface Article {
+  /** Title of the article. */
   title: string;
   /** URL of the article on the blog. */
   articleUrl: string;

@@ -9,6 +9,11 @@ import type {
 } from './update-addon-provider-command.types.js';
 
 /**
+ * Updates the public description of an add-on provider.
+ *
+ * Only the marketplace facing fields can be changed here. The provisioning API settings, the plans
+ * and the features have their own endpoints.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/addonproviders/:XXX
  * @group AddonProvider
  * @version 2

@@ -12,6 +12,10 @@ import type {
 import { transformJenkinsInfo } from './jenkins-transform.js';
 
 /**
+ * Retrieves a Jenkins add-on, with the credentials to reach it and its update state.
+ *
+ * The instance and its update state live behind two endpoints, fetched in parallel and merged.
+ *
  * @endpoint [GET] /v4/addon-providers/jenkins/addons/:XXX
  * @endpoint [GET] /v4/addon-providers/jenkins/addons/:XXX/updates
  * @group Jenkins
@@ -41,6 +45,8 @@ export class GetJenkinsInfoCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Retrieves a Jenkins add-on, without its update state.
+ *
  * @endpoint [GET] /v4/addon-providers/jenkins/addons/:XXX
  * @group Jenkins
  * @version 4
@@ -59,6 +65,8 @@ class GetJenkinsInfoInnerCommand extends CcApiSimpleCommand<
 }
 
 /**
+ * Reads whether a newer Jenkins is available for an add-on.
+ *
  * @endpoint [GET] /v4/addon-providers/jenkins/addons/:XXX/updates
  * @group Jenkins
  * @version 4

@@ -7,6 +7,12 @@ import type { DisableLogDrainCommandInput, DisableLogDrainCommandOutput } from '
 import { waitForLogDrainDisabled } from './log-drain-utils.js';
 
 /**
+ * Stops a log drain from shipping logs, without deleting it, and waits until it has actually stopped.
+ *
+ * The transition is asynchronous: the drain goes through `DISABLING` first. This command polls the drain once
+ * a second for up to 30 seconds and only resolves once it reports `DISABLED`, throwing if it has not got there
+ * in time.
+ *
  * @endpoint [PUT] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX/disable
  * @endpoint [GET] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX
  * @group LogDrain
@@ -23,6 +29,8 @@ export class DisableLogDrainCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Requests the disabling of the log drain, without waiting for it to take effect.
+ *
  * @endpoint [PUT] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX/disable
  * @group LogDrain
  * @version 4

@@ -9,6 +9,10 @@ import type {
 } from './update-keycloak-version-command.types.js';
 
 /**
+ * Moves an add-on to another Keycloak version.
+ *
+ * The instance is rebuilt on the target version, so it is unavailable for the duration.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-keycloak/addons/:XXX/version/update
  * @group Keycloak
  * @version 4

@@ -9,6 +9,10 @@ import type {
 } from './get-exposed-environment-command.types.js';
 
 /**
+ * Reads the configuration an application exposes to the applications linked to it.
+ *
+ * This is what other applications see, as opposed to the variables the application itself runs with.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/exposed_env
  * @group Environment
  * @version 2

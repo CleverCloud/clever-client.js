@@ -8,6 +8,8 @@ import type {
 } from './get-oauth-consumer-secret-command.types.js';
 
 /**
+ * Retrieves the secret of an OAuth consumer.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/consumers/:XXX/secret
  * @group OauthConsumer
  * @version 2

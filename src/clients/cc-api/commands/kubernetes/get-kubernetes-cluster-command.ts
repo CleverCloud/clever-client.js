@@ -8,6 +8,8 @@ import type {
 import { transformKubernetesCluster } from './kubernetes-transform.js';
 
 /**
+ * Retrieves one Kubernetes cluster, with its node groups and load balancers.
+ *
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX
  * @group Kubernetes
  * @version 4

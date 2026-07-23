@@ -8,6 +8,10 @@ import type {
 } from './renew-cellar-credentials-command.types.js';
 
 /**
+ * Rotates the S3 credentials of a Cellar add-on.
+ *
+ * The previous key stops working, so every client using it has to be updated.
+ *
  * @endpoint [POST] /v4/cellar/organisations/:XXX/cellar/:XXX/credentials/renew
  * @group Cellar
  * @version 4

@@ -4,6 +4,8 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { DisableGrafanaCommandInput } from './disable-grafana-command.types.js';
 
 /**
+ * Turns Grafana off for an owner, dropping the Grafana organisation and its dashboards.
+ *
  * @endpoint [DELETE] /v4/saas/grafana/:XXX
  * @group Grafana
  * @version 4

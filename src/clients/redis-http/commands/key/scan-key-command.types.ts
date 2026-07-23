@@ -25,13 +25,17 @@ export type ScanKeyCommandInput =
       match?: string;
     });
 
+/**
+ * One page of the key scan
+ */
 export interface ScanKeyCommandOutput {
   /**
    * The scan cursor to be used to continue the scan
    */
   cursor: number;
   /**
-   * The total number of keys
+   * The total number of keys in the database. This is the whole key count, it does not take the
+   * `type` and `match` filters into account.
    */
   total: number;
   /**

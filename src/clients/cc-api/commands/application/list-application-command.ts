@@ -7,6 +7,9 @@ import { consolidateApplicationWithBranches } from './application-utils.js';
 import type { ListApplicationCommandInput, ListApplicationCommandOutput } from './list-application-command.types.js';
 
 /**
+ * Lists every application of an organisation, optionally completed with the branches of their
+ * deployment repositories.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications
  * @group Application
  * @version 2
@@ -25,6 +28,8 @@ export class ListApplicationCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Lists every application of an organisation, without their branches.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications
  * @group Application
  * @version 2

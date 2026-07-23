@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteApplicationCommandInput } from './delete-application-command.types.js';
 
 /**
+ * Deletes an application, along with its deployment repository and its configuration.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX
  * @group Application
  * @version 2

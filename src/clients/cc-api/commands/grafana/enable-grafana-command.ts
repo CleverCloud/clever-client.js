@@ -6,6 +6,10 @@ import type { EnableGrafanaCommandInput, EnableGrafanaCommandOutput } from './en
 import { GetGrafanaCommand } from './get-grafana-command.js';
 
 /**
+ * Turns Grafana on for an owner, creating the Grafana organisation and its Clever Cloud dashboards.
+ *
+ * The organisation is read back afterwards so the caller gets its identifier.
+ *
  * @endpoint [POST] /v4/saas/grafana/:XXX
  * @endpoint [GET] /v4/saas/grafana/:XXX
  * @group Grafana
@@ -19,6 +23,8 @@ export class EnableGrafanaCommand extends CcApiCompositeCommand<EnableGrafanaCom
 }
 
 /**
+ * Creates the Grafana organisation, without reading it back.
+ *
  * @endpoint [POST] /v4/saas/grafana/:XXX
  * @group Grafana
  * @version 4

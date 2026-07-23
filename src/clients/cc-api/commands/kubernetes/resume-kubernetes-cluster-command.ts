@@ -10,6 +10,12 @@ import type {
 } from './resume-kubernetes-cluster-command.types.js';
 
 /**
+ * Resumes a cluster stuck in the `FAILED` status, re-running the operation that failed.
+ *
+ * Only a `FAILED` cluster can be resumed, and one that failed while being deleted cannot: ask for the
+ * deletion again instead. Recovery boots real machines and takes several minutes; the command returns
+ * as soon as it is accepted, unless it is asked to wait for the cluster to become active.
+ *
  * @endpoint [POST] /v4/kubernetes/organisations/:XXX/clusters/:XXX/resume
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX
  * @group Kubernetes
@@ -32,6 +38,8 @@ export class ResumeKubernetesClusterCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Asks for the cluster to be resumed, without waiting for it to recover.
+ *
  * @endpoint [POST] /v4/kubernetes/organisations/:XXX/clusters/:XXX/resume
  * @group Kubernetes
  * @version 4

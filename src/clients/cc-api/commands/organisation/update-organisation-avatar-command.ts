@@ -8,6 +8,10 @@ import type {
 } from './update-organisation-avatar-command.types.js';
 
 /**
+ * Replaces the avatar of an organisation with the given image.
+ *
+ * The image is sent as the raw request body, typed by the given media type.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/avatar
  * @group Organisation
  * @version 2

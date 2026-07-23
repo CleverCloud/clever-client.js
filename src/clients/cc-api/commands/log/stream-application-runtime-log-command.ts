@@ -8,6 +8,11 @@ import type { ApplicationRuntimeLog } from './log.types.js';
 import type { StreamApplicationRuntimeLogCommandInput } from './stream-application-runtime-log-command.types.js';
 
 /**
+ * Opens a Server-Sent Events stream of the runtime logs of an application.
+ *
+ * The stream stays open and keeps delivering lines as the application writes them, unless `until` closes the
+ * range or `limit` caps the number of lines. Past lines are replayed first when `since` reaches into the past.
+ *
  * @endpoint [GET] /v4/logs/organisations/:XXX/applications/:XXX/logs
  * @group Log
  * @version 4

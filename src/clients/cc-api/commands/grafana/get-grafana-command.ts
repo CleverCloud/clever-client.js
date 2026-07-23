@@ -4,6 +4,10 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { GetGrafanaCommandInput, GetGrafanaCommandOutput } from './get-grafana-command.types.js';
 
 /**
+ * Retrieves the Grafana organisation backing an owner's metrics dashboards.
+ *
+ * Answers `404` when Grafana has not been enabled for that owner.
+ *
  * @endpoint [GET] /v4/saas/grafana/:XXX
  * @group Grafana
  * @version 4

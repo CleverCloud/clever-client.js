@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { RebootMetabaseCommandInput } from './reboot-metabase-command.types.js';
 
 /**
+ * Restarts the Metabase instance backing an add-on, without touching its data.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-metabase/addons/:XXX/reboot
  * @group Metabase
  * @version 4

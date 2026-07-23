@@ -3,6 +3,8 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { GetGithubUsernameCommandOutput } from './get-github-username-command.types.js';
 
 /**
+ * Retrieves the GitHub user name of the account linked to the current user.
+ *
  * @endpoint [GET] /v2/github/username
  * @group Github
  * @version 2

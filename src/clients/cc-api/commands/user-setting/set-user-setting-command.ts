@@ -6,6 +6,8 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { SetUserSettingCommandInput } from './set-user-setting-command.types.js';
 
 /**
+ * Writes one Console preference of the current user, creating it when it does not exist yet.
+ *
  * @endpoint [PUT] /v4/console/settings/:XXX
  * @group UserSetting
  * @version 4

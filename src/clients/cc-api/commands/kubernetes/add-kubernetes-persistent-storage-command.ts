@@ -8,6 +8,11 @@ import type {
 import { transformKubernetesCluster } from './kubernetes-transform.js';
 
 /**
+ * Installs the Ceph CSI driver on a cluster, so its pods can claim persistent volumes.
+ *
+ * The driver is deployed asynchronously: the cluster comes back right away, its `features.isCsi`
+ * flag only turning on once the deployment has gone through.
+ *
  * @endpoint [POST] /v4/kubernetes/organisations/:XXX/clusters/:XXX/csi/ceph
  * @group Kubernetes
  * @version 4

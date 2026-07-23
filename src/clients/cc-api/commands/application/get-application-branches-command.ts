@@ -8,6 +8,8 @@ import type {
 } from './get-application-branches-command.types.js';
 
 /**
+ * Lists the branches available on an application's deployment repository.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/branches
  * @group Application
  * @version 2

@@ -4,6 +4,9 @@ import type { GetKubernetesProductCommandOutput } from './get-kubernetes-product
 import { transformKubernetesProduct } from './kubernetes-transform.js';
 
 /**
+ * Lists what a new Kubernetes cluster can be built from: the control-plane layouts on offer and the
+ * versions available.
+ *
  * @endpoint [GET] /v4/kubernetes-product
  * @group Kubernetes
  * @version 4

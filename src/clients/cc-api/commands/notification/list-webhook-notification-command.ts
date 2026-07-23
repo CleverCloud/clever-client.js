@@ -8,6 +8,8 @@ import type {
 import { transformWebhookNotification } from './notification-transform.js';
 
 /**
+ * Lists the webhooks watching an owner.
+ *
  * @endpoint [GET] /v2/notifications/webhooks/:XXX
  * @group Notification
  * @version 2

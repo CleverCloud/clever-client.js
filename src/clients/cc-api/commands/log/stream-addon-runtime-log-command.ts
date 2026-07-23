@@ -8,6 +8,11 @@ import type { AddonRuntimeLog } from './log.types.js';
 import type { StreamAddonRuntimeLogCommandInput } from './stream-addon-runtime-log-command.types.js';
 
 /**
+ * Opens a Server-Sent Events stream of the runtime logs of an add-on.
+ *
+ * The stream stays open and keeps delivering lines as the add-on writes them, unless `until` closes the range
+ * or `limit` caps the number of lines. Past lines are replayed first when `since` reaches into the past.
+ *
  * @endpoint [GET] /v4/logs/organisations/:XXX/resources/:XXX/logs
  * @group Log
  * @version 4

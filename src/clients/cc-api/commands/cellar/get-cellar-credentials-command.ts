@@ -8,6 +8,8 @@ import type {
 } from './get-cellar-credentials-command.types.js';
 
 /**
+ * Retrieves the S3 credentials of a Cellar add-on.
+ *
  * @endpoint [GET] /v4/cellar/organisations/:XXX/cellar/:XXX/credentials
  * @group Cellar
  * @version 4

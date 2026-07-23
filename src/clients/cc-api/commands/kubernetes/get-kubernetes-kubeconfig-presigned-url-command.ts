@@ -7,6 +7,11 @@ import type {
 } from './get-kubernetes-kubeconfig-presigned-url-command.types.js';
 
 /**
+ * Retrieves a self-authenticated URL from which the cluster's kubeconfig can be downloaded.
+ *
+ * The URL carries its own token, so it can be handed to a tool that has no Clever Cloud credentials.
+ * It only grants a read of that one kubeconfig, and expires an hour after it was issued.
+ *
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX/kubeconfig/presigned-url
  * @group Kubernetes
  * @version 4

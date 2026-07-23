@@ -13,6 +13,11 @@ import type {
 import { transformPulsarCluster, transformPulsarInfo } from './pulsar-transform.js';
 
 /**
+ * Retrieves the details of a Pulsar add-on, with the cluster it is hosted on.
+ *
+ * The add-on payload only carries the id of its cluster, so the command makes a second request to fetch the cluster
+ * and inlines it as `cluster`.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-pulsar/addons/:XXX
  * @endpoint [GET] /v4/addon-providers/addon-pulsar/clusters/:XXX
  * @group Pulsar
@@ -38,6 +43,8 @@ export class GetPulsarInfoCommand extends CcApiCompositeCommand<GetPulsarInfoCom
 }
 
 /**
+ * Retrieves the Pulsar add-on itself: its tenant, namespace and access token.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-pulsar/addons/:XXX
  * @group Pulsar
  * @version 4
@@ -53,6 +60,8 @@ class GetPulsarInfoInnerCommand extends CcApiSimpleCommand<GetPulsarInfoCommandI
 }
 
 /**
+ * Retrieves a Pulsar cluster: where it is reachable, which version it runs, and which plans it supports.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-pulsar/clusters/:XXX
  * @group Pulsar
  * @version 4

@@ -5,6 +5,10 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { RebuildMetabaseCommandInput } from './rebuild-metabase-command.types.js';
 
 /**
+ * Rebuilds the Metabase instance backing an add-on from scratch, keeping its data.
+ *
+ * Slower than a reboot, but it also picks up the platform changes a restart would not.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-metabase/addons/:XXX/rebuild
  * @group Metabase
  * @version 4

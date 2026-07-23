@@ -4,6 +4,11 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { DeleteKubernetesNodeGroupCommandInput } from './delete-kubernetes-node-group-command.types.js';
 
 /**
+ * Deletes a node group of a cluster, draining and tearing down every node it runs.
+ *
+ * The teardown is asynchronous: the command returns as soon as the deletion is accepted, while the
+ * node group goes through its terminating statuses.
+ *
  * @endpoint [DELETE] /v4/kubernetes/organisations/:XXX/clusters/:XXX/node-groups/:XXX
  * @group Kubernetes
  * @version 4

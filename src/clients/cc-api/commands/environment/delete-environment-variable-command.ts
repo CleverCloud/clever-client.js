@@ -8,6 +8,10 @@ import type {
 } from './delete-environment-variable-command.types.js';
 
 /**
+ * Removes one environment variable from an application.
+ *
+ * The change only reaches the running instances on the next deployment.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/env/:XXX
  * @group Environment
  * @version 2

@@ -5,6 +5,8 @@ import type { GetZoneCommandInput, GetZoneCommandOutput } from './get-zone-comma
 import { transformZone } from './zone-transform.js';
 
 /**
+ * Retrieves one zone by name.
+ *
  * @endpoint [GET] /v4/products/zones/:XXX
  * @group Zone
  * @version 4

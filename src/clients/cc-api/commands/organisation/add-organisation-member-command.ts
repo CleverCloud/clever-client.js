@@ -25,7 +25,12 @@ const API_ERROR_CODES: Record<string, AddOrganisationMemberErrorCode> = {
 };
 
 /**
- * Adds a member to an organisation.
+ * Adds a member to an organisation, or accepts a pending invitation to one.
+ *
+ * Without an invitation key, an invitation email is sent to the given address and the member only
+ * joins once they follow it; the current user must be allowed to add members and to assign the
+ * requested role. With an invitation key, the current user joins the organisation the invitation
+ * was issued for, and the other parameters are ignored.
  *
  * Common error codes: see {@link ADD_ORGANISATION_MEMBER_ERROR_CODES}
  *

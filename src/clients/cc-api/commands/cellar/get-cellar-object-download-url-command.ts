@@ -8,6 +8,8 @@ import type {
 } from './get-cellar-object-download-url-command.types.js';
 
 /**
+ * Mints a presigned URL that downloads one object without credentials.
+ *
  * @endpoint [POST] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets/:XXX/objects/download-url
  * @group Cellar
  * @version 4

@@ -9,6 +9,8 @@ import type {
 } from './list-kubernetes-cluster-command.types.js';
 
 /**
+ * Lists the Kubernetes clusters of an organisation, optionally filtered by status.
+ *
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters
  * @group Kubernetes
  * @version 4

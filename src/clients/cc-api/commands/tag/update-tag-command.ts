@@ -5,6 +5,12 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { UpdateTagCommandInput, UpdateTagCommandOutput } from './update-tag-command.types.js';
 
 /**
+ * Replaces every tag of an application or an add-on at once.
+ *
+ * The resource kind is picked from the input: passing an `applicationId` targets an application,
+ * passing an `addonId` targets an add-on. Tags left out of the list are removed.
+ *
+ * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/tags
  * @endpoint [PUT] /v2/organisations/:XXX/addons/:XXX/tags
  * @group Tag
  * @version 2

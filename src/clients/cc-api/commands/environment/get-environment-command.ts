@@ -20,10 +20,15 @@ import type {
 } from './get-environment-command.types.js';
 
 /**
+ * Reads the environment of an application or an add-on.
+ *
+ * The resource kind is picked from the input. For an application, the variables contributed by the
+ * applications and add-ons it is linked to can be pulled in too, each costing one extra request.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/env
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/env
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/dependencies/env
- * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/env
+ * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/addons/env
  * @group Environment
  * @version 2
  */
@@ -68,6 +73,8 @@ export class GetEnvironmentCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Reads the variables set directly on an application.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/env
  * @group Environment
  * @version 2
@@ -88,6 +95,8 @@ class GetApplicationEnvironmentCommand extends CcApiSimpleCommand<
 }
 
 /**
+ * Reads the connection details an add-on exposes as environment variables.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/env
  * @group Environment
  * @version 2
@@ -109,6 +118,8 @@ class GetAddonEnvironmentCommand extends CcApiSimpleCommand<
 }
 
 /**
+ * Reads the variables the applications linked to this one contribute.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/dependencies/env
  * @group Environment
  * @version 2
@@ -133,6 +144,8 @@ class GetLinkedApplicationEnvironmentCommand extends CcApiSimpleCommand<
 }
 
 /**
+ * Reads the variables the add-ons linked to this application contribute.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/addons/env
  * @group Environment
  * @version 2

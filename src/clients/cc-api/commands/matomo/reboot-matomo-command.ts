@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { RebootMatomoCommandInput } from './reboot-matomo-command.types.js';
 
 /**
+ * Restarts the Matomo instance backing an add-on, without touching its data.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-matomo/addons/:XXX/reboot
  * @group Matomo
  * @version 4

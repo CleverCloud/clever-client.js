@@ -4,6 +4,8 @@ import type { GetProfileCommandOutput } from './get-profile-command.types.js';
 import { transformProfile } from './profile-transform.js';
 
 /**
+ * Retrieves the account of the signed-in user.
+ *
  * @endpoint [GET] /v2/self
  * @group Profile
  * @version 2

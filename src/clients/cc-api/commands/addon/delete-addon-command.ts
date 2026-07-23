@@ -5,6 +5,10 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteAddonCommandInput } from './delete-addon-command.types.js';
 
 /**
+ * Deprovisions an add-on.
+ *
+ * The underlying resource and the data it holds are destroyed by the provider.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/addons/:XXX
  * @group Addon
  * @version 2

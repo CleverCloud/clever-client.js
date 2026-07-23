@@ -8,6 +8,10 @@ import type {
 import { transformOauthConsumer, transformOauthConsumerRightsForApi } from './oauth-consumer-transform.js';
 
 /**
+ * Registers a new OAuth consumer owned by an organisation.
+ *
+ * The returned consumer carries its key; the secret has to be fetched separately.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/consumers/
  * @group OauthConsumer
  * @version 2

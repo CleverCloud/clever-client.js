@@ -6,6 +6,8 @@ import { transformNetworkGroupPeer } from './network-group-transform.js';
 import { normalizeMemberKind } from './network-group-utils.js';
 
 /**
+ * Retrieves a network group, with its members and its peers.
+ *
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX
  * @group NetworkGroup
  * @version 4

@@ -9,6 +9,8 @@ import type {
 } from './list-addon-provider-feature-command.types.js';
 
 /**
+ * Lists the features declared by an add-on provider.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addonproviders/:XXX/features
  * @group AddonProvider
  * @version 2

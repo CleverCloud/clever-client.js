@@ -8,6 +8,11 @@ import type {
 } from './update-kubernetes-node-group-command.types.js';
 
 /**
+ * Updates a node group: its metadata, how many nodes it runs, and its autoscaling bounds.
+ *
+ * Despite being a PATCH, the API requires `name` and `targetNodeCount` on every call. Resizing boots
+ * or drains real machines, so the new node count is only reached some time after the call returns.
+ *
  * @endpoint [PATCH] /v4/kubernetes/organisations/:XXX/clusters/:XXX/node-groups/:XXX
  * @group Kubernetes
  * @version 4

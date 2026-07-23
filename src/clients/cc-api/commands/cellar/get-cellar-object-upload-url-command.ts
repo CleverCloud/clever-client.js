@@ -8,6 +8,8 @@ import type {
 } from './get-cellar-object-upload-url-command.types.js';
 
 /**
+ * Mints a presigned URL that uploads one object without credentials.
+ *
  * @endpoint [POST] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets/:XXX/objects/:XXX/presigned-url
  * @group Cellar
  * @version 4

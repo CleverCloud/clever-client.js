@@ -10,8 +10,12 @@ import type {
 import { transformOauthConsumer } from './oauth-consumer-transform.js';
 
 /**
+ * Lists the OAuth consumers owned by an organisation, optionally with their secrets.
+ *
+ * Fetching the secrets costs one extra request per consumer, so it is off by default.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/consumers
- * @endpoint [GET] /v2/organisations/:XXX/consumers
+ * @endpoint [GET] /v2/organisations/:XXX/consumers/:XXX/secret
  * @group OauthConsumer
  * @version 2
  */
@@ -42,6 +46,8 @@ export class ListOauthConsumerCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Lists the OAuth consumers of an organisation, without their secrets.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/consumers
  * @group OauthConsumer
  * @version 2

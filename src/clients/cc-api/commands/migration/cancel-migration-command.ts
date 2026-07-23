@@ -5,6 +5,10 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { CancelMigrationCommandInput } from './cancel-migration-command.types.js';
 
 /**
+ * Aborts a running add-on migration.
+ *
+ * The request is forwarded to the add-on provider, which is the one that actually stops the migration.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/addons/:XXX/migrations/:XXX
  * @group Migration
  * @version 2

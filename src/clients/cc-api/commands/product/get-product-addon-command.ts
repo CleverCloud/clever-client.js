@@ -8,7 +8,12 @@ import type { GetProductAddonCommandInput, GetProductAddonCommandOutput } from '
 import { GetProductAddonVersionsCommand } from './get-product-addon-versions-command.js';
 
 /**
+ * Retrieves one add-on provider from the product catalogue, optionally with the versions it offers.
+ *
+ * Passing an owner narrows the plans and prices down to what that organisation is entitled to.
+ *
  * @endpoint [GET] /v2/products/addonproviders/:XXX
+ * @endpoint [GET] /v4/addon-providers/:XXX
  * @group Product
  * @version 2
  */
@@ -32,6 +37,8 @@ export class GetProductAddonCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Retrieves one add-on provider, without its versions.
+ *
  * @endpoint [GET] /v2/products/addonproviders/:XXX
  * @group Product
  * @version 2

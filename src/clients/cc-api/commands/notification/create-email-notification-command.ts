@@ -8,6 +8,8 @@ import type {
 import { transformEmailNotification } from './notification-transform.js';
 
 /**
+ * Creates an email hook, which mails platform events to a set of recipients as they happen.
+ *
  * @endpoint [POST] /v2/notifications/emailhooks/:XXX
  * @group Notification
  * @version 2

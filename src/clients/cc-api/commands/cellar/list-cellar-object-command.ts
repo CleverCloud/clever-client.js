@@ -10,6 +10,11 @@ import type {
 } from './list-cellar-object-command.types.js';
 
 /**
+ * Lists one page of a bucket's contents, presented as objects and directories.
+ *
+ * Keys are split on slashes so the result reads like a file browser: a common prefix comes back as a
+ * directory rather than as the objects under it.
+ *
  * @endpoint [GET] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets/:XXX/objects
  * @group Cellar
  * @version 4

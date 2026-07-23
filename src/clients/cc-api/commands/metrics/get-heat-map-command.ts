@@ -8,7 +8,9 @@ import { transformHeatMap } from './metrics-transform.js';
 
 /**
  * Gets the geographic heat map of incoming requests for an owner, optionally restricted to a single application.
- * Each point aggregates the number of requests originating from a geographic cell over the time range.
+ * Each point aggregates the number of requests originating from a geographic cell over the time range. Cells
+ * are roughly 39 km wide, and the coordinates of a point are the centre of its cell. Requests whose source IP
+ * address could not be geolocated are not counted.
  *
  * @endpoint [GET] /v4/stats/organisations/:XXX/requests
  * @group Metrics

@@ -4,6 +4,8 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { ListPersonalSshKeyCommandOutput } from './list-personal-ssh-key-command.types.js';
 
 /**
+ * Lists the public SSH keys registered on the current user's account.
+ *
  * @endpoint [GET] /v2/self/keys
  * @group SshKey
  * @version 2

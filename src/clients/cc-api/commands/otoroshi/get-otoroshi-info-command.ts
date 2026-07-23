@@ -6,6 +6,8 @@ import type { GetOtoroshiInfoCommandInput, GetOtoroshiInfoCommandOutput } from '
 import { transformOtoroshiInfo } from './otoroshi-transform.js';
 
 /**
+ * Retrieves a Otoroshi add-on, with the URL to reach it, its admin API credentials and the resources it is built on.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-otoroshi/addons/:XXX
  * @group Otoroshi
  * @version 4

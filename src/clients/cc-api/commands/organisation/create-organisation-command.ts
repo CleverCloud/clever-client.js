@@ -8,6 +8,11 @@ import type {
 import { transformOrganisation } from './organisation-transform.js';
 
 /**
+ * Creates an organisation owned by the current user.
+ *
+ * The current user becomes its first `ADMIN` member. Organisation creation can be disabled
+ * platform wide, in which case the call is refused.
+ *
  * @endpoint [POST] /v2/organisations
  * @group Organisation
  * @version 2

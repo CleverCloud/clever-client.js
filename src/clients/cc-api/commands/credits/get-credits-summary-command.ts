@@ -7,6 +7,8 @@ import type {
 } from './get-credits-summary-command.types.js';
 
 /**
+ * Retrieves how much prepaid and free credit an organisation has left.
+ *
  * @endpoint [GET] /v4/billing/organisations/:XXX/credits/summary
  * @group Credits
  * @version 4

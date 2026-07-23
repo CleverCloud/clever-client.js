@@ -12,6 +12,10 @@ import { transformOauthConsumer } from './oauth-consumer-transform.js';
 import type { OauthConsumer } from './oauth-consumer.types.js';
 
 /**
+ * Retrieves an OAuth consumer, optionally with its secret.
+ *
+ * The secret lives behind its own endpoint, so asking for it costs one extra request.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/consumers/:XXX
  * @endpoint [GET] /v2/organisations/:XXX/consumers/:XXX/secret
  * @group OauthConsumer
@@ -45,6 +49,8 @@ export class GetOauthConsumerCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Retrieves an OAuth consumer, without its secret.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/consumers/:XXX
  * @group OauthConsumer
  * @version 2

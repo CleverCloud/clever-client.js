@@ -9,6 +9,8 @@ import type {
 } from './create-addon-provider-plan-command.types.js';
 
 /**
+ * Adds a pricing plan to an add-on provider's catalogue.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/addonproviders/:XXX/plans
  * @group AddonProvider
  * @version 2

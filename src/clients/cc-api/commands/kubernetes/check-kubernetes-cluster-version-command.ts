@@ -8,6 +8,8 @@ import type {
 import { transformKubernetesClusterVersionCheck } from './kubernetes-transform.js';
 
 /**
+ * Tells whether a cluster runs the latest Kubernetes version, and which versions it can move to.
+ *
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX/version/check
  * @group Kubernetes
  * @version 4

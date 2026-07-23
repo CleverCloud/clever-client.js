@@ -9,6 +9,8 @@ import type {
 import { transformKeycloakVersionCheck } from './keycloak-transform.js';
 
 /**
+ * Checks which Keycloak versions an add-on can be moved to, and whether it is behind.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-keycloak/addons/:XXX/version/check
  * @group Keycloak
  * @version 4

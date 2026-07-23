@@ -9,6 +9,10 @@ import type {
 } from './list-kubernetes-deployment-event-command.types.js';
 
 /**
+ * Lists the deployment log of a cluster: the steps of the operations run on it and its node groups.
+ *
+ * The API returns the most recent events first, capped at 50 by default and 1000 at most.
+ *
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX/deployment-events
  * @group Kubernetes
  * @version 4

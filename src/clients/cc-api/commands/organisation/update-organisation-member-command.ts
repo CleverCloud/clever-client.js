@@ -29,6 +29,9 @@ const API_ERROR_CODES: Record<string, UpdateOrganisationMemberErrorCode> = {
 /**
  * Updates the role or the job title of an organisation member.
  *
+ * The current user must be allowed to edit the members of the organisation, and to assign both the
+ * role the member holds and the one they are given.
+ *
  * Common error codes: see {@link UPDATE_ORGANISATION_MEMBER_ERROR_CODES}
  *
  * @endpoint [PUT] /v2/organisations/:XXX/members/:XXX

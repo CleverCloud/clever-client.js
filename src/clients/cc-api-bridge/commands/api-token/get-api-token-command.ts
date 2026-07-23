@@ -5,7 +5,7 @@ import { transformApiToken } from './api-token-transform.js';
 import type { GetApiTokenCommandInput, GetApiTokenCommandOutput } from './get-api-token-command.types.js';
 
 /**
- * Get an API token
+ * Retrieves one API token of the current user, without its value.
  *
  * @endpoint [GET] /api-tokens/:XXX
  * @group ApiToken

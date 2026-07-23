@@ -8,6 +8,8 @@ import type {
 import { transformNetworkGroupPeer } from './network-group-transform.js';
 
 /**
+ * Retrieves a peer of a network group, whether it runs on the platform or is an external machine.
+ *
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX
  * @group NetworkGroup
  * @version 4

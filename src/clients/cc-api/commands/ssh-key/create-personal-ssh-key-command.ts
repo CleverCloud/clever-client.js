@@ -10,7 +10,13 @@ import type {
 import { ListPersonalSshKeyCommand } from './list-personal-ssh-key-command.js';
 
 /**
+ * Registers a public SSH key on the current user's account.
+ *
+ * The endpoint answers nothing, so the key list is fetched afterwards to return the stored key with
+ * its fingerprint.
+ *
  * @endpoint [PUT] /v2/self/keys/:XXX
+ * @endpoint [GET] /v2/self/keys
  * @group SshKey
  * @version 2
  */
@@ -29,6 +35,8 @@ export class CreatePersonalSshKeyCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Registers a public SSH key, without reading it back.
+ *
  * @endpoint [PUT] /v2/self/keys/:XXX
  * @group SshKey
  * @version 2

@@ -7,6 +7,13 @@ import type { GetMetricsCommandInput, GetMetricsCommandOutput } from './get-metr
 import { transformMetrics } from './metrics-transform.js';
 
 /**
+ * Gets the resource usage time series of an application or an add-on over a time window.
+ *
+ * The series come from Warp10, where the raw telegraf measurements of every instance are aggregated into one
+ * series per metric: CPU takes the busiest instance, memory and load are averaged. The window ends at `end`
+ * and spans `interval` backwards, sampled into buckets of `span`; `fill` decides whether the buckets with no
+ * measurement come back as 0 or are left out.
+ *
  * @endpoint [GET] /v4/stats/organisations/:XXX/resources/:XXX/metrics
  * @group Metrics
  * @version 4

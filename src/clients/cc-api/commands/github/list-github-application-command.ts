@@ -5,6 +5,9 @@ import { transformGithubApplication } from './github-transform.js';
 import type { ListGithubApplicationCommandOutput } from './list-github-application-command.types.js';
 
 /**
+ * Lists the GitHub repositories the linked account gives access to, so that one can be picked as the source of an
+ * application.
+ *
  * @endpoint [GET] /v2/github/applications
  * @group Github
  * @version 2

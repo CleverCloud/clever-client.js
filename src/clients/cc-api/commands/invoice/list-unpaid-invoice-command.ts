@@ -8,6 +8,11 @@ import type {
 } from './list-unpaid-invoice-command.types.js';
 
 /**
+ * Lists the invoices of an organisation that are still waiting to be paid.
+ *
+ * Unpaid means `PENDING`, `PROCESSING` or `PAYMENTHELD`: neither paid, nor cancelled, nor refunded.
+ * The whole history is looked at, not only the current period.
+ *
  * @endpoint [GET] /v4/billing/organisations/:XXX/invoices/unpaid
  * @group Invoice
  * @version 4

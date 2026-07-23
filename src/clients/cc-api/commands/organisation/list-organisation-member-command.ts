@@ -8,6 +8,8 @@ import type {
 import { transformOrganisationMember } from './organisation-transform.js';
 
 /**
+ * Lists the members of an organisation, with their role.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/members
  * @group Organisation
  * @version 2

@@ -6,6 +6,11 @@ import type { DeleteKubernetesClusterCommandInput } from './delete-kubernetes-cl
 import { waitForKubernetesClusterDeletion } from './kubernetes-utils.js';
 
 /**
+ * Deletes a Kubernetes cluster, tearing down its control plane and every node it runs.
+ *
+ * Tearing down real machines takes several minutes. The command returns as soon as the deletion is
+ * accepted, unless it is asked to wait for it to complete.
+ *
  * @endpoint [DELETE] /v4/kubernetes/organisations/:XXX/clusters/:XXX
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX
  * @group Kubernetes
@@ -25,6 +30,8 @@ export class DeleteKubernetesClusterCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Asks for the cluster to be deleted, without waiting for it to be gone.
+ *
  * @endpoint [DELETE] /v4/kubernetes/organisations/:XXX/clusters/:XXX
  * @group Kubernetes
  * @version 4

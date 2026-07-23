@@ -8,6 +8,8 @@ import type {
 } from './get-config-provider-command.types.js';
 
 /**
+ * Reads the configuration a Config Provider add-on hands to the applications linked to it.
+ *
  * @endpoint [GET] /v4/addon-providers/config-provider/addons/:XXX/env
  * @group ConfigProvider
  * @version 4

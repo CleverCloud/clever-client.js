@@ -9,6 +9,9 @@ import type {
 import { transformKeycloakInfo } from './keycloak-transform.js';
 
 /**
+ * Puts a Keycloak add-on behind a network group, so it is only reachable from the peers of that
+ * private network instead of the public internet.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-keycloak/addons/:XXX/networkgroup
  * @group Keycloak
  * @version 4

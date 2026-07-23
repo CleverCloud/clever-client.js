@@ -5,6 +5,8 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { DeleteUserSettingCommandInput } from './delete-user-setting-command.types.js';
 
 /**
+ * Removes one Console preference of the current user, which falls back to its default.
+ *
  * @endpoint [DELETE] /v4/console/settings/:XXX
  * @group UserSetting
  * @version 4

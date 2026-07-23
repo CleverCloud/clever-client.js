@@ -4,7 +4,7 @@ import { transformApiToken } from './api-token-transform.js';
 import type { ListApiTokenCommandOutput } from './list-api-token-command.types.js';
 
 /**
- * List API tokens
+ * Lists the API tokens of the current user, without their values.
  *
  * @endpoint [GET] /api-tokens
  * @group ApiToken

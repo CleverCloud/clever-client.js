@@ -9,6 +9,10 @@ import type {
 } from './create-addon-provider-feature-command.types.js';
 
 /**
+ * Adds a feature to an add-on provider's catalogue.
+ *
+ * Features are declared once on the provider, then given a value by each plan.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/addonproviders/:XXX/features
  * @group AddonProvider
  * @version 2

@@ -10,6 +10,12 @@ import type {
 } from './redeploy-kubernetes-cluster-command.types.js';
 
 /**
+ * Redeploys the control plane of a cluster, replacing its machines with fresh ones.
+ *
+ * Optional YAML hooks can be applied before and after the swap. Replacing real machines takes several
+ * minutes; the command returns as soon as the redeploy is accepted, unless it is asked to wait for
+ * the cluster to be active again.
+ *
  * @endpoint [POST] /v4/kubernetes/organisations/:XXX/clusters/:XXX/redeploy
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX
  * @group Kubernetes
@@ -32,6 +38,8 @@ export class RedeployKubernetesClusterCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Asks for the control plane to be redeployed, without waiting for it to come back up.
+ *
  * @endpoint [POST] /v4/kubernetes/organisations/:XXX/clusters/:XXX/redeploy
  * @group Kubernetes
  * @version 4

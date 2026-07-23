@@ -5,6 +5,11 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { ConfirmAuthMfaCommandInput } from './confirm-auth-mfa-command.types.js';
 
 /**
+ * Confirms a second factor enrolment by proving the authenticator app is correctly set up.
+ *
+ * The factor only becomes active once this succeeds. The account password is sent base64-encoded in
+ * the `X-Clever-Password` header.
+ *
  * @endpoint [POST] /v2/self/mfa/:XXX/confirmation
  * @group Auth
  * @version 2

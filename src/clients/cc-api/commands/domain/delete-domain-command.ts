@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteDomainCommandInput } from './delete-domain-command.types.js';
 
 /**
+ * Detaches a domain from an application, which stops answering on it.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/vhosts/:XXX
  * @group Domain
  * @version 2

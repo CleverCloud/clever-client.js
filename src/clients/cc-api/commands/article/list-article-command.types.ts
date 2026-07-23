@@ -1,5 +1,8 @@
 import type { Article } from './article.types.js';
 
+/**
+ * Which blog feed to read, and how many articles to pull out of it.
+ */
 export interface ListArticleCommandInput {
   /** Language of the feed to fetch, defaults to `en`. An unsupported language falls back to `en`. */
   lang?: 'en' | 'fr';

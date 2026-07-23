@@ -8,6 +8,8 @@ import type {
 import { transformKubernetesNodeGroup } from './kubernetes-transform.js';
 
 /**
+ * Retrieves one node group of a cluster.
+ *
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX/node-groups/:XXX
  * @group Kubernetes
  * @version 4

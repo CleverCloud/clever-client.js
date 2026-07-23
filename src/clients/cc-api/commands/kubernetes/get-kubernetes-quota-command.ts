@@ -8,6 +8,8 @@ import type {
 import { transformKubernetesQuota } from './kubernetes-transform.js';
 
 /**
+ * Retrieves the limits applied to an owner's Kubernetes usage.
+ *
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/quota
  * @group Kubernetes
  * @version 4

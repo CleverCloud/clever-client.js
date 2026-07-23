@@ -5,6 +5,11 @@ import type { CheckVatNumberCommandInput, CheckVatNumberCommandOutput } from './
 import { transformVatNumber } from './vat-number-transform.js';
 
 /**
+ * Checks a VAT number against the European VIES registry.
+ *
+ * The two-letter country prefix is stripped from the number before it is sent, since the country is
+ * passed separately. A syntactically invalid number is reported as invalid rather than as an error.
+ *
  * @endpoint [GET] /v2/vat_check
  * @group VatNumber
  * @version 2

@@ -14,6 +14,12 @@ import type {
 } from './create-application-command.types.js';
 
 /**
+ * Creates an application in an organisation.
+ *
+ * The runtime can be given either fully qualified or as a variant slug, in which case the latest
+ * enabled runtime for that slug is resolved first. The created application is then completed with
+ * the branches of its deployment repository.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/applications
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/branches
  * @group Application
@@ -99,6 +105,8 @@ export class CreateApplicationCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Creates an application, once its runtime has been fully resolved.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/applications
  * @group Application
  * @version 2

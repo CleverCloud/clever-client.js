@@ -8,6 +8,9 @@ import type {
 import { transformProductAddonVersions } from './product-transform.js';
 
 /**
+ * Retrieves the versions an add-on provider offers, on its shared clusters and on dedicated
+ * instances.
+ *
  * @endpoint [GET] /v4/addon-providers/:XXX
  * @group Product
  * @version 4

@@ -8,6 +8,8 @@ import type {
 } from './create-cellar-bucket-command.types.js';
 
 /**
+ * Creates a bucket in a Cellar add-on.
+ *
  * @endpoint [POST] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets
  * @group Cellar
  * @version 4

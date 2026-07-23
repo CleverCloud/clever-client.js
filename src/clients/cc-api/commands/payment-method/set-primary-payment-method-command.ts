@@ -8,6 +8,10 @@ import type {
 } from './set-primary-payment-method-command.types.js';
 
 /**
+ * Makes a payment method the one the invoices of an organisation are charged on.
+ *
+ * The payment method must already be attached to the organisation.
+ *
  * @endpoint [PUT] /v4/billing/organisations/:XXX/payments/methods/default
  * @group PaymentMethod
  * @version 4

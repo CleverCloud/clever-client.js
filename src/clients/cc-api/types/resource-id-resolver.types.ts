@@ -1,20 +1,41 @@
 import type { SelfOrPromise } from '../../../types/utils.types.js';
 
+/**
+ * The cache the client keeps so it can fill in a resource's owner, and translate between the two
+ * add-on id formats, without spending a request on it every time.
+ */
 export interface ResourceIdIndex {
+  /** Maps each resource to the owner it belongs to. */
   ownerIdIndex: OwnerIdIndex;
+  /** Maps the two add-on id formats onto each other. */
   addonsIndex: AddonIdIndex;
 }
 
+/**
+ * Which owner each resource belongs to, keyed by resource id. Lets a command that was given only a
+ * resource id resolve the `ownerId` its endpoint needs.
+ */
 export interface OwnerIdIndex {
+  /** Owner of each application, keyed by application id. */
   applicationIds: Record<string, string>;
+  /** Owner of each add-on, keyed by public add-on id. */
   addonIds: Record<string, string>;
+  /** Owner of each add-on, keyed by provider-side add-on id. */
   addonRealIds: Record<string, string>;
+  /** Owner of each add-on provider, keyed by provider id. */
   addonProviderIds: Record<string, string>;
+  /** Owner of each OAuth consumer, keyed by consumer key. */
   oauthConsumerIds: Record<string, string>;
 }
 
+/**
+ * The translation between an add-on's public id and its provider-side id, which different endpoints
+ * expect.
+ */
 export interface AddonIdIndex {
+  /** Provider-side id of each add-on, keyed by public add-on id. */
   addonIds: Record<string, string>;
+  /** Public id of each add-on, keyed by provider-side add-on id. */
   addonRealIds: Record<string, string>;
 }
 

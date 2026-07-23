@@ -13,7 +13,15 @@ import type {
 } from './update-application-command.types.js';
 
 /**
+ * Updates an application.
+ *
+ * Only the given fields are changed. The branch lives behind its own endpoint, so setting it costs
+ * an extra request. The updated application is then completed with the branches of its deployment
+ * repository.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX
+ * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/branch
+ * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/branches
  * @group Application
  * @version 2
  */
@@ -48,6 +56,8 @@ export class UpdateApplicationCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Updates every application field but the branch.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX
  * @group Application
  * @version 2
@@ -109,6 +119,8 @@ class UpdateApplicationInnerCommand extends CcApiSimpleCommand<
 }
 
 /**
+ * Changes the branch an application deploys from.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/branch
  * @group Application
  * @version 2

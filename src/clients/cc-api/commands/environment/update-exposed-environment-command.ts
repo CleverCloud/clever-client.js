@@ -6,6 +6,10 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { UpdateExposedEnvironmentCommandInput } from './update-exposed-environment-command.types.js';
 
 /**
+ * Replaces the configuration an application exposes to the applications linked to it.
+ *
+ * Variables left out of the input stop being exposed.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/exposed_env
  * @group Environment
  * @version 2

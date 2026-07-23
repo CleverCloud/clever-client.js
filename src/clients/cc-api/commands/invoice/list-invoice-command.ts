@@ -6,6 +6,11 @@ import { transformInvoiceSummary } from './invoice-transform.js';
 import type { ListInvoiceCommandInput, ListInvoiceCommandOutput } from './list-invoice-command.types.js';
 
 /**
+ * Lists the billing documents an organisation was issued over a period.
+ *
+ * Invoices and credit notes are returned together, told apart by the `kind` field, and the detailed
+ * lines are left out. When the period is left open, the API defaults to the current year.
+ *
  * @endpoint [GET] /v4/billing/organisations/:XXX/invoices
  * @group Invoice
  * @version 4

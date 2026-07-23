@@ -6,6 +6,8 @@ import type { ListMigrationCommandInput, ListMigrationCommandOutput } from './li
 import { transformMigration } from './migration-transform.js';
 
 /**
+ * Lists the migrations an add-on went through, past and running.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/migrations
  * @group Migration
  * @version 2

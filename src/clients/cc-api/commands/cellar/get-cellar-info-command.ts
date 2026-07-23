@@ -6,6 +6,8 @@ import { transformCellarInfo } from './cellar-transform.js';
 import type { GetCellarInfoCommandInput, GetCellarInfoCommandOutput } from './get-cellar-info-command.types.js';
 
 /**
+ * Retrieves a Cellar add-on, with how much storage and traffic it is using.
+ *
  * @endpoint [GET] /v4/cellar/organisations/:XXX/cellar/:XXX
  * @group Cellar
  * @version 4

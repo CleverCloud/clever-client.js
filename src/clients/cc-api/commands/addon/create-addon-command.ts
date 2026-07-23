@@ -5,6 +5,11 @@ import { transformAddon } from './addon-transform.js';
 import type { CreateAddonCommandInput, CreateAddonCommandOutput } from './create-addon-command.types.js';
 
 /**
+ * Provisions a new add-on in an organisation.
+ *
+ * The add-on is created from a provider and one of its plans, in the given zone. Provisioning is
+ * asynchronous on the provider side: the returned add-on may not be ready to serve traffic yet.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/addons
  * @group Addon
  * @version 2

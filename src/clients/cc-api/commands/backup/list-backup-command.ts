@@ -23,7 +23,16 @@ const CUSTOM_RESTORE_COMMANDS: { [key: string]: (addonDetails: GetAddonDetailsIn
 };
 
 /**
+ * Lists the backups taken from an add-on, optionally with the shell commands that restore or
+ * delete them.
+ *
+ * Restore commands come from three places, tried in order: the backup payload itself for the
+ * providers that build one (Elasticsearch), a per-provider template filled with the add-on
+ * connection details (PostgreSQL, MySQL, MongoDB), or nothing at all for the other providers.
+ *
  * @endpoint [GET] /v2/backups/:XXX/:XXX
+ * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX
+ * @endpoint [GET] /v4/addon-providers/:XXX/addons/:XXX
  * @group Backup
  * @version 2
  */
@@ -70,6 +79,8 @@ export class ListBackupCommand extends CcApiCompositeCommand<ListBackupCommandIn
 }
 
 /**
+ * Lists the raw backups of an add-on, without resolving any restore command.
+ *
  * @endpoint [GET] /v2/backups/:XXX/:XXX
  * @group Backup
  * @version 2
@@ -92,6 +103,8 @@ class ListBackupInnerCommand extends CcApiSimpleCommand<ListBackupCommandInput, 
 }
 
 /**
+ * Retrieves the connection details of an add-on, which the restore command templates are filled with.
+ *
  * @endpoint [GET] /v4/addon-providers/:XXX/addons/:XXX
  * @group Addon
  * @version 4

@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { RebootOtoroshiCommandInput } from './reboot-otoroshi-command.types.js';
 
 /**
+ * Restarts the Otoroshi instance backing an add-on, without touching its data.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-otoroshi/addons/:XXX/reboot
  * @group Otoroshi
  * @version 4

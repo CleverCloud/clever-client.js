@@ -2,6 +2,8 @@ import { get } from '../../../../lib/request/request-params-builder.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 
 /**
+ * Sends the confirmation email again to the user's unconfirmed primary address.
+ *
  * @endpoint [GET] /v2/self/confirmation_email
  * @group Profile
  * @version 2

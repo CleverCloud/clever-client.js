@@ -11,6 +11,10 @@ import { waitForNetworkGroupPeerCreation } from './network-group-utils.js';
 import type { NetworkGroupPeerExternal } from './network-group.types.js';
 
 /**
+ * Attaches an external WireGuard peer, a machine outside the Clever Cloud platform, to a member of a network group.
+ *
+ * Creation is asynchronous: the command polls the peer until it shows up and returns it.
+ *
  * @endpoint [POST] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/external-peers
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX
  * @group NetworkGroup
@@ -35,6 +39,8 @@ export class CreateNetworkGroupExternalPeerCommand extends CcApiCompositeCommand
 }
 
 /**
+ * Sends the external peer creation request and returns the id the API allocated for it.
+ *
  * @endpoint [POST] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/external-peers
  * @group NetworkGroup
  * @version 4

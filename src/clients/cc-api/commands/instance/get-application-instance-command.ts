@@ -9,6 +9,11 @@ import type {
 import { transformApplicationInstance } from './instance-transform.js';
 
 /**
+ * Retrieves one instance of an application.
+ *
+ * Instances are kept after they are destroyed, so a deleted instance can still be retrieved: its `deletedAt`
+ * tells it apart from a live one.
+ *
  * @endpoint [GET] /v4/orchestration/organisations/:XXX/applications/:XXX/instances/:XXX
  * @group Instance
  * @version 4

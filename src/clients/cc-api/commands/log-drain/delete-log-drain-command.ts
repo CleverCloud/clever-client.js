@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteLogDrainCommandInput } from './delete-log-drain-command.types.js';
 
 /**
+ * Deletes a log drain of an application or an add-on, stopping the shipping for good.
+ *
  * @endpoint [DELETE] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX
  * @group LogDrain
  * @version 4

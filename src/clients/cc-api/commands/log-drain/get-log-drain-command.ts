@@ -6,6 +6,8 @@ import type { GetLogDrainCommandInput, GetLogDrainCommandOutput } from './get-lo
 import { transformLogDrain } from './log-drain-transform.js';
 
 /**
+ * Retrieves a log drain of an application or an add-on, with its status and its shipping backlog.
+ *
  * @endpoint [GET] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX
  * @group LogDrain
  * @version 4

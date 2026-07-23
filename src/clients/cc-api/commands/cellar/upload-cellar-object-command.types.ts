@@ -1,5 +1,8 @@
 import type { CellarObjectResourceId } from './cellar.types.js';
 
+/**
+ * Identifies where the object goes, and what to store in it.
+ */
 export type UploadCellarObjectCommandInput = CellarObjectResourceId & {
   /**
    * The object content to store.

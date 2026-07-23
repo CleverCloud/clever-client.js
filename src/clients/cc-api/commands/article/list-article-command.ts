@@ -84,12 +84,19 @@ async function getFeedPage(composer: CcApiComposer, params: ListArticlePageComma
   }
 }
 
+/**
+ * Identifies the feed page to fetch.
+ */
 interface ListArticlePageCommandInput {
+  /** Language of the feed. */
   lang: 'en' | 'fr';
+  /** One-based page number. Page 1 is the feed URL itself. */
   page: number;
 }
 
 /**
+ * Fetches one page of the blog feed and parses it into articles.
+ *
  * @endpoint [GET] https://www.clever.cloud/feed/
  * @endpoint [GET] https://www.clever.cloud/fr/feed/
  * @group Article

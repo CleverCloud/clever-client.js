@@ -10,6 +10,10 @@ import type {
 } from './search-network-group-command.types.js';
 
 /**
+ * Searches the network groups of an organisation, and their members and peers, by id or by label.
+ *
+ * The API returns every kind of component matching the query; the `types` input filters the result client side.
+ *
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/search
  * @group NetworkGroup
  * @version 4

@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteAddonProviderPlanCommandInput } from './delete-addon-provider-plan-command.types.js';
 
 /**
+ * Removes a pricing plan from an add-on provider's catalogue.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/addonproviders/:XXX/plans/:XXX
  * @group AddonProvider
  * @version 2

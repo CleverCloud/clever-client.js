@@ -9,6 +9,8 @@ import type {
 import { transformOtoroshiVersionCheck } from './otoroshi-transform.js';
 
 /**
+ * Checks which Otoroshi versions an add-on can be moved to, and whether it is behind.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-otoroshi/addons/:XXX/version/check
  * @group Otoroshi
  * @version 4

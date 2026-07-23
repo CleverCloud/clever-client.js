@@ -10,6 +10,11 @@ import type {
 } from './add-link-command.types.js';
 
 /**
+ * Links an application to another application or to an add-on.
+ *
+ * The target kind is picked from the input. Once linked, the target's configuration is injected
+ * into the application's environment on its next deployment.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
  * @endpoint [POST] /v2/organisations/:XXX/applications/:XXX/addons
  * @group Link
@@ -34,6 +39,8 @@ export class AddLinkCommand extends CcApiCompositeCommand<AddLinkCommandInput, u
 }
 
 /**
+ * Links an application to another application.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
  * @group Link
  * @version 2
@@ -54,6 +61,8 @@ export class AddApplicationToApplicationLinkCommand extends CcApiSimpleCommand<
 }
 
 /**
+ * Links an application to an add-on.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/applications/:XXX/addons
  * @group Link
  * @version 2

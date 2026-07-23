@@ -1,4 +1,6 @@
 import type { SshKey } from './ssh-key.types.js';
 
-// transformed: sorted by name
+/**
+ * The keys found on the linked GitHub account, sorted by name.
+ */
 export type ListGithubSshKeyCommandOutput = Array<SshKey>;

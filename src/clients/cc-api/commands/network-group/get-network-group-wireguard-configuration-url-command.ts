@@ -7,6 +7,11 @@ import type {
 } from './get-network-group-wireguard-configuration-url-command.types.js';
 
 /**
+ * Retrieves a presigned URL from which the WireGuard configuration of a peer can be downloaded without
+ * authentication.
+ *
+ * The URL is short lived and grants access to the peer private key, so treat it as a secret.
+ *
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX/wireguard/configuration/presigned-url
  * @group NetworkGroup
  * @version 4

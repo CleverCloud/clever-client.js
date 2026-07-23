@@ -10,6 +10,11 @@ import { transformNotificationInfoEvents } from './notification-transform.js';
 import type { WebhookNotificationFormat } from './notification.types.js';
 
 /**
+ * Lists what notifications can be built from: the events that can be watched, the meta events
+ * grouping them, and the webhook payload formats on offer.
+ *
+ * Meant to feed a notification editor without hardcoding the platform's vocabulary.
+ *
  * @endpoint [GET] /v2/notifications/info/events
  * @endpoint [GET] /v2/notifications/info/webhookformats
  * @group Notification
@@ -25,6 +30,8 @@ export class GetNotificationInfoCommand extends CcApiCompositeCommand<void, GetN
 }
 
 /**
+ * Lists the events that can be watched, and the meta events grouping them.
+ *
  * @endpoint [GET] /v2/notifications/info/events
  * @group Notification
  * @version 2
@@ -40,6 +47,8 @@ class GetNotificationInfoEventsCommand extends CcApiSimpleCommand<void, GetNotif
 }
 
 /**
+ * Lists the payload formats a webhook can post in.
+ *
  * @endpoint [GET] /v2/notifications/info/webhookformats
  * @group Notification
  * @version 2

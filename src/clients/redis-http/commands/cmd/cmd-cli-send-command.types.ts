@@ -1,5 +1,8 @@
 import type { RedisHttpCommandInput } from '../../types/redis-http.types.js';
 
+/**
+ * The command line to run, exactly as it would be typed in the Redis© CLI
+ */
 export interface CmdCliSendCommandInput extends RedisHttpCommandInput {
   /**
    * Redis© Command line
@@ -7,6 +10,9 @@ export interface CmdCliSendCommandInput extends RedisHttpCommandInput {
   commandLine: string;
 }
 
+/**
+ * What the command line answered, formatted the way the Redis© CLI would print it
+ */
 export interface CmdCliSendCommandOutput {
   /**
    * Whether the command execution was successful or not

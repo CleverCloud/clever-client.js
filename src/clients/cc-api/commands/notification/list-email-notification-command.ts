@@ -8,6 +8,8 @@ import type {
 import { transformEmailNotification } from './notification-transform.js';
 
 /**
+ * Lists the email hooks watching an owner.
+ *
  * @endpoint [GET] /v2/notifications/emailhooks/:XXX
  * @group Notification
  * @version 2

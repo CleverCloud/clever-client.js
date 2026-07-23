@@ -8,6 +8,8 @@ import type {
 } from './get-cellar-credentials-presigned-url-command.types.js';
 
 /**
+ * Retrieves a presigned URL that reveals the Cellar credentials without going through the API again.
+ *
  * @endpoint [GET] /v4/cellar/organisations/:XXX/cellar/:XXX/credentials/presigned-url
  * @group Cellar
  * @version 4

@@ -1,4 +1,6 @@
 import type { SshKey } from './ssh-key.types.js';
 
-// transformed: sorted by name
+/**
+ * The keys registered on the account, sorted by name.
+ */
 export type ListPersonalSshKeyCommandOutput = Array<SshKey>;

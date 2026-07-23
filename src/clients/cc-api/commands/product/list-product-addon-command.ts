@@ -11,6 +11,10 @@ import type {
 } from './list-product-addon-command.types.js';
 
 /**
+ * Lists the add-on providers in the product catalogue, optionally with the versions each offers.
+ *
+ * Fetching the versions costs one extra request per provider, so it is off by default.
+ *
  * @endpoint [GET] /v2/products/addonproviders
  * @endpoint [GET] /v4/addon-providers/:XXX
  * @group Product
@@ -37,6 +41,8 @@ export class ListProductAddonCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Lists the add-on providers, without their versions.
+ *
  * @endpoint [GET] /v2/products/addonproviders
  * @group Product
  * @version 2

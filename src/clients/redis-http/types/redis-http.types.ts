@@ -44,13 +44,13 @@ export interface RedisHttpCommandInput {
 
 /**
  * Parameters for Redis© scan operations.
- * Used to incrementally iterate over a collection of elements.
+ * Used to incrementally iterate over the elements held inside one key.
  *
  * @example
- * // Scan all keys matching 'user:*'
+ * // Scan the members of the 'users' set whose name starts with 'admin'
  * const scan: KeyScan = {
  *   key: 'users',
- *   match: 'user:*',
+ *   match: 'admin*',
  *   count: 50
  * };
  */
@@ -94,6 +94,9 @@ export interface KeyScanResult<T> extends WithKey {
   elements: Array<T>;
 }
 
+/**
+ * Mixed into every input and output that addresses a single Redis© key
+ */
 export interface WithKey {
   /**
    * The name of the key

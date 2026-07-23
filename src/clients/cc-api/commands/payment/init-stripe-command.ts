@@ -5,6 +5,11 @@ import { transformInvoice } from '../invoice/invoice-transform.js';
 import type { InitStripeCommandInput, InitStripeCommandOutput } from './init-stripe-command.types.js';
 
 /**
+ * Opens a Stripe payment for an invoice by charging it on the payment method of the organisation.
+ *
+ * The charge may need the payer to confirm the intent in the browser, in which case the payment
+ * only settles once {@link AuthorizeStripeCommand} is called with that intent.
+ *
  * @endpoint [POST] /v4/billing/organisations/:XXX/invoices/:XXX/payments/stripe
  * @group Payment
  * @version 4

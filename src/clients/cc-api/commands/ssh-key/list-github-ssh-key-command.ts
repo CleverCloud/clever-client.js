@@ -4,6 +4,10 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { ListGithubSshKeyCommandOutput } from './list-github-ssh-key-command.types.js';
 
 /**
+ * Lists the public SSH keys the current user has on their linked GitHub account.
+ *
+ * Meant to offer them for import, so a user does not have to paste a key they already published.
+ *
  * @endpoint [GET] /v2/github/keys
  * @group SshKey
  * @version 2

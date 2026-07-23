@@ -4,7 +4,7 @@ import { CcApiBridgeCommand } from '../../lib/cc-api-bridge-command.js';
 import type { UpdateApiTokenCommandInput } from './update-api-token-command.types.js';
 
 /**
- * Update an API token
+ * Renames an API token, or changes the note attached to it.
  *
  * @endpoint [PUT] /api-tokens/:XXX
  * @group ApiToken

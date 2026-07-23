@@ -9,6 +9,8 @@ import type {
 } from './list-kubernetes-node-group-command.types.js';
 
 /**
+ * Lists the node groups of a Kubernetes cluster, optionally filtered by status.
+ *
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX/node-groups
  * @group Kubernetes
  * @version 4

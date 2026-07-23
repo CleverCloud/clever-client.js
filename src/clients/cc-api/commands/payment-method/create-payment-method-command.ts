@@ -8,6 +8,12 @@ import type {
 import { transformPaymentMethod } from './payment-method-transform.js';
 
 /**
+ * Attaches a payment method to an organisation.
+ *
+ * The payment method itself is created on the Stripe side, with the Stripe JS tools and the intent
+ * returned by {@link GetStripeIntentCommand}; this command only registers the resulting identifier
+ * so that the invoices of the organisation can be charged on it.
+ *
  * @endpoint [POST] /v4/billing/organisations/:XXX/payments/methods
  * @group PaymentMethod
  * @version 4

@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteKeycloakNetworkGroupCommandInput } from './delete-keycloak-network-group-command.types.js';
 
 /**
+ * Takes a Keycloak add-on out of its network group, making it publicly reachable again.
+ *
  * @endpoint [DELETE] /v4/addon-providers/addon-keycloak/addons/:XXX/networkgroup
  * @group Keycloak
  * @version 4

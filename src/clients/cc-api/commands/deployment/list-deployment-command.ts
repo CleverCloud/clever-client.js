@@ -14,6 +14,12 @@ import type {
 } from './list-deployment-command.types.js';
 
 /**
+ * Lists the deployments of an application, or of every application of an organisation.
+ *
+ * The endpoint that is called depends on the input: when an `applicationId` is given, only that application's
+ * deployments are listed and the paging and filtering parameters apply; otherwise every application of the
+ * organisation is covered and only `ownerId` is forwarded.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/deployments
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/deployments
  * @group Deployment
@@ -32,6 +38,11 @@ export class ListDeploymentCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Lists the deployments of every application of an organisation.
+ *
+ * The payload groups the deployments by application, as a record keyed by application identifier; it is
+ * flattened into a single array, each deployment carrying the application it belongs to.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/deployments
  * @group Deployment
  * @version 2
@@ -52,6 +63,10 @@ class ListOrganisationDeploymentCommand extends CcApiSimpleCommand<
 }
 
 /**
+ * Lists the deployments of a single application.
+ *
+ * The backend returns at most 10 deployments when no `limit` is given.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/deployments
  * @group Deployment
  * @version 2

@@ -6,6 +6,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteTcpRedirectionCommandInput } from './delete-tcp-redirection-command.types.js';
 
 /**
+ * Closes a public TCP port of an application and gives it back to the pool.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/tcpRedirs/:XXX
  * @group TcpRedirection
  * @version 2

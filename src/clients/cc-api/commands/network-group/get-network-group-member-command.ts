@@ -8,6 +8,8 @@ import type {
 import { normalizeMemberKind } from './network-group-utils.js';
 
 /**
+ * Retrieves a member of a network group.
+ *
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members/:XXX
  * @group NetworkGroup
  * @version 4

@@ -10,6 +10,12 @@ import type { Domain } from './domain.types.js';
 import type { ListDomainCommandInput, ListDomainCommandOutput } from './list-domain-command.types.js';
 
 /**
+ * Lists the domains an application answers on, with the primary one flagged.
+ *
+ * The favourite domain is fetched alongside the list. When the application has none, a primary one
+ * is guessed from the domains themselves (see `@domain-utils.ts`), so the result always flags a
+ * primary domain as long as the application has at least one domain.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite
  * @group Domain
@@ -47,6 +53,8 @@ export class ListDomainCommand extends CcApiCompositeCommand<ListDomainCommandIn
 }
 
 /**
+ * Lists the raw domains of an application, before the primary one is resolved.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts
  * @group Domain
  * @version 2
@@ -71,6 +79,8 @@ class ListDomainInnerCommand extends CcApiSimpleCommand<ListDomainCommandInput, 
 }
 
 /**
+ * Reads the favourite domain explicitly set on an application. Answers `404` when there is none.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite
  * @group Domain
  * @version 2

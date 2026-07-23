@@ -4,6 +4,11 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { InitPaypalCommandInput, InitPaypalCommandOutput } from './init-paypal-command.types.js';
 
 /**
+ * Opens a PayPal payment for an invoice and returns the URL the payer has to approve it at.
+ *
+ * The payment only settles once {@link AuthorizePaypalCommand} is called with the transaction
+ * identifier PayPal hands back.
+ *
  * @endpoint [POST] /v4/billing/organisations/:XXX/invoices/:XXX/payments/paypal
  * @group Payment
  * @version 4

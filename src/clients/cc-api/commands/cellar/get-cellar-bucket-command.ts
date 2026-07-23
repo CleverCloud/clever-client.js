@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { GetCellarBucketCommandInput, GetCellarBucketCommandOutput } from './get-cellar-bucket-command.types.js';
 
 /**
+ * Retrieves one bucket, with its versioning status.
+ *
  * @endpoint [GET] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets/:XXX
  * @group Cellar
  * @version 4

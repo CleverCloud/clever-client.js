@@ -8,6 +8,10 @@ import type {
 } from './update-organisation-command.types.js';
 
 /**
+ * Updates the display and billing identity of an organisation.
+ *
+ * The whole identity is sent, so every field has to be provided, not only the ones that change.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX
  * @group Organisation
  * @version 2

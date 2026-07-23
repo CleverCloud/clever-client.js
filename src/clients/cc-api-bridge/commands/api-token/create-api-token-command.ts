@@ -5,7 +5,10 @@ import { transformCreatedApiToken } from './api-token-transform.js';
 import type { CreateApiTokenCommandInput, CreateApiTokenCommandResponse } from './create-api-token-command.types.js';
 
 /**
- * Create an API token
+ * Mints a new API token for an account.
+ *
+ * The account credentials are passed in the body rather than taken from the client, and the token
+ * value is only returned by this call, so it has to be stored right away.
  *
  * @endpoint [POST] /api-tokens
  * @group ApiToken

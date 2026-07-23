@@ -5,6 +5,9 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { GetMateriaInfoCommandInput, GetMateriaInfoCommandOutput } from './get-materia-info-command.types.js';
 
 /**
+ * Retrieves the details of a Materia KV add-on: where its database is reachable and the token to authenticate against
+ * it.
+ *
  * @endpoint [GET] /v4/materia/organisations/:XXX/materia/databases/:XXX
  * @group Materia
  * @version 4

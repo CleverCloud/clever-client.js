@@ -9,6 +9,9 @@ import type {
 } from './get-elasticsearch-info-command.types.js';
 
 /**
+ * Retrieves the details of an Elasticsearch add-on: its plan and zone, the credentials of its Elasticsearch, Kibana
+ * and APM endpoints, and the optional services and features it runs.
+ *
  * @endpoint [GET] /v2/providers/es-addon/:XXX
  * @group Elasticsearch
  * @version 2

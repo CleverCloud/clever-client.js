@@ -10,6 +10,11 @@ import { transformKubernetesCluster } from './kubernetes-transform.js';
 import { waitForKubernetesClusterActive } from './kubernetes-utils.js';
 
 /**
+ * Creates a Kubernetes cluster, optionally with its first node groups.
+ *
+ * Provisioning boots real machines and takes several minutes. The command returns as soon as the
+ * cluster is registered, unless it is asked to wait for it to become active.
+ *
  * @endpoint [POST] /v4/kubernetes/organisations/:XXX/clusters
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX
  * @group Kubernetes
@@ -32,6 +37,8 @@ export class CreateKubernetesClusterCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Registers the cluster, without waiting for it to be provisioned.
+ *
  * @endpoint [POST] /v4/kubernetes/organisations/:XXX/clusters
  * @group Kubernetes
  * @version 4

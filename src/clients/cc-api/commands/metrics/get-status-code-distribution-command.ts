@@ -12,6 +12,9 @@ import { transformStatusCodeDistribution } from './metrics-transform.js';
 /**
  * Gets the distribution of HTTP status codes over time for an owner, optionally restricted to a single application.
  *
+ * The backend counts the responses served by the platform's load balancers into hourly buckets; the client
+ * additionally sums them over the whole range into `byStatusCode`.
+ *
  * @endpoint [GET] /v4/stats/organisations/:XXX/http-status-codes
  * @group Metrics
  * @version 4

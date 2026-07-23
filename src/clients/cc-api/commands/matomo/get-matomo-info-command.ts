@@ -6,6 +6,8 @@ import type { GetMatomoInfoCommandInput, GetMatomoInfoCommandOutput } from './ge
 import { transformMatomoInfo } from './matomo-transform.js';
 
 /**
+ * Retrieves a Matomo add-on, with the URL to reach it and the resources it is built on.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-matomo/addons/:XXX
  * @group Matomo
  * @version 4

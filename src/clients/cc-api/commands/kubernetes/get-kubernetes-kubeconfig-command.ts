@@ -10,6 +10,11 @@ import type {
 } from './get-kubernetes-kubeconfig-command.types.js';
 
 /**
+ * Retrieves the kubeconfig of a cluster, as a YAML document.
+ *
+ * The kubeconfig embeds a client certificate and points at the API server through the load balancer
+ * unless another route is asked for. It is only available once the cluster is up.
+ *
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX/kubeconfig.yaml
  * @group Kubernetes
  * @version 4

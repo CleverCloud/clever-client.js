@@ -6,6 +6,11 @@ import type { ListZoneCommandInput, ListZoneCommandOutput } from './list-zone-co
 import { transformZone } from './zone-transform.js';
 
 /**
+ * Lists the zones applications and add-ons can be deployed in.
+ *
+ * Passing an owner narrows the list down to the zones that organisation has access to; calling it
+ * without any parameter lists the public zones.
+ *
  * @endpoint [GET] /v4/products/zones
  * @group Zone
  * @version 4

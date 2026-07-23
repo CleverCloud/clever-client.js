@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteOtoroshiNetworkGroupCommandInput } from './delete-otoroshi-network-group-command.types.js';
 
 /**
+ * Takes a Otoroshi add-on out of its network group, making it publicly reachable again.
+ *
  * @endpoint [DELETE] /v4/addon-providers/addon-otoroshi/addons/:XXX/networkgroup
  * @group Otoroshi
  * @version 4

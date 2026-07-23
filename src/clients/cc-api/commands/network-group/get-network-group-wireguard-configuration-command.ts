@@ -8,6 +8,11 @@ import type {
 } from './get-network-group-wireguard-configuration-command.types.js';
 
 /**
+ * Retrieves the WireGuard configuration file of a peer, as plain text.
+ *
+ * The configuration is what the peer needs to join the network group: it holds its private key, so treat it as a
+ * secret.
+ *
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX/wireguard/configuration
  * @group NetworkGroup
  * @version 4

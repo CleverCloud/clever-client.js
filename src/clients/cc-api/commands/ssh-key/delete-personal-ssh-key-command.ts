@@ -4,6 +4,8 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { DeletePersonalSshKeyCommandInput } from './delete-personal-ssh-key-command.types.js';
 
 /**
+ * Removes a public SSH key from the current user's account.
+ *
  * @endpoint [DELETE] /v2/self/keys/:XXX
  * @group SshKey
  * @version 2

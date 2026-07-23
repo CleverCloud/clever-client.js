@@ -7,6 +7,12 @@ import type { EnableLogDrainCommandInput, EnableLogDrainCommandOutput } from './
 import { waitForLogDrainEnabled } from './log-drain-utils.js';
 
 /**
+ * Puts a disabled log drain back to work, and waits until it starts shipping again.
+ *
+ * The transition is asynchronous: the drain goes through `ENABLING` first. This command polls the drain once a
+ * second for up to 30 seconds and only resolves once it reports `ENABLED`, throwing if it has not got there in
+ * time.
+ *
  * @endpoint [PUT] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX/enable
  * @endpoint [GET] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX
  * @group LogDrain
@@ -23,6 +29,8 @@ export class EnableLogDrainCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Requests the enabling of the log drain, without waiting for it to take effect.
+ *
  * @endpoint [PUT] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX/enable
  * @group LogDrain
  * @version 4

@@ -6,6 +6,11 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { GetUserSettingCommandInput, GetUserSettingCommandOutput } from './get-user-setting-command.types.js';
 
 /**
+ * Reads one Console preference of the current user.
+ *
+ * Settings are arbitrary string values the Console stores per user, optionally scoped to an
+ * environment so that a preference set in production does not leak into a test environment.
+ *
  * @endpoint [GET] /v4/console/settings/:XXX
  * @group UserSetting
  * @version 4

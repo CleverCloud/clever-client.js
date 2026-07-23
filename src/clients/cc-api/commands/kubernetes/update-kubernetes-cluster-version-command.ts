@@ -10,6 +10,12 @@ import type {
 } from './update-kubernetes-cluster-version-command.types.js';
 
 /**
+ * Upgrades the control plane of a cluster to another Kubernetes version.
+ *
+ * The version must be one of those `CheckKubernetesClusterVersionCommand` reports as available. The
+ * upgrade replaces real machines and takes several minutes; the command returns as soon as it is
+ * accepted, unless it is asked to wait for the cluster to become active again.
+ *
  * @endpoint [POST] /v4/kubernetes/organisations/:XXX/clusters/:XXX/version/update
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/clusters/:XXX
  * @group Kubernetes
@@ -32,6 +38,8 @@ export class UpdateKubernetesClusterVersionCommand extends CcApiCompositeCommand
 }
 
 /**
+ * Asks for the upgrade, without waiting for the control plane to come back up.
+ *
  * @endpoint [POST] /v4/kubernetes/organisations/:XXX/clusters/:XXX/version/update
  * @group Kubernetes
  * @version 4

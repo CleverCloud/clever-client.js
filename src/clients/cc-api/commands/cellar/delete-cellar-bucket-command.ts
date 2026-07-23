@@ -6,6 +6,10 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteCellarBucketCommandInput } from './delete-cellar-bucket-command.types.js';
 
 /**
+ * Removes a bucket from a Cellar add-on.
+ *
+ * A bucket that still holds objects is only removed when the purge is asked for.
+ *
  * @endpoint [DELETE] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets/:XXX
  * @group Cellar
  * @version 4

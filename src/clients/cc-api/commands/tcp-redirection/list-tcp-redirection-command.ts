@@ -8,6 +8,8 @@ import type {
 } from './list-tcp-redirection-command.types.js';
 
 /**
+ * Lists the public TCP ports routed to an application.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/tcpRedirs
  * @group TcpRedirection
  * @version 2

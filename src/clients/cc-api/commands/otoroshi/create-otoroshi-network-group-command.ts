@@ -9,6 +9,9 @@ import type {
 import { transformOtoroshiInfo } from './otoroshi-transform.js';
 
 /**
+ * Puts a Otoroshi add-on behind a network group, so it is only reachable from the peers of that
+ * private network instead of the public internet.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-otoroshi/addons/:XXX/networkgroup
  * @group Otoroshi
  * @version 4

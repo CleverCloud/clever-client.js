@@ -9,6 +9,11 @@ import type {
 import { transformLoadBalancer } from './load-balancer-transform.js';
 
 /**
+ * Lists the load balancers serving an application or an add-on, with the DNS records to point a domain at them.
+ *
+ * The endpoint called depends on whether an application id or an add-on id is given. When no kind is provided, the
+ * public `default` load balancers are returned.
+ *
  * @endpoint [GET] /v4/load-balancers/organisations/:XXX/applications/:XXX/load-balancers/:XXX
  * @endpoint [GET] /v4/load-balancers/organisations/:XXX/addons/:XXX/load-balancers/:XXX
  * @group LoadBalancer

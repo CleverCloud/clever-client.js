@@ -9,6 +9,10 @@ import type {
 } from './update-otoroshi-version-command.types.js';
 
 /**
+ * Moves an add-on to another Otoroshi version.
+ *
+ * The instance is rebuilt on the target version, so it is unavailable for the duration.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-otoroshi/addons/:XXX/version/update
  * @group Otoroshi
  * @version 4

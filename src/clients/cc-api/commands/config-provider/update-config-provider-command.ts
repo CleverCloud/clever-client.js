@@ -8,6 +8,11 @@ import type {
 } from './update-config-provider-command.types.js';
 
 /**
+ * Replaces the configuration a Config Provider add-on hands to the applications linked to it.
+ *
+ * Variables left out of the input are removed. Linked applications only see the change on their next
+ * deployment.
+ *
  * @endpoint [PUT] /v4/addon-providers/config-provider/addons/:XXX/env
  * @group ConfigProvider
  * @version 4

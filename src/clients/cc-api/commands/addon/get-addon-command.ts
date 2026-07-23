@@ -6,6 +6,8 @@ import { transformAddon } from './addon-transform.js';
 import type { GetAddonCommandInput, GetAddonCommandOutput } from './get-addon-command.types.js';
 
 /**
+ * Retrieves an add-on, with the provider and plan it was provisioned from.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX
  * @group Addon
  * @version 2

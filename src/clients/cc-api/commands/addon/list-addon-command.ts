@@ -5,6 +5,8 @@ import { transformAddon } from './addon-transform.js';
 import type { ListAddonCommandInput, ListAddonCommandOutput } from './list-addon-command.types.js';
 
 /**
+ * Lists every add-on provisioned in an organisation.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons
  * @group Addon
  * @version 2

@@ -8,6 +8,8 @@ import { consolidateApplicationWithBranches } from './application-utils.js';
 import type { GetApplicationCommandInput, GetApplicationCommandOutput } from './get-application-command.types.js';
 
 /**
+ * Retrieves an application, optionally completed with the branches of its deployment repository.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/branches
  * @group Application
@@ -28,6 +30,8 @@ export class GetApplicationCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Retrieves an application, without its branches.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX
  * @group Application
  * @version 2

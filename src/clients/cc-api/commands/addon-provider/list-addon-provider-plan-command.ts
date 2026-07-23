@@ -9,6 +9,8 @@ import type {
 } from './list-addon-provider-plan-command.types.js';
 
 /**
+ * Lists the pricing plans offered by an add-on provider.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addonproviders/:XXX/plans
  * @group AddonProvider
  * @version 2

@@ -9,6 +9,10 @@ import type {
 import { transformProductRuntime } from './product-transform.js';
 
 /**
+ * Lists the runtimes applications can be deployed on.
+ *
+ * Passing an owner narrows the catalogue down to what that organisation is entitled to.
+ *
  * @endpoint [GET] /v2/products/instances
  * @group Product
  * @version 2

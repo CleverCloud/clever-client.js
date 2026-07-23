@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteOauthConsumerCommandInput } from './delete-oauth-consumer-command.types.js';
 
 /**
+ * Removes an OAuth consumer, revoking every token issued through it.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/consumers/:XXX
  * @group OauthConsumer
  * @version 2

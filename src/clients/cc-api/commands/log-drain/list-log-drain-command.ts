@@ -7,6 +7,8 @@ import type { ListLogDrainCommandInput, ListLogDrainCommandOutput } from './list
 import { transformLogDrain } from './log-drain-transform.js';
 
 /**
+ * Lists the log drains of an application or an add-on, most recently updated first.
+ *
  * @endpoint [GET] /v4/drains/organisations/:XXX/resources/:XXX/drains
  * @group LogDrain
  * @version 4

@@ -15,6 +15,11 @@ import {
 import type { NetworkGroupMember } from './network-group.types.js';
 
 /**
+ * Creates a network group in an organisation, optionally with a first set of members.
+ *
+ * The network group id is generated client side, because the creation endpoint answers before the network group
+ * exists. The command then polls the network group until it shows up and returns it.
+ *
  * @endpoint [POST] /v4/networkgroups/organisations/:XXX/networkgroups
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX
  * @group NetworkGroup
@@ -35,6 +40,10 @@ export class CreateNetworkGroupCommand extends CcApiCompositeCommand<
 }
 
 /**
+ * Sends the network group creation request, with the client generated id.
+ *
+ * The endpoint answers `202 Accepted` with no body: the network group is created asynchronously.
+ *
  * @endpoint [POST] /v4/networkgroups/organisations/:XXX/networkgroups
  * @group NetworkGroup
  * @version 4

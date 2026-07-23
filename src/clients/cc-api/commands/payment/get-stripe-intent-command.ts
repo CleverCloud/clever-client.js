@@ -4,6 +4,12 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { GetStripeIntentCommandInput, GetStripeIntentCommandOutput } from './get-stripe-intent-command.types.js';
 
 /**
+ * Opens a Stripe setup intent so that a new payment method can be collected in the browser.
+ *
+ * The returned client secret is what the Stripe JS tools need to collect the card or the mandate;
+ * the resulting payment method is then attached to the organisation with
+ * {@link CreatePaymentMethodCommand}.
+ *
  * @endpoint [GET] /v4/billing/organisations/:XXX/payments/stripe/intent
  * @group Payment
  * @version 4

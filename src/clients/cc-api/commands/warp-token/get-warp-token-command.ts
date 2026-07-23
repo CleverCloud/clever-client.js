@@ -10,6 +10,11 @@ import type {
 import { transformWarpToken } from './warp-token-transform.js';
 
 /**
+ * Issues a Warp10 read token, used to query the metrics and access logs time series.
+ *
+ * The token is scoped to a whole organisation, or to a single application when `applicationId` is
+ * given.
+ *
  * @endpoint [POST] /v4/stats/organisations/{ownerId}/tokens/read
  * @endpoint [POST] /v4/stats/organisations/{ownerId}/resources/{resourceId}/tokens/read
  * @group WarpToken

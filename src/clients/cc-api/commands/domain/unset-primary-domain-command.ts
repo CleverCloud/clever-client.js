@@ -5,6 +5,11 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { UnsetPrimaryDomainCommandInput } from './unset-primary-domain-command.types.js';
 
 /**
+ * Clears the primary domain of an application.
+ *
+ * The application keeps every domain it answers on; only the favourite mark is removed, and the
+ * primary domain falls back to being guessed.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite
  * @group Domain
  * @version 2

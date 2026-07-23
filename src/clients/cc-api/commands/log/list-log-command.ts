@@ -7,6 +7,11 @@ import type { ListLogCommandInput, ListLogCommandOutput } from './list-log-comma
 import { transformOldLogs } from './log-transform.js';
 
 /**
+ * Retrieves a page of the runtime logs of an add-on from the legacy v2 log store.
+ *
+ * This is a one-shot request over an archived index, not a stream: it answers with the log lines it has and
+ * closes. Prefer `StreamAddonRuntimeLogCommand` for anything live.
+ *
  * @endpoint [GET] /v2/logs/:XXX
  * @group Log
  * @version 2

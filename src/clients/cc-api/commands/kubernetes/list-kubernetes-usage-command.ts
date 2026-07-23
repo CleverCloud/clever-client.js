@@ -8,6 +8,8 @@ import type {
 } from './list-kubernetes-usage-command.types.js';
 
 /**
+ * Lists the billable Kubernetes resources an owner held, past and present.
+ *
  * @endpoint [GET] /v4/kubernetes/organisations/:XXX/usage
  * @group Kubernetes
  * @version 4
