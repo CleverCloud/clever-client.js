@@ -27,8 +27,12 @@ export interface GetWarpTokenCommandInputResource extends GetWarpTokenCommandInp
 export interface GetWarpTokenCommandInputBase {
   /** Time series the token may read. Defaults to every series the caller is allowed to read. */
   applications?: Array<WarpTokenApplication>;
-  /** How long the token stays valid, as an ISO 8601 duration. Defaults to the platform lifetime. */
-  ttl?: string;
+  /**
+   * How long the token stays valid, as an ISO 8601 duration (`PT1H`, `P1D`, ...) or a number of milliseconds.
+   * Defaults to the platform lifetime.
+   * @converted to an ISO 8601 duration
+   */
+  ttl?: number | string;
 }
 
 /**

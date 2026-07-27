@@ -1,5 +1,6 @@
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
+import { normalizeDuration } from '../../../../utils/duration-utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type {
@@ -32,7 +33,7 @@ export class GetWarpTokenCommand extends CcApiSimpleCommand<GetWarpTokenCommandI
       body.applications = params.applications;
     }
     if (params.ttl != null) {
-      body.ttl = params.ttl;
+      body.ttl = normalizeDuration(params.ttl)!;
     }
 
     return post(url, body);

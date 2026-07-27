@@ -13,14 +13,17 @@ export type GetMetricsCommandInput = ApplicationOrAddonId & {
    */
   metrics?: Array<MetricKind>;
   /**
-   * Length of the window to read, as an ISO 8601 duration (`PT30M`, `PT6H`, ...). Defaults to 30 minutes.
+   * Length of the window to read, as an ISO 8601 duration (`PT30M`, `PT6H`, ...) or a number of milliseconds.
+   * Defaults to 30 minutes.
+   * @converted to an ISO 8601 duration
    */
-  interval?: string;
+  interval?: number | string;
   /**
-   * Size of the sampling buckets the window is cut into, as an ISO 8601 duration. Defaults to 2 minutes. The
-   * backend rejects a span more than 300 times smaller than the interval.
+   * Size of the sampling buckets the window is cut into, as an ISO 8601 duration or a number of milliseconds.
+   * Defaults to 2 minutes. The backend rejects a span more than 300 times smaller than the interval.
+   * @converted to an ISO 8601 duration
    */
-  span?: string;
+  span?: number | string;
   /**
    * Moment the window ends at. Defaults to now.
    * @converted to an ISO date string

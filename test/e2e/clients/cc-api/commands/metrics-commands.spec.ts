@@ -36,6 +36,22 @@ describe('metrics commands', function () {
     expect(response.load1![0].value).toBeTypeOf('number');
   });
 
+  it('should get addon metrics over a window given in milliseconds', async () => {
+    const response = await support.client.send(
+      new GetMetricsCommand({
+        addonId: STATIC_MYSQL_ADDON_ID,
+        metrics: ['mem'],
+        // the API only accepts ISO 8601 durations; these are converted to `PT1H` and `PT2M`
+        interval: 60 * 60 * 1000,
+        span: 2 * 60 * 1000,
+      }),
+    );
+
+    expect(response.mem).toBeInstanceOf(Array);
+    expect(response.mem![0].timestamp).toBeTypeOf('number');
+    expect(response.mem![0].value).toBeTypeOf('number');
+  });
+
   it('should get application status code distribution', async () => {
     const response = await support.client.send(
       new GetStatusCodeDistributionCommand({ applicationId: STATIC_LOGS_APPLICATION }),

@@ -1,6 +1,7 @@
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
+import { normalizeDuration } from '../../../../utils/duration-utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { GetMetricsCommandInput, GetMetricsCommandOutput } from './get-metrics-command.types.js';
@@ -26,8 +27,8 @@ export class GetMetricsCommand extends CcApiSimpleCommand<GetMetricsCommandInput
       safeUrl`/v4/stats/organisations/${params.ownerId}/resources/${resourceId}/metrics`,
       new QueryParams()
         .set('only', (params.metrics?.length ?? 0) > 0 ? Array.from(new Set(params.metrics).values()) : null)
-        .set('interval', params.interval)
-        .set('span', params.span)
+        .set('interval', normalizeDuration(params.interval))
+        .set('span', normalizeDuration(params.span))
         .set('end', normalizeDate(params.end))
         .set('fill', params.fill),
     );
