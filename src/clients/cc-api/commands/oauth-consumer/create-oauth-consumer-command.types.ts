@@ -1,4 +1,4 @@
-import type { AccessRights, ManageRights, OauthConsumer } from './oauth-consumer.types.js';
+import type { GrantableRights, OauthConsumer } from './oauth-consumer.types.js';
 
 /**
  * Description of the OAuth consumer to register.
@@ -20,7 +20,7 @@ export interface CreateOauthConsumerCommandInput {
    * Rights to grant the consumer, keyed by right.
    * @converted to the API's snake_case keys
    */
-  rights: Record<AccessRights | ManageRights, boolean>;
+  rights: Record<GrantableRights, boolean>;
 }
 
 /**

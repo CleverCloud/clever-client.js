@@ -1,4 +1,4 @@
-import type { AccessRights, ManageRights, OauthConsumer } from './oauth-consumer.types.js';
+import type { GrantableRights, OauthConsumer } from './oauth-consumer.types.js';
 
 /**
  * Identifies the OAuth consumer to replace, along with its new definition.
@@ -22,7 +22,7 @@ export interface UpdateOauthConsumerCommandInput {
    * Rights to grant the consumer, keyed by right.
    * @converted to the API's snake_case keys
    */
-  rights: Record<AccessRights | ManageRights, boolean>;
+  rights: Record<GrantableRights, boolean>;
 }
 
 /**
