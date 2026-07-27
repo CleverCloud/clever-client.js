@@ -94,12 +94,12 @@ describe('Duration utils', () => {
       expect(normalizeDuration('P1M')).toBe('P1M');
     });
 
-    it('should return null for null input', () => {
-      expect(normalizeDuration(null)).toBeNull();
+    it('should return undefined for null input', () => {
+      expect(normalizeDuration(null)).toBeUndefined();
     });
 
-    it('should return null for undefined input', () => {
-      expect(normalizeDuration(undefined)).toBeNull();
+    it('should return undefined for undefined input', () => {
+      expect(normalizeDuration(undefined)).toBeUndefined();
     });
 
     it('should throw error for a non finite number', () => {

@@ -360,10 +360,10 @@ export interface KubernetesNodeGroup {
    */
   createdAt: string;
   /**
-   * When the node group was last changed.
+   * When the node group was last changed, absent while it has never been changed.
    * @converted to an ISO date string
    */
-  updatedAt: string | null;
+  updatedAt?: string;
   /** Where the node group stands in its lifecycle. */
   status: KubernetesNodeGroupStatus;
   /**
@@ -442,12 +442,12 @@ export interface KubernetesClusterUsageItem {
    * When the resource started being billed.
    * @converted to an ISO date string
    */
-  createdAt: string | null;
+  createdAt?: string;
   /**
-   * When it stopped being billed, `null` while it is still running.
+   * When it stopped being billed, absent while it is still running.
    * @converted to an ISO date string
    */
-  deactivatedAt: string | null;
+  deactivatedAt?: string;
 }
 
 /**

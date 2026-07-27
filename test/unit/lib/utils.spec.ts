@@ -70,9 +70,14 @@ describe('Utils', () => {
       expect(result).toMatch(/^2023-11-14T/);
     });
 
-    it('should return null for null input', () => {
+    it('should return undefined for null input', () => {
       const result = normalizeDate(null);
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for undefined input', () => {
+      const result = normalizeDate(undefined);
+      expect(result).toBeUndefined();
     });
 
     it('should fix [UTC] suffix', () => {

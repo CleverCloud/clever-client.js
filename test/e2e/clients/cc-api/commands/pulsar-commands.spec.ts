@@ -47,8 +47,8 @@ describe.skip('pulsar commands', function () {
     expect(response.cluster.supportedPlans).toBeInstanceOf(Array);
     expect(response.token).toBeTypeOf('string');
     expect(response.createdAt).toBeTypeOf('string');
-    expect(response.askForDeletionAt).toBeNull();
-    expect(response.deletedAt).toBeNull();
+    expect(response.askForDeletionAt).toBeUndefined();
+    expect(response.deletedAt).toBeUndefined();
     expect(response.status).toBeTypeOf('string');
     expect(response.plan).toBeTypeOf('string');
     expect(response.isColdStorageLinked).toBeTypeOf('boolean');

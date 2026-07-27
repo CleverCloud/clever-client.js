@@ -8,7 +8,7 @@ export function transformJenkinsInfo(response: any): GetJenkinsInfoInnerCommandO
     plan: response.plan,
     zone: response.zone,
     createdAt: normalizeDate(response.creation_date)!,
-    deletedAt: normalizeDate(response.deletion_date)!,
+    deletedAt: normalizeDate(response.deletion_date),
     status: response.status,
     host: response.host,
     user: response.user,

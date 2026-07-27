@@ -13,7 +13,7 @@ export function transformApplicationInstance(payload: any): Instance {
     state: payload.state,
     hypervisorId: payload.hypervisorId,
     createdAt: normalizeDate(payload.creationDate)!,
-    deletedAt: normalizeDate(payload.deletionDate) ?? undefined,
+    deletedAt: normalizeDate(payload.deletionDate),
     network: transformNetwork(payload.network),
     isBuildVm: payload.isBuildVm,
   };

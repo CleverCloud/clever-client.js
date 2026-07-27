@@ -43,7 +43,7 @@ export function toArray<T>(value: T | Array<T>): Array<T> {
  * Handles Date objects, timestamps, and string dates including those with '[UTC]' suffix.
  *
  * @param date - The date to normalize
- * @returns The date in ISO string format, or null if input is null/undefined
+ * @returns The date in ISO string format, or undefined if input is null/undefined
  * @throws {Error} If the input cannot be parsed as a valid date
  *
  * @example
@@ -51,9 +51,9 @@ export function toArray<T>(value: T | Array<T>): Array<T> {
  * normalizeDate('2023-01-01[UTC]')          // '2023-01-01T00:00:00.000Z'
  * normalizeDate(1672531200000)              // '2023-01-01T00:00:00.000Z'
  */
-export function normalizeDate(date: Date | string | number | null | undefined): string | null {
+export function normalizeDate(date: Date | string | number | null | undefined): string | undefined {
   if (date == null) {
-    return null;
+    return undefined;
   }
 
   let parsedDate: Date | undefined;

@@ -63,9 +63,9 @@ export function transformLogDrain(payload: ApiLogDrainPayload, ref: ApplicationO
       lastError: payload.execution.lastError,
       attempt: payload.execution.attempt,
       maxAttempt: payload.execution.maxAttempt,
-      lastAttemptAt: normalizeDate(payload.execution.lastAttemptAt) ?? undefined,
-      nextAttemptAt: normalizeDate(payload.execution.nextAttemptAt) ?? undefined,
-      retryingSince: normalizeDate(payload.execution.retryingSince) ?? undefined,
+      lastAttemptAt: normalizeDate(payload.execution.lastAttemptAt),
+      nextAttemptAt: normalizeDate(payload.execution.nextAttemptAt),
+      retryingSince: normalizeDate(payload.execution.retryingSince),
     },
     backlog: payload.backlog,
   };

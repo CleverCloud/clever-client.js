@@ -46,7 +46,7 @@ export function transformStatusCodeDistribution(
   const byDate = payload.map(({ date, statuses }: any) => {
     const kept = keep(statuses);
     return {
-      date: normalizeDate(date),
+      date: normalizeDate(date)!,
       total: kept.reduce((sum: number, { count }: any) => sum + count, 0),
       statuses: Object.fromEntries(kept.map(({ code, count }: any) => [code, count])),
     };

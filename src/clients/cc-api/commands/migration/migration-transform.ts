@@ -12,7 +12,7 @@ export function transformMigration(payload: any): Migration {
         status: step.status,
         message: step.message,
         startsAt: normalizeDate(step.startDate)!,
-        endsAt: normalizeDate(step.endDate) ?? undefined,
+        endsAt: normalizeDate(step.endDate),
       }),
     ),
     status: payload.status,

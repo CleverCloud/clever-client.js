@@ -23,7 +23,7 @@ export function transformInvoice(payload: any): Invoice {
     category: payload.category,
     address: transformAddress(payload.address),
     emittedAt: normalizeDate(payload.emission_date)!,
-    paidAt: normalizeDate(payload.pay_date)!,
+    paidAt: normalizeDate(payload.pay_date),
     status: payload.status,
     consumptionStartedAt: normalizeDate(payload.consumption_begin_date)!,
     consumptionEndedAt: normalizeDate(payload.consumption_end_date)!,
@@ -152,8 +152,8 @@ function transformCountable(payload: any): InvoiceCountable {
 
 function transformCountableDetail(payload: any): InvoiceCountableDetail {
   return {
-    consumptionStartedAt: normalizeDate(payload.consumption_start) ?? undefined,
-    consumptionEndedAt: normalizeDate(payload.consumption_end) ?? undefined,
+    consumptionStartedAt: normalizeDate(payload.consumption_start),
+    consumptionEndedAt: normalizeDate(payload.consumption_end),
     planId: payload.plan_id,
     quantity: payload.quantity,
     price: transformMoney(payload.price),

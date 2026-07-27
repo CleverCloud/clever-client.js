@@ -53,7 +53,7 @@ export function parseDuration(duration: string): number {
  * could turn one the API accepts into one it rejects.
  *
  * @param duration - The duration to normalize, either a number of milliseconds or an ISO 8601 duration
- * @returns The duration as an ISO 8601 string, or null if input is null/undefined
+ * @returns The duration as an ISO 8601 string, or undefined if input is null/undefined
  * @throws {Error} If the input is a number that cannot be turned into a duration
  *
  * @example
@@ -62,9 +62,9 @@ export function parseDuration(duration: string): number {
  * normalizeDuration(0)         // 'PT0S'
  * normalizeDuration('P1M')     // 'P1M'
  */
-export function normalizeDuration(duration: number | string | null | undefined): string | null {
+export function normalizeDuration(duration: number | string | null | undefined): string | undefined {
   if (duration == null) {
-    return null;
+    return undefined;
   }
 
   if (typeof duration !== 'number') {
