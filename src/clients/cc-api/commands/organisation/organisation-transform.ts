@@ -39,7 +39,7 @@ export function transformOrganisationMember(payload: any): OrganisationMember {
     avatar: payload.member.avatar,
     preferredMFA: payload.member.preferredMFA,
     role: payload.role,
-    jobTitle: payload.job,
+    jobTitle: payload.job ?? undefined,
   };
 }
 

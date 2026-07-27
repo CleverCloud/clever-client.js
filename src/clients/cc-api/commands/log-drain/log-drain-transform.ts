@@ -54,20 +54,20 @@ export function transformLogDrain(payload: ApiLogDrainPayload, ref: ApplicationO
     id: payload.id,
     updatedAt: normalizeDate(payload.status.date)!,
     status: payload.status.status,
-    updatedBy: payload.status.authorId,
-    errorReason: payload.status.errorReason,
+    updatedBy: payload.status.authorId ?? undefined,
+    errorReason: payload.status.errorReason ?? undefined,
     kind: payload.kind!,
     target: transformLogDrainTarget(payload.recipient),
     execution: {
       status: payload.execution.status,
-      lastError: payload.execution.lastError,
-      attempt: payload.execution.attempt,
-      maxAttempt: payload.execution.maxAttempt,
+      lastError: payload.execution.lastError ?? undefined,
+      attempt: payload.execution.attempt ?? undefined,
+      maxAttempt: payload.execution.maxAttempt ?? undefined,
       lastAttemptAt: normalizeDate(payload.execution.lastAttemptAt),
       nextAttemptAt: normalizeDate(payload.execution.nextAttemptAt),
       retryingSince: normalizeDate(payload.execution.retryingSince),
     },
-    backlog: payload.backlog,
+    backlog: payload.backlog ?? undefined,
   };
 
   return 'applicationId' in ref ? { ...common, applicationId: ref.applicationId } : { ...common, addonId: ref.addonId };

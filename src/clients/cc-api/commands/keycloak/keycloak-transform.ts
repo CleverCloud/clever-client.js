@@ -15,7 +15,9 @@ export function transformKeycloakInfo(response: any): KeycloakInfo {
     accessUrl: response.accessUrl,
     availableVersions: response.availableVersions,
     resources: response.resources,
-    features: response.features,
+    features: {
+      networkGroup: response.features.networkGroup ?? undefined,
+    },
     initialCredentials: response.initialCredentials,
     environment: sortBy(toArray(response.envVars), 'name'),
   };

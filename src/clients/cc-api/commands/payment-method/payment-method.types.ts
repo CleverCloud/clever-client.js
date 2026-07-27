@@ -29,8 +29,8 @@ export interface CommonPaymentMethod {
 export interface CreditCardPaymentMethod extends CommonPaymentMethod {
   /** Kind of payment method: always `CREDITCARD` here. */
   type: 'CREDITCARD';
-  /** Name of the card holder, or `null` when Stripe holds none. */
-  holderName: string | null;
+  /** Name of the card holder, absent when Stripe holds none. */
+  holderName?: string;
   /**
    * Last day of the month the card expires on, e.g. `2026-07-31` for a card valid through July 2026.
    * @renamedFrom `expirationDate`
@@ -43,8 +43,8 @@ export interface CreditCardPaymentMethod extends CommonPaymentMethod {
   cardType: string;
   /** Networks the card can be charged on, as Stripe labels them. */
   availableNetworks: Array<string>;
-  /** Network preferred for charging the card, or `null` when none is set. */
-  preferredNetwork: string | null;
+  /** Network preferred for charging the card, absent when none is set. */
+  preferredNetwork?: string;
 }
 
 /**
@@ -53,10 +53,10 @@ export interface CreditCardPaymentMethod extends CommonPaymentMethod {
 export interface SepaDebitPaymentMethod extends CommonPaymentMethod {
   /** Kind of payment method: always `SEPA_DEBIT` here. */
   type: 'SEPA_DEBIT';
-  /** Bank code of the debited account, or `null` when Stripe holds none. */
-  bankCode: string | null;
-  /** Branch code of the debited account, or `null` when Stripe holds none. */
-  branchCode: string | null;
+  /** Bank code of the debited account, absent when Stripe holds none. */
+  bankCode?: string;
+  /** Branch code of the debited account, absent when Stripe holds none. */
+  branchCode?: string;
   /** ISO 3166-1 alpha-2 country code of the debited account, e.g. `FR`. */
   country: string;
   /** Stripe fingerprint uniquely identifying the debited account. */

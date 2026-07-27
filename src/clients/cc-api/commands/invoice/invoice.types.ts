@@ -171,11 +171,13 @@ export interface InvoiceSummary {
   /**
    * When the document was issued.
    * @renamedFrom `emission_date`
+   * @converted to an ISO date string
    */
   emittedAt: string;
   /**
    * When the document was paid, if it was.
    * @renamedFrom `pay_date`
+   * @converted to an ISO date string
    */
   paidAt?: string;
   /** How far the payment of the document got. */
@@ -567,11 +569,13 @@ export interface InvoiceUnbilledUptime {
   /**
    * When the run started being measured.
    * @renamedFrom `start_date`
+   * @converted to an ISO date string
    */
   consumptionStartedAt: string;
   /**
    * When the run stopped being measured.
    * @renamedFrom `end_date`
+   * @converted to an ISO date string
    */
   consumptionEndedAt: string;
 }

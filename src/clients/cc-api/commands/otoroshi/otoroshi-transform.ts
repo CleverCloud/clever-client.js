@@ -12,8 +12,15 @@ export function transformOtoroshiInfo(response: any): OtoroshiInfo {
     javaVersion: response.javaVersion,
     accessUrl: response.accessUrl,
     availableVersions: response.availableVersions,
-    resources: response.resources,
-    features: response.features,
+    resources: {
+      entrypoint: response.resources.entrypoint,
+      redisId: response.resources.redisId,
+      pulsarId: response.resources.pulsarId ?? undefined,
+      elasticId: response.resources.elasticId ?? undefined,
+    },
+    features: {
+      networkGroup: response.features.networkGroup ?? undefined,
+    },
     api: response.api,
     initialCredentials: response.initialCredentials,
   };

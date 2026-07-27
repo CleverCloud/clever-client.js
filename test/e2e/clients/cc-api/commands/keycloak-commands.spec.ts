@@ -112,7 +112,7 @@ describe('keycloak commands', function () {
     const response = await support.client.send(new CreateKeycloakNetworkGroupCommand({ addonId: addon.id }));
 
     expect(response.id).toBe(addon.realId);
-    expect(response.features.networkGroup).not.toBeNull();
+    expect(response.features.networkGroup).toBeDefined();
     expect(response.features.networkGroup!.id).toBeTypeOf('string');
   });
 

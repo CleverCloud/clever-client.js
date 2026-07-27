@@ -166,8 +166,8 @@ export interface CellarObjectList {
   items: Array<CellarObjectItem>;
   /** The directories on this page. */
   directories: Array<CellarDirectory>;
-  /** Cursor to pass back to get the next page, `null` when the listing is exhausted. */
-  cursor: string | null;
+  /** Cursor to pass back to get the next page, absent when the listing is exhausted. */
+  cursor?: string;
 }
 
 /**

@@ -14,7 +14,10 @@ export function transformMetabaseInfo(response: any): MetabaseInfo {
     javaVersion: response.javaVersion,
     accessUrl: response.accessUrl,
     availableVersions: response.availableVersions,
-    resources: response.resources,
+    resources: {
+      entrypoint: response.resources.entrypoint,
+      pgsqlId: response.resources.pgsqlId ?? undefined,
+    },
     environment: sortBy(toArray(response.envVars), 'name'),
   };
 }

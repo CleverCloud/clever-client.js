@@ -233,7 +233,7 @@ describe('cellar commands', function () {
 
     expect(response.items).toEqual([]);
     expect(response.directories).toEqual([]);
-    expect(response.cursor).toBeNull();
+    expect(response.cursor).toBeUndefined();
   });
 
   it('should get cellar bucket object upload url', async () => {

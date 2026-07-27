@@ -10,6 +10,6 @@ export function transformOauthToken(payload: any): OauthToken {
     expiresAt: normalizeDate(payload.expirationDate)!,
     lastUsedAt: normalizeDate(payload.lastUtilisation)!,
     rights: transformOauthConsumerRights(payload.rights),
-    employeeId: payload.employeeId,
+    employeeId: payload.employeeId ?? undefined,
   };
 }

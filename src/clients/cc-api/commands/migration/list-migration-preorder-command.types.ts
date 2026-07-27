@@ -63,11 +63,11 @@ export interface MigrationPreorderLine {
    */
   priceTotalHt: number;
   /** Name of the pack the line belongs to, when it is part of one. */
-  pack: null | string;
+  pack?: string;
   /** Number of drops the line represents, drops being the internal consumption unit. */
   dropQuantity: number;
   /** Identifier of the coupon applied to the line, when there is one. */
-  coupon: null | number;
+  coupon?: number;
   /** Discount applied to the line, before tax. `0` when the line carries no discount. */
   discount: number;
 }

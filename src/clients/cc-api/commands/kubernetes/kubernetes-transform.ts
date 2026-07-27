@@ -11,6 +11,7 @@ import type {
   KubernetesNodeGroup,
   KubernetesProduct,
   KubernetesQuota,
+  KubernetesTaint,
 } from './kubernetes.types.js';
 
 export function transformKubernetesProduct(payload: any): KubernetesProduct {
@@ -37,7 +38,7 @@ export function transformKubernetesCluster(payload: any): KubernetesCluster {
     id: payload.id,
     ownerId: payload.tenantId,
     name: payload.name,
-    description: payload.description,
+    description: payload.description ?? undefined,
     tags: payload.tags,
     status: payload.status,
     createdAt: normalizeDate(payload.creationDate)!,
@@ -48,7 +49,7 @@ export function transformKubernetesCluster(payload: any): KubernetesCluster {
     nodeGroups: payload.nodeGroups,
     standaloneNodeGroups: payload.standaloneNodeGroups,
     loadBalancers: payload.loadBalancers,
-    storageUsageBytes: payload.storageUsageBytes,
+    storageUsageBytes: payload.storageUsageBytes ?? undefined,
   };
 }
 
@@ -67,14 +68,14 @@ export function serializeKubernetesClusterFeatures(features: KubernetesClusterFe
   };
 }
 
-function transformKubernetesClusterFeatures(payload: any): KubernetesClusterFeatures | null {
+function transformKubernetesClusterFeatures(payload: any): KubernetesClusterFeatures | undefined {
   if (payload == null) {
-    return null;
+    return undefined;
   }
   return {
-    isCsi: payload.csi,
-    registries: payload.registries,
-    isAutoscalingEnabled: payload.autoscalingEnabled,
+    isCsi: payload.csi ?? undefined,
+    registries: payload.registries ?? undefined,
+    isAutoscalingEnabled: payload.autoscalingEnabled ?? undefined,
   };
 }
 
@@ -83,19 +84,28 @@ export function transformKubernetesNodeGroup(payload: any): KubernetesNodeGroup 
     id: payload.id,
     clusterId: payload.clusterId,
     name: payload.name,
-    description: payload.description,
-    tag: payload.tag,
+    description: payload.description ?? undefined,
+    tag: payload.tag ?? undefined,
     flavor: payload.flavor,
     currentNodeCount: payload.currentNodeCount,
     targetNodeCount: payload.targetNodeCount,
     minNodeCount: payload.minNodeCount,
     maxNodeCount: payload.maxNodeCount,
-    taints: payload.taints,
+    taints: payload.taints?.map(transformKubernetesTaint),
     labels: payload.labels,
     createdAt: normalizeDate(payload.createdAt)!,
     updatedAt: normalizeDate(payload.updatedAt),
     status: payload.status,
     isAutoscalingEnabled: payload.autoscalingEnabled,
+  };
+}
+
+/** A taint with no value is sent as `"value": null`, which the interface spells as an absent key. */
+function transformKubernetesTaint(payload: any): KubernetesTaint {
+  return {
+    key: payload.key,
+    value: payload.value ?? undefined,
+    effect: payload.effect,
   };
 }
 
@@ -155,9 +165,9 @@ export function transformKubernetesClusterEvent(payload: any): KubernetesCluster
   }
 }
 
-function transformKubernetesClusterDeploymentFailure(payload: any): KubernetesClusterDeploymentFailure | null {
+function transformKubernetesClusterDeploymentFailure(payload: any): KubernetesClusterDeploymentFailure | undefined {
   if (payload == null) {
-    return null;
+    return undefined;
   }
   return {
     operation: payload.operation,
@@ -169,15 +179,29 @@ function transformKubernetesClusterDeploymentFailure(payload: any): KubernetesCl
 
 /**
  * The only wire keys the tenant-facing item data renames are the owner ones: `tenantId` on most
- * variants, `orgId` on the Materia one, both becoming `ownerId`. Every other field (including nested
- * control-plane bundle data) passes through untouched, so a single generic remap covers all variants
- * of the discriminated union.
+ * variants, `orgId` on the Materia one, both becoming `ownerId`. Every other field passes through
+ * untouched, so a single generic remap covers all variants of the discriminated union — except the
+ * one nullable field buried in the control-plane bundle, which is normalised first.
  */
 function transformKubernetesClusterItemData(payload: any): KubernetesClusterItemData {
-  const ownerId = payload.tenantId ?? payload.orgId;
+  const data = payload.type === 'PublicControlPlaneBundleData' ? withNormalizedComponents(payload) : payload;
+  const ownerId = data.tenantId ?? data.orgId;
   if (ownerId === undefined) {
-    return payload;
+    return data;
   }
-  const { tenantId, orgId, ...rest } = payload;
+  const { tenantId, orgId, ...rest } = data;
   return { ...rest, ownerId };
+}
+
+/**
+ * An API server bound to no public port is sent as `"port": null`, which the interface spells as an
+ * absent key. Every other bundled component carries no nullable field.
+ */
+function withNormalizedComponents(payload: any): any {
+  return {
+    ...payload,
+    components: payload.components?.map((component: any) =>
+      component.type === 'PublicApiServer' ? { ...component, port: component.port ?? undefined } : component,
+    ),
+  };
 }

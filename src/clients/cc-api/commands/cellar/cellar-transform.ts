@@ -5,7 +5,7 @@ export function transformCellarObjectList(payload: any): CellarObjectList {
   return {
     items: payload.content,
     directories: payload.directories,
-    cursor: payload.cursor,
+    cursor: payload.cursor ?? undefined,
   };
 }
 

@@ -31,17 +31,17 @@ export interface OtoroshiInfo {
     /** Identifier of the Redis© add-on holding the gateway configuration. */
     redisId: string;
     /** Identifier of the Pulsar add-on events are pushed to, on the instances that have one. */
-    pulsarId: string | null;
+    pulsarId?: string;
     /** Identifier of the Elasticsearch add-on events are indexed into, on the instances that have one. */
-    elasticId: string | null;
+    elasticId?: string;
   };
   /** Optional capabilities turned on for this instance. */
   features: {
-    /** The network group the instance sits behind, or `null` when it is publicly reachable. */
-    networkGroup: {
+    /** The network group the instance sits behind, absent when it is publicly reachable. */
+    networkGroup?: {
       /** Identifier of the network group. */
       id: string;
-    } | null;
+    };
   };
   /** Credentials and endpoints of the Otoroshi admin API. */
   api: {

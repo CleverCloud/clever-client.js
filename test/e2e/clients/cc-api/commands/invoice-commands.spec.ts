@@ -42,6 +42,11 @@ describe('invoice commands', function () {
     const response = await support.client.send(new ListInvoiceCommand({ ownerId: support.userId }));
 
     expect(response).toBeInstanceOf(Array);
+    // the summary dates go through the same normalisation as the full invoice ones
+    response.forEach((invoice) => {
+      checkDateFormat(invoice.emittedAt);
+      checkDateFormat(invoice.paidAt!);
+    });
   });
 
   it('should list unpaid invoice', async () => {

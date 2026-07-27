@@ -13,8 +13,8 @@ export function transformPaymentMethod(payload: any): PaymentMethod {
     return {
       ...common,
       type: 'SEPA_DEBIT',
-      bankCode: payload.bankCode ?? null,
-      branchCode: payload.branchCode ?? null,
+      bankCode: payload.bankCode ?? undefined,
+      branchCode: payload.branchCode ?? undefined,
       country: payload.country,
       fingerprint: payload.fingerprint,
     };
@@ -23,11 +23,11 @@ export function transformPaymentMethod(payload: any): PaymentMethod {
   return {
     ...common,
     type: 'CREDITCARD',
-    holderName: payload.holderName ?? null,
+    holderName: payload.holderName ?? undefined,
     expiresAt: normalizeDate(payload.expirationDate)!,
     isExpired: payload.isExpired,
     cardType: payload.cardType,
     availableNetworks: payload.availableNetworks ?? [],
-    preferredNetwork: payload.preferredNetwork ?? null,
+    preferredNetwork: payload.preferredNetwork ?? undefined,
   };
 }

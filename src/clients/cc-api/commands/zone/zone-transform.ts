@@ -7,7 +7,7 @@ export function transformZone(payload: any): Zone {
     country: payload.country,
     countryCode: payload.countryCode,
     city: payload.city,
-    displayName: payload.displayName,
+    displayName: payload.displayName ?? undefined,
     lat: payload.lat,
     lon: payload.lon,
     outboundIPs: payload.outboundIPs?.sort() ?? [],

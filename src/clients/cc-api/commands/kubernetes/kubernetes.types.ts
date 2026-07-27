@@ -93,14 +93,14 @@ export interface KubernetesClusterFeatures {
    * Whether the Ceph CSI driver is installed, so pods can claim persistent volumes.
    * @renamedFrom `csi`
    */
-  isCsi?: boolean | null;
+  isCsi?: boolean;
   /** Container registries the cluster is allowed to pull from. */
-  registries?: string | null;
+  registries?: string;
   /**
    * Whether node groups may scale themselves within their bounds.
    * @renamedFrom `autoscalingEnabled`
    */
-  isAutoscalingEnabled?: boolean | null;
+  isAutoscalingEnabled?: boolean;
 }
 
 /**
@@ -111,14 +111,14 @@ export interface KubernetesClusterFeaturesPayload {
    * Whether to install the Ceph CSI driver, so pods can claim persistent volumes.
    * @sentAs `csi`
    */
-  isCsi?: boolean | null;
+  isCsi?: boolean;
   /** Container registries the cluster is allowed to pull from. */
-  registries?: string | null;
+  registries?: string;
   /**
    * Whether node groups may scale themselves within their bounds.
    * @sentAs `autoscalingEnabled`
    */
-  isAutoscalingEnabled?: boolean | null;
+  isAutoscalingEnabled?: boolean;
 }
 
 /**
@@ -204,7 +204,7 @@ export interface KubernetesCluster {
   /** Display name of the cluster. */
   name: string;
   /** Free text description of the cluster. */
-  description: string | null;
+  description?: string;
   /** Labels attached to the cluster. */
   tags: Array<string>;
   /** Where the cluster stands in its lifecycle. */
@@ -222,15 +222,15 @@ export interface KubernetesCluster {
   /** Identifier of the zone the cluster runs in. */
   locationId: string;
   /** Optional capabilities turned on for the cluster. */
-  features: KubernetesClusterFeatures | null;
+  features?: KubernetesClusterFeatures;
   /** The node groups attached to the cluster. */
   nodeGroups: Array<KubernetesClusterNodeGroupSummary>;
   /** Node groups created for this owner but not attached to any cluster. */
   standaloneNodeGroups: Array<KubernetesClusterStandaloneNodeGroupSummary>;
   /** The load balancers fronting the cluster. */
   loadBalancers: Array<KubernetesClusterLoadBalancer>;
-  /** Persistent storage claimed by the cluster, in bytes. `null` when it has no CSI driver. */
-  storageUsageBytes: number | null;
+  /** Persistent storage claimed by the cluster, in bytes. Absent when it has no CSI driver. */
+  storageUsageBytes?: number;
 }
 
 /**
@@ -292,7 +292,7 @@ export interface KubernetesTaint {
   /** Key of the taint. */
   key: string;
   /** Value of the taint, when it carries one. */
-  value?: string | null;
+  value?: string;
   /** What the taint does: refuse new pods, prefer not to place them, or evict the ones already there. */
   effect: 'NoSchedule' | 'PreferNoSchedule' | 'NoExecute';
 }
@@ -337,9 +337,9 @@ export interface KubernetesNodeGroup {
   /** Display name of the node group. */
   name: string;
   /** Free text description of the node group. */
-  description: string | null;
+  description?: string;
   /** Label attached to the node group. */
-  tag: string | null;
+  tag?: string;
   /** Size every node of the group runs on. */
   flavor: KubernetesFlavor;
   /** How many nodes are running right now. */
@@ -600,7 +600,7 @@ export interface KubernetesVmData {
  * beyond their kind.
  */
 export type KubernetesBundledComponent =
-  | { type: 'PublicApiServer'; componentType: 'APISERVER'; port: number | null }
+  | { type: 'PublicApiServer'; componentType: 'APISERVER'; port?: number }
   | { type: 'PublicControllerManager'; componentType: 'CONTROLLER_MANAGER' }
   | { type: 'PublicCloudControllerManager'; componentType: 'CLOUD_CONTROLLER_MANAGER' }
   | { type: 'PublicNodeGroupOperator'; componentType: 'NODE_GROUP_OPERATOR' }
@@ -719,8 +719,8 @@ export interface KubernetesClusterStatusEvent {
   date: string;
   /** Where the cluster now stands in its lifecycle. */
   status: KubernetesClusterStatus;
-  /** Why the cluster reached a failure state, `null` unless it did. */
-  failure: KubernetesClusterDeploymentFailure | null;
+  /** Why the cluster reached a failure state, absent unless it did. */
+  failure?: KubernetesClusterDeploymentFailure;
 }
 
 /**
@@ -765,8 +765,8 @@ export interface KubernetesNodeLifecycleEvent {
   nodeGroupId: string;
   /** Size the node runs on. */
   flavor: KubernetesFlavor;
-  /** Why the node reached a failure state, `null` unless it did. */
-  failure: KubernetesClusterDeploymentFailure | null;
+  /** Why the node reached a failure state, absent unless it did. */
+  failure?: KubernetesClusterDeploymentFailure;
 }
 
 /**

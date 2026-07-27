@@ -31,7 +31,7 @@ export interface MetabaseInfo {
     /** Identifier of the application serving Metabase. */
     entrypoint: string;
     /** Identifier of the PostgreSQL add-on holding the Metabase configuration, when it has one. */
-    pgsqlId: string | null;
+    pgsqlId?: string;
   };
   /**
    * Environment variables of the underlying application.

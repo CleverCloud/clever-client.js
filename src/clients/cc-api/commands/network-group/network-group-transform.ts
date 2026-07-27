@@ -7,12 +7,12 @@ import type { NetworkGroupEndpoint, NetworkGroupPeer } from './network-group.typ
 export function transformNetworkGroupPeer(payload: any): NetworkGroupPeer {
   const base = {
     id: payload.id,
-    label: payload.label,
+    label: payload.label ?? undefined,
     publicKey: payload.publicKey,
     endpoint: transformNetworkGroupEndpoint(payload.endpoint),
     hostname: payload.hostname,
     parentMember: payload.parentMember,
-    parentEvent: payload.parentEvent,
+    parentEvent: payload.parentEvent ?? undefined,
   };
 
   if (payload.type === 'CleverPeer') {

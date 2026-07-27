@@ -118,17 +118,17 @@ export interface Application {
    * @renamedFrom `separateBuild`
    */
   hasSeparatedBuild: boolean;
-  /** Scaler size used for the build, or `null` when the runtime does not support a separate build. */
-  buildFlavor: ProductRuntimeFlavor | null;
+  /** Scaler size used for the build, absent when the runtime does not support a separate build. */
+  buildFlavor?: ProductRuntimeFlavor;
   /** Whether the application is meant to be running, and why it may not be. */
   state: ApplicationState;
   /** Commit currently deployed, or the commit the application is pinned to. */
   commitId: string;
   /**
-   * Name of the appliance repository the application was created from, or `null` when the
+   * Name of the appliance repository the application was created from, absent when the
    * application is not backed by an appliance.
    */
-  appliance: string | null;
+  appliance?: string;
   /** Branch deployments are taken from. */
   branch: string;
   /** Branches available on the deployment repository, sorted. Only filled by the commands that fetch them. */

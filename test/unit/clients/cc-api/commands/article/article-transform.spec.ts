@@ -57,10 +57,10 @@ describe('article-transform', () => {
       expect(await parseRssFeed(buildFeed([]))).toEqual([]);
     });
 
-    it('should fall back to a null banner when the description has no post thumbnail', async () => {
+    it('should leave the banner absent when the description has no post thumbnail', async () => {
       const feed = buildFeed([buildItem({ description: `<![CDATA[<p>Only an excerpt.</p>]]>` })]);
 
-      expect((await parseRssFeed(feed))[0].bannerUrl).toBeNull();
+      expect((await parseRssFeed(feed))[0].bannerUrl).toBeUndefined();
     });
 
     // WordPress posts commonly open with a heading or an empty spacer paragraph before the excerpt
