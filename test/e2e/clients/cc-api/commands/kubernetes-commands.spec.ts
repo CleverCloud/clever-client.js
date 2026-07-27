@@ -13,7 +13,7 @@ import { GetKubernetesProductCommand } from '../../../../../src/clients/cc-api/c
 import { GetKubernetesQuotaCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/get-kubernetes-quota-command.js';
 import type { KubernetesCluster } from '../../../../../src/clients/cc-api/commands/kubernetes/kubernetes.types.js';
 import { ListKubernetesClusterCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/list-kubernetes-cluster-command.js';
-import { ListKubernetesDeploymentEventCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/list-kubernetes-deployment-event-command.js';
+import { ListKubernetesClusterEventCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/list-kubernetes-cluster-event-command.js';
 import { ListKubernetesNodeGroupCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/list-kubernetes-node-group-command.js';
 import { ListKubernetesUsageCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/list-kubernetes-usage-command.js';
 import { RedeployKubernetesClusterCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/redeploy-kubernetes-cluster-command.js';
@@ -291,9 +291,13 @@ describe('kubernetes commands', function () {
     expect(updated.maxNodeCount).toBe(3);
 
     const events = await support.client.send(
-      new ListKubernetesDeploymentEventCommand({ ownerId: support.organisationId, clusterId: active.id, limit: 10 }),
+      new ListKubernetesClusterEventCommand({ ownerId: support.organisationId, clusterId: active.id, limit: 10 }),
     );
     expect(events).toBeInstanceOf(Array);
+    for (const event of events) {
+      expect(['CLUSTER_STATUS', 'CLUSTER_ITEM', 'NODE_LIFECYCLE']).toContain(event.event);
+      expect(event.date).toBeTypeOf('string');
+    }
 
     const deleted = await support.client.send(
       new DeleteKubernetesNodeGroupCommand({

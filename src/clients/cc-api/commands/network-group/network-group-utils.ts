@@ -85,7 +85,7 @@ export async function waitForNetworkGroupPeerDeletion(
  * Returns a copy of the given member with its `kind` normalized to uppercase.
  *
  * The Clever Cloud API may return the member `kind` in lower or mixed case; this
- * guarantees it is always one of `'APPLICATION' | 'ADDON' | 'EXTERNAL'`.
+ * guarantees it is always one of `'APPLICATION' | 'ADDON' | 'EXTERNAL' | 'LOADBALANCER'`.
  */
 export function normalizeMemberKind<T extends { kind: string }>(member: T): T & { kind: NetworkGroupMember['kind'] } {
   return {

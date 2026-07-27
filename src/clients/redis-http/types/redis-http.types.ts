@@ -20,6 +20,8 @@ export interface RedisHttpClientConfig extends WithOptional<CcClientConfig, 'bas
    * The default URL of the Redis© database (or any database compatible with the Redis© protocol).
    * This URL will be used for all commands that require a backend connection unless
    * overridden in the command parameters.
+   *
+   * The URL must use the `redis:` or `rediss:` (TLS) protocol.
    */
   backendUrl?: string;
 }
@@ -38,6 +40,8 @@ export interface RedisHttpCommandInput {
    * The URL of the Redis© database (or any database compatible with the Redis© protocol).
    * By default, uses the `backendUrl` provided in the `RedisHttpClient` config.
    * Can be overridden per command to use a different database.
+   *
+   * The URL must use the `redis:` or `rediss:` (TLS) protocol.
    */
   backendUrl?: string;
 }
@@ -62,8 +66,20 @@ export interface KeyScan extends WithKey {
   cursor?: number;
 
   /**
-   * The number of elements to scan. Default to `100`.
+   * A per-page work hint for the amount of elements to scan. Default to `100`.
+   *
+   * This is a lower-bound hint, not a hard cap: a single page can return
+   * strictly more than `count` elements. This mirrors native Redis© `SCAN COUNT`
+   * semantics, where `COUNT` only tells the server how much work to do per
+   * iteration and never bounds the size of the returned batch.
+   *
+   * Callers must not rely on `count` to limit the page size. Instead, always
+   * drive iteration through the returned cursor and tolerate variable page
+   * sizes (a page may even be empty while iteration continues).
+   *
    * Adjust this value to control memory usage and response time.
+   *
+   * @see https://redis.io/docs/latest/commands/scan/ (see "The COUNT option")
    */
   count?: number;
 

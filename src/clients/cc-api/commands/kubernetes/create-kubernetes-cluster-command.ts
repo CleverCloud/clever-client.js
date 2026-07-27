@@ -6,7 +6,7 @@ import type {
   CreateKubernetesClusterCommandInput,
   CreateKubernetesClusterCommandOutput,
 } from './create-kubernetes-cluster-command.types.js';
-import { transformKubernetesCluster } from './kubernetes-transform.js';
+import { serializeKubernetesClusterFeatures, transformKubernetesCluster } from './kubernetes-transform.js';
 import { waitForKubernetesClusterActive } from './kubernetes-utils.js';
 
 /**
@@ -56,7 +56,7 @@ class CreateKubernetesClusterCommandInner extends CcApiSimpleCommand<
       networkGroupId: params.networkGroupId,
       topologyConfig: params.topologyConfig,
       locationId: params.locationId,
-      features: params.features,
+      features: serializeKubernetesClusterFeatures(params.features),
       nodeGroups: params.nodeGroups,
     });
   }

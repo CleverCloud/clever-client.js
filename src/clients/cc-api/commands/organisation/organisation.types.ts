@@ -1,11 +1,22 @@
+import type { ApplicationState } from '../application/application.types.js';
 import type { MFAKind } from '../auth/auth.types.js';
 
 /**
- * Everything one owner (an organisation, or the personal organisation of the current user) holds,
- * as returned by the summary endpoint: its products, the role the current user has on it, and the
- * billing flags the console needs to decide what it may offer.
+ * Everything one owner holds as returned by the summary endpoint: its products and the billing
+ * flags the console needs to decide what it may offer.
+ *
+ * The endpoint describes the current user's personal organisation and the regular organisations
+ * they belong to with two different shapes, so this is a discriminated union on `isPersonal`: a
+ * {@link PersonalOrganisationSummary} carries the user-specific fields (email address, language,
+ * partner), a {@link StandardOrganisationSummary} carries the organisation-specific fields (role,
+ * VAT, support flags).
  */
-export interface OrganisationSummary {
+export type OrganisationSummary = PersonalOrganisationSummary | StandardOrganisationSummary;
+
+/**
+ * The fields every owner summary holds, whether it is the personal organisation or a regular one.
+ */
+export interface BaseOrganisationSummary {
   /** Identifier of the owner, of the form `orga_<uuid>`, or `user_<uuid>` for a personal organisation. */
   id: string;
   /** Display name of the organisation, or of the user for a personal organisation. */
@@ -18,36 +29,71 @@ export interface OrganisationSummary {
   addons: Array<AddonSummary>;
   /** OAuth consumers declared by the organisation. Sorted by name, then key. */
   consumers: Array<ConsumerSummary>;
-  /** Add-on providers published by the organisation. Sorted by name, then id. */
-  providers: Array<ProviderSummary>;
-  /** Role the current user has on this organisation. Not sent for a personal organisation. */
-  role: 'NONE' | 'ADMIN' | 'ACCOUNTING' | 'DEVELOPER' | 'MANAGER';
-  /** How far the VAT number of the organisation got through validation. Not sent for a personal organisation. */
-  vatState: string;
-  /**
-   * Whether the billing details are complete enough to pay: an address, and a company name or a
-   * customer full name. Not sent for a personal organisation.
-   */
-  canPay: boolean;
   /**
    * Whether SEPA direct debit is offered to this organisation, which requires it to be trusted, to have a valid VAT
    * number, or to be on a premium plan.
    * @renamedFrom `canSEPA`
    */
   canPayWithSEPA: boolean;
+}
+
+/**
+ * The summary of the current user's personal organisation, built from the payload's user. It
+ * carries the user-specific fields (email address, language, partner) that a regular organisation
+ * does not have, and none of the organisation-specific billing fields.
+ */
+export interface PersonalOrganisationSummary extends BaseOrganisationSummary {
+  /** Always `true`: this summary is the personal organisation. Set while transforming; the payload does not carry it. */
+  isPersonal: true;
   /**
-   * Whether the organisation is on the Clever Cloud premium support plan. Not sent for a personal organisation.
+   * Email address of the user.
+   * @renamedFrom `email`
+   */
+  emailAddress: string;
+  /**
+   * Language the user picked for the console, as an ISO 639-1 code.
+   * @renamedFrom `lang`
+   */
+  language: string;
+  /**
+   * Whether the user is a Clever Cloud administrator.
+   * @renamedFrom `admin`
+   */
+  isAdmin: boolean;
+  /** Identifier of the partner the user signed up through. */
+  partnerId: string;
+  /** Display name of the partner the user signed up through. */
+  partnerName: string;
+  /** URL of the console of the partner the user signed up through. */
+  partnerConsoleUrl: string;
+}
+
+/**
+ * The summary of an organisation the current user belongs to. It carries the role the user
+ * has on it and the billing and support flags, and none of the user-specific fields.
+ */
+export interface StandardOrganisationSummary extends BaseOrganisationSummary {
+  /** Always `false`: this summary is a regular organisation, not the personal one. Set while transforming. */
+  isPersonal: false;
+  /** Add-on providers published by the organisation. Sorted by name, then id. */
+  providers: Array<ProviderSummary>;
+  /** Role the current user has on this organisation. */
+  role: 'NONE' | 'ADMIN' | 'ACCOUNTING' | 'DEVELOPER' | 'MANAGER';
+  /** How far the VAT number of the organisation got through validation. */
+  vatState: OrganisationVatState;
+  /**
+   * Whether the billing details are complete enough to pay: an address, and a company name or a
+   * customer full name.
+   */
+  canPay: boolean;
+  /**
+   * Whether the organisation is on the Clever Cloud premium support plan.
    * @renamedFrom `cleverEnterprise`
    */
   isPremium: boolean;
-  /** Phone number the organisation may call for emergency support. Not sent for a personal organisation. */
+  /** Phone number the organisation may call for emergency support. */
   emergencyNumber: string;
-  /**
-   * Whether this summary is the one built from the payload's user, that is the personal
-   * organisation. The payload does not carry it, it is set while transforming.
-   */
-  isPersonal: boolean;
-  /** Whether the organisation was manually flagged as trusted. Not sent for a personal organisation. */
+  /** Whether the organisation was manually flagged as trusted. */
   isTrusted: boolean;
 }
 
@@ -80,7 +126,7 @@ export interface ApplicationSummary {
   /** URL of the logo of the runtime flavour. */
   variantLogoUrl: string;
   /** Whether the application is meant to be running, and why it may not be. */
-  state: string;
+  state: ApplicationState;
   /** Commit currently deployed, or the commit the application is pinned to. */
   commit: string;
   /** Tags set by the platform on the application. */
@@ -132,6 +178,14 @@ export interface ProviderSummary {
 }
 
 /**
+ * How far a VAT number got through validation: `INVALID` when there is no number or it is
+ * malformed, `PENDING_VALIDATION` when VIES accepted it but nobody confirmed it manually,
+ * `VALID` when both did, `NOT_NEEDED` when the company was manually exempted, and
+ * `NOT_APPLICABLE` when the organisation is not a company.
+ */
+export type OrganisationVatState = 'INVALID' | 'PENDING_VALIDATION' | 'VALID' | 'NOT_NEEDED' | 'NOT_APPLICABLE';
+
+/**
  * An organisation: the owner that applications, add-ons and invoices belong to, carrying the legal
  * and billing identity those invoices are issued to.
  */
@@ -164,13 +218,8 @@ export interface Organisation {
   vat: string;
   /** URL of the organisation avatar. */
   avatar: string;
-  /**
-   * How far the VAT number got through validation: `INVALID` when there is no number or it is
-   * malformed, `PENDING_VALIDATION` when VIES accepted it but nobody confirmed it manually,
-   * `VALID` when both did, `NOT_NEEDED` when the company was manually exempted, and
-   * `NOT_APPLICABLE` when the organisation is not a company.
-   */
-  vatState: 'INVALID' | 'PENDING_VALIDATION' | 'VALID' | 'NOT_NEEDED' | 'NOT_APPLICABLE';
+  /** How far the VAT number got through validation. */
+  vatState: OrganisationVatState;
   /** Full name of the customer the invoices are issued to, when the organisation is not a company. */
   customerFullName: string;
   /**

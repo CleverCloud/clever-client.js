@@ -19,6 +19,7 @@ export function transformInvoice(payload: any): Invoice {
     invoiceNumber: payload.invoice_number,
     kind: payload.kind,
     origin: payload.origin,
+    version: payload.version,
     category: payload.category,
     address: transformAddress(payload.address),
     emittedAt: normalizeDate(payload.emission_date)!,
@@ -142,7 +143,7 @@ function transformCountable(payload: any): InvoiceCountable {
     quantity: payload.quantity,
     planId: payload.plan_id,
     duration: payload.duration,
-    detailsPrice: transformMoney(payload.details_price),
+    detailsPrice: payload.details_price != null ? transformMoney(payload.details_price) : undefined,
     details: (payload.details ?? []).map(transformCountableDetail),
     category: payload.category,
     subCategory: payload.sub_category,
@@ -151,8 +152,8 @@ function transformCountable(payload: any): InvoiceCountable {
 
 function transformCountableDetail(payload: any): InvoiceCountableDetail {
   return {
-    consumptionStartedAt: normalizeDate(payload.consumption_start)!,
-    consumptionEndedAt: normalizeDate(payload.consumption_end)!,
+    consumptionStartedAt: normalizeDate(payload.consumption_start) ?? undefined,
+    consumptionEndedAt: normalizeDate(payload.consumption_end) ?? undefined,
     planId: payload.plan_id,
     quantity: payload.quantity,
     price: transformMoney(payload.price),

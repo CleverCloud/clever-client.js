@@ -41,6 +41,11 @@ export interface BackupBase {
    * @converted falls back to `link` for Elasticsearch add-ons
    */
   downloadUrl: string;
+  /**
+   * Name of the backup archive file, for example `<ref>-<timestamp>.<ext>`. Only sent for
+   * database add-ons; Elasticsearch backups do not carry it.
+   */
+  filename?: string;
 }
 
 /**

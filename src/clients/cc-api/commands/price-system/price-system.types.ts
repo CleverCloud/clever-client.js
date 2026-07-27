@@ -36,7 +36,7 @@ export interface RuntimePricePolicy {
   /** Scaler size the price applies to, for example `S` or `S_SML`. */
   flavor: string;
   /**
-   * Span of time the price covers, usually one hour.
+   * Span of time the price covers, usually one hour, as an ISO-8601 duration (for example `PT1H`).
    * @renamedFrom `time_unit`
    */
   timeUnit: string;

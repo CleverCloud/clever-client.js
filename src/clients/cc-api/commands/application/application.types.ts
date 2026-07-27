@@ -47,6 +47,8 @@ export interface Application {
     defaultEnvironment: Array<EnvironmentVariable>;
     /** Whether the instances are long lived or spawned for a one-off job. */
     lifetime: ApplicationLifetime;
+    /** Name of the kernel the instances run on, for example `linux-vm`. */
+    kernelName: string;
   };
   /** How the code reaches the platform, and where the instances can be pushed to. */
   deployment: {
@@ -116,14 +118,17 @@ export interface Application {
    * @renamedFrom `separateBuild`
    */
   hasSeparatedBuild: boolean;
-  /** Scaler size used for the build, when the build is separated. */
-  buildFlavor: ProductRuntimeFlavor;
+  /** Scaler size used for the build, or `null` when the runtime does not support a separate build. */
+  buildFlavor: ProductRuntimeFlavor | null;
   /** Whether the application is meant to be running, and why it may not be. */
   state: ApplicationState;
   /** Commit currently deployed, or the commit the application is pinned to. */
   commitId: string;
-  /** Reserved for internal use, always null. */
-  appliance: null;
+  /**
+   * Name of the appliance repository the application was created from, or `null` when the
+   * application is not backed by an appliance.
+   */
+  appliance: string | null;
   /** Branch deployments are taken from. */
   branch: string;
   /** Branches available on the deployment repository, sorted. Only filled by the commands that fetch them. */

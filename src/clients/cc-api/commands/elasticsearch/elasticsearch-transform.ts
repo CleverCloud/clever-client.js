@@ -4,7 +4,7 @@ import type { ElasticsearchInfo } from './elasticsearch.types.js';
 export function transformElasticsearchInfo(response: any): ElasticsearchInfo {
   return {
     id: response.id,
-    ownerId: response.owner_id,
+    ownerId: response.owner_id ?? null,
     addonId: response.app_id,
     plan: response.plan,
     zone: response.zone,
@@ -20,10 +20,10 @@ export function transformElasticsearchInfo(response: any): ElasticsearchInfo {
     },
     version: response.version,
     backups: {
-      kibanaSnapshotsUrl: response.backups.kibana_snapshots_url,
+      kibanaSnapshotsUrl: response.backups.kibana_snapshots_url ?? null,
     },
-    kibanaApplication: response.kibana_application,
-    apmApplication: response.apm_application,
+    kibanaApplication: response.kibana_application ?? null,
+    apmApplication: response.apm_application ?? null,
     services: transformNamedFlags(response.services),
     features: transformNamedFlags(response.features),
   };

@@ -34,4 +34,8 @@ export class CreateApiTokenCommand extends CcApiBridgeCommand<
   transformCommandOutput(response: unknown): CreateApiTokenCommandResponse {
     return transformCreatedApiToken(response);
   }
+
+  isAuthEnabled(): boolean {
+    return false;
+  }
 }

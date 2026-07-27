@@ -31,4 +31,6 @@ export interface StreamApplicationAccessLogCommandInput extends ApplicationId {
   throttleElements?: number;
   /** Length of the throttling window, in milliseconds. */
   throttlePerInMilliseconds?: number;
+  /** How long the backend keeps retrying to reconnect the underlying stream before giving up, in seconds. Defaults to 600. */
+  maxRetryDurationInSeconds?: number;
 }

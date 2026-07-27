@@ -2,6 +2,7 @@ import { sortBy } from '../../../../lib/utils.js';
 import type { GetOrganisationSummariesCommandOutput } from './get-organisation-summaries-command.types.js';
 import type {
   ApplicationSummary,
+  BaseOrganisationSummary,
   Organisation,
   OrganisationMember,
   OrganisationSummary,
@@ -69,21 +70,42 @@ function transformApplicationSummary(payload: any): ApplicationSummary {
 }
 
 function transformOrganisationSummary(payload: any, isPersonal: boolean): OrganisationSummary {
-  return {
+  const base: BaseOrganisationSummary = {
     id: payload.id,
     name: payload.name,
     avatar: payload.avatar,
     applications: sortBy((payload.applications ?? []).map(transformApplicationSummary), 'name', 'id'),
     addons: sortBy(payload.addons ?? [], 'name', 'id'),
     consumers: sortBy(payload.consumers ?? [], 'name', 'key'),
+    canPayWithSEPA: payload.canSEPA,
+  };
+
+  if (isPersonal) {
+    // The payload's user (a `UserSummary`) carries the user-specific fields and none of the
+    // company billing fields.
+    return {
+      ...base,
+      isPersonal: true,
+      emailAddress: payload.email,
+      language: payload.lang,
+      isAdmin: payload.admin,
+      partnerId: payload.partnerId,
+      partnerName: payload.partnerName,
+      partnerConsoleUrl: payload.partnerConsoleUrl,
+    };
+  }
+
+  // A company organisation (an `OrganisationSummary`) carries the role and billing fields and none
+  // of the user-specific fields.
+  return {
+    ...base,
+    isPersonal: false,
     providers: sortBy(payload.providers ?? [], 'name', 'id'),
     role: payload.role,
     vatState: payload.vatState,
     canPay: payload.canPay,
-    canPayWithSEPA: payload.canSEPA,
     isPremium: payload.cleverEnterprise,
     emergencyNumber: payload.emergencyNumber,
     isTrusted: payload.isTrusted,
-    isPersonal: isPersonal,
   };
 }

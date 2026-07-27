@@ -59,7 +59,7 @@ describe('application commands', function () {
       }),
     );
 
-    expect(updatedApplication.buildFlavor.name).toBe('L');
+    expect(updatedApplication.buildFlavor!.name).toBe('L');
   });
 
   it('should update branch', async () => {

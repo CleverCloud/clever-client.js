@@ -110,6 +110,8 @@ export interface ProductRuntimeFlavor {
   cpuFactor: number;
   /** Multiplier applied to the memory share. */
   memFactor: number;
+  /** Fraction of the flavor's resources reserved for the system rather than the application. */
+  systemOverheadFactor: number;
 }
 
 /**

@@ -13,10 +13,7 @@ import { transformZone } from './zone-transform.js';
  */
 export class GetZoneCommand extends CcApiSimpleCommand<GetZoneCommandInput, GetZoneCommandOutput> {
   toRequestParams(params: GetZoneCommandInput) {
-    let queryParms: QueryParams | undefined;
-    if (params.ownerId != null) {
-      queryParms = new QueryParams().append('ownerId', params.ownerId);
-    }
+    const queryParms = new QueryParams().append('ownerId', params.ownerId).append('tag', params.tag);
 
     return get(`/v4/products/zones/${params.zoneName}`, queryParms);
   }

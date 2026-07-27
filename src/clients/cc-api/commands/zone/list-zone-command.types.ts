@@ -6,7 +6,9 @@ import type { Zone } from './zone.types.js';
  */
 export type ListZoneCommandInput = void | {
   /** Identifier of the user or organisation to filter the zones for. */
-  ownerId: string;
+  ownerId?: string;
+  /** Tag the zones must carry to be listed, for example `infra:clever-cloud`. */
+  tag?: string;
 };
 
 /**

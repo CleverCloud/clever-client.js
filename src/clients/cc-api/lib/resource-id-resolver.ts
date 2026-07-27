@@ -304,9 +304,11 @@ export class ResourceIdResolver {
         this.#getIndex().addonsIndex.addonIds[addon.id] = addon.realId;
         this.#getIndex().addonsIndex.addonRealIds[addon.realId] = addon.id;
       });
-      organisation.providers?.forEach((provider) => {
-        this.#getIndex().ownerIdIndex.addonProviderIds[provider.id] = organisation.id;
-      });
+      if (!organisation.isPersonal) {
+        organisation.providers?.forEach((provider) => {
+          this.#getIndex().ownerIdIndex.addonProviderIds[provider.id] = organisation.id;
+        });
+      }
       organisation.consumers?.forEach((consumer) => {
         this.#getIndex().ownerIdIndex.oauthConsumerIds[consumer.key] = organisation.id;
       });

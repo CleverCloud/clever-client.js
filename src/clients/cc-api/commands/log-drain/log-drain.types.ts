@@ -23,21 +23,50 @@ interface LogDrainCommon {
    */
   status: LogDrainStatus;
   /**
-   * Identifier of the user who last changed the drain's status.
+   * Identifier of the user who last changed the drain's status. Absent when the status was set by the system
+   * rather than by a user.
    * @renamedFrom `status.authorId`
    */
-  updatedBy: string;
+  updatedBy?: string;
+  /**
+   * Why the drain reached its current status, when the transition carried a reason (e.g. an enable/disable
+   * triggered by a delivery failure). Absent for plain user-driven transitions.
+   * @renamedFrom `status.errorReason`
+   */
+  errorReason?: string;
   /** How the shipping is going right now. */
   execution: {
     /** Whether the drain is currently shipping, retrying after a failure, or stopped. */
     status: LogDrainExecutionStatus;
-    /** Error the last failed delivery attempt reported. */
-    lastError: string;
+    /** Error the last failed delivery attempt reported. Absent when no attempt has failed. */
+    lastError?: string;
+    /** Number of delivery attempts made in the current retry streak. Absent when the drain is not running. */
+    attempt?: number;
+    /** Maximum number of delivery attempts before the drain gives up. Absent when the drain is not running. */
+    maxAttempt?: number;
+    /**
+     * When the last delivery attempt was made. Only set while the drain is retrying.
+     * @converted to an ISO date string
+     */
+    lastAttemptAt?: string;
+    /**
+     * When the next delivery attempt is scheduled, computed from the retry backoff. Only set while the drain is
+     * retrying.
+     * @converted to an ISO date string
+     */
+    nextAttemptAt?: string;
+    /**
+     * When the current retry streak started. Absent when the drain is not retrying.
+     * @converted to an ISO date string
+     */
+    retryingSince?: string;
   };
-  /** How far behind the drain is on the messages it has to ship. */
-  backlog: {
+  /** How far behind the drain is on the messages it has to ship. Absent when the drain has no stats yet. */
+  backlog?: {
     /** Rate at which messages are currently leaving the drain's queue, in messages per second. */
     msgRateOut: number;
+    /** Rate at which bytes are currently leaving the drain's queue, in bytes per second. */
+    msgThroughputOut: number;
     /** Number of messages still queued and waiting to be shipped. */
     msgBacklog: number;
   };
@@ -58,6 +87,19 @@ export interface LogDrain extends LogDrainCommon {
    * carries a `resourceId`.
    */
   addonId?: string;
+}
+
+/**
+ * Outcome of a server-side probe of a log drain's recipient. The API answers with a `200` whether or not the
+ * recipient could be reached: `ok` tells success from failure, and `code`/`message` carry the debug detail.
+ */
+export interface LogDrainProbeResult {
+  /** Whether the recipient answered the probe successfully. */
+  ok: boolean;
+  /** Short machine-readable code describing the probe outcome. */
+  code: string;
+  /** Human-readable explanation of the probe outcome. */
+  message: string;
 }
 
 /** Status of a log drain: whether it is shipping logs, and which transition it is going through. */

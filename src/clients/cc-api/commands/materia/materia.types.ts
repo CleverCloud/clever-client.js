@@ -11,7 +11,7 @@ export interface MateriaInfo {
   /** Kind of Materia database. Only key-value databases exist so far. */
   kind: 'KV';
   /** Plan the database was provisioned with. */
-  plan: 'ALPHA';
+  plan: 'ALPHA' | 'BASE';
   /** Host name the database is reachable at. */
   host: string;
   /** Port the database is reachable on. */

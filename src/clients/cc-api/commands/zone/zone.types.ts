@@ -12,8 +12,8 @@ export interface Zone {
   countryCode: string;
   /** City the zone sits in. */
   city: string;
-  /** Human readable name of the zone, meant to be shown in a picker. */
-  displayName: string;
+  /** Human readable name of the zone, meant to be shown in a picker. May be absent. */
+  displayName?: string;
   /** Latitude of the zone, to place it on a map. */
   lat: number;
   /** Longitude of the zone, to place it on a map. */

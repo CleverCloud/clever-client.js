@@ -9,4 +9,10 @@ export interface ScanListKeyCommandInput extends RedisHttpCommandInput, Omit<Key
 /**
  * The result when the scan is successful
  */
-export type ScanListKeyCommandOutput = KeyScanResult<ListKeyElement>;
+export interface ScanListKeyCommandOutput extends KeyScanResult<ListKeyElement> {
+  /**
+   * The total number of elements held in the `list` key (its full length),
+   * independent of the current scan window.
+   */
+  total: number;
+}

@@ -170,8 +170,8 @@ DELETE,/v4/kubernetes/organisations/{ownerId}/clusters/{clusterId},DeleteKuberne
 GET,/v4/kubernetes/organisations/{ownerId}/clusters/{clusterId},GetKubernetesClusterCommand,kubernetes,admin-only
 PATCH,/v4/kubernetes/organisations/{ownerId}/clusters/{clusterId},UpdateKubernetesClusterCommand,kubernetes,admin-only
 POST,/v4/kubernetes/organisations/{ownerId}/clusters/{clusterId}/csi/ceph,AddKubernetesPersistentStorageCommand,kubernetes,admin-only
-GET,/v4/kubernetes/organisations/{ownerId}/clusters/{clusterId}/deployment-events,ListKubernetesDeploymentEventCommand,kubernetes,admin-only
-GET,/v4/kubernetes/organisations/{ownerId}/clusters/{clusterId}/events,,kubernetes,admin-only
+GET,/v4/kubernetes/organisations/{ownerId}/clusters/{clusterId}/deployment-events,,kubernetes,admin-only
+GET,/v4/kubernetes/organisations/{ownerId}/clusters/{clusterId}/events,ListKubernetesClusterEventCommand,kubernetes,admin-only
 GET,/v4/kubernetes/organisations/{ownerId}/clusters/{clusterId}/kubeconfig.yaml,GetKubernetesKubeconfigCommand,kubernetes,admin-only
 GET,/v4/kubernetes/organisations/{ownerId}/clusters/{clusterId}/kubeconfig/presigned-url,GetKubernetesKubeconfigPresignedUrlCommand,kubernetes,admin-only
 GET,/v4/kubernetes/organisations/{ownerId}/clusters/{clusterId}/node-groups,ListKubernetesNodeGroupCommand,kubernetes,admin-only

@@ -23,6 +23,7 @@ export function transformApplication(payload: any): Application {
       flavors: sortBy(payload.instance.flavors.map(transformProductRuntimeFlavor), 'price'),
       defaultEnvironment: sortBy(toArray(payload.instance.defaultEnv), 'name'),
       lifetime: payload.instance.lifetime,
+      kernelName: payload.instance.kernelName,
     },
     deployment: {
       canShutdown: payload.deployment.shutdownable,
@@ -43,7 +44,7 @@ export function transformApplication(payload: any): Application {
     isFavourite: payload.favourite,
     cancelOnPush: payload.cancelOnPush,
     hasSeparatedBuild: payload.separateBuild,
-    buildFlavor: payload.buildFlavor,
+    buildFlavor: payload.buildFlavor != null ? transformProductRuntimeFlavor(payload.buildFlavor) : null,
     state: payload.state,
     commitId: payload.commitId,
     appliance: payload.appliance,

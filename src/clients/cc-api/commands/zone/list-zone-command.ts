@@ -19,7 +19,7 @@ export class ListZoneCommand extends CcApiSimpleCommand<ListZoneCommandInput, Li
   toRequestParams(params: ListZoneCommandInput) {
     let queryParms: QueryParams | undefined;
     if (params != null && typeof params === 'object') {
-      queryParms = new QueryParams().append('ownerId', params.ownerId);
+      queryParms = new QueryParams().append('ownerId', params.ownerId).append('tag', params.tag);
     }
 
     return get(`/v4/products/zones`, queryParms);

@@ -39,7 +39,7 @@ export function transformMigrationPreorder(response: any): ListMigrationPreorder
         pack: line.pack,
         dropQuantity: line.dropQuantity,
         coupon: line.coupon,
-        discount: 0,
+        discount: line.discount,
       })) ?? [],
       'priceTotalHt',
     ),

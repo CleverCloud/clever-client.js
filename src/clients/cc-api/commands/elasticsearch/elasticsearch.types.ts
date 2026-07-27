@@ -3,13 +3,13 @@
  * and APM endpoints, and the optional services and features it was provisioned with.
  */
 export interface ElasticsearchInfo {
-  /** Identifier of the Elasticsearch cluster backing the add-on. */
+  /** Internal identifier the Elasticsearch add-on provider assigns to the add-on (a UUID). Not the underlying Elasticsearch cluster id. */
   id: string;
   /**
-   * Identifier of the organisation owning the add-on.
+   * Identifier of the organisation owning the add-on, or `null` when the backend has none recorded.
    * @renamedFrom `owner_id`
    */
-  ownerId: string;
+  ownerId: string | null;
   /** Version of Elasticsearch the cluster runs. */
   version: string;
   /**
@@ -58,21 +58,21 @@ export interface ElasticsearchInfo {
   /** Where the backups of the add-on can be found. */
   backups: {
     /**
-     * URL listing the Kibana snapshots taken for the add-on.
+     * URL listing the Kibana snapshots taken for the add-on, or `null` when none is available.
      * @renamedFrom `kibana_snapshots_url`
      */
-    kibanaSnapshotsUrl: string;
+    kibanaSnapshotsUrl: string | null;
   };
   /**
-   * Identifier of the application running Kibana for this add-on.
+   * Identifier of the application running Kibana for this add-on, or `null` when Kibana is not enabled.
    * @renamedFrom `kibana_application`
    */
-  kibanaApplication: string;
+  kibanaApplication: string | null;
   /**
-   * Identifier of the application running the APM server for this add-on.
+   * Identifier of the application running the APM server for this add-on, or `null` when APM is not enabled.
    * @renamedFrom `apm_application`
    */
-  apmApplication: string;
+  apmApplication: string | null;
   /**
    * Optional services (Kibana, APM, ...) that can run alongside the cluster, and whether they do. Each entry has its
    * `enabled` renamed to `isEnabled`, and the list is sorted by name.

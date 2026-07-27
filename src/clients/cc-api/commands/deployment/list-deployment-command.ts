@@ -33,7 +33,7 @@ export class ListDeploymentCommand extends CcApiCompositeCommand<
     if ('applicationId' in params && params.applicationId != null) {
       return client.send(new ListApplicationDeploymentCommand(params));
     }
-    return client.send(new ListOrganisationDeploymentCommand({ ownerId: params.ownerId! }));
+    return client.send(new ListOrganisationDeploymentCommand({ ownerId: params.ownerId!, limit: params.limit }));
   }
 }
 
@@ -52,7 +52,10 @@ class ListOrganisationDeploymentCommand extends CcApiSimpleCommand<
   Array<DeploymentLegacy>
 > {
   toRequestParams(params: ListOrganisationDeploymentCommandInput) {
-    return get(safeUrl`/v2/organisations/${params.ownerId}/deployments`);
+    return get(
+      safeUrl`/v2/organisations/${params.ownerId}/deployments`,
+      new QueryParams().set('limit', params.limit),
+    );
   }
 
   transformCommandOutput(response: unknown): Array<DeploymentLegacy> {

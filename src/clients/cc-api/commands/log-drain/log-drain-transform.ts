@@ -17,11 +17,19 @@ import type {
 interface ApiLogDrainPayload {
   id: string;
   resourceId: string;
-  status: { date: string; status: LogDrainStatus; authorId?: string };
+  status: { date: string; status: LogDrainStatus; authorId?: string; errorReason?: string };
   kind?: LogDrainKind;
   recipient: ApiRecipientPayload;
-  execution: { status: LogDrainExecutionStatus; lastError: string };
-  backlog: { msgRateOut: number; msgBacklog: number };
+  execution: {
+    status: LogDrainExecutionStatus;
+    lastError?: string;
+    attempt?: number;
+    maxAttempt?: number;
+    lastAttemptAt?: string;
+    nextAttemptAt?: string;
+    retryingSince?: string;
+  };
+  backlog?: { msgRateOut: number; msgThroughputOut: number; msgBacklog: number };
 }
 
 interface ApiRecipientPayload {
@@ -46,11 +54,18 @@ export function transformLogDrain(payload: ApiLogDrainPayload, ref: ApplicationO
     id: payload.id,
     updatedAt: normalizeDate(payload.status.date)!,
     status: payload.status.status,
-    updatedBy: payload.status.authorId!,
+    updatedBy: payload.status.authorId,
+    errorReason: payload.status.errorReason,
     kind: payload.kind!,
     target: transformLogDrainTarget(payload.recipient),
     execution: {
-      ...payload.execution,
+      status: payload.execution.status,
+      lastError: payload.execution.lastError,
+      attempt: payload.execution.attempt,
+      maxAttempt: payload.execution.maxAttempt,
+      lastAttemptAt: normalizeDate(payload.execution.lastAttemptAt) ?? undefined,
+      nextAttemptAt: normalizeDate(payload.execution.nextAttemptAt) ?? undefined,
+      retryingSince: normalizeDate(payload.execution.retryingSince) ?? undefined,
     },
     backlog: payload.backlog,
   };

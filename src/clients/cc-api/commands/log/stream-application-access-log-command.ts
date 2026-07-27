@@ -32,7 +32,8 @@ export class StreamApplicationAccessLogCommand extends AbstractLogsStreamCommand
         .append('until', normalizeDate(params.until))
         .append('field', params.fields)
         .append('throttleElements', params.throttleElements)
-        .append('throttlePerInMilliseconds', params.throttlePerInMilliseconds),
+        .append('throttlePerInMilliseconds', params.throttlePerInMilliseconds)
+        .append('maxRetryDurationInSeconds', params.maxRetryDurationInSeconds),
     };
   }
 

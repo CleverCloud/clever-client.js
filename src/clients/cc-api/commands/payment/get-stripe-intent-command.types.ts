@@ -4,7 +4,15 @@
 export interface GetStripeIntentCommandInput {
   /** Identifier of the organisation a payment method is about to be registered on. */
   ownerId: string;
+  /**
+   * Kind of payment method the intent collects. Defaults to a credit card intent (`card`) when
+   * omitted; use `sepa_debit` to set up a SEPA direct debit mandate.
+   */
+  type?: StripeIntentType;
 }
+
+/** Kind of payment method a Stripe setup intent collects. */
+export type StripeIntentType = 'card' | 'sepa_debit';
 
 /**
  * What the Stripe JS tools need to collect the payment details in the browser.

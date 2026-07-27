@@ -5,18 +5,18 @@
 export interface Instance {
   /** Identifier of the instance, a bare UUID. */
   id: string;
-  /** Identifier of the organisation the instance belongs to. */
-  ownerId: string;
+  /** Identifier of the organisation the instance belongs to. Absent when the instance is not attached to an owner. */
+  ownerId?: string;
   /** Identifier of the application the instance runs. */
   applicationId: string;
   /** Identifier of the deployment that created the instance. */
   deploymentId: string;
-  /** Display name of the instance, as shown in the console. */
-  name: string;
-  /** Name of the scaler flavor the instance runs on, which sets its CPU and RAM (`XS`, `S`, ...). */
-  flavor: string;
-  /** Position of the instance within its deployment, starting at 0. */
-  index: number;
+  /** Display name of the instance, as shown in the console. Absent until the instance is named. */
+  name?: string;
+  /** Name of the scaler flavor the instance runs on, which sets its CPU and RAM (`XS`, `S`, ...). Absent until the instance is assigned a flavor. */
+  flavor?: string;
+  /** Position of the instance within its deployment, starting at 0. Absent until the instance is assigned an index. */
+  index?: number;
   /** Current lifecycle state of the instance. */
   state: InstanceState;
   /** Identifier of the hypervisor hosting the instance. */
@@ -33,8 +33,13 @@ export interface Instance {
    * @converted to an ISO date string
    */
   deletedAt?: string;
-  /** Where the instance can be reached. */
-  network: {
+  /**
+   * Where the instance can be reached. Absent until the instance has a network address assigned.
+   * @converted from the backend socket-address wire form to `{ ip, port }`. The backend serialises it as an
+   *   `"ip:port"` string (`"1.2.3.4:443"`, or `"[2001:db8::1]:443"` for IPv6); a legacy `{ ip, port }` object
+   *   form is also accepted.
+   */
+  network?: {
     /** IP address of the instance. */
     ip: string;
     /** Port the application listens on. */

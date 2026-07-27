@@ -1,6 +1,6 @@
 import type {
   KubernetesCluster,
-  KubernetesClusterFeatures,
+  KubernetesClusterFeaturesPayload,
   KubernetesNodeGroupCreationPayload,
   KubernetesTopologyConfig,
 } from './kubernetes.types.js';
@@ -29,7 +29,7 @@ export interface CreateKubernetesClusterCommandInput {
   /** Identifier of the zone to run the cluster in. */
   locationId?: string;
   /** Optional capabilities to turn on. */
-  features?: KubernetesClusterFeatures;
+  features?: KubernetesClusterFeaturesPayload;
   /** Node groups to create alongside the cluster. */
   nodeGroups?: Array<KubernetesNodeGroupCreationPayload>;
   /**

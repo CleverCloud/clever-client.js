@@ -15,7 +15,9 @@ import type { CancelMigrationCommandInput } from './cancel-migration-command.typ
  */
 export class CancelMigrationCommand extends CcApiSimpleCommand<CancelMigrationCommandInput, undefined> {
   toRequestParams(params: CancelMigrationCommandInput) {
-    return delete_(safeUrl`/v2/organisations/${params.ownerId}addons/${params.addonId}/migrations/:XXX`);
+    return delete_(
+      safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}/migrations/${params.migrationId}`,
+    );
   }
 
   transformCommandOutput(): undefined {

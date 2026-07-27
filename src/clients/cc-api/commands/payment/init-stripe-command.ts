@@ -2,7 +2,11 @@ import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import { transformInvoice } from '../invoice/invoice-transform.js';
-import type { InitStripeCommandInput, InitStripeCommandOutput } from './init-stripe-command.types.js';
+import type {
+  InitStripeCommandInput,
+  InitStripeCommandOutput,
+  InitStripePaymentMethod,
+} from './init-stripe-command.types.js';
 
 /**
  * Opens a Stripe payment for an invoice by charging it on the payment method of the organisation.
@@ -16,10 +20,23 @@ import type { InitStripeCommandInput, InitStripeCommandOutput } from './init-str
  */
 export class InitStripeCommand extends CcApiSimpleCommand<InitStripeCommandInput, InitStripeCommandOutput> {
   toRequestParams(params: InitStripeCommandInput) {
-    return post(safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/${params.invoiceNumber}/payments/stripe`);
+    return post(
+      safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/${params.invoiceNumber}/payments/stripe`,
+      toStripePaymentMethodBody(params.paymentMethod),
+    );
   }
 
   transformCommandOutput(response: unknown): InitStripeCommandOutput {
     return transformInvoice(response);
   }
+}
+
+/**
+ * Maps the payment method to the JSON body the `StripePaymentMethod` route decodes.
+ */
+function toStripePaymentMethodBody(paymentMethod: InitStripePaymentMethod) {
+  if (paymentMethod.kind === 'NEW') {
+    return { type: 'NEW_CARD', token: paymentMethod.token, deviceData: paymentMethod.deviceData };
+  }
+  return { type: 'EXISTING_CARD', token: paymentMethod.paymentMethodId };
 }

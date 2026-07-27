@@ -46,6 +46,7 @@ export function transformProductRuntimeFlavor(payload: any): ProductRuntimeFlavo
     },
     cpuFactor: payload.cpuFactor,
     memFactor: payload.memFactor,
+    systemOverheadFactor: payload.systemOverheadFactor,
   };
 }
 

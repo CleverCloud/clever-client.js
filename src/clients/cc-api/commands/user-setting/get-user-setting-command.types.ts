@@ -12,6 +12,6 @@ export interface GetUserSettingCommandInput {
 }
 
 /**
- * The stored value, pulled out of the `{ value }` wrapper the API returns.
+ * The stored value, pulled out of the `{ name, value }` wrapper the API returns.
  */
 export type GetUserSettingCommandOutput = string;

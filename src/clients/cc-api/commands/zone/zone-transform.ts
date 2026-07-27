@@ -11,6 +11,6 @@ export function transformZone(payload: any): Zone {
     lat: payload.lat,
     lon: payload.lon,
     outboundIPs: payload.outboundIPs?.sort() ?? [],
-    tags: payload?.tags.sort() ?? [],
+    tags: payload?.tags?.sort() ?? [],
   };
 }

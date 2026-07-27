@@ -25,7 +25,7 @@ describe('load-balancer commands', function () {
     expect(response).toBeInstanceOf(Array);
     expect(response[0].id).toBeTypeOf('string');
     expect(response[0].zone).toBeTypeOf('string');
-    expect(response[0].zoneId).toBeTypeOf('string');
+    expect(response[0].name).toBeTypeOf('string');
     expect(response[0].dns.cname).toBeTypeOf('string');
     expect(response[0].dns.aRecords).toBeInstanceOf(Array);
   });
@@ -49,7 +49,7 @@ describe('load-balancer commands', function () {
     expect(response).toBeInstanceOf(Array);
     expect(response[0].id).toBeTypeOf('string');
     expect(response[0].zone).toBeTypeOf('string');
-    expect(response[0].zoneId).toBeTypeOf('string');
+    expect(response[0].name).toBeTypeOf('string');
     expect(response[0].dns.cname).toBeTypeOf('string');
     expect(response[0].dns.aRecords).toBeInstanceOf(Array);
   });

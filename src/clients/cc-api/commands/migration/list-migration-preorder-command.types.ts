@@ -68,7 +68,7 @@ export interface MigrationPreorderLine {
   dropQuantity: number;
   /** Identifier of the coupon applied to the line, when there is one. */
   coupon: null | number;
-  /** Discount applied to the line. Always `0`: the simulated order never carries one. */
+  /** Discount applied to the line, before tax. `0` when the line carries no discount. */
   discount: number;
 }
 

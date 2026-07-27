@@ -2,20 +2,24 @@ import type { NetworkGroupPeerExternal } from './network-group.types.js';
 
 /**
  * Describes the external peer to attach to a network group member.
+ *
+ * The shape depends on the peer's role in the WireGuard mesh: a `SERVER` peer accepts connections and must declare
+ * the public address it listens on, whereas a `CLIENT` peer only initiates connections and has no such address.
  */
-export interface CreateNetworkGroupExternalPeerCommandInput {
+export type CreateNetworkGroupExternalPeerCommandInput =
+  | CreateNetworkGroupExternalClientPeerCommandInput
+  | CreateNetworkGroupExternalServerPeerCommandInput;
+
+/**
+ * The fields shared by every external peer to attach, whatever its role.
+ */
+interface CreateNetworkGroupExternalPeerCommandInputBase {
   /** Identifier of the organisation owning the network group. */
   ownerId: string;
   /** Identifier of the network group to attach the peer to. */
   networkGroupId: string;
   /** Human readable name of the peer. */
   label: string;
-  /** Public IP address the peer can be reached at, for a peer that accepts connections. */
-  ip?: string;
-  /** Public port the peer listens on, for a peer that accepts connections. */
-  port?: number;
-  /** Role of the peer in the WireGuard mesh. Only peers that initiate connections can be declared this way. */
-  peerRole: 'CLIENT';
   /** WireGuard public key of the peer. */
   publicKey: string;
   /** DNS name to give to the peer inside the network group. */
@@ -24,6 +28,28 @@ export interface CreateNetworkGroupExternalPeerCommandInput {
   parentEvent?: string;
   /** Identifier of the network group member the peer is attached to. */
   parentMember: string;
+}
+
+/**
+ * An external peer that only initiates WireGuard connections: it has no public address the other peers connect to.
+ */
+export interface CreateNetworkGroupExternalClientPeerCommandInput
+  extends CreateNetworkGroupExternalPeerCommandInputBase {
+  /** Role of the peer in the WireGuard mesh: a client only initiates connections. */
+  peerRole: 'CLIENT';
+}
+
+/**
+ * An external peer that accepts WireGuard connections: it must declare the public address the other peers reach it at.
+ */
+export interface CreateNetworkGroupExternalServerPeerCommandInput
+  extends CreateNetworkGroupExternalPeerCommandInputBase {
+  /** Role of the peer in the WireGuard mesh: a server accepts connections. */
+  peerRole: 'SERVER';
+  /** Public IP address the peer accepts connections at. */
+  ip: string;
+  /** Public port the peer listens on. */
+  port: number;
 }
 
 /**

@@ -1,7 +1,7 @@
 import { patchJson } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformKubernetesCluster } from './kubernetes-transform.js';
+import { serializeKubernetesClusterFeatures, transformKubernetesCluster } from './kubernetes-transform.js';
 import type {
   UpdateKubernetesClusterCommandInput,
   UpdateKubernetesClusterCommandOutput,
@@ -26,7 +26,7 @@ export class UpdateKubernetesClusterCommand extends CcApiSimpleCommand<
       name: params.name,
       tags: params.tags,
       description: params.description,
-      features: params.features,
+      features: serializeKubernetesClusterFeatures(params.features),
     });
   }
 

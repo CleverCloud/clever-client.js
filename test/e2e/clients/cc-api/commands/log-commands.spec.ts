@@ -1,5 +1,4 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { ListLogCommand } from '../../../../../src/clients/cc-api/commands/log/list-log-command.js';
 import type {
   ApplicationAccessLog,
   ApplicationRuntimeLog,
@@ -9,53 +8,9 @@ import { StreamApplicationRuntimeLogCommand } from '../../../../../src/clients/c
 import type { CcStream } from '../../../../../src/lib/stream/cc-stream.js';
 import { Deferred } from '../../../../../src/lib/utils.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { e2eSupport, STATIC_LOGS_APPLICATION, STATIC_MYSQL_ADDON_ID } from '../e2e-support.js';
+import { e2eSupport, STATIC_LOGS_APPLICATION } from '../e2e-support.js';
 
 describe('log commands', function () {
-  const support = e2eSupport({ user: 'test-user-without-github' });
-
-  it('should list addon log', async () => {
-    const response = await support.client.send(new ListLogCommand({ addonId: STATIC_MYSQL_ADDON_ID }));
-
-    expect(response).toBeInstanceOf(Array);
-    expect(response[0].id).toBeTypeOf('string');
-    checkDateFormat(response[0].date);
-    expect(response[0].message).toBeTypeOf('string');
-    expect(response[0].type).toBeTypeOf('string');
-    expect(response[0].severity).toBeTypeOf('string');
-    expect(response[0].program).toBeTypeOf('string');
-    expect(response[0].deploymentId).toBeTypeOf('string');
-    expect(response[0].sourceHost).toBeTypeOf('string');
-    expect(response[0].sourceIp).toBeTypeOf('string');
-    expect(response[0].zone).toBeTypeOf('string');
-  });
-
-  it('should list addon log with options', async () => {
-    const logs = await support.client.send(new ListLogCommand({ addonId: STATIC_MYSQL_ADDON_ID, limit: 1 }));
-    const deploymentId = logs[0].deploymentId;
-
-    const response = await support.client.send(
-      new ListLogCommand({
-        addonId: STATIC_MYSQL_ADDON_ID,
-        deploymentId,
-        limit: 10,
-        order: 'DESC',
-      }),
-    );
-
-    expect(response).toBeInstanceOf(Array);
-    expect(response[0].id).toBeTypeOf('string');
-    checkDateFormat(response[0].date);
-    expect(response[0].message).toBeTypeOf('string');
-    expect(response[0].type).toBeTypeOf('string');
-    expect(response[0].severity).toBeTypeOf('string');
-    expect(response[0].program).toBeTypeOf('string');
-    expect(response[0].deploymentId).toBeTypeOf('string');
-    expect(response[0].sourceHost).toBeTypeOf('string');
-    expect(response[0].sourceIp).toBeTypeOf('string');
-    expect(response[0].zone).toBeTypeOf('string');
-  });
-
   describe('log stream', function () {
     const support = e2eSupport({ user: 'test-user-without-github' });
 

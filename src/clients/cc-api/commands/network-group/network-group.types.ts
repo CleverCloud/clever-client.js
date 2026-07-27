@@ -32,6 +32,8 @@ export interface NetworkGroup {
   ownerId: string;
   /** Human readable name of the network group. */
   label: string;
+  /** DNS-safe form of the label, used for DNS and ZooKeeper operations; absent on older network groups. */
+  dnsSanitizedLabel?: string;
   /** Free form description of the network group. */
   description?: string;
   /** Private IP range allocated to the network group, in CIDR notation. */
@@ -46,6 +48,11 @@ export interface NetworkGroup {
   members: Array<NetworkGroupMember>;
   /** Revision of the network group, bumped every time it is modified. */
   version: number;
+  /**
+   * Who owns the network group: `CUSTOMER` when a user created it, `PLATFORM` when Clever Cloud provisioned it for
+   * a managed product. Absent on older network groups.
+   */
+  ownership?: 'CUSTOMER' | 'PLATFORM';
 }
 
 /**
@@ -103,7 +110,7 @@ export interface NetworkGroupMember {
   /** DNS name resolving to the member inside the network group. */
   domainName: string;
   /** What the member is. Uppercased, because the API is not consistent about the case it returns. */
-  kind: 'APPLICATION' | 'ADDON' | 'EXTERNAL';
+  kind: 'APPLICATION' | 'ADDON' | 'EXTERNAL' | 'LOADBALANCER';
 }
 
 /**

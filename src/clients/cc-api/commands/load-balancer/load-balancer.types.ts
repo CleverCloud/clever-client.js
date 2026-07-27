@@ -4,13 +4,13 @@
 export interface LoadBalancer {
   /** Identifier of the load balancer, of the form `loadBalancer_<uuid>`. */
   id: string;
+  /** Name of the load balancer, which identifies the zone and the machine serving it, such as `lb.par.n1`. */
+  name: string;
   /**
-   * Name of the load balancer, which identifies the zone and the machine serving it.
-   * @renamedFrom `name`
+   * Identifier of the zone the load balancer runs in.
+   * @renamedFrom `zoneId`
    */
   zone: string;
-  /** Identifier of the zone the load balancer runs in. */
-  zoneId: string;
   /** DNS records a custom domain must point to in order to be served by this load balancer. */
   dns: {
     /** Domain name a `CNAME` record should target. */

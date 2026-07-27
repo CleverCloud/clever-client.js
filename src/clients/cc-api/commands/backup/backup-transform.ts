@@ -7,8 +7,9 @@ export function transformBackup(payload: any): InnerBackup {
     entityId: payload.entity_id,
     status: payload.status,
     createdAt: normalizeDate(payload.creation_date)!,
-    expiresAt: normalizeDate(payload.delete_at)!,
+    expiresAt: normalizeDate(payload.delete_at) ?? undefined,
     downloadUrl: payload.download_url ?? payload.link,
+    filename: payload.filename,
     restoreCommand: payload.restore_command,
     deleteCommand: payload.delete_command,
   };

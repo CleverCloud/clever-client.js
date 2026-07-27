@@ -20,6 +20,10 @@ export interface CreateApiTokenCommandInput {
   description?: string;
   /**
    * When the token should stop being accepted.
+   *
+   * The backend enforces two constraints on this date: it must be in the future, and it must be
+   * less than one year (366 days) from now.
+   *
    * @sentAs `expirationDate`
    * @converted to an ISO date string
    */

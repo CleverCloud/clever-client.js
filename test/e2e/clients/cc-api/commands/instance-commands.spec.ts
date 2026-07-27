@@ -41,8 +41,8 @@ describe('instance commands', { timeout: 60000 }, () => {
     expect(response[0].hypervisorId).toBeTypeOf('string');
     checkDateFormat(response[0].createdAt);
     checkDateFormat(response[0].deletedAt!);
-    expect(response[0].network.ip).toBeTypeOf('string');
-    expect(response[0].network.port).toBeTypeOf('number');
+    expect(response[0].network!.ip).toBeTypeOf('string');
+    expect(response[0].network!.port).toBeTypeOf('number');
     expect(response[0].isBuildVm).toBe(false);
   });
 
@@ -67,8 +67,8 @@ describe('instance commands', { timeout: 60000 }, () => {
     expect(response.hypervisorId).toBeTypeOf('string');
     checkDateFormat(response.createdAt);
     checkDateFormat(response.deletedAt!);
-    expect(response.network.ip).toBeTypeOf('string');
-    expect(response.network.port).toBeTypeOf('number');
+    expect(response.network!.ip).toBeTypeOf('string');
+    expect(response.network!.port).toBeTypeOf('number');
     expect(response.isBuildVm).toBe(false);
   });
 

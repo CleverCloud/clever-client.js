@@ -25,6 +25,8 @@ export interface Deployment {
   version: {
     /** Identifier of the git commit that was deployed. Absent when the deployment does not ship a commit. */
     commitId?: string;
+    /** Identifier of the git commit that was deployed just before this one. Absent when there is no previous commit. */
+    previousCommitId?: string;
   };
   /** What triggered the deployment and how it was scheduled. */
   origin: {

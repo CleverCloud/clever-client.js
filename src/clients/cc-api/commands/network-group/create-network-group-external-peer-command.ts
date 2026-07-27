@@ -54,8 +54,7 @@ class CreateNetworkGroupExternalPeerCommandInner extends CcApiSimpleCommand<
       safeUrl`/v4/networkgroups/organisations/${params.ownerId}/networkgroups/${params.networkGroupId}/external-peers`,
       {
         label: params.label,
-        ip: params.ip,
-        port: params.port,
+        ...(params.peerRole === 'SERVER' ? { ip: params.ip, port: params.port } : {}),
         peerRole: params.peerRole,
         publicKey: params.publicKey,
         hostname: params.hostname,

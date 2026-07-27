@@ -1,6 +1,7 @@
 import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import type { CcRequestParams } from '../../../../types/request.types.js';
+import type { SelfOrPromise } from '../../../../types/utils.types.ts';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type {
@@ -36,12 +37,10 @@ export class GetOtoroshiConfigCommand extends CcApiSimpleCommand<
     };
   }
 
-  transformCommandOutput(response: unknown): GetOtoroshiConfigCommandOutput {
+  transformCommandOutput(response: unknown): SelfOrPromise<GetOtoroshiConfigCommandOutput> {
     if (typeof response === 'string') {
       return response;
     }
-    // An `application/yaml` response is decoded as a Blob by `getResponseBody`.
-    // Its text is read asynchronously; the command runner awaits this value.
-    return (response as Blob).text() as unknown as GetOtoroshiConfigCommandOutput;
+    return (response as Blob).text();
   }
 }

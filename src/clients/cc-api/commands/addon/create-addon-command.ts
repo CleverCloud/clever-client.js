@@ -22,6 +22,11 @@ export class CreateAddonCommand extends CcApiSimpleCommand<CreateAddonCommandInp
       region: params.zone,
       plan: params.planId,
       options: params.options ?? {},
+      linkedApp: params.linkedApplication,
+      version: params.version,
+      paymentIntent: params.paymentIntent,
+      paymentMethodType: params.paymentMethodType,
+      sepaSourceId: params.sepaSourceId,
     });
   }
 

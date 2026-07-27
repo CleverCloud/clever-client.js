@@ -22,8 +22,8 @@ export interface ApplicationRuntimeLog {
   zone: string;
   /** Process id of the emitting process on the instance. */
   pid: number;
-  /** Syslog facility the line was emitted on. */
-  facility: number;
+  /** Syslog facility the line was emitted on, by name (`kern`, `daemon`, `local0`, ...). */
+  facility: string;
   /** Syslog severity of the line, derived from its priority (`emerg`, `alert`, ..., `debug`). */
   severity: string;
   /** Raw syslog priority of the line. */
@@ -103,8 +103,11 @@ export interface ApplicationAccessLogBase<T> {
   source: AccessLogPeer;
   /** Which load balancer endpoint the request landed on. */
   destination: AccessLogPeer;
-  /** TLS version the request was served over. Absent when the request was not served over TLS. */
-  tls?: string;
+  /** Details of the TLS layer the request was served over. Absent when the request was not served over TLS. */
+  tls?: {
+    /** TLS version the request was served over. */
+    version: string;
+  };
   /** Name of the zone the request was served in. */
   zone: string;
   /** Protocol-specific details of the request. */

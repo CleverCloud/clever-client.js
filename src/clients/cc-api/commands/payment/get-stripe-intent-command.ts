@@ -1,3 +1,4 @@
+import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
@@ -19,7 +20,8 @@ export class GetStripeIntentCommand extends CcApiSimpleCommand<
   GetStripeIntentCommandOutput
 > {
   toRequestParams(params: GetStripeIntentCommandInput) {
-    return get(safeUrl`/v4/billing/organisations/${params.ownerId}/payments/stripe/intent`);
+    const queryParams = params.type != null ? new QueryParams().set('type', params.type) : undefined;
+    return get(safeUrl`/v4/billing/organisations/${params.ownerId}/payments/stripe/intent`, queryParams);
   }
 
   transformCommandOutput(response: unknown): GetStripeIntentCommandOutput {

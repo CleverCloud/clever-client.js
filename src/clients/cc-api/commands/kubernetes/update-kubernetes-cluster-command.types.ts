@@ -1,4 +1,4 @@
-import type { KubernetesCluster, KubernetesClusterFeatures } from './kubernetes.types.js';
+import type { KubernetesCluster, KubernetesClusterFeaturesPayload } from './kubernetes.types.js';
 
 /**
  * Identifies the cluster to update, and what to change on it.
@@ -15,7 +15,7 @@ export interface UpdateKubernetesClusterCommandInput {
   /** New free text description of the cluster. */
   description?: string;
   /** Optional capabilities to turn on or off. */
-  features?: KubernetesClusterFeatures;
+  features?: KubernetesClusterFeaturesPayload;
 }
 
 /**

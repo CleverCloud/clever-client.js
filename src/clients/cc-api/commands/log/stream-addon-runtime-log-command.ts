@@ -28,12 +28,13 @@ export class StreamAddonRuntimeLogCommand extends AbstractLogsStreamCommand<
         .append('limit', this._computeLimit())
         .append('since', normalizeDate(params.since))
         .append('until', normalizeDate(params.until))
-        .append('deploymentId', params.deploymentId)
         .append('filter', params.filter)
         .append('instanceId', params.instanceId)
+        .append('service', params.services)
         .append('field', params.fields)
         .append('throttleElements', params.throttleElements)
-        .append('throttlePerInMilliseconds', params.throttlePerInMilliseconds),
+        .append('throttlePerInMilliseconds', params.throttlePerInMilliseconds)
+        .append('maxRetryDurationInSeconds', params.maxRetryDurationInSeconds),
     };
   }
 
