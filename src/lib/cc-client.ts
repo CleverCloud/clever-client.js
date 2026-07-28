@@ -118,13 +118,33 @@ export class CcClient<Api extends string> {
     command: Command<Api, CommandInput, CommandOutput>,
     requestConfig?: CcRequestConfigPartial,
   ): Promise<CommandOutput> {
+    return this._send(command, requestConfig, true);
+  }
+
+  /**
+   * Sends a command, under the idempotency ceiling of whatever encloses it.
+   *
+   * Every command goes through here, including the ones a composite command sends through its composer.
+   *
+   * @param command - The command to execute
+   * @param requestConfig - Request configuration that overrides the default
+   * @param isIdempotentCeiling - Whether what encloses this command can be replayed at all
+   * @returns The processed command response
+   */
+  protected async _send<CommandInput, CommandOutput>(
+    command: Command<Api, CommandInput, CommandOutput>,
+    requestConfig: CcRequestConfigPartial | undefined,
+    isIdempotentCeiling: boolean,
+  ): Promise<CommandOutput> {
     try {
       if (command instanceof CompositeCommand) {
-        return await this._compose(command, requestConfig);
+        return await this._compose(command, requestConfig, isIdempotentCeiling);
       }
 
       const requestParams = await this._getCommandRequestParams(command, requestConfig);
-      const request = await this._prepareRequest(command, requestParams, requestConfig);
+      // a caller can only replay what it sent, so a command is no more replayable than what encloses it
+      const isIdempotent = isIdempotentCeiling && command.isIdempotent();
+      const request = await this._prepareRequest(command, requestParams, requestConfig, isIdempotent);
       const response = await sendRequest<CommandOutput>(request);
       return await this._handleResponse(response, request, command);
     } catch (e) {
@@ -172,7 +192,7 @@ export class CcClient<Api extends string> {
     const streamConfigWithDefaults = mergeStreamConfig(this.#defaultStreamsConfig, requestAndStreamConfig);
     return command.createStream(async () => {
       const preparedRequestParams = await command.toRequestParams(transformedParams);
-      return this._prepareRequest(command, preparedRequestParams, requestAndStreamConfig);
+      return this._prepareRequest(command, preparedRequestParams, requestAndStreamConfig, true);
     }, streamConfigWithDefaults);
   }
 
@@ -208,21 +228,30 @@ export class CcClient<Api extends string> {
    * Handles execution of composite commands that consist of multiple sub-commands
    *
    * @param command - The composite command to execute
-   * @param requestConfig - Optional request configuration
+   * @param requestConfig - Request configuration that overrides the default
+   * @param isIdempotentCeiling - Whether what encloses this composite command can be replayed at all
    * @returns The result of executing all sub-commands
    */
   protected async _compose<CommandOutput>(
     command: CompositeCommand<Api, unknown, CommandOutput>,
-    requestConfig?: CcRequestConfigPartial,
+    requestConfig: CcRequestConfigPartial | undefined,
+    isIdempotentCeiling: boolean,
   ): Promise<CommandOutput> {
     const transformedParams = await this._transformCommandParams(command, requestConfig);
 
     // the composite command states the configuration its sub-commands need, the caller configuration still wins over it
     const composedRequestConfig = mergeRequestConfigPartial(command.getRequestConfig(), requestConfig);
 
+    // a caller can only replay the composite as a whole, so nothing it sends is more replayable than it is
+    const composedIsIdempotent = isIdempotentCeiling && command.isIdempotent();
+
     return command.compose(transformedParams, {
       send: (command, commandRequestConfig) =>
-        this.send(command, mergeRequestConfigPartial(composedRequestConfig, commandRequestConfig)),
+        this._send(
+          command,
+          mergeRequestConfigPartial(composedRequestConfig, commandRequestConfig),
+          composedIsIdempotent,
+        ),
     });
   }
 
@@ -246,13 +275,15 @@ export class CcClient<Api extends string> {
    *
    * @param command - The command to prepare request for
    * @param requestParams - The request parameters
-   * @param requestConfig - Optional request configuration
+   * @param requestConfig - Request configuration that overrides the default
+   * @param isIdempotent - Whether sending the prepared request twice means it twice
    * @returns The prepared request
    */
   protected async _prepareRequest(
     command: SimpleCommand<Api, unknown, unknown> | StreamCommand<Api, unknown, CcStream>,
     requestParams: Partial<CcRequestParams>,
-    requestConfig?: CcRequestConfigPartial,
+    requestConfig: CcRequestConfigPartial | undefined,
+    isIdempotent: boolean,
   ): Promise<CcRequest> {
     const preparedRequestParams: WithRequired<Partial<CcRequestParams>, 'queryParams' | 'headers'> = {
       ...requestParams,
@@ -284,6 +315,8 @@ export class CcClient<Api extends string> {
       ...mergeRequestConfig(this.#defaultRequestsConfig, resolvedRequestConfig),
       // url
       url,
+      // metadata
+      isIdempotent,
     };
   }
 

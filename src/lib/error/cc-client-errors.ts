@@ -353,6 +353,36 @@ export class CcNetworkError extends CcRequestError {
   get retryAdvice(): NetworkRetryAdvice {
     return getNetworkErrorInfo(this.#networkCode).retryAdvice;
   }
+
+  /**
+   * Whether sending this exact request again is worth it, and safe.
+   *
+   * The client is the one able to answer this: it knows which failure happened, whether the connection
+   * had been established when it did — so whether the server may already have acted — and whether the
+   * command this request came from can be sent twice at all. A consumer branching on {@link networkCode}
+   * has to rebuild all three, and the consequence of getting the middle one wrong is a resource created
+   * twice, silently.
+   *
+   * Replayability is what the command declared, not what the method suggests: these APIs have `PUT`
+   * endpoints that mail something on every call, and reads served over `POST`. A command that never
+   * declared it answers `false`, so an endpoint nobody checked is never replayed on a guess.
+   *
+   * `false` does not always mean hopeless: a request that is not idempotent but failed on a reset
+   * connection would be worth replaying if it could be made safe. {@link retryAdvice} tells those two
+   * cases apart.
+   *
+   * @returns Whether to send the request again, with a backoff
+   */
+  isWorthRetrying(): boolean {
+    switch (this.retryAdvice) {
+      case 'retry':
+        return true;
+      case 'do-not-retry':
+        return false;
+      case 'retry-if-idempotent':
+        return this.request.isIdempotent;
+    }
+  }
 }
 
 /**

@@ -14,6 +14,7 @@ import { CcStream } from '../../../src/lib/stream/cc-stream.js';
 import type { CcStreamConfig, CcStreamRequestFactory } from '../../../src/lib/stream/cc-stream.types.js';
 import { StreamCommand } from '../../../src/lib/stream/stream-command.js';
 import type { CcClientConfig } from '../../../src/types/client.types.js';
+import type { Command } from '../../../src/types/command.types.js';
 import type { OnRequestHook, OnResponseHook } from '../../../src/types/hook.types.js';
 import type {
   CcRequest,
@@ -61,6 +62,18 @@ function simpleCommand(requestsParams: Partial<CcRequestParams>): TestSimpleComm
   })();
 }
 
+function idempotentSimpleCommand(requestsParams: Partial<CcRequestParams>): TestSimpleCommand {
+  return new (class MyCommand extends TestSimpleCommand {
+    toRequestParams() {
+      return requestsParams;
+    }
+
+    override isIdempotent(): boolean {
+      return true;
+    }
+  })();
+}
+
 function compositeCommand(result: unknown): TestCompositeCommand {
   return new (class MyCommand extends TestCompositeCommand {
     async compose() {
@@ -101,11 +114,23 @@ class SpiedClient extends CcClient<'test'> {
   ): ReturnType<CcClient<'test'>['_transformStreamParams']> {
     return super._transformStreamParams(command, _requestConfig);
   }
+  override async _send<CommandInput, CommandOutput>(
+    command: Parameters<CcClient<'test'>['_send']>[0],
+    requestConfig: Parameters<CcClient<'test'>['_send']>[1],
+    isIdempotentCeiling: Parameters<CcClient<'test'>['_send']>[2],
+  ): Promise<CommandOutput> {
+    return super._send<CommandInput, CommandOutput>(
+      command as Command<'test', CommandInput, CommandOutput>,
+      requestConfig,
+      isIdempotentCeiling,
+    );
+  }
   override async _compose<CommandOutput>(
     command: CompositeCommand<'test', unknown, CommandOutput>,
-    requestConfig?: CcRequestConfigPartial,
+    requestConfig: CcRequestConfigPartial | undefined,
+    isIdempotentCeiling: boolean,
   ): Promise<CommandOutput> {
-    return super._compose(command, requestConfig);
+    return super._compose(command, requestConfig, isIdempotentCeiling);
   }
   override async _getCommandRequestParams(
     command: Parameters<CcClient<'test'>['_getCommandRequestParams']>[0],
@@ -117,8 +142,9 @@ class SpiedClient extends CcClient<'test'> {
     command: Parameters<CcClient<'test'>['_prepareRequest']>[0],
     requestParams: Parameters<CcClient<'test'>['_prepareRequest']>[1],
     requestConfig: Parameters<CcClient<'test'>['_prepareRequest']>[2],
+    isIdempotent: Parameters<CcClient<'test'>['_prepareRequest']>[3],
   ): ReturnType<CcClient<'test'>['_prepareRequest']> {
-    return super._prepareRequest(command, requestParams, requestConfig);
+    return super._prepareRequest(command, requestParams, requestConfig, isIdempotent);
   }
   override async _handleResponse<CommandOutput>(
     response: CcResponse<CommandOutput>,
@@ -207,6 +233,8 @@ describe('clever-client', () => {
       expect(spy.mock.calls[0][1].method).toBe('GET');
       expect(spy.mock.calls[0][1].url).toBe('/path/subPath');
       expect(spy.mock.calls[0][2]).toBe(requestConfig);
+      // the command declares nothing, so it is not replayable
+      expect(spy.mock.calls[0][3]).toBe(false);
     });
 
     it('should call `command.toRequestParams` method with the transformed params', async () => {
@@ -515,6 +543,7 @@ describe('clever-client', () => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy.mock.calls[0][0]).toBe(command);
       expect(spy.mock.calls[0][1]).toBe(requestConfig);
+      expect(spy.mock.calls[0][2]).toBe(true);
     });
 
     it('should call `_transformCommandParams` method with right params', async () => {
@@ -555,7 +584,7 @@ describe('clever-client', () => {
           return Promise.resolve('result');
         }
       })();
-      const spy = vi.spyOn(client, 'send');
+      const spy = vi.spyOn(client, '_send');
       await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
 
       await client.send(command, { isCorsEnabled: false, cache: { mode: 'reload', ttl: 500 }, isDebugEnabled: true });
@@ -583,12 +612,55 @@ describe('clever-client', () => {
           return { isCorsEnabled: true, timeout: 1000 };
         }
       })();
-      const spy = vi.spyOn(client, 'send');
+      const spy = vi.spyOn(client, '_send');
       await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
 
       await client.send(command, { timeout: 500 });
 
       expect(spy.mock.lastCall![1]).toEqual({ isCorsEnabled: true, timeout: 500 });
+    });
+
+    it('composer should hold every request it sends to what the composite itself can be replayed as', async () => {
+      const command = new (class MyCommand extends TestCompositeCommand {
+        override async compose(
+          _params: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[0],
+          composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
+        ) {
+          await composer.send(idempotentSimpleCommand(get('/path/subPath')));
+          return Promise.resolve('result');
+        }
+      })();
+      const spy = vi.spyOn(client, '_prepareRequest');
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
+
+      await client.send(command);
+
+      // the inner command says it can be replayed, the composite around it never said so
+      const request = (await spy.mock.results[0].value) as CcRequest;
+      expect(request.isIdempotent).toBe(false);
+    });
+
+    it('composer should let a replayable composite pass its answer down to the requests it sends', async () => {
+      const command = new (class MyCommand extends TestCompositeCommand {
+        override async compose(
+          _params: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[0],
+          composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
+        ) {
+          await composer.send(idempotentSimpleCommand(get('/path/subPath')));
+          return Promise.resolve('result');
+        }
+
+        override isIdempotent(): boolean {
+          return true;
+        }
+      })();
+      const spy = vi.spyOn(client, '_prepareRequest');
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
+
+      await client.send(command);
+
+      const request = (await spy.mock.results[0].value) as CcRequest;
+      expect(request.isIdempotent).toBe(true);
     });
   });
 

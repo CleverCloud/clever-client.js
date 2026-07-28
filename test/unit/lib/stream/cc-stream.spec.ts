@@ -1,7 +1,8 @@
 import type { MockSseEvent, NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CcClientError, CcHttpError } from '../../../../src/lib/error/cc-client-errors.js';
+import type { NetworkErrorCode } from '../../../../src/lib/error/cc-client-errors.js';
+import { CcClientError, CcHttpError, CcNetworkError } from '../../../../src/lib/error/cc-client-errors.js';
 import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../../src/lib/request/query-params.js';
 import { requestWithCache } from '../../../../src/lib/request/request-with-cache.js';
@@ -17,6 +18,10 @@ const CLOSE_STREAM: MockSseEvent = { type: 'close' };
 const MESSAGE: MockSseEvent = { type: 'message', event: 'EVENT', data: 'hello' };
 
 const RETRY = { maxRetryCount: 2, initRetryTimeout: 10, backoffFactor: 1 };
+
+function networkError(code: NetworkErrorCode, isIdempotent: boolean): CcNetworkError {
+  return new CcNetworkError({ isIdempotent } as CcRequest, code);
+}
 
 describe('cc-stream', () => {
   let newScenario: NewScenario;
@@ -35,7 +40,17 @@ describe('cc-stream', () => {
   });
   afterAll(hooks.after);
 
-  function createAndSpyStream(request: Partial<CcRequest>, config: Partial<CcStreamConfig> = {}): SpiedStream {
+  /**
+   * @param request the request the factory forges, merged over the defaults
+   * @param config the stream configuration, merged over the defaults
+   * @param requestFailure raised by the request factory instead of forging the request, to play a
+   * connection that never opened without depending on what the environment does with an unreachable host
+   */
+  function createAndSpyStream(
+    request: Partial<CcRequest>,
+    config: Partial<CcStreamConfig> = {},
+    requestFailure?: Error,
+  ): SpiedStream {
     cleanStream?.();
 
     const stubs: Stubs = {
@@ -50,12 +65,17 @@ describe('cc-stream', () => {
     const stream = new CcStream(
       () => {
         stubs.request();
+        if (requestFailure != null) {
+          throw requestFailure;
+        }
         const requestUrl = request.url ?? '';
         return {
           isCorsEnabled: false,
           timeout: 0,
           cache: null,
           isDebugEnabled: false,
+          // what the client puts on every stream request, a stream being a subscription to observe
+          isIdempotent: true,
           method: 'GET',
           ...request,
           url: requestUrl.startsWith('http') ? requestUrl : `${newScenario.mockClient.baseUrl}${requestUrl}`,
@@ -205,6 +225,7 @@ describe('cc-stream', () => {
         isCorsEnabled: false,
         timeout: 0,
         isDebugEnabled: false,
+        isIdempotent: true,
       },
       <CommandOutput>() =>
         Promise.resolve({
@@ -564,6 +585,34 @@ describe('cc-stream', () => {
 
       // 2nd retry (events) => open++ & event+=2
       await spiedStream.verifyCounts({ open: 2, event: 4, error: 1 }, 60);
+    });
+
+    it('network failure on a replayable request should be retried', async () => {
+      // ECONNRESET is `retry-if-idempotent`: the answer comes from what the command declared
+      const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY }, networkError('ECONNRESET', true));
+
+      void spiedStream.start();
+
+      await spiedStream.verifyCounts({ request: 3, error: 2, failure: 1 }, 150);
+    });
+
+    it('network failure on a request nothing declared replayable should fail without retry', async () => {
+      const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY }, networkError('ECONNRESET', false));
+
+      void spiedStream.start();
+
+      await spiedStream.verifyCounts({ request: 1, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcNetworkError);
+    });
+
+    it('network failure nothing will fix should fail without retry, replayable or not', async () => {
+      // ENOTFOUND is `do-not-retry`: reconnecting to a host that does not resolve is a slower way of failing
+      const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY }, networkError('ENOTFOUND', true));
+
+      void spiedStream.start();
+
+      await spiedStream.verifyCounts({ request: 1, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcNetworkError);
     });
 
     it('[success + timeout + error 500 + error 500] should be retried and fail', async () => {

@@ -57,6 +57,28 @@ export abstract class AbstractCommand<Api extends string, CommandInput> {
   getRequestConfig(): CcRequestConfigPartial | undefined {
     return undefined;
   }
+
+  /**
+   * Whether this command can be sent twice without meaning it twice.
+   *
+   * It answers the question a caller asks after a failure that may or may not have reached the server:
+   * can this be sent again. What counts is the effect, not the answer — two calls leaving the same state
+   * are idempotent even when the second one answers 404.
+   *
+   * Override to `true` only once the route has been read and its replay is known to change nothing
+   * further. The default is `false` because an unchecked endpoint is an unknown one, and the cost of
+   * being wrong is an action performed twice. The HTTP method does not answer it either: a `PUT` that
+   * mails a confirmation is not replayable, and a read behind a `POST` is.
+   *
+   * For a composite command, it is about replaying the whole command: one that creates and then waits is
+   * not replayable, whatever its individual steps do. The client applies it as a ceiling over every
+   * request the composite makes, so a step is only replayable if the composite is too.
+   *
+   * @returns Whether sending this command again means it again
+   */
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**

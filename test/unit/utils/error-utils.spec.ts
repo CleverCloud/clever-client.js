@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CcClientError, CcHttpError, CcNetworkError, CcRequestError } from '../../../src/lib/error/cc-client-errors.js';
 import type { CcRequest, CcResponse } from '../../../src/types/request.types.js';
+import type { NetworkErrorCode } from '../../../src/utils/error-utils.js';
 import {
   getNetworkErrorInfo,
   isCcClientError,
@@ -132,6 +133,10 @@ describe('tolerateNotFound', () => {
 });
 
 describe('network retry advice', () => {
+  function networkError(code: NetworkErrorCode | null, isIdempotent: boolean = true): CcNetworkError {
+    return new CcNetworkError({ ...REQUEST, isIdempotent }, code);
+  }
+
   describe('getNetworkErrorInfo', () => {
     it('should advise on every code with one of the stances it says it uses', () => {
       const advices = NETWORK_ERROR_CODES.map((code) => getNetworkErrorInfo(code).retryAdvice);
@@ -170,6 +175,42 @@ describe('network retry advice', () => {
 
     it('should stay careful when the platform named no code, as browsers do', () => {
       expect(getNetworkErrorInfo(null).retryAdvice).toBe('retry-if-idempotent');
+    });
+  });
+
+  describe('CcNetworkError.isWorthRetrying', () => {
+    it('should retry whatever the command when the request never reached the server', () => {
+      expect(networkError('ECONNREFUSED', false).isWorthRetrying()).toBe(true);
+      expect(networkError('ECONNREFUSED', true).isWorthRetrying()).toBe(true);
+    });
+
+    it('should refuse whatever the command when nothing will change by itself', () => {
+      expect(networkError('ENOTFOUND', true).isWorthRetrying()).toBe(false);
+      expect(networkError('ENOTFOUND', false).isWorthRetrying()).toBe(false);
+    });
+
+    it('should replay a request the command declared replayable when it died on an established connection', () => {
+      expect(networkError('ECONNRESET', true).isWorthRetrying()).toBe(true);
+    });
+
+    it('should not replay a request that may already have been processed and means it twice', () => {
+      expect(networkError('ECONNRESET', false).isWorthRetrying()).toBe(false);
+    });
+
+    it('should not read the method, a GET nobody declared replayable being held back like any other', () => {
+      const getRequest = { ...REQUEST, method: 'GET', isIdempotent: false } as CcRequest;
+
+      expect(new CcNetworkError(getRequest, 'ECONNRESET').isWorthRetrying()).toBe(false);
+    });
+
+    it('should hold a non-replayable request back when the browser refused to say what happened', () => {
+      expect(networkError(null, false).isWorthRetrying()).toBe(false);
+      expect(networkError(null, true).isWorthRetrying()).toBe(true);
+    });
+
+    it('should leave the reason readable, so a held-back request can be told from a hopeless one', () => {
+      expect(networkError('ECONNRESET', false).retryAdvice).toBe('retry-if-idempotent');
+      expect(networkError('ENOTFOUND', false).retryAdvice).toBe('do-not-retry');
     });
   });
 });

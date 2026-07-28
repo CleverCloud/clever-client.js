@@ -28,6 +28,7 @@ describe('request', () => {
       timeout: 0,
       cache: null,
       isDebugEnabled: false,
+      isIdempotent: false,
       method: 'GET',
       ...request,
       url: request.url!.startsWith('http') ? request.url! : `${newScenario.mockClient.baseUrl}${request.url}`,

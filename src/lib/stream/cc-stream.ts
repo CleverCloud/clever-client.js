@@ -1,5 +1,5 @@
 import type { SseMessage } from '../../types/request.types.js';
-import { CcClientError, CcHttpError } from '../error/cc-client-errors.js';
+import { CcClientError, CcHttpError, CcNetworkError } from '../error/cc-client-errors.js';
 import { handleHttpErrors } from '../error/handle-http-errors.js';
 import { asNetworkError, isFetchNetworkError } from '../error/network-error.js';
 import { HeadersBuilder } from '../request/headers-builder.js';
@@ -421,6 +421,12 @@ export class CcStream {
 
     if (error == null) {
       return true;
+    }
+
+    // The error knows better than this method does: reconnecting to a host that does not resolve is
+    // just a slower way of failing, and it is the same question consumers ask it.
+    if (error instanceof CcNetworkError) {
+      return error.isWorthRetrying();
     }
 
     if (error instanceof CcHttpError) {
