@@ -12,8 +12,8 @@ import { ListPersonalSshKeyCommand } from './list-personal-ssh-key-command.js';
 /**
  * Registers a public SSH key on the current user's account.
  *
- * The endpoint answers nothing, so the key list is fetched afterwards to return the stored key with
- * its fingerprint.
+ * The endpoint answers a confirmation message rather than the stored key, so the key list is fetched
+ * afterwards to return it with its fingerprint.
  *
  * @endpoint [PUT] /v2/self/keys/:XXX
  * @endpoint [GET] /v2/self/keys
