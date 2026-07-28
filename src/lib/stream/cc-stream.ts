@@ -186,11 +186,11 @@ export class CcStream {
     }
 
     try {
-      this.#debugLog(`Forging HTTP request`);
-      const request = await this.#requestFactory();
-
       this.#state = 'connecting';
       this.#debugLog('State changed to connecting', { state: this.#state, retryCount: this.#retryCount });
+
+      this.#debugLog(`Forging HTTP request`);
+      const request = await this.#requestFactory();
 
       this.#abortController = new AbortController();
       if (request.signal != null) {
