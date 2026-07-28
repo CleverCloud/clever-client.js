@@ -1,3 +1,7 @@
+import type { NotificationEventType, NotificationMetaEventType } from './notification-event-types.js';
+
+export type { NotificationEventType, NotificationMetaEventType } from './notification-event-types.js';
+
 /**
  * A webhook that posts platform events to one or more URLs as they happen.
  */
@@ -131,39 +135,3 @@ export interface EmailNotificationTargetOrganisation {
   /** Discriminant of the target. */
   type: 'organisation';
 }
-
-/**
- * A platform event a notification can fire on.
- */
-export type NotificationEventType =
-  | 'ACCOUNT_CREATION'
-  | 'ACCOUNT_DELETION'
-  | 'ACCOUNT_EDITION'
-  | 'ADDON_CREATION'
-  | 'ADDON_DELETION'
-  | 'APPLICATION_CREATION'
-  | 'APPLICATION_DELETION'
-  | 'APPLICATION_EDITION'
-  | 'APPLICATION_REDEPLOY'
-  | 'APPLICATION_STOP'
-  | 'CLEVER_TOOLS_REQUEST'
-  | 'CREDITS_ADDED'
-  | 'DEPLOYMENT_ACTION_BEGIN'
-  | 'DEPLOYMENT_ACTION_END'
-  | 'DEPLOYMENT_FAIL'
-  | 'DEPLOYMENT_SUCCESS'
-  | 'GIT_PUSH'
-  | 'ORGANISATION_CREATION'
-  | 'ORGANISATION_DELETION'
-  | 'ORGANISATION_EDITION'
-  | 'ORGANISATION_USER_ADDITION';
-
-/**
- * A shorthand standing for a whole family of events, so a notification does not have to list them
- * one by one and keeps working when new events are added to the family.
- */
-export type NotificationMetaEventType =
-  | 'META_SERVICE_LIFECYCLE'
-  | 'META_DEPLOYMENT_RESULT'
-  | 'META_SERVICE_MANAGEMENT'
-  | 'META_CREDITS';
