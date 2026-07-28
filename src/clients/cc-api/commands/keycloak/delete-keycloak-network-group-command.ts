@@ -28,4 +28,9 @@ export class DeleteKeycloakNetworkGroupCommand extends CcApiSimpleCommand<
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // the network group is gone on the second call, but the add-on is restarted again whatever happens
+  isIdempotent(): boolean {
+    return false;
+  }
 }

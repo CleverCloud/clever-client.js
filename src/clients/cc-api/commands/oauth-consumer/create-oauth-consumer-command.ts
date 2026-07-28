@@ -34,4 +34,9 @@ export class CreateOauthConsumerCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CreateOauthConsumerCommandOutput {
     return transformOauthConsumer(response);
   }
+
+  // each call registers one more consumer, with its own key and secret, and spends a creation quota token
+  isIdempotent(): boolean {
+    return false;
+  }
 }

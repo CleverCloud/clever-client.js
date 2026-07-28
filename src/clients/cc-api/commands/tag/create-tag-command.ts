@@ -33,4 +33,9 @@ export class CreateTagCommand extends CcApiSimpleCommand<CreateTagCommandInput, 
       addonId: 'ADDON_ID',
     };
   }
+
+  // a tag is stored keyed on the resource and the tag itself, so re-adding one already there stores nothing more
+  isIdempotent(): boolean {
+    return true;
+  }
 }

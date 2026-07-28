@@ -18,4 +18,9 @@ export class DeleteHashKeyElementCommand extends RedisHttpCommand<
   toRequestParams(params: DeleteHashKeyElementCommandInput) {
     return post(`/key/hash/_delete`, params);
   }
+
+  // `HDEL` on a field: the second call removes nothing more and answers `wasDeleted: false`
+  isIdempotent(): boolean {
+    return true;
+  }
 }

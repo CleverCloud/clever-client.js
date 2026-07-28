@@ -34,4 +34,9 @@ export class StartMigrationCommand extends CcApiSimpleCommand<StartMigrationComm
       addonId: 'ADDON_ID',
     };
   }
+
+  // the provider opens a new migration, with its own id, on every call
+  isIdempotent(): boolean {
+    return false;
+  }
 }

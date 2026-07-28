@@ -35,6 +35,12 @@ export class ResumeKubernetesClusterCommand extends CcApiCompositeCommand<
     }
     return cluster;
   }
+
+  // the resume below only fires on a `FAILED` cluster and the wait only reads, so replaying the
+  // whole thing does not resume twice
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -54,5 +60,11 @@ class ResumeKubernetesClusterCommandInner extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): ResumeKubernetesClusterCommandOutput {
     return transformKubernetesCluster(response);
+  }
+
+  // the handler moves the cluster out of `FAILED` before returning, so a replay no longer matches
+  // the only status it accepts and re-reserves no quota
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -35,6 +35,12 @@ export class RedeployKubernetesClusterCommand extends CcApiCompositeCommand<
     }
     return cluster;
   }
+
+  // the redeploy below only fires from `ACTIVE` and the wait only reads, so replaying the whole
+  // thing does not queue a second redeploy
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -57,5 +63,11 @@ class RedeployKubernetesClusterCommandInner extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): RedeployKubernetesClusterCommandOutput {
     return transformKubernetesCluster(response);
+  }
+
+  // the status transition only fires from `ACTIVE`, so a replay against the cluster it just moved
+  // is refused rather than redeploying it again
+  isIdempotent(): boolean {
+    return true;
   }
 }

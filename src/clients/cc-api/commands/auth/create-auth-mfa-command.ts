@@ -26,4 +26,9 @@ export class CreateAuthMfaCommand extends CcApiSimpleCommand<CreateAuthMfaComman
         .build(),
     };
   }
+
+  // every call mints a new secret and a new set of backup codes, replacing the enrolment being set up
+  isIdempotent(): boolean {
+    return false;
+  }
 }

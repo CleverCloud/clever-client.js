@@ -27,4 +27,8 @@ export class GetAddonCommand extends CcApiSimpleCommand<GetAddonCommandInput, Ge
       addonId: 'ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

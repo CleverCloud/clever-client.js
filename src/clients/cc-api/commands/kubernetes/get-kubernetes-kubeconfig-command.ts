@@ -38,4 +38,10 @@ export class GetKubernetesKubeconfigCommand extends CcApiSimpleCommand<
     }
     return (response as Blob).text();
   }
+
+  // the client certificate is minted on the fly for each call, but nothing about it is recorded or
+  // revoked server-side, so a replay hands out another copy and changes nothing
+  isIdempotent(): boolean {
+    return true;
+  }
 }

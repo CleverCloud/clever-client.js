@@ -29,6 +29,11 @@ export class CreateLogDrainCommand extends CcApiCompositeCommand<
     const created = await composer.send(new CreateLogDrainInnerCommand(params));
     return waitForLogDrainEnabled(composer, params, created.id);
   }
+
+  // creation is not guarded by any uniqueness check, so a replay adds a second drain to the resource
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**
@@ -58,5 +63,10 @@ class CreateLogDrainInnerCommand extends CcApiSimpleCommand<CreateLogDrainComman
       ownerId: true,
       addonId: 'REAL_ADDON_ID',
     };
+  }
+
+  // the handler generates a fresh drain id, so a replay adds a second drain to the resource
+  isIdempotent(): boolean {
+    return false;
   }
 }

@@ -18,4 +18,9 @@ export class AddListKeyElementCommand extends RedisHttpCommand<
   toRequestParams(params: AddListKeyElementCommandInput) {
     return post(`/key/list/_push`, params);
   }
+
+  // `RPUSH`/`LPUSH` appends, so a replay stores the value a second time
+  isIdempotent(): boolean {
+    return false;
+  }
 }

@@ -12,4 +12,9 @@ export class CreateSetKeyCommand extends RedisHttpCommand<CreateSetKeyCommandInp
   toRequestParams(params: CreateSetKeyCommandInput) {
     return post(`/key/set/_create`, params);
   }
+
+  // `SADD` on the same members, behind an existence check: a replay is refused and stores nothing more
+  isIdempotent(): boolean {
+    return true;
+  }
 }

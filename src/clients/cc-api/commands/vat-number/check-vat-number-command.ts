@@ -25,4 +25,9 @@ export class CheckVatNumberCommand extends CcApiSimpleCommand<CheckVatNumberComm
   transformCommandOutput(response: unknown): CheckVatNumberCommandOutput {
     return transformVatNumber(response);
   }
+
+  // the VIES lookup only caches its answer under the number asked about
+  isIdempotent(): boolean {
+    return true;
+  }
 }

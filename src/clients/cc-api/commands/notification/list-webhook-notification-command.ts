@@ -25,4 +25,8 @@ export class ListWebhookNotificationCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ListWebhookNotificationCommandOutput {
     return sortBy((response as Array<unknown>).map(transformWebhookNotification), 'name', 'createdAt');
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

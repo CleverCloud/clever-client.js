@@ -25,4 +25,8 @@ export class CheckKubernetesClusterVersionCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CheckKubernetesClusterVersionCommandOutput {
     return transformKubernetesClusterVersionCheck(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

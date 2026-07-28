@@ -24,4 +24,8 @@ export class GetOrganisationSummariesCommand extends CcApiSimpleCommand<void, Ge
   transformCommandOutput(response: unknown): GetOrganisationSummariesCommandOutput {
     return transformOrganisationSummaries(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

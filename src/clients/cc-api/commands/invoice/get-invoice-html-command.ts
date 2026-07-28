@@ -19,4 +19,8 @@ export class GetInvoiceHtmlCommand extends CcApiSimpleCommand<GetInvoiceHtmlComm
       headers: new HeadersBuilder().acceptTextHtml().build(),
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

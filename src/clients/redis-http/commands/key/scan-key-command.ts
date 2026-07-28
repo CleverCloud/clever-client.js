@@ -12,4 +12,9 @@ export class ScanKeyCommand extends RedisHttpCommand<ScanKeyCommandInput, ScanKe
   toRequestParams(params: ScanKeyCommandInput) {
     return post(`/keys/_scan`, params);
   }
+
+  // `SCAN`, a read behind a `POST`
+  isIdempotent(): boolean {
+    return true;
+  }
 }

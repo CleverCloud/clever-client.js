@@ -33,4 +33,8 @@ export class ListProductRuntimeCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ListProductRuntimeCommandOutput {
     return sortBy((response as Array<unknown>).map(transformProductRuntime), 'name');
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

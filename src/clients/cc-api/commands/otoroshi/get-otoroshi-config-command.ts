@@ -43,4 +43,9 @@ export class GetOtoroshiConfigCommand extends CcApiSimpleCommand<
     }
     return (response as Blob).text();
   }
+
+  // the YAML is rendered from the add-on as it stands, no credential is minted for it
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -28,4 +28,9 @@ export class GetCellarCredentialsCommand extends CcApiSimpleCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // reads the stored credentials, it does not mint any
+  isIdempotent(): boolean {
+    return true;
+  }
 }

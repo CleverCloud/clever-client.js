@@ -53,6 +53,11 @@ export class UpdateApplicationCommand extends CcApiCompositeCommand<
       ownerId: true,
     };
   }
+
+  // the update step queues a rescale deployment, so a replay redeploys the application
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**
@@ -116,6 +121,11 @@ class UpdateApplicationInnerCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): UpdateApplicationCommandOutput {
     return transformApplication(response);
   }
+
+  // every call enters the rescale branch and queues a deployment, so a replay redeploys the application
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**
@@ -134,5 +144,9 @@ class UpdateApplicationBranchCommand extends CcApiSimpleCommand<UpdateApplicatio
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

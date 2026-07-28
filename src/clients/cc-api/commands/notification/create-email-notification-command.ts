@@ -49,4 +49,9 @@ export class CreateEmailNotificationCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CreateEmailNotificationCommandOutput {
     return transformEmailNotification(response);
   }
+
+  // the handler inserts a hook under a freshly generated id, so a replay leaves the owner with two identical hooks
+  isIdempotent(): boolean {
+    return false;
+  }
 }

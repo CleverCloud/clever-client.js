@@ -28,4 +28,8 @@ export class DeleteAuthMfaCommand extends CcApiSimpleCommand<DeleteAuthMfaComman
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

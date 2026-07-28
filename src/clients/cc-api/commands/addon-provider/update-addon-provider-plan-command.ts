@@ -42,4 +42,10 @@ export class UpdateAddonProviderPlanCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  // the plan fields are overwritten and each given feature is matched by name, so a replay lands on
+  // the same plan
+  isIdempotent(): boolean {
+    return true;
+  }
 }

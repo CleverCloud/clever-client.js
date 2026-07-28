@@ -27,4 +27,8 @@ export class GetNetworkGroupMemberCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetNetworkGroupMemberCommandOutput {
     return normalizeMemberKind(response as GetNetworkGroupMemberCommandOutput);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

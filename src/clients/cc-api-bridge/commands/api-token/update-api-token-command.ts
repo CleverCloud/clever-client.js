@@ -20,4 +20,9 @@ export class UpdateApiTokenCommand extends CcApiBridgeCommand<UpdateApiTokenComm
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // the name and description are written over the stored token, so a replay lands on the same values
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -18,4 +18,9 @@ export class DeletePaymentMethodCommand extends CcApiSimpleCommand<DeletePayment
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // the handler detaches the payment method and answers `204` either way, so a replay detaches nothing more
+  isIdempotent(): boolean {
+    return true;
+  }
 }

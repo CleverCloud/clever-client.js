@@ -44,4 +44,8 @@ export class ListCellarObjectCommand extends CcApiSimpleCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

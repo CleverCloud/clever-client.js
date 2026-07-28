@@ -45,4 +45,8 @@ export class GetMetricsCommand extends CcApiSimpleCommand<GetMetricsCommandInput
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

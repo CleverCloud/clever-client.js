@@ -17,4 +17,8 @@ export class ListApiTokenCommand extends CcApiBridgeCommand<void, ListApiTokenCo
   transformCommandOutput(response: unknown): ListApiTokenCommandOutput {
     return (response as Array<unknown>).map(transformApiToken);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

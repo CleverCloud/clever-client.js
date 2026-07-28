@@ -76,6 +76,11 @@ export class ListBackupCommand extends CcApiCompositeCommand<ListBackupCommandIn
     // no restore command
     return backups.map((backup) => omit(backup, 'restoreCommand', 'deleteCommand'));
   }
+
+  // every step only reads, the restore commands are built client side
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -100,6 +105,10 @@ class ListBackupInnerCommand extends CcApiSimpleCommand<ListBackupCommandInput, 
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -119,5 +128,9 @@ class GetAddonDetailsInnerCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): GetAddonDetailsInnerCommandOutput {
     return transformAddonDetails(response, this.params.addonProviderId);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

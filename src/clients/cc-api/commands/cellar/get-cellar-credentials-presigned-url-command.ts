@@ -28,4 +28,9 @@ export class GetCellarCredentialsPresignedUrlCommand extends CcApiSimpleCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // the URL is signed on the fly and the token is not stored anywhere, so a replay only mints a second short lived one
+  isIdempotent(): boolean {
+    return true;
+  }
 }

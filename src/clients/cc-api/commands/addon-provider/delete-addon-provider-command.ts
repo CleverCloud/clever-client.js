@@ -25,4 +25,8 @@ export class DeleteAddonProviderCommand extends CcApiSimpleCommand<DeleteAddonPr
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

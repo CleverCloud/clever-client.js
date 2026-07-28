@@ -22,4 +22,8 @@ export class GetInvoiceCommand extends CcApiSimpleCommand<GetInvoiceCommandInput
   transformCommandOutput(response: unknown): GetInvoiceCommandOutput {
     return transformInvoice(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -34,4 +34,9 @@ export class GetCellarObjectDownloadUrlCommand extends CcApiSimpleCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // the handler only signs an S3 URL, it stores nothing, so a replay mints a second URL for the same object
+  isIdempotent(): boolean {
+    return true;
+  }
 }

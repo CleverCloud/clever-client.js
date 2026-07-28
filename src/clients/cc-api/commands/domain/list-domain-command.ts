@@ -50,6 +50,10 @@ export class ListDomainCommand extends CcApiCompositeCommand<ListDomainCommandIn
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -76,6 +80,10 @@ class ListDomainInnerCommand extends CcApiSimpleCommand<ListDomainCommandInput, 
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -98,5 +106,9 @@ class GetPrimaryDomainInnerCommand extends CcApiSimpleCommand<ApplicationId, Dom
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

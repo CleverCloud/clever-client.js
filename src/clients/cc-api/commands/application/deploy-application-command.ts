@@ -64,4 +64,9 @@ export class DeployApplicationCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  // each call queues a deployment of its own, with a new deployment id
+  isIdempotent(): boolean {
+    return false;
+  }
 }

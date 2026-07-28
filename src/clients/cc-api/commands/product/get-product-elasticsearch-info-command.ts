@@ -23,4 +23,8 @@ export class GetProductElasticsearchInfoCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetProductElasticsearchInfoCommandOutput {
     return transformProductElasticsearchInfo(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

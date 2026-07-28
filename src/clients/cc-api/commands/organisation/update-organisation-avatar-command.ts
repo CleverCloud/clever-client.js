@@ -28,4 +28,9 @@ export class UpdateOrganisationAvatarCommand extends CcApiSimpleCommand<
       body: params.data,
     };
   }
+
+  // the image is stored under a path derived from the organisation id, so a replay overwrites it with itself
+  isIdempotent(): boolean {
+    return true;
+  }
 }

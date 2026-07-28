@@ -29,4 +29,10 @@ export class AddKubernetesPersistentStorageCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): AddKubernetesPersistentStorageCommandOutput {
     return transformKubernetesCluster(response);
   }
+
+  // the deployment step looks for an existing storage item first, so a replay skips instead of
+  // provisioning a second Ceph namespace
+  isIdempotent(): boolean {
+    return true;
+  }
 }

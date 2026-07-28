@@ -28,4 +28,10 @@ export class DeleteAddonCommand extends CcApiSimpleCommand<DeleteAddonCommandInp
       addonId: 'ADDON_ID',
     };
   }
+
+  // a deprovisioned add-on is skipped by the owner lookup, so a replay answers 404 without
+  // deprovisioning anything again
+  isIdempotent(): boolean {
+    return true;
+  }
 }

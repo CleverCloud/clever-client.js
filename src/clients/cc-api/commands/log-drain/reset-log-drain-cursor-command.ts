@@ -2,11 +2,11 @@ import { patch } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { transformLogDrain } from './log-drain-transform.js';
 import type {
   ResetLogDrainCursorCommandInput,
   ResetLogDrainCursorCommandOutput,
 } from './reset-log-drain-cursor-command.types.js';
-import { transformLogDrain } from './log-drain-transform.js';
 
 /**
  * Resets the shipping cursor of a log drain to now, so it stops trying to catch up on its backlog and only
@@ -37,5 +37,10 @@ export class ResetLogDrainCursorCommand extends CcApiSimpleCommand<
       ownerId: true,
       addonId: 'REAL_ADDON_ID',
     };
+  }
+
+  // the handler drops the shipping subscription, so a replay leaves the same empty backlog
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -20,6 +20,11 @@ export class EnableGrafanaCommand extends CcApiCompositeCommand<EnableGrafanaCom
     await composer.send(new InnerEnableGrafanaCommand(params));
     return composer.send(new GetGrafanaCommand(params));
   }
+
+  // creating the organisation is not replayable, so neither is the whole command
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**
@@ -36,5 +41,10 @@ class InnerEnableGrafanaCommand extends CcApiSimpleCommand<EnableGrafanaCommandI
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // every call creates a Grafana organisation and mints a new service account token for it
+  isIdempotent(): boolean {
+    return false;
   }
 }

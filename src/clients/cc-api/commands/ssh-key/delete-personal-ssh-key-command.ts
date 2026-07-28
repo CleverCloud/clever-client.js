@@ -18,4 +18,8 @@ export class DeletePersonalSshKeyCommand extends CcApiSimpleCommand<DeletePerson
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

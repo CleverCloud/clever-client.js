@@ -30,4 +30,9 @@ export class RenewCellarCredentialsCommand extends CcApiSimpleCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // rotates the secret key on the storage cluster, so a replay invalidates the key the first call returned
+  isIdempotent(): boolean {
+    return false;
+  }
 }

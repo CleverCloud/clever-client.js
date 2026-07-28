@@ -24,6 +24,11 @@ export class DeleteNetworkGroupExternalPeerCommand extends CcApiCompositeCommand
     await waitForNetworkGroupPeerDeletion(composer, params.ownerId, params.networkGroupId, params.externalPeerId);
     return undefined;
   }
+
+  // the deletion removes nothing more the second time and the wait only reads
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -45,5 +50,9 @@ class DeleteNetworkGroupExternalPeerCommandInner extends CcApiSimpleCommand<
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

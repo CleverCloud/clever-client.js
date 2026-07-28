@@ -41,6 +41,10 @@ export class ListLinkCommand extends CcApiCompositeCommand<ListLinkCommandInput,
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -65,6 +69,10 @@ class ListApplicationToApplicationLinkCommand extends CcApiSimpleCommand<
       (link) => link.application.id,
     );
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -88,6 +96,10 @@ class ListApplicationToAddonLinkCommand extends CcApiSimpleCommand<
       (link) => link.addon.name,
       (link) => link.addon.id,
     );
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }
 
@@ -118,5 +130,9 @@ class ListAddonToApplicationLinkCommand extends CcApiSimpleCommand<
       (link) => link.application.name,
       (link) => link.application.id,
     );
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

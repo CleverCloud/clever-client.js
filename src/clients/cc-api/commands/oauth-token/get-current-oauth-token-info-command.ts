@@ -18,4 +18,9 @@ export class GetCurrentOauthTokenInfoCommand extends CcApiSimpleCommand<void, Ge
   transformCommandOutput(response: unknown): GetCurrentOauthTokenInfoCommandOutput {
     return transformOauthToken(response);
   }
+
+  // the token is read back as is, neither refreshed nor rotated
+  isIdempotent(): boolean {
+    return true;
+  }
 }

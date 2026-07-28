@@ -39,4 +39,9 @@ export class ListMigrationPreorderCommand extends CcApiSimpleCommand<
       addonId: 'ADDON_ID',
     };
   }
+
+  // the purchase order is computed for the answer and never stored, so nothing is ordered twice
+  isIdempotent(): boolean {
+    return true;
+  }
 }

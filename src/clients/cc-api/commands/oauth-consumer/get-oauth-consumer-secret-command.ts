@@ -27,4 +27,9 @@ export class GetOauthConsumerSecretCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  // the stored secret is read back as is, never rotated
+  isIdempotent(): boolean {
+    return true;
+  }
 }

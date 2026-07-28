@@ -18,4 +18,8 @@ export class UnlinkGithubAccountCommand extends CcApiSimpleCommand<void, undefin
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

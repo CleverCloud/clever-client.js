@@ -41,4 +41,9 @@ export class UpdateOrganisationCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): UpdateOrganisationCommandOutput {
     return transformOrganisation(response);
   }
+
+  // the whole identity is overwritten with the given fields, so a replay writes the same values
+  isIdempotent(): boolean {
+    return true;
+  }
 }

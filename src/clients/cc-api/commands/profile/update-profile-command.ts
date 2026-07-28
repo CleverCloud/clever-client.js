@@ -21,4 +21,8 @@ export class UpdateProfileCommand extends CcApiSimpleCommand<UpdateProfileComman
   transformCommandOutput(response: unknown): UpdateProfileCommandOutput {
     return transformProfile(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

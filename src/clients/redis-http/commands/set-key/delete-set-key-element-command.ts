@@ -18,4 +18,9 @@ export class DeleteSetKeyElementCommand extends RedisHttpCommand<
   toRequestParams(params: DeleteSetKeyElementCommandInput) {
     return post(`/key/set/_delete`, params);
   }
+
+  // `SREM` of one member: the second call removes nothing more
+  isIdempotent(): boolean {
+    return true;
+  }
 }

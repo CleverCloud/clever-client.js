@@ -70,6 +70,10 @@ export class GetEnvironmentCommand extends CcApiCompositeCommand<
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -91,6 +95,10 @@ class GetApplicationEnvironmentCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }
 
@@ -114,6 +122,10 @@ class GetAddonEnvironmentCommand extends CcApiSimpleCommand<
       ownerId: true,
       addonId: 'ADDON_ID',
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }
 
@@ -141,6 +153,10 @@ class GetLinkedApplicationEnvironmentCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -166,5 +182,9 @@ class GetLinkedAddonEnvironmentCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

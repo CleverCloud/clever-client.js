@@ -20,4 +20,9 @@ export class DeleteApiTokenCommand extends CcApiBridgeCommand<DeleteApiTokenComm
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // the token is looked up before being dropped, so a replay revokes nothing more and answers "unknown token id"
+  isIdempotent(): boolean {
+    return true;
+  }
 }

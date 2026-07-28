@@ -23,4 +23,8 @@ export class DeleteProfileEmailAddressCommand extends CcApiSimpleCommand<
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

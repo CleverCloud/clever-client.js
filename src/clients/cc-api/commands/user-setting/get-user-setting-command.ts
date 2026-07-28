@@ -28,4 +28,8 @@ export class GetUserSettingCommand extends CcApiSimpleCommand<GetUserSettingComm
   transformCommandOutput(response: unknown): GetUserSettingCommandOutput {
     return (response as { value: string }).value;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

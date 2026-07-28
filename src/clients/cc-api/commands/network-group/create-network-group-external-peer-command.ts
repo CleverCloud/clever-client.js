@@ -36,6 +36,11 @@ export class CreateNetworkGroupExternalPeerCommand extends CcApiCompositeCommand
       peer.peerId,
     )) as NetworkGroupPeerExternal;
   }
+
+  // the API allocates the peer id, so a replay attaches a second peer instead of finding the first one
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**
@@ -62,5 +67,10 @@ class CreateNetworkGroupExternalPeerCommandInner extends CcApiSimpleCommand<
         parentMember: params.parentMember,
       },
     );
+  }
+
+  // the API allocates the peer id, so a replay attaches a second peer instead of finding the first one
+  isIdempotent(): boolean {
+    return false;
   }
 }

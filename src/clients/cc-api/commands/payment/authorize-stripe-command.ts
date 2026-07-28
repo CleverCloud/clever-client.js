@@ -27,4 +27,10 @@ export class AuthorizeStripeCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): AuthorizeStripeCommandOutput {
     return transformInvoice(response);
   }
+
+  // the handler settles the invoice again whenever the intent reads as succeeded, so a replay mails a second paid
+  // invoice and notifies a second payment attempt
+  isIdempotent(): boolean {
+    return false;
+  }
 }

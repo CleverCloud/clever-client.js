@@ -25,4 +25,9 @@ export class GetNetworkGroupWireguardConfigurationUrlCommand extends CcApiSimple
       safeUrl`/v4/networkgroups/organisations/${params.ownerId}/networkgroups/${params.networkGroupId}/peers/${params.peerId}/wireguard/configuration/presigned-url`,
     );
   }
+
+  // the URL is signed on the fly and the token is not stored anywhere, so a replay only mints a second short lived one
+  isIdempotent(): boolean {
+    return true;
+  }
 }

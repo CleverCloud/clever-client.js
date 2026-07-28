@@ -33,4 +33,9 @@ export class CheckLogDrainCommand extends CcApiSimpleCommand<CheckLogDrainComman
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // the probe posts a sample log line to the recipient, so a replay ships a second one to the target
+  isIdempotent(): boolean {
+    return false;
+  }
 }

@@ -25,4 +25,9 @@ export class DeleteOauthConsumerCommand extends CcApiSimpleCommand<DeleteOauthCo
       ownerId: true,
     };
   }
+
+  // the consumer is marked deleted and its tokens revoked, so a replay only meets a not-found error
+  isIdempotent(): boolean {
+    return true;
+  }
 }

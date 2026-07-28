@@ -38,4 +38,8 @@ export class UpdateEnvironmentCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

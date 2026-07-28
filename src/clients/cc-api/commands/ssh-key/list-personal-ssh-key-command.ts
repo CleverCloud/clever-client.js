@@ -18,4 +18,8 @@ export class ListPersonalSshKeyCommand extends CcApiSimpleCommand<void, ListPers
   transformCommandOutput(response: unknown): ListPersonalSshKeyCommandOutput {
     return sortBy(response as ListPersonalSshKeyCommandOutput, 'name');
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

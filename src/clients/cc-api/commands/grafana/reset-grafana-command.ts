@@ -20,4 +20,9 @@ export class ResetGrafanaCommand extends CcApiSimpleCommand<ResetGrafanaCommandI
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // each dashboard is re-applied at its recorded version with `overwrite`, so a replay lands on the same dashboards
+  isIdempotent(): boolean {
+    return true;
+  }
 }

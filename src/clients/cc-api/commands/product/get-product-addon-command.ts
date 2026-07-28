@@ -34,6 +34,10 @@ export class GetProductAddonCommand extends CcApiCompositeCommand<
       versions,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -53,5 +57,9 @@ class GetProductAddonInnerCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): GetProductAddonCommandOutput {
     return transformAddonProviderFull(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

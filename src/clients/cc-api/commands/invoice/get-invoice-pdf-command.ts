@@ -19,4 +19,9 @@ export class GetInvoicePdfCommand extends CcApiSimpleCommand<GetInvoicePdfComman
       headers: new HeadersBuilder().accept('application/pdf').build(),
     };
   }
+
+  // the PDF is rendered on the fly from the invoice and stored nowhere
+  isIdempotent(): boolean {
+    return true;
+  }
 }

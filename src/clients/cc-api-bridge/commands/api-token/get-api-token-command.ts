@@ -18,4 +18,8 @@ export class GetApiTokenCommand extends CcApiBridgeCommand<GetApiTokenCommandInp
   transformCommandOutput(response: unknown): GetApiTokenCommandOutput {
     return transformApiToken(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

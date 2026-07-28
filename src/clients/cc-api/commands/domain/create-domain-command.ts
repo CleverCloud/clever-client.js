@@ -82,4 +82,9 @@ export class CreateDomainCommand extends CcApiSimpleCommand<CreateDomainCommandI
       ownerId: true,
     };
   }
+
+  // the exact domain is refused as already taken on a replay, so it is only ever attached once
+  isIdempotent(): boolean {
+    return true;
+  }
 }

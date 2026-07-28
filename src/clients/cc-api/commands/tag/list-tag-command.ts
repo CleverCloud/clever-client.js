@@ -33,4 +33,8 @@ export class ListTagCommand extends CcApiSimpleCommand<ListTagCommandInput, List
       addonId: 'ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -51,4 +51,10 @@ export class CreateAddonProviderCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CreateAddonProviderCommandOutput {
     return transformAddonProviderFull(response);
   }
+
+  // the provider id comes from the caller and is looked up first, so a replay is refused rather than
+  // registering a second provider
+  isIdempotent(): boolean {
+    return true;
+  }
 }

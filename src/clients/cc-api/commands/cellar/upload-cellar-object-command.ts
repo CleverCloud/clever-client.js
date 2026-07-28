@@ -35,6 +35,11 @@ export class UploadCellarObjectCommand extends CcApiCompositeCommand<UploadCella
       new UploadCellarObjectInnerCommand({ url, content: params.content, contentType: getContentType(params) }),
     );
   }
+
+  // sends the content again, which a bucket with versioning on keeps as a new version instead of overwriting
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 function getContentType(params: UploadCellarObjectCommandInput): string {
@@ -88,5 +93,10 @@ class UploadCellarObjectInnerCommand extends CcApiSimpleCommand<UploadCellarObje
   // the URL points at the API rather than at the page origin, so from a browser the request is cross-origin
   getRequestConfig(): CcRequestConfigPartial {
     return { isCorsEnabled: true };
+  }
+
+  // the content lands on the same object key, but a bucket with versioning on keeps the replay as a new version
+  isIdempotent(): boolean {
+    return false;
   }
 }

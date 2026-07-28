@@ -32,4 +32,9 @@ export class GetStripeIntentCommand extends CcApiSimpleCommand<
       customer: res.customer,
     };
   }
+
+  // every call asks Stripe for a brand new setup intent, so a replay leaves a second one behind
+  isIdempotent(): boolean {
+    return false;
+  }
 }

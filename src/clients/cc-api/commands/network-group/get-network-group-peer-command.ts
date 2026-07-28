@@ -27,4 +27,8 @@ export class GetNetworkGroupPeerCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetNetworkGroupPeerCommandOutput {
     return transformNetworkGroupPeer(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -26,4 +26,9 @@ export class SetUserSettingCommand extends CcApiSimpleCommand<SetUserSettingComm
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // `HSET` on the setting name, and the per-user quota counter only moves when the name did not exist yet
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -33,4 +33,9 @@ export class CreateAddonCommand extends CcApiSimpleCommand<CreateAddonCommandInp
   transformCommandOutput(response: unknown): CreateAddonCommandOutput {
     return transformAddon(response);
   }
+
+  // each call provisions one more add-on, with its own id, and counts against the creation rate limit
+  isIdempotent(): boolean {
+    return false;
+  }
 }

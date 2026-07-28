@@ -31,4 +31,9 @@ export class CreateCellarBucketCommand extends CcApiSimpleCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // the bucket name is the caller's and the handler refuses a name that already exists, so a replay creates nothing
+  isIdempotent(): boolean {
+    return true;
+  }
 }

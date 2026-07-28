@@ -29,6 +29,12 @@ export class InitStripeCommand extends CcApiSimpleCommand<InitStripeCommandInput
   transformCommandOutput(response: unknown): InitStripeCommandOutput {
     return transformInvoice(response);
   }
+
+  // the handler records a new payment attempt and opens a Stripe payment intent, and the idempotency key it sends to
+  // Stripe only covers the current hour
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**

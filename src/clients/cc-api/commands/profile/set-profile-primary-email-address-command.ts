@@ -24,4 +24,9 @@ export class SetProfilePrimaryEmailAddressCommand extends CcApiSimpleCommand<
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // an address the account does not own yet gets a confirmation link mailed on every call
+  isIdempotent(): boolean {
+    return false;
+  }
 }

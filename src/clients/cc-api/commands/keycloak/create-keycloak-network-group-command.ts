@@ -33,4 +33,9 @@ export class CreateKeycloakNetworkGroupCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CreateKeycloakNetworkGroupCommandOutput {
     return transformKeycloakInfo(response);
   }
+
+  // every call allocates a new network group id, so a replay leaves the previous one behind and restarts the add-on
+  isIdempotent(): boolean {
+    return false;
+  }
 }

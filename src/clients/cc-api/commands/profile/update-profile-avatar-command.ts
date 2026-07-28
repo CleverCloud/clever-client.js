@@ -37,4 +37,9 @@ export class UpdateProfileAvatarCommand extends CcApiSimpleCommand<
       }
     }
   }
+
+  // the image is stored under a path derived from the owner id, so a replay overwrites the same file
+  isIdempotent(): boolean {
+    return true;
+  }
 }

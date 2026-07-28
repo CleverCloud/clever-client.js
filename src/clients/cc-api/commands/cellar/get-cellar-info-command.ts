@@ -27,4 +27,8 @@ export class GetCellarInfoCommand extends CcApiSimpleCommand<GetCellarInfoComman
   transformCommandOutput(response: unknown): GetCellarInfoCommandOutput {
     return transformCellarInfo(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

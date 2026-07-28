@@ -33,4 +33,8 @@ export class ListAddonInstanceCommand extends CcApiSimpleCommand<
       addonId: 'ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

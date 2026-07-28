@@ -42,6 +42,10 @@ export class GetJenkinsInfoCommand extends CcApiCompositeCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -62,6 +66,10 @@ class GetJenkinsInfoInnerCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetJenkinsInfoInnerCommandOutput {
     return transformJenkinsInfo(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -74,5 +82,10 @@ class GetJenkinsInfoInnerCommand extends CcApiSimpleCommand<
 class GetJenkinsUpdatesCommand extends CcApiSimpleCommand<GetJenkinsInfoCommandInput, GetJenkinsUpdatesCommandOutput> {
   toRequestParams(params: GetJenkinsInfoCommandInput) {
     return get(safeUrl`/v4/addon-providers/jenkins/addons/${params.addonId}/updates`);
+  }
+
+  // the add-on version is compared against the Jenkins update centre, which is only read
+  isIdempotent(): boolean {
+    return true;
   }
 }

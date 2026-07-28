@@ -42,4 +42,8 @@ export class ListLogDrainCommand extends CcApiSimpleCommand<ListLogDrainCommandI
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

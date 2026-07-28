@@ -35,4 +35,8 @@ export class DeleteEnvironmentVariableCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

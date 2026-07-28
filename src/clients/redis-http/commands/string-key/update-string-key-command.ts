@@ -15,4 +15,9 @@ export class UpdateStringKeyCommand extends RedisHttpCommand<
   toRequestParams(params: UpdateStringKeyCommandInput) {
     return post(`/key/string/_update`, params);
   }
+
+  // `SET XX`: the second call writes the same value
+  isIdempotent(): boolean {
+    return true;
+  }
 }

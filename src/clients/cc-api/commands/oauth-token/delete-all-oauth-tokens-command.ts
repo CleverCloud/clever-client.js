@@ -18,4 +18,9 @@ export class DeleteOauthTokenCommand extends CcApiSimpleCommand<void, undefined>
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // every token of the user is revoked, so a replay has nothing left to revoke
+  isIdempotent(): boolean {
+    return true;
+  }
 }

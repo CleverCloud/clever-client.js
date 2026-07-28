@@ -50,4 +50,9 @@ export class CreateProfileEmailAddressCommand extends CcApiSimpleCommand<
   transformErrorCode({ code }: ApiErrorInfo) {
     return API_ERROR_CODES[code] ?? code;
   }
+
+  // the address is only stored once the mailed link is followed, so a replay mails a second link
+  isIdempotent(): boolean {
+    return false;
+  }
 }

@@ -41,4 +41,9 @@ export class UpdateOauthConsumerCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  // the whole consumer is overwritten with the given fields, so a replay writes the same values
+  isIdempotent(): boolean {
+    return true;
+  }
 }

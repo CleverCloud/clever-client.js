@@ -27,4 +27,10 @@ export class UndeployApplicationCommand extends CcApiSimpleCommand<UndeployAppli
       ownerId: true,
     };
   }
+
+  // each call queues a stop instruction of its own, with a new deployment id, even on an already
+  // stopped application
+  isIdempotent(): boolean {
+    return false;
+  }
 }

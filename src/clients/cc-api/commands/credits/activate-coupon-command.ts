@@ -56,4 +56,9 @@ export class ActivateCouponCommand extends CcApiSimpleCommand<ActivateCouponComm
   transformErrorCode({ code }: ApiErrorInfo) {
     return API_ERROR_CODES[code] ?? code;
   }
+
+  // the coupon usage is keyed on `(coupon name, owner)`, so a replay is refused instead of granting the credits twice
+  isIdempotent(): boolean {
+    return true;
+  }
 }

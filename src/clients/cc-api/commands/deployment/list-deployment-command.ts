@@ -35,6 +35,10 @@ export class ListDeploymentCommand extends CcApiCompositeCommand<
     }
     return client.send(new ListOrganisationDeploymentCommand({ ownerId: params.ownerId!, limit: params.limit }));
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -52,16 +56,17 @@ class ListOrganisationDeploymentCommand extends CcApiSimpleCommand<
   Array<DeploymentLegacy>
 > {
   toRequestParams(params: ListOrganisationDeploymentCommandInput) {
-    return get(
-      safeUrl`/v2/organisations/${params.ownerId}/deployments`,
-      new QueryParams().set('limit', params.limit),
-    );
+    return get(safeUrl`/v2/organisations/${params.ownerId}/deployments`, new QueryParams().set('limit', params.limit));
   }
 
   transformCommandOutput(response: unknown): Array<DeploymentLegacy> {
     return Object.entries(response as Record<string, Array<unknown>>).flatMap(([applicationId, deployments]) =>
       deployments.map((o) => transformDeploymentLegacy(o, applicationId)),
     );
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }
 
@@ -93,5 +98,9 @@ class ListApplicationDeploymentCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

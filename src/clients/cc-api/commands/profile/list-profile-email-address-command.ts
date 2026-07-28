@@ -33,6 +33,10 @@ export class ListProfileEmailAddressCommand extends CcApiCompositeCommand<void, 
       })),
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -49,5 +53,9 @@ class ListProfileSecondaryEmailAddressCommand extends CcApiSimpleCommand<void, A
 
   transformCommandOutput(response: Array<string>) {
     return response?.sort() ?? [];
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

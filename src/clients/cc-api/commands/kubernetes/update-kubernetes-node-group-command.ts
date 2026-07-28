@@ -39,4 +39,10 @@ export class UpdateKubernetesNodeGroupCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): UpdateKubernetesNodeGroupCommandOutput {
     return transformKubernetesNodeGroup(response);
   }
+
+  // the handler only accepts a `READY` node group, so a replay of a resize meets the `TO_RESIZE` it
+  // just set and is refused rather than reserving quota a second time
+  isIdempotent(): boolean {
+    return true;
+  }
 }

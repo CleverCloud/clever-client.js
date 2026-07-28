@@ -22,4 +22,9 @@ export class DeleteUserSettingCommand extends CcApiSimpleCommand<DeleteUserSetti
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // `HDEL`, and the per-user quota counter only moves when the name was actually removed
+  isIdempotent(): boolean {
+    return true;
+  }
 }

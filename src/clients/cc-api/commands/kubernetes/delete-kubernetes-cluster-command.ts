@@ -27,6 +27,11 @@ export class DeleteKubernetesClusterCommand extends CcApiCompositeCommand<
     }
     return undefined;
   }
+
+  // the deletion below converges and the wait only reads, so replaying the whole thing is safe
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -45,5 +50,11 @@ class DeleteKubernetesClusterCommandInner extends CcApiSimpleCommand<DeleteKuber
   // command in this client discards the response body, so we follow that convention here too.
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // the handler only flags the cluster for deletion, and returns it untouched when the flag is
+  // already set, so a replay tears down nothing more
+  isIdempotent(): boolean {
+    return true;
   }
 }

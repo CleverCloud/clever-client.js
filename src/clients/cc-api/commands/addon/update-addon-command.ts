@@ -29,4 +29,8 @@ export class UpdateAddonCommand extends CcApiSimpleCommand<UpdateAddonCommandInp
       addonId: 'ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

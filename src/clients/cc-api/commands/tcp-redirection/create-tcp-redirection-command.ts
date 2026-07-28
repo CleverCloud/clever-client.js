@@ -32,4 +32,9 @@ export class CreateTcpRedirectionCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  // an application holds at most one port per namespace, so a replay is refused instead of allocating a second one
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -30,4 +30,8 @@ export class GetPrimaryDomainCommand extends CcApiCompositeCommand<
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

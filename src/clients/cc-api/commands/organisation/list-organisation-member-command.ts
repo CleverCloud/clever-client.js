@@ -25,4 +25,8 @@ export class ListOrganisationMemberCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ListOrganisationMemberCommandOutput {
     return sortBy((response as Array<unknown>).map(transformOrganisationMember), 'name', 'emailAddress', 'id');
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -29,4 +29,8 @@ export class GetOtoroshiInfoCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetOtoroshiInfoCommandOutput {
     return transformOtoroshiInfo(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

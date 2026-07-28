@@ -47,4 +47,9 @@ export class RemoveOrganisationMemberCommand extends CcApiSimpleCommand<
   transformErrorCode({ code }: ApiErrorInfo) {
     return API_ERROR_CODES[code] ?? code;
   }
+
+  // the membership row is dropped, so a replay only meets a `NOT_FOUND` error
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -20,4 +20,8 @@ export class ListTcpRedirectionNamespaceCommand extends CcApiSimpleCommand<
   toRequestParams(params: ListTcpRedirectionNamespaceCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/namespaces`);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

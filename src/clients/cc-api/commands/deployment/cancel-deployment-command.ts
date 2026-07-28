@@ -30,4 +30,10 @@ export class CancelDeploymentCommand extends CcApiSimpleCommand<CancelDeployment
       ownerId: true,
     };
   }
+
+  // each accepted call queues a cancellation instruction under a fresh deployment id, and the
+  // "still running" guard only closes once that instruction has landed
+  isIdempotent(): boolean {
+    return false;
+  }
 }

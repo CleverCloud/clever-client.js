@@ -36,6 +36,11 @@ export class AddLinkCommand extends CcApiCompositeCommand<AddLinkCommandInput, u
       ownerId: true,
     };
   }
+
+  // both endpoints refuse to link a target twice, so a replay leaves a single link
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -57,6 +62,11 @@ export class AddApplicationToApplicationLinkCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // an existing dependency is refused as a duplicate, so a replay does not link the application twice
+  isIdempotent(): boolean {
+    return true;
   }
 }
 
@@ -86,5 +96,10 @@ export class AddApplicationToAddonLinkCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // the add-on is only attached when it is not linked yet, so a replay changes nothing
+  isIdempotent(): boolean {
+    return true;
   }
 }

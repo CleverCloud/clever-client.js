@@ -38,6 +38,10 @@ export class ListProductAddonCommand extends CcApiCompositeCommand<
       }),
     );
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -57,5 +61,9 @@ class ListProductAddonInnerCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): ListProductAddonCommandOutput {
     return sortBy((response as Array<unknown>).map(transformAddonProviderFull), 'name');
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -30,4 +30,9 @@ export class CreateWebhookNotificationCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CreateWebhookNotificationCommandOutput {
     return transformWebhookNotification(response);
   }
+
+  // the handler inserts a hook under a freshly generated id, so a replay leaves the owner with two identical hooks
+  isIdempotent(): boolean {
+    return false;
+  }
 }

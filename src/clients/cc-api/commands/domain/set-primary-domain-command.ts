@@ -52,4 +52,8 @@ export class SetPrimaryDomainCommand extends CcApiSimpleCommand<SetPrimaryDomain
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

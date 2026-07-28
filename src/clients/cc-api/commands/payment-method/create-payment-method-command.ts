@@ -31,4 +31,10 @@ export class CreatePaymentMethodCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CreatePaymentMethodCommandOutput {
     return transformPaymentMethod(response);
   }
+
+  // the handler attaches the Stripe payment method the body names, so a replay attaches the same one rather than a
+  // second card
+  isIdempotent(): boolean {
+    return true;
+  }
 }

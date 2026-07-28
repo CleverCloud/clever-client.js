@@ -32,4 +32,8 @@ export class CheckOtoroshiVersionCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CheckOtoroshiVersionCommandOutput {
     return transformOtoroshiVersionCheck(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

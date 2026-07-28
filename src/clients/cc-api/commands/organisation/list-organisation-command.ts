@@ -31,4 +31,8 @@ export class ListOrganisationCommand extends CcApiSimpleCommand<
       'id',
     );
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

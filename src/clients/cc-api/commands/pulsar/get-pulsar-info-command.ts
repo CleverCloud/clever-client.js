@@ -40,6 +40,11 @@ export class GetPulsarInfoCommand extends CcApiCompositeCommand<GetPulsarInfoCom
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // both steps only read
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -56,6 +61,11 @@ class GetPulsarInfoInnerCommand extends CcApiSimpleCommand<GetPulsarInfoCommandI
 
   transformCommandOutput(response: unknown): GetPulsarInfoInnerCommandOutput {
     return transformPulsarInfo(response);
+  }
+
+  // the access token comes from the stored add-on row, renewing it is a separate route
+  isIdempotent(): boolean {
+    return true;
   }
 }
 
@@ -76,5 +86,9 @@ class GetPulsarClusterCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): GetPulsarClusterInnerCommandOutput {
     return transformPulsarCluster(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -21,4 +21,8 @@ export class DeleteWebhookNotificationCommand extends CcApiSimpleCommand<
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

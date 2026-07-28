@@ -40,4 +40,9 @@ export class RequestAuthPasswordResetCommand extends CcApiSimpleCommand<
   isAuthEnabled(): boolean {
     return false;
   }
+
+  // every call mints a new reset key and mails it, and counts against the hourly per-mailbox limit
+  isIdempotent(): boolean {
+    return false;
+  }
 }

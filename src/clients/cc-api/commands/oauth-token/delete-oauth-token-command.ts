@@ -19,4 +19,9 @@ export class DeleteOauthTokenCommand extends CcApiSimpleCommand<DeleteTokenComma
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // the named token is revoked, so a replay only meets a not-found error
+  isIdempotent(): boolean {
+    return true;
+  }
 }

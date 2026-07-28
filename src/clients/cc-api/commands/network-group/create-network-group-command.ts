@@ -37,6 +37,11 @@ export class CreateNetworkGroupCommand extends CcApiCompositeCommand<
     await composer.send(new CreateNetworkGroupCommandInner({ ...params, networkGroupId }));
     return waitForNetworkGroupCreation(composer, params.ownerId, networkGroupId);
   }
+
+  // a fresh network group id is generated on every run, so a replay creates a second network group
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**
@@ -79,5 +84,10 @@ class CreateNetworkGroupCommandInner extends CcApiSimpleCommand<CreateNetworkGro
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // the id travels in the body and the API reserves it, so a replay is refused rather than creating a second one
+  isIdempotent(): boolean {
+    return true;
   }
 }

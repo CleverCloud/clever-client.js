@@ -48,4 +48,9 @@ export class GetLogDrainTestCommandCommand extends CcApiSimpleCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // the backend only formats a shell command out of the drain, it never contacts the recipient itself
+  isIdempotent(): boolean {
+    return true;
+  }
 }

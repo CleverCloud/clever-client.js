@@ -17,4 +17,10 @@ export class InitPaypalCommand extends CcApiSimpleCommand<InitPaypalCommandInput
   toRequestParams(params: InitPaypalCommandInput) {
     return post(safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/${params.invoiceNumber}/payments/paypal`);
   }
+
+  // the handler creates a new PayPal order and points the invoice at it, so a replay opens a second one and orphans
+  // the URL the first call returned
+  isIdempotent(): boolean {
+    return false;
+  }
 }

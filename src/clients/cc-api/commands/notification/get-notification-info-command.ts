@@ -27,6 +27,10 @@ export class GetNotificationInfoCommand extends CcApiCompositeCommand<void, GetN
       ...(await composer.send(new GetNotificationInfoEventsCommand())),
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -44,6 +48,10 @@ class GetNotificationInfoEventsCommand extends CcApiSimpleCommand<void, GetNotif
   transformCommandOutput(response: unknown): GetNotificationInfoEventsCommandOutput {
     return transformNotificationInfoEvents(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -56,5 +64,9 @@ class GetNotificationInfoEventsCommand extends CcApiSimpleCommand<void, GetNotif
 class GetNotificationInfoWebhookFormatsCommand extends CcApiSimpleCommand<void, Array<WebhookNotificationFormat>> {
   toRequestParams() {
     return get(safeUrl`/v2/notifications/info/webhookformats`);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

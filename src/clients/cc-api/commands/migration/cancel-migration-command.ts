@@ -30,4 +30,9 @@ export class CancelMigrationCommand extends CcApiSimpleCommand<CancelMigrationCo
       addonId: 'ADDON_ID',
     };
   }
+
+  // the provider is asked to abort a migration named by its id, so a replay aborts nothing more
+  isIdempotent(): boolean {
+    return true;
+  }
 }

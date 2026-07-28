@@ -28,4 +28,8 @@ export class GetNetworkGroupCommand extends CcApiSimpleCommand<
       peers: networkGroup.peers.map(transformNetworkGroupPeer),
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

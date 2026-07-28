@@ -33,8 +33,7 @@ interface CreateNetworkGroupExternalPeerCommandInputBase {
 /**
  * An external peer that only initiates WireGuard connections: it has no public address the other peers connect to.
  */
-export interface CreateNetworkGroupExternalClientPeerCommandInput
-  extends CreateNetworkGroupExternalPeerCommandInputBase {
+export interface CreateNetworkGroupExternalClientPeerCommandInput extends CreateNetworkGroupExternalPeerCommandInputBase {
   /** Role of the peer in the WireGuard mesh: a client only initiates connections. */
   peerRole: 'CLIENT';
 }
@@ -42,8 +41,7 @@ export interface CreateNetworkGroupExternalClientPeerCommandInput
 /**
  * An external peer that accepts WireGuard connections: it must declare the public address the other peers reach it at.
  */
-export interface CreateNetworkGroupExternalServerPeerCommandInput
-  extends CreateNetworkGroupExternalPeerCommandInputBase {
+export interface CreateNetworkGroupExternalServerPeerCommandInput extends CreateNetworkGroupExternalPeerCommandInputBase {
   /** Role of the peer in the WireGuard mesh: a server accepts connections. */
   peerRole: 'SERVER';
   /** Public IP address the peer accepts connections at. */

@@ -56,4 +56,9 @@ export class UpdateOrganisationMemberCommand extends CcApiSimpleCommand<
   transformErrorCode({ code }: ApiErrorInfo) {
     return API_ERROR_CODES[code] ?? code;
   }
+
+  // the role and the job title of an existing membership are overwritten, so a replay writes the same values
+  isIdempotent(): boolean {
+    return true;
+  }
 }

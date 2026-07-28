@@ -25,4 +25,10 @@ export class GetKubernetesKubeconfigPresignedUrlCommand extends CcApiSimpleComma
       safeUrl`/v4/kubernetes/organisations/${params.ownerId}/clusters/${params.clusterId}/kubeconfig/presigned-url`,
     );
   }
+
+  // the token is signed on the fly for each call and never stored, so a replay issues another URL
+  // without touching the cluster or invalidating the first one
+  isIdempotent(): boolean {
+    return true;
+  }
 }

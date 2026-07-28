@@ -33,4 +33,8 @@ export class UpdateTagCommand extends CcApiSimpleCommand<UpdateTagCommandInput, 
       addonId: 'ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

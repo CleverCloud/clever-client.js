@@ -20,4 +20,8 @@ export class ListGithubSshKeyCommand extends CcApiSimpleCommand<void, ListGithub
   transformCommandOutput(response: unknown): ListGithubSshKeyCommandOutput {
     return sortBy(response as ListGithubSshKeyCommandOutput, 'name');
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

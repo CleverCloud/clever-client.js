@@ -32,4 +32,8 @@ export class DeleteCellarBucketCommand extends CcApiSimpleCommand<DeleteCellarBu
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

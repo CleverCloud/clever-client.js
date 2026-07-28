@@ -25,4 +25,10 @@ export class DeleteApplicationCommand extends CcApiSimpleCommand<DeleteApplicati
       ownerId: true,
     };
   }
+
+  // a deleted application is skipped by the owner lookup, so a replay answers 404 without deleting
+  // anything again
+  isIdempotent(): boolean {
+    return true;
+  }
 }

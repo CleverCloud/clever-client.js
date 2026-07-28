@@ -39,4 +39,10 @@ export class CreateKubernetesNodeGroupCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CreateKubernetesNodeGroupCommandOutput {
     return transformKubernetesNodeGroup(response);
   }
+
+  // nothing dedupes on the name: each call mints a node group id and reserves quota for it, so a
+  // replay adds a second node group and boots its machines
+  isIdempotent(): boolean {
+    return false;
+  }
 }

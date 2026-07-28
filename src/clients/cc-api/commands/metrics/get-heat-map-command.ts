@@ -36,4 +36,8 @@ export class GetHeatMapCommand extends CcApiSimpleCommand<GetHeatMapCommandInput
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

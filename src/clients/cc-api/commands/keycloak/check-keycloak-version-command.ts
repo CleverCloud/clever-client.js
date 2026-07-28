@@ -32,4 +32,8 @@ export class CheckKeycloakVersionCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CheckKeycloakVersionCommandOutput {
     return transformKeycloakVersionCheck(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

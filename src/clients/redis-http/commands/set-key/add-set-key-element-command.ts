@@ -18,4 +18,9 @@ export class AddSetKeyElementCommand extends RedisHttpCommand<
   toRequestParams(params: AddSetKeyElementCommandInput) {
     return post(`/key/set/_set`, params);
   }
+
+  // `SADD` of one member: a set holds it once however many times it is added
+  isIdempotent(): boolean {
+    return true;
+  }
 }

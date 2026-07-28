@@ -30,4 +30,8 @@ export class DeleteLogDrainCommand extends CcApiSimpleCommand<DeleteLogDrainComm
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

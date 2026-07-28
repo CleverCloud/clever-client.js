@@ -64,6 +64,11 @@ export class ListArticleCommand extends CcApiCompositeCommand<ListArticleCommand
 
     return sortBy(articles, { key: 'publishedAt', order: 'desc' }).slice(0, limit);
   }
+
+  // every page is a plain fetch of the public blog feed
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -128,5 +133,9 @@ class ListArticlePageCommand extends CcApiSimpleCommand<ListArticlePageCommandIn
 
   getRequestConfig(): CcRequestConfigPartial {
     return { isCorsEnabled: true, cache: { ttl: DEFAULT_CACHE_TTL } };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

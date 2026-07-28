@@ -41,4 +41,9 @@ export class CreateOrganisationCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CreateOrganisationCommandOutput {
     return transformOrganisation(response);
   }
+
+  // each call creates one more organisation, with its own id, and spends a creation quota token
+  isIdempotent(): boolean {
+    return false;
+  }
 }

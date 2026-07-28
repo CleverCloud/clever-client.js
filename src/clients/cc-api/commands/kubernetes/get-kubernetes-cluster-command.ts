@@ -25,4 +25,8 @@ export class GetKubernetesClusterCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetKubernetesClusterCommandOutput {
     return transformKubernetesCluster(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

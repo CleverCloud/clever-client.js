@@ -47,4 +47,8 @@ export class SearchNetworkGroupCommand extends CcApiSimpleCommand<
 
     return normalized.filter((item) => this.params.types!.includes(item.type));
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

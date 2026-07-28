@@ -23,4 +23,9 @@ export class GetGithubLinkTransactionIdCommand extends CcApiSimpleCommand<
     const { transactionId, redirectUri } = response as { transactionId: string; redirectUri: string };
     return { transactionId, redirectUrl: redirectUri };
   }
+
+  // every call mints and stores a new transaction id, so a replay opens a second linking flow
+  isIdempotent(): boolean {
+    return false;
+  }
 }

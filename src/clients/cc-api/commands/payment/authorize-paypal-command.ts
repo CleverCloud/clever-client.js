@@ -28,4 +28,10 @@ export class AuthorizePaypalCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): AuthorizePaypalCommandOutput {
     return transformInvoice(response);
   }
+
+  // an invoice that is already paid is refused before the capture, and the capture itself carries a PayPal request id,
+  // so a replay takes no second payment
+  isIdempotent(): boolean {
+    return true;
+  }
 }

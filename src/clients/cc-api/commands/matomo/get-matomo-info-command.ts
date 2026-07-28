@@ -26,4 +26,8 @@ export class GetMatomoInfoCommand extends CcApiSimpleCommand<GetMatomoInfoComman
   transformCommandOutput(response: unknown): GetMatomoInfoCommandOutput {
     return transformMatomoInfo(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

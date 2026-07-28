@@ -27,4 +27,9 @@ export class RebuildMatomoCommand extends CcApiSimpleCommand<RebuildMatomoComman
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // each call queues a cacheless redeployment, so a replay rebuilds the instance a second time
+  isIdempotent(): boolean {
+    return false;
+  }
 }

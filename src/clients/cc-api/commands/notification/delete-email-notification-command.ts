@@ -18,4 +18,8 @@ export class DeleteEmailNotificationCommand extends CcApiSimpleCommand<DeleteEma
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

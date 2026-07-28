@@ -29,4 +29,8 @@ export class GetMetabaseInfoCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetMetabaseInfoCommandOutput {
     return transformMetabaseInfo(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

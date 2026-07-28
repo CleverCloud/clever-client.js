@@ -37,4 +37,8 @@ export class GetApplicationInstanceCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -102,6 +102,11 @@ export class CreateApplicationCommand extends CcApiCompositeCommand<
     await consolidateApplicationWithBranches(application, composer);
     return application;
   }
+
+  // the creation step allocates one more application, with its own id and repository
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**
@@ -158,5 +163,11 @@ class CreateApplicationInnerCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): CreateApplicationCommandOutput {
     return transformApplication(response);
+  }
+
+  // each call allocates one more application, with its own id, and counts against the creation rate
+  // limit
+  isIdempotent(): boolean {
+    return false;
   }
 }

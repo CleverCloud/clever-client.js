@@ -38,4 +38,9 @@ export class CreateApiTokenCommand extends CcApiBridgeCommand<
   isAuthEnabled(): boolean {
     return false;
   }
+
+  // each call runs a full OAuth dance and generates a new token id, so a replay mints a second token
+  isIdempotent(): boolean {
+    return false;
+  }
 }

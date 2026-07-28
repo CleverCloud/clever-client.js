@@ -13,4 +13,8 @@ export class GetGithubUsernameCommand extends CcApiSimpleCommand<void, GetGithub
   toRequestParams() {
     return get(`/v2/github/username`);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

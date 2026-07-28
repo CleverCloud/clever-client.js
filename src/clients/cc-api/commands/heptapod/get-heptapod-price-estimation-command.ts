@@ -28,4 +28,9 @@ export class GetHeptapodPriceEstimationCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetHeptapodPriceEstimationCommandOutput {
     return transformHeptapodPriceEstimation(response);
   }
+
+  // the estimate is computed from the recorded usage on every call, nothing is invoiced or stored
+  isIdempotent(): boolean {
+    return true;
+  }
 }

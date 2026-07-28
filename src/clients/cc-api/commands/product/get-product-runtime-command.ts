@@ -32,4 +32,8 @@ export class GetProductRuntimeCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetProductRuntimeCommandOutput {
     return transformProductRuntime(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -34,4 +34,8 @@ export class GetAuthMfaBackupCodesCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetAuthMfaBackupCodesCommandOutput {
     return (response as Array<{ code: string }>).map((o) => o.code);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

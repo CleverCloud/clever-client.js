@@ -28,4 +28,9 @@ export class GetNetworkGroupWireguardConfigurationCommand extends CcApiSimpleCom
       headers: new HeadersBuilder().acceptTextPlain().build(),
     };
   }
+
+  // the configuration is rendered from what the API already knows about the peer, no key is generated
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -30,4 +30,9 @@ export class GetCellarObjectUploadUrlCommand extends CcApiSimpleCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // the handler only signs a URL, it stores nothing, so a replay mints a second URL for the same object key
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -20,4 +20,8 @@ export class GetCreditsSummaryCommand extends CcApiSimpleCommand<
   toRequestParams(params: GetCreditsSummaryCommandInput) {
     return get(safeUrl`/v4/billing/organisations/${params.ownerId}/credits/summary`);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

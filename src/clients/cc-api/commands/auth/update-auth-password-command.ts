@@ -24,4 +24,9 @@ export class UpdateAuthPasswordCommand extends CcApiSimpleCommand<UpdateAuthPass
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // a replay sets the very same password, and is anyway rejected because the old password no longer matches
+  isIdempotent(): boolean {
+    return true;
+  }
 }

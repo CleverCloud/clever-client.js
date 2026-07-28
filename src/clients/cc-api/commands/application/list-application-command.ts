@@ -25,6 +25,10 @@ export class ListApplicationCommand extends CcApiCompositeCommand<
     }
     return applications;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -44,5 +48,9 @@ export class ListApplicationInnerCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): ListApplicationCommandOutput {
     return (response as Array<unknown>).map(transformApplication);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

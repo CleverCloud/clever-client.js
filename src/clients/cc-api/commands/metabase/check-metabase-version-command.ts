@@ -32,4 +32,8 @@ export class CheckMetabaseVersionCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): CheckMetabaseVersionCommandOutput {
     return transformMetabaseVersionCheck(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -34,4 +34,9 @@ export class UpdateExposedEnvironmentCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  // the endpoint redeploys every application linked to this one, so a replay queues a second deployment
+  isIdempotent(): boolean {
+    return false;
+  }
 }

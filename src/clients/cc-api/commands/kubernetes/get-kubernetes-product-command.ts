@@ -19,4 +19,8 @@ export class GetKubernetesProductCommand extends CcApiSimpleCommand<void, GetKub
   transformCommandOutput(response: unknown): GetKubernetesProductCommandOutput {
     return transformKubernetesProduct(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

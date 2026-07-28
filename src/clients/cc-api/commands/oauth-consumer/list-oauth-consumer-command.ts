@@ -43,6 +43,10 @@ export class ListOauthConsumerCommand extends CcApiCompositeCommand<
 
     return oauthConsumers;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -62,5 +66,9 @@ class ListOauthConsumerInnerCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): ListOauthConsumerCommandOutput {
     return sortBy((response as Array<unknown>).map(transformOauthConsumer), 'name');
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

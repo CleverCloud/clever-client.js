@@ -29,4 +29,8 @@ export class ListInvoiceCommand extends CcApiSimpleCommand<ListInvoiceCommandInp
   transformCommandOutput(response: unknown): ListInvoiceCommandOutput {
     return sortBy((response as Array<unknown>).map(transformInvoiceSummary), 'emittedAt');
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

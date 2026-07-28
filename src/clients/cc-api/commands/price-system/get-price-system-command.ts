@@ -32,4 +32,8 @@ export class GetPriceSystemCommand extends CcApiSimpleCommand<GetPriceSystemComm
   transformCommandOutput(response: unknown): GetPriceSystemCommandOutput {
     return transformPriceSystem(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

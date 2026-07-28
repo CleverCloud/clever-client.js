@@ -28,4 +28,10 @@ export class DeleteKubernetesNodeGroupCommand extends CcApiSimpleCommand<
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // a node group already on its way out is returned untouched, so a replay releases no quota twice
+  // and tears down nothing more
+  isIdempotent(): boolean {
+    return true;
+  }
 }

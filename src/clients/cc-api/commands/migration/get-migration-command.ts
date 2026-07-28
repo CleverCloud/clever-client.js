@@ -27,4 +27,8 @@ export class GetMigrationCommand extends CcApiSimpleCommand<GetMigrationCommandI
       addonId: 'ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

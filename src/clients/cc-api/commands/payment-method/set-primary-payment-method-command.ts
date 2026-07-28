@@ -29,4 +29,9 @@ export class SetPrimaryPaymentMethodCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): SetPrimaryPaymentMethodCommandOutput {
     return transformPaymentMethod(response);
   }
+
+  // the payment data table is append only, but only its latest row counts, so a replay leaves the same one primary
+  isIdempotent(): boolean {
+    return true;
+  }
 }

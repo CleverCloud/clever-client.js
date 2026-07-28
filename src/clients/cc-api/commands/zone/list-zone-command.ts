@@ -28,4 +28,8 @@ export class ListZoneCommand extends CcApiSimpleCommand<ListZoneCommandInput, Li
   transformCommandOutput(response: unknown): ListZoneCommandOutput {
     return sortBy((response as Array<unknown>).map(transformZone), 'name');
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

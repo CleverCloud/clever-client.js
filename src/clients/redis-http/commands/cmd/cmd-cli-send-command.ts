@@ -12,4 +12,9 @@ export class CmdCliSendCommand extends RedisHttpCommand<CmdCliSendCommandInput, 
   toRequestParams(params: CmdCliSendCommandInput) {
     return post(`/command/cli`, params);
   }
+
+  // the command line is the caller's, and a replayed `INCR` or `RPUSH` means it twice
+  isIdempotent(): boolean {
+    return false;
+  }
 }

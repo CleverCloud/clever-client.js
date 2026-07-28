@@ -36,4 +36,9 @@ export class UpdateOtoroshiVersionCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): UpdateOtoroshiVersionCommandOutput {
     return transformOtoroshiInfo(response);
   }
+
+  // setting the version env vars converges, but every call also redeploys the instance
+  isIdempotent(): boolean {
+    return false;
+  }
 }

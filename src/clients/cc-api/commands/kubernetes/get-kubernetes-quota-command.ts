@@ -25,4 +25,10 @@ export class GetKubernetesQuotaCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetKubernetesQuotaCommandOutput {
     return transformKubernetesQuota(response);
   }
+
+  // the handler writes the default quota when the owner has none yet, but it is keyed on the owner,
+  // so a replay finds that row and stores nothing more
+  isIdempotent(): boolean {
+    return true;
+  }
 }

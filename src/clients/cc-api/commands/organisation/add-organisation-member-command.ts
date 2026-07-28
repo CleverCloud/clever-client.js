@@ -58,4 +58,9 @@ export class AddOrganisationMemberCommand extends CcApiSimpleCommand<AddOrganisa
   transformErrorCode({ code }: ApiErrorInfo) {
     return API_ERROR_CODES[code] ?? code;
   }
+
+  // a new invitation key is issued and mailed on every call, against a per-mailbox sending quota
+  isIdempotent(): boolean {
+    return false;
+  }
 }

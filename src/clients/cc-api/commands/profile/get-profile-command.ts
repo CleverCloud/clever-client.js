@@ -18,4 +18,8 @@ export class GetProfileCommand extends CcApiSimpleCommand<void, GetProfileComman
   transformCommandOutput(response: unknown): GetProfileCommandOutput {
     return transformProfile(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

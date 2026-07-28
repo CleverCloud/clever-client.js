@@ -29,4 +29,8 @@ export class GetKeycloakInfoCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetKeycloakInfoCommandOutput {
     return transformKeycloakInfo(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

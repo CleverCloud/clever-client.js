@@ -26,6 +26,11 @@ export class EnableLogDrainCommand extends CcApiCompositeCommand<
     await composer.send(new InnerEnableLogDrainCommand(params));
     return waitForLogDrainEnabled(composer, params, params.drainId);
   }
+
+  // the backend refuses to enable a drain already `ENABLING`/`ENABLED`, so a replay only re-reads its state
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -53,5 +58,10 @@ class InnerEnableLogDrainCommand extends CcApiSimpleCommand<EnableLogDrainComman
       ownerId: true,
       addonId: 'REAL_ADDON_ID',
     };
+  }
+
+  // a drain already `ENABLING`/`ENABLED` is refused rather than scheduled twice
+  isIdempotent(): boolean {
+    return true;
   }
 }

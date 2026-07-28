@@ -46,6 +46,10 @@ export class GetOauthConsumerCommand extends CcApiCompositeCommand<
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -62,5 +66,9 @@ class GetOauthConsumerInnerCommand extends CcApiSimpleCommand<GetOauthConsumerCo
 
   transformCommandOutput(response: unknown): OauthConsumer {
     return transformOauthConsumer(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

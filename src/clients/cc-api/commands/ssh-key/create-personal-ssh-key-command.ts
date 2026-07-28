@@ -32,6 +32,11 @@ export class CreatePersonalSshKeyCommand extends CcApiCompositeCommand<
     const keys = await composer.send(new ListPersonalSshKeyCommand());
     return keys.find((key) => key.name === params.name)!;
   }
+
+  // registering is guarded on the name and the fingerprint, and reading the keys back changes nothing
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -53,5 +58,10 @@ export class CreatePersonalSshKeyInnerCommand extends CcApiSimpleCommand<CreateP
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // the name and the fingerprint are both checked first, so a replay is refused rather than storing the key twice
+  isIdempotent(): boolean {
+    return true;
   }
 }

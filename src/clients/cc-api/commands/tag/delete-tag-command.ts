@@ -35,4 +35,8 @@ export class DeleteTagCommand extends CcApiSimpleCommand<DeleteTagCommandInput, 
       addonId: 'ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

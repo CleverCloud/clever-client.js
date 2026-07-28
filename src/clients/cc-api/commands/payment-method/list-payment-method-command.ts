@@ -25,4 +25,8 @@ export class ListPaymentMethodCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ListPaymentMethodCommandOutput {
     return (response as Array<unknown>).map(transformPaymentMethod);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

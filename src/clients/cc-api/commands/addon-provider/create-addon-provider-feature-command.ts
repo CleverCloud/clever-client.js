@@ -37,4 +37,10 @@ export class CreateAddonProviderFeatureCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  // the feature name is checked against the ones already declared, so a replay is refused rather than
+  // adding the feature twice
+  isIdempotent(): boolean {
+    return true;
+  }
 }

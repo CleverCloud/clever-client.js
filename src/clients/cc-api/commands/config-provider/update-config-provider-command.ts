@@ -34,4 +34,9 @@ export class UpdateConfigProviderCommand extends CcApiSimpleCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // one `UPDATE` replacing the whole configuration, so a replay stores the same variables
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -16,4 +16,9 @@ export class RequestProfileEmailConfirmationCommand extends CcApiSimpleCommand<v
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // the whole point of the endpoint is to send a mail, so a replay sends a second one
+  isIdempotent(): boolean {
+    return false;
+  }
 }

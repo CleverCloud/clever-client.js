@@ -32,4 +32,8 @@ export class ListAddonProviderFeatureCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

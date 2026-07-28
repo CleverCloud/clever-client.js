@@ -24,4 +24,9 @@ export class DeleteOrganisationCommand extends CcApiSimpleCommand<DeleteOrganisa
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // the applications, the add-ons and the organisation are deleted, so a replay only meets a not-found error
+  isIdempotent(): boolean {
+    return true;
+  }
 }

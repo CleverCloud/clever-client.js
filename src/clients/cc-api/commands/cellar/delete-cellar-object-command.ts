@@ -28,4 +28,8 @@ export class DeleteCellarObjectCommand extends CcApiSimpleCommand<DeleteCellarOb
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

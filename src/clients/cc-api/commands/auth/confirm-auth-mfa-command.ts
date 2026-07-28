@@ -34,4 +34,9 @@ export class ConfirmAuthMfaCommand extends CcApiSimpleCommand<ConfirmAuthMfaComm
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // once the factor is active, the endpoint answers with a conflict, so an enrolment is never confirmed twice
+  isIdempotent(): boolean {
+    return true;
+  }
 }

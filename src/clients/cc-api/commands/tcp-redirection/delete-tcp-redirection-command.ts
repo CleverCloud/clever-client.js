@@ -29,4 +29,8 @@ export class DeleteTcpRedirectionCommand extends CcApiSimpleCommand<DeleteTcpRed
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

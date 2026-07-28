@@ -12,4 +12,9 @@ export class DeleteKeyCommand extends RedisHttpCommand<DeleteKeyCommandInput, De
   toRequestParams(params: DeleteKeyCommandInput) {
     return post(`/key/_delete`, params);
   }
+
+  // `DEL`: the second call removes nothing more and answers `wasDeleted: false`
+  isIdempotent(): boolean {
+    return true;
+  }
 }

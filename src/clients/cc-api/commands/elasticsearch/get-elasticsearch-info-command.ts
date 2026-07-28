@@ -33,4 +33,8 @@ export class GetElasticsearchInfoCommand extends CcApiSimpleCommand<
       addonId: 'ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

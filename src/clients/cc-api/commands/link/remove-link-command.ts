@@ -33,6 +33,10 @@ export class RemoveLinkCommand extends CcApiCompositeCommand<RemoveLinkCommandIn
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -54,6 +58,10 @@ export class RemoveApplicationToApplicationLinkCommand extends CcApiSimpleComman
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }
 
@@ -82,5 +90,9 @@ export class RemoveApplicationToAddonLinkCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

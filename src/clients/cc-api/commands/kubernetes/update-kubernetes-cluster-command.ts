@@ -33,4 +33,8 @@ export class UpdateKubernetesClusterCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): UpdateKubernetesClusterCommandOutput {
     return transformKubernetesCluster(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

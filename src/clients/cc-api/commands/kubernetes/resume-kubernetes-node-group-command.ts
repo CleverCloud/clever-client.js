@@ -31,4 +31,10 @@ export class ResumeKubernetesNodeGroupCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ResumeKubernetesNodeGroupCommandOutput {
     return transformKubernetesNodeGroup(response);
   }
+
+  // the recovery runs in the background and leaves the node group in `DEPLOYING` meanwhile, which is
+  // the very status the handler accepts, so a replay starts a second recovery over the first
+  isIdempotent(): boolean {
+    return false;
+  }
 }

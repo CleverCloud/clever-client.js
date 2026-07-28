@@ -21,4 +21,8 @@ export class GetZoneCommand extends CcApiSimpleCommand<GetZoneCommandInput, GetZ
   transformCommandOutput(response: unknown): GetZoneCommandOutput {
     return transformZone(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -27,4 +27,8 @@ export class DeleteDomainCommand extends CcApiSimpleCommand<DeleteDomainCommandI
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

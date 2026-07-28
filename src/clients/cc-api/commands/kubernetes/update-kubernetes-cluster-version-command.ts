@@ -35,6 +35,12 @@ export class UpdateKubernetesClusterVersionCommand extends CcApiCompositeCommand
     }
     return cluster;
   }
+
+  // the upgrade below only fires from `ACTIVE` and the wait only reads, so replaying the whole
+  // thing does not queue a second upgrade
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -59,5 +65,11 @@ class UpdateKubernetesClusterVersionCommandInner extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): UpdateKubernetesClusterVersionCommandOutput {
     return transformKubernetesCluster(response);
+  }
+
+  // the target version is written as a plain field and the status transition only fires from
+  // `ACTIVE`, so a replay against the cluster it just moved is refused
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -28,4 +28,9 @@ export class DeleteOtoroshiNetworkGroupCommand extends CcApiSimpleCommand<
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // with no network group left, the handler stops early, so a replay neither deletes nor restarts anything
+  isIdempotent(): boolean {
+    return true;
+  }
 }

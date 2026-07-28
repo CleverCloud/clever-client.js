@@ -37,4 +37,10 @@ export class CreateAddonProviderPlanCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  // the plan name is checked against the ones already declared, so a replay is refused rather than
+  // adding the plan twice
+  isIdempotent(): boolean {
+    return true;
+  }
 }

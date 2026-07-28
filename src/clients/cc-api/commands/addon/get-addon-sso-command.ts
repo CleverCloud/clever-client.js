@@ -30,4 +30,10 @@ export class GetAddonSsoCommand extends CcApiSimpleCommand<GetAddonSsoCommandInp
       addonId: 'ADDON_ID',
     };
   }
+
+  // the payload is signed on the fly from the add-on and the provider salt, nothing is stored or
+  // rotated
+  isIdempotent(): boolean {
+    return true;
+  }
 }

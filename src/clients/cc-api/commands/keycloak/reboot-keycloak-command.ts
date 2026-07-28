@@ -25,4 +25,9 @@ export class RebootKeycloakCommand extends CcApiSimpleCommand<RebootKeycloakComm
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // each call queues a redeployment, so a replay restarts the instance a second time
+  isIdempotent(): boolean {
+    return false;
+  }
 }

@@ -26,4 +26,8 @@ export class GetProductAddonVersionsCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetProductAddonVersionsCommandOutput {
     return transformProductAddonVersions(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

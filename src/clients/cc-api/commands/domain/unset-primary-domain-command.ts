@@ -28,4 +28,8 @@ export class UnsetPrimaryDomainCommand extends CcApiSimpleCommand<UnsetPrimaryDo
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

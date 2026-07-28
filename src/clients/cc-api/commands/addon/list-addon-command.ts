@@ -19,4 +19,8 @@ export class ListAddonCommand extends CcApiSimpleCommand<ListAddonCommandInput, 
   transformCommandOutput(response: unknown): ListAddonCommandOutput {
     return sortBy((response as Array<unknown>).map(transformAddon), 'name');
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

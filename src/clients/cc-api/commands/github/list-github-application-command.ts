@@ -20,4 +20,8 @@ export class ListGithubApplicationCommand extends CcApiSimpleCommand<void, ListG
   transformCommandOutput(response: unknown): ListGithubApplicationCommandOutput {
     return sortBy((response as Array<unknown>).map(transformGithubApplication), 'name');
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

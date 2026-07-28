@@ -32,6 +32,10 @@ export class GetDeploymentCommand extends CcApiSimpleCommand<GetDeploymentComman
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -63,5 +67,9 @@ export class GetDeploymentCommandLegacy extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

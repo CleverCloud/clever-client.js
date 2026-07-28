@@ -48,4 +48,9 @@ export class GetWarpTokenCommand extends CcApiSimpleCommand<GetWarpTokenCommandI
       ownerId: true,
     };
   }
+
+  // every call mints a brand new Warp10 token, so a replay issues a second one
+  isIdempotent(): boolean {
+    return false;
+  }
 }

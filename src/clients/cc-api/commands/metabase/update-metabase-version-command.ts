@@ -36,4 +36,9 @@ export class UpdateMetabaseVersionCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): UpdateMetabaseVersionCommandOutput {
     return transformMetabaseInfo(response);
   }
+
+  // setting the version env var converges, but every call also redeploys the instance
+  isIdempotent(): boolean {
+    return false;
+  }
 }

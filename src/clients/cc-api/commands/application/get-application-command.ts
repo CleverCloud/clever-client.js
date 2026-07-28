@@ -27,6 +27,10 @@ export class GetApplicationCommand extends CcApiCompositeCommand<
     }
     return application;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -52,5 +56,9 @@ export class GetApplicationInnerCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

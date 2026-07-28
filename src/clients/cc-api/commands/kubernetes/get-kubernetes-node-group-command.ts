@@ -27,4 +27,8 @@ export class GetKubernetesNodeGroupCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetKubernetesNodeGroupCommandOutput {
     return transformKubernetesNodeGroup(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

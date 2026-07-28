@@ -36,4 +36,9 @@ export class UpdateKeycloakVersionCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): UpdateKeycloakVersionCommandOutput {
     return transformKeycloakInfo(response);
   }
+
+  // setting the version env var converges, but every call also redeploys the instance
+  isIdempotent(): boolean {
+    return false;
+  }
 }

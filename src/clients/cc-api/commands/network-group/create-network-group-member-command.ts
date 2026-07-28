@@ -30,6 +30,11 @@ export class CreateNetworkGroupMemberCommand extends CcApiCompositeCommand<
     await composer.send(new CreateNetworkGroupMemberCommandInner(params));
     return waitForNetworkGroupMemberCreation(composer, params.ownerId, params.networkGroupId, params.memberId);
   }
+
+  // the member id is the caller's and the API answers done when that member is already there, so a replay adds nothing
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
@@ -54,5 +59,10 @@ class CreateNetworkGroupMemberCommandInner extends CcApiSimpleCommand<CreateNetw
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // the member id is the caller's and the API answers done when that member is already there, so a replay adds nothing
+  isIdempotent(): boolean {
+    return true;
   }
 }

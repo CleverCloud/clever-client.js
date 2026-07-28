@@ -34,6 +34,11 @@ export class CreateKubernetesClusterCommand extends CcApiCompositeCommand<
     }
     return cluster;
   }
+
+  // the creation below is not replayable, so neither is waiting on top of it
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**
@@ -63,5 +68,11 @@ class CreateKubernetesClusterCommandInner extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): CreateKubernetesClusterCommandOutput {
     return transformKubernetesCluster(response);
+  }
+
+  // nothing dedupes on the name: each call mints a cluster id, reserves quota and persists a new
+  // cluster, so a replay builds a second one
+  isIdempotent(): boolean {
+    return false;
   }
 }

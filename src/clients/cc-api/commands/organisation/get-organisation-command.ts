@@ -22,4 +22,8 @@ export class GetOrganisationCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetOrganisationCommandOutput {
     return transformOrganisation(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

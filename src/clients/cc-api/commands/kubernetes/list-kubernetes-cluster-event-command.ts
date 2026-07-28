@@ -32,4 +32,8 @@ export class ListKubernetesClusterEventCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): ListKubernetesClusterEventCommandOutput {
     return (response as Array<unknown>).map(transformKubernetesClusterEvent);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }

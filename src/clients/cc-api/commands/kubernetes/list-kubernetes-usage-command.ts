@@ -27,4 +27,9 @@ export class ListKubernetesUsageCommand extends CcApiSimpleCommand<
       transformKubernetesClusterUsageItem,
     );
   }
+
+  // reads what was already recorded, it bills nothing by itself
+  isIdempotent(): boolean {
+    return true;
+  }
 }

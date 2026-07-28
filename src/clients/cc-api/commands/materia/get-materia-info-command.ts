@@ -23,4 +23,9 @@ export class GetMateriaInfoCommand extends CcApiSimpleCommand<GetMateriaInfoComm
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // the token comes from the stored add-on row, it is not minted or rotated on read
+  isIdempotent(): boolean {
+    return true;
+  }
 }
