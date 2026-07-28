@@ -10,7 +10,7 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
  * @group Token
  * @version 2
  */
-export class DeleteOauthTokenCommand extends CcApiSimpleCommand<void, undefined> {
+export class DeleteAllOauthTokensCommand extends CcApiSimpleCommand<void, undefined> {
   toRequestParams() {
     return delete_(`/v2/self/tokens/`);
   }
