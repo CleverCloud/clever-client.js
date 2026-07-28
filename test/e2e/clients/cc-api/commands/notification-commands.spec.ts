@@ -222,6 +222,12 @@ describe('notification commands', function () {
 
     expect(response.formats.length).toBeGreaterThan(0);
     expect(response.events.length).toBeGreaterThan(0);
-    expect(Object.entries(response.metaEvents).length).toBeGreaterThan(0);
+
+    const metaEvents = Object.entries(response.metaEvents);
+    expect(metaEvents.length).toBeGreaterThan(0);
+    for (const [metaEvent, events] of metaEvents) {
+      expect(events?.length, `${metaEvent} should stand for at least one event`).toBeGreaterThan(0);
+      expect(response.events, `${metaEvent} should be listed among the events`).toContain(metaEvent);
+    }
   });
 });

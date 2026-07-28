@@ -1,6 +1,12 @@
 import { normalizeDate, sortBy } from '../../../../lib/utils.js';
 import type { GetNotificationInfoEventsCommandOutput } from './get-notification-info-command.types.js';
-import type { EmailNotification, EmailNotificationTarget, WebhookNotification } from './notification.types.js';
+import type {
+  EmailNotification,
+  EmailNotificationTarget,
+  NotificationEventType,
+  NotificationMetaEventType,
+  WebhookNotification,
+} from './notification.types.js';
 
 export function transformWebhookNotification(payload: any): WebhookNotification {
   return {
@@ -52,11 +58,10 @@ function transformTarget(payload: any): EmailNotificationTarget {
 export function transformNotificationInfoEvents(response: any): GetNotificationInfoEventsCommandOutput {
   return {
     events: response.events,
-    metaEvents: {
-      META_SERVICE_LIFECYCLE: response.meta_events.META_SERVICE_LIFECYCLE,
-      META_DEPLOYMENT_RESULT: response.meta_events.META_DEPLOYMENT_RESULT,
-      META_SERVICE_MANAGEMENT: response.meta_events.META_SERVICE_MANAGEMENT,
-      META_CREDITS: response.meta_events.META_CREDITS,
-    },
+    // The endpoint answers `meta_events` as an array of `{ key, events }`, keyed here so callers can
+    // look a meta event up without scanning
+    metaEvents: Object.fromEntries(
+      response.meta_events.map((metaEvent: any) => [metaEvent.key, metaEvent.events]),
+    ) as Record<NotificationMetaEventType, Array<NotificationEventType>>,
   };
 }

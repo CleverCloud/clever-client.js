@@ -18,8 +18,12 @@ export interface GetNotificationInfoCommandOutput extends GetNotificationInfoEve
  * @internal
  */
 export interface GetNotificationInfoEventsCommandOutput {
-  /** Every event that can be watched individually. */
-  events: Array<NotificationEventType>;
-  /** Which events each meta event stands for, keyed by meta event. Read from the payload's `meta_events`. */
+  /** Every value a notification can watch: the individual events, and the meta events grouping them. */
+  events: Array<NotificationEventType | NotificationMetaEventType>;
+  /**
+   * Which events each meta event stands for, keyed by meta event.
+   * @renamedFrom `meta_events`
+   * @converted from an array of `{ key, events }` to a map keyed by `key`
+   */
   metaEvents: Record<NotificationMetaEventType, Array<NotificationEventType>>;
 }
