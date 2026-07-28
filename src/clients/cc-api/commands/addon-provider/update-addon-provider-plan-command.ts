@@ -9,9 +9,11 @@ import type {
 } from './update-addon-provider-plan-command.types.js';
 
 /**
- * Replaces a pricing plan of an add-on provider.
+ * Updates a pricing plan of an add-on provider.
  *
- * The whole plan is overwritten: features left out of the input are dropped from the plan.
+ * The name, the slug and the price are overwritten. Features are matched by name and set one at a
+ * time: those left out of the input keep their current value, and a name the provider does not
+ * declare as a feature is ignored.
  *
  * @endpoint [PUT] /v2/organisations/:XXX/addonproviders/:XXX/plans/:XXX
  * @group AddonProvider

@@ -2,10 +2,10 @@ import type { AddonProviderId } from '../../types/cc-api.types.js';
 import type { AddonProviderFeatureType, AddonProviderPlan } from './addon-provider.types.js';
 
 /**
- * Identifies the plan to replace, along with its new definition.
+ * Identifies the plan to update, along with its new values.
  */
 export interface UpdateAddonProviderPlanCommandInput extends AddonProviderId {
-  /** Identifier of the plan to replace. */
+  /** Identifier of the plan to update. */
   planId: string;
   /** New display name of the plan. */
   name: string;
@@ -13,7 +13,7 @@ export interface UpdateAddonProviderPlanCommandInput extends AddonProviderId {
   slug: string;
   /** New monthly price of the plan. */
   price: number;
-  /** New values the plan gives to the provider features. Defaults to an empty list, which clears them. */
+  /** New values the plan gives to the provider features. Features left out keep their current value. */
   features?: Array<{
     /** Display name of the feature, as declared on the provider. */
     name: string;
