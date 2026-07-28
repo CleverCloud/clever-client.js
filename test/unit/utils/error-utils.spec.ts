@@ -169,6 +169,7 @@ describe('network retry advice', () => {
       ['a URL with no usable host', 'EAI_NONAME'],
       ['a local firewall refusing to let us out', 'ECONNABORTED'],
       ['a server that answers nothing at all', 'UND_ERR_HEADERS_TIMEOUT'],
+      ['a certificate signed by an authority this machine does not trust', 'SELF_SIGNED_CERT_IN_CHAIN'],
     ] as const)('should say not to retry %s', ([, code]) => {
       expect(getNetworkErrorInfo(code).retryAdvice).toBe('do-not-retry');
     });

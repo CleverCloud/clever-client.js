@@ -16,7 +16,7 @@ type FetchRejection = { name?: string; message?: string; cause?: unknown; code?:
  *
  * Node is the odd one out: it words every `fetch()` failure the same way and describes the actual one on
  * the `cause`, so matching its two messages means recognising failures whose code we do not know yet —
- * a TLS handshake that never completed, a port the spec forbids. Which is the trade we want: those are
+ * a certificate that expired, a port the spec forbids. Which is the trade we want: those are
  * still requests that never reached a response, and the alternative is reporting a plain outage as an
  * `UNEXPECTED_ERROR` every time a runtime adds a code to the list below.
  */

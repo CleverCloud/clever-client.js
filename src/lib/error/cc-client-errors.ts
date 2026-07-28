@@ -157,6 +157,31 @@ export const NETWORK_ERRORS = {
     retryAdvice: 'retry',
   },
 
+  //-- the connection was established and the TLS handshake failed on certificate verification: the
+  //-- host is reachable, its identity is what could not be trusted. Nothing was sent, and nothing
+  //-- changes until a certificate, a proxy or a trust store does, so none of these is worth retrying.
+
+  DEPTH_ZERO_SELF_SIGNED_CERT: {
+    explanation:
+      'The server presented a self-signed certificate: it vouches for its own identity and nothing else vouches for it. Usually a local backend, a preview environment or an appliance serving the certificate it generated when it was installed.',
+    retryAdvice: 'do-not-retry',
+  },
+  SELF_SIGNED_CERT_IN_CHAIN: {
+    explanation:
+      'The certificate chain leads up to a self-signed authority this machine does not trust. Almost always something inspecting TLS in the middle — a corporate proxy, an antivirus, a debugging tool — reissuing certificates under its own root, which has to be trusted by the runtime for the chain to verify.',
+    retryAdvice: 'do-not-retry',
+  },
+  UNABLE_TO_GET_ISSUER_CERT_LOCALLY: {
+    explanation:
+      'The certificate names an issuer that is nowhere in the trust store being used. The chain is not broken, this machine simply has no reason to believe it: a private certificate authority, or a runtime reading a bundle of its own rather than the one the rest of the system uses.',
+    retryAdvice: 'do-not-retry',
+  },
+  UNABLE_TO_VERIFY_LEAF_SIGNATURE: {
+    explanation:
+      'The chain stopped one certificate short of a trusted root. Typically a server sending only its own certificate and omitting the intermediate that links it to a root — a misconfiguration browsers tend to hide, because they keep intermediates seen on earlier connections, and other clients do not.',
+    retryAdvice: 'do-not-retry',
+  },
+
   //-- Node (undici) ran out of patience, or the socket died under it
 
   ERR_STREAM_PREMATURE_CLOSE: {
