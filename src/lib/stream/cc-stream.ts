@@ -1,8 +1,9 @@
 import type { SseMessage } from '../../types/request.types.js';
 import { CcClientError, CcHttpError } from '../error/cc-client-errors.js';
 import { handleHttpErrors } from '../error/handle-http-errors.js';
+import { asNetworkError, isFetchNetworkError } from '../error/network-error.js';
 import { HeadersBuilder } from '../request/headers-builder.js';
-import { isNetworkError, sendRequest, SseResponseBody } from '../request/request.js';
+import { sendRequest, SseResponseBody } from '../request/request.js';
 import { combineWithSignal, Deferred } from '../utils.js';
 import type { CcStreamCloseReason, CcStreamConfig, CcStreamRequestFactory, CcStreamState } from './cc-stream.types.js';
 
@@ -229,7 +230,9 @@ export class CcStream {
       await response.body.read({
         onMessage: this.#onMessage.bind(this),
         onClose: this.#onClose.bind(this),
-        onError: this.#onError.bind(this),
+        // A socket dying mid-stream rejects raw, past the point where sendRequest could name it, so
+        // it is named here instead — otherwise it would reach consumers as an unexplained SSE error.
+        onError: (error) => this.#onError(asNetworkError(error, request) ?? error),
       });
     } catch (error: unknown) {
       if (error instanceof CcClientError) {
@@ -365,9 +368,12 @@ export class CcStream {
 
     this.#cleanup();
 
-    const wrappedError = isNetworkError(error as Parameters<typeof isNetworkError>[0])
-      ? new CcClientError('Failed to establish/maintain the connection with the server', 'SSE_SERVER_ERROR', error)
-      : error;
+    // Errors the client raised already say what went wrong, and a CcNetworkError says which network
+    // failure it was; only a raw one needs to be named here so that it can be retried at all.
+    const wrappedError =
+      !(error instanceof CcClientError) && isFetchNetworkError(error)
+        ? new CcClientError('Failed to establish/maintain the connection with the server', 'SSE_SERVER_ERROR', error)
+        : error;
 
     const canRetry = this.#canRetry(wrappedError);
     this.#debugLog('Retry decision', {

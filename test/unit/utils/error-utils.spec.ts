@@ -1,13 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { CcClientError, CcHttpError, CcRequestError } from '../../../src/lib/error/cc-client-errors.js';
+import { CcClientError, CcHttpError, CcNetworkError, CcRequestError } from '../../../src/lib/error/cc-client-errors.js';
 import type { CcRequest, CcResponse } from '../../../src/types/request.types.js';
 import {
+  getNetworkErrorInfo,
   isCcClientError,
   isCcHttpError,
   isCcHttpErrorWithCode,
   isCcHttpErrorWithStatus,
   isCcRequestError,
   isRateLimitError,
+  NETWORK_ERROR_CODES,
+  NETWORK_ERRORS,
+  NETWORK_RETRY_ADVICES,
   tolerateNotFound,
 } from '../../../src/utils/error-utils.js';
 
@@ -124,5 +128,74 @@ describe('tolerateNotFound', () => {
   it('should rethrow a non-http error, even one carrying a 404 statusCode', async () => {
     const error = Object.assign(new Error('boom'), { statusCode: 404 });
     await expect(tolerateNotFound(Promise.reject(error))).rejects.toBe(error);
+  });
+});
+
+describe('network retry advice', () => {
+  describe('getNetworkErrorInfo', () => {
+    it('should advise on every code with one of the stances it says it uses', () => {
+      const advices = NETWORK_ERROR_CODES.map((code) => getNetworkErrorInfo(code).retryAdvice);
+
+      expect(advices.filter((advice) => NETWORK_RETRY_ADVICES.includes(advice))).toHaveLength(
+        NETWORK_ERROR_CODES.length,
+      );
+    });
+
+    it.for([
+      ['a resolver that will answer next time', 'EAI_AGAIN'],
+      ['a server that has not started listening yet', 'ECONNREFUSED'],
+      ['a network that is down and will come back', 'ENETDOWN'],
+      ['a connection that never completed', 'UND_ERR_CONNECT_TIMEOUT'],
+    ] as const)('should say to retry %s', ([, code]) => {
+      expect(getNetworkErrorInfo(code).retryAdvice).toBe('retry');
+    });
+
+    it.for([
+      ['a connection reset by the peer', 'ECONNRESET'],
+      ['a socket written to after it was closed', 'EPIPE'],
+      ['a response that stopped mid-body', 'ERR_STREAM_PREMATURE_CLOSE'],
+      ['a keep-alive socket the server closed', 'UND_ERR_SOCKET'],
+    ] as const)('should make retrying %s conditional, the server may have acted', ([, code]) => {
+      expect(getNetworkErrorInfo(code).retryAdvice).toBe('retry-if-idempotent');
+    });
+
+    it.for([
+      ['a domain that does not exist', 'ENOTFOUND'],
+      ['a URL with no usable host', 'EAI_NONAME'],
+      ['a local firewall refusing to let us out', 'ECONNABORTED'],
+      ['a server that answers nothing at all', 'UND_ERR_HEADERS_TIMEOUT'],
+    ] as const)('should say not to retry %s', ([, code]) => {
+      expect(getNetworkErrorInfo(code).retryAdvice).toBe('do-not-retry');
+    });
+
+    it('should stay careful when the platform named no code, as browsers do', () => {
+      expect(getNetworkErrorInfo(null).retryAdvice).toBe('retry-if-idempotent');
+    });
+  });
+});
+
+describe('network error explanations', () => {
+  it('should list exactly the codes the table defines, so the two cannot drift', () => {
+    expect([...NETWORK_ERROR_CODES].sort()).toEqual(Object.keys(NETWORK_ERRORS).sort());
+  });
+
+  it('should read as prose rather than as a label, so it can be shown as is', () => {
+    for (const code of NETWORK_ERROR_CODES) {
+      const { explanation } = getNetworkErrorInfo(code);
+
+      expect(explanation, `${code} should be a sentence`).toMatch(/^[A-Z].*\.$/s);
+      expect(explanation.length, `${code} should say something`).toBeGreaterThan(60);
+    }
+  });
+
+  it('should explain a failure the platform did not name, rather than guess one', () => {
+    const explanation = new CcNetworkError(REQUEST, null).explanation;
+
+    expect(explanation).toContain('did not say why');
+    expect(explanation).toContain('CORS');
+  });
+
+  it('should explain a failure the platform named', () => {
+    expect(new CcNetworkError(REQUEST, 'ECONNREFUSED').explanation).toBe(NETWORK_ERRORS.ECONNREFUSED.explanation);
   });
 });
