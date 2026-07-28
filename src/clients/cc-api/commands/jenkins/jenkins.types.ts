@@ -73,9 +73,9 @@ export interface JenkinsUpdates {
   manageLink: string;
   /** The versions being compared. */
   versions: {
-    /** Version currently installed. */
-    current: string;
-    /** Latest version that can be installed. */
-    available: string;
+    /** Version currently installed. Absent when the add-on has no recorded version. */
+    current?: string;
+    /** Latest version that can be installed. Absent when the add-on has no recorded version. */
+    available?: string;
   };
 }

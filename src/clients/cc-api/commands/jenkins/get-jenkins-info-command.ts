@@ -9,7 +9,7 @@ import type {
   GetJenkinsInfoInnerCommandOutput,
   GetJenkinsUpdatesCommandOutput,
 } from './get-jenkins-info-command.types.js';
-import { transformJenkinsInfo } from './jenkins-transform.js';
+import { transformJenkinsInfo, transformJenkinsUpdates } from './jenkins-transform.js';
 
 /**
  * Retrieves a Jenkins add-on, with the credentials to reach it and its update state.
@@ -82,6 +82,10 @@ class GetJenkinsInfoInnerCommand extends CcApiSimpleCommand<
 class GetJenkinsUpdatesCommand extends CcApiSimpleCommand<GetJenkinsInfoCommandInput, GetJenkinsUpdatesCommandOutput> {
   toRequestParams(params: GetJenkinsInfoCommandInput) {
     return get(safeUrl`/v4/addon-providers/jenkins/addons/${params.addonId}/updates`);
+  }
+
+  transformCommandOutput(response: unknown): GetJenkinsUpdatesCommandOutput {
+    return transformJenkinsUpdates(response);
   }
 
   // the add-on version is compared against the Jenkins update centre, which is only read

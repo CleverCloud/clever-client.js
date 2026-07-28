@@ -1,5 +1,8 @@
 import { normalizeDate, sortBy } from '../../../../lib/utils.js';
-import type { GetJenkinsInfoInnerCommandOutput } from './get-jenkins-info-command.types.js';
+import type {
+  GetJenkinsInfoInnerCommandOutput,
+  GetJenkinsUpdatesCommandOutput,
+} from './get-jenkins-info-command.types.js';
 
 export function transformJenkinsInfo(response: any): GetJenkinsInfoInnerCommandOutput {
   return {
@@ -21,5 +24,15 @@ export function transformJenkinsInfo(response: any): GetJenkinsInfoInnerCommandO
       (response.features ?? []).map((feature: any) => ({ name: feature.name, isEnabled: feature.enabled })),
       'name',
     ),
+  };
+}
+
+export function transformJenkinsUpdates(response: any): GetJenkinsUpdatesCommandOutput {
+  return {
+    manageLink: response.manageLink,
+    versions: {
+      current: response.versions.current ?? undefined,
+      available: response.versions.available ?? undefined,
+    },
   };
 }
