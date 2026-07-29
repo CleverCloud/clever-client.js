@@ -72,11 +72,11 @@ export interface EmailNotification {
   /** Display name of the hook. */
   name?: string;
   /**
-   * Who gets the emails.
+   * Who gets the emails. Absent means the whole organisation.
    * @renamedFrom `notified`
    * @converted sorted by type
    */
-  targets: Array<EmailNotificationTarget>;
+  targets?: Array<EmailNotificationTarget>;
   /** Events the hook fires on, sorted. Absent means every event. */
   events?: Array<NotificationEventType | NotificationMetaEventType>;
   /**

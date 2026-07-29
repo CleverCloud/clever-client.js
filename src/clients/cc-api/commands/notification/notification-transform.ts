@@ -27,9 +27,9 @@ export function transformEmailNotification(payload: any): EmailNotification {
     id: payload.id,
     ownerId: payload.ownerId,
     name: payload.name,
-    targets: sortBy(payload.notified?.map(transformTarget) ?? [], 'type'),
-    events: payload.events?.sort() ?? [],
-    scopes: payload.scope?.sort() ?? [],
+    targets: payload.notified == null ? undefined : sortBy(payload.notified.map(transformTarget), 'type'),
+    events: payload.events?.sort(),
+    scopes: payload.scope?.sort(),
     createdAt: normalizeDate(payload.createdAt)!,
   };
 }
