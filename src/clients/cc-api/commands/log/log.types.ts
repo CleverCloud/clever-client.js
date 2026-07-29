@@ -18,6 +18,12 @@ export interface ApplicationRuntimeLog {
    * @converted to an ISO date string
    */
   date: string;
+  /**
+   * Name of the region the emitting instance runs in, the one grouping several zones (`EU`, `US`, ...). Absent
+   * when the emitting instance did not report it.
+   * @converted the backend's `unknown` placeholder becomes `undefined`
+   */
+  region?: string;
   /** Name of the zone the emitting instance runs in. */
   zone: string;
   /** Process id of the emitting process on the instance. */
@@ -57,6 +63,11 @@ export interface AddonRuntimeLog {
    * @converted to an ISO date string
    */
   date: string;
+  /**
+   * Name of the region the emitting instance runs in, the one grouping several zones (`EU`, `US`, ...). Absent
+   * when the add-on instance did not report it.
+   */
+  region?: string;
   /** Name of the zone the emitting instance runs in. */
   zone: string;
   /** Process id of the emitting process on the instance. */
