@@ -1,35 +1,12 @@
 # How to contribute?
 
-##  We have precise rules for commit message format
+## Commits and changelog
 
-Commit messages must respect [conventional commit](https://www.conventionalcommits.org).
+A change ships two texts: a commit message, written for whoever works on this repository next, and a changelog entry, written for whoever consumes `@clevercloud/client`. Both follow precise rules — commit messages are [conventional commits](https://www.conventionalcommits.org) with a scope taken from a fixed taxonomy, and `CHANGELOG.md` is written through [Changesets](https://github.com/changesets/changesets).
 
-Possible types are `fix:`, `feat:`, `build:`, `chore:`, `ci:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`.
+**Read [docs/commits-and-changelog.md](docs/commits-and-changelog.md) before your first commit.** It is the reference for both: how to install the commit hook, which type and scope to pick, when a change needs a changelog entry, and how to write one.
 
-The scope should be the name of the component affected.
-If many components are affected, consider the following options:
-* split into multiple commits
-* use the main module.
-* avoid specifying any scope and add some details instead.
-
-To help you respect the rules, you should install a commit linter with the following command:
-
-```shell
-cd ${PATH_TO_THE_REPOSITORY_ROOT}
-git config core.hooksPath '.githooks'
-```
-
-## Adding a changeset
-
-Releases and `CHANGELOG.md` are driven by [Changesets](https://github.com/changesets/changesets), independently from commit messages. Nothing enforces this in CI, but if your PR changes `src/` or `esm/`, please add a changeset describing the change from the point of view of someone consuming `@clevercloud/client`:
-
-```shell
-pnpm changeset
-```
-
-This asks for a bump type (patch/minor/major) and a free-form summary, then writes a `.changeset/*.md` file — commit it alongside your code change. Need several changelog entries or bump types in one PR? Run the command again, or edit the generated files directly; each `.changeset/*.md` file becomes its own entry, so there's no need to work around anything at the commit-message level.
-
-CI keeps a `Release` PR up to date that bumps `package.json` and compiles pending changesets into `CHANGELOG.md`; merging it tags and publishes the release.
+CI keeps a `Release` PR up to date that bumps `package.json` and compiles the pending entries into `CHANGELOG.md`; merging it tags and publishes the release.
 
 ## How to test
 
