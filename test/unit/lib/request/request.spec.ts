@@ -276,6 +276,45 @@ describe('request', () => {
         });
     });
 
+    // a backend can announce JSON and send something that isn't: billing-api interpolates the
+    // message straight into a JSON string, so one holding a quote goes out malformed
+    describe('when a body announced as JSON does not parse', () => {
+      const MALFORMED = '{"code":9302,"message":"Unknown Paypal error: he said "no""}';
+
+      function mockJsonResponse(status: number, body: string): void {
+        vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+          new Response(body, { status, headers: { 'content-type': 'application/json' } }),
+        );
+      }
+
+      it('should keep the status of an error response and hand over the raw text', async () => {
+        mockJsonResponse(400, MALFORMED);
+
+        const response = await sendRequest({ method: 'GET', url: 'http://localhost/api/test' });
+
+        expect(response.status).toBe(400);
+        expect(response.body).toBe(MALFORMED);
+      });
+
+      it('should still parse an error response that is well formed', async () => {
+        mockJsonResponse(400, '{"code":9000,"message":"Check that the json provided is well-formed."}');
+
+        const response = await sendRequest({ method: 'GET', url: 'http://localhost/api/test' });
+
+        expect(response.body).toEqual({ code: 9000, message: 'Check that the json provided is well-formed.' });
+      });
+
+      // on a successful response the body is the result, and a command handed a string where it
+      // expects its output would fail further away, on a worse message
+      it('should still reject on a successful response', async () => {
+        mockJsonResponse(200, '{"data":');
+
+        await expectPromiseThrows(sendRequest({ method: 'GET', url: 'http://localhost/api/test' }), (err) => {
+          expect(err).toBeInstanceOf(CcRequestError);
+        });
+      });
+    });
+
     it('should handle network errors', async () => {
       vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
         throw new TypeError('Failed to fetch');

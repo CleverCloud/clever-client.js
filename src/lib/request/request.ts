@@ -125,7 +125,7 @@ async function getResponseBody(request: CcRequest, fetchResponse: Response): Pro
 
   const responseContentType = getContentType(fetchResponse.headers);
   if (responseContentType === JSON_TYPE) {
-    return fetchResponse.json();
+    return getJsonResponseBody(fetchResponse);
   }
 
   if (responseContentType === EVENT_STREAM_CONTENT_TYPE) {
@@ -139,6 +139,32 @@ async function getResponseBody(request: CcRequest, fetchResponse: Response): Pro
   // todo. streamable response
 
   return fetchResponse.blob();
+}
+
+/**
+ * The body of a response announced as JSON, tolerating a malformed one when it reports an error.
+ *
+ * A backend can announce JSON and send something that isn't: billing-api builds its error bodies by
+ * interpolating the message straight into a JSON string, so a message holding a quote or a newline
+ * goes out malformed. Letting the parse failure through would replace the error the caller needs —
+ * status, code, message — with an opaque `UNEXPECTED_ERROR`, dropping the status with it, so the
+ * response never becomes the `CcHttpError` it should be and `tolerateNotFound()` and friends stop
+ * working on it. Falling back to the raw text keeps the status and reports whatever the body held.
+ *
+ * Only error responses get that tolerance. On a successful one the body *is* the result, and a
+ * command handed a string where it expects its output would fail further away, on a worse message.
+ */
+async function getJsonResponseBody(fetchResponse: Response): Promise<unknown> {
+  if (fetchResponse.status < 400) {
+    return fetchResponse.json();
+  }
+
+  const text = await fetchResponse.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
 }
 
 function getContentType(headers: Headers | undefined): string | null {
