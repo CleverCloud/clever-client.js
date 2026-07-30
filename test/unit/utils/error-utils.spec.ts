@@ -14,6 +14,7 @@ import {
   NETWORK_ERRORS,
   NETWORK_RETRY_ADVICES,
   tolerateNotFound,
+  tolerateStatus,
 } from '../../../src/utils/error-utils.js';
 
 const REQUEST = {} as CcRequest;
@@ -109,6 +110,26 @@ describe('isRateLimitError', () => {
 
   it('should not match another error', () => {
     expect(isRateLimitError(httpError(403, 'unknown_error'))).toBe(false);
+  });
+});
+
+describe('tolerateStatus', () => {
+  it('should resolve to the value when the promise fulfills', async () => {
+    await expect(tolerateStatus(Promise.resolve('value'), 409)).resolves.toBe('value');
+  });
+
+  it('should resolve to `undefined` when the promise rejects with the given status', async () => {
+    await expect(tolerateStatus(Promise.reject(httpError(409, 'some.code')), 409)).resolves.toBeUndefined();
+  });
+
+  it('should rethrow an http error with another status', async () => {
+    const error = httpError(500, 'some.code');
+    await expect(tolerateStatus(Promise.reject(error), 409)).rejects.toBe(error);
+  });
+
+  it('should rethrow a non-http error, even one carrying the given statusCode', async () => {
+    const error = Object.assign(new Error('boom'), { statusCode: 409 });
+    await expect(tolerateStatus(Promise.reject(error), 409)).rejects.toBe(error);
   });
 });
 

@@ -115,6 +115,29 @@ export function isRateLimitError(error: unknown): error is CcHttpError {
 }
 
 /**
+ * Runs `promise` and resolves to `undefined` when it rejects with the given HTTP status. Any other
+ * error is rethrown.
+ *
+ * Commands reject on an error status, so callers for which one of them is a legitimate state have to
+ * catch that error instead of checking the resolved value. This wraps that `try`/`catch`. Only a
+ * {@link CcHttpError} is tolerated: an error carrying the same `statusCode` from anywhere else still
+ * propagates.
+ *
+ * @param promise - The promise to run
+ * @param status - The HTTP status to resolve to `undefined` for
+ */
+export async function tolerateStatus<T>(promise: Promise<T>, status: number): Promise<T | undefined> {
+  try {
+    return await promise;
+  } catch (error) {
+    if (isCcHttpErrorWithStatus(error, status)) {
+      return undefined;
+    }
+    throw error;
+  }
+}
+
+/**
  * Runs `promise` and resolves to `undefined` when it rejects with a 404. Any other error is rethrown.
  *
  * Commands reject on a 404, so callers for which a missing resource is a legitimate state (a
@@ -124,12 +147,5 @@ export function isRateLimitError(error: unknown): error is CcHttpError {
  * @param promise - The promise to run
  */
 export async function tolerateNotFound<T>(promise: Promise<T>): Promise<T | undefined> {
-  try {
-    return await promise;
-  } catch (error) {
-    if (isCcHttpErrorWithStatus(error, 404)) {
-      return undefined;
-    }
-    throw error;
-  }
+  return tolerateStatus(promise, 404);
 }
