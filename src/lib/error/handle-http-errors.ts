@@ -9,6 +9,14 @@ import { CcHttpError } from './cc-client-errors.js';
  */
 export const TOO_MANY_REQUESTS_ERROR_CODE = 'clever.core.too-many-requests';
 
+/**
+ * Error code reported for a payload the backend rejected as invalid, regardless of which backend
+ * produced it. Like {@link TOO_MANY_REQUESTS_ERROR_CODE} this is the wire code v4/OVD-backed
+ * endpoints already send natively; notification-api describes the same failure with no code at all,
+ * and is normalized to it, see {@link isFieldErrorsResponse}.
+ */
+export const BAD_REQUEST_ERROR_CODE = 'clever.core.bad-request';
+
 export function handleHttpErrors(
   request: CcRequest,
   response: CcResponse<unknown>,
@@ -17,18 +25,15 @@ export function handleHttpErrors(
   if (response.status >= 400) {
     // try to parse message and code from error
     const errorBody = parseErrorBody(response.body);
-    const parsedErrorMessage = parseErrorMessage(errorBody);
+    const fieldErrorsMessage = parseFieldErrorsMessage(errorBody);
+    const parsedErrorMessage = parseErrorMessage(errorBody) ?? fieldErrorsMessage;
     const parsedErrorCode = parseErrorCode(errorBody);
 
     const errorMessage =
       parsedErrorMessage == null || parsedErrorMessage.length === 0
         ? `Error ${response.status}`
         : `[${response.status}]: ${parsedErrorMessage}`;
-    // rate limiting is a cross-cutting, transport-level concern: report it with a single,
-    // predictable code instead of leaving it to each command's own error-code mapping
-    const errorCode = isRateLimitResponse(response, parsedErrorCode)
-      ? TOO_MANY_REQUESTS_ERROR_CODE
-      : transformErrorCode(parsedErrorCode, parsedErrorMessage, response.status, command);
+    const errorCode = resolveErrorCode(response, parsedErrorCode, parsedErrorMessage, fieldErrorsMessage, command);
 
     // throw error
     throw new CcHttpError(errorMessage, errorCode, request, response);
@@ -92,6 +97,56 @@ function isMarkupDocument(body: string): boolean {
   return body.trimStart().startsWith('<');
 }
 
+/**
+ * The message of a Play JSON validation failure, in the shape `JsError.toJson` produces.
+ *
+ * notification-api answers a malformed payload with that document and nothing else: no `message` and
+ * no `code`, just a map of the paths that failed to the reasons they failed.
+ *
+ * ```json
+ * { "obj.urls": [{ "msg": ["error.path.missing"], "args": [] }] }
+ * ```
+ *
+ * Left alone it reads as a bare `Error 400`, which doesn't say which field the caller got wrong.
+ * This flattens it to `urls: error.path.missing`, dropping the `obj` prefix play-json uses to name
+ * the root of the payload — it names our own request body, so it tells the caller nothing.
+ *
+ * Every entry has to match that shape for the body to be reported this way, which is what keeps an
+ * unrelated document from being read as a list of field errors.
+ */
+function parseFieldErrorsMessage(body: unknown): string | undefined {
+  if (body == null || typeof body !== 'object' || Array.isArray(body)) {
+    return undefined;
+  }
+
+  const entries = Object.entries(body as Record<string, unknown>);
+  if (entries.length === 0) {
+    return undefined;
+  }
+
+  const fieldErrors: Array<string> = [];
+  for (const [path, pathErrors] of entries) {
+    if (!Array.isArray(pathErrors)) {
+      return undefined;
+    }
+
+    const reasons = (pathErrors as Array<{ msg?: Array<unknown> } | null>)
+      .flatMap((pathError) => {
+        const messages = pathError?.msg;
+        return Array.isArray(messages) ? messages : [];
+      })
+      .filter((reason: unknown): reason is string => typeof reason === 'string');
+
+    if (reasons.length === 0) {
+      return undefined;
+    }
+
+    fieldErrors.push(`${path.startsWith('obj.') ? path.slice('obj.'.length) : path}: ${reasons.join(', ')}`);
+  }
+
+  return fieldErrors.join('. ');
+}
+
 function parseErrorCode(body: unknown): string | undefined {
   const errorBody = body as { code?: string | number; id?: string | number } | undefined;
   if (errorBody?.code != null) {
@@ -102,6 +157,50 @@ function parseErrorCode(body: unknown): string | undefined {
   }
 
   return undefined;
+}
+
+/**
+ * The code to report for an error response: one of the cross-cutting codes the client normalizes
+ * itself, or the code the body carried once the command had its say on it.
+ *
+ * A backend reporting a cross-cutting failure in its own dialect is a transport-level concern, not
+ * something to leave to each command's error-code mapping — so those are resolved here, and a
+ * command never gets to override them.
+ */
+function resolveErrorCode(
+  response: CcResponse<unknown>,
+  parsedErrorCode: string | undefined,
+  parsedErrorMessage: string | undefined,
+  fieldErrorsMessage: string | undefined,
+  command?: SimpleCommand<string, unknown, unknown>,
+): string {
+  if (isRateLimitResponse(response, parsedErrorCode)) {
+    return TOO_MANY_REQUESTS_ERROR_CODE;
+  }
+  if (isFieldErrorsResponse(response, parsedErrorCode, fieldErrorsMessage)) {
+    return BAD_REQUEST_ERROR_CODE;
+  }
+  return transformErrorCode(parsedErrorCode, parsedErrorMessage, response.status, command);
+}
+
+/**
+ * Whether the response is a payload validation failure reported without an error code.
+ *
+ * notification-api answers a malformed payload with the bare play-json document
+ * {@link parseFieldErrorsMessage} reads, which names the fields at fault but carries no code — so a
+ * caller had nothing to match on, where every other backend sends {@link BAD_REQUEST_ERROR_CODE} (or
+ * its own spelling of it) for the same failure. Reporting that code here closes the gap.
+ *
+ * The body having been recognized is most of the answer; the status is checked too so that the same
+ * document returned with another status is never labelled a bad request. A body that did carry a
+ * code is left alone — it says more than this one would, and the command may still map it.
+ */
+function isFieldErrorsResponse(
+  response: CcResponse<unknown>,
+  parsedErrorCode: string | undefined,
+  fieldErrorsMessage: string | undefined,
+): boolean {
+  return fieldErrorsMessage != null && parsedErrorCode == null && response.status === 400;
 }
 
 function isRateLimitResponse(response: CcResponse<unknown>, parsedErrorCode: string | undefined): boolean {

@@ -121,6 +121,115 @@ describe('handleHttpErrors', () => {
     });
   });
 
+  // the shape play-json's `JsError.toJson` produces, which notification-api returns as is when a
+  // hook payload fails validation: no `message` and no `code`, only the paths that failed
+  describe('with a Play JSON validation body', () => {
+    it('should report the field that failed and why', () => {
+      expect(() =>
+        handleHttpErrors(REQUEST, response(400, { 'obj.urls': [{ msg: ['error.path.missing'], args: [] }] })),
+      ).toThrow(expect.objectContaining({ message: '[400]: urls: error.path.missing' }));
+    });
+
+    it('should report every field that failed', () => {
+      expect(() =>
+        handleHttpErrors(
+          REQUEST,
+          response(400, {
+            'obj.urls': [{ msg: ['error.path.missing'], args: [] }],
+            'obj.name': [{ msg: ['error.expected.jsstring'], args: [] }],
+          }),
+        ),
+      ).toThrow(expect.objectContaining({ message: '[400]: urls: error.path.missing. name: error.expected.jsstring' }));
+    });
+
+    it('should report every reason a single field failed', () => {
+      expect(() =>
+        handleHttpErrors(REQUEST, response(400, { 'obj.urls': [{ msg: ['too short', 'not a url'], args: [] }] })),
+      ).toThrow(expect.objectContaining({ message: '[400]: urls: too short, not a url' }));
+    });
+
+    // play-json indexes into arrays, and names an error on the payload root `obj` with no suffix
+    it('should keep a path that does not name a root field', () => {
+      expect(() =>
+        handleHttpErrors(REQUEST, response(400, { obj: [{ msg: ['error.expected.jsobject'], args: [] }] })),
+      ).toThrow(expect.objectContaining({ message: '[400]: obj: error.expected.jsobject' }));
+    });
+
+    it('should report an indexed path as play-json wrote it', () => {
+      expect(() =>
+        handleHttpErrors(REQUEST, response(400, { 'obj.urls[0].url': [{ msg: ['error.path.missing'], args: [] }] })),
+      ).toThrow(expect.objectContaining({ message: '[400]: urls[0].url: error.path.missing' }));
+    });
+
+    it('should prefer an explicit message over the field errors', () => {
+      expect(() =>
+        handleHttpErrors(
+          REQUEST,
+          response(400, { message: 'boom', 'obj.urls': [{ msg: ['error.path.missing'], args: [] }] }),
+        ),
+      ).toThrow(expect.objectContaining({ message: '[400]: boom' }));
+    });
+
+    it('should read the shape through a body sent as text', () => {
+      expect(() =>
+        handleHttpErrors(REQUEST, response(400, '{"obj.urls":[{"msg":["error.path.missing"],"args":[]}]}')),
+      ).toThrow(expect.objectContaining({ message: '[400]: urls: error.path.missing' }));
+    });
+
+    // a body only qualifies when every one of its entries matches, so an unrelated document is
+    // never dressed up as a list of field errors
+    it.each([
+      ['an empty body', {}],
+      ['a body whose values are not arrays', { context: { key: 'foo' } }],
+      ['a body whose entries carry no `msg`', { 'obj.urls': [{ args: [] }] }],
+      ['a body where only some entries match', { 'obj.urls': [{ msg: ['nope'], args: [] }], other: 'x' }],
+    ])('should not report %s as field errors', (_label, body) => {
+      expect(() => handleHttpErrors(REQUEST, response(400, body))).toThrow(
+        expect.objectContaining({ message: 'Error 400', code: 'unknown_error' }),
+      );
+    });
+
+    // the body names the fields at fault but carries no code of its own, where every other backend
+    // sends one for the same failure
+    describe('error code normalization', () => {
+      const FIELD_ERRORS = { 'obj.urls': [{ msg: ['error.path.missing'], args: [] }] };
+
+      it('should report `clever.core.bad-request`', () => {
+        expect(() => handleHttpErrors(REQUEST, response(400, FIELD_ERRORS))).toThrow(
+          expect.objectContaining({ code: 'clever.core.bad-request' }),
+        );
+      });
+
+      it('should not let a command override it', () => {
+        const cmd = command(() => 'some.other.code');
+        expect(() => handleHttpErrors(REQUEST, response(400, FIELD_ERRORS), cmd)).toThrow(
+          expect.objectContaining({ code: 'clever.core.bad-request' }),
+        );
+      });
+
+      it('should normalize a body sent as text too', () => {
+        expect(() =>
+          handleHttpErrors(REQUEST, response(400, '{"obj.urls":[{"msg":["error.path.missing"],"args":[]}]}')),
+        ).toThrow(expect.objectContaining({ code: 'clever.core.bad-request' }));
+      });
+
+      // the same document under another status is not evidence of a bad request
+      it('should not report it for a status other than 400', () => {
+        expect(() => handleHttpErrors(REQUEST, response(422, FIELD_ERRORS))).toThrow(
+          expect.objectContaining({ code: 'unknown_error', message: '[422]: urls: error.path.missing' }),
+        );
+      });
+
+      // a code the backend did send says more, and the command may still map it
+      it('should leave a body that carries its own code alone', () => {
+        const cmd = command(({ code }) => code);
+        expect(() =>
+          handleHttpErrors(REQUEST, response(400, { code: 'clever.some.code', ...FIELD_ERRORS }), cmd),
+        ).toThrow(expect.objectContaining({ code: 'clever.some.code' }));
+      });
+    });
+  });
+
   describe('with a body that is not JSON', () => {
     it('should report a plain text error as the text it is', () => {
       expect(() => handleHttpErrors(REQUEST, response(400, 'The request content was malformed'))).toThrow(
