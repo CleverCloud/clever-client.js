@@ -97,6 +97,68 @@ describe('handleHttpErrors', () => {
     );
   });
 
+  // Play sends every `String` result as `text/plain`, so the request layer hands these over as a raw
+  // string: notification-api reports a missing hook that way, and forwards cc-api's own error bodies
+  // that way too when authentication fails
+  describe('with a JSON body sent as text', () => {
+    it('should report the message it carries rather than the JSON document', () => {
+      expect(() => handleHttpErrors(REQUEST, response(404, '{"error":"webhook not found"}'))).toThrow(
+        expect.objectContaining({ message: '[404]: webhook not found' }),
+      );
+    });
+
+    it('should report the message and the code of a forwarded cc-api error', () => {
+      const cmd = command(({ code }) => code);
+      expect(() =>
+        handleHttpErrors(REQUEST, response(401, '{"id":2001,"message":"Not connected","type":"error"}'), cmd),
+      ).toThrow(expect.objectContaining({ message: '[401]: Not connected', code: '2001' }));
+    });
+
+    it('should still detect a forwarded cc-api rate limit error', () => {
+      expect(() =>
+        handleHttpErrors(REQUEST, response(403, '{"id":403,"message":"You have performed that request too much."}')),
+      ).toThrow(expect.objectContaining({ code: 'clever.core.too-many-requests' }));
+    });
+  });
+
+  describe('with a body that is not JSON', () => {
+    it('should report a plain text error as the text it is', () => {
+      expect(() => handleHttpErrors(REQUEST, response(400, 'The request content was malformed'))).toThrow(
+        expect.objectContaining({ message: '[400]: The request content was malformed' }),
+      );
+    });
+
+    // a gateway answering before the request reaches the API sends a whole document, which holds no
+    // sentence worth showing — the status alone says more
+    it.each([
+      ['an HTML error page', '<html><body><h1>503 Service Unavailable</h1></body></html>'],
+      ['an HTML page behind a doctype', '<!DOCTYPE html>\n<html><body>502 Bad Gateway</body></html>'],
+      ['an XML error document', '<?xml version="1.0"?><Error><Code>NoSuchKey</Code></Error>'],
+    ])('should not report %s as the message', (_label, body) => {
+      expect(() => handleHttpErrors(REQUEST, response(503, body))).toThrow(
+        expect.objectContaining({ message: 'Error 503' }),
+      );
+    });
+
+    // the document is still there for whoever is debugging
+    it('should keep the markup on the response the error carries', () => {
+      const page = '<html><body>503</body></html>';
+      try {
+        handleHttpErrors(REQUEST, response(503, page));
+        expect.fail('should have thrown');
+      } catch (err) {
+        expect((err as CcHttpError).response.body).toBe(page);
+      }
+    });
+
+    // a body that opens like an object but does not parse must not be lost
+    it('should report a truncated JSON body as the text it is', () => {
+      expect(() => handleHttpErrors(REQUEST, response(500, '{"message":"boom'))).toThrow(
+        expect.objectContaining({ message: '[500]: {"message":"boom' }),
+      );
+    });
+  });
+
   it('should throw a `CcHttpError` carrying the request and response', () => {
     try {
       handleHttpErrors(REQUEST, response(429, { code: 'clever.core.too-many-requests', error: 'slow down' }));
