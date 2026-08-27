@@ -51,8 +51,11 @@ export interface ProductRuntimeVariant {
   name: string;
   /** Protocol the code is pushed with by default. */
   deployType: string;
-  /** URL of the variant logo. */
-  logo: string;
+  /**
+   * URL of the variant logo.
+   * @renamedFrom `logo`
+   */
+  logoUrl: string;
 }
 
 /**

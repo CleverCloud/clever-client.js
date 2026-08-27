@@ -1,6 +1,6 @@
 import { normalizeDate, sortBy } from '../../../../lib/utils.js';
 import { toArray } from '../../../../utils/environment-utils.js';
-import { transformProductRuntimeFlavor } from '../product/product-transform.js';
+import { transformProductRuntimeFlavor, transformProductRuntimeVariant } from '../product/product-transform.js';
 import type { Application } from './application.types.js';
 
 export function transformApplication(payload: any): Application {
@@ -14,7 +14,7 @@ export function transformApplication(payload: any): Application {
     instance: {
       type: payload.instance.type,
       version: payload.instance.version,
-      variant: payload.instance.variant,
+      variant: transformProductRuntimeVariant(payload.instance.variant),
       minInstances: payload.instance.minInstances,
       maxInstances: payload.instance.maxInstances,
       maxAllowedInstances: payload.instance.maxAllowedInstances,

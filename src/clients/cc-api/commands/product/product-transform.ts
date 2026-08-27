@@ -6,6 +6,7 @@ import type {
   ProductElasticsearchInfo,
   ProductRuntime,
   ProductRuntimeFlavor,
+  ProductRuntimeVariant,
 } from './product.types.js';
 
 export function transformProductRuntime(payload: any): ProductRuntime {
@@ -13,7 +14,7 @@ export function transformProductRuntime(payload: any): ProductRuntime {
     type: payload.type,
     version: payload.version,
     name: payload.name,
-    variant: payload.variant,
+    variant: transformProductRuntimeVariant(payload.variant),
     description: payload.description,
     isEnabled: payload.enabled,
     isComingSoon: payload.comingSoon,
@@ -23,6 +24,16 @@ export function transformProductRuntime(payload: any): ProductRuntime {
     flavors: sortBy(payload.flavors.map(transformProductRuntimeFlavor), 'price'),
     defaultFlavor: transformProductRuntimeFlavor(payload.defaultFlavor),
     buildFlavor: transformProductRuntimeFlavor(payload.buildFlavor),
+  };
+}
+
+export function transformProductRuntimeVariant(payload: any): ProductRuntimeVariant {
+  return {
+    id: payload.id,
+    slug: payload.slug,
+    name: payload.name,
+    deployType: payload.deployType,
+    logoUrl: payload.logo,
   };
 }
 

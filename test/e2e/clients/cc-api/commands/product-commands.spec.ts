@@ -96,7 +96,7 @@ describe('product commands', function () {
     expect(runtime.variant.slug).toBeTypeOf('string');
     expect(runtime.variant.name).toBeTypeOf('string');
     expect(runtime.variant.deployType).toBeTypeOf('string');
-    expect(runtime.variant.logo).toBeTypeOf('string');
+    expect(runtime.variant.logoUrl).toBeTypeOf('string');
     expect(runtime.description).toBeTypeOf('string');
     expect(runtime.isEnabled).toBeTypeOf('boolean');
     expect(runtime.isComingSoon).toBeTypeOf('boolean');

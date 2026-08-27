@@ -25,7 +25,7 @@ export interface Application {
     type: string;
     /** Version of the runtime. */
     version: string;
-    /** Flavour of the runtime the application was created with, carrying its display name and logo. */
+    /** Variant of the runtime the application was created with, carrying its display name and logo. */
     variant: ProductRuntimeVariant;
     /** Lower bound of the horizontal scaling window. */
     minInstances: number;
