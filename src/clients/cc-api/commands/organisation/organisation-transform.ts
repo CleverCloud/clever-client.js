@@ -63,7 +63,7 @@ function transformApplicationSummary(payload: any): ApplicationSummary {
     isZeroDowntimeDeploymentEnabled: !payload.homogeneous,
     variantLogoUrl: payload.variantLogoUrl,
     state: payload.state,
-    commit: payload.commit,
+    commitId: payload.commit,
     systemTags: payload.systemTags,
     customerTags: payload.customerTags,
   };

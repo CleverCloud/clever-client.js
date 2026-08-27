@@ -130,8 +130,11 @@ export interface ApplicationSummary {
   variantLogoUrl: string;
   /** Whether the application is meant to be running, and why it may not be. */
   state: ApplicationState;
-  /** Commit currently deployed, or the commit the application is pinned to. */
-  commit: string;
+  /**
+   * Commit currently deployed, or the commit the application is pinned to.
+   * @renamedFrom `commit`
+   */
+  commitId: string;
   /** Tags set by the platform on the application. */
   systemTags: Array<string>;
   /** Tags set by the customer on the application. */
