@@ -57,7 +57,7 @@ function transformApplicationSummary(payload: any): ApplicationSummary {
     id: payload.id,
     name: payload.name,
     instanceType: payload.instanceType,
-    instanceVariant: payload.instanceVariant,
+    variantName: payload.instanceVariant,
     variantSlug: payload.variantSlug,
     isArchived: payload.archived,
     isZeroDowntimeDeploymentEnabled: !payload.homogeneous,

@@ -108,9 +108,12 @@ export interface ApplicationSummary {
   name: string;
   /** Identifier of the runtime the application runs on, for example `node` or `docker`. */
   instanceType: string;
-  /** Flavour of the runtime the application was created with. */
-  instanceVariant: string;
-  /** Slug of the runtime flavour, usable in a URL. */
+  /**
+   * Display name of the runtime variant the application was created with, for example `Node.js`.
+   * @renamedFrom `instanceVariant`
+   */
+  variantName: string;
+  /** Slug of the runtime variant, usable in a URL. */
   variantSlug: string;
   /**
    * Whether the application is archived, that is kept but excluded from listings.
@@ -123,7 +126,7 @@ export interface ApplicationSummary {
    * @converted with the boolean inverted
    */
   isZeroDowntimeDeploymentEnabled: boolean;
-  /** URL of the logo of the runtime flavour. */
+  /** URL of the logo of the runtime variant. */
   variantLogoUrl: string;
   /** Whether the application is meant to be running, and why it may not be. */
   state: ApplicationState;
