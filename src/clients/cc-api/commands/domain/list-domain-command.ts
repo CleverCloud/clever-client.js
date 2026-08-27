@@ -1,7 +1,7 @@
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl, sortBy } from '../../../../lib/utils.js';
 import { guessPrimaryDomain } from '../../../../utils/domain-utils.js';
-import { tolerateNotFound } from '../../../../utils/error-utils.ts';
+import { tolerateNotFound } from '../../../../utils/error-utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { ApplicationId, CcApiComposer } from '../../types/cc-api.types.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';

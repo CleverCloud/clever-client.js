@@ -1,4 +1,4 @@
-import { isTestDomain } from './domain-utils.ts';
+import { isTestDomain } from './domain-utils.js';
 
 /**
  * The minimal domain description needed to run a DNS diagnosis.

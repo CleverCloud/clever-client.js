@@ -21,7 +21,7 @@ import { ResumeKubernetesClusterCommand } from '../../../../../src/clients/cc-ap
 import { UpdateKubernetesClusterCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/update-kubernetes-cluster-command.js';
 import { UpdateKubernetesClusterVersionCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/update-kubernetes-cluster-version-command.js';
 import { UpdateKubernetesNodeGroupCommand } from '../../../../../src/clients/cc-api/commands/kubernetes/update-kubernetes-node-group-command.js';
-import { tolerateNotFound } from '../../../../../src/utils/error-utils.ts';
+import { tolerateNotFound } from '../../../../../src/utils/error-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
 // Kubernetes clusters are not addon-plan based (no `providerId`/`planId`): creation goes straight through

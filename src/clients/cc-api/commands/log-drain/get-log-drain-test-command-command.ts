@@ -1,7 +1,7 @@
 import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import type { CcRequestParams } from '../../../../types/request.types.js';
-import type { SelfOrPromise } from '../../../../types/utils.types.ts';
+import type { SelfOrPromise } from '../../../../types/utils.types.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type {

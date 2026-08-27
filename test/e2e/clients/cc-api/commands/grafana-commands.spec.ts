@@ -3,7 +3,7 @@ import { DisableGrafanaCommand } from '../../../../../src/clients/cc-api/command
 import { EnableGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/enable-grafana-command.js';
 import { GetGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/get-grafana-command.js';
 import { ResetGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/reset-grafana-command.js';
-import { tolerateNotFound } from '../../../../../src/utils/error-utils.ts';
+import { tolerateNotFound } from '../../../../../src/utils/error-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
 describe('grafana commands', function () {

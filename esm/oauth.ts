@@ -1,4 +1,4 @@
-import { oauthV1AuthorizationHeader } from '../src/utils/auth-utils.ts';
+import { oauthV1AuthorizationHeader } from '../src/utils/auth-utils.js';
 import type { OAuthTokens } from './oauth.types.js';
 import type { RequestParams } from './request.types.js';
 

@@ -1,5 +1,5 @@
 import type { Composer } from '../../../../types/command.types.js';
-import { tolerateNotFound } from '../../../../utils/error-utils.ts';
+import { tolerateNotFound } from '../../../../utils/error-utils.js';
 import { Polling } from '../../../../utils/polling.js';
 import type { CcApiType } from '../../types/cc-api.types.js';
 import { GetKubernetesClusterCommand } from './get-kubernetes-cluster-command.js';

@@ -3,7 +3,7 @@ import { DeployApplicationCommand } from '../../../../../src/clients/cc-api/comm
 import { GetApplicationInstanceCommand } from '../../../../../src/clients/cc-api/commands/instance/get-application-instance-command.js';
 import type { Instance } from '../../../../../src/clients/cc-api/commands/instance/instance.types.js';
 import { ListApplicationInstanceCommand } from '../../../../../src/clients/cc-api/commands/instance/list-application-instance-command.js';
-import { tolerateNotFound } from '../../../../../src/utils/error-utils.ts';
+import { tolerateNotFound } from '../../../../../src/utils/error-utils.js';
 import { Polling } from '../../../../../src/utils/polling.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';

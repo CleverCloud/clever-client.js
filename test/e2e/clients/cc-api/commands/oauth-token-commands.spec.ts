@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, it } from 'vitest';
-import { DeleteOauthTokenCommand } from '../../../../../src/clients/cc-api/commands/oauth-token/delete-oauth-token-command.ts';
+import { DeleteOauthTokenCommand } from '../../../../../src/clients/cc-api/commands/oauth-token/delete-oauth-token-command.js';
 import { GetCurrentOauthTokenInfoCommand } from '../../../../../src/clients/cc-api/commands/oauth-token/get-current-oauth-token-info-command.js';
 import { ListOauthTokenCommand } from '../../../../../src/clients/cc-api/commands/oauth-token/list-oauth-token-command.js';
 import { e2eSupport } from '../e2e-support.js';

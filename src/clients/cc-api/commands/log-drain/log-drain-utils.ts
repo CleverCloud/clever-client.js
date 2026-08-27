@@ -1,5 +1,5 @@
 import type { Composer } from '../../../../types/command.types.js';
-import { tolerateNotFound } from '../../../../utils/error-utils.ts';
+import { tolerateNotFound } from '../../../../utils/error-utils.js';
 import { isTimeoutError, Polling } from '../../../../utils/polling.js';
 import type { ApplicationOrAddonId, CcApiType } from '../../types/cc-api.types.js';
 import { GetLogDrainCommand } from './get-log-drain-command.js';

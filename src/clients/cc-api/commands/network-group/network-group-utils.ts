@@ -1,6 +1,6 @@
 import { randomUUID } from '../../../../lib/utils.js';
 import type { Composer } from '../../../../types/command.types.js';
-import { tolerateNotFound } from '../../../../utils/error-utils.ts';
+import { tolerateNotFound } from '../../../../utils/error-utils.js';
 import { isTimeoutError, Polling } from '../../../../utils/polling.js';
 import type { CcApiCommand, CcApiType } from '../../types/cc-api.types.js';
 import type { Addon } from '../addon/addon.types.js';

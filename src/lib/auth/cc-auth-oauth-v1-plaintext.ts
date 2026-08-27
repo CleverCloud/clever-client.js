@@ -1,5 +1,5 @@
 import type { OauthTokens } from '../../types/auth.types.js';
-import { oauthV1AuthorizationHeader } from '../../utils/auth-utils.ts';
+import { oauthV1AuthorizationHeader } from '../../utils/auth-utils.js';
 import { CcAuth } from './cc-auth.js';
 
 /**

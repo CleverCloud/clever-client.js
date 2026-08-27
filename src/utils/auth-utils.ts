@@ -1,4 +1,4 @@
-import type { OauthTokens } from '../types/auth.types.ts';
+import type { OauthTokens } from '../types/auth.types.js';
 
 /**
  * Returns the API token formatted as a Bearer token.

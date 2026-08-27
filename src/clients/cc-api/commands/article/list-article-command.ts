@@ -1,8 +1,8 @@
 import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { sortBy } from '../../../../lib/utils.js';
-import type { CcRequestConfigPartial, CcRequestParams } from '../../../../types/request.types.ts';
-import { isCcHttpError } from '../../../../utils/error-utils.ts';
+import type { CcRequestConfigPartial, CcRequestParams } from '../../../../types/request.types.js';
+import { isCcHttpError } from '../../../../utils/error-utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CcApiComposer } from '../../types/cc-api.types.js';
 import { parseRssFeed } from './article-transform.js';

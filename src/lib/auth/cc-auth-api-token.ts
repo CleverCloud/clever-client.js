@@ -1,4 +1,4 @@
-import { bearerAuthorizationHeader } from '../../utils/auth-utils.ts';
+import { bearerAuthorizationHeader } from '../../utils/auth-utils.js';
 import { CcAuth } from './cc-auth.js';
 
 /**

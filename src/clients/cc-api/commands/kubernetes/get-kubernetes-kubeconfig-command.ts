@@ -2,7 +2,7 @@ import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
 import { QueryParams } from '../../../../lib/request/query-params.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import type { CcRequestParams } from '../../../../types/request.types.js';
-import type { SelfOrPromise } from '../../../../types/utils.types.ts';
+import type { SelfOrPromise } from '../../../../types/utils.types.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type {
   GetKubernetesKubeconfigCommandInput,
