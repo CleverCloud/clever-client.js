@@ -90,16 +90,126 @@ export interface LogDrain extends LogDrainCommon {
 }
 
 /**
- * Outcome of a server-side probe of a log drain's recipient. The API answers with a `200` whether or not the
- * recipient could be reached: `ok` tells success from failure, and `code`/`message` carry the debug detail.
+ * What every probe result carries, whichever transport the probe exercised.
  */
-export interface LogDrainProbeResult {
+interface LogDrainProbeResultCommon {
   /** Whether the recipient answered the probe successfully. */
   ok: boolean;
   /** Short machine-readable code describing the probe outcome. */
   code: string;
   /** Human-readable explanation of the probe outcome. */
   message: string;
+  /**
+   * How long the probe took, as an ISO 8601 duration.
+   * @renamedFrom `durationMs`
+   * @converted from a number of milliseconds to an ISO 8601 duration
+   */
+  duration?: string;
+}
+
+/**
+ * Outcome of a server-side probe of a log drain's recipient. The API answers with a `200` whether or not the
+ * recipient could be reached: `ok` tells success from failure, and `code`/`message` carry the debug detail.
+ *
+ * The `type` discriminates the transport the probe exercised, and each variant carries the detail block that
+ * transport produces.
+ */
+export type LogDrainProbeResult =
+  | HttpLogDrainProbeResult
+  | TcpLogDrainProbeResult
+  | UdpLogDrainProbeResult
+  | AbortedLogDrainProbeResult;
+
+/** Transport a log drain probe exercises, decided by the kind of target the drain ships to. */
+export type LogDrainProbeType = 'HTTP' | 'TCP' | 'UDP';
+
+/** Outcome of a probe that sent an HTTP request to the recipient. */
+export interface HttpLogDrainProbeResult extends LogDrainProbeResultCommon {
+  /** Discriminates the transport the probe exercised. */
+  type: 'HTTP';
+  /** What the probe sent, and what came back. */
+  http: LogDrainProbeHttpDetail;
+}
+
+/** Outcome of a probe that opened a TCP connection to the recipient. */
+export interface TcpLogDrainProbeResult extends LogDrainProbeResultCommon {
+  /** Discriminates the transport the probe exercised. */
+  type: 'TCP';
+  /** Outcome of the connection attempt. */
+  tcp: LogDrainProbeTcpDetail;
+}
+
+/**
+ * Outcome of a probe of a UDP recipient, which is never probed at all: UDP delivery carries no
+ * acknowledgement, so there is nothing to check and no detail to report, and `ok` is always `true`.
+ */
+export interface UdpLogDrainProbeResult extends LogDrainProbeResultCommon {
+  /** Discriminates the transport the probe exercised. */
+  type: 'UDP';
+}
+
+/**
+ * Outcome of a probe that ended without any transport reporting back, which today means the overall probe
+ * timeout fired. It carries no detail block, leaving `code` as the only account of what happened.
+ */
+export interface AbortedLogDrainProbeResult extends LogDrainProbeResultCommon {
+  /** Absent, because the probe exercised no transport. */
+  type?: undefined;
+}
+
+/** The HTTP exchange a probe went through with the recipient. */
+export interface LogDrainProbeHttpDetail {
+  /** The request the probe sent, standing in for a real delivery. */
+  request: LogDrainProbeHttpRequest;
+  /**
+   * What the recipient answered. Absent when no HTTP response came back at all (a DNS, a connection or a TLS
+   * failure), leaving `code` as the only account of what went wrong.
+   */
+  response?: LogDrainProbeHttpResponse;
+}
+
+/** The request a probe sent to the recipient. */
+export interface LogDrainProbeHttpRequest {
+  /** HTTP method of the request. */
+  method: string;
+  /** URL the request was sent to, with the secrets some target URLs carry masked. */
+  url: string;
+  /** Headers of the request, keyed by header name. Credentials are redacted. */
+  headers: Record<string, string>;
+  /**
+   * Body of the request, cut off past 2048 characters with a `…[truncated]` marker. Absent when the request
+   * carried no body.
+   */
+  body?: string;
+}
+
+/** The response the recipient answered a probe with. */
+export interface LogDrainProbeHttpResponse {
+  /** HTTP status code of the response. */
+  statusCode: number;
+  /**
+   * Headers of the response, keyed by header name, each holding every occurrence of that header in the order
+   * it came in. Credentials are redacted.
+   */
+  headers: Record<string, Array<string>>;
+  /**
+   * Body of the response, cut off past 2048 characters with a `…[truncated]` marker. Absent when the response
+   * carried no body, or when it was too large to be read.
+   */
+  body?: string;
+}
+
+/** Outcome of the connection a probe opened to the recipient. */
+export interface LogDrainProbeTcpDetail {
+  /**
+   * Whether the connection was established.
+   * @renamedFrom `connected`
+   */
+  wasConnected: boolean;
+  /** Host the probe connected to. */
+  host: string;
+  /** Port the probe connected to. */
+  port: number;
 }
 
 /** Status of a log drain: whether it is shipping logs, and which transition it is going through. */

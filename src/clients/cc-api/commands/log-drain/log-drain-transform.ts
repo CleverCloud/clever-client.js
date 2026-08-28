@@ -1,10 +1,14 @@
 import { normalizeDate } from '../../../../lib/utils.js';
+import { normalizeDuration } from '../../../../utils/duration-utils.js';
 import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
 import type {
   ElasticsearchDrainTarget,
   LogDrain,
   LogDrainExecutionStatus,
   LogDrainKind,
+  LogDrainProbeHttpDetail,
+  LogDrainProbeResult,
+  LogDrainProbeType,
   LogDrainStatus,
   LogDrainTarget,
   LogDrainTlsVerification,
@@ -54,6 +58,31 @@ interface ApiRecipientPayload {
   sourceToken?: string;
   sourcetype?: string;
   tlsVerification?: LogDrainTlsVerification;
+}
+
+interface ApiProbeResultPayload {
+  ok: boolean;
+  code: string;
+  message: string;
+  type?: LogDrainProbeType | null;
+  durationMs?: number | null;
+  http?: ApiProbeHttpDetailPayload | null;
+  tcp?: ApiProbeTcpDetailPayload | null;
+}
+
+interface ApiProbeHttpDetailPayload {
+  request: { method: string; url: string; headers: Record<string, string>; body?: string | null };
+  response?: {
+    statusCode: number;
+    headers: Record<string, Array<string>>;
+    body?: string | null;
+  } | null;
+}
+
+interface ApiProbeTcpDetailPayload {
+  connected: boolean;
+  host: string;
+  port: number;
 }
 
 /**
@@ -254,4 +283,59 @@ export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainT
       return target;
     }
   }
+}
+
+/**
+ * Transform API v4 drain probe payload to client format.
+ * The variant is picked from the transport the probe reports, and a probe that reached none of them, which the
+ * API answers by leaving the field out, becomes the transport-less variant.
+ */
+export function transformLogDrainProbeResult(payload: ApiProbeResultPayload): LogDrainProbeResult {
+  const common = {
+    ok: payload.ok,
+    code: payload.code,
+    message: payload.message,
+    duration: normalizeDuration(payload.durationMs),
+  };
+
+  // the API attaches the transport and its detail block in one move, so a block is guaranteed to be there
+  // whenever the transport it belongs to is the one reported
+  switch (payload.type) {
+    case 'HTTP':
+      return { ...common, type: 'HTTP', http: transformLogDrainProbeHttpDetail(payload.http!) };
+    case 'TCP':
+      return {
+        ...common,
+        type: 'TCP',
+        tcp: { wasConnected: payload.tcp!.connected, host: payload.tcp!.host, port: payload.tcp!.port },
+      };
+    case 'UDP':
+      return { ...common, type: 'UDP' };
+    default:
+      return common;
+  }
+}
+
+/**
+ * Transform API v4 drain probe HTTP detail payload to client format
+ */
+function transformLogDrainProbeHttpDetail(payload: ApiProbeHttpDetailPayload): LogDrainProbeHttpDetail {
+  const response = payload.response;
+
+  return {
+    request: {
+      method: payload.request.method,
+      url: payload.request.url,
+      headers: { ...payload.request.headers },
+      body: payload.request.body ?? undefined,
+    },
+    response:
+      response != null
+        ? {
+            statusCode: response.statusCode,
+            headers: Object.fromEntries(Object.entries(response.headers).map(([name, values]) => [name, [...values]])),
+            body: response.body ?? undefined,
+          }
+        : undefined,
+  };
 }

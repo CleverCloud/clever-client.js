@@ -3,12 +3,14 @@ import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { CheckLogDrainCommandInput, CheckLogDrainCommandOutput } from './check-log-drain-command.types.js';
+import { transformLogDrainProbeResult } from './log-drain-transform.js';
 
 /**
  * Probes the recipient of a log drain server-side, to check whether it can be reached.
  *
  * The probe always resolves, whether or not the recipient answered: read `ok` to tell success from failure, and
- * `code`/`message` for the debug detail. Nothing about the drain is changed.
+ * `code`/`message` for the debug detail. Narrow on `type` for the `http` or `tcp` block describing what
+ * happened on the wire. Nothing about the drain is changed.
  *
  * @endpoint [POST] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX/check
  * @group LogDrain
@@ -24,7 +26,7 @@ export class CheckLogDrainCommand extends CcApiSimpleCommand<CheckLogDrainComman
   }
 
   transformCommandOutput(response: unknown): CheckLogDrainCommandOutput {
-    return response as CheckLogDrainCommandOutput;
+    return transformLogDrainProbeResult(response as Parameters<typeof transformLogDrainProbeResult>[0]);
   }
 
   getIdsToResolve(): IdResolve {
