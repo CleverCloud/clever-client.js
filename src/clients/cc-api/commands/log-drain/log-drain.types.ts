@@ -125,7 +125,8 @@ export type LogDrainTarget =
   | DatadogDrainTarget
   | ElasticsearchDrainTarget
   | NewrelicDrainTarget
-  | BetterStackDrainTarget;
+  | BetterStackDrainTarget
+  | SplunkDrainTarget;
 
 /**
  * How the drain verifies the TLS certificate of its target: `DEFAULT` validates it, `TRUSTFUL` accepts any
@@ -238,4 +239,29 @@ export interface BetterStackDrainTarget {
    * sent.
    */
   sourceToken: string;
+}
+
+/** Ships the logs to Splunk, through its HTTP Event Collector. */
+export interface SplunkDrainTarget {
+  /** Discriminates the protocol of the target. */
+  type: 'SPLUNK';
+  /** URL of the HTTP Event Collector endpoint, e.g. `https://<host>:8088/services/collector/event`. */
+  url: string;
+  /**
+   * HTTP Event Collector token the drain authenticates with.
+   */
+  token: string;
+  /**
+   * Index the events are written to, used as is.
+   * Absent to let the index configured on the HTTP Event Collector token apply.
+   */
+  index?: string;
+  /**
+   * Sourcetype applied to the forwarded events. Absent to let the sourcetype configured on the HTTP Event
+   * Collector token apply.
+   * @renamedFrom `sourcetype`
+   */
+  sourceType?: string;
+  /** How the drain verifies the TLS certificate of the collector. */
+  tlsVerification?: LogDrainTlsVerification;
 }

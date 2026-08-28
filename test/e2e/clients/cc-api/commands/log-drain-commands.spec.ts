@@ -251,6 +251,38 @@ describe('log-drain commands', function () {
     }
   });
 
+  it('should create log drain with SPLUNK target', async () => {
+    const application = await support.createTestApplication();
+
+    const response = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        kind: 'LOG',
+        skipCheck: true,
+        target: {
+          type: 'SPLUNK',
+          url: 'https://example.com:8088/services/collector/event',
+          token: 'my-hec-token',
+          index: 'my-index',
+          sourceType: 'my-sourcetype',
+          tlsVerification: 'TRUSTFUL',
+        },
+      }),
+    );
+
+    expect(response.id).toBeTypeOf('string');
+    expect(response.applicationId).toBe(application.id);
+    expect(response.status).toBe('ENABLED');
+    expect(response.target.type).toBe('SPLUNK');
+    expect(response.target.url).toBe('https://example.com:8088/services/collector/event');
+    if (response.target.type === 'SPLUNK') {
+      expect(response.target.token).toBeTypeOf('string'); // API returns masked token
+      expect(response.target.index).toBe('my-index');
+      expect(response.target.sourceType).toBe('my-sourcetype');
+      expect(response.target.tlsVerification).toBe('TRUSTFUL');
+    }
+  });
+
   it('should create log drain with ACCESSLOG kind', async () => {
     const application = await support.createTestApplication();
 

@@ -10,6 +10,7 @@ import type {
   LogDrainTlsVerification,
   OvhTcpDrainTarget,
   RawHttpDrainTarget,
+  SplunkDrainTarget,
   SyslogTcpDrainTarget,
   SyslogUdpDrainTarget,
 } from './log-drain.types.js';
@@ -33,7 +34,16 @@ interface ApiLogDrainPayload {
 }
 
 interface ApiRecipientPayload {
-  type: 'RAW_HTTP' | 'SYSLOG_TCP' | 'SYSLOG_UDP' | 'OVH_TCP' | 'DATADOG' | 'ELASTICSEARCH' | 'NEWRELIC' | 'BETTERSTACK';
+  type:
+    | 'RAW_HTTP'
+    | 'SYSLOG_TCP'
+    | 'SYSLOG_UDP'
+    | 'OVH_TCP'
+    | 'DATADOG'
+    | 'ELASTICSEARCH'
+    | 'NEWRELIC'
+    | 'BETTERSTACK'
+    | 'SPLUNK';
   url: string;
   username?: string;
   password?: string;
@@ -42,6 +52,7 @@ interface ApiRecipientPayload {
   rfc5424StructuredDataParameters?: string;
   token?: string;
   sourceToken?: string;
+  sourcetype?: string;
   tlsVerification?: LogDrainTlsVerification;
 }
 
@@ -120,6 +131,20 @@ export function buildLogDrainCreatePayload(
   if (target.type === 'OVH_TCP') {
     if (target.token != null) {
       body.recipient.token = target.token;
+    }
+  }
+
+  // SPLUNK: token, index, sourcetype and tlsVerification
+  if (target.type === 'SPLUNK') {
+    body.recipient.token = target.token;
+    if (target.index != null) {
+      body.recipient.index = target.index;
+    }
+    if (target.sourceType != null) {
+      body.recipient.sourcetype = target.sourceType;
+    }
+    if (target.tlsVerification != null) {
+      body.recipient.tlsVerification = target.tlsVerification;
     }
   }
 
@@ -211,5 +236,22 @@ export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainT
         url: payload.url,
         sourceToken: payload.sourceToken!,
       };
+    case 'SPLUNK': {
+      const target: SplunkDrainTarget = {
+        type: 'SPLUNK',
+        url: payload.url,
+        token: payload.token!,
+      };
+      if (payload.index) {
+        target.index = payload.index;
+      }
+      if (payload.sourcetype) {
+        target.sourceType = payload.sourcetype;
+      }
+      if (payload.tlsVerification) {
+        target.tlsVerification = payload.tlsVerification;
+      }
+      return target;
+    }
   }
 }
