@@ -138,9 +138,7 @@ export function buildLogDrainCreatePayload(
 
   // ELASTICSEARCH: index (renamed from indexPrefix) and tlsVerification
   if (target.type === 'ELASTICSEARCH') {
-    if (target.indexPrefix != null) {
-      body.recipient.index = target.indexPrefix;
-    }
+    body.recipient.index = target.indexPrefix;
     if (target.tlsVerification != null) {
       body.recipient.tlsVerification = target.tlsVerification;
     }
@@ -238,15 +236,13 @@ export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainT
       const target: ElasticsearchDrainTarget = {
         type: 'ELASTICSEARCH',
         url: payload.url,
+        indexPrefix: payload.index!,
       };
       if (payload.username) {
         target.credentials = {
           username: payload.username,
           password: payload.password!,
         };
-      }
-      if (payload.index) {
-        target.indexPrefix = payload.index;
       }
       if (payload.tlsVerification) {
         target.tlsVerification = payload.tlsVerification;

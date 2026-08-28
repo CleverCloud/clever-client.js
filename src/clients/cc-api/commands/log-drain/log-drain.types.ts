@@ -309,7 +309,9 @@ export interface DatadogDrainTarget {
 export interface ElasticsearchDrainTarget {
   /** Discriminates the protocol of the target. */
   type: 'ELASTICSEARCH';
-  /** URL of the Elasticsearch cluster. */
+  /**
+   * URL of the bulk endpoint of the Elasticsearch cluster, whose path has to end in `/_bulk`.
+   */
   url: string;
   /** HTTP basic auth credentials to send with each request. */
   credentials?: {
@@ -323,7 +325,7 @@ export interface ElasticsearchDrainTarget {
    * `<indexPrefix>-YYYY-MM-DD`.
    * @renamedFrom `index`
    */
-  indexPrefix?: string;
+  indexPrefix: string;
   /** How the drain verifies the TLS certificate of the cluster. */
   tlsVerification?: LogDrainTlsVerification;
 }
