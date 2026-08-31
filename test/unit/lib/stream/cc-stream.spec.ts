@@ -44,12 +44,13 @@ describe('cc-stream', () => {
    * @param request the request the factory forges, merged over the defaults
    * @param config the stream configuration, merged over the defaults
    * @param requestFailure raised by the request factory instead of forging the request, to play a
-   * connection that never opened without depending on what the environment does with an unreachable host
+   * connection that never opened without depending on what the environment does with an unreachable host.
+   * As a function, it is given the 1-based attempt number, so that only some of the attempts fail
    */
   function createAndSpyStream(
     request: Partial<CcRequest>,
     config: Partial<CcStreamConfig> = {},
-    requestFailure?: Error,
+    requestFailure?: Error | ((attempt: number) => Error | undefined),
   ): SpiedStream {
     cleanStream?.();
 
@@ -62,11 +63,14 @@ describe('cc-stream', () => {
       failure: vi.fn(),
     };
 
+    const getRequestFailure = typeof requestFailure === 'function' ? requestFailure : () => requestFailure;
+
     const stream = new CcStream(
       () => {
         stubs.request();
-        if (requestFailure != null) {
-          throw requestFailure;
+        const failure = getRequestFailure(stubs.request.mock.calls.length);
+        if (failure != null) {
+          throw failure;
         }
         const requestUrl = request.url ?? '';
         return {
@@ -606,12 +610,44 @@ describe('cc-stream', () => {
     });
 
     it('network failure nothing will fix should fail without retry, replayable or not', async () => {
-      // ENOTFOUND is `do-not-retry`: reconnecting to a host that does not resolve is a slower way of failing
+      // ENOTFOUND is `do-not-retry`, and a stream that never opened has no reason to doubt it: reconnecting to a
+      // host that does not resolve is a slower way of failing
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY }, networkError('ENOTFOUND', true));
 
       void spiedStream.start();
 
       await spiedStream.verifyCounts({ request: 1, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcNetworkError);
+    });
+
+    it('network failure nothing will fix should be retried once the stream has been open', async () => {
+      // the same ENOTFOUND, from a host that did resolve a moment ago: that is a resolver coming back, not a typo
+      const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY }, (attempt) =>
+        attempt === 1 ? undefined : networkError('ENOTFOUND', true),
+      );
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [MESSAGE] });
+
+      void spiedStream.start();
+
+      // the heartbeat times out the open connection, then both reconnections fail to resolve
+      await spiedStream.verifyCounts({ request: 3, open: 1, error: 2, failure: 1 }, 150);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcNetworkError);
+    });
+
+    it('network failure a reconnection cannot outlive should fail even once the stream has been open', async () => {
+      // having been open only speaks for the failures a stream waits out, and a certificate is not one of them
+      const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY }, (attempt) =>
+        attempt === 1 ? undefined : networkError('DEPTH_ZERO_SELF_SIGNED_CERT', true),
+      );
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [MESSAGE] });
+
+      void spiedStream.start();
+
+      await spiedStream.verifyCounts({ request: 2, open: 1, error: 1, failure: 1 }, 150);
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcNetworkError);
     });
 

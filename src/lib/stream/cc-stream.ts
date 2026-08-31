@@ -1,4 +1,5 @@
 import type { SseMessage } from '../../types/request.types.js';
+import type { NetworkErrorCode } from '../error/cc-client-errors.js';
 import { CcClientError, CcHttpError, CcNetworkError } from '../error/cc-client-errors.js';
 import { handleHttpErrors } from '../error/handle-http-errors.js';
 import { asNetworkError, isFetchNetworkError } from '../error/network-error.js';
@@ -8,6 +9,20 @@ import { combineWithSignal, Deferred } from '../utils.js';
 import type { CcStreamCloseReason, CcStreamConfig, CcStreamRequestFactory, CcStreamState } from './cc-stream.types.js';
 
 const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
+
+/**
+ * Network failures a stream reconnects through once it has been open, against the advice the error itself gives.
+ *
+ * That advice answers for a one-shot request, where a name resolving to nothing is a typo and sending it again only
+ * fails slower. A stream that has been open asks a different question: the host did resolve and this machine did have
+ * an address, so whatever took them away is something that comes back — a laptop waking before its resolver, a VPN
+ * reconnecting, an interface not given its address yet, a local port range that frees up again. Outliving those is
+ * what a stream is for, and what it is configured for: `maxRetryCount` defaults to `Infinity`.
+ *
+ * Having been open is the whole condition. Before that the advice is right, and a stream pointed at a host nobody can
+ * resolve still fails on its first attempt instead of retrying a typo for ever.
+ */
+const RECONNECTABLE_NETWORK_CODES = new Set<NetworkErrorCode>(['ENOTFOUND', 'EADDRNOTAVAIL']);
 
 /**
  * CcStream manages Server-Sent Events (SSE) connections with automatic retry logic,
@@ -24,6 +39,7 @@ export class CcStream {
   #lastReceivedMessageId: string | undefined;
   #lastContact: Date | undefined;
   #retryCount = 0;
+  #hasBeenOpen = false;
   #retryTimeoutId: ReturnType<typeof setTimeout> | null = null;
   #heartbeatIntervalId: ReturnType<typeof setInterval> | null = null;
   #connectionStartTime: Date | null = null;
@@ -276,6 +292,7 @@ export class CcStream {
     this.#state = 'open';
     this.#lastContact = new Date();
     this.#retryCount = 0;
+    this.#hasBeenOpen = true;
 
     this.#heartbeatIntervalId = setInterval(() => {
       const now = new Date();
@@ -423,10 +440,13 @@ export class CcStream {
       return true;
     }
 
-    // The error knows better than this method does: reconnecting to a host that does not resolve is
-    // just a slower way of failing, and it is the same question consumers ask it.
+    // The error knows better than this method does, and it is the same question consumers ask it. The one thing
+    // this method knows that the error cannot is whether the stream ever connected, see RECONNECTABLE_NETWORK_CODES.
     if (error instanceof CcNetworkError) {
-      return error.isWorthRetrying();
+      return (
+        error.isWorthRetrying() ||
+        (this.#hasBeenOpen && error.networkCode != null && RECONNECTABLE_NETWORK_CODES.has(error.networkCode))
+      );
     }
 
     if (error instanceof CcHttpError) {
