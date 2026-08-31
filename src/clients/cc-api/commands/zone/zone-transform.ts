@@ -10,7 +10,7 @@ export function transformZone(payload: any): Zone {
     displayName: payload.displayName ?? undefined,
     lat: payload.lat,
     lon: payload.lon,
-    outboundIPs: payload.outboundIPs?.sort() ?? [],
+    outboundIps: payload.outboundIPs?.sort() ?? [],
     tags: payload?.tags?.sort() ?? [],
   };
 }

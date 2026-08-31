@@ -18,8 +18,11 @@ export interface Zone {
   lat: number;
   /** Longitude of the zone, to place it on a map. */
   lon: number;
-  /** Public IP addresses traffic leaving the zone comes from, to be allow-listed downstream. Sorted. */
-  outboundIPs: Array<string>;
+  /**
+   * Public IP addresses traffic leaving the zone comes from, to be allow-listed downstream. Sorted.
+   * @renamedFrom `outboundIPs`
+   */
+  outboundIps: Array<string>;
   /** Labels qualifying the zone, for example whether it is a partner zone. Sorted. */
   tags: Array<string>;
 }

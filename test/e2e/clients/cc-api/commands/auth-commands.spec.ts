@@ -23,7 +23,7 @@ describe('auth commands', function () {
   afterEach(async () => {
     const profile = await support.client.send(new GetProfileCommand());
 
-    if (profile.preferredMFA === 'TOTP') {
+    if (profile.preferredMfa === 'TOTP') {
       await support.client.send(new DeleteAuthMfaCommand({ kind: 'TOTP', password: support.password }));
     }
   });

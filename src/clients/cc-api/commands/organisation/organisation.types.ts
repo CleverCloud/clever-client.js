@@ -1,5 +1,5 @@
 import type { ApplicationState } from '../application/application.types.js';
-import type { MFAKind } from '../auth/auth.types.js';
+import type { MfaKind } from '../auth/auth.types.js';
 
 /**
  * Everything one owner holds as returned by the summary endpoint: its products and the billing
@@ -34,7 +34,7 @@ export interface BaseOrganisationSummary {
    * number, or to be on a premium plan.
    * @renamedFrom `canSEPA`
    */
-  canPayWithSEPA: boolean;
+  canPayWithSepa: boolean;
 }
 
 /**
@@ -245,7 +245,7 @@ export interface Organisation {
    * number, or to be on a premium plan.
    * @renamedFrom `canSEPA`
    */
-  canPayWithSEPA: boolean;
+  canPayWithSepa: boolean;
   /** Whether the organisation was manually flagged as trusted. */
   isTrusted: boolean;
 }
@@ -278,7 +278,7 @@ export interface OrganisationMember {
    * Second factor the user authenticates with.
    * @renamedFrom `member.preferredMFA`
    */
-  preferredMFA: MFAKind;
+  preferredMfa: MfaKind;
   /** Role the user has on the organisation. */
   role: OrganisationMemberRole;
   /**

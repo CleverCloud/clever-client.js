@@ -181,10 +181,10 @@ function transformKubernetesClusterDeploymentFailure(payload: any): KubernetesCl
  * The only wire keys the tenant-facing item data renames are the owner ones: `tenantId` on most
  * variants, `orgId` on the Materia one, both becoming `ownerId`. Every other field passes through
  * untouched, so a single generic remap covers all variants of the discriminated union — except the
- * one nullable field buried in the control-plane bundle, which is normalised first.
+ * two variants carrying a key of their own, which are normalised first.
  */
 function transformKubernetesClusterItemData(payload: any): KubernetesClusterItemData {
-  const data = payload.type === 'PublicControlPlaneBundleData' ? withNormalizedComponents(payload) : payload;
+  const data = withNormalizedVariant(payload);
   const ownerId = data.tenantId ?? data.orgId;
   if (ownerId === undefined) {
     return data;
@@ -194,14 +194,28 @@ function transformKubernetesClusterItemData(payload: any): KubernetesClusterItem
 }
 
 /**
- * An API server bound to no public port is sent as `"port": null`, which the interface spells as an
- * absent key. Every other bundled component carries no nullable field.
+ * Two variants need more than the generic owner remap. An API server bound to no public port is
+ * sent as `"port": null`, which the interface spells as an absent key — every other bundled
+ * component carries no nullable field. And the storage variant is the one place the payload spells
+ * the CephCSI version in the all-uppercase form the interface refuses.
  */
-function withNormalizedComponents(payload: any): any {
-  return {
-    ...payload,
-    components: payload.components?.map((component: any) =>
-      component.type === 'PublicApiServer' ? { ...component, port: component.port ?? undefined } : component,
-    ),
-  };
+function withNormalizedVariant(payload: any): any {
+  switch (payload.type) {
+    case 'PublicControlPlaneBundleData':
+      return {
+        ...payload,
+        components: payload.components?.map((component: any) =>
+          component.type === 'PublicApiServer' ? { ...component, port: component.port ?? undefined } : component,
+        ),
+      };
+    case 'PublicStorageData': {
+      const { cephCSIVersion, ...containerStorageInterface } = payload.containerStorageInterface;
+      return {
+        ...payload,
+        containerStorageInterface: { ...containerStorageInterface, cephCsiVersion: cephCSIVersion },
+      };
+    }
+    default:
+      return payload;
+  }
 }

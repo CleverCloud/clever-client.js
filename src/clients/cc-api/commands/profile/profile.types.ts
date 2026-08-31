@@ -1,4 +1,4 @@
-import type { MFAKind } from '../auth/auth.types.js';
+import type { MfaKind } from '../auth/auth.types.js';
 
 /**
  * The account of the signed-in user: who they are, how they are billed, and how they sign in.
@@ -47,8 +47,11 @@ export interface Profile {
   isAdmin: boolean;
   /** Whether the account has a usable payment method, so resources can be provisioned. */
   canPay: boolean;
-  /** Second authentication factor the user signs in with, `NONE` when they have none. */
-  preferredMFA: MFAKind;
+  /**
+   * Second authentication factor the user signs in with, `NONE` when they have none.
+   * @renamedFrom `preferredMFA`
+   */
+  preferredMfa: MfaKind;
   /** Whether the account has a password, as opposed to signing in only through an external provider. */
   hasPassword: boolean;
   /** Identifier of the partner the account was created through, when it was not created directly. */

@@ -26,7 +26,7 @@ export function transformOrganisation(payload: any): Organisation {
     canPay: payload.canPay,
     isPremium: payload.cleverEnterprise,
     emergencyNumber: payload.emergencyNumber,
-    canPayWithSEPA: payload.canSEPA,
+    canPayWithSepa: payload.canSEPA,
     isTrusted: payload.isTrusted,
   };
 }
@@ -37,7 +37,7 @@ export function transformOrganisationMember(payload: any): OrganisationMember {
     emailAddress: payload.member.email,
     name: payload.member.name,
     avatar: payload.member.avatar,
-    preferredMFA: payload.member.preferredMFA,
+    preferredMfa: payload.member.preferredMFA,
     role: payload.role,
     jobTitle: payload.job ?? undefined,
   };
@@ -77,7 +77,7 @@ function transformOrganisationSummary(payload: any, isPersonal: boolean): Organi
     applications: sortBy((payload.applications ?? []).map(transformApplicationSummary), 'name', 'id'),
     addons: sortBy(payload.addons ?? [], 'name', 'id'),
     consumers: sortBy(payload.consumers ?? [], 'name', 'key'),
-    canPayWithSEPA: payload.canSEPA,
+    canPayWithSepa: payload.canSEPA,
   };
 
   if (isPersonal) {

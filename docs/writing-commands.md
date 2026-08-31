@@ -190,10 +190,13 @@ transform keeps the payload keys.
 - **Arrays are plural**, unless the collection is one cohesive thing (an app's `environment`).
 - **`state`** is data or resource state; **`status`** is operational or lifecycle status.
 - **Approved abbreviations**: `id`, `url`, `sso`, `api`, `ip`, `dns`, `http(s)`, `tcp`, `mfa`,
-  `oauth`, `ssh`, `vat`, `cpu`, `ram`, `uuid`. Everything else spelled out (`shortDescription`,
-  `networkGroup*`).
-- **Acronyms**: lowercase when leading (`vat`, `oauthApp`), uppercase mid-name (`preferredMFA`,
-  `outboundIPs`), spelled into a phrase where a verb belongs (`canPayWithSEPA`).
+  `oauth`, `ssh`, `vat`, `sepa`, `csi`, `cpu`, `ram`, `uuid`. Everything else spelled out
+  (`shortDescription`, `networkGroup*`).
+- **Never an all-uppercase acronym**, in a field name or a type name. An acronym is one ordinary
+  word and takes the casing its position calls for: `vat`, `oauthApp`, `preferredMfa`,
+  `outboundIps`, `cephCsiVersion`, `MfaKind`. Where a verb belongs, spell the acronym into a phrase
+  (`canSEPA` → `canPayWithSepa`). This applies to the names we choose, not to values the backend
+  sends (`'APIRateLimit'`) or to wire keys, which the transform keeps as they are.
 - **URLs end in `Url`**, never `Uri`.
 - **Generic names** (`name`, `type`, `value`, `key`, `label`, `kind`) only on a primary entity, where
   the interface supplies the context; elsewhere `ssoUrl`, not `url`.

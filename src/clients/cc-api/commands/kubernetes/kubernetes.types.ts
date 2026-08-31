@@ -564,8 +564,11 @@ export interface KubernetesCephCsiConfig {
   cephPool: string;
   /** Kubernetes namespace the CSI driver runs in. */
   kubernetesNamespace: string;
-  /** Version of the CephCSI driver. */
-  cephCSIVersion: string;
+  /**
+   * Version of the CephCSI driver.
+   * @renamedFrom `cephCSIVersion`
+   */
+  cephCsiVersion: string;
   /** How many CSI provisioner replicas run. */
   provisionerReplicas: number;
 }

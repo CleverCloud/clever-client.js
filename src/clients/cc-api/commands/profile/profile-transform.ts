@@ -18,7 +18,7 @@ export function transformProfile(payload: any): Profile {
     isLinkedToGitHub: payload.oauthApps != null && payload.oauthApps.includes('github'),
     isAdmin: payload.admin,
     canPay: payload.canPay,
-    preferredMFA: payload.preferredMFA,
+    preferredMfa: payload.preferredMFA,
     hasPassword: payload.hasPassword,
     partnerId: payload.partnerId,
     partnerName: payload.partnerName,

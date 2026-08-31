@@ -54,7 +54,7 @@ describe('organisation commands', function () {
     expect(response.canPay).toBeTypeOf('boolean');
     expect(response.isPremium).toBeTypeOf('boolean');
     expect(response).toHaveProperty('emergencyNumber');
-    expect(response.canPayWithSEPA).toBeTypeOf('boolean');
+    expect(response.canPayWithSepa).toBeTypeOf('boolean');
     expect(response.isTrusted).toBeTypeOf('boolean');
   });
 
@@ -111,7 +111,7 @@ describe('organisation commands', function () {
     expect(response.canPay).toBeTypeOf('boolean');
     expect(response.isPremium).toBeTypeOf('boolean');
     expect(response).toHaveProperty('emergencyNumber');
-    expect(response.canPayWithSEPA).toBeTypeOf('boolean');
+    expect(response.canPayWithSepa).toBeTypeOf('boolean');
     expect(response.isTrusted).toBeTypeOf('boolean');
   });
 
@@ -149,7 +149,7 @@ describe('organisation commands', function () {
     expect(response.canPay).toBeTypeOf('boolean');
     expect(response.isPremium).toBeTypeOf('boolean');
     expect(response).toHaveProperty('emergencyNumber');
-    expect(response.canPayWithSEPA).toBeTypeOf('boolean');
+    expect(response.canPayWithSepa).toBeTypeOf('boolean');
     expect(response.isTrusted).toBeTypeOf('boolean');
   });
 
@@ -218,7 +218,7 @@ describe('organisation commands', function () {
       expect(response[0].emailAddress).toBeTypeOf('string');
       expect(response[0].name).toBeTypeOf('string');
       expect(response[0].avatar).toBeTypeOf('string');
-      expect(response[0].preferredMFA).toBeTypeOf('string');
+      expect(response[0].preferredMfa).toBeTypeOf('string');
       expect(response[0].role).toBe('ADMIN');
     });
 
