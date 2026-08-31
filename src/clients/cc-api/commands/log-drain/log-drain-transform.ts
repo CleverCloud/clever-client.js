@@ -1,7 +1,8 @@
 import { normalizeDate } from '../../../../lib/utils.js';
 import { normalizeDuration } from '../../../../utils/duration-utils.js';
-import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
 import type {
+  ApplicationOrAddonLogDrainKind,
+  AuditLogDrain,
   ElasticsearchDrainTarget,
   LogDrain,
   LogDrainExecutionStatus,
@@ -21,7 +22,8 @@ import type {
 
 interface ApiLogDrainPayload {
   id: string;
-  resourceId: string;
+  /** Left out for an AUDITLOG drain, which is attached to the organisation rather than to a resource. */
+  resourceId?: string | null;
   status: { date: string; status: LogDrainStatus; authorId?: string; errorReason?: string };
   kind?: LogDrainKind;
   recipient: ApiRecipientPayload;
@@ -86,17 +88,15 @@ interface ApiProbeTcpDetailPayload {
 }
 
 /**
- * Transform API v4 log drain payload to client format.
- * `ref` mirrors back whichever of `applicationId`/`addonId` the caller used to identify the drain.
+ * Transform the fields an API v4 log drain payload carries whichever stream the drain ships.
  */
-export function transformLogDrain(payload: ApiLogDrainPayload, ref: ApplicationOrAddonId): LogDrain {
-  const common = {
+function transformLogDrainCommon(payload: ApiLogDrainPayload): Omit<LogDrain, 'kind' | 'resourceId'> {
+  return {
     id: payload.id,
     updatedAt: normalizeDate(payload.status.date)!,
     status: payload.status.status,
     updatedBy: payload.status.authorId ?? undefined,
     errorReason: payload.status.errorReason ?? undefined,
-    kind: payload.kind!,
     target: transformLogDrainTarget(payload.recipient),
     execution: {
       status: payload.execution.status,
@@ -109,8 +109,27 @@ export function transformLogDrain(payload: ApiLogDrainPayload, ref: ApplicationO
     },
     backlog: payload.backlog ?? undefined,
   };
+}
 
-  return 'applicationId' in ref ? { ...common, applicationId: ref.applicationId } : { ...common, addonId: ref.addonId };
+/**
+ * Transform API v4 log drain payload to client format.
+ * The drain is attached to an application or an add-on, so the payload always names the resource it ships the
+ * logs of.
+ */
+export function transformLogDrain(payload: ApiLogDrainPayload): LogDrain {
+  return {
+    ...transformLogDrainCommon(payload),
+    kind: payload.kind as ApplicationOrAddonLogDrainKind,
+    resourceId: payload.resourceId!,
+  };
+}
+
+/**
+ * Transform API v4 audit log drain payload to client format.
+ * An audit log drain is attached to the organisation itself, so the payload names no resource.
+ */
+export function transformAuditLogDrain(payload: ApiLogDrainPayload): AuditLogDrain {
+  return { ...transformLogDrainCommon(payload), kind: 'AUDITLOG' };
 }
 
 /**

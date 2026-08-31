@@ -1,5 +1,5 @@
 /**
- * What every log drain carries, whichever kind of resource it is attached to.
+ * What every log drain carries, whichever stream it ships and whatever it is attached to.
  */
 interface LogDrainCommon {
   /** Identifier of the drain. */
@@ -9,8 +9,6 @@ interface LogDrainCommon {
    * @renamedFrom `recipient`
    */
   target: LogDrainTarget;
-  /** Which stream of logs the drain ships. */
-  kind: LogDrainKind;
   /**
    * When the drain's current status was set.
    * @renamedFrom `status.date`
@@ -77,16 +75,25 @@ interface LogDrainCommon {
  * (a syslog collector, an Elasticsearch cluster, Datadog, ...) as they are produced.
  */
 export interface LogDrain extends LogDrainCommon {
+  /** Which stream of logs the drain ships. */
+  kind: ApplicationOrAddonLogDrainKind;
   /**
-   * Identifier of the application the drain is attached to. Mirrored back from the command input, the payload
-   * only carries a `resourceId`.
+   * Identifier of the resource whose logs the drain ships, as the platform names it: an application id, or the
+   * `realId` of an add-on — never the `addonId` the command was asked with.
    */
-  applicationId?: string;
-  /**
-   * Identifier of the add-on the drain is attached to. Mirrored back from the command input, the payload only
-   * carries a `resourceId`.
-   */
-  addonId?: string;
+  resourceId: string;
+}
+
+/**
+ * An audit log drain: it forwards what the organisation's members did, so it is attached to the organisation
+ * itself and names no resource.
+ *
+ * Only the organisation-wide listing returns one: it can be reached through neither an application nor an
+ * add-on, and the endpoints scoped to one refuse its kind.
+ */
+export interface AuditLogDrain extends LogDrainCommon {
+  /** Which stream of logs the drain ships. Always the organisation's audit log. */
+  kind: 'AUDITLOG';
 }
 
 /**

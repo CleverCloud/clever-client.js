@@ -43,7 +43,7 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     checkDateFormat(response.updatedAt);
     expect(response.status).toBe('ENABLED');
     expect(response.target.type).toBe('RAW_HTTP');
@@ -89,7 +89,7 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     checkDateFormat(response.updatedAt);
     expect(response.status).toBe('ENABLED');
     expect(response.target.type).toBe('RAW_HTTP');
@@ -120,6 +120,26 @@ describe('log-drain commands', function () {
     expect(response).toBeInstanceOf(Array);
     expect(response).toHaveLength(2);
     expect(response.map((r) => r.id)).toEqualInAnyOrder([drain1.id, drain2.id]);
+    expect(response.map((r) => r.resourceId)).toEqual([application.id, application.id]);
+  });
+
+  it('should list log drain of a whole organisation', async () => {
+    const application = await support.createTestApplication();
+    const drain = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        kind: 'LOG',
+        skipCheck: true,
+        target: { type: 'RAW_HTTP', url: 'https://example.com' },
+      }),
+    );
+
+    const response = await support.client.send(new ListLogDrainCommand({ ownerId: support.organisationId }));
+
+    expect(response).toBeInstanceOf(Array);
+    const found = response.find((d) => d.id === drain.id);
+    expect(found).toMatchObject({ kind: 'LOG', resourceId: application.id });
+    checkDateFormat(found!.updatedAt);
   });
 
   it('should disable log drain', async () => {
@@ -138,7 +158,7 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     checkDateFormat(response.updatedAt);
     expect(response.status).toBe('DISABLED');
     expect(response.target).toBeTypeOf('object');
@@ -164,7 +184,7 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     checkDateFormat(response.updatedAt);
     expect(response.status).toBe('ENABLED');
     expect(response.target.type).toBe('RAW_HTTP');
@@ -188,7 +208,7 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     expect(response.status).toBe('ENABLED');
     expect(response.target.type).toBe('OVH_TCP');
     expect(response.target.url).toBe('https://example.com');
@@ -214,7 +234,7 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     expect(response.status).toBe('ENABLED');
     expect(response.target.type).toBe('BETTERSTACK');
     expect(response.target.url).toBe('https://example.com');
@@ -241,7 +261,7 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     expect(response.status).toBe('ENABLED');
     expect(response.target.type).toBe('ELASTICSEARCH');
     expect(response.target.url).toBe('https://example.com');
@@ -271,7 +291,7 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     expect(response.status).toBe('ENABLED');
     expect(response.target.type).toBe('SPLUNK');
     expect(response.target.url).toBe('https://example.com:8088/services/collector/event');
@@ -299,7 +319,7 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     expect(response.status).toBe('ENABLED');
     expect(response.target).toEqual({
       type: 'RAW_HTTP',

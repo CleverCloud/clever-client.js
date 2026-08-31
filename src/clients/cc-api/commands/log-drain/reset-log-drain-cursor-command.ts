@@ -29,7 +29,7 @@ export class ResetLogDrainCursorCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): ResetLogDrainCursorCommandOutput {
-    return transformLogDrain(response as Parameters<typeof transformLogDrain>[0], this.params);
+    return transformLogDrain(response as Parameters<typeof transformLogDrain>[0]);
   }
 
   getIdsToResolve(): IdResolve {

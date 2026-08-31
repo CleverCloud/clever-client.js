@@ -20,7 +20,7 @@ export class GetLogDrainCommand extends CcApiSimpleCommand<GetLogDrainCommandInp
   }
 
   transformCommandOutput(response: unknown): GetLogDrainCommandOutput {
-    return transformLogDrain(response as Parameters<typeof transformLogDrain>[0], this.params);
+    return transformLogDrain(response as Parameters<typeof transformLogDrain>[0]);
   }
 
   getIdsToResolve(): IdResolve {
