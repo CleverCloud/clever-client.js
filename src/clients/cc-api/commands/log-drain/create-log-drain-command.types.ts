@@ -1,13 +1,16 @@
 import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
-import type { LogDrain, LogDrainKind, LogDrainTarget } from './log-drain.types.js';
+import type { ApplicationOrAddonLogDrainKind, LogDrain, LogDrainTarget } from './log-drain.types.js';
 
 /**
  * Identifies the application or add-on the drain is created on, and describes the drain to create. The owner
  * is resolved automatically when omitted.
  */
 export type CreateLogDrainCommandInput = ApplicationOrAddonId & {
-  /** Which stream of logs the drain ships. */
-  kind: LogDrainKind;
+  /**
+   * Which stream of logs the drain ships. `AUDITLOG` is not one of them: audit logs belong to the
+   * organisation rather than to any application or add-on, so this endpoint rejects them with a `400`.
+   */
+  kind: ApplicationOrAddonLogDrainKind;
   /**
    * Where the drain ships the logs, and how it authenticates against it.
    * @sentAs `recipient`

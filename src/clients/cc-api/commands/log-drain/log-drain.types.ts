@@ -222,6 +222,12 @@ export type LogDrainExecutionStatus = 'RUNNING' | 'RETRYING' | 'NOT_RUNNING';
 export type LogDrainKind = 'LOG' | 'ACCESSLOG' | 'AUDITLOG';
 
 /**
+ * Which stream of logs a drain attached to an application or an add-on ships. Audit logs are missing because
+ * they record what the organisation's members did, and belong to no application nor add-on.
+ */
+export type ApplicationOrAddonLogDrainKind = 'LOG' | 'ACCESSLOG';
+
+/**
  * Where a log drain ships the logs. The `type` discriminates the protocol, and each variant carries the
  * credentials that protocol needs.
  *
