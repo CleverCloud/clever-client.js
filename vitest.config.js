@@ -70,7 +70,13 @@ const allProjects = [
       exclude: excludeForBrowser,
       fileParallelism: false,
       maxConcurrency: 1,
-      browser: { enabled: true, provider: playwright(), headless: true, instances: [{ browser: 'chromium' }] },
+      browser: {
+        enabled: true,
+        provider: playwright(),
+        headless: true,
+        screenshotFailures: false,
+        instances: [{ browser: 'chromium' }],
+      },
     },
   },
   // ---------- E2E ----------
@@ -103,7 +109,13 @@ const allProjects = [
       hookTimeout: 30000,
       fileParallelism: false,
       maxConcurrency: 1,
-      browser: { enabled: true, provider: playwright(), headless: true, instances: [{ browser: 'chromium' }] },
+      browser: {
+        enabled: true,
+        provider: playwright(),
+        headless: true,
+        screenshotFailures: false,
+        instances: [{ browser: 'chromium' }],
+      },
     },
   },
 ];
