@@ -101,7 +101,39 @@ describe('domain commands', function () {
         domain: `app-${application.id.replace('app_', '')}.cleverapps.io/`,
         isPrimary: false,
       },
-      // no favourite set: the guess promotes the non-test domain to primary
+      { domain: 'foo.com/', isPrimary: false },
+    ]);
+  });
+
+  it('should list domains with primary', async () => {
+    const application = await support.createTestApplication();
+    await support.client.send(
+      new CreateDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
+    );
+
+    await support.client.send(
+      new SetPrimaryDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
+    );
+
+    const response = await support.client.send(
+      new ListDomainCommand({
+        applicationId: application.id,
+      }),
+    );
+
+    expect(response).toBeInstanceOf(Array);
+    expect(response).toHaveLength(2);
+    expect(response).toEqualInAnyOrder([
+      {
+        domain: `app-${application.id.replace('app_', '')}.cleverapps.io/`,
+        isPrimary: false,
+      },
       { domain: 'foo.com/', isPrimary: true },
     ]);
   });

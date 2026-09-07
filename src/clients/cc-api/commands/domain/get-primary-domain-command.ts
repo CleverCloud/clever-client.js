@@ -1,28 +1,32 @@
-import { CcApiCompositeCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
+import { get } from '../../../../lib/request/request-params-builder.js';
+import { safeUrl } from '../../../../lib/utils.js';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import type { ApplicationId } from '../../types/cc-api.types.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { transformDomain } from './domain-transform.js';
+import type { Domain } from './domain.types.js';
 import type {
   GetPrimaryDomainCommandInput,
   GetPrimaryDomainCommandOutput,
 } from './get-primary-domain-command.types.js';
-import { ListDomainCommand } from './list-domain-command.js';
 
 /**
- * Returns the application's primary domain. It relies on {@link ListDomainCommand}, so when no
- * favourite domain is set on the application, the primary domain is guessed (see `@domain-utils.ts`).
+ * Reads the favourite domain explicitly set on an application. Answers `404` when there is none.
  *
- * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite
  * @group Domain
  * @version 2
  */
-export class GetPrimaryDomainCommand extends CcApiCompositeCommand<
+export class GetPrimaryDomainCommand extends CcApiSimpleCommand<
   GetPrimaryDomainCommandInput,
   GetPrimaryDomainCommandOutput
 > {
-  async compose(params: GetPrimaryDomainCommandInput, composer: CcApiComposer): Promise<GetPrimaryDomainCommandOutput> {
-    const domains = await composer.send(new ListDomainCommand(params));
-    return domains.find((domain) => domain.isPrimary);
+  toRequestParams(params: ApplicationId) {
+    return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/vhosts/favourite`);
+  }
+
+  transformCommandOutput(response: unknown): Domain {
+    return transformDomain(response, true);
   }
 
   getIdsToResolve(): IdResolve {

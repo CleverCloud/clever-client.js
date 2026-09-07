@@ -10,4 +10,4 @@ export type GetPrimaryDomainCommandInput = ApplicationId;
 /**
  * The primary domain, or `undefined` when the application has no domain at all.
  */
-export type GetPrimaryDomainCommandOutput = Domain | undefined;
+export type GetPrimaryDomainCommandOutput = Domain;

@@ -1,20 +1,19 @@
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { guessPrimaryDomain } from '../../../../utils/domain-utils.js';
 import { tolerateNotFound } from '../../../../utils/error-utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { ApplicationId, CcApiComposer } from '../../types/cc-api.types.js';
+import type { CcApiComposer } from '../../types/cc-api.types.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import { transformDomain } from './domain-transform.js';
 import type { Domain } from './domain.types.js';
+import { GetPrimaryDomainCommand } from './get-primary-domain-command.js';
 import type { ListDomainCommandInput, ListDomainCommandOutput } from './list-domain-command.types.js';
 
 /**
  * Lists the domains an application answers on, with the primary one flagged.
  *
- * The favourite domain is fetched alongside the list. When the application has none, a primary one
- * is guessed from the domains themselves (see `@domain-utils.ts`), so the result always flags a
- * primary domain as long as the application has at least one domain.
+ * The favourite domain is fetched alongside the list. If no primary domain can be found, you can guess one
+ * using `@clevercloud/client/utils/domain-utils.js`.
  *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite
@@ -25,22 +24,13 @@ export class ListDomainCommand extends CcApiCompositeCommand<ListDomainCommandIn
   async compose(params: ListDomainCommandInput, composer: CcApiComposer): Promise<ListDomainCommandOutput> {
     const [rawDomains, primaryDomain] = await Promise.all([
       composer.send(new ListDomainInnerCommand(params)),
-      tolerateNotFound(composer.send(new GetPrimaryDomainInnerCommand(params))),
+      tolerateNotFound(composer.send(new GetPrimaryDomainCommand(params))),
     ]);
 
     const domains = rawDomains.map((domain) => ({
       ...domain,
       isPrimary: domain.domain === primaryDomain?.domain,
     }));
-
-    // if a primary domain is there, nothing to do, otherwise guess one (see @domain-utils.ts)
-    if (!domains.some((domain) => domain.isPrimary)) {
-      const fallbackPrimary = guessPrimaryDomain(domains.map((domain) => domain.domain));
-      const fallbackDomain = domains.find((domain) => domain.domain === fallbackPrimary);
-      if (fallbackDomain != null) {
-        fallbackDomain.isPrimary = true;
-      }
-    }
 
     return domains;
   }
@@ -73,33 +63,6 @@ class ListDomainInnerCommand extends CcApiSimpleCommand<ListDomainCommandInput, 
       (response as Array<unknown>).map((domain) => transformDomain(domain)),
       'domain',
     );
-  }
-
-  getIdsToResolve(): IdResolve {
-    return {
-      ownerId: true,
-    };
-  }
-
-  isIdempotent(): boolean {
-    return true;
-  }
-}
-
-/**
- * Reads the favourite domain explicitly set on an application. Answers `404` when there is none.
- *
- * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite
- * @group Domain
- * @version 2
- */
-class GetPrimaryDomainInnerCommand extends CcApiSimpleCommand<ApplicationId, Domain> {
-  toRequestParams(params: ApplicationId) {
-    return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/vhosts/favourite`);
-  }
-
-  transformCommandOutput(response: unknown): Domain {
-    return transformDomain(response, true);
   }
 
   getIdsToResolve(): IdResolve {
