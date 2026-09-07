@@ -2,59 +2,26 @@ import type { ApplicationState } from '../application/application.types.js';
 import type { MfaKind } from '../auth/auth.types.js';
 
 /**
- * Everything one owner holds as returned by the summary endpoint: its products and the billing
- * flags the console needs to decide what it may offer.
- *
- * The endpoint describes the current user's personal organisation and the regular organisations
- * they belong to with two different shapes, so this is a discriminated union on `isPersonal`: a
- * {@link PersonalOrganisationSummary} carries the user-specific fields (email address, language,
- * partner), a {@link StandardOrganisationSummary} carries the organisation-specific fields (role,
- * VAT, support flags).
+ * The signed-in user as the summary endpoint describes them: who they are and which partner they
+ * signed up through. What they own hangs off their personal organisation, not off this.
  */
-export type OrganisationSummary = PersonalOrganisationSummary | StandardOrganisationSummary;
-
-/**
- * The fields every owner summary holds, whether it is the personal organisation or a regular one.
- */
-export interface BaseOrganisationSummary {
-  /** Identifier of the owner, of the form `orga_<uuid>`, or `user_<uuid>` for a personal organisation. */
+export interface UserSummary {
+  /** Identifier of the user, of the form `user_<uuid>`. It also identifies their personal organisation. */
   id: string;
-  /** Display name of the organisation, or of the user for a personal organisation. */
+  /** Display name of the user. */
   name: string;
-  /** URL of the organisation avatar. */
+  /** URL of the user avatar. */
   avatar: string;
-  /** Applications owned by the organisation. Sorted by name, then id. */
-  applications: Array<ApplicationSummary>;
-  /** Add-ons owned by the organisation. Sorted by name, then id. */
-  addons: Array<AddonSummary>;
-  /** OAuth consumers declared by the organisation. Sorted by name, then key. */
-  consumers: Array<ConsumerSummary>;
-  /**
-   * Whether SEPA direct debit is offered to this organisation, which requires it to be trusted, to have a valid VAT
-   * number, or to be on a premium plan.
-   * @renamedFrom `canSEPA`
-   */
-  canPayWithSepa: boolean;
-}
-
-/**
- * The summary of the current user's personal organisation, built from the payload's user. It
- * carries the user-specific fields (email address, language, partner) that a regular organisation
- * does not have, and none of the organisation-specific billing fields.
- */
-export interface PersonalOrganisationSummary extends BaseOrganisationSummary {
-  /** Always `true`: this summary is the personal organisation. Set while transforming; the payload does not carry it. */
-  isPersonal: true;
   /**
    * Email address of the user.
    * @renamedFrom `email`
    */
   emailAddress: string;
   /**
-   * Language the user picked for the console, as an ISO 639-1 code.
+   * Language the user picked for the console, as an ISO 639-1 code. Absent when they never picked one.
    * @renamedFrom `lang`
    */
-  language: string;
+  language?: string;
   /**
    * Whether the user is a Clever Cloud administrator.
    * @renamedFrom `admin`
@@ -66,26 +33,53 @@ export interface PersonalOrganisationSummary extends BaseOrganisationSummary {
   partnerName: string;
   /** URL of the console of the partner the user signed up through. */
   partnerConsoleUrl: string;
+  /** Self-service features the partner the user signed up through forbids. Empty when nothing is forbidden. */
+  contextFlags: Array<ContextFlag>;
 }
 
 /**
- * The summary of an organisation the current user belongs to. It carries the role the user
- * has on it and the billing and support flags, and none of the user-specific fields.
+ * Everything one organisation holds as returned by the summary endpoint: its products and the
+ * billing flags the console needs to decide what it may offer.
+ *
+ * The personal organisation of the signed-in user is one of them, discriminated on `isPersonal`:
+ * the endpoint publishes no add-on provider for it, so only a {@link StandardOrganisationSummary}
+ * carries `providers`.
  */
-export interface StandardOrganisationSummary extends BaseOrganisationSummary {
-  /** Always `false`: this summary is a regular organisation, not the personal one. Set while transforming. */
-  isPersonal: false;
-  /** Add-on providers published by the organisation. Sorted by name, then id. */
-  providers: Array<ProviderSummary>;
-  /** Role the current user has on this organisation. */
-  role: 'NONE' | 'ADMIN' | 'ACCOUNTING' | 'DEVELOPER' | 'MANAGER';
+export type OrganisationSummary = PersonalOrganisationSummary | StandardOrganisationSummary;
+
+/**
+ * The fields every organisation summary holds, whether it is the personal organisation or a regular
+ * one.
+ */
+export interface BaseOrganisationSummary {
+  /** Identifier of the organisation, of the form `orga_<uuid>`, or `user_<uuid>` for a personal organisation. */
+  id: string;
+  /** Display name of the organisation. Always `Personal space` for a personal organisation. */
+  name: string;
+  /** URL of the organisation avatar. */
+  avatar: string;
+  /** Applications owned by the organisation. Sorted by name, then id. */
+  applications: Array<ApplicationSummary>;
+  /** Add-ons owned by the organisation. Sorted by name, then id. */
+  addons: Array<AddonSummary>;
+  /** OAuth consumers declared by the organisation. Sorted by name, then key. */
+  consumers: Array<ConsumerSummary>;
+  /** Role the signed-in user has on the organisation. Always `ADMIN` on a personal organisation. */
+  role: OrganisationMemberRole;
   /** How far the VAT number of the organisation got through validation. */
   vatState: OrganisationVatState;
   /**
-   * Whether the billing details are complete enough to pay: an address, and a company name or a
-   * customer full name.
+   * Whether the organisation may be charged. The summary derives it from `vatState` alone, so it is `false` only when
+   * that state is `INVALID`; the `canPay` of {@link Organisation} answers on the completeness of the billing details
+   * instead.
    */
   canPay: boolean;
+  /**
+   * Whether SEPA direct debit is offered to this organisation, which requires it to be trusted, to have a valid VAT
+   * number, or to be on a premium plan.
+   * @renamedFrom `canSEPA`
+   */
+  canPayWithSepa: boolean;
   /**
    * Whether the organisation is on the Clever Cloud premium support plan.
    * @renamedFrom `cleverEnterprise`
@@ -95,6 +89,31 @@ export interface StandardOrganisationSummary extends BaseOrganisationSummary {
   emergencyNumber: string;
   /** Whether the organisation was manually flagged as trusted. */
   isTrusted: boolean;
+  /** Self-service features the partner this organisation is attached to forbids. Empty when nothing is forbidden. */
+  contextFlags: Array<ContextFlag>;
+}
+
+/**
+ * The summary of the personal organisation of the signed-in user: the owner their own applications
+ * and add-ons belong to.
+ *
+ * The endpoint sends its products on the payload's user rather than on the organisation itself, and
+ * never publishes its add-on providers, so they are taken from the user here and there is no
+ * `providers` field.
+ */
+export interface PersonalOrganisationSummary extends BaseOrganisationSummary {
+  /** Always `true`: this summary is the personal organisation. Set while transforming; the payload does not carry it. */
+  isPersonal: true;
+}
+
+/**
+ * The summary of a regular organisation the signed-in user belongs to.
+ */
+export interface StandardOrganisationSummary extends BaseOrganisationSummary {
+  /** Always `false`: this summary is a regular organisation, not the personal one. Set while transforming. */
+  isPersonal: false;
+  /** Add-on providers published by the organisation. Sorted by name, then id. */
+  providers: Array<ProviderSummary>;
 }
 
 /**
@@ -192,6 +211,21 @@ export interface ProviderSummary {
 export type OrganisationVatState = 'INVALID' | 'PENDING_VALIDATION' | 'VALID' | 'NOT_NEEDED' | 'NOT_APPLICABLE';
 
 /**
+ * A self-service feature a partner forbids to the users and organisations attached to it:
+ * `DENY_ORGA_CREATION` forbids creating an organisation, `DENY_ORGA_UPDATE` editing the information
+ * of one, `DENY_ORGA_DELETION` deleting one, `DENY_ORGA_MEMBER_UPDATE` any change to the members of
+ * one (addition, role change, removal, invitation), `DENY_ORGA_MEMBER_LIST` listing them, and
+ * `DENY_SELF_ACCOUNT_DELETION` deleting the user account itself.
+ */
+export type ContextFlag =
+  | 'DENY_ORGA_CREATION'
+  | 'DENY_ORGA_UPDATE'
+  | 'DENY_ORGA_DELETION'
+  | 'DENY_ORGA_MEMBER_UPDATE'
+  | 'DENY_ORGA_MEMBER_LIST'
+  | 'DENY_SELF_ACCOUNT_DELETION';
+
+/**
  * An organisation: the owner that applications, add-ons and invoices belong to, carrying the legal
  * and billing identity those invoices are issued to.
  */
@@ -248,6 +282,8 @@ export interface Organisation {
   canPayWithSepa: boolean;
   /** Whether the organisation was manually flagged as trusted. */
   isTrusted: boolean;
+  /** Self-service features the partner this organisation is attached to forbids. Empty when nothing is forbidden. */
+  contextFlags: Array<ContextFlag>;
 }
 
 /**

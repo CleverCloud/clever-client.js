@@ -1,11 +1,16 @@
 import { sortBy } from '../../../../lib/utils.js';
-import type { GetOrganisationSummariesCommandOutput } from './get-organisation-summaries-command.types.js';
+import type { GetOrganisationSummaryCommandOutput } from './get-organisation-summary-command.types.js';
 import type {
+  AddonSummary,
   ApplicationSummary,
   BaseOrganisationSummary,
+  ConsumerSummary,
   Organisation,
   OrganisationMember,
-  OrganisationSummary,
+  PersonalOrganisationSummary,
+  ProviderSummary,
+  StandardOrganisationSummary,
+  UserSummary,
 } from './organisation.types.js';
 
 export function transformOrganisation(payload: any): Organisation {
@@ -28,6 +33,7 @@ export function transformOrganisation(payload: any): Organisation {
     emergencyNumber: payload.emergencyNumber,
     canPayWithSepa: payload.canSEPA,
     isTrusted: payload.isTrusted,
+    contextFlags: payload.contextFlags ?? [],
   };
 }
 
@@ -43,13 +49,36 @@ export function transformOrganisationMember(payload: any): OrganisationMember {
   };
 }
 
-export function transformOrganisationSummaries(payload: any): GetOrganisationSummariesCommandOutput {
-  const organisations: Array<OrganisationSummary> =
-    payload.organisations
-      ?.filter((summary: any) => summary.id !== payload.user.id)
-      .map((summary: any) => transformOrganisationSummary(summary, false)) ?? [];
+export function transformOrganisationSummary(payload: any): GetOrganisationSummaryCommandOutput {
+  // The endpoint describes the personal organisation twice: the payload's user is the only place
+  // its products are sent, its entry among the organisations the only place its billing flags are.
+  // A personal organisation shares the id of its user, which is what tells the two kinds apart.
+  const summaries: Array<any> = payload.organisations ?? [];
+  const personalSummary = summaries.find((summary) => summary.id === payload.user.id);
+  const standardSummaries = summaries.filter((summary) => summary.id !== payload.user.id);
 
-  return [transformOrganisationSummary(payload.user, true), ...sortBy(organisations, 'name')];
+  return {
+    user: transformUserSummary(payload.user),
+    organisations: [
+      ...(personalSummary == null ? [] : [transformPersonalOrganisationSummary(personalSummary, payload.user)]),
+      ...sortBy(standardSummaries.map(transformStandardOrganisationSummary), 'name'),
+    ],
+  };
+}
+
+function transformUserSummary(payload: any): UserSummary {
+  return {
+    id: payload.id,
+    name: payload.name,
+    avatar: payload.avatar,
+    emailAddress: payload.email,
+    language: payload.lang ?? undefined,
+    isAdmin: payload.admin,
+    partnerId: payload.partnerId,
+    partnerName: payload.partnerName,
+    partnerConsoleUrl: payload.partnerConsoleUrl,
+    contextFlags: payload.contextFlags ?? [],
+  };
 }
 
 function transformApplicationSummary(payload: any): ApplicationSummary {
@@ -69,43 +98,67 @@ function transformApplicationSummary(payload: any): ApplicationSummary {
   };
 }
 
-function transformOrganisationSummary(payload: any, isPersonal: boolean): OrganisationSummary {
-  const base: BaseOrganisationSummary = {
+function transformAddonSummary(payload: any): AddonSummary {
+  return {
+    id: payload.id,
+    name: payload.name,
+    realId: payload.realId,
+    providerId: payload.providerId,
+    logoUrl: payload.logoUrl,
+    systemTags: payload.systemTags,
+    customerTags: payload.customerTags,
+  };
+}
+
+function transformConsumerSummary(payload: any): ConsumerSummary {
+  return {
+    name: payload.name,
+    key: payload.key,
+    picture: payload.picture,
+  };
+}
+
+function transformProviderSummary(payload: any): ProviderSummary {
+  return {
+    id: payload.id,
+    name: payload.name,
+  };
+}
+
+/**
+ * `productsPayload` is where the endpoint sends the products of the organisation: the organisation
+ * itself for a regular one, the payload's user for a personal one.
+ */
+function transformBaseOrganisationSummary(payload: any, productsPayload: any): BaseOrganisationSummary {
+  return {
     id: payload.id,
     name: payload.name,
     avatar: payload.avatar,
-    applications: sortBy((payload.applications ?? []).map(transformApplicationSummary), 'name', 'id'),
-    addons: sortBy(payload.addons ?? [], 'name', 'id'),
-    consumers: sortBy(payload.consumers ?? [], 'name', 'key'),
-    canPayWithSepa: payload.canSEPA,
-  };
-
-  if (isPersonal) {
-    // The payload's user (a `UserSummary`) carries the user-specific fields and none of the
-    // company billing fields.
-    return {
-      ...base,
-      isPersonal: true,
-      emailAddress: payload.email,
-      language: payload.lang,
-      isAdmin: payload.admin,
-      partnerId: payload.partnerId,
-      partnerName: payload.partnerName,
-      partnerConsoleUrl: payload.partnerConsoleUrl,
-    };
-  }
-
-  // A company organisation (an `OrganisationSummary`) carries the role and billing fields and none
-  // of the user-specific fields.
-  return {
-    ...base,
-    isPersonal: false,
-    providers: sortBy(payload.providers ?? [], 'name', 'id'),
+    applications: sortBy((productsPayload.applications ?? []).map(transformApplicationSummary), 'name', 'id'),
+    addons: sortBy((productsPayload.addons ?? []).map(transformAddonSummary), 'name', 'id'),
+    consumers: sortBy((productsPayload.consumers ?? []).map(transformConsumerSummary), 'name', 'key'),
     role: payload.role,
     vatState: payload.vatState,
     canPay: payload.canPay,
+    canPayWithSepa: payload.canSEPA,
     isPremium: payload.cleverEnterprise,
     emergencyNumber: payload.emergencyNumber,
     isTrusted: payload.isTrusted,
+    contextFlags: payload.contextFlags ?? [],
+  };
+}
+
+function transformPersonalOrganisationSummary(payload: any, userPayload: any): PersonalOrganisationSummary {
+  return {
+    ...transformBaseOrganisationSummary(payload, userPayload),
+    isPersonal: true,
+  };
+}
+
+function transformStandardOrganisationSummary(payload: any): StandardOrganisationSummary {
+  return {
+    ...transformBaseOrganisationSummary(payload, payload),
+    isPersonal: false,
+    providers: sortBy((payload.providers ?? []).map(transformProviderSummary), 'name', 'id'),
   };
 }

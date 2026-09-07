@@ -1,8 +1,8 @@
 import { CcClientError } from '../../../lib/error/cc-client-errors.js';
 import type { CcRequestConfigPartial } from '../../../types/request.types.js';
 import type { CcApiClient } from '../cc-api-client.js';
-import { GetOrganisationSummariesCommand } from '../commands/organisation/get-organisation-summaries-command.js';
-import type { GetOrganisationSummariesCommandOutput } from '../commands/organisation/get-organisation-summaries-command.types.js';
+import { GetOrganisationSummaryCommand } from '../commands/organisation/get-organisation-summary-command.js';
+import type { GetOrganisationSummaryCommandOutput } from '../commands/organisation/get-organisation-summary-command.types.js';
 import type { ResourceId } from '../types/cc-api.types.js';
 import type { AddonIdType, ResourceIdIndex, Store } from '../types/resource-id-resolver.types.js';
 
@@ -283,7 +283,7 @@ export class ResourceIdResolver {
    * @param requestConfig - Optional request configuration
    */
   async #fetchAndStore(requestConfig?: CcRequestConfigPartial): Promise<void> {
-    const summary = await this.#client.send(new GetOrganisationSummariesCommand(), {
+    const summary = await this.#client.send(new GetOrganisationSummaryCommand(), {
       ...requestConfig,
       cache: { mode: 'reload' },
     });
@@ -291,10 +291,10 @@ export class ResourceIdResolver {
     return this.#indexStore.write(this.#getIndex());
   }
 
-  #indexSummary(summaries: GetOrganisationSummariesCommandOutput): void {
+  #indexSummary(summary: GetOrganisationSummaryCommandOutput): void {
     this.#index = this.#createEmptyIndex();
 
-    for (const organisation of summaries) {
+    for (const organisation of summary.organisations) {
       organisation.applications?.forEach((application) => {
         this.#getIndex().ownerIdIndex.applicationIds[application.id] = organisation.id;
       });
