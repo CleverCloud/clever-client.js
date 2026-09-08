@@ -42,6 +42,18 @@ export class ResourceIdResolver {
   #index: ResourceIdIndex | undefined;
 
   /**
+   * The store read currently in flight, shared by every concurrent caller so the index is only
+   * loaded once. Cleared once it settles.
+   */
+  #pendingInit: Promise<void> | undefined;
+
+  /**
+   * The summary fetch currently in flight, shared by every concurrent caller so a burst of
+   * unresolved ids only costs one request. Cleared once it settles.
+   */
+  #pendingFetch: Promise<void> | undefined;
+
+  /**
    * Creates a new ResourceIdResolver instance
    *
    * @param client - API client to use for fetching resource information
@@ -269,20 +281,57 @@ export class ResourceIdResolver {
   /**
    * Initializes the resolver by loading the index from storage.
    * If no stored index exists, creates an empty one.
+   *
+   * Callers that arrive while the store is being read share that read instead of starting their
+   * own.
    */
   async #init(): Promise<void> {
-    if (this.#index == null) {
-      this.#index = (await this.#indexStore.read()) ?? this.#createEmptyIndex();
+    if (this.#index != null) {
+      return;
     }
+
+    this.#pendingInit ??= this.#readIndex().finally(() => {
+      this.#pendingInit = undefined;
+    });
+
+    return this.#pendingInit;
+  }
+
+  /**
+   * Loads the index from storage, falling back to an empty one when the store holds nothing.
+   */
+  async #readIndex(): Promise<void> {
+    this.#index = (await this.#indexStore.read()) ?? this.#createEmptyIndex();
   }
 
   /**
    * Fetches fresh resource data from the API and updates the cache.
    * This is called when a requested ID is not found in the current cache.
    *
+   * Callers that arrive while a fetch is in flight share it, so resolving several unknown ids at
+   * once costs one request instead of one per id. They therefore read a summary that was requested
+   * just before they asked for it. A resource created during that window stays unresolved, which
+   * is the same outcome as resolving it a few milliseconds earlier.
+   *
+   * The first caller's `requestConfig` applies to the shared request. That config cannot change
+   * the response the others get, because this fetch always forces `cache: { mode: 'reload' }`.
+   *
    * @param requestConfig - Optional request configuration
    */
   async #fetchAndStore(requestConfig?: CcRequestConfigPartial): Promise<void> {
+    this.#pendingFetch ??= this.#fetchSummaryAndStore(requestConfig).finally(() => {
+      this.#pendingFetch = undefined;
+    });
+
+    return this.#pendingFetch;
+  }
+
+  /**
+   * Fetches the organisation summary, rebuilds the index from it and writes it to the store.
+   *
+   * @param requestConfig - Optional request configuration
+   */
+  async #fetchSummaryAndStore(requestConfig?: CcRequestConfigPartial): Promise<void> {
     const summary = await this.#client.send(new GetOrganisationSummaryCommand(), {
       ...requestConfig,
       cache: { mode: 'reload' },
