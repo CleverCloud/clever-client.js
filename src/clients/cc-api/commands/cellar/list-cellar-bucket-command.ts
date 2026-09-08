@@ -8,7 +8,21 @@ import type {
 } from './list-cellar-bucket-command.types.js';
 
 /**
+ * The error codes this command can produce, to compare against `error.code`.
+ *
+ * - `CELLAR_NOT_FOUND`: the add-on does not exist, or does not belong to the given owner
+ */
+export const LIST_CELLAR_BUCKET_ERROR_CODES = {
+  CELLAR_NOT_FOUND: 'clever.cellar.not-found',
+} as const;
+
+export type ListCellarBucketErrorCode =
+  (typeof LIST_CELLAR_BUCKET_ERROR_CODES)[keyof typeof LIST_CELLAR_BUCKET_ERROR_CODES];
+
+/**
  * Lists the buckets of a Cellar add-on.
+ *
+ * Common error codes: see {@link LIST_CELLAR_BUCKET_ERROR_CODES}
  *
  * @endpoint [GET] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets
  * @group Cellar

@@ -10,10 +10,26 @@ import type {
 } from './list-cellar-object-command.types.js';
 
 /**
+ * The error codes this command can produce, to compare against `error.code`.
+ *
+ * - `CELLAR_NOT_FOUND`: the add-on does not exist, or does not belong to the given owner
+ * - `BUCKET_NOT_FOUND`: the bucket does not exist in the add-on
+ */
+export const LIST_CELLAR_OBJECT_ERROR_CODES = {
+  CELLAR_NOT_FOUND: 'clever.cellar.not-found',
+  BUCKET_NOT_FOUND: 'clever.cellar.bucket-not-found',
+} as const;
+
+export type ListCellarObjectErrorCode =
+  (typeof LIST_CELLAR_OBJECT_ERROR_CODES)[keyof typeof LIST_CELLAR_OBJECT_ERROR_CODES];
+
+/**
  * Lists one page of a bucket's contents, presented as objects and directories.
  *
  * Keys are split on slashes so the result reads like a file browser: a common prefix comes back as a
  * directory rather than as the objects under it.
+ *
+ * Common error codes: see {@link LIST_CELLAR_OBJECT_ERROR_CODES}
  *
  * @endpoint [GET] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets/:XXX/objects
  * @group Cellar

@@ -8,12 +8,30 @@ import type { UploadCellarObjectCommandInput } from './upload-cellar-object-comm
 const DEFAULT_CONTENT_TYPE = 'application/octet-stream';
 
 /**
+ * The error codes this command can produce, to compare against `error.code`.
+ *
+ * - `CELLAR_NOT_FOUND`: the add-on does not exist, or does not belong to the given owner
+ * - `BUCKET_NOT_FOUND`: the bucket does not exist in the add-on
+ * - `UPLOAD_FAILED`: the storage cluster refused the content
+ */
+export const UPLOAD_CELLAR_OBJECT_ERROR_CODES = {
+  CELLAR_NOT_FOUND: 'clever.cellar.not-found',
+  BUCKET_NOT_FOUND: 'clever.cellar.bucket-not-found',
+  UPLOAD_FAILED: 'clever.cellar.upload-failed',
+} as const;
+
+export type UploadCellarObjectErrorCode =
+  (typeof UPLOAD_CELLAR_OBJECT_ERROR_CODES)[keyof typeof UPLOAD_CELLAR_OBJECT_ERROR_CODES];
+
+/**
  * Uploads an object into a Cellar bucket.
  *
  * The content is sent to a presigned URL pointing at https://api.clever-cloud.com, so that second
  * request leaves the client configuration behind: it reaches the API directly even when the client
  * is set up to go through `api-bridge`, it does not carry the authentication set on the client, and
  * in a browser it is a cross-origin request.
+ *
+ * Common error codes: see {@link UPLOAD_CELLAR_OBJECT_ERROR_CODES}
  *
  * @endpoint [POST] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets/:XXX/objects/:XXX/presigned-url
  * @endpoint [POST] /v4/cellar/organisations/:XXX/cellar/:XXX/buckets/:XXX/objects/upload/:XXX

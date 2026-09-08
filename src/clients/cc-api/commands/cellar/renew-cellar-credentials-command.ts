@@ -8,9 +8,23 @@ import type {
 } from './renew-cellar-credentials-command.types.js';
 
 /**
+ * The error codes this command can produce, to compare against `error.code`.
+ *
+ * - `CELLAR_NOT_FOUND`: the add-on does not exist, or does not belong to the given owner
+ */
+export const RENEW_CELLAR_CREDENTIALS_ERROR_CODES = {
+  CELLAR_NOT_FOUND: 'clever.cellar.not-found',
+} as const;
+
+export type RenewCellarCredentialsErrorCode =
+  (typeof RENEW_CELLAR_CREDENTIALS_ERROR_CODES)[keyof typeof RENEW_CELLAR_CREDENTIALS_ERROR_CODES];
+
+/**
  * Rotates the S3 credentials of a Cellar add-on.
  *
  * The previous key stops working, so every client using it has to be updated.
+ *
+ * Common error codes: see {@link RENEW_CELLAR_CREDENTIALS_ERROR_CODES}
  *
  * @endpoint [POST] /v4/cellar/organisations/:XXX/cellar/:XXX/credentials/renew
  * @group Cellar
