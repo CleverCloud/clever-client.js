@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { RebootMatomoCommandInput } from './reboot-matomo-command.types.js';
 
 /**
+ * Restarts the Matomo instance backing an add-on, without touching its data.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-matomo/addons/:XXX/reboot
  * @group Matomo
  * @version 4
@@ -22,5 +24,10 @@ export class RebootMatomoCommand extends CcApiSimpleCommand<RebootMatomoCommandI
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // each call queues a redeployment, so a replay restarts the instance a second time
+  isIdempotent(): boolean {
+    return false;
   }
 }

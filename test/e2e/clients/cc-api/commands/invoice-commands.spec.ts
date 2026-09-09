@@ -26,10 +26,10 @@ describe('invoice commands', function () {
 
     expect(response).toBeTypeOf('object');
     expect(response.invoiceNumber).toBe(invoiceNumber);
-    checkDateFormat(response.emissionDate);
-    checkDateFormat(response.payDate!);
-    checkDateFormat(response.consumptionStartDate);
-    checkDateFormat(response.consumptionEndDate);
+    checkDateFormat(response.emittedAt);
+    checkDateFormat(response.paidAt!);
+    checkDateFormat(response.consumptionStartedAt);
+    checkDateFormat(response.consumptionEndedAt);
   });
 
   it('should get invoice as HTML', async () => {
@@ -42,6 +42,11 @@ describe('invoice commands', function () {
     const response = await support.client.send(new ListInvoiceCommand({ ownerId: support.userId }));
 
     expect(response).toBeInstanceOf(Array);
+    // the summary dates go through the same normalisation as the full invoice ones
+    response.forEach((invoice) => {
+      checkDateFormat(invoice.emittedAt);
+      checkDateFormat(invoice.paidAt!);
+    });
   });
 
   it('should list unpaid invoice', async () => {

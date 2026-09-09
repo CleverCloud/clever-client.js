@@ -8,6 +8,8 @@ import type {
 } from './list-tcp-redirection-command.types.js';
 
 /**
+ * Lists the public TCP ports routed to an application.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/tcpRedirs
  * @group TcpRedirection
  * @version 2
@@ -20,13 +22,13 @@ export class ListTcpRedirectionCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/tcpRedirs`);
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

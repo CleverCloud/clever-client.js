@@ -10,6 +10,11 @@ import type {
 } from './list-application-instance-command.types.js';
 
 /**
+ * Lists the instances of an application, live and destroyed alike.
+ *
+ * Without any filter the whole history is returned, so a long-lived application yields the instances of all its
+ * past deployments. Narrow it down with `deploymentId`, a time range or a state filter.
+ *
  * @endpoint [GET] /v4/orchestration/organisations/:XXX/applications/:XXX/instances
  * @group Instance
  * @version 4
@@ -33,16 +38,16 @@ export class ListApplicationInstanceCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): ListApplicationInstanceCommandOutput {
-    return sortBy((response as Array<unknown>).map(transformApplicationInstance), 'creationDate', 'index');
-  }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
+    return sortBy((response as Array<unknown>).map(transformApplicationInstance), 'createdAt', 'index');
   }
 
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

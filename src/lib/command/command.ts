@@ -1,5 +1,5 @@
-import type { Composer } from '../../types/command.types.js';
-import type { CcRequestParams } from '../../types/request.types.js';
+import type { ApiErrorInfo, Composer } from '../../types/command.types.js';
+import type { CcRequestConfigPartial, CcRequestParams } from '../../types/request.types.js';
 import type { SelfOrPromise } from '../../types/utils.types.js';
 
 //--
@@ -43,6 +43,42 @@ export abstract class AbstractCommand<Api extends string, CommandInput> {
    * Must be implemented by a concrete class.
    */
   abstract get api(): Api;
+
+  /**
+   * Gets the request configuration this command needs.
+   * Override for commands whose endpoint only works with a specific configuration, like a command targeting
+   * another origin, which browsers only reach with CORS enabled.
+   *
+   * It takes precedence over the client default configuration, but the configuration given to `send()` still
+   * wins, so that a caller can always override it explicitly.
+   *
+   * @returns The request configuration, or `undefined` to only rely on the client and caller configuration
+   */
+  getRequestConfig(): CcRequestConfigPartial | undefined {
+    return undefined;
+  }
+
+  /**
+   * Whether this command can be sent twice without meaning it twice.
+   *
+   * It answers the question a caller asks after a failure that may or may not have reached the server:
+   * can this be sent again. What counts is the effect, not the answer — two calls leaving the same state
+   * are idempotent even when the second one answers 404.
+   *
+   * Override to `true` only once the route has been read and its replay is known to change nothing
+   * further. The default is `false` because an unchecked endpoint is an unknown one, and the cost of
+   * being wrong is an action performed twice. The HTTP method does not answer it either: a `PUT` that
+   * mails a confirmation is not replayable, and a read behind a `POST` is.
+   *
+   * For a composite command, it is about replaying the whole command: one that creates and then waits is
+   * not replayable, whatever its individual steps do. The client applies it as a ceiling over every
+   * request the composite makes, so a step is only replayable if the composite is too.
+   *
+   * @returns Whether sending this command again means it again
+   */
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**
@@ -76,36 +112,34 @@ export abstract class SimpleCommand<Api extends string, CommandInput, CommandOut
   abstract toRequestParams(_params: CommandInput): SelfOrPromise<Partial<CcRequestParams>>;
 
   /**
-   * Determines how to handle empty responses from the API.
-   *
-   * @param _status - The HTTP status code
-   * @param _body - The response body
-   * @returns Policy for handling empty responses:
-   *   - null: treat response as non-empty
-   *   - {isEmpty: true}: treat as empty, use emptyValue if provided
-   */
-  getEmptyResponsePolicy(_status: number, _body?: unknown): { isEmpty: boolean; emptyValue?: unknown } | null {
-    return null;
-  }
-
-  /**
-   * Transforms the raw API response into the expected output format
+   * Transforms the raw API response into the expected output format.
+   * May be asynchronous, the client awaits the result.
    *
    * @param response - The raw response from the API
    * @returns The processed response in the expected format
    */
-  transformCommandOutput(response: unknown): CommandOutput {
+  transformCommandOutput(response: unknown): SelfOrPromise<CommandOutput> {
     return response as CommandOutput;
   }
 
   /**
-   * Transforms API error codes into client-specific error codes
+   * Transforms an API error into a client-specific error code.
    *
-   * @param errorCode - The error code from the API
+   * @param error - What could be parsed from the error response: its code, its message and its HTTP status
    * @returns The transformed error code for client use
    */
-  transformErrorCode(errorCode: string): string {
-    return errorCode;
+  transformErrorCode(error: ApiErrorInfo): string {
+    return error.code;
+  }
+
+  /**
+   * Determines whether the client's authentication should be applied to this command's request.
+   * Override to return `false` for commands that must be sent unauthenticated.
+   *
+   * @returns Whether authentication should be applied
+   */
+  isAuthEnabled(): boolean {
+    return true;
   }
 }
 

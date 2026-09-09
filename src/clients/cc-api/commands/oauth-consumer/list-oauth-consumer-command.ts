@@ -10,8 +10,12 @@ import type {
 import { transformOauthConsumer } from './oauth-consumer-transform.js';
 
 /**
+ * Lists the OAuth consumers owned by an organisation, optionally with their secrets.
+ *
+ * Fetching the secrets costs one extra request per consumer, so it is off by default.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/consumers
- * @endpoint [GET] /v2/organisations/:XXX/consumers
+ * @endpoint [GET] /v2/organisations/:XXX/consumers/:XXX/secret
  * @group OauthConsumer
  * @version 2
  */
@@ -39,9 +43,15 @@ export class ListOauthConsumerCommand extends CcApiCompositeCommand<
 
     return oauthConsumers;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Lists the OAuth consumers of an organisation, without their secrets.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/consumers
  * @group OauthConsumer
  * @version 2
@@ -58,7 +68,7 @@ class ListOauthConsumerInnerCommand extends CcApiSimpleCommand<
     return sortBy((response as Array<unknown>).map(transformOauthConsumer), 'name');
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
+  isIdempotent(): boolean {
+    return true;
   }
 }

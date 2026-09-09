@@ -1,0 +1,136 @@
+# Work in that project
+
+This file provides guidance to LLMs when working with code in this repository.
+
+## Development Commands
+
+### Building
+- `pnpm run build` - Build the project with Rollup
+- `pnpm run prepack` - Build before packing/publishing (alias of `build`; quality gates run in PR CI, not at pack time)
+
+### Testing
+Tests run on Vitest. The same `*.spec.js` files run in both Node.js and a real browser (Vitest browser mode, Playwright/Chromium), defined as four projects in `vitest.config.js`: `node-unit`, `browser-unit`, `node-e2e`, `browser-e2e`.
+- `pnpm run test` - Run all unit tests (browser + Node.js)
+- `pnpm run test:unit` - Same as test (unit tests only)
+- `pnpm run test:unit:browser` - Browser unit tests
+- `pnpm run test:unit:browser:watch` - Watch mode for browser unit tests
+- `pnpm run test:unit:node` - Node.js unit tests
+- `pnpm run test:unit:node:watch` - Watch mode for Node.js unit tests
+- `pnpm run test:unit:watch` - Watch mode for unit tests (both environments)
+- `pnpm run test:e2e` - End-to-end tests (browser + Node.js)
+- `pnpm run test:e2e:browser` - Browser e2e tests
+- `pnpm run test:e2e:node` - Node.js e2e tests
+
+Browser tests require Playwright Chromium: `npx playwright install chromium`.
+
+### Linting & Formatting
+- `pnpm run lint` - ESLint check
+- `pnpm run lint:fix` - ESLint auto-fix
+- `pnpm run format` - Format code with Prettier
+- `pnpm run format:check` - Check code formatting
+- `pnpm run typecheck` - TypeScript type checking
+
+### Analysis & Generation
+- `pnpm run endpoints-generate` - Generate API endpoints from OpenAPI specs
+- `pnpm run endpoints-list` - List all available endpoints
+- `pnpm run endpoints-analyze` - Analyze endpoint usage
+- `pnpm run api-usage-analyze` - Analyze API usage across console3, clever-components, clever-tools
+
+## Architecture Overview
+
+This is the **@clevercloud/client** package - a comprehensive JavaScript REST client for Clever Cloud's APIs. The project provides multiple client implementations and both modern command-pattern clients and legacy functional clients.
+
+### Core Architecture Components
+
+#### 1. Client Implementations (`src/clients/`)
+- **cc-api/**: Main Clever Cloud API client with OAuth v1 and API token auth
+- **cc-api-bridge/**: Bridge client for API token management  
+- **redis-http/**: Redis HTTP client for Redis addon management
+
+#### 2. Base Library (`src/lib/`)
+- **cc-client.js**: Base client class with HTTP handling, auth, and streaming
+- **auth/**: Authentication implementations (OAuth v1, API tokens)
+- **command/**: Command pattern implementation for API operations
+- **request/**: HTTP request handling, caching, debugging
+- **stream/**: Server-Sent Events streaming with auto-retry
+- **error/**: Error handling and HTTP status code management
+
+#### 3. Command Pattern Structure
+Each API operation is implemented as a Command class:
+- Commands are located in `src/clients/{client}/commands/{domain}/`
+- Each command has a main `.ts` file and a `.types.ts` for its input and output types
+- Commands handle request building, response transformation, and validation
+
+**Before adding or fixing a command, read [docs/writing-commands.md](docs/writing-commands.md).** It
+is the authoritative reference for the conventions this client follows: reading the backend source
+first and keeping `data/command-backend-source-map.csv` up to date, file layout, naming, the
+`undefined`-over-`null` rule, date and duration normalisation, transforms, error codes, and JSDoc.
+
+### Committing and releasing
+
+**Before writing a commit message or a changelog entry, read
+[docs/commits-and-changelog.md](docs/commits-and-changelog.md).**
+
+#### 4. Legacy Client (`esm/`)
+Functional API client for backward compatibility:
+- Functions for each API endpoint
+- OAuth utilities and request helpers
+- Streaming implementations for logs and events
+
+### Key Patterns
+
+#### Authentication
+The project supports multiple auth methods:
+- **OAuth v1 PLAINTEXT**: For secure token-based auth
+- **API tokens**: Simpler programmatic access
+- Auth is configured per client instance in the constructor
+
+#### Resource ID Resolution
+The cc-api client includes automatic ID resolution and caching:
+- Automatically resolves owner IDs for apps, addons, OAuth consumers
+- Translates between different addon ID formats
+- Configurable storage backends (memory, file, localStorage)
+
+#### Command Pattern
+All API operations use the Command pattern:
+```javascript
+const command = new GetApplicationCommand({ applicationId: 'app_123' });
+const result = await client.send(command);
+```
+
+#### Streaming
+Real-time data via Server-Sent Events:
+- Application logs, access logs, platform events
+- Auto-retry with exponential backoff
+- Health checks and connection monitoring
+
+### File Organization
+- `src/clients/{client}/commands/{domain}/` - Command implementations
+- `src/clients/{client}/lib/` - Client-specific utilities  
+- `src/lib/` - Shared base functionality
+- `src/types/` - TypeScript type definitions
+- `src/utils/` - Utility functions
+- `test/unit/` - Unit tests
+- `test/e2e/` - End-to-end tests
+- `esm/` - Legacy functional client
+- `tasks/` - Build and analysis scripts
+
+### Testing Environment
+- **Runner**: Vitest, with the same specs run in Node.js and a real browser (Vitest browser mode, Playwright/Chromium). Configured as four projects in `vitest.config.js`.
+- **Assertions**: Vitest (`expect`); spies/stubs via `vitest`. A custom `toEqualInAnyOrder` matcher (order-insensitive deep equality) lives in `test/lib/deep-equal-in-any-order/` and is registered for all projects via `test/setup/vite-matchers.js`.
+- **Mock API**: Provided by the [`@clevercloud/doublure`](https://www.npmjs.com/package/@clevercloud/doublure) package; tests use its `doublureHooks` (`@clevercloud/doublure/testing`) and the browser is bridged via its Vitest plugin (`@clevercloud/doublure/vitest`).
+- **E2E**: Node uses `test/e2e/global-setup.node.js` (login/logout) with token hand-off to workers; the browser uses the proxy/login Vite plugin in `test/lib/e2e-proxy.browser.js`.
+- Tests are located parallel to source files with `.spec.js` extension. Use `*.node.spec.js` / `*.browser.spec.js` to restrict a spec to one environment.
+
+### Build System
+- **Rollup**: Bundling and distribution
+- **TypeScript**: Type checking (JSDoc + .d.ts files)
+- **ESLint**: Code linting with Prettier integration
+- Supports both Node.js (22+) and browser environments
+
+### Export Strategy
+The package uses conditional exports in package.json:
+- Modern clients: Direct imports from `/src`
+- Legacy client: From `/esm`
+- Storage providers: Environment-specific (browser/node)
+- TypeScript definitions: Generated to `/dist/types`

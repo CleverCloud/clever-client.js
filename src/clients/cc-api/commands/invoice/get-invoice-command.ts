@@ -5,6 +5,11 @@ import type { GetInvoiceCommandInput, GetInvoiceCommandOutput } from './get-invo
 import { transformInvoice } from './invoice-transform.js';
 
 /**
+ * Retrieves one billing document of an organisation, with all of its detailed lines.
+ *
+ * The endpoint serves both invoices and the credit notes that void them, told apart by the `kind`
+ * field. The totals are computed by the API from the lines rather than stored.
+ *
  * @endpoint [GET] /v4/billing/organisations/:XXX/invoices/:XXX
  * @group Invoice
  * @version 4
@@ -14,11 +19,11 @@ export class GetInvoiceCommand extends CcApiSimpleCommand<GetInvoiceCommandInput
     return get(safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/${params.invoiceNumber}`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetInvoiceCommandOutput {
     return transformInvoice(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

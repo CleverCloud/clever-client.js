@@ -5,8 +5,11 @@ import type {
   ListWebhookNotificationCommandInput,
   ListWebhookNotificationCommandOutput,
 } from './list-webhook-notification-command.types.js';
+import { transformWebhookNotification } from './notification-transform.js';
 
 /**
+ * Lists the webhooks watching an owner.
+ *
  * @endpoint [GET] /v2/notifications/webhooks/:XXX
  * @group Notification
  * @version 2
@@ -20,10 +23,10 @@ export class ListWebhookNotificationCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): ListWebhookNotificationCommandOutput {
-    return sortBy(response as ListWebhookNotificationCommandOutput, 'name', 'createdAt');
+    return sortBy((response as Array<unknown>).map(transformWebhookNotification), 'name', 'createdAt');
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
+  isIdempotent(): boolean {
+    return true;
   }
 }

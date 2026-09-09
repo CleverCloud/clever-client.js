@@ -1,6 +1,10 @@
 allowBuilds:
   esbuild: set this to true or false
   unrs-resolver: false
+catalog:
+  # Declared twice in package.json: an optional peer dependency, and a dev dependency so the tests
+  # can load it. Keep the two ranges in sync from here.
+  linkedom: ^0.18.13
 minimumReleaseAge: 10080
 # Pin to the versions resolved by the old npm lockfile: newer releases change the
 # OpenAPI types and break the typecheck of tasks/lib/endpoint-parse.js. Keep the

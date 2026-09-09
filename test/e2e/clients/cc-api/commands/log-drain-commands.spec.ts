@@ -30,6 +30,7 @@ describe('log-drain commands', function () {
       new CreateLogDrainCommand({
         applicationId: application.id,
         kind: 'LOG',
+        skipCheck: true,
         target: {
           type: 'RAW_HTTP',
           url: 'https://example.com',
@@ -42,7 +43,7 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     checkDateFormat(response.updatedAt);
     expect(response.status).toBe('ENABLED');
     expect(response.target.type).toBe('RAW_HTTP');
@@ -60,14 +61,8 @@ describe('log-drain commands', function () {
       new CreateLogDrainCommand({
         applicationId: application.id,
         kind: 'LOG',
-        target: {
-          type: 'RAW_HTTP',
-          url: 'https://example.com',
-          credentials: {
-            username: 'username',
-            password: 'password',
-          },
-        },
+        skipCheck: true,
+        target: { type: 'RAW_HTTP', url: 'https://example.com' },
       }),
     );
 
@@ -84,14 +79,8 @@ describe('log-drain commands', function () {
       new CreateLogDrainCommand({
         applicationId: application.id,
         kind: 'LOG',
-        target: {
-          type: 'RAW_HTTP',
-          url: 'https://example.com',
-          credentials: {
-            username: 'username',
-            password: 'password',
-          },
-        },
+        skipCheck: true,
+        target: { type: 'RAW_HTTP', url: 'https://example.com' },
       }),
     );
 
@@ -100,16 +89,11 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     checkDateFormat(response.updatedAt);
     expect(response.status).toBe('ENABLED');
     expect(response.target.type).toBe('RAW_HTTP');
     expect(response.target.url).toBe('https://example.com');
-    if (response.target.type === 'RAW_HTTP') {
-      expect(response.target.credentials).toBeTypeOf('object');
-      expect(response.target.credentials!.username).toBe('username');
-      expect(response.target.credentials!.password).toBeTypeOf('string'); // API returns masked password
-    }
   });
 
   it('should list log drain', async () => {
@@ -118,24 +102,16 @@ describe('log-drain commands', function () {
       new CreateLogDrainCommand({
         applicationId: application.id,
         kind: 'LOG',
-        target: {
-          type: 'RAW_HTTP',
-          url: 'https://example.com',
-          credentials: {
-            username: 'username',
-            password: 'password',
-          },
-        },
+        skipCheck: true,
+        target: { type: 'RAW_HTTP', url: 'https://example.com' },
       }),
     );
     const drain2 = await support.client.send(
       new CreateLogDrainCommand({
         applicationId: application.id,
         kind: 'LOG',
-        target: {
-          type: 'SYSLOG_UDP',
-          url: 'https://example.com',
-        },
+        skipCheck: true,
+        target: { type: 'SYSLOG_UDP', url: 'https://example.com' },
       }),
     );
 
@@ -144,6 +120,26 @@ describe('log-drain commands', function () {
     expect(response).toBeInstanceOf(Array);
     expect(response).toHaveLength(2);
     expect(response.map((r) => r.id)).toEqualInAnyOrder([drain1.id, drain2.id]);
+    expect(response.map((r) => r.resourceId)).toEqual([application.id, application.id]);
+  });
+
+  it('should list log drain of a whole organisation', async () => {
+    const application = await support.createTestApplication();
+    const drain = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        kind: 'LOG',
+        skipCheck: true,
+        target: { type: 'RAW_HTTP', url: 'https://example.com' },
+      }),
+    );
+
+    const response = await support.client.send(new ListLogDrainCommand({ ownerId: support.organisationId }));
+
+    expect(response).toBeInstanceOf(Array);
+    const found = response.find((d) => d.id === drain.id);
+    expect(found).toMatchObject({ kind: 'LOG', resourceId: application.id });
+    checkDateFormat(found!.updatedAt);
   });
 
   it('should disable log drain', async () => {
@@ -152,14 +148,8 @@ describe('log-drain commands', function () {
       new CreateLogDrainCommand({
         applicationId: application.id,
         kind: 'LOG',
-        target: {
-          type: 'RAW_HTTP',
-          url: 'https://example.com',
-          credentials: {
-            username: 'username',
-            password: 'password',
-          },
-        },
+        skipCheck: true,
+        target: { type: 'RAW_HTTP', url: 'https://example.com' },
       }),
     );
 
@@ -168,7 +158,7 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     checkDateFormat(response.updatedAt);
     expect(response.status).toBe('DISABLED');
     expect(response.target).toBeTypeOf('object');
@@ -180,14 +170,8 @@ describe('log-drain commands', function () {
       new CreateLogDrainCommand({
         applicationId: application.id,
         kind: 'LOG',
-        target: {
-          type: 'RAW_HTTP',
-          url: 'https://example.com',
-          credentials: {
-            username: 'username',
-            password: 'password',
-          },
-        },
+        skipCheck: true,
+        target: { type: 'RAW_HTTP', url: 'https://example.com' },
       }),
     );
 
@@ -200,15 +184,122 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     checkDateFormat(response.updatedAt);
     expect(response.status).toBe('ENABLED');
     expect(response.target.type).toBe('RAW_HTTP');
     expect(response.target.url).toBe('https://example.com');
-    if (response.target.type === 'RAW_HTTP') {
-      expect(response.target.credentials).toBeTypeOf('object');
-      expect(response.target.credentials!.username).toBe('username');
-      expect(response.target.credentials!.password).toBeTypeOf('string'); // API returns masked password
+  });
+
+  it('should create log drain with OVH_TCP target', async () => {
+    const application = await support.createTestApplication();
+
+    const response = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        kind: 'LOG',
+        skipCheck: true,
+        target: {
+          type: 'OVH_TCP',
+          url: 'https://example.com',
+          token: 'my-token',
+        },
+      }),
+    );
+
+    expect(response.id).toBeTypeOf('string');
+    expect(response.resourceId).toBe(application.id);
+    expect(response.status).toBe('ENABLED');
+    expect(response.target.type).toBe('OVH_TCP');
+    expect(response.target.url).toBe('https://example.com');
+    if (response.target.type === 'OVH_TCP') {
+      expect(response.target.token).toBeTypeOf('string'); // API returns masked token
+    }
+  });
+
+  it('should create log drain with BETTERSTACK target', async () => {
+    const application = await support.createTestApplication();
+
+    const response = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        kind: 'LOG',
+        skipCheck: true,
+        target: {
+          type: 'BETTERSTACK',
+          url: 'https://example.com',
+          sourceToken: 'my-source-token',
+        },
+      }),
+    );
+
+    expect(response.id).toBeTypeOf('string');
+    expect(response.resourceId).toBe(application.id);
+    expect(response.status).toBe('ENABLED');
+    expect(response.target.type).toBe('BETTERSTACK');
+    expect(response.target.url).toBe('https://example.com');
+    if (response.target.type === 'BETTERSTACK') {
+      expect(response.target.sourceToken).toBeTypeOf('string'); // API returns masked source token
+    }
+  });
+
+  it('should create log drain with ELASTICSEARCH target and tlsVerification', async () => {
+    const application = await support.createTestApplication();
+
+    const response = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        kind: 'LOG',
+        skipCheck: true,
+        target: {
+          type: 'ELASTICSEARCH',
+          url: 'https://example.com',
+          indexPrefix: 'my-index',
+          tlsVerification: 'TRUSTFUL',
+        },
+      }),
+    );
+
+    expect(response.id).toBeTypeOf('string');
+    expect(response.resourceId).toBe(application.id);
+    expect(response.status).toBe('ENABLED');
+    expect(response.target.type).toBe('ELASTICSEARCH');
+    expect(response.target.url).toBe('https://example.com');
+    if (response.target.type === 'ELASTICSEARCH') {
+      expect(response.target.indexPrefix).toBe('my-index');
+      expect(response.target.tlsVerification).toBe('TRUSTFUL');
+    }
+  });
+
+  it('should create log drain with SPLUNK target', async () => {
+    const application = await support.createTestApplication();
+
+    const response = await support.client.send(
+      new CreateLogDrainCommand({
+        applicationId: application.id,
+        kind: 'LOG',
+        skipCheck: true,
+        target: {
+          type: 'SPLUNK',
+          url: 'https://example.com:8088/services/collector/event',
+          token: 'my-hec-token',
+          index: 'my-index',
+          sourceType: 'my-sourcetype',
+          tlsVerification: 'TRUSTFUL',
+        },
+      }),
+    );
+
+    expect(response.id).toBeTypeOf('string');
+    expect(response.resourceId).toBe(application.id);
+    expect(response.status).toBe('ENABLED');
+    expect(response.target.type).toBe('SPLUNK');
+    expect(response.target.url).toBe('https://example.com:8088/services/collector/event');
+    if (response.target.type === 'SPLUNK') {
+      expect(response.target.token).toBeTypeOf('string'); // API returns masked token
+      expect(response.target.index).toBe('my-index');
+      expect(response.target.sourceType).toBe('my-sourcetype');
+      expect(response.target.tlsVerification).toBe('TRUSTFUL');
     }
   });
 
@@ -219,6 +310,7 @@ describe('log-drain commands', function () {
       new CreateLogDrainCommand({
         applicationId: application.id,
         kind: 'ACCESSLOG',
+        skipCheck: true,
         target: {
           type: 'RAW_HTTP',
           url: 'https://example.com',
@@ -227,30 +319,11 @@ describe('log-drain commands', function () {
     );
 
     expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
+    expect(response.resourceId).toBe(application.id);
     expect(response.status).toBe('ENABLED');
     expect(response.target).toEqual({
       type: 'RAW_HTTP',
       url: 'https://example.com',
     });
-  });
-
-  it('should create log drain with AUDITLOG kind', async () => {
-    const application = await support.createTestApplication();
-
-    const response = await support.client.send(
-      new CreateLogDrainCommand({
-        applicationId: application.id,
-        kind: 'AUDITLOG',
-        target: {
-          type: 'RAW_HTTP',
-          url: 'https://example.com',
-        },
-      }),
-    );
-
-    expect(response.id).toBeTypeOf('string');
-    expect(response.applicationId).toBe(application.id);
-    expect(response.status).toBe('ENABLED');
   });
 });

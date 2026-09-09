@@ -5,6 +5,8 @@ import type { GetOrganisationCommandInput, GetOrganisationCommandOutput } from '
 import { transformOrganisation } from './organisation-transform.js';
 
 /**
+ * Retrieves an organisation.
+ *
  * @endpoint [GET] /v2/organisations/:XXX
  * @group Organisation
  * @version 2
@@ -21,7 +23,7 @@ export class GetOrganisationCommand extends CcApiSimpleCommand<
     return transformOrganisation(response);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
+  isIdempotent(): boolean {
+    return true;
   }
 }

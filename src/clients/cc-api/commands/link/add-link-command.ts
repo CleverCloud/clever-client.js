@@ -10,6 +10,11 @@ import type {
 } from './add-link-command.types.js';
 
 /**
+ * Links an application to another application or to an add-on.
+ *
+ * The target kind is picked from the input. Once linked, the target's configuration is injected
+ * into the application's environment on its next deployment.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
  * @endpoint [POST] /v2/organisations/:XXX/applications/:XXX/addons
  * @group Link
@@ -31,9 +36,16 @@ export class AddLinkCommand extends CcApiCompositeCommand<AddLinkCommandInput, u
       ownerId: true,
     };
   }
+
+  // both endpoints refuse to link a target twice, so a replay leaves a single link
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Links an application to another application.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
  * @group Link
  * @version 2
@@ -51,9 +63,16 @@ export class AddApplicationToApplicationLinkCommand extends CcApiSimpleCommand<
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  // an existing dependency is refused as a duplicate, so a replay does not link the application twice
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Links an application to an add-on.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/applications/:XXX/addons
  * @group Link
  * @version 2
@@ -77,5 +96,10 @@ export class AddApplicationToAddonLinkCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // the add-on is only attached when it is not linked yet, so a replay changes nothing
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -1,38 +1,26 @@
+import type { OauthConsumerRights } from './oauth-consumer-rights.js';
+
+export type { AccessRights, GrantableRights, ManageRights, OauthConsumerRights } from './oauth-consumer-rights.js';
+
+/**
+ * A third party application allowed to act on Clever Cloud on a user's behalf through OAuth, along
+ * with the rights the user granted it.
+ */
 export interface OauthConsumer {
+  /** Display name shown on the consent screen. */
   name: string;
+  /** Description shown on the consent screen. */
   description: string;
+  /** OAuth consumer key, which also identifies the consumer in the API. */
   key: string;
+  /** URL of the application's home page. */
   url: string;
+  /** URL of the logo shown on the consent screen. */
   picture: string;
+  /** URL the OAuth callbacks are sent to. */
   baseUrl: string;
+  /** Which rights the consumer holds, keyed by right. */
   rights: Record<OauthConsumerRights, boolean>;
+  /** OAuth consumer secret. Only filled when it was explicitly asked for. */
   secret?: string;
 }
-
-export type OauthConsumerRights = 'almighty' | AccessRights | ManageRights;
-
-export type AccessRights =
-  // renamed from access_organisations
-  | 'accessOrganisations'
-  // renamed from access_organisations_bills
-  | 'accessOrganisationsBills'
-  // renamed from access_organisations_credit_count
-  | 'accessOrganisationsCreditCount'
-  // renamed from access_organisations_consumption_statistics
-  | 'accessOrganisationsConsumptionStatistics'
-  // renamed from access_personal_information
-  | 'accessPersonalInformation';
-
-export type ManageRights =
-  // renamed from manage_organisations
-  | 'manageOrganisations'
-  // renamed from manage_organisations_services
-  | 'manageOrganisationsServices'
-  // renamed from manage_organisations_applications
-  | 'manageOrganisationsApplications'
-  // renamed from manage_organisations_members
-  | 'manageOrganisationsMembers'
-  // renamed from manage_personal_information
-  | 'managePersonalInformation'
-  // renamed from manage_ssh_keys
-  | 'manageSshKeys';

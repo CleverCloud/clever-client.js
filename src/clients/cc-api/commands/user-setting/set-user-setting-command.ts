@@ -6,6 +6,8 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { SetUserSettingCommandInput } from './set-user-setting-command.types.js';
 
 /**
+ * Writes one Console preference of the current user, creating it when it does not exist yet.
+ *
  * @endpoint [PUT] /v4/console/settings/:XXX
  * @group UserSetting
  * @version 4
@@ -15,7 +17,7 @@ export class SetUserSettingCommand extends CcApiSimpleCommand<SetUserSettingComm
     return {
       method: 'PUT',
       url: safeUrl`/v4/console/settings/${params.name}`,
-      queryParams: new QueryParams().append('env', this.params.env),
+      queryParams: new QueryParams().append('env', this.params.environment),
       body: params.value,
       headers: new HeadersBuilder().acceptTextPlain().acceptJson().contentTypeTextPlain().build(),
     };
@@ -23,5 +25,10 @@ export class SetUserSettingCommand extends CcApiSimpleCommand<SetUserSettingComm
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // `HSET` on the setting name, and the per-user quota counter only moves when the name did not exist yet
+  isIdempotent(): boolean {
+    return true;
   }
 }

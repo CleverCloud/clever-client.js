@@ -2,7 +2,7 @@ import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformDeploymentLegacy } from './deployment-transform.js';
+import { transformDeployment, transformDeploymentLegacy } from './deployment-transform.js';
 import type {
   GetDeploymentCommandInput,
   GetDeploymentCommandOutput,
@@ -10,6 +10,8 @@ import type {
 } from './get-deployment-command.types.js';
 
 /**
+ * Retrieves a deployment of an application, with the states it went through and what triggered it.
+ *
  * @endpoint [GET] /v4/orchestration/organisations/:XXX/applications/:XXX/deployments/:XXX
  * @group Deployment
  * @version 4
@@ -21,8 +23,8 @@ export class GetDeploymentCommand extends CcApiSimpleCommand<GetDeploymentComman
     );
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
+  transformCommandOutput(response: unknown): GetDeploymentCommandOutput {
+    return transformDeployment(response);
   }
 
   getIdsToResolve(): IdResolve {
@@ -30,9 +32,18 @@ export class GetDeploymentCommand extends CcApiSimpleCommand<GetDeploymentComman
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Retrieves a deployment of an application from the legacy v2 API.
+ *
+ * The v2 shape is flatter than the v4 one: it carries the deployment number and its author, but not the steps
+ * or the placement details. Prefer `GetDeploymentCommand`.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/deployments/:XXX
  * @group Deployment
  * @version 2
@@ -48,10 +59,6 @@ export class GetDeploymentCommandLegacy extends CcApiSimpleCommand<
     );
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetDeploymentCommandOutputLegacy {
     return transformDeploymentLegacy(response, this.params.applicationId);
   }
@@ -60,5 +67,9 @@ export class GetDeploymentCommandLegacy extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

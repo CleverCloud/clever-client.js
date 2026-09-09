@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { RebootMetabaseCommandInput } from './reboot-metabase-command.types.js';
 
 /**
+ * Restarts the Metabase instance backing an add-on, without touching its data.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-metabase/addons/:XXX/reboot
  * @group Metabase
  * @version 4
@@ -22,5 +24,10 @@ export class RebootMetabaseCommand extends CcApiSimpleCommand<RebootMetabaseComm
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // each call queues a redeployment, so a replay restarts the instance a second time
+  isIdempotent(): boolean {
+    return false;
   }
 }

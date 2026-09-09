@@ -1,5 +1,6 @@
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
+import { normalizeDuration } from '../../../../utils/duration-utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type {
@@ -10,6 +11,11 @@ import type {
 import { transformWarpToken } from './warp-token-transform.js';
 
 /**
+ * Issues a Warp10 read token, used to query the metrics and access logs time series.
+ *
+ * The token is scoped to a whole organisation, or to a single application when `applicationId` is
+ * given.
+ *
  * @endpoint [POST] /v4/stats/organisations/{ownerId}/tokens/read
  * @endpoint [POST] /v4/stats/organisations/{ownerId}/resources/{resourceId}/tokens/read
  * @group WarpToken
@@ -27,7 +33,7 @@ export class GetWarpTokenCommand extends CcApiSimpleCommand<GetWarpTokenCommandI
       body.applications = params.applications;
     }
     if (params.ttl != null) {
-      body.ttl = params.ttl;
+      body.ttl = normalizeDuration(params.ttl)!;
     }
 
     return post(url, body);
@@ -41,5 +47,10 @@ export class GetWarpTokenCommand extends CcApiSimpleCommand<GetWarpTokenCommandI
     return {
       ownerId: true,
     };
+  }
+
+  // every call mints a brand new Warp10 token, so a replay issues a second one
+  isIdempotent(): boolean {
+    return false;
   }
 }

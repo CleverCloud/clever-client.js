@@ -2,6 +2,14 @@ import { CcStream } from '../../../../lib/stream/cc-stream.js';
 import type { CcStreamConfig, CcStreamRequestFactory } from '../../../../lib/stream/cc-stream.types.js';
 import { CcApiStreamCommand } from '../../lib/cc-api-command.js';
 
+/**
+ * Base class for the commands that open a Server-Sent Events stream of log lines.
+ *
+ * Subclasses only have to name the SSE event carrying the logs and say how to turn its payload into a log
+ * object. This class keeps track of how many lines were already delivered so that, when the stream is paused
+ * and resumed or retried after an error, the reconnection asks for the remaining lines only rather than
+ * replaying the ones the caller already saw.
+ */
 export abstract class AbstractLogsStreamCommand<
   CommandInput extends { limit?: number },
   Log,
@@ -41,6 +49,10 @@ export abstract class AbstractLogsStreamCommand<
   }
 }
 
+/**
+ * A Server-Sent Events stream of log lines, with the connection handling (heartbeat health check, retry with
+ * exponential backoff, pause and resume) inherited from `CcStream`.
+ */
 export class LogsStream<Log> extends CcStream {
   #logTopicName: string;
   #logConverter: (payload: unknown) => Log | null;
@@ -57,6 +69,9 @@ export class LogsStream<Log> extends CcStream {
   }
 
   /**
+   * Registers a callback invoked with each log line the stream delivers. Lines the converter cannot turn into
+   * a log object are silently skipped.
+   *
    * @param callback The function which handles the log
    */
   onLog(callback: (log: Log) => void): this {

@@ -8,7 +8,12 @@ import type { GetProductAddonCommandInput, GetProductAddonCommandOutput } from '
 import { GetProductAddonVersionsCommand } from './get-product-addon-versions-command.js';
 
 /**
+ * Retrieves one add-on provider from the product catalogue, optionally with the versions it offers.
+ *
+ * Passing an owner narrows the plans and prices down to what that organisation is entitled to.
+ *
  * @endpoint [GET] /v2/products/addonproviders/:XXX
+ * @endpoint [GET] /v4/addon-providers/:XXX
  * @group Product
  * @version 2
  */
@@ -18,9 +23,6 @@ export class GetProductAddonCommand extends CcApiCompositeCommand<
 > {
   async compose(params: GetProductAddonCommandInput, composer: CcApiComposer): Promise<GetProductAddonCommandOutput> {
     const addon = await composer.send(new GetProductAddonInnerCommand(params));
-    if (addon == null) {
-      return undefined;
-    }
 
     if (!params.withVersions) {
       return addon;
@@ -32,9 +34,15 @@ export class GetProductAddonCommand extends CcApiCompositeCommand<
       versions,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Retrieves one add-on provider, without its versions.
+ *
  * @endpoint [GET] /v2/products/addonproviders/:XXX
  * @group Product
  * @version 2
@@ -51,7 +59,7 @@ class GetProductAddonInnerCommand extends CcApiSimpleCommand<
     return transformAddonProviderFull(response);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
+  isIdempotent(): boolean {
+    return true;
   }
 }

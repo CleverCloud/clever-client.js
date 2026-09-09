@@ -5,7 +5,7 @@ export async function requestDebug<CommandOutput>(
   request: CcRequest,
   handler: RequestAdapter,
 ): Promise<CcResponse<CommandOutput>> {
-  if (!request.debug) {
+  if (!request.isDebugEnabled) {
     return handler<CommandOutput>(request);
   }
 

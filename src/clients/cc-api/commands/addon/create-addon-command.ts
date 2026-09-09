@@ -5,6 +5,11 @@ import { transformAddon } from './addon-transform.js';
 import type { CreateAddonCommandInput, CreateAddonCommandOutput } from './create-addon-command.types.js';
 
 /**
+ * Provisions a new add-on in an organisation.
+ *
+ * The add-on is created from a provider and one of its plans, in the given zone. Provisioning is
+ * asynchronous on the provider side: the returned add-on may not be ready to serve traffic yet.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/addons
  * @group Addon
  * @version 2
@@ -17,10 +22,20 @@ export class CreateAddonCommand extends CcApiSimpleCommand<CreateAddonCommandInp
       region: params.zone,
       plan: params.planId,
       options: params.options ?? {},
+      linkedApp: params.linkedApplication,
+      version: params.version,
+      paymentIntent: params.paymentIntent,
+      paymentMethodType: params.paymentMethodType,
+      sepaSourceId: params.sepaSourceId,
     });
   }
 
   transformCommandOutput(response: unknown): CreateAddonCommandOutput {
     return transformAddon(response);
+  }
+
+  // each call provisions one more add-on, with its own id, and counts against the creation rate limit
+  isIdempotent(): boolean {
+    return false;
   }
 }

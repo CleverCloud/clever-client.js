@@ -6,6 +6,11 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { GetUserSettingCommandInput, GetUserSettingCommandOutput } from './get-user-setting-command.types.js';
 
 /**
+ * Reads one Console preference of the current user.
+ *
+ * Settings are arbitrary string values the Console stores per user, optionally scoped to an
+ * environment so that a preference set in production does not leak into a test environment.
+ *
  * @endpoint [GET] /v4/console/settings/:XXX
  * @group UserSetting
  * @version 4
@@ -15,16 +20,16 @@ export class GetUserSettingCommand extends CcApiSimpleCommand<GetUserSettingComm
     return {
       method: 'GET',
       url: safeUrl`/v4/console/settings/${params.name}`,
-      queryParams: new QueryParams().append('env', this.params.env),
+      queryParams: new QueryParams().append('env', this.params.environment),
       headers: new HeadersBuilder().acceptTextPlain().acceptJson().build(),
     };
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetUserSettingCommandOutput {
     return (response as { value: string }).value;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

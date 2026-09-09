@@ -12,4 +12,9 @@ export class GetStringKeyCommand extends RedisHttpCommand<GetStringKeyCommandInp
   toRequestParams(params: GetStringKeyCommandInput) {
     return post(`/key/string/_get`, params);
   }
+
+  // `GET`, a read behind a `POST`
+  isIdempotent(): boolean {
+    return true;
+  }
 }

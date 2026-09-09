@@ -9,6 +9,8 @@ import type {
 } from './create-addon-provider-plan-command.types.js';
 
 /**
+ * Adds a pricing plan to an add-on provider's catalogue.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/addonproviders/:XXX/plans
  * @group AddonProvider
  * @version 2
@@ -34,5 +36,11 @@ export class CreateAddonProviderPlanCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  // the plan name is checked against the ones already declared, so a replay is refused rather than
+  // adding the plan twice
+  isIdempotent(): boolean {
+    return true;
   }
 }

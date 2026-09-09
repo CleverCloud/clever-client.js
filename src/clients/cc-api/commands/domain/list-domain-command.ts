@@ -1,5 +1,6 @@
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl, sortBy } from '../../../../lib/utils.js';
+import { tolerateNotFound } from '../../../../utils/error-utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CcApiComposer } from '../../types/cc-api.types.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
@@ -9,21 +10,29 @@ import { GetPrimaryDomainCommand } from './get-primary-domain-command.js';
 import type { ListDomainCommandInput, ListDomainCommandOutput } from './list-domain-command.types.js';
 
 /**
+ * Lists the domains an application answers on, with the primary one flagged.
+ *
+ * The favourite domain is fetched alongside the list. If no primary domain can be found, you can guess one
+ * using `@clevercloud/client/utils/domain-utils.js`.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts
+ * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite
  * @group Domain
  * @version 2
  */
 export class ListDomainCommand extends CcApiCompositeCommand<ListDomainCommandInput, ListDomainCommandOutput> {
   async compose(params: ListDomainCommandInput, composer: CcApiComposer): Promise<ListDomainCommandOutput> {
-    return Promise.all([
+    const [rawDomains, primaryDomain] = await Promise.all([
       composer.send(new ListDomainInnerCommand(params)),
-      composer.send(new GetPrimaryDomainCommand(params)),
-    ]).then(([domains, primaryDomain]) =>
-      domains.map((domain) => ({
-        ...domain,
-        isPrimary: domain.domain === primaryDomain?.domain,
-      })),
-    );
+      tolerateNotFound(composer.send(new GetPrimaryDomainCommand(params))),
+    ]);
+
+    const domains = rawDomains.map((domain) => ({
+      ...domain,
+      isPrimary: domain.domain === primaryDomain?.domain,
+    }));
+
+    return domains;
   }
 
   getIdsToResolve(): IdResolve {
@@ -31,9 +40,15 @@ export class ListDomainCommand extends CcApiCompositeCommand<ListDomainCommandIn
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Lists the raw domains of an application, before the primary one is resolved.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/vhosts
  * @group Domain
  * @version 2
@@ -41,10 +56,6 @@ export class ListDomainCommand extends CcApiCompositeCommand<ListDomainCommandIn
 class ListDomainInnerCommand extends CcApiSimpleCommand<ListDomainCommandInput, Array<Domain>> {
   toRequestParams(params: ListDomainCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/vhosts`);
-  }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
   }
 
   transformCommandOutput(response: unknown): Array<Domain> {
@@ -58,5 +69,9 @@ class ListDomainInnerCommand extends CcApiSimpleCommand<ListDomainCommandInput, 
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

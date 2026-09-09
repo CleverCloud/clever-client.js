@@ -9,6 +9,11 @@ import type {
 import { constructNetworkGroupMember, waitForNetworkGroupMemberCreation } from './network-group-utils.js';
 
 /**
+ * Adds a member, an application or an add-on, to a network group.
+ *
+ * The member kind and its network group domain name are derived from the member id, client side. Creation is
+ * asynchronous: the command polls the member until it shows up and returns it.
+ *
  * @endpoint [POST] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members/:XXX
  * @group NetworkGroup
@@ -25,9 +30,18 @@ export class CreateNetworkGroupMemberCommand extends CcApiCompositeCommand<
     await composer.send(new CreateNetworkGroupMemberCommandInner(params));
     return waitForNetworkGroupMemberCreation(composer, params.ownerId, params.networkGroupId, params.memberId);
   }
+
+  // the member id is the caller's and the API answers done when that member is already there, so a replay adds nothing
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Sends the member creation request.
+ *
+ * The endpoint answers `202 Accepted` with no body: the member is added asynchronously.
+ *
  * @endpoint [POST] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members
  * @group NetworkGroup
  * @version 4
@@ -45,5 +59,10 @@ class CreateNetworkGroupMemberCommandInner extends CcApiSimpleCommand<CreateNetw
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // the member id is the caller's and the API answers done when that member is already there, so a replay adds nothing
+  isIdempotent(): boolean {
+    return true;
   }
 }

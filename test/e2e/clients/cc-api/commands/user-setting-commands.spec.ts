@@ -18,7 +18,7 @@ describe('user setting commands', function () {
   afterEach(async () => {
     await support.client.send(
       new DeleteUserSettingCommand({
-        env: 'test-e2e',
+        environment: 'test-e2e',
         name: 'hello',
       }),
     );
@@ -27,19 +27,19 @@ describe('user setting commands', function () {
   it('should set setting', async () => {
     const response = await support.client.send(
       new SetUserSettingCommand({
-        env: 'test-e2e',
+        environment: 'test-e2e',
         name: 'hello',
         value: 'world',
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should get user setting', async () => {
     await support.client.send(
       new SetUserSettingCommand({
-        env: 'test-e2e',
+        environment: 'test-e2e',
         name: 'hello',
         value: 'world',
       }),
@@ -47,7 +47,7 @@ describe('user setting commands', function () {
 
     const response = await support.client.send(
       new GetUserSettingCommand({
-        env: 'test-e2e',
+        environment: 'test-e2e',
         name: 'hello',
       }),
     );
@@ -55,21 +55,10 @@ describe('user setting commands', function () {
     expect(response).toBe('world');
   });
 
-  it('should get user setting null', async () => {
-    const response = await support.client.send(
-      new GetUserSettingCommand({
-        env: 'test-e2e',
-        name: 'hello',
-      }),
-    );
-
-    expect(response).toBeNull();
-  });
-
   it('should delete user setting', async () => {
     await support.client.send(
       new SetUserSettingCommand({
-        env: 'test-e2e',
+        environment: 'test-e2e',
         name: 'hello',
         value: 'world',
       }),
@@ -77,22 +66,11 @@ describe('user setting commands', function () {
 
     const response = await support.client.send(
       new DeleteUserSettingCommand({
-        env: 'test-e2e',
+        environment: 'test-e2e',
         name: 'hello',
       }),
     );
 
-    expect(response).toBeNull();
-  });
-
-  it('should delete user setting when not exist', async () => {
-    const response = await support.client.send(
-      new DeleteUserSettingCommand({
-        env: 'test-e2e',
-        name: 'hello',
-      }),
-    );
-
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });

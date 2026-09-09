@@ -8,6 +8,8 @@ import type {
 } from './get-config-provider-command.types.js';
 
 /**
+ * Reads the configuration a Config Provider add-on hands to the applications linked to it.
+ *
  * @endpoint [GET] /v4/addon-providers/config-provider/addons/:XXX/env
  * @group ConfigProvider
  * @version 4
@@ -24,13 +26,13 @@ export class GetConfigProviderCommand extends CcApiSimpleCommand<
     return sortBy(response as GetConfigProviderCommandOutput, 'name');
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       addonId: 'REAL_ADDON_ID',
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

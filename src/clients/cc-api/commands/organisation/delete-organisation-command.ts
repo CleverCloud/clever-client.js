@@ -4,6 +4,11 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { DeleteOrganisationCommandInput } from './delete-organisation-command.types.js';
 
 /**
+ * Deletes an organisation.
+ *
+ * A personal organisation cannot be deleted: the command throws before sending anything when the
+ * given id starts with `user_`.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX
  * @group Organisation
  * @version 2
@@ -18,5 +23,10 @@ export class DeleteOrganisationCommand extends CcApiSimpleCommand<DeleteOrganisa
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // the applications, the add-ons and the organisation are deleted, so a replay only meets a not-found error
+  isIdempotent(): boolean {
+    return true;
   }
 }

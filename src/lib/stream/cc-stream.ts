@@ -1,12 +1,28 @@
 import type { SseMessage } from '../../types/request.types.js';
-import { CcClientError, CcHttpError } from '../error/cc-client-errors.js';
+import type { NetworkErrorCode } from '../error/cc-client-errors.js';
+import { CcClientError, CcHttpError, CcNetworkError } from '../error/cc-client-errors.js';
 import { handleHttpErrors } from '../error/handle-http-errors.js';
+import { asNetworkError, isFetchNetworkError } from '../error/network-error.js';
 import { HeadersBuilder } from '../request/headers-builder.js';
-import { isNetworkError, sendRequest, SseResponseBody } from '../request/request.js';
+import { sendRequest, SseResponseBody } from '../request/request.js';
 import { combineWithSignal, Deferred } from '../utils.js';
 import type { CcStreamCloseReason, CcStreamConfig, CcStreamRequestFactory, CcStreamState } from './cc-stream.types.js';
 
 const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
+
+/**
+ * Network failures a stream reconnects through once it has been open, against the advice the error itself gives.
+ *
+ * That advice answers for a one-shot request, where a name resolving to nothing is a typo and sending it again only
+ * fails slower. A stream that has been open asks a different question: the host did resolve and this machine did have
+ * an address, so whatever took them away is something that comes back — a laptop waking before its resolver, a VPN
+ * reconnecting, an interface not given its address yet, a local port range that frees up again. Outliving those is
+ * what a stream is for, and what it is configured for: `maxRetryCount` defaults to `Infinity`.
+ *
+ * Having been open is the whole condition. Before that the advice is right, and a stream pointed at a host nobody can
+ * resolve still fails on its first attempt instead of retrying a typo for ever.
+ */
+const RECONNECTABLE_NETWORK_CODES = new Set<NetworkErrorCode>(['ENOTFOUND', 'EADDRNOTAVAIL']);
 
 /**
  * CcStream manages Server-Sent Events (SSE) connections with automatic retry logic,
@@ -23,6 +39,7 @@ export class CcStream {
   #lastReceivedMessageId: string | undefined;
   #lastContact: Date | undefined;
   #retryCount = 0;
+  #hasBeenOpen = false;
   #retryTimeoutId: ReturnType<typeof setTimeout> | null = null;
   #heartbeatIntervalId: ReturnType<typeof setInterval> | null = null;
   #connectionStartTime: Date | null = null;
@@ -164,7 +181,7 @@ export class CcStream {
    * @param data - Optional data to include in the log
    */
   #debugLog(message: string, data?: unknown): void {
-    if (this.#config.debug) {
+    if (this.#config.isDebugEnabled) {
       const timestamp = new Date().toISOString();
       const logMessage = `[CcStream] [${timestamp}] ${message}`;
       if (data !== undefined) {
@@ -186,11 +203,11 @@ export class CcStream {
     }
 
     try {
-      this.#debugLog(`Forging HTTP request`);
-      const request = await this.#requestFactory();
-
       this.#state = 'connecting';
       this.#debugLog('State changed to connecting', { state: this.#state, retryCount: this.#retryCount });
+
+      this.#debugLog(`Forging HTTP request`);
+      const request = await this.#requestFactory();
 
       this.#abortController = new AbortController();
       if (request.signal != null) {
@@ -229,7 +246,9 @@ export class CcStream {
       await response.body.read({
         onMessage: this.#onMessage.bind(this),
         onClose: this.#onClose.bind(this),
-        onError: this.#onError.bind(this),
+        // A socket dying mid-stream rejects raw, past the point where sendRequest could name it, so
+        // it is named here instead — otherwise it would reach consumers as an unexplained SSE error.
+        onError: (error) => this.#onError(asNetworkError(error, request) ?? error),
       });
     } catch (error: unknown) {
       if (error instanceof CcClientError) {
@@ -273,6 +292,7 @@ export class CcStream {
     this.#state = 'open';
     this.#lastContact = new Date();
     this.#retryCount = 0;
+    this.#hasBeenOpen = true;
 
     this.#heartbeatIntervalId = setInterval(() => {
       const now = new Date();
@@ -365,9 +385,12 @@ export class CcStream {
 
     this.#cleanup();
 
-    const wrappedError = isNetworkError(error as Parameters<typeof isNetworkError>[0])
-      ? new CcClientError('Failed to establish/maintain the connection with the server', 'SSE_SERVER_ERROR', error)
-      : error;
+    // Errors the client raised already say what went wrong, and a CcNetworkError says which network
+    // failure it was; only a raw one needs to be named here so that it can be retried at all.
+    const wrappedError =
+      !(error instanceof CcClientError) && isFetchNetworkError(error)
+        ? new CcClientError('Failed to establish/maintain the connection with the server', 'SSE_SERVER_ERROR', error)
+        : error;
 
     const canRetry = this.#canRetry(wrappedError);
     this.#debugLog('Retry decision', {
@@ -415,6 +438,15 @@ export class CcStream {
 
     if (error == null) {
       return true;
+    }
+
+    // The error knows better than this method does, and it is the same question consumers ask it. The one thing
+    // this method knows that the error cannot is whether the stream ever connected, see RECONNECTABLE_NETWORK_CODES.
+    if (error instanceof CcNetworkError) {
+      return (
+        error.isWorthRetrying() ||
+        (this.#hasBeenOpen && error.networkCode != null && RECONNECTABLE_NETWORK_CODES.has(error.networkCode))
+      );
     }
 
     if (error instanceof CcHttpError) {

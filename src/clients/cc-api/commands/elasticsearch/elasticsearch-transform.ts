@@ -4,7 +4,7 @@ import type { ElasticsearchInfo } from './elasticsearch.types.js';
 export function transformElasticsearchInfo(response: any): ElasticsearchInfo {
   return {
     id: response.id,
-    ownerId: response.owner_id,
+    ownerId: response.owner_id ?? undefined,
     addonId: response.app_id,
     plan: response.plan,
     zone: response.zone,
@@ -20,11 +20,18 @@ export function transformElasticsearchInfo(response: any): ElasticsearchInfo {
     },
     version: response.version,
     backups: {
-      kibanaSnapshotsUrl: response.backups.kibana_snapshots_url,
+      kibanaSnapshotsUrl: response.backups.kibana_snapshots_url ?? undefined,
     },
-    kibanaApplication: response.kibana_application,
-    apmApplication: response.apm_application,
-    services: sortBy(response.services, 'name'),
-    features: sortBy(response.features, 'name'),
+    kibanaApplication: response.kibana_application ?? undefined,
+    apmApplication: response.apm_application ?? undefined,
+    services: transformNamedFlags(response.services),
+    features: transformNamedFlags(response.features),
   };
+}
+
+function transformNamedFlags(payload: Array<any>): Array<{ name: string; isEnabled: boolean }> {
+  return sortBy(
+    payload.map((item: any) => ({ name: item.name, isEnabled: item.enabled })),
+    'name',
+  );
 }

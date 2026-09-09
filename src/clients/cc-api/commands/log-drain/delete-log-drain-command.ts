@@ -5,14 +5,18 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteLogDrainCommandInput } from './delete-log-drain-command.types.js';
 
 /**
- * @endpoint [DELETE] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
+ * Deletes a log drain of an application or an add-on, stopping the shipping for good.
+ *
+ * @endpoint [DELETE] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX
  * @group LogDrain
  * @version 4
  */
 export class DeleteLogDrainCommand extends CcApiSimpleCommand<DeleteLogDrainCommandInput, undefined> {
   toRequestParams(params: DeleteLogDrainCommandInput) {
+    const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;
+
     return delete_(
-      safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains/${params.drainId}`,
+      safeUrl`/v4/drains/organisations/${params.ownerId}/resources/${resourceId}/drains/${params.drainId}`,
     );
   }
 
@@ -23,6 +27,11 @@ export class DeleteLogDrainCommand extends CcApiSimpleCommand<DeleteLogDrainComm
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
+      addonId: 'REAL_ADDON_ID',
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

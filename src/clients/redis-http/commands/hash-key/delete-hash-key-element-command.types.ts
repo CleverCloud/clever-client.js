@@ -21,5 +21,5 @@ export interface DeleteHashKeyElementCommandOutput extends WithKey {
   /**
    * `true` when the field has been deleted. `false` when the field was already absent.
    */
-  deleted: boolean;
+  wasDeleted: boolean;
 }

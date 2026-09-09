@@ -6,11 +6,11 @@ import type {
   CcRequestConfigPartial,
   CcRequestParams,
   CcResponse,
-  HttpMethod,
 } from '../types/request.types.js';
 import type { WithRequired } from '../types/utils.types.js';
 import type { CcAuth } from './auth/cc-auth.js';
 import { CompositeCommand, type SimpleCommand } from './command/command.js';
+import { CcClientError } from './error/cc-client-errors.js';
 import { handleHttpErrors } from './error/handle-http-errors.js';
 import type { GetUrl } from './get-url.js';
 import { QueryParams } from './request/query-params.js';
@@ -18,15 +18,15 @@ import { sendRequest } from './request/request.js';
 import type { CcStream } from './stream/cc-stream.js';
 import type { CcStreamConfig, CcStreamConfigPartial, RetryConfig } from './stream/cc-stream.types.js';
 import type { StreamCommand } from './stream/stream-command.js';
-import { mergeRequestConfig, mergeRequestConfigPartial } from './utils.js';
+import { isAbsoluteUrl, isUrlWithinBaseUrl, mergeRequestConfig, mergeRequestConfigPartial } from './utils.js';
 
 const DEFAULT_REQUEST_CONFIG: CcRequestConfig = {
-  cors: false,
+  isCorsEnabled: false,
   timeout: 0,
   cache: null,
-  debug: false,
+  isDebugEnabled: false,
 };
-const DEFAULT_REQUEST_PARAMS: Partial<CcRequestParams> & { method: HttpMethod } = {
+const DEFAULT_REQUEST_PARAMS: WithRequired<Partial<CcRequestParams>, 'method'> = {
   method: 'GET',
 };
 const DEFAULT_STREAM_CONFIG: CcStreamConfig = {
@@ -38,7 +38,7 @@ const DEFAULT_STREAM_CONFIG: CcStreamConfig = {
   // The default Clever Cloud heartbeat period is 2 seconds. We add 500ms to handle potential latency.
   heartbeatPeriod: 2_000 + 500,
   healthcheckInterval: 1_000,
-  debug: false,
+  isDebugEnabled: false,
 };
 
 /**
@@ -54,7 +54,7 @@ const DEFAULT_STREAM_CONFIG: CcStreamConfig = {
  * - Handle request/response lifecycle
  * - Manage authentication
  * - Transform request parameters and responses
- * - Handle errors and empty responses
+ * - Handle errors
  *
  * @example
  * ```typescript
@@ -99,6 +99,11 @@ export class CcClient<Api extends string> {
    * @param auth - Optional authentication handler
    */
   constructor(config: CcClientConfig, auth?: CcAuth) {
+    try {
+      new URL(config.baseUrl, globalThis.location?.href);
+    } catch (e) {
+      throw new CcClientError(`Invalid configuration key: "baseUrl=${config.baseUrl}"`, 'INVALID_CONFIGURATION', e);
+    }
     this.#baseUrl = config.baseUrl;
     this.#defaultRequestsConfig = mergeRequestConfig(DEFAULT_REQUEST_CONFIG, config.defaultRequestConfig);
     this.#defaultStreamsConfig = mergeStreamConfig(DEFAULT_STREAM_CONFIG, config.defaultStreamConfig);
@@ -119,13 +124,33 @@ export class CcClient<Api extends string> {
     command: Command<Api, CommandInput, CommandOutput>,
     requestConfig?: CcRequestConfigPartial,
   ): Promise<CommandOutput> {
+    return this._send(command, requestConfig, true);
+  }
+
+  /**
+   * Sends a command, under the idempotency ceiling of whatever encloses it.
+   *
+   * Every command goes through here, including the ones a composite command sends through its composer.
+   *
+   * @param command - The command to execute
+   * @param requestConfig - Request configuration that overrides the default
+   * @param isIdempotentCeiling - Whether what encloses this command can be replayed at all
+   * @returns The processed command response
+   */
+  protected async _send<CommandInput, CommandOutput>(
+    command: Command<Api, CommandInput, CommandOutput>,
+    requestConfig: CcRequestConfigPartial | undefined,
+    isIdempotentCeiling: boolean,
+  ): Promise<CommandOutput> {
     try {
       if (command instanceof CompositeCommand) {
-        return await this._compose(command, requestConfig);
+        return await this._compose(command, requestConfig, isIdempotentCeiling);
       }
 
       const requestParams = await this._getCommandRequestParams(command, requestConfig);
-      const request = await this._prepareRequest(requestParams, requestConfig);
+      // a caller can only replay what it sent, so a command is no more replayable than what encloses it
+      const isIdempotent = isIdempotentCeiling && command.isIdempotent();
+      const request = await this._prepareRequest(command, requestParams, requestConfig, isIdempotent);
       const response = await sendRequest<CommandOutput>(request);
       return await this._handleResponse(response, request, command);
     } catch (e) {
@@ -146,11 +171,13 @@ export class CcClient<Api extends string> {
   getUrl(getUrl: GetUrl<Api, unknown>): URL {
     const url = getUrl.get(getUrl.params);
 
-    const left = this.#baseUrl.endsWith('/') ? this.#baseUrl : this.#baseUrl + '/';
-    const right = url.startsWith('/') ? url.slice(1) : url;
-    const result = new URL(left + right, globalThis.location?.href);
+    const resolvedUrl = this.#resolveUrl(url);
+    const result = new URL(resolvedUrl, globalThis.location?.href);
 
-    this.#auth?.applyOnUrl(result);
+    // apply auth only if the URL does not point outside of the client base URL
+    if (isUrlWithinBaseUrl(this.#baseUrl, resolvedUrl)) {
+      this.#auth?.applyOnUrl(result);
+    }
 
     return result;
   }
@@ -171,7 +198,7 @@ export class CcClient<Api extends string> {
     const streamConfigWithDefaults = mergeStreamConfig(this.#defaultStreamsConfig, requestAndStreamConfig);
     return command.createStream(async () => {
       const preparedRequestParams = await command.toRequestParams(transformedParams);
-      return this._prepareRequest(preparedRequestParams, requestAndStreamConfig);
+      return this._prepareRequest(command, preparedRequestParams, requestAndStreamConfig, true);
     }, streamConfigWithDefaults);
   }
 
@@ -207,18 +234,30 @@ export class CcClient<Api extends string> {
    * Handles execution of composite commands that consist of multiple sub-commands
    *
    * @param command - The composite command to execute
-   * @param requestConfig - Optional request configuration
+   * @param requestConfig - Request configuration that overrides the default
+   * @param isIdempotentCeiling - Whether what encloses this composite command can be replayed at all
    * @returns The result of executing all sub-commands
    */
   protected async _compose<CommandOutput>(
     command: CompositeCommand<Api, unknown, CommandOutput>,
-    requestConfig?: CcRequestConfigPartial,
+    requestConfig: CcRequestConfigPartial | undefined,
+    isIdempotentCeiling: boolean,
   ): Promise<CommandOutput> {
     const transformedParams = await this._transformCommandParams(command, requestConfig);
 
+    // the composite command states the configuration its sub-commands need, the caller configuration still wins over it
+    const composedRequestConfig = mergeRequestConfigPartial(command.getRequestConfig(), requestConfig);
+
+    // a caller can only replay the composite as a whole, so nothing it sends is more replayable than it is
+    const composedIsIdempotent = isIdempotentCeiling && command.isIdempotent();
+
     return command.compose(transformedParams, {
       send: (command, commandRequestConfig) =>
-        this.send(command, mergeRequestConfigPartial(requestConfig, commandRequestConfig)),
+        this._send(
+          command,
+          mergeRequestConfigPartial(composedRequestConfig, commandRequestConfig),
+          composedIsIdempotent,
+        ),
     });
   }
 
@@ -240,13 +279,17 @@ export class CcClient<Api extends string> {
   /**
    * Prepares the final request by combining parameters, configuration, and authentication
    *
+   * @param command - The command to prepare request for
    * @param requestParams - The request parameters
-   * @param requestConfig - Optional request configuration
+   * @param requestConfig - Request configuration that overrides the default
+   * @param isIdempotent - Whether sending the prepared request twice means it twice
    * @returns The prepared request
    */
   protected async _prepareRequest(
+    command: SimpleCommand<Api, unknown, unknown> | StreamCommand<Api, unknown, CcStream>,
     requestParams: Partial<CcRequestParams>,
-    requestConfig?: CcRequestConfigPartial,
+    requestConfig: CcRequestConfigPartial | undefined,
+    isIdempotent: boolean,
   ): Promise<CcRequest> {
     const preparedRequestParams: WithRequired<Partial<CcRequestParams>, 'queryParams' | 'headers'> = {
       ...requestParams,
@@ -259,17 +302,27 @@ export class CcClient<Api extends string> {
       await this.#hooks.onRequest(preparedRequestParams);
     }
 
-    // apply auth if auth method is defined
-    this.#auth?.applyOnRequestParams(preparedRequestParams);
+    const url = this.#resolveUrl(preparedRequestParams.url ?? '');
+
+    // apply auth if auth method is defined, if command does not disable it,
+    // and if the command does not target a URL outside of the client base URL
+    if (command.isAuthEnabled() && isUrlWithinBaseUrl(this.#baseUrl, url)) {
+      this.#auth?.applyOnRequestParams(preparedRequestParams);
+    }
+
+    // the command states the configuration its endpoint needs, the caller configuration still wins over it
+    const resolvedRequestConfig = mergeRequestConfigPartial(command.getRequestConfig(), requestConfig);
 
     return {
       // params
       ...DEFAULT_REQUEST_PARAMS,
       ...preparedRequestParams,
       // config
-      ...mergeRequestConfig(this.#defaultRequestsConfig, requestConfig),
+      ...mergeRequestConfig(this.#defaultRequestsConfig, resolvedRequestConfig),
       // url
-      url: this.#baseUrl + preparedRequestParams.url,
+      url,
+      // metadata
+      isIdempotent,
     };
   }
 
@@ -293,16 +346,29 @@ export class CcClient<Api extends string> {
       await this.#hooks.onResponse(response, request);
     }
 
-    // special case for null response
-    const emptyResponsePolicy = command.getEmptyResponsePolicy(response.status, response.body);
-    if (emptyResponsePolicy?.isEmpty) {
-      return (emptyResponsePolicy.emptyValue ?? null) as CommandOutput;
-    }
-
     // handle http errors
     handleHttpErrors(request, response, command);
 
     return command.transformCommandOutput(response.body);
+  }
+
+  /**
+   * Resolves a command URL against the client base URL.
+   * Absolute URLs (starting with `http://` or `https://`) are returned untouched so that a command can target
+   * another origin than the one the client is configured with.
+   *
+   * @param url - The URL provided by the command, either absolute or relative to the base URL
+   * @returns The resolved URL
+   */
+  #resolveUrl(url: string): string {
+    if (isAbsoluteUrl(url)) {
+      return url;
+    }
+
+    const left = this.#baseUrl.endsWith('/') ? this.#baseUrl.slice(0, -1) : this.#baseUrl;
+    const right = url.startsWith('/') ? url : '/' + url;
+
+    return left + right;
   }
 }
 

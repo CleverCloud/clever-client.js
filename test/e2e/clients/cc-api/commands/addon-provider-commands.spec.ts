@@ -85,7 +85,7 @@ describe.skip('addon-provider commands', function () {
   it('should delete addon provider', async () => {
     const response = await support.client.send(new DeleteAddonProviderCommand({ addonProviderId: addonProvider.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should update addon provider', async () => {
@@ -144,7 +144,7 @@ describe.skip('addon-provider commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should list addon provider feature', async () => {
@@ -266,6 +266,6 @@ describe.skip('addon-provider commands', function () {
     );
 
     console.log(response);
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });

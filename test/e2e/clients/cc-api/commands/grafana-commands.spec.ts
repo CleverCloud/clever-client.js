@@ -3,6 +3,7 @@ import { DisableGrafanaCommand } from '../../../../../src/clients/cc-api/command
 import { EnableGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/enable-grafana-command.js';
 import { GetGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/get-grafana-command.js';
 import { ResetGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/reset-grafana-command.js';
+import { tolerateNotFound } from '../../../../../src/utils/error-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
 describe('grafana commands', function () {
@@ -17,18 +18,22 @@ describe('grafana commands', function () {
   });
 
   it('should disable grafana', async () => {
-    const grafana = await support.client.send(new GetGrafanaCommand({ ownerId: support.organisationId }));
+    const grafana = await tolerateNotFound(
+      support.client.send(new GetGrafanaCommand({ ownerId: support.organisationId })),
+    );
     if (grafana == null) {
       await support.client.send(new EnableGrafanaCommand({ ownerId: support.organisationId }));
     }
 
     const response = await support.client.send(new DisableGrafanaCommand({ ownerId: support.organisationId }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should enable grafana', async () => {
-    const grafana = await support.client.send(new GetGrafanaCommand({ ownerId: support.organisationId }));
+    const grafana = await tolerateNotFound(
+      support.client.send(new GetGrafanaCommand({ ownerId: support.organisationId })),
+    );
     if (grafana != null) {
       await support.client.send(new DisableGrafanaCommand({ ownerId: support.organisationId }));
     }
@@ -39,7 +44,9 @@ describe('grafana commands', function () {
   });
 
   it('should get grafana', async () => {
-    const grafana = await support.client.send(new GetGrafanaCommand({ ownerId: support.organisationId }));
+    const grafana = await tolerateNotFound(
+      support.client.send(new GetGrafanaCommand({ ownerId: support.organisationId })),
+    );
     if (grafana == null) {
       await support.client.send(new EnableGrafanaCommand({ ownerId: support.organisationId }));
     }
@@ -50,13 +57,15 @@ describe('grafana commands', function () {
   });
 
   it('should reset grafana', async () => {
-    const grafana = await support.client.send(new GetGrafanaCommand({ ownerId: support.organisationId }));
+    const grafana = await tolerateNotFound(
+      support.client.send(new GetGrafanaCommand({ ownerId: support.organisationId })),
+    );
     if (grafana == null) {
       await support.client.send(new EnableGrafanaCommand({ ownerId: support.organisationId }));
     }
 
     const response = await support.client.send(new ResetGrafanaCommand({ ownerId: support.organisationId }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });

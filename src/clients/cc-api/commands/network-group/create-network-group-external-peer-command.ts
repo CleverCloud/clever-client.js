@@ -11,6 +11,10 @@ import { waitForNetworkGroupPeerCreation } from './network-group-utils.js';
 import type { NetworkGroupPeerExternal } from './network-group.types.js';
 
 /**
+ * Attaches an external WireGuard peer, a machine outside the Clever Cloud platform, to a member of a network group.
+ *
+ * Creation is asynchronous: the command polls the peer until it shows up and returns it.
+ *
  * @endpoint [POST] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/external-peers
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX
  * @group NetworkGroup
@@ -32,9 +36,16 @@ export class CreateNetworkGroupExternalPeerCommand extends CcApiCompositeCommand
       peer.peerId,
     )) as NetworkGroupPeerExternal;
   }
+
+  // the API allocates the peer id, so a replay attaches a second peer instead of finding the first one
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**
+ * Sends the external peer creation request and returns the id the API allocated for it.
+ *
  * @endpoint [POST] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/external-peers
  * @group NetworkGroup
  * @version 4
@@ -48,8 +59,7 @@ class CreateNetworkGroupExternalPeerCommandInner extends CcApiSimpleCommand<
       safeUrl`/v4/networkgroups/organisations/${params.ownerId}/networkgroups/${params.networkGroupId}/external-peers`,
       {
         label: params.label,
-        ip: params.ip,
-        port: params.port,
+        ...(params.peerRole === 'SERVER' ? { ip: params.ip, port: params.port } : {}),
         peerRole: params.peerRole,
         publicKey: params.publicKey,
         hostname: params.hostname,
@@ -57,5 +67,10 @@ class CreateNetworkGroupExternalPeerCommandInner extends CcApiSimpleCommand<
         parentMember: params.parentMember,
       },
     );
+  }
+
+  // the API allocates the peer id, so a replay attaches a second peer instead of finding the first one
+  isIdempotent(): boolean {
+    return false;
   }
 }

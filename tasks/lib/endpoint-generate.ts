@@ -93,12 +93,6 @@ function getClassContent(
     return ${requestParamsCall};
   }`);
 
-    if (method === 'get') {
-      methodsToImplement.push(`getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }`);
-    }
-
     if (autoOwner) {
       typeImports.push(`import type { IdResolve } from '../../types/resource-id-resolver.types.js';`);
       methodsToImplement.push(`getIdsToResolve(): IdResolve {

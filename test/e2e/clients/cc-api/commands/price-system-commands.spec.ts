@@ -25,23 +25,38 @@ describe('price system commands', function () {
 
     expect(response.zone).toBe('par');
     expect(response.currency).toBe('EUR');
-    expect(response.runtime).toBeInstanceOf(Array);
-    expect(response.runtime[0].id).toBeTypeOf('string');
-    expect(response.runtime[0].source).toBeTypeOf('string');
-    expect(response.runtime[0].flavor).toBeTypeOf('string');
-    expect(response.runtime[0].timeUnit).toBeTypeOf('string');
-    expect(response.runtime[0].price).toBeTypeOf('number');
-    expect(response.runtime[0].priceId).toBeTypeOf('string');
-    expect(response.countable).toBeInstanceOf(Array);
-    expect(response.countable[0].id).toBeTypeOf('string');
-    expect(response.countable[0].service).toBeTypeOf('string');
-    expect(response.countable[0].dataUnit).toBeTypeOf('string');
-    expect(response.countable[0].dataQuantityForPrice.secability).toBeTypeOf('string');
-    expect(response.countable[0].dataQuantityForPrice.quantity).toBeTypeOf('number');
-    expect(response.countable[0]).toHaveProperty('timeIntervalForPrice');
-    expect(response.countable[0].pricePlans).toBeInstanceOf(Array);
-    expect(response.countable[0].pricePlans[0].planId).toBeTypeOf('string');
-    expect(response.countable[0].pricePlans[0].maxQuantity).toBeTypeOf('number');
-    expect(response.countable[0].pricePlans[0].price).toBeTypeOf('number');
+    expect(response.runtimes).toBeInstanceOf(Array);
+    expect(response.runtimes[0].id).toBeTypeOf('string');
+    expect(response.runtimes[0].source).toBeTypeOf('string');
+    expect(response.runtimes[0].flavor).toBeTypeOf('string');
+    expect(response.runtimes[0].timeUnit).toBeTypeOf('string');
+    expect(response.runtimes[0].price).toBeTypeOf('number');
+    expect(response.runtimes[0].priceId).toBeTypeOf('string');
+    expect(response.countables).toBeInstanceOf(Array);
+    expect(response.countables[0].id).toBeTypeOf('string');
+    expect(response.countables[0].service).toBeTypeOf('string');
+    expect(response.countables[0].dataUnit).toBeTypeOf('string');
+    expect(response.countables[0].dataQuantityForPrice.secability).toBeTypeOf('string');
+    expect(response.countables[0].dataQuantityForPrice.quantity).toBeTypeOf('number');
+    expect(response.countables[0]).toHaveProperty('timeIntervalForPrice');
+    expect(response.countables[0].pricePlans).toBeInstanceOf(Array);
+    expect(response.countables[0].pricePlans[0].planId).toBeTypeOf('string');
+    expect(response.countables[0].pricePlans[0].maxQuantity).toBeTypeOf('number');
+    expect(response.countables[0].pricePlans[0].price).toBeTypeOf('number');
+  });
+
+  it('should get the public price system when ownerId is omitted', async () => {
+    const response = await support.client.send(
+      new GetPriceSystemCommand({
+        zone: 'par',
+        currency: 'EUR',
+      }),
+    );
+
+    expect(response.currency).toBe('EUR');
+    expect(response.runtimes).toBeInstanceOf(Array);
+    expect(response.runtimes[0].id).toBeTypeOf('string');
+    expect(response.countables).toBeInstanceOf(Array);
+    expect(response.countables[0].id).toBeTypeOf('string');
   });
 });

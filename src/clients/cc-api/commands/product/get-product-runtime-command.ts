@@ -9,6 +9,11 @@ import type {
 import { transformProductRuntime } from './product-transform.js';
 
 /**
+ * Retrieves one runtime from the product catalogue.
+ *
+ * Passing an owner narrows the scaler sizes and prices down to what that organisation is entitled
+ * to.
+ *
  * @endpoint [GET] /v2/products/instances/:XXX-:XXX
  * @group Product
  * @version 2
@@ -28,7 +33,7 @@ export class GetProductRuntimeCommand extends CcApiSimpleCommand<
     return transformProductRuntime(response);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
+  isIdempotent(): boolean {
+    return true;
   }
 }

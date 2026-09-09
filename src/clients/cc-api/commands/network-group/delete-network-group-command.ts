@@ -6,6 +6,10 @@ import type { DeleteNetworkGroupCommandInput } from './delete-network-group-comm
 import { waitForNetworkGroupDeletion } from './network-group-utils.js';
 
 /**
+ * Deletes a network group, together with all its members and peers.
+ *
+ * Deletion is asynchronous: the command polls the network group until it is gone.
+ *
  * @endpoint [DELETE] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX
  * @group NetworkGroup
@@ -17,9 +21,16 @@ export class DeleteNetworkGroupCommand extends CcApiCompositeCommand<DeleteNetwo
     await waitForNetworkGroupDeletion(composer, params.ownerId, params.networkGroupId);
     return undefined;
   }
+
+  // the deletion removes nothing more the second time and the wait only reads
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Sends the network group deletion request.
+ *
  * @endpoint [DELETE] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX
  * @group NetworkGroup
  * @version 4
@@ -31,5 +42,9 @@ class DeleteNetworkGroupCommandInner extends CcApiSimpleCommand<DeleteNetworkGro
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

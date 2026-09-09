@@ -6,6 +6,8 @@ import type { GetMetabaseInfoCommandInput, GetMetabaseInfoCommandOutput } from '
 import { transformMetabaseInfo } from './metabase-transform.js';
 
 /**
+ * Retrieves a Metabase add-on, with the URL to reach it and the resources it is built on.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-metabase/addons/:XXX
  * @group Metabase
  * @version 4
@@ -24,11 +26,11 @@ export class GetMetabaseInfoCommand extends CcApiSimpleCommand<
     };
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetMetabaseInfoCommandOutput {
     return transformMetabaseInfo(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

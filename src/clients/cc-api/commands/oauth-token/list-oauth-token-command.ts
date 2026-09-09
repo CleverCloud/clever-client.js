@@ -19,6 +19,10 @@ export class ListOauthTokenCommand extends CcApiSimpleCommand<void, ListTokenCom
   }
 
   transformCommandOutput(response: unknown): ListTokenCommandOutput {
-    return sortBy((response as Array<unknown>).map(transformOauthToken), { key: 'creationDate', order: 'desc' });
+    return sortBy((response as Array<unknown>).map(transformOauthToken), { key: 'createdAt', order: 'desc' });
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

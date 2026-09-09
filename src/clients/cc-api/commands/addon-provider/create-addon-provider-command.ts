@@ -8,6 +8,12 @@ import type {
 } from './create-addon-provider-command.types.js';
 
 /**
+ * Registers a new add-on provider owned by an organisation.
+ *
+ * This is the entry point for partners publishing a service on the marketplace: it declares the
+ * provisioning API Clever Cloud will call, and the credentials used to talk to it. The provider
+ * starts with no plan and no feature.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/addonproviders
  * @group AddonProvider
  * @version 2
@@ -44,5 +50,11 @@ export class CreateAddonProviderCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): CreateAddonProviderCommandOutput {
     return transformAddonProviderFull(response);
+  }
+
+  // the provider id comes from the caller and is looked up first, so a replay is refused rather than
+  // registering a second provider
+  isIdempotent(): boolean {
+    return true;
   }
 }

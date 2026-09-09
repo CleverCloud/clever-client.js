@@ -13,6 +13,11 @@ import type {
 } from './list-link-command.types.js';
 
 /**
+ * Lists what a resource is linked to.
+ *
+ * For an application, that is the applications and the add-ons it depends on, fetched in parallel
+ * and merged into one list. For an add-on, that is the applications consuming it.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/applications
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/dependencies
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/addons
@@ -36,10 +41,16 @@ export class ListLinkCommand extends CcApiCompositeCommand<ListLinkCommandInput,
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
- * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
+ * Lists the applications an application depends on.
+ *
+ * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/dependencies
  * @group Link
  * @version 2
  */
@@ -58,9 +69,15 @@ class ListApplicationToApplicationLinkCommand extends CcApiSimpleCommand<
       (link) => link.application.id,
     );
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Lists the add-ons an application depends on.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/addons
  * @group Link
  * @version 2
@@ -80,9 +97,15 @@ class ListApplicationToAddonLinkCommand extends CcApiSimpleCommand<
       (link) => link.addon.id,
     );
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Lists the applications consuming an add-on.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/applications
  * @group Link
  * @version 2
@@ -107,5 +130,9 @@ class ListAddonToApplicationLinkCommand extends CcApiSimpleCommand<
       (link) => link.application.name,
       (link) => link.application.id,
     );
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

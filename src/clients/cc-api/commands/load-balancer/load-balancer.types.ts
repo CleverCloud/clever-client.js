@@ -1,10 +1,24 @@
+/**
+ * A load balancer fronting an application or an add-on, and the DNS records pointing at it.
+ */
 export interface LoadBalancer {
+  /** Identifier of the load balancer, of the form `loadBalancer_<uuid>`. */
   id: string;
-  // renamed from name
+  /** Name of the load balancer, which identifies the zone and the machine serving it, such as `lb.par.n1`. */
+  name: string;
+  /**
+   * Identifier of the zone the load balancer runs in.
+   * @renamedFrom `zoneId`
+   */
   zone: string;
-  zoneId: string;
+  /** DNS records a custom domain must point to in order to be served by this load balancer. */
   dns: {
+    /** Domain name a `CNAME` record should target. */
     cname: string;
-    a: Array<string>;
+    /**
+     * IP addresses `A` records should target, when a `CNAME` cannot be used.
+     * @renamedFrom `a`
+     */
+    aRecords: Array<string>;
   };
 }

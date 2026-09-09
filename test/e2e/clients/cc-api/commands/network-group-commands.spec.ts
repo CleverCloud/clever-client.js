@@ -41,17 +41,6 @@ describe('network-group commands', function () {
     expect(response).toEqualInAnyOrder(createdNetworkGroup);
   });
 
-  it('should get network group null', async () => {
-    const response = await support.client.send(
-      new GetNetworkGroupCommand({
-        ownerId: support.organisationId,
-        networkGroupId: 'ng_00000000-0000-0000-0000-000000000000',
-      }),
-    );
-
-    expect(response).toBeNull();
-  });
-
   it('should list network groups', async () => {
     const application = await support.createTestApplication();
     const ng1 = await support.createNetworkGroup(application.id);
@@ -97,7 +86,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should create network group member', async () => {
@@ -130,7 +119,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should create network group external peer', async () => {
@@ -191,7 +180,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should get network group peer wireguard config', async () => {
@@ -364,7 +353,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should create network group member with mongodb-addon addon', async () => {
@@ -407,7 +396,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should create network group member with mysql-addon addon', async () => {
@@ -450,7 +439,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should create network group member with postgresql-addon addon', async () => {
@@ -493,7 +482,7 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should create network group member with redis-addon addon', async () => {
@@ -536,6 +525,6 @@ describe('network-group commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });

@@ -9,7 +9,11 @@ describe.skip('payment commands', function () {
 
   it('should initialize stripe payement', async () => {
     const response = await support.client.send(
-      new InitStripeCommand({ ownerId: support.userId, invoiceNumber: STATIC_INVOICE_ID }),
+      new InitStripeCommand({
+        ownerId: support.userId,
+        invoiceNumber: STATIC_INVOICE_ID,
+        paymentMethod: { kind: 'EXISTING', paymentMethodId: 'pm_xxx' },
+      }),
     );
 
     console.log(response);

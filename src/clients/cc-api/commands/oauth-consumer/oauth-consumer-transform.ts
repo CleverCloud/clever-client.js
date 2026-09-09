@@ -1,4 +1,4 @@
-import type { AccessRights, ManageRights, OauthConsumer, OauthConsumerRights } from './oauth-consumer.types.js';
+import type { GrantableRights, OauthConsumer, OauthConsumerRights } from './oauth-consumer.types.js';
 
 export function transformOauthConsumer(payload: any): OauthConsumer {
   return {
@@ -29,7 +29,7 @@ export function transformOauthConsumerRights(payload: any): Record<OauthConsumer
   };
 }
 
-export function transformOauthConsumerRightsForApi(rights: Record<AccessRights | ManageRights, boolean>) {
+export function transformOauthConsumerRightsForApi(rights: Record<GrantableRights, boolean>) {
   return {
     access_organisations: rights.accessOrganisations,
     access_organisations_bills: rights.accessOrganisationsBills,

@@ -5,6 +5,10 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { RebuildKeycloakCommandInput } from './rebuild-keycloak-command.types.js';
 
 /**
+ * Rebuilds the Keycloak instance backing an add-on from scratch, keeping its data.
+ *
+ * Slower than a reboot, but it also picks up the platform changes a restart would not.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-keycloak/addons/:XXX/rebuild
  * @group Keycloak
  * @version 4
@@ -22,5 +26,10 @@ export class RebuildKeycloakCommand extends CcApiSimpleCommand<RebuildKeycloakCo
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // each call queues a cacheless redeployment, so a replay rebuilds the instance a second time
+  isIdempotent(): boolean {
+    return false;
   }
 }

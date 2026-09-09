@@ -5,6 +5,10 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteAddonProviderFeatureCommandInput } from './delete-addon-provider-feature-command.types.js';
 
 /**
+ * Removes a feature from an add-on provider's catalogue.
+ *
+ * The feature is addressed by name, which the command base64-encodes so it survives the URL path.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/addonproviders/:XXX/features/:XXX
  * @group AddonProvider
  * @version 2
@@ -27,5 +31,9 @@ export class DeleteAddonProviderFeatureCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

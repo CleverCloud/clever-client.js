@@ -8,6 +8,8 @@ import type {
 import { transformPaymentMethod } from './payment-method-transform.js';
 
 /**
+ * Lists the payment methods registered on an organisation.
+ *
  * @endpoint [GET] /v4/billing/organisations/:XXX/payments/methods
  * @group PaymentMethod
  * @version 4
@@ -24,7 +26,7 @@ export class ListPaymentMethodCommand extends CcApiSimpleCommand<
     return (response as Array<unknown>).map(transformPaymentMethod);
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
+  isIdempotent(): boolean {
+    return true;
   }
 }

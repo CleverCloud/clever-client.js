@@ -1,15 +1,35 @@
 import { normalizeDate, sortBy } from '../../../../lib/utils.js';
 import type { GetNotificationInfoEventsCommandOutput } from './get-notification-info-command.types.js';
-import type { EmailNotification, EmailNotificationTarget } from './notification.types.js';
+import type {
+  EmailNotification,
+  EmailNotificationTarget,
+  NotificationEventType,
+  NotificationMetaEventType,
+  WebhookNotification,
+} from './notification.types.js';
+
+export function transformWebhookNotification(payload: any): WebhookNotification {
+  return {
+    id: payload.id,
+    ownerId: payload.ownerId,
+    name: payload.name,
+    urls: payload.urls,
+    events: payload.events,
+    scopes: payload.scope,
+    createdAt: payload.createdAt,
+    failures: payload.failures,
+    state: payload.state,
+  };
+}
 
 export function transformEmailNotification(payload: any): EmailNotification {
   return {
     id: payload.id,
     ownerId: payload.ownerId,
     name: payload.name,
-    targets: sortBy(payload.notified?.map(transformTarget) ?? [], 'type'),
-    events: payload.events?.sort() ?? [],
-    scope: payload.scope?.sort() ?? [],
+    targets: payload.notified == null ? undefined : sortBy(payload.notified.map(transformTarget), 'type'),
+    events: payload.events?.sort(),
+    scopes: payload.scope?.sort(),
     createdAt: normalizeDate(payload.createdAt)!,
   };
 }
@@ -19,7 +39,7 @@ function transformTarget(payload: any): EmailNotificationTarget {
     case 'email':
       return {
         type: 'email',
-        emailAddresses: payload.target.split(','),
+        emailAddress: payload.target,
       };
     case 'organisation':
       return {
@@ -28,6 +48,7 @@ function transformTarget(payload: any): EmailNotificationTarget {
     case 'userid':
       return {
         type: 'user',
+        userId: payload.target,
       };
     default:
       throw new Error(`Unknown notification target type: ${payload.type}`);
@@ -37,11 +58,10 @@ function transformTarget(payload: any): EmailNotificationTarget {
 export function transformNotificationInfoEvents(response: any): GetNotificationInfoEventsCommandOutput {
   return {
     events: response.events,
-    metaEvents: {
-      META_SERVICE_LIFECYCLE: response.meta_events.META_SERVICE_LIFECYCLE,
-      META_DEPLOYMENT_RESULT: response.meta_events.META_DEPLOYMENT_RESULT,
-      META_SERVICE_MANAGEMENT: response.meta_events.META_SERVICE_MANAGEMENT,
-      META_CREDITS: response.meta_events.META_CREDITS,
-    },
+    // The endpoint answers `meta_events` as an array of `{ key, events }`, keyed here so callers can
+    // look a meta event up without scanning
+    metaEvents: Object.fromEntries(
+      response.meta_events.map((metaEvent: any) => [metaEvent.key, metaEvent.events]),
+    ) as Record<NotificationMetaEventType, Array<NotificationEventType>>,
   };
 }

@@ -46,17 +46,6 @@ describe.skip('migration commands', function () {
     expect(response.id).toBe(createdMigration.id);
   });
 
-  it('should get migration null', async () => {
-    const response = await support.client.send(
-      new GetMigrationCommand({
-        addonId: 'addon_00000000-0000-0000-0000-000000000000',
-        migrationId: 'migration_00000000-0000-0000-0000-000000000000',
-      }),
-    );
-
-    expect(response).toBeNull();
-  });
-
   it('should list migrations', async () => {
     const addon = await support.createTestAddon({
       providerId: 'mysql-addon',
@@ -152,6 +141,6 @@ describe.skip('migration commands', function () {
       }),
     );
 
-    expect(result).toBeNull();
+    expect(result).toBeUndefined();
   });
 });

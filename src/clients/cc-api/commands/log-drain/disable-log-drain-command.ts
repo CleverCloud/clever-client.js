@@ -7,8 +7,14 @@ import type { DisableLogDrainCommandInput, DisableLogDrainCommandOutput } from '
 import { waitForLogDrainDisabled } from './log-drain-utils.js';
 
 /**
- * @endpoint [PUT] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX/disable
- * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
+ * Stops a log drain from shipping logs, without deleting it, and waits until it has actually stopped.
+ *
+ * The transition is asynchronous: the drain goes through `DISABLING` first. This command polls the drain once
+ * a second for up to 30 seconds and only resolves once it reports `DISABLED`, throwing if it has not got there
+ * in time.
+ *
+ * @endpoint [PUT] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX/disable
+ * @endpoint [GET] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX
  * @group LogDrain
  * @version 4
  */
@@ -18,19 +24,28 @@ export class DisableLogDrainCommand extends CcApiCompositeCommand<
 > {
   async compose(params: DisableLogDrainCommandInput, composer: CcApiComposer): Promise<DisableLogDrainCommandOutput> {
     await composer.send(new InnerDisableLogDrainCommand(params));
-    return waitForLogDrainDisabled(composer, params.ownerId!, params.applicationId, params.drainId);
+    return waitForLogDrainDisabled(composer, params, params.drainId);
+  }
+
+  // the backend refuses to disable a drain already `DISABLING`/`DISABLED`, so a replay only re-reads its state
+  isIdempotent(): boolean {
+    return true;
   }
 }
 
 /**
- * @endpoint [PUT] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX/disable
+ * Requests the disabling of the log drain, without waiting for it to take effect.
+ *
+ * @endpoint [PUT] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX/disable
  * @group LogDrain
  * @version 4
  */
 class InnerDisableLogDrainCommand extends CcApiSimpleCommand<DisableLogDrainCommandInput, undefined> {
   toRequestParams(params: DisableLogDrainCommandInput) {
+    const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;
+
     return put(
-      safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains/${params.drainId}/disable`,
+      safeUrl`/v4/drains/organisations/${params.ownerId}/resources/${resourceId}/drains/${params.drainId}/disable`,
     );
   }
 
@@ -41,6 +56,12 @@ class InnerDisableLogDrainCommand extends CcApiSimpleCommand<DisableLogDrainComm
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
+      addonId: 'REAL_ADDON_ID',
     };
+  }
+
+  // a drain already `DISABLING`/`DISABLED` is refused rather than stopped twice
+  isIdempotent(): boolean {
+    return true;
   }
 }

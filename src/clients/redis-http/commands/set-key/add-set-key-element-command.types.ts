@@ -22,5 +22,5 @@ export interface AddSetKeyElementCommandOutput extends WithKey {
   /**
    * `true` when the member has been added. `false` when the member was already present.
    */
-  added: boolean;
+  wasAdded: boolean;
 }

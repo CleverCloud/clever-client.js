@@ -9,6 +9,10 @@ import type {
 } from './update-otoroshi-version-command.types.js';
 
 /**
+ * Moves an add-on to another Otoroshi version.
+ *
+ * The instance is rebuilt on the target version, so it is unavailable for the duration.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-otoroshi/addons/:XXX/version/update
  * @group Otoroshi
  * @version 4
@@ -31,5 +35,10 @@ export class UpdateOtoroshiVersionCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): UpdateOtoroshiVersionCommandOutput {
     return transformOtoroshiInfo(response);
+  }
+
+  // setting the version env vars converges, but every call also redeploys the instance
+  isIdempotent(): boolean {
+    return false;
   }
 }

@@ -4,6 +4,8 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { DeleteEmailNotificationCommandInput } from './delete-email-notification-command.types.js';
 
 /**
+ * Removes an email hook, which stops mailing events.
+ *
  * @endpoint [DELETE] /v2/notifications/emailhooks/:XXX/:XXX
  * @group Notification
  * @version 2
@@ -15,5 +17,9 @@ export class DeleteEmailNotificationCommand extends CcApiSimpleCommand<DeleteEma
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

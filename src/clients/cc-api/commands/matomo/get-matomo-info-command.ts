@@ -6,6 +6,8 @@ import type { GetMatomoInfoCommandInput, GetMatomoInfoCommandOutput } from './ge
 import { transformMatomoInfo } from './matomo-transform.js';
 
 /**
+ * Retrieves a Matomo add-on, with the URL to reach it and the resources it is built on.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-matomo/addons/:XXX
  * @group Matomo
  * @version 4
@@ -13,10 +15,6 @@ import { transformMatomoInfo } from './matomo-transform.js';
 export class GetMatomoInfoCommand extends CcApiSimpleCommand<GetMatomoInfoCommandInput, GetMatomoInfoCommandOutput> {
   toRequestParams(params: GetMatomoInfoCommandInput) {
     return get(safeUrl`/v4/addon-providers/addon-matomo/addons/${params.addonId}`);
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 
   getIdsToResolve(): IdResolve {
@@ -27,5 +25,9 @@ export class GetMatomoInfoCommand extends CcApiSimpleCommand<GetMatomoInfoComman
 
   transformCommandOutput(response: unknown): GetMatomoInfoCommandOutput {
     return transformMatomoInfo(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

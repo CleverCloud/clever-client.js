@@ -8,6 +8,10 @@ import type {
 } from './set-primary-payment-method-command.types.js';
 
 /**
+ * Makes a payment method the one the invoices of an organisation are charged on.
+ *
+ * The payment method must already be attached to the organisation.
+ *
  * @endpoint [PUT] /v4/billing/organisations/:XXX/payments/methods/default
  * @group PaymentMethod
  * @version 4
@@ -24,5 +28,10 @@ export class SetPrimaryPaymentMethodCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): SetPrimaryPaymentMethodCommandOutput {
     return transformPaymentMethod(response);
+  }
+
+  // the payment data table is append only, but only its latest row counts, so a replay leaves the same one primary
+  isIdempotent(): boolean {
+    return true;
   }
 }

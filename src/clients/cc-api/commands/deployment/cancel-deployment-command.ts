@@ -5,6 +5,11 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { CancelDeploymentCommandInput } from './cancel-deployment-command.types.js';
 
 /**
+ * Cancels an in-flight deployment of an application.
+ *
+ * Cancellation works by destroying the instances the deployment has already started. It only makes sense on a
+ * deployment that is still running: a deployment that already reached a terminal state is left untouched.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/deployments/:XXX/instances
  * @group Deployment
  * @version 2
@@ -24,5 +29,11 @@ export class CancelDeploymentCommand extends CcApiSimpleCommand<CancelDeployment
     return {
       ownerId: true,
     };
+  }
+
+  // each accepted call queues a cancellation instruction under a fresh deployment id, and the
+  // "still running" guard only closes once that instruction has landed
+  isIdempotent(): boolean {
+    return false;
   }
 }

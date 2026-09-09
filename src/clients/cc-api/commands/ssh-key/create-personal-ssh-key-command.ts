@@ -10,7 +10,13 @@ import type {
 import { ListPersonalSshKeyCommand } from './list-personal-ssh-key-command.js';
 
 /**
+ * Registers a public SSH key on the current user's account.
+ *
+ * The endpoint answers a confirmation message rather than the stored key, so the key list is fetched
+ * afterwards to return it with its fingerprint.
+ *
  * @endpoint [PUT] /v2/self/keys/:XXX
+ * @endpoint [GET] /v2/self/keys
  * @group SshKey
  * @version 2
  */
@@ -26,9 +32,16 @@ export class CreatePersonalSshKeyCommand extends CcApiCompositeCommand<
     const keys = await composer.send(new ListPersonalSshKeyCommand());
     return keys.find((key) => key.name === params.name)!;
   }
+
+  // registering is guarded on the name and the fingerprint, and reading the keys back changes nothing
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Registers a public SSH key, without reading it back.
+ *
  * @endpoint [PUT] /v2/self/keys/:XXX
  * @group SshKey
  * @version 2
@@ -45,5 +58,10 @@ export class CreatePersonalSshKeyInnerCommand extends CcApiSimpleCommand<CreateP
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // the name and the fingerprint are both checked first, so a replay is refused rather than storing the key twice
+  isIdempotent(): boolean {
+    return true;
   }
 }

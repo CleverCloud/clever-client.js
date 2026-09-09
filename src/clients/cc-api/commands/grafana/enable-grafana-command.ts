@@ -6,6 +6,10 @@ import type { EnableGrafanaCommandInput, EnableGrafanaCommandOutput } from './en
 import { GetGrafanaCommand } from './get-grafana-command.js';
 
 /**
+ * Turns Grafana on for an owner, creating the Grafana organisation and its Clever Cloud dashboards.
+ *
+ * The organisation is read back afterwards so the caller gets its identifier.
+ *
  * @endpoint [POST] /v4/saas/grafana/:XXX
  * @endpoint [GET] /v4/saas/grafana/:XXX
  * @group Grafana
@@ -16,9 +20,16 @@ export class EnableGrafanaCommand extends CcApiCompositeCommand<EnableGrafanaCom
     await composer.send(new InnerEnableGrafanaCommand(params));
     return composer.send(new GetGrafanaCommand(params));
   }
+
+  // creating the organisation is not replayable, so neither is the whole command
+  isIdempotent(): boolean {
+    return false;
+  }
 }
 
 /**
+ * Creates the Grafana organisation, without reading it back.
+ *
  * @endpoint [POST] /v4/saas/grafana/:XXX
  * @group Grafana
  * @version 4
@@ -30,5 +41,10 @@ class InnerEnableGrafanaCommand extends CcApiSimpleCommand<EnableGrafanaCommandI
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // every call creates a Grafana organisation and mints a new service account token for it
+  isIdempotent(): boolean {
+    return false;
   }
 }

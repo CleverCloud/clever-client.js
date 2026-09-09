@@ -8,6 +8,8 @@ import type {
 } from './get-oauth-consumer-secret-command.types.js';
 
 /**
+ * Retrieves the secret of an OAuth consumer.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/consumers/:XXX/secret
  * @group OauthConsumer
  * @version 2
@@ -20,13 +22,14 @@ export class GetOauthConsumerSecretCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/organisations/${params.ownerId}/consumers/${params.oauthConsumerKey}/secret`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
+  }
+
+  // the stored secret is read back as is, never rotated
+  isIdempotent(): boolean {
+    return true;
   }
 }

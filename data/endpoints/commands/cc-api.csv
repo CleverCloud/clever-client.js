@@ -302,7 +302,7 @@ remote-cc-api-v2,[PUT] /v2/application/:XXX/environment,false,,,,,,,,
 remote-cc-api-v2,[GET] /v2/newsfeeds/blog,false,,,,,,,,
 remote-cc-api-v2,[GET] /v2/newsfeeds/engineering,false,,,,,,,,
 remote-cc-api-v2,[GET] /v2/password_forgotten,false,,,,,,,,
-remote-cc-api-v2,[POST] /v2/password_forgotten,true,,,,IGNORE,,,,C'est un POST de formulaire; ça devrait pas être dispo dans le client
+remote-cc-api-v2,[POST] /v2/password_forgotten,true,Auth,PasswordReset,Request,RequestAuthPasswordReset,false,false,,Form POST (form-urlencoded body, HTML response); needed by clever-components for the password reset flow
 remote-cc-api-v2,[GET] /v2/password_forgotten/:XXX,false,,,,,,,,
 remote-cc-api-v2,[POST] /v2/password_forgotten/:XXX,false,,,,,,,,
 remote-cc-api-v2,[PUT] /v2/payments/:XXX/end/stripe,false,,,,,,,,

@@ -5,6 +5,8 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { GetInvoiceHtmlCommandInput, GetInvoiceHtmlCommandOutput } from './get-invoice-html-command.types.js';
 
 /**
+ * Retrieves one billing document of an organisation, rendered as an HTML page.
+ *
  * @endpoint [GET] /v4/billing/organisations/:XXX/invoices/:XXX.html
  * @group Invoice
  * @version 4
@@ -18,7 +20,7 @@ export class GetInvoiceHtmlCommand extends CcApiSimpleCommand<GetInvoiceHtmlComm
     };
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
+  isIdempotent(): boolean {
+    return true;
   }
 }

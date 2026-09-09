@@ -1,15 +1,23 @@
+import { QueryParams } from '../../../../lib/request/query-params.js';
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CcApiComposer } from '../../types/cc-api.types.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { CreateLogDrainCommandInput, CreateLogDrainCommandOutput } from './create-log-drain-command.types.js';
+import { buildLogDrainCreatePayload } from './log-drain-transform.js';
 import { waitForLogDrainEnabled } from './log-drain-utils.js';
-import type { LogDrainKind, LogDrainTarget } from './log-drain.types.js';
 
 /**
- * @endpoint [POST] /v4/drains/organisations/:XXX/applications/:XXX/drains
- * @endpoint [GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX
+ * Creates a log drain on an application or an add-on, and waits until it starts shipping.
+ *
+ * Creation is asynchronous: the drain is persisted first, then enabled in the background. This command polls
+ * the drain once a second for up to 30 seconds and only resolves once it reports `ENABLED`, throwing if it has
+ * not got there in time. Unless `skipCheck` is set, the API also probes the target before persisting the drain
+ * and refuses to create it when the target cannot be reached.
+ *
+ * @endpoint [POST] /v4/drains/organisations/:XXX/resources/:XXX/drains
+ * @endpoint [GET] /v4/drains/organisations/:XXX/resources/:XXX/drains/:XXX
  * @group LogDrain
  * @version 4
  */
@@ -19,20 +27,30 @@ export class CreateLogDrainCommand extends CcApiCompositeCommand<
 > {
   async compose(params: CreateLogDrainCommandInput, composer: CcApiComposer): Promise<CreateLogDrainCommandOutput> {
     const created = await composer.send(new CreateLogDrainInnerCommand(params));
-    return waitForLogDrainEnabled(composer, params.ownerId!, params.applicationId, created.id);
+    return waitForLogDrainEnabled(composer, params, created.id);
+  }
+
+  // creation is not guarded by any uniqueness check, so a replay adds a second drain to the resource
+  isIdempotent(): boolean {
+    return false;
   }
 }
 
 /**
- * @endpoint [POST] /v4/drains/organisations/:XXX/applications/:XXX/drains
+ * Creates the log drain and returns its identifier, without waiting for it to start shipping.
+ *
+ * @endpoint [POST] /v4/drains/organisations/:XXX/resources/:XXX/drains
  * @group LogDrain
  * @version 4
  */
 class CreateLogDrainInnerCommand extends CcApiSimpleCommand<CreateLogDrainCommandInput, { id: string }> {
   toRequestParams(params: CreateLogDrainCommandInput) {
+    const resourceId = 'applicationId' in params ? params.applicationId : params.addonId;
+
     return post(
-      safeUrl`/v4/drains/organisations/${params.ownerId}/applications/${params.applicationId}/drains`,
-      this.#getBody(params.target, params.kind),
+      safeUrl`/v4/drains/organisations/${params.ownerId}/resources/${resourceId}/drains`,
+      buildLogDrainCreatePayload(params.kind, params.target),
+      new QueryParams().set('skipCheck', params.skipCheck),
     );
   }
 
@@ -43,56 +61,12 @@ class CreateLogDrainInnerCommand extends CcApiSimpleCommand<CreateLogDrainComman
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
+      addonId: 'REAL_ADDON_ID',
     };
   }
 
-  #getBody(drain: LogDrainTarget, kind: LogDrainKind) {
-    const body: {
-      kind: LogDrainKind;
-      recipient: {
-        type: string;
-        url: string;
-        username?: string;
-        password?: string;
-        index?: string;
-        apiKey?: string;
-        rfc5424StructuredDataParameters?: string;
-      };
-    } = {
-      kind,
-      recipient: {
-        type: drain.type,
-        url: drain.url,
-      },
-    };
-
-    // RAW_HTTP and ELASTICSEARCH: credentials
-    if (drain.type === 'RAW_HTTP' || drain.type === 'ELASTICSEARCH') {
-      if (drain.credentials != null) {
-        body.recipient.username = drain.credentials.username;
-        body.recipient.password = drain.credentials.password;
-      }
-    }
-
-    // ELASTICSEARCH: index (renamed from indexPrefix)
-    if (drain.type === 'ELASTICSEARCH') {
-      if (drain.indexPrefix != null) {
-        body.recipient.index = drain.indexPrefix;
-      }
-    }
-
-    // NEWRELIC: apiKey
-    if (drain.type === 'NEWRELIC') {
-      body.recipient.apiKey = drain.apiKey;
-    }
-
-    // Syslog: RFC 5424 structured data parameters
-    if (drain.type === 'SYSLOG_TCP' || drain.type === 'SYSLOG_UDP') {
-      if (drain.structuredDataParameters != null) {
-        body.recipient.rfc5424StructuredDataParameters = drain.structuredDataParameters;
-      }
-    }
-
-    return body;
+  // the handler generates a fresh drain id, so a replay adds a second drain to the resource
+  isIdempotent(): boolean {
+    return false;
   }
 }

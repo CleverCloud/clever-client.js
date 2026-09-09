@@ -6,8 +6,11 @@ import type {
   CheckMetabaseVersionCommandInput,
   CheckMetabaseVersionCommandOutput,
 } from './check-metabase-version-command.types.js';
+import { transformMetabaseVersionCheck } from './metabase-transform.js';
 
 /**
+ * Checks which Metabase versions an add-on can be moved to, and whether it is behind.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-metabase/addons/:XXX/version/check
  * @group Metabase
  * @version 4
@@ -27,12 +30,10 @@ export class CheckMetabaseVersionCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): CheckMetabaseVersionCommandOutput {
-    const res = response as CheckMetabaseVersionCommandOutput;
-    return {
-      installed: res.installed,
-      available: res.available,
-      needUpdate: res.needUpdate,
-      latest: res.latest,
-    };
+    return transformMetabaseVersionCheck(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

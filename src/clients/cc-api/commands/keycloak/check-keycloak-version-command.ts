@@ -6,8 +6,11 @@ import type {
   CheckKeycloakVersionCommandInput,
   CheckKeycloakVersionCommandOutput,
 } from './check-keycloak-version-command.types.js';
+import { transformKeycloakVersionCheck } from './keycloak-transform.js';
 
 /**
+ * Checks which Keycloak versions an add-on can be moved to, and whether it is behind.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-keycloak/addons/:XXX/version/check
  * @group Keycloak
  * @version 4
@@ -27,12 +30,10 @@ export class CheckKeycloakVersionCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): CheckKeycloakVersionCommandOutput {
-    const res = response as CheckKeycloakVersionCommandOutput;
-    return {
-      installed: res.installed,
-      available: res.available,
-      latest: res.latest,
-      needUpdate: res.needUpdate,
-    };
+    return transformKeycloakVersionCheck(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

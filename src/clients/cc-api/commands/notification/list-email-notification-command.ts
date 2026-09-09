@@ -8,6 +8,8 @@ import type {
 import { transformEmailNotification } from './notification-transform.js';
 
 /**
+ * Lists the email hooks watching an owner.
+ *
  * @endpoint [GET] /v2/notifications/emailhooks/:XXX
  * @group Notification
  * @version 2
@@ -24,7 +26,7 @@ export class ListEmailNotificationCommand extends CcApiSimpleCommand<
     return sortBy((response as Array<unknown>).map(transformEmailNotification), 'name', 'createdAt');
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
+  isIdempotent(): boolean {
+    return true;
   }
 }

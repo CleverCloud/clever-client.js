@@ -5,13 +5,19 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { CancelMigrationCommandInput } from './cancel-migration-command.types.js';
 
 /**
+ * Aborts a running add-on migration.
+ *
+ * The request is forwarded to the add-on provider, which is the one that actually stops the migration.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/addons/:XXX/migrations/:XXX
  * @group Migration
  * @version 2
  */
 export class CancelMigrationCommand extends CcApiSimpleCommand<CancelMigrationCommandInput, undefined> {
   toRequestParams(params: CancelMigrationCommandInput) {
-    return delete_(safeUrl`/v2/organisations/${params.ownerId}addons/${params.addonId}/migrations/:XXX`);
+    return delete_(
+      safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}/migrations/${params.migrationId}`,
+    );
   }
 
   transformCommandOutput(): undefined {
@@ -23,5 +29,10 @@ export class CancelMigrationCommand extends CcApiSimpleCommand<CancelMigrationCo
       ownerId: true,
       addonId: 'ADDON_ID',
     };
+  }
+
+  // the provider is asked to abort a migration named by its id, so a replay aborts nothing more
+  isIdempotent(): boolean {
+    return true;
   }
 }

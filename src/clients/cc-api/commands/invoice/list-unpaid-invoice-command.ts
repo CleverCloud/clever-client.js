@@ -8,6 +8,11 @@ import type {
 } from './list-unpaid-invoice-command.types.js';
 
 /**
+ * Lists the invoices of an organisation that are still waiting to be paid.
+ *
+ * Unpaid means `PENDING`, `PROCESSING` or `PAYMENTHELD`: neither paid, nor cancelled, nor refunded.
+ * The whole history is looked at, not only the current period.
+ *
  * @endpoint [GET] /v4/billing/organisations/:XXX/invoices/unpaid
  * @group Invoice
  * @version 4
@@ -20,11 +25,11 @@ export class ListUnpaidInvoiceCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/unpaid`);
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
+  transformCommandOutput(response: unknown): ListUnpaidInvoiceCommandOutput {
+    return sortBy((response as Array<unknown>).map(transformInvoiceSummary), 'emittedAt');
   }
 
-  transformCommandOutput(response: unknown): ListUnpaidInvoiceCommandOutput {
-    return sortBy((response as Array<unknown>).map(transformInvoiceSummary), 'emissionDate');
+  isIdempotent(): boolean {
+    return true;
   }
 }

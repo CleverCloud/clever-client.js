@@ -10,6 +10,11 @@ import type {
 } from './remove-link-command.types.js';
 
 /**
+ * Unlinks an application from another application or from an add-on.
+ *
+ * The target kind is picked from the input. The target's configuration stops being injected on the
+ * application's next deployment.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/addons/:XXX
  * @group Link
@@ -28,9 +33,15 @@ export class RemoveLinkCommand extends CcApiCompositeCommand<RemoveLinkCommandIn
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Unlinks an application from another application.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX
  * @group Link
  * @version 2
@@ -48,9 +59,15 @@ export class RemoveApplicationToApplicationLinkCommand extends CcApiSimpleComman
   transformCommandOutput(): undefined {
     return undefined;
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Unlinks an application from an add-on.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/addons/:XXX
  * @group Link
  * @version 2
@@ -73,5 +90,9 @@ export class RemoveApplicationToAddonLinkCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

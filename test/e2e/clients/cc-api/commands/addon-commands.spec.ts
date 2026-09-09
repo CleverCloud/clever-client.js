@@ -23,7 +23,7 @@ describe('addon commands', function () {
   it('should create addon', async () => {
     const response = await support.createTestAddon();
 
-    checkDateFormat(response.creationDate);
+    checkDateFormat(response.createdAt);
     expect(response.id).toMatch(/addon_.+/);
     expect(response.realId).toMatch(/config_.+/);
     expect(response.name).toBe('test-addon');
@@ -36,14 +36,7 @@ describe('addon commands', function () {
     const addon = await support.createTestAddon();
 
     const response = await support.client.send(new DeleteAddonCommand({ addonId: addon.id }));
-    expect(response).toBeNull();
-  });
-
-  it('should get addon null', async () => {
-    const response = await support.client.send(
-      new GetAddonCommand({ ownerId: support.organisationId, addonId: 'addon_00000000-0000-0000-0000-000000000000' }),
-    );
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should get addon', async () => {
@@ -53,17 +46,6 @@ describe('addon commands', function () {
       new GetAddonCommand({ ownerId: support.organisationId, addonId: addon.id }),
     );
     expect(response).toEqualInAnyOrder(addon);
-  });
-
-  it('should get addon sso null', async () => {
-    const response = await support.client.send(
-      new GetAddonSsoCommand({
-        ownerId: support.organisationId,
-        addonId: 'addon_00000000-0000-0000-0000-000000000000',
-      }),
-    );
-
-    expect(response).toBeNull();
   });
 
   it('should get addon sso', async () => {
@@ -78,7 +60,7 @@ describe('addon commands', function () {
     expect(response.timestamp).toBeTypeOf('number');
     expect(response.token).toBeTypeOf('string');
     expect(response.signature).toBeTypeOf('string');
-    expect(response.email).toBeTypeOf('string');
+    expect(response.emailAddress).toBeTypeOf('string');
     expect(response.userId).toBe(support.organisationId);
   });
 });

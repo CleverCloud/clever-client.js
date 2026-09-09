@@ -32,7 +32,7 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should delete domain', async () => {
@@ -51,7 +51,7 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should get primary domain', async () => {
@@ -75,8 +75,8 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response.isPrimary).toBe(true);
-    expect(response.domain).toBe('foo.com/');
+    expect(response?.isPrimary).toBe(true);
+    expect(response?.domain).toBe('foo.com/');
   });
 
   it('should list domains', async () => {
@@ -105,6 +105,39 @@ describe('domain commands', function () {
     ]);
   });
 
+  it('should list domains with primary', async () => {
+    const application = await support.createTestApplication();
+    await support.client.send(
+      new CreateDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
+    );
+
+    await support.client.send(
+      new SetPrimaryDomainCommand({
+        applicationId: application.id,
+        domain: 'foo.com',
+      }),
+    );
+
+    const response = await support.client.send(
+      new ListDomainCommand({
+        applicationId: application.id,
+      }),
+    );
+
+    expect(response).toBeInstanceOf(Array);
+    expect(response).toHaveLength(2);
+    expect(response).toEqualInAnyOrder([
+      {
+        domain: `app-${application.id.replace('app_', '')}.cleverapps.io/`,
+        isPrimary: false,
+      },
+      { domain: 'foo.com/', isPrimary: true },
+    ]);
+  });
+
   it('should set primary domain', async () => {
     const application = await support.createTestApplication();
     await support.client.send(
@@ -121,7 +154,7 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should unset primary domain', async () => {
@@ -145,6 +178,6 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });

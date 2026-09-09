@@ -1,19 +1,44 @@
 import { post } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
+import type { ApiErrorInfo } from '../../../../types/command.types.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { ActivateCouponCommandInput, ActivateCouponCommandOutput } from './activate-coupon-command.types.js';
 import { transformCouponUsage } from './credits-transform.js';
 
 /**
+ * The error codes this command can produce, to compare against `error.code`.
+ *
+ * - `NOT_FOUND`: The coupon doesn't exist
+ * - `NOT_VALID_YET`: The coupon is not valid yet
+ * - `NO_LONGER_VALID`: The coupon is no longer valid
+ * - `USED_TOO_MANY_TIMES`: The coupon has been used too many times
+ * - `CURRENCY_MISMATCH`: The currency of the coupon doesn't match the currency of the owner
+ * - `ALREADY_ACTIVATED`: The coupon was already activated
+ */
+export const ACTIVATE_COUPON_ERROR_CODES = {
+  NOT_FOUND: 'clever.credits.coupon.not-found',
+  NOT_VALID_YET: 'clever.credits.coupon.not-valid-yet',
+  NO_LONGER_VALID: 'clever.credits.coupon.no-longer-valid',
+  USED_TOO_MANY_TIMES: 'clever.credits.coupon.used-too-many-times',
+  CURRENCY_MISMATCH: 'clever.credits.coupon.currency-mismatch',
+  ALREADY_ACTIVATED: 'clever.credits.coupon.already-activated',
+} as const;
+
+export type ActivateCouponErrorCode = (typeof ACTIVATE_COUPON_ERROR_CODES)[keyof typeof ACTIVATE_COUPON_ERROR_CODES];
+
+const API_ERROR_CODES: Record<string, ActivateCouponErrorCode> = {
+  '10001': ACTIVATE_COUPON_ERROR_CODES.NOT_FOUND,
+  '10002': ACTIVATE_COUPON_ERROR_CODES.NOT_VALID_YET,
+  '10003': ACTIVATE_COUPON_ERROR_CODES.NO_LONGER_VALID,
+  '10004': ACTIVATE_COUPON_ERROR_CODES.USED_TOO_MANY_TIMES,
+  '10005': ACTIVATE_COUPON_ERROR_CODES.CURRENCY_MISMATCH,
+  '10011': ACTIVATE_COUPON_ERROR_CODES.ALREADY_ACTIVATED,
+};
+
+/**
  * Activates a coupon
  *
- * Common error codes:
- * - `clever.credits.coupon.not-found`: The coupon doesn't exist
- * - `clever.credits.coupon.not-valid-yet`: The coupon is not valid yet
- * - `clever.credits.coupon.no-longer-valid`: The coupon is no longer valid
- * - `clever.credits.coupon.used-too-many-times`: The coupon has been used too many times
- * - `clever.credits.coupon.currency-mismatch`: The currency of the coupon doesn't match the currency of the owner
- * - `clever.credits.coupon.already-activated`: The coupon was already activated
+ * Common error codes: see {@link ACTIVATE_COUPON_ERROR_CODES}
  *
  * @endpoint [POST] /v4/billing/organisations/:XXX/applied-coupons
  * @group Credits
@@ -28,26 +53,12 @@ export class ActivateCouponCommand extends CcApiSimpleCommand<ActivateCouponComm
     return transformCouponUsage(response);
   }
 
-  transformErrorCode(errorCode: string) {
-    if (errorCode === '10001') {
-      return 'clever.credits.coupon.not-found';
-    }
-    if (errorCode === '10002') {
-      return 'clever.credits.coupon.not-valid-yet';
-    }
-    if (errorCode === '10003') {
-      return 'clever.credits.coupon.no-longer-valid';
-    }
-    if (errorCode === '10004') {
-      return 'clever.credits.coupon.used-too-many-times';
-    }
-    if (errorCode === '10005') {
-      return 'clever.credits.coupon.currency-mismatch';
-    }
-    if (errorCode === '10011') {
-      return 'clever.credits.coupon.already-activated';
-    }
+  transformErrorCode({ code }: ApiErrorInfo) {
+    return API_ERROR_CODES[code] ?? code;
+  }
 
-    return errorCode;
+  // the coupon usage is keyed on `(coupon name, owner)`, so a replay is refused instead of granting the credits twice
+  isIdempotent(): boolean {
+    return true;
   }
 }

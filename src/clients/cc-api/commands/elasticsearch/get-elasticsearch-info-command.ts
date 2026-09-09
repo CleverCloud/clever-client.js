@@ -9,6 +9,9 @@ import type {
 } from './get-elasticsearch-info-command.types.js';
 
 /**
+ * Retrieves the details of an Elasticsearch add-on: its plan and zone, the credentials of its Elasticsearch, Kibana
+ * and APM endpoints, and the optional services and features it runs.
+ *
  * @endpoint [GET] /v2/providers/es-addon/:XXX
  * @group Elasticsearch
  * @version 2
@@ -21,10 +24,6 @@ export class GetElasticsearchInfoCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/providers/es-addon/${params.addonId}`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetElasticsearchInfoCommandOutput {
     return transformElasticsearchInfo(response);
   }
@@ -33,5 +32,9 @@ export class GetElasticsearchInfoCommand extends CcApiSimpleCommand<
     return {
       addonId: 'ADDON_ID',
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -4,6 +4,8 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { DeleteWebhookNotificationCommandInput } from './delete-webhook-notification-command.types.js';
 
 /**
+ * Removes a webhook, which stops posting events.
+ *
  * @endpoint [DELETE] /v2/notifications/webhooks/:XXX/:XXX
  * @group Notification
  * @version 2
@@ -18,5 +20,9 @@ export class DeleteWebhookNotificationCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

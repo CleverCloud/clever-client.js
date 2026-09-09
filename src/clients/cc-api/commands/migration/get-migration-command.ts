@@ -6,6 +6,8 @@ import type { GetMigrationCommandInput, GetMigrationCommandOutput } from './get-
 import { transformMigration } from './migration-transform.js';
 
 /**
+ * Retrieves an add-on migration, with the step by step progress of the plan or zone change it performs.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/migrations/:XXX
  * @group Migration
  * @version 2
@@ -19,14 +21,14 @@ export class GetMigrationCommand extends CcApiSimpleCommand<GetMigrationCommandI
     return transformMigration(response);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
       addonId: 'ADDON_ID',
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

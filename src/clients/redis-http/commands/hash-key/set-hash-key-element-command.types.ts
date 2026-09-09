@@ -13,5 +13,5 @@ export interface SetHashKeyElementCommandOutput extends HashKeyElement, WithKey 
   /**
    * `true` when a new field has been added. `false` when a field has been updated.
    */
-  added: boolean;
+  wasAdded: boolean;
 }

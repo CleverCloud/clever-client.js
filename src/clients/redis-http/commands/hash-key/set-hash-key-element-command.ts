@@ -18,4 +18,9 @@ export class SetHashKeyElementCommand extends RedisHttpCommand<
   toRequestParams(params: SetHashKeyElementCommandInput) {
     return post(`/key/hash/_set`, params);
   }
+
+  // `HSET` on one field: the second call writes the same value and answers `wasAdded: false`
+  isIdempotent(): boolean {
+    return true;
+  }
 }

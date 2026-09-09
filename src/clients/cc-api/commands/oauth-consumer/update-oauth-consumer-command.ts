@@ -9,6 +9,10 @@ import type {
 } from './update-oauth-consumer-command.types.js';
 
 /**
+ * Replaces the description and the rights of an OAuth consumer.
+ *
+ * Every field is overwritten, including the rights: those left out are revoked.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/consumers/:XXX
  * @group OauthConsumer
  * @version 2
@@ -36,5 +40,10 @@ export class UpdateOauthConsumerCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  // the whole consumer is overwritten with the given fields, so a replay writes the same values
+  isIdempotent(): boolean {
+    return true;
   }
 }

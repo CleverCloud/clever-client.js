@@ -5,6 +5,10 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { UndeployApplicationCommandInput } from './undeploy-application-command.types.js';
 
 /**
+ * Stops an application by tearing down all of its running instances.
+ *
+ * The application itself is kept, and can be deployed again later.
+ *
  * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/instances
  * @group Application
  * @version 2
@@ -22,5 +26,11 @@ export class UndeployApplicationCommand extends CcApiSimpleCommand<UndeployAppli
     return {
       ownerId: true,
     };
+  }
+
+  // each call queues a stop instruction of its own, with a new deployment id, even on an already
+  // stopped application
+  isIdempotent(): boolean {
+    return false;
   }
 }

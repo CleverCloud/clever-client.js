@@ -6,6 +6,11 @@ import { transformMigration } from './migration-transform.js';
 import type { StartMigrationCommandInput, StartMigrationCommandOutput } from './start-migration-command.types.js';
 
 /**
+ * Starts the migration of an add-on to another plan, zone or version.
+ *
+ * The migration runs asynchronously on the add-on provider side; the returned migration describes the steps it will
+ * go through and their initial status.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/addons/:XXX/migrations
  * @group Migration
  * @version 2
@@ -28,5 +33,10 @@ export class StartMigrationCommand extends CcApiSimpleCommand<StartMigrationComm
       ownerId: true,
       addonId: 'ADDON_ID',
     };
+  }
+
+  // the provider opens a new migration, with its own id, on every call
+  isIdempotent(): boolean {
+    return false;
   }
 }

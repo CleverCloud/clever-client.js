@@ -8,6 +8,10 @@ import type {
 } from './get-auth-mfa-backup-codes-command.types.js';
 
 /**
+ * Retrieves the backup codes that let the current user sign in when the authenticator app is lost.
+ *
+ * The account password is sent base64-encoded in the `X-Clever-Password` header.
+ *
  * @endpoint [GET] /v2/self/mfa/:XXX/backupcodes
  * @group Auth
  * @version 2
@@ -29,5 +33,9 @@ export class GetAuthMfaBackupCodesCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): GetAuthMfaBackupCodesCommandOutput {
     return (response as Array<{ code: string }>).map((o) => o.code);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

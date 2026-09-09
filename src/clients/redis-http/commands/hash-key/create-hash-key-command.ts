@@ -12,4 +12,9 @@ export class CreateHashKeyCommand extends RedisHttpCommand<CreateHashKeyCommandI
   toRequestParams(params: CreateHashKeyCommandInput) {
     return post(`/key/hash/_create`, params);
   }
+
+  // `HSET` on the same fields, behind an existence check: a replay is refused and stores nothing more
+  isIdempotent(): boolean {
+    return true;
+  }
 }

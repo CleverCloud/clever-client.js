@@ -18,4 +18,9 @@ export class UpdateListKeyElementCommand extends RedisHttpCommand<
   toRequestParams(params: UpdateListKeyElementCommandInput) {
     return post(`/key/list/_update`, params);
   }
+
+  // `LSET` at an index: the second call writes the same value at the same place
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -9,6 +9,10 @@ import type {
 } from './get-addon-provider-command.types.js';
 
 /**
+ * Retrieves an add-on provider owned by an organisation.
+ *
+ * Only the provider description is returned: its plans and features are listed separately.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addonproviders/:XXX
  * @group AddonProvider
  * @version 2
@@ -25,13 +29,13 @@ export class GetAddonProviderCommand extends CcApiSimpleCommand<
     return transformAddonProvider(response);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

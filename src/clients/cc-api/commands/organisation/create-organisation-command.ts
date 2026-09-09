@@ -8,6 +8,11 @@ import type {
 import { transformOrganisation } from './organisation-transform.js';
 
 /**
+ * Creates an organisation owned by the current user.
+ *
+ * The current user becomes its first `ADMIN` member. Organisation creation can be disabled
+ * platform wide, in which case the call is refused.
+ *
  * @endpoint [POST] /v2/organisations
  * @group Organisation
  * @version 2
@@ -17,8 +22,11 @@ export class CreateOrganisationCommand extends CcApiSimpleCommand<
   CreateOrganisationCommandOutput
 > {
   toRequestParams(params: CreateOrganisationCommandInput) {
+    // the wire still spells the VAT number `VAT`
+    const vat = 'vat' in params ? { VAT: params.vat } : {};
     const body = {
-      ...omit(params, 'billingEmailAddress', 'contacts'),
+      ...omit('vat' in params ? omit(params, 'vat') : params, 'billingEmailAddress', 'contacts'),
+      ...vat,
       billingEmail: params.billingEmailAddress,
       contacts:
         params.contacts?.map((c) => ({
@@ -32,5 +40,10 @@ export class CreateOrganisationCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): CreateOrganisationCommandOutput {
     return transformOrganisation(response);
+  }
+
+  // each call creates one more organisation, with its own id, and spends a creation quota token
+  isIdempotent(): boolean {
+    return false;
   }
 }

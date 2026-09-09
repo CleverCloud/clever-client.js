@@ -96,10 +96,10 @@ describe('product commands', function () {
     expect(runtime.variant.slug).toBeTypeOf('string');
     expect(runtime.variant.name).toBeTypeOf('string');
     expect(runtime.variant.deployType).toBeTypeOf('string');
-    expect(runtime.variant.logo).toBeTypeOf('string');
+    expect(runtime.variant.logoUrl).toBeTypeOf('string');
     expect(runtime.description).toBeTypeOf('string');
-    expect(runtime.enabled).toBeTypeOf('boolean');
-    expect(runtime.comingSoon).toBeTypeOf('boolean');
+    expect(runtime.isEnabled).toBeTypeOf('boolean');
+    expect(runtime.isComingSoon).toBeTypeOf('boolean');
     expect(runtime.maxInstances).toBeTypeOf('number');
     expect(runtime.tags).toBeInstanceOf(Array);
     expect(runtime.deployments).toBeInstanceOf(Array);
@@ -115,10 +115,10 @@ describe('product commands', function () {
     expect(flavor.cpus).toBeTypeOf('number');
     expect(flavor.gpus).toBeTypeOf('number');
     expect(flavor.price).toBeTypeOf('number');
-    expect(flavor.available).toBeTypeOf('boolean');
-    expect(flavor.microservice).toBeTypeOf('boolean');
-    expect(flavor.machineLearning).toBeTypeOf('boolean');
-    expect(flavor.nice).toBeTypeOf('number');
+    expect(flavor.isAvailable).toBeTypeOf('boolean');
+    expect(flavor.isSharedCpu).toBeTypeOf('boolean');
+    expect(flavor.isMachineLearning).toBeTypeOf('boolean');
+    expect(flavor.cpuPriorityOffset).toBeTypeOf('number');
     expect(flavor.priceId).toBeTypeOf('string');
     if (flavor.memory.unit != null) {
       expect(flavor.memory.unit).toBeTypeOf('string');
@@ -141,11 +141,11 @@ describe('product commands', function () {
     expect(addon.googlePlusName).toBeTypeOf('string');
     expect(addon.twitterName).toBeTypeOf('string');
     expect(addon.analyticsId).toBeTypeOf('string');
-    expect(addon.shortDesc).toBeTypeOf('string');
-    expect(addon.longDesc).toBeTypeOf('string');
+    expect(addon.shortDescription).toBeTypeOf('string');
+    expect(addon.longDescription).toBeTypeOf('string');
     expect(addon.logoUrl).toBeTypeOf('string');
     expect(addon.status).toBeTypeOf('string');
-    expect(addon.openInNewTab).toBeTypeOf('boolean');
+    expect(addon.shouldOpenInNewTab).toBeTypeOf('boolean');
     expect(addon.canUpgrade).toBeTypeOf('boolean');
     expect(addon.zones).toBeInstanceOf(Array);
     expect(addon.plans).toBeInstanceOf(Array);
@@ -162,9 +162,9 @@ describe('product commands', function () {
     expect(elasticsearchServiceInfo.cpus).toBeTypeOf('number');
     expect(elasticsearchServiceInfo.gpus).toBeTypeOf('number');
     expect(elasticsearchServiceInfo.price).toBeTypeOf('number');
-    expect(elasticsearchServiceInfo.available).toBeTypeOf('boolean');
-    expect(elasticsearchServiceInfo.microservice).toBeTypeOf('boolean');
-    expect(elasticsearchServiceInfo.nice).toBeTypeOf('number');
+    expect(elasticsearchServiceInfo.isAvailable).toBeTypeOf('boolean');
+    expect(elasticsearchServiceInfo.isSharedCpu).toBeTypeOf('boolean');
+    expect(elasticsearchServiceInfo.cpuPriorityOffset).toBeTypeOf('number');
     expect(elasticsearchServiceInfo.priceId).toBeTypeOf('string');
   }
 });

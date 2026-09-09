@@ -5,6 +5,9 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { GetMateriaInfoCommandInput, GetMateriaInfoCommandOutput } from './get-materia-info-command.types.js';
 
 /**
+ * Retrieves the details of a Materia KV add-on: where its database is reachable and the token to authenticate against
+ * it.
+ *
  * @endpoint [GET] /v4/materia/organisations/:XXX/materia/databases/:XXX
  * @group Materia
  * @version 4
@@ -14,14 +17,15 @@ export class GetMateriaInfoCommand extends CcApiSimpleCommand<GetMateriaInfoComm
     return get(safeUrl`/v4/materia/organisations/${params.ownerId}/materia/databases/${params.addonId}`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
       addonId: 'REAL_ADDON_ID',
     };
+  }
+
+  // the token comes from the stored add-on row, it is not minted or rotated on read
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -8,6 +8,8 @@ import type {
 import { transformEmailNotification } from './notification-transform.js';
 
 /**
+ * Creates an email hook, which mails platform events to a set of recipients as they happen.
+ *
  * @endpoint [POST] /v2/notifications/emailhooks/:XXX
  * @group Notification
  * @version 2
@@ -22,7 +24,7 @@ export class CreateEmailNotificationCommand extends CcApiSimpleCommand<
         case 'email':
           return {
             type: 'email',
-            target: target.emailAddresses.join(','),
+            target: target.emailAddress,
           };
         case 'organisation':
           return {
@@ -31,6 +33,7 @@ export class CreateEmailNotificationCommand extends CcApiSimpleCommand<
         case 'user':
           return {
             type: 'userid',
+            target: target.userId,
           };
       }
     });
@@ -39,11 +42,16 @@ export class CreateEmailNotificationCommand extends CcApiSimpleCommand<
       name: params.name,
       notified,
       events: params.events,
-      scope: params.scope,
+      scope: params.scopes,
     });
   }
 
   transformCommandOutput(response: unknown): CreateEmailNotificationCommandOutput {
     return transformEmailNotification(response);
+  }
+
+  // the handler inserts a hook under a freshly generated id, so a replay leaves the owner with two identical hooks
+  isIdempotent(): boolean {
+    return false;
   }
 }

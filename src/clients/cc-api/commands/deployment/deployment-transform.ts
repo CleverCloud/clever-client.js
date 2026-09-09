@@ -1,5 +1,5 @@
 import { normalizeDate } from '../../../../lib/utils.js';
-import type { DeploymentLegacy, DeploymentState } from './deployment.types.js';
+import type { Deployment, DeploymentLegacy, DeploymentState } from './deployment.types.js';
 
 const DEPLOYMENT_STATE_CONVERT_MAP: Record<string, Omit<DeploymentState, 'QUEUED'>> = {
   TASK_RUNNING: 'TASK_IN_PROGRESS',
@@ -8,6 +8,20 @@ const DEPLOYMENT_STATE_CONVERT_MAP: Record<string, Omit<DeploymentState, 'QUEUED
   CANCELLED: 'CANCELLED',
   OK: 'SUCCEEDED',
 };
+
+export function transformDeployment(payload: any): Deployment {
+  return {
+    id: payload.id,
+    ownerId: payload.ownerId,
+    applicationId: payload.applicationId,
+    startsAt: payload.startDate,
+    state: payload.state,
+    steps: payload.steps,
+    version: payload.version,
+    origin: payload.origin,
+    hasDedicatedBuild: payload.hasDedicatedBuild,
+  };
+}
 
 export function transformDeploymentLegacy(payload: any, applicationId: string): DeploymentLegacy {
   return {

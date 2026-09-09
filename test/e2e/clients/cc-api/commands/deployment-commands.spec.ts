@@ -114,7 +114,7 @@ describe('deployment commands', function () {
 
     expect(response.id).toBe(deployment.deploymentId);
     expect(response.applicationId).toBe(application.id);
-    checkDateFormat(response.startDate);
+    checkDateFormat(response.startsAt);
     expect(response.state).toBeTypeOf('string');
     expect(response.steps).toBeInstanceOf(Array);
     expect(response.steps[0].state).toBe('QUEUED');
@@ -141,7 +141,7 @@ describe('deployment commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   async function waitForDeployment(applicationId: string, deploymentId: string): Promise<void> {

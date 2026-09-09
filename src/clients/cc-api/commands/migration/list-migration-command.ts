@@ -6,6 +6,8 @@ import type { ListMigrationCommandInput, ListMigrationCommandOutput } from './li
 import { transformMigration } from './migration-transform.js';
 
 /**
+ * Lists the migrations an add-on went through, past and running.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/migrations
  * @group Migration
  * @version 2
@@ -16,11 +18,7 @@ export class ListMigrationCommand extends CcApiSimpleCommand<ListMigrationComman
   }
 
   transformCommandOutput(response: unknown): ListMigrationCommandOutput {
-    return sortBy((response as Array<unknown>).map(transformMigration), { key: 'requestDate', order: 'desc' });
-  }
-
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
+    return sortBy((response as Array<unknown>).map(transformMigration), { key: 'requestedAt', order: 'desc' });
   }
 
   getIdsToResolve(): IdResolve {
@@ -28,5 +26,9 @@ export class ListMigrationCommand extends CcApiSimpleCommand<ListMigrationComman
       ownerId: true,
       addonId: 'ADDON_ID',
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -6,6 +6,7 @@ import type {
   ProductElasticsearchInfo,
   ProductRuntime,
   ProductRuntimeFlavor,
+  ProductRuntimeVariant,
 } from './product.types.js';
 
 export function transformProductRuntime(payload: any): ProductRuntime {
@@ -13,16 +14,26 @@ export function transformProductRuntime(payload: any): ProductRuntime {
     type: payload.type,
     version: payload.version,
     name: payload.name,
-    variant: payload.variant,
+    variant: transformProductRuntimeVariant(payload.variant),
     description: payload.description,
-    enabled: payload.enabled,
-    comingSoon: payload.comingSoon,
+    isEnabled: payload.enabled,
+    isComingSoon: payload.comingSoon,
     maxInstances: payload.maxInstances,
     tags: payload.tags?.sort() ?? [],
     deployments: payload.deployments?.sort() ?? [],
     flavors: sortBy(payload.flavors.map(transformProductRuntimeFlavor), 'price'),
     defaultFlavor: transformProductRuntimeFlavor(payload.defaultFlavor),
     buildFlavor: transformProductRuntimeFlavor(payload.buildFlavor),
+  };
+}
+
+export function transformProductRuntimeVariant(payload: any): ProductRuntimeVariant {
+  return {
+    id: payload.id,
+    slug: payload.slug,
+    name: payload.name,
+    deployType: payload.deployType,
+    logoUrl: payload.logo,
   };
 }
 
@@ -34,18 +45,19 @@ export function transformProductRuntimeFlavor(payload: any): ProductRuntimeFlavo
     gpus: payload.gpus,
     disk: payload.disk,
     price: payload.price,
-    available: payload.available,
-    microservice: payload.microservice,
-    machineLearning: payload.machine_learning,
-    nice: payload.nice,
+    isAvailable: payload.available,
+    isSharedCpu: payload.microservice,
+    isMachineLearning: payload.machine_learning,
+    cpuPriorityOffset: payload.nice,
     priceId: payload.price_id.toLowerCase(),
     memory: {
-      unit: payload.unit,
-      value: payload.value,
-      formatted: payload.formatted,
+      unit: payload.memory.unit,
+      value: payload.memory.value,
+      formatted: payload.memory.formatted,
     },
     cpuFactor: payload.cpuFactor,
     memFactor: payload.memFactor,
+    systemOverheadFactor: payload.systemOverheadFactor,
   };
 }
 
@@ -53,7 +65,10 @@ export function transformProductAddonVersions(response: any): ProductAddonVersio
   return {
     clusters: sortBy(response.clusters.map(transformAddonVersionCluster), 'label'),
     dedicated: Object.fromEntries(
-      Object.entries(response.dedicated).map(([k, v]: [string, any]) => [k, { features: sortBy(v.features, 'name') }]),
+      Object.entries(response.dedicated).map(([k, v]: [string, any]) => [
+        k,
+        { features: transformAddonVersionFeatures(v.features) },
+      ]),
     ),
     defaultDedicatedVersion: response.defaultDedicatedVersion,
   };
@@ -65,8 +80,15 @@ function transformAddonVersionCluster(cluster: any): ProductAddonClusterVersion 
     label: cluster.label,
     zone: cluster.zone,
     version: cluster.version,
-    features: sortBy(cluster.version, 'name'),
+    features: transformAddonVersionFeatures(cluster.features),
   };
+}
+
+function transformAddonVersionFeatures(features: Array<any>): Array<{ name: string; isEnabled: boolean }> {
+  return sortBy(
+    features.map((feature: any) => ({ name: feature.name, isEnabled: feature.enabled })),
+    'name',
+  );
 }
 
 export function transformProductElasticsearchInfo(response: any): ProductElasticsearchInfo {
@@ -85,9 +107,9 @@ function transformServiceInfo(payload: any): ElasticsearchServiceInfo {
     cpus: payload.cpus,
     gpus: payload.gpus,
     price: payload.price,
-    available: payload.available,
-    microservice: payload.microservice,
-    nice: payload.nice,
+    isAvailable: payload.available,
+    isSharedCpu: payload.microservice,
+    cpuPriorityOffset: payload.nice,
     priceId: payload.price_id.toLowerCase(),
   };
 }

@@ -57,7 +57,7 @@ describe('keycloak commands', function () {
     });
     const response = await support.client.send(new RebootKeycloakCommand({ addonId: addon.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should rebuild keycloak', async () => {
@@ -68,7 +68,7 @@ describe('keycloak commands', function () {
     });
     const response = await support.client.send(new RebuildKeycloakCommand({ addonId: addon.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should check keycloak version', async () => {
@@ -81,7 +81,7 @@ describe('keycloak commands', function () {
 
     expect(response.installed).toBeTypeOf('string');
     expect(response.latest).toBeTypeOf('string');
-    expect(response.available).toContain(response.latest);
+    expect(response.availableVersions).toContain(response.latest);
     expect(response.needUpdate).toBeTypeOf('boolean');
   });
 
@@ -112,7 +112,7 @@ describe('keycloak commands', function () {
     const response = await support.client.send(new CreateKeycloakNetworkGroupCommand({ addonId: addon.id }));
 
     expect(response.id).toBe(addon.realId);
-    expect(response.features.networkGroup).not.toBeNull();
+    expect(response.features.networkGroup).toBeDefined();
     expect(response.features.networkGroup!.id).toBeTypeOf('string');
   });
 
@@ -127,6 +127,6 @@ describe('keycloak commands', function () {
 
     const response = await support.client.send(new DeleteKeycloakNetworkGroupCommand({ addonId: addon.id }));
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });

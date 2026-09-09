@@ -40,14 +40,14 @@ describe.skip('jenkins commands', function () {
     expect(response.addonId).toBe(addon.id);
     expect(response.plan).toBe('XS');
     expect(response.zone).toBe('par');
-    checkDateFormat(response.creationDate);
-    checkDateFormat(response.deletionDate!);
+    checkDateFormat(response.createdAt);
+    checkDateFormat(response.deletedAt!);
     expect(response.status).toBe('ACTIVE');
     expect(response.host).toBeTypeOf('string');
     expect(response.user).toBeTypeOf('string');
     expect(response.password).toBeTypeOf('string');
     expect(response.version).toBeTypeOf('string');
-    expect(response.features).toEqualInAnyOrder([{ name: 'encryption', enabled: false }]);
+    expect(response.features).toEqualInAnyOrder([{ name: 'encryption', isEnabled: false }]);
     expect(response.updates.manageLink).toBeTypeOf('string');
     expect(response.updates.versions.current).toBeTypeOf('string');
     expect(response.updates.versions.available).toBeTypeOf('string');

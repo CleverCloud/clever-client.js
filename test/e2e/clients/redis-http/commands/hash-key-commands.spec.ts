@@ -34,7 +34,7 @@ describe('hash-key commands', function () {
       }),
     );
 
-    expect(response).toEqual({ key: 'test', field: 'f1', deleted: true });
+    expect(response).toEqual({ key: 'test', field: 'f1', wasDeleted: true });
   });
 
   it('should scan hash key', async () => {
@@ -66,6 +66,6 @@ describe('hash-key commands', function () {
       }),
     );
 
-    expect(response).toEqual({ key: 'test', field: 'f1', value: 'v2', added: false });
+    expect(response).toEqual({ key: 'test', field: 'f1', value: 'v2', wasAdded: false });
   });
 });

@@ -6,8 +6,11 @@ import type {
   CheckOtoroshiVersionCommandInput,
   CheckOtoroshiVersionCommandOutput,
 } from './check-otoroshi-version-command.types.js';
+import { transformOtoroshiVersionCheck } from './otoroshi-transform.js';
 
 /**
+ * Checks which Otoroshi versions an add-on can be moved to, and whether it is behind.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-otoroshi/addons/:XXX/version/check
  * @group Otoroshi
  * @version 4
@@ -27,12 +30,10 @@ export class CheckOtoroshiVersionCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): CheckOtoroshiVersionCommandOutput {
-    const res = response as CheckOtoroshiVersionCommandOutput;
-    return {
-      installed: res.installed,
-      available: res.available,
-      needUpdate: res.needUpdate,
-      latest: res.latest,
-    };
+    return transformOtoroshiVersionCheck(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

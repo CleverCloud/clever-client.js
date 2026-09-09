@@ -1,6 +1,6 @@
 import { normalizeDate, sortBy } from '../../../../lib/utils.js';
 import { toArray } from '../../../../utils/environment-utils.js';
-import { transformProductRuntimeFlavor } from '../product/product-transform.js';
+import { transformProductRuntimeFlavor, transformProductRuntimeVariant } from '../product/product-transform.js';
 import type { Application } from './application.types.js';
 
 export function transformApplication(payload: any): Application {
@@ -14,7 +14,7 @@ export function transformApplication(payload: any): Application {
     instance: {
       type: payload.instance.type,
       version: payload.instance.version,
-      variant: payload.instance.variant,
+      variant: transformProductRuntimeVariant(payload.instance.variant),
       minInstances: payload.instance.minInstances,
       maxInstances: payload.instance.maxInstances,
       maxAllowedInstances: payload.instance.maxAllowedInstances,
@@ -23,34 +23,34 @@ export function transformApplication(payload: any): Application {
       flavors: sortBy(payload.instance.flavors.map(transformProductRuntimeFlavor), 'price'),
       defaultEnvironment: sortBy(toArray(payload.instance.defaultEnv), 'name'),
       lifetime: payload.instance.lifetime,
+      kernelName: payload.instance.kernelName,
     },
     deployment: {
-      shutdownable: payload.deployment.shutdownable,
+      canShutdown: payload.deployment.shutdownable,
       type: payload.deployment.type,
       repoState: payload.deployment.repoState,
       url: payload.deployment.url,
-      httpUrl: payload.deployment.httpUrl,
+      httpUrl: payload.deployment.httpUrl ?? undefined,
     },
     domains: sortBy(
       payload.vhosts?.map((domain: any) => ({ domain: domain.fqdn })),
       'domain',
     ),
-    creationDate: normalizeDate(payload.creationDate)!,
-    lastDeploy: payload.last_deploy,
-    archived: payload.archived,
-    stickySessions: payload.stickySessions,
-    homogeneous: payload.homogeneous,
-    favourite: payload.favourite,
+    createdAt: normalizeDate(payload.creationDate)!,
+    lastDeployedAt: payload.last_deploy,
+    isArchived: payload.archived,
+    hasStickySessions: payload.stickySessions,
+    isZeroDowntimeDeploymentEnabled: !payload.homogeneous,
+    isFavourite: payload.favourite,
     cancelOnPush: payload.cancelOnPush,
-    separateBuild: payload.separateBuild,
-    buildFlavor: payload.buildFlavor,
+    hasSeparatedBuild: payload.separateBuild,
+    buildFlavor: payload.buildFlavor != null ? transformProductRuntimeFlavor(payload.buildFlavor) : undefined,
     state: payload.state,
     commitId: payload.commitId,
-    appliance: payload.appliance,
+    appliance: payload.appliance ?? undefined,
     branch: payload.branch,
     branches: payload.branches?.sort(),
-    forceHttps: payload.forceHttps === 'ENABLED',
-    // renamed from env
+    shouldForceHttps: payload.forceHttps === 'ENABLED',
     environment: sortBy(payload.env, 'name'),
   };
 

@@ -30,7 +30,7 @@ describe('link commands', function () {
       new AddLinkCommand({ applicationId: application1.id, targetApplicationId: application2.id }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should add link between an application and an addon', async () => {
@@ -40,7 +40,7 @@ describe('link commands', function () {
       new AddLinkCommand({ applicationId: application.id, targetAddonId: addon.id }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should list application links', async () => {
@@ -101,7 +101,7 @@ describe('link commands', function () {
       new RemoveLinkCommand({ applicationId: application1.id, targetApplicationId: application2.id }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should remove link to addon', async () => {
@@ -112,6 +112,6 @@ describe('link commands', function () {
       new RemoveLinkCommand({ applicationId: application.id, targetAddonId: addon.id }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 });

@@ -26,41 +26,55 @@
       "types": "./dist/src/clients/cc-api/cc-api-client.d.ts",
       "default": "./dist/src/clients/cc-api/cc-api-client.js"
     },
-    "./cc-api-commands/*": {
-      "types": "./dist/src/clients/cc-api/commands/*",
-      "default": "./dist/src/clients/cc-api/commands/*"
+    "./cc-api-commands/*.js": {
+      "types": "./dist/src/clients/cc-api/commands/*.d.ts",
+      "default": "./dist/src/clients/cc-api/commands/*.js"
     },
     "./cc-api-local-storage-store.js": {
-      "types": "./dist/src/clients/cc-api/lib/store/local-storage-store.d.ts",
-      "browser": "./dist/src/clients/cc-api/lib/store/local-storage-store.js"
+      "browser": {
+        "types": "./dist/src/clients/cc-api/lib/store/local-storage-store.d.ts",
+        "default": "./dist/src/clients/cc-api/lib/store/local-storage-store.js"
+      }
     },
     "./cc-api-file-store.js": {
-      "types": "./dist/src/clients/cc-api/lib/store/file-store.d.ts",
-      "node": "./dist/src/clients/cc-api/lib/store/file-store.js"
+      "node": {
+        "types": "./dist/src/clients/cc-api/lib/store/file-store.d.ts",
+        "default": "./dist/src/clients/cc-api/lib/store/file-store.js"
+      }
     },
     "./cc-api-bridge-client.js": {
       "types": "./dist/src/clients/cc-api-bridge/cc-api-bridge-client.d.ts",
       "default": "./dist/src/clients/cc-api-bridge/cc-api-bridge-client.js"
     },
-    "./cc-api-bridge-commands/*": {
-      "types": "./dist/src/clients/cc-api-bridge/commands/*",
-      "default": "./dist/src/clients/cc-api-bridge/commands/*"
+    "./cc-api-bridge-commands/*.js": {
+      "types": "./dist/src/clients/cc-api-bridge/commands/*.d.ts",
+      "default": "./dist/src/clients/cc-api-bridge/commands/*.js"
     },
     "./redis-http-client.js": {
       "types": "./dist/src/clients/redis-http/redis-http-client.d.ts",
       "default": "./dist/src/clients/redis-http/redis-http-client.js"
     },
-    "./redis-http-commands/*": {
-      "types": "./dist/src/clients/redis-http/commands/*",
-      "default": "./dist/src/clients/redis-http/commands/*"
+    "./redis-http-commands/*.js": {
+      "types": "./dist/src/clients/redis-http/commands/*.d.ts",
+      "default": "./dist/src/clients/redis-http/commands/*.js"
     },
-    "./utils/*": {
-      "types": "./dist/src/utils/*",
-      "default": "./dist/src/utils/*"
+    "./utils/*.js": {
+      "types": "./dist/src/utils/*.d.ts",
+      "default": "./dist/src/utils/*.js"
     },
-    "./esm/*": {
-      "types": "./dist/esm/*",
-      "default": "./dist/esm/*"
+    "./esm/*.js": {
+      "types": "./dist/esm/*.d.ts",
+      "default": "./dist/esm/*.js"
+    }
+  },
+  "imports": {
+    "#dom-parser": {
+      "clever-client-source": {
+        "node": "./src/lib/xml/dom-parser.node.ts",
+        "default": "./src/lib/xml/dom-parser.browser.ts"
+      },
+      "node": "./dist/src/lib/xml/dom-parser.node.js",
+      "default": "./dist/src/lib/xml/dom-parser.browser.js"
     }
   },
   "scripts": {
@@ -93,7 +107,13 @@
     "fetch-event-stream": "^0.1.6"
   },
   "peerDependencies": {
-    "eventsource": "^4.0.0"
+    "eventsource": "^4.0.0",
+    "linkedom": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "linkedom": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@babel/parser": "^7.28.5",
@@ -127,6 +147,7 @@
     "fs-extra": "^11.3.2",
     "globals": "^16.5.0",
     "http-proxy-3": "^1.23.3",
+    "linkedom": "catalog:",
     "playwright": "^1.60.0",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.3.0",

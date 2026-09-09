@@ -6,6 +6,8 @@ import type { GetKeycloakInfoCommandInput, GetKeycloakInfoCommandOutput } from '
 import { transformKeycloakInfo } from './keycloak-transform.js';
 
 /**
+ * Retrieves a Keycloak add-on, with the URL to reach it, its initial credentials and the resources it is built on.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-keycloak/addons/:XXX
  * @group Keycloak
  * @version 4
@@ -18,10 +20,6 @@ export class GetKeycloakInfoCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v4/addon-providers/addon-keycloak/addons/${params.addonId}`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       addonId: 'REAL_ADDON_ID',
@@ -30,5 +28,9 @@ export class GetKeycloakInfoCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): GetKeycloakInfoCommandOutput {
     return transformKeycloakInfo(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -5,6 +5,11 @@ import type { ListOrganisationCommandInput, ListOrganisationCommandOutput } from
 import { transformOrganisation } from './organisation-transform.js';
 
 /**
+ * Lists the organisations the current user is a member of.
+ *
+ * The endpoint also returns the personal organisation of the user, which is filtered out unless
+ * `withPersonalOrganisation` is set.
+ *
  * @endpoint [GET] /v2/organisations
  * @group Organisation
  * @version 2
@@ -25,5 +30,9 @@ export class ListOrganisationCommand extends CcApiSimpleCommand<
       'name',
       'id',
     );
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

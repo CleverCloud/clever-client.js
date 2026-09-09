@@ -4,6 +4,10 @@ import type { GetProductElasticsearchInfoCommandOutput } from './get-product-ela
 import { transformProductElasticsearchInfo } from './product-transform.js';
 
 /**
+ * Retrieves the scaler sizes the services shipped alongside an Elasticsearch add-on run on.
+ *
+ * The endpoint is marked as temporary on the backend, so it may move.
+ *
  * @endpoint [GET] /v2/providers/es-addon/tmp/services-flavors
  * @group Product
  * @version 2
@@ -18,5 +22,9 @@ export class GetProductElasticsearchInfoCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): GetProductElasticsearchInfoCommandOutput {
     return transformProductElasticsearchInfo(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

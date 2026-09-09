@@ -10,6 +10,10 @@ import type {
 import { transformMigrationPreorder } from './migration-transform.js';
 
 /**
+ * Simulates the invoice of a plan change, so that the price difference can be shown before the migration is started.
+ *
+ * Nothing is ordered nor charged: the returned document is a purchase order preview.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/migrations/preorders
  * @group Migration
  * @version 2
@@ -29,14 +33,15 @@ export class ListMigrationPreorderCommand extends CcApiSimpleCommand<
     return transformMigrationPreorder(response);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
       addonId: 'ADDON_ID',
     };
+  }
+
+  // the purchase order is computed for the answer and never stored, so nothing is ordered twice
+  isIdempotent(): boolean {
+    return true;
   }
 }

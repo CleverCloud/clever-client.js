@@ -5,6 +5,12 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteTagCommandInput, DeleteTagCommandOutput } from './delete-tag-command.types.js';
 
 /**
+ * Removes one tag from an application or an add-on.
+ *
+ * The resource kind is picked from the input: passing an `applicationId` targets an application,
+ * passing an `addonId` targets an add-on.
+ *
+ * @endpoint [DELETE] /v2/organisations/:XXX/applications/:XXX/tags/:XXX
  * @endpoint [DELETE] /v2/organisations/:XXX/addons/:XXX/tags/:XXX
  * @group Tag
  * @version 2
@@ -28,5 +34,9 @@ export class DeleteTagCommand extends CcApiSimpleCommand<DeleteTagCommandInput, 
       ownerId: true,
       addonId: 'ADDON_ID',
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

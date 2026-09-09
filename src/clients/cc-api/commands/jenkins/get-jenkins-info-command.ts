@@ -9,9 +9,13 @@ import type {
   GetJenkinsInfoInnerCommandOutput,
   GetJenkinsUpdatesCommandOutput,
 } from './get-jenkins-info-command.types.js';
-import { transformJenkinsInfo } from './jenkins-transform.js';
+import { transformJenkinsInfo, transformJenkinsUpdates } from './jenkins-transform.js';
 
 /**
+ * Retrieves a Jenkins add-on, with the credentials to reach it and its update state.
+ *
+ * The instance and its update state live behind two endpoints, fetched in parallel and merged.
+ *
  * @endpoint [GET] /v4/addon-providers/jenkins/addons/:XXX
  * @endpoint [GET] /v4/addon-providers/jenkins/addons/:XXX/updates
  * @group Jenkins
@@ -27,10 +31,6 @@ export class GetJenkinsInfoCommand extends CcApiCompositeCommand<
       composer.send(new GetJenkinsUpdatesCommand(params)),
     ]);
 
-    if (internal == null || updates == null) {
-      return undefined;
-    }
-
     return {
       ...internal,
       updates,
@@ -42,9 +42,15 @@ export class GetJenkinsInfoCommand extends CcApiCompositeCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Retrieves a Jenkins add-on, without its update state.
+ *
  * @endpoint [GET] /v4/addon-providers/jenkins/addons/:XXX
  * @group Jenkins
  * @version 4
@@ -60,9 +66,15 @@ class GetJenkinsInfoInnerCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): GetJenkinsInfoInnerCommandOutput {
     return transformJenkinsInfo(response);
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Reads whether a newer Jenkins is available for an add-on.
+ *
  * @endpoint [GET] /v4/addon-providers/jenkins/addons/:XXX/updates
  * @group Jenkins
  * @version 4
@@ -70,5 +82,14 @@ class GetJenkinsInfoInnerCommand extends CcApiSimpleCommand<
 class GetJenkinsUpdatesCommand extends CcApiSimpleCommand<GetJenkinsInfoCommandInput, GetJenkinsUpdatesCommandOutput> {
   toRequestParams(params: GetJenkinsInfoCommandInput) {
     return get(safeUrl`/v4/addon-providers/jenkins/addons/${params.addonId}/updates`);
+  }
+
+  transformCommandOutput(response: unknown): GetJenkinsUpdatesCommandOutput {
+    return transformJenkinsUpdates(response);
+  }
+
+  // the add-on version is compared against the Jenkins update centre, which is only read
+  isIdempotent(): boolean {
+    return true;
   }
 }

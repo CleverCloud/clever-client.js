@@ -14,6 +14,12 @@ import type {
 } from './list-deployment-command.types.js';
 
 /**
+ * Lists the deployments of an application, or of every application of an organisation.
+ *
+ * The endpoint that is called depends on the input: when an `applicationId` is given, only that application's
+ * deployments are listed and the paging and filtering parameters apply; otherwise every application of the
+ * organisation is covered and only `ownerId` is forwarded.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/deployments
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/deployments
  * @group Deployment
@@ -27,11 +33,20 @@ export class ListDeploymentCommand extends CcApiCompositeCommand<
     if ('applicationId' in params && params.applicationId != null) {
       return client.send(new ListApplicationDeploymentCommand(params));
     }
-    return client.send(new ListOrganisationDeploymentCommand({ ownerId: params.ownerId! }));
+    return client.send(new ListOrganisationDeploymentCommand({ ownerId: params.ownerId!, limit: params.limit }));
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }
 
 /**
+ * Lists the deployments of every application of an organisation.
+ *
+ * The payload groups the deployments by application, as a record keyed by application identifier; it is
+ * flattened into a single array, each deployment carrying the application it belongs to.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/deployments
  * @group Deployment
  * @version 2
@@ -41,7 +56,7 @@ class ListOrganisationDeploymentCommand extends CcApiSimpleCommand<
   Array<DeploymentLegacy>
 > {
   toRequestParams(params: ListOrganisationDeploymentCommandInput) {
-    return get(safeUrl`/v2/organisations/${params.ownerId}/deployments`);
+    return get(safeUrl`/v2/organisations/${params.ownerId}/deployments`, new QueryParams().set('limit', params.limit));
   }
 
   transformCommandOutput(response: unknown): Array<DeploymentLegacy> {
@@ -50,12 +65,16 @@ class ListOrganisationDeploymentCommand extends CcApiSimpleCommand<
     );
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
+  isIdempotent(): boolean {
+    return true;
   }
 }
 
 /**
+ * Lists the deployments of a single application.
+ *
+ * The backend returns at most 10 deployments when no `limit` is given.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/deployments
  * @group Deployment
  * @version 2
@@ -75,13 +94,13 @@ class ListApplicationDeploymentCommand extends CcApiSimpleCommand<
     return (response as Array<unknown>).map((o) => transformDeploymentLegacy(o, this.params.applicationId));
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

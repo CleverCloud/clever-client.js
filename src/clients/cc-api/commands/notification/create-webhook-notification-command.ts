@@ -5,8 +5,11 @@ import type {
   CreateWebhookNotificationCommandInput,
   CreateWebhookNotificationCommandOutput,
 } from './create-webhook-notification-command.types.js';
+import { transformWebhookNotification } from './notification-transform.js';
 
 /**
+ * Creates a webhook, which posts platform events to one or more URLs as they happen.
+ *
  * @endpoint [POST] /v2/notifications/webhooks/:XXX
  * @group Notification
  * @version 2
@@ -20,7 +23,16 @@ export class CreateWebhookNotificationCommand extends CcApiSimpleCommand<
       name: params.name,
       urls: params.urls,
       events: params.events,
-      scope: params.scope,
+      scope: params.scopes,
     });
+  }
+
+  transformCommandOutput(response: unknown): CreateWebhookNotificationCommandOutput {
+    return transformWebhookNotification(response);
+  }
+
+  // the handler inserts a hook under a freshly generated id, so a replay leaves the owner with two identical hooks
+  isIdempotent(): boolean {
+    return false;
   }
 }

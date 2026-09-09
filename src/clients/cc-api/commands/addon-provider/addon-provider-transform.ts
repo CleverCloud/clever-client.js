@@ -24,11 +24,11 @@ export function transformAddonProvider(payload: any): AddonProvider {
     googlePlusName: payload.googlePlusName,
     twitterName: payload.twitterName,
     analyticsId: payload.analyticsId,
-    shortDesc: payload.shortDesc,
-    longDesc: payload.longDesc,
+    shortDescription: payload.shortDesc,
+    longDescription: payload.longDesc,
     logoUrl: payload.logoUrl,
     status: payload.status,
-    openInNewTab: payload.openInNewTab,
+    shouldOpenInNewTab: payload.openInNewTab,
     canUpgrade: payload.canUpgrade,
     zones: payload.regions,
   };
@@ -50,7 +50,6 @@ export function transformAddonProviderPlanFeature(payload: any): AddonProviderPl
   return {
     ...transformAddonProviderFeature(payload),
     value: payload.value,
-    // fallback to value when null
     computableValue: payload.computable_value ?? payload.value,
   };
 }
@@ -59,7 +58,6 @@ export function transformAddonProviderFeature(payload: any): AddonProviderFeatur
   return {
     name: payload.name,
     type: payload.type,
-    //fallback to name when null
     nameCode: payload.name_code ?? payload.name,
   };
 }

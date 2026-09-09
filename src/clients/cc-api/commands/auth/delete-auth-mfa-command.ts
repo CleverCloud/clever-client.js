@@ -5,6 +5,10 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { DeleteAuthMfaCommandInput } from './delete-auth-mfa-command.types.js';
 
 /**
+ * Turns a second authentication factor off for the current user.
+ *
+ * The account password is sent base64-encoded in the `X-Clever-Password` header.
+ *
  * @endpoint [DELETE] /v2/self/mfa/:XXX
  * @group Auth
  * @version 2
@@ -23,5 +27,9 @@ export class DeleteAuthMfaCommand extends CcApiSimpleCommand<DeleteAuthMfaComman
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

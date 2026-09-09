@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   combineWithSignal,
+  isAbsoluteUrl,
+  isUrlWithinBaseUrl,
   merge,
   mergeRequestConfig,
   mergeRequestConfigPartial,
@@ -68,9 +70,14 @@ describe('Utils', () => {
       expect(result).toMatch(/^2023-11-14T/);
     });
 
-    it('should return null for null input', () => {
+    it('should return undefined for null input', () => {
       const result = normalizeDate(null);
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for undefined input', () => {
+      const result = normalizeDate(undefined);
+      expect(result).toBeUndefined();
     });
 
     it('should fix [UTC] suffix', () => {
@@ -108,6 +115,116 @@ describe('Utils', () => {
     it('should handle empty string values', () => {
       const result = safeUrl`https://example.com/${''}`;
       expect(result).toBe('https://example.com/');
+    });
+  });
+
+  describe('isAbsoluteUrl', () => {
+    it('should return true for an http url', () => {
+      expect(isAbsoluteUrl('http://example.com/path')).toBe(true);
+    });
+
+    it('should return true for an https url', () => {
+      expect(isAbsoluteUrl('https://example.com/path')).toBe(true);
+    });
+
+    it('should return true whatever the scheme case', () => {
+      expect(isAbsoluteUrl('HTTPS://example.com/path')).toBe(true);
+    });
+
+    it('should return false for a root relative url', () => {
+      expect(isAbsoluteUrl('/path/subPath')).toBe(false);
+    });
+
+    it('should return false for a relative url', () => {
+      expect(isAbsoluteUrl('path/subPath')).toBe(false);
+    });
+
+    it('should return false for an empty url', () => {
+      expect(isAbsoluteUrl('')).toBe(false);
+    });
+
+    it('should return false for a protocol relative url', () => {
+      expect(isAbsoluteUrl('//example.com/path')).toBe(false);
+    });
+
+    it('should return false when the scheme is not at the start of the url', () => {
+      expect(isAbsoluteUrl('/redirect?to=https://example.com')).toBe(false);
+    });
+
+    it('should return false for a non http scheme', () => {
+      expect(isAbsoluteUrl('ws://example.com/path')).toBe(false);
+    });
+  });
+
+  describe('isUrlWithinBaseUrl', () => {
+    it('should return true when the url is the base url itself', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api')).toBe(true);
+    });
+
+    it('should return true when the url is a sub path of the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api/2')).toBe(true);
+    });
+
+    it('should return false when the url only shares a path prefix with the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api2')).toBe(false);
+    });
+
+    it('should return true when the url adds a query string to the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api?foo=bar')).toBe(true);
+    });
+
+    it('should return true when the url adds a fragment to the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api#foo')).toBe(true);
+    });
+
+    it('should ignore the trailing slash of the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api/', 'https://example.com/api/2')).toBe(true);
+      expect(isUrlWithinBaseUrl('https://example.com/api/', 'https://example.com/api')).toBe(true);
+      expect(isUrlWithinBaseUrl('https://example.com/api/', 'https://example.com/api2')).toBe(false);
+    });
+
+    it('should return false when the url targets another host', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://evil.com/api/2')).toBe(false);
+    });
+
+    it('should return false when the url targets a host having the base url host as prefix', () => {
+      expect(isUrlWithinBaseUrl('https://example.com', 'https://example.com.evil.com/api')).toBe(false);
+    });
+
+    it('should return false when the url targets another scheme', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'http://example.com/api/2')).toBe(false);
+    });
+
+    it('should return false when the url targets another port', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com:8080/api/2')).toBe(false);
+    });
+
+    it('should resolve dot segments escaping the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api/../other')).toBe(false);
+    });
+
+    it('should resolve dot segments staying within the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/api/sub/../2')).toBe(true);
+    });
+
+    it('should resolve dot segments of the base url', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/other/../api', 'https://example.com/api/2')).toBe(true);
+    });
+
+    it('should ignore the default port of the scheme', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com:443/api/2')).toBe(true);
+    });
+
+    it('should ignore the host case', () => {
+      expect(isUrlWithinBaseUrl('https://EXAMPLE.com/api', 'https://example.com/api/2')).toBe(true);
+    });
+
+    it('should keep the path case significant', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'https://example.com/API/2')).toBe(false);
+    });
+
+    it('should return false when the url cannot be parsed', () => {
+      expect(isUrlWithinBaseUrl('https://example.com/api', 'not an url')).toBe(false);
     });
   });
 
@@ -224,81 +341,81 @@ describe('Utils', () => {
     it('should merge request config with null config', () => {
       const config = mergeRequestConfig(
         {
-          cors: true,
+          isCorsEnabled: true,
           timeout: 0,
           cache: null,
-          debug: true,
+          isDebugEnabled: true,
         },
         // @ts-expect-error testing null override config
         null,
       );
       expect(config).toEqual({
-        cors: true,
+        isCorsEnabled: true,
         timeout: 0,
         cache: null,
-        debug: true,
+        isDebugEnabled: true,
       });
     });
 
     it('should merge request config with empty config', () => {
       const config = mergeRequestConfig(
         {
-          cors: true,
+          isCorsEnabled: true,
           timeout: 0,
           cache: null,
-          debug: true,
+          isDebugEnabled: true,
         },
         {},
       );
       expect(config).toEqual({
-        cors: true,
+        isCorsEnabled: true,
         timeout: 0,
         cache: null,
-        debug: true,
+        isDebugEnabled: true,
       });
     });
 
     it('should merge request config with config', () => {
       const config = mergeRequestConfig(
         {
-          cors: true,
+          isCorsEnabled: true,
           timeout: 0,
           cache: null,
-          debug: true,
+          isDebugEnabled: true,
         },
         {
-          cors: false,
+          isCorsEnabled: false,
           timeout: 10,
           cache: { ttl: 1000 },
-          debug: false,
+          isDebugEnabled: false,
         },
       );
       expect(config).toEqual({
-        cors: false,
+        isCorsEnabled: false,
         timeout: 10,
         cache: { ttl: 1000 },
-        debug: false,
+        isDebugEnabled: false,
       });
     });
 
     it('should merge request config with partial config', () => {
       const config = mergeRequestConfig(
         {
-          cors: true,
+          isCorsEnabled: true,
           timeout: 0,
           cache: null,
-          debug: true,
+          isDebugEnabled: true,
         },
         {
           cache: { ttl: 1000 },
-          debug: false,
+          isDebugEnabled: false,
         },
       );
       expect(config).toEqual({
-        cors: true,
+        isCorsEnabled: true,
         timeout: 0,
         cache: { ttl: 1000 },
-        debug: false,
+        isDebugEnabled: false,
       });
     });
 
@@ -306,10 +423,10 @@ describe('Utils', () => {
       it('should not merge null cache with undefined cache', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: null,
-            debug: true,
+            isDebugEnabled: true,
           },
           {},
         );
@@ -319,10 +436,10 @@ describe('Utils', () => {
       it('should not merge cache with undefined cache', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: { ttl: 1000 },
-            debug: true,
+            isDebugEnabled: true,
           },
           {},
         );
@@ -332,10 +449,10 @@ describe('Utils', () => {
       it('should merge cache with null cache', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: { ttl: 1000 },
-            debug: true,
+            isDebugEnabled: true,
           },
           {
             cache: null,
@@ -347,10 +464,10 @@ describe('Utils', () => {
       it('should merge null cache with cache', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: null,
-            debug: true,
+            isDebugEnabled: true,
           },
           {
             cache: { ttl: 10 },
@@ -362,10 +479,10 @@ describe('Utils', () => {
       it('should merge null cache with partial cache (use `0` ttl)', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: null,
-            debug: true,
+            isDebugEnabled: true,
           },
           {
             cache: { mode: 'reload' },
@@ -377,10 +494,10 @@ describe('Utils', () => {
       it('should merge cache with partial cache', () => {
         const config = mergeRequestConfig(
           {
-            cors: true,
+            isCorsEnabled: true,
             timeout: 0,
             cache: { ttl: 1000 },
-            debug: true,
+            isDebugEnabled: true,
           },
           {
             cache: { mode: 'reload' },
@@ -398,18 +515,21 @@ describe('Utils', () => {
     });
 
     it('should merge partial config with undefined', () => {
-      const config = mergeRequestConfigPartial({ cors: true }, undefined);
-      expect(config).toEqual({ cors: true });
+      const config = mergeRequestConfigPartial({ isCorsEnabled: true }, undefined);
+      expect(config).toEqual({ isCorsEnabled: true });
     });
 
     it('should merge partial config with empty config', () => {
-      const config = mergeRequestConfigPartial({ cors: true }, {});
-      expect(config).toEqual({ cors: true });
+      const config = mergeRequestConfigPartial({ isCorsEnabled: true }, {});
+      expect(config).toEqual({ isCorsEnabled: true });
     });
 
     it('should merge partial config with partial config', () => {
-      const config = mergeRequestConfigPartial({ cors: true, debug: true }, { cors: false, timeout: 10 });
-      expect(config).toEqual({ cors: false, timeout: 10, debug: true });
+      const config = mergeRequestConfigPartial(
+        { isCorsEnabled: true, isDebugEnabled: true },
+        { isCorsEnabled: false, timeout: 10 },
+      );
+      expect(config).toEqual({ isCorsEnabled: false, timeout: 10, isDebugEnabled: true });
     });
 
     describe('cache config', () => {

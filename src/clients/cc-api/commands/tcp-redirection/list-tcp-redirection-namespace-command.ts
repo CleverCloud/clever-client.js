@@ -7,6 +7,8 @@ import type {
 } from './list-tcp-redirection-namespace-command.types.js';
 
 /**
+ * Lists the load balancer pools an organisation may open TCP ports in.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/namespaces
  * @group TcpRedirection
  * @version 2
@@ -19,7 +21,7 @@ export class ListTcpRedirectionNamespaceCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/organisations/${params.ownerId}/namespaces`);
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
+  isIdempotent(): boolean {
+    return true;
   }
 }

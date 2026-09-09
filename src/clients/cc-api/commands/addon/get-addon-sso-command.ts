@@ -6,6 +6,11 @@ import { transformAddonSso } from './addon-transform.js';
 import type { GetAddonSsoCommandInput, GetAddonSsoCommandOutput } from './get-addon-sso-command.types.js';
 
 /**
+ * Retrieves the single sign-on payload that logs the current user into the provider's own console.
+ *
+ * The payload is meant to be posted to the provider SSO URL: it carries a short-lived, signed proof
+ * that the caller owns the add-on.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/sso
  * @group Addon
  * @version 2
@@ -13,10 +18,6 @@ import type { GetAddonSsoCommandInput, GetAddonSsoCommandOutput } from './get-ad
 export class GetAddonSsoCommand extends CcApiSimpleCommand<GetAddonSsoCommandInput, GetAddonSsoCommandOutput> {
   toRequestParams(params: GetAddonSsoCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}/sso`);
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 
   transformCommandOutput(response: unknown): GetAddonSsoCommandOutput {
@@ -28,5 +29,11 @@ export class GetAddonSsoCommand extends CcApiSimpleCommand<GetAddonSsoCommandInp
       ownerId: true,
       addonId: 'ADDON_ID',
     };
+  }
+
+  // the payload is signed on the fly from the add-on and the provider salt, nothing is stored or
+  // rotated
+  isIdempotent(): boolean {
+    return true;
   }
 }

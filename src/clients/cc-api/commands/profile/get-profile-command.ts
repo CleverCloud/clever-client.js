@@ -4,6 +4,8 @@ import type { GetProfileCommandOutput } from './get-profile-command.types.js';
 import { transformProfile } from './profile-transform.js';
 
 /**
+ * Retrieves the account of the signed-in user.
+ *
  * @endpoint [GET] /v2/self
  * @group Profile
  * @version 2
@@ -15,5 +17,9 @@ export class GetProfileCommand extends CcApiSimpleCommand<void, GetProfileComman
 
   transformCommandOutput(response: unknown): GetProfileCommandOutput {
     return transformProfile(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

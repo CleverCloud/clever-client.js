@@ -1,5 +1,6 @@
 import { randomUUID } from '../../../../lib/utils.js';
 import type { Composer } from '../../../../types/command.types.js';
+import { tolerateNotFound } from '../../../../utils/error-utils.js';
 import { isTimeoutError, Polling } from '../../../../utils/polling.js';
 import type { CcApiCommand, CcApiType } from '../../types/cc-api.types.js';
 import type { Addon } from '../addon/addon.types.js';
@@ -84,7 +85,7 @@ export async function waitForNetworkGroupPeerDeletion(
  * Returns a copy of the given member with its `kind` normalized to uppercase.
  *
  * The Clever Cloud API may return the member `kind` in lower or mixed case; this
- * guarantees it is always one of `'APPLICATION' | 'ADDON' | 'EXTERNAL'`.
+ * guarantees it is always one of `'APPLICATION' | 'ADDON' | 'EXTERNAL' | 'LOADBALANCER'`.
  */
 export function normalizeMemberKind<T extends { kind: string }>(member: T): T & { kind: NetworkGroupMember['kind'] } {
   return {
@@ -167,7 +168,7 @@ async function waitForCreation<T>(
 ): Promise<T> {
   const polling = new Polling(
     async () => {
-      const result = await composer.send(command);
+      const result = await tolerateNotFound(composer.send(command));
       if (result == null) {
         return { stop: false };
       } else {
@@ -196,7 +197,7 @@ async function waitForDeletion(
 ): Promise<void> {
   const polling = new Polling(
     async () => {
-      const result = await composer.send(command);
+      const result = await tolerateNotFound(composer.send(command));
       return { stop: result == null };
     },
     POLLING_INTERVAL_MS,

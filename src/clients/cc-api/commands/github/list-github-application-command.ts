@@ -5,6 +5,9 @@ import { transformGithubApplication } from './github-transform.js';
 import type { ListGithubApplicationCommandOutput } from './list-github-application-command.types.js';
 
 /**
+ * Lists the GitHub repositories the linked account gives access to, so that one can be picked as the source of an
+ * application.
+ *
  * @endpoint [GET] /v2/github/applications
  * @group Github
  * @version 2
@@ -18,7 +21,7 @@ export class ListGithubApplicationCommand extends CcApiSimpleCommand<void, ListG
     return sortBy((response as Array<unknown>).map(transformGithubApplication), 'name');
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
+  isIdempotent(): boolean {
+    return true;
   }
 }

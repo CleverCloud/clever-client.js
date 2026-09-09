@@ -8,6 +8,10 @@ import type {
 import { transformOauthConsumer, transformOauthConsumerRightsForApi } from './oauth-consumer-transform.js';
 
 /**
+ * Registers a new OAuth consumer owned by an organisation.
+ *
+ * The returned consumer carries its key; the secret has to be fetched separately.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/consumers/
  * @group OauthConsumer
  * @version 2
@@ -29,5 +33,10 @@ export class CreateOauthConsumerCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): CreateOauthConsumerCommandOutput {
     return transformOauthConsumer(response);
+  }
+
+  // each call registers one more consumer, with its own key and secret, and spends a creation quota token
+  isIdempotent(): boolean {
+    return false;
   }
 }

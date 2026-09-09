@@ -4,6 +4,7 @@ import { ConfirmAuthMfaCommand } from '../../../../../src/clients/cc-api/command
 import { CreateAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
 import { DeleteAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
 import { GetAuthMfaBackupCodesCommand } from '../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-backup-codes-command.js';
+import { RequestAuthPasswordResetCommand } from '../../../../../src/clients/cc-api/commands/auth/request-auth-password-reset-command.js';
 import { UpdateAuthPasswordCommand } from '../../../../../src/clients/cc-api/commands/auth/update-auth-password-command.js';
 import { GetProfileCommand } from '../../../../../src/clients/cc-api/commands/profile/get-profile-command.js';
 import { e2eSupport } from '../e2e-support.js';
@@ -22,7 +23,7 @@ describe('auth commands', function () {
   afterEach(async () => {
     const profile = await support.client.send(new GetProfileCommand());
 
-    if (profile.preferredMFA === 'TOTP') {
+    if (profile.preferredMfa === 'TOTP') {
       await support.client.send(new DeleteAuthMfaCommand({ kind: 'TOTP', password: support.password }));
     }
   });
@@ -31,7 +32,7 @@ describe('auth commands', function () {
     await createMfa();
 
     const response = await support.client.send(new DeleteAuthMfaCommand({ kind: 'TOTP', password: support.password }));
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should create auth mfa', async () => {
@@ -58,7 +59,7 @@ describe('auth commands', function () {
       }),
     );
 
-    expect(confirmResponse).toBeNull();
+    expect(confirmResponse).toBeUndefined();
   });
 
   it('should get mfa backup codes', async () => {
@@ -76,15 +77,24 @@ describe('auth commands', function () {
     const newPassword = support.newTemporaryPassword!;
     try {
       const response = await support.client.send(
-        new UpdateAuthPasswordCommand({ oldPassword, newPassword, revokeTokens: false }),
+        new UpdateAuthPasswordCommand({ oldPassword, newPassword, shouldRevokeTokens: false }),
       );
 
-      expect(response).toBeNull();
+      expect(response).toBeUndefined();
     } finally {
       await support.client.send(
-        new UpdateAuthPasswordCommand({ oldPassword: newPassword, newPassword: oldPassword, revokeTokens: false }),
+        new UpdateAuthPasswordCommand({
+          oldPassword: newPassword,
+          newPassword: oldPassword,
+          shouldRevokeTokens: false,
+        }),
       );
     }
+  });
+
+  it('should request a password reset', async () => {
+    const response = await support.client.send(new RequestAuthPasswordResetCommand({ login: support.email }));
+    expect(response).toBeUndefined();
   });
 
   async function createMfa() {

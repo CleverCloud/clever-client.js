@@ -5,6 +5,8 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { DeleteOtoroshiNetworkGroupCommandInput } from './delete-otoroshi-network-group-command.types.js';
 
 /**
+ * Takes a Otoroshi add-on out of its network group, making it publicly reachable again.
+ *
  * @endpoint [DELETE] /v4/addon-providers/addon-otoroshi/addons/:XXX/networkgroup
  * @group Otoroshi
  * @version 4
@@ -25,5 +27,10 @@ export class DeleteOtoroshiNetworkGroupCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // with no network group left, the handler stops early, so a replay neither deletes nor restarts anything
+  isIdempotent(): boolean {
+    return true;
   }
 }

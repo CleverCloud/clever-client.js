@@ -8,6 +8,13 @@ import type { ApplicationAccessLog } from './log.types.js';
 import type { StreamApplicationAccessLogCommandInput } from './stream-application-access-log-command.types.js';
 
 /**
+ * Opens a Server-Sent Events stream of the access logs of an application: one entry per request the platform's
+ * load balancers served on its behalf.
+ *
+ * The stream stays open and keeps delivering entries as requests come in, unless `until` closes the range or
+ * `limit` caps the number of entries. Only HTTP requests are delivered: entries for other protocols are
+ * dropped.
+ *
  * @endpoint [GET] /v4/accesslogs/organisations/:XXX/applications/:XXX/accesslogs
  * @group Log
  * @version 4
@@ -23,9 +30,10 @@ export class StreamApplicationAccessLogCommand extends AbstractLogsStreamCommand
         .append('limit', this._computeLimit())
         .append('since', normalizeDate(params.since))
         .append('until', normalizeDate(params.until))
-        .append('field', params.field)
+        .append('field', params.fields)
         .append('throttleElements', params.throttleElements)
-        .append('throttlePerInMilliseconds', params.throttlePerInMilliseconds),
+        .append('throttlePerInMilliseconds', params.throttlePerInMilliseconds)
+        .append('maxRetryDurationInSeconds', params.maxRetryDurationInSeconds),
     };
   }
 

@@ -8,6 +8,9 @@ import type {
 import { transformProductAddonVersions } from './product-transform.js';
 
 /**
+ * Retrieves the versions an add-on provider offers, on its shared clusters and on dedicated
+ * instances.
+ *
  * @endpoint [GET] /v4/addon-providers/:XXX
  * @group Product
  * @version 4
@@ -24,7 +27,7 @@ export class GetProductAddonVersionsCommand extends CcApiSimpleCommand<
     return transformProductAddonVersions(response);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
+  isIdempotent(): boolean {
+    return true;
   }
 }

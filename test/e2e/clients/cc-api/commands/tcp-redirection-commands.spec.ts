@@ -59,7 +59,7 @@ describe('tcp redirection commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should list tcp redirection namespaces', async () => {

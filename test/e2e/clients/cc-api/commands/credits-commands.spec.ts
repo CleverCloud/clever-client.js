@@ -32,9 +32,9 @@ describe('credits commands', function () {
     );
 
     expect(response.couponName).toBe(couponName);
-    checkDateFormat(response.usageDate);
-    checkDateFormat(response.freeCreditsStartDate);
-    checkDateFormat(response.freeCreditsEndDate);
+    checkDateFormat(response.usedAt);
+    checkDateFormat(response.freeCreditsStartsAt);
+    checkDateFormat(response.freeCreditsEndsAt);
     expect(response.appliedByUserId).toBe(support.userId);
   });
 });

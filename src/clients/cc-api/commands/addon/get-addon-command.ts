@@ -6,6 +6,8 @@ import { transformAddon } from './addon-transform.js';
 import type { GetAddonCommandInput, GetAddonCommandOutput } from './get-addon-command.types.js';
 
 /**
+ * Retrieves an add-on, with the provider and plan it was provisioned from.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX
  * @group Addon
  * @version 2
@@ -13,10 +15,6 @@ import type { GetAddonCommandInput, GetAddonCommandOutput } from './get-addon-co
 export class GetAddonCommand extends CcApiSimpleCommand<GetAddonCommandInput, GetAddonCommandOutput> {
   toRequestParams(params: GetAddonCommandInput) {
     return get(safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}`);
-  }
-
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
   }
 
   transformCommandOutput(response: unknown): GetAddonCommandOutput {
@@ -28,5 +26,9 @@ export class GetAddonCommand extends CcApiSimpleCommand<GetAddonCommandInput, Ge
       ownerId: true,
       addonId: 'ADDON_ID',
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

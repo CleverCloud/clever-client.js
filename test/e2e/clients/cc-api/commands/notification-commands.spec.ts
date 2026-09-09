@@ -51,10 +51,15 @@ describe('notification commands', function () {
     const targets: Array<EmailNotificationTarget> = [
       {
         type: 'email',
-        emailAddresses: ['test1@example.com', 'test2@example.com'],
+        emailAddress: 'test1@example.com',
+      },
+      {
+        type: 'email',
+        emailAddress: 'test2@example.com',
       },
       {
         type: 'user',
+        userId: support.userId,
       },
       {
         type: 'organisation',
@@ -66,7 +71,7 @@ describe('notification commands', function () {
         name: 'hook name',
         targets,
         events: ['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION'],
-        scope: [app1.id, app2.id],
+        scopes: [app1.id, app2.id],
       }),
     );
 
@@ -74,7 +79,7 @@ describe('notification commands', function () {
     expect(response.name).toBe('hook name');
     expect(response.targets).toEqualInAnyOrder(targets);
     expect(response.events).toEqualInAnyOrder(['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION']);
-    expect(response.scope).toEqualInAnyOrder([app1.id, app2.id]);
+    expect(response.scopes).toEqualInAnyOrder([app1.id, app2.id]);
   });
 
   it('should list email notifications', async () => {
@@ -82,14 +87,14 @@ describe('notification commands', function () {
       new CreateEmailNotificationCommand({
         ownerId: support.organisationId,
         name: 'hook 1',
-        targets: [{ type: 'user' }],
+        targets: [{ type: 'user', userId: support.userId }],
       }),
     );
     const notification2 = await support.client.send(
       new CreateEmailNotificationCommand({
         ownerId: support.organisationId,
         name: 'hook 2',
-        targets: [{ type: 'user' }],
+        targets: [{ type: 'user', userId: support.userId }],
       }),
     );
 
@@ -111,7 +116,7 @@ describe('notification commands', function () {
       new CreateEmailNotificationCommand({
         ownerId: support.organisationId,
         name: 'hook 1',
-        targets: [{ type: 'user' }],
+        targets: [{ type: 'user', userId: support.userId }],
       }),
     );
 
@@ -122,7 +127,7 @@ describe('notification commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should create webhook notification', async () => {
@@ -153,7 +158,7 @@ describe('notification commands', function () {
         name: 'hook name',
         urls,
         events: ['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION'],
-        scope: [app1.id, app2.id],
+        scopes: [app1.id, app2.id],
       }),
     );
 
@@ -161,7 +166,7 @@ describe('notification commands', function () {
     expect(response.name).toBe('hook name');
     expect(response.urls).toEqualInAnyOrder(urls);
     expect(response.events).toEqualInAnyOrder(['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION']);
-    expect(response.scope).toEqualInAnyOrder([app1.id, app2.id]);
+    expect(response.scopes).toEqualInAnyOrder([app1.id, app2.id]);
   });
 
   it('should list webhook notifications', async () => {
@@ -209,7 +214,7 @@ describe('notification commands', function () {
       }),
     );
 
-    expect(response).toBeNull();
+    expect(response).toBeUndefined();
   });
 
   it('should get notification info', async () => {
@@ -217,6 +222,12 @@ describe('notification commands', function () {
 
     expect(response.formats.length).toBeGreaterThan(0);
     expect(response.events.length).toBeGreaterThan(0);
-    expect(Object.entries(response.metaEvents).length).toBeGreaterThan(0);
+
+    const metaEvents = Object.entries(response.metaEvents);
+    expect(metaEvents.length).toBeGreaterThan(0);
+    for (const [metaEvent, events] of metaEvents) {
+      expect(events?.length, `${metaEvent} should stand for at least one event`).toBeGreaterThan(0);
+      expect(response.events, `${metaEvent} should be listed among the events`).toContain(metaEvent);
+    }
   });
 });

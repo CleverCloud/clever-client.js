@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import type { ApiToken } from '../../../../../src/clients/cc-api-bridge/commands/api-token/api-token.types.js';
 import { CreateApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.js';
 import { DeleteApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/delete-api-token-command.js';
+import { GetApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/get-api-token-command.js';
 import { ListApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/list-api-token-command.js';
 import { UpdateApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/update-api-token-command.js';
 import { e2eSupport } from '../e2e-support.js';
@@ -24,9 +25,9 @@ describe('api-token commands', function () {
       new CreateApiTokenCommand({
         name: 'test-api-token',
         description: 'test description',
-        email: support.email,
+        emailAddress: support.email,
         password: support.password,
-        expirationDate: new Date(new Date().getTime() + 1000 * 60 * 2),
+        expiresAt: new Date(new Date().getTime() + 1000 * 60 * 2),
       }),
     );
     createdTokenId = tokenCreated.apiTokenId;
@@ -35,8 +36,8 @@ describe('api-token commands', function () {
     expect(tokenCreated.apiTokenId).toBeTypeOf('string');
     expect(tokenCreated.name).toBe('test-api-token');
     expect(tokenCreated.description).toBe('test description');
-    expect(tokenCreated.creationDate).toBe(new Date(tokenCreated.creationDate).toISOString());
-    expect(tokenCreated.expirationDate).toBe(new Date(tokenCreated.expirationDate).toISOString());
+    expect(tokenCreated.createdAt).toBe(new Date(tokenCreated.createdAt).toISOString());
+    expect(tokenCreated.expiresAt).toBe(new Date(tokenCreated.expiresAt).toISOString());
     expect(tokenCreated.state).toBe('ACTIVE');
 
     // list
@@ -49,10 +50,18 @@ describe('api-token commands', function () {
     expect(tokenFormList!.name).toBe(tokenCreated.name);
     expect(tokenFormList!.description).toBe(tokenCreated.description);
     expect(tokenFormList!.userId).toBeTypeOf('string');
-    expect(tokenFormList!.creationDate).toBe(tokenCreated.creationDate);
-    expect(tokenFormList!.expirationDate).toBe(tokenCreated.expirationDate);
+    expect(tokenFormList!.createdAt).toBe(tokenCreated.createdAt);
+    expect(tokenFormList!.expiresAt).toBe(tokenCreated.expiresAt);
     expect(tokenFormList!.ip).toBeTypeOf('string');
     expect(tokenFormList!.state).toBe('ACTIVE');
+
+    // get
+    const tokenFromGet = await support.client.send(new GetApiTokenCommand({ apiTokenId: tokenCreated.apiTokenId }));
+    expect(tokenFromGet.apiTokenId).toBe(tokenCreated.apiTokenId);
+    expect(tokenFromGet.name).toBe(tokenCreated.name);
+    expect(tokenFromGet.description).toBe(tokenCreated.description);
+    expect(tokenFromGet.userId).toBeTypeOf('string');
+    expect(tokenFromGet.state).toBe('ACTIVE');
 
     // update
     const updateResponse = await support.client.send(
@@ -63,7 +72,7 @@ describe('api-token commands', function () {
       }),
     );
 
-    expect(updateResponse).toBeNull();
+    expect(updateResponse).toBeUndefined();
     const apiTokenUpdated = await getApiToken(tokenCreated.apiTokenId);
     expect(apiTokenUpdated!.name).toBe('test-api-token-updated');
     expect(apiTokenUpdated!.description).toBe('test description updated');
@@ -72,7 +81,7 @@ describe('api-token commands', function () {
     const deleteResponse = await support.client.send(
       new DeleteApiTokenCommand({ apiTokenId: tokenCreated.apiTokenId }),
     );
-    expect(deleteResponse).toBeNull();
+    expect(deleteResponse).toBeUndefined();
     const apiTokenDeleted = await getApiToken(tokenCreated.apiTokenId);
     expect(apiTokenDeleted).toBeUndefined();
     createdTokenId = null;

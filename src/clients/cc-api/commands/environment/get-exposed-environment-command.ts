@@ -9,6 +9,10 @@ import type {
 } from './get-exposed-environment-command.types.js';
 
 /**
+ * Reads the configuration an application exposes to the applications linked to it.
+ *
+ * This is what other applications see, as opposed to the variables the application itself runs with.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/exposed_env
  * @group Environment
  * @version 2
@@ -21,10 +25,6 @@ export class GetExposedEnvironmentCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/exposed_env`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetExposedEnvironmentCommandOutput {
     return sortBy(toArray(response as Record<string, string>), 'name');
   }
@@ -33,5 +33,9 @@ export class GetExposedEnvironmentCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

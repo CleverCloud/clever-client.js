@@ -11,7 +11,7 @@ export interface CreateStringKeyCommandInput extends RedisHttpCommandInput, With
 }
 
 /**
- * Response when the key has been updated
+ * Response when the key has been created
  */
 export interface CreateStringKeyCommandOutput extends WithKey {
   /**

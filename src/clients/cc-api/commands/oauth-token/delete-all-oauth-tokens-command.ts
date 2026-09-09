@@ -10,12 +10,17 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
  * @group Token
  * @version 2
  */
-export class DeleteOauthTokenCommand extends CcApiSimpleCommand<void, undefined> {
+export class DeleteAllOauthTokensCommand extends CcApiSimpleCommand<void, undefined> {
   toRequestParams() {
     return delete_(`/v2/self/tokens/`);
   }
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  // every token of the user is revoked, so a replay has nothing left to revoke
+  isIdempotent(): boolean {
+    return true;
   }
 }

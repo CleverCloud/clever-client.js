@@ -20,10 +20,15 @@ import type {
 } from './get-environment-command.types.js';
 
 /**
+ * Reads the environment of an application or an add-on.
+ *
+ * The resource kind is picked from the input. For an application, the variables contributed by the
+ * applications and add-ons it is linked to can be pulled in too, each costing one extra request.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/env
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/env
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/dependencies/env
- * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/env
+ * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/addons/env
  * @group Environment
  * @version 2
  */
@@ -40,7 +45,7 @@ export class GetEnvironmentCommand extends CcApiCompositeCommand<
       ]);
 
       const result: GetEnvironmentCommandOutput = {
-        environment: sortBy(responses[0] ?? [], 'name'),
+        environment: sortBy(responses[0], 'name'),
       };
       if (params.includeLinkedApplications) {
         result.linkedApplicationsEnvironment = sortBy(responses[1] ?? [], 'applicationName');
@@ -65,9 +70,15 @@ export class GetEnvironmentCommand extends CcApiCompositeCommand<
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Reads the variables set directly on an application.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/env
  * @group Environment
  * @version 2
@@ -80,18 +91,20 @@ class GetApplicationEnvironmentCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/env`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Reads the connection details an add-on exposes as environment variables.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/env
  * @group Environment
  * @version 2
@@ -104,19 +117,21 @@ class GetAddonEnvironmentCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/organisations/${params.ownerId}/addons/${params.addonId}/env`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
       addonId: 'ADDON_ID',
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Reads the variables the applications linked to this one contribute.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/dependencies/env
  * @group Environment
  * @version 2
@@ -129,10 +144,6 @@ class GetLinkedApplicationEnvironmentCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/dependencies/env`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): Array<LinkedApplicationEnvironment> {
     return transformLinkedApplicationsEnvironment(response);
   }
@@ -142,9 +153,15 @@ class GetLinkedApplicationEnvironmentCommand extends CcApiSimpleCommand<
       ownerId: true,
     };
   }
+
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Reads the variables the add-ons linked to this application contribute.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/addons/env
  * @group Environment
  * @version 2
@@ -157,10 +174,6 @@ class GetLinkedAddonEnvironmentCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/organisations/${params.ownerId}/applications/${params.applicationId}/addons/env`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): Array<LinkedAddonEnvironment> {
     return transformLinkedAddonsEnvironment(response);
   }
@@ -169,5 +182,9 @@ class GetLinkedAddonEnvironmentCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

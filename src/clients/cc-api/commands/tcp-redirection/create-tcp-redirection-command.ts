@@ -8,6 +8,11 @@ import type {
 } from './create-tcp-redirection-command.types.js';
 
 /**
+ * Opens a public TCP port on an application.
+ *
+ * The port itself is picked by the platform out of the requested namespace, which defaults to
+ * `default`.
+ *
  * @endpoint [POST] /v2/organisations/:XXX/applications/:XXX/tcpRedirs
  * @group TcpRedirection
  * @version 2
@@ -26,5 +31,10 @@ export class CreateTcpRedirectionCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  // an application holds at most one port per namespace, so a replay is refused instead of allocating a second one
+  isIdempotent(): boolean {
+    return true;
   }
 }

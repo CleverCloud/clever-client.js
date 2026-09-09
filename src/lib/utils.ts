@@ -43,7 +43,7 @@ export function toArray<T>(value: T | Array<T>): Array<T> {
  * Handles Date objects, timestamps, and string dates including those with '[UTC]' suffix.
  *
  * @param date - The date to normalize
- * @returns The date in ISO string format, or null if input is null/undefined
+ * @returns The date in ISO string format, or undefined if input is null/undefined
  * @throws {Error} If the input cannot be parsed as a valid date
  *
  * @example
@@ -51,9 +51,9 @@ export function toArray<T>(value: T | Array<T>): Array<T> {
  * normalizeDate('2023-01-01[UTC]')          // '2023-01-01T00:00:00.000Z'
  * normalizeDate(1672531200000)              // '2023-01-01T00:00:00.000Z'
  */
-export function normalizeDate(date: Date | string | number | null | undefined): string | null {
+export function normalizeDate(date: Date | string | number | null | undefined): string | undefined {
   if (date == null) {
-    return null;
+    return undefined;
   }
 
   let parsedDate: Date | undefined;
@@ -112,6 +112,54 @@ export function safeUrl(strings: TemplateStringsArray, ...values: Array<unknown>
   });
 
   return result;
+}
+
+/**
+ * Checks whether a URL is absolute (starts with `http://` or `https://`).
+ * Absolute URLs are used as is by clients, instead of being appended to the client base URL.
+ *
+ * @param url - The URL to check
+ * @returns Whether the URL is absolute
+ */
+export function isAbsoluteUrl(url: string): boolean {
+  return /^https?:\/\//i.test(url);
+}
+
+/**
+ * Checks whether a URL sits under a base URL, on a path segment boundary.
+ * This is used to decide whether credentials may be sent along with a request: a command targeting another
+ * origin, or a sibling path outside the base URL, must not receive the client credentials.
+ *
+ * Both URLs are parsed before being compared, so dot segments are resolved and the scheme, the host and the
+ * port are compared on their normalized form. The path comparison is segment aware, so `https://example.com/api`
+ * contains `https://example.com/api/2` but not `https://example.com/api2`.
+ *
+ * A URL that cannot be parsed is considered outside of the base URL.
+ *
+ * @param baseUrl - The base URL delimiting the scope
+ * @param url - The URL to check
+ * @returns Whether the URL sits under the base URL
+ */
+export function isUrlWithinBaseUrl(baseUrl: string, url: string): boolean {
+  let parsedBaseUrl: URL;
+  let parsedUrl: URL;
+  try {
+    parsedBaseUrl = new URL(baseUrl, globalThis.location?.href);
+    parsedUrl = new URL(url, globalThis.location?.href);
+  } catch {
+    return false;
+  }
+
+  // `origin` is not used here because it collapses to the opaque value `null` for non special schemes,
+  // which would make two unrelated URLs compare as equal
+  if (parsedUrl.protocol !== parsedBaseUrl.protocol || parsedUrl.host !== parsedBaseUrl.host) {
+    return false;
+  }
+
+  const basePath = parsedBaseUrl.pathname.endsWith('/') ? parsedBaseUrl.pathname.slice(0, -1) : parsedBaseUrl.pathname;
+
+  // the path either is the base path itself, or continues on a segment boundary
+  return parsedUrl.pathname === basePath || parsedUrl.pathname.startsWith(basePath + '/');
 }
 
 /**

@@ -5,6 +5,12 @@ import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import type { ListTagCommandInput, ListTagCommandOutput } from './list-tag-command.types.js';
 
 /**
+ * Lists the tags attached to an application or an add-on.
+ *
+ * The resource kind is picked from the input: passing an `applicationId` targets an application,
+ * passing an `addonId` targets an add-on.
+ *
+ * @endpoint [GET] /v2/organisations/:XXX/applications/:XXX/tags
  * @endpoint [GET] /v2/organisations/:XXX/addons/:XXX/tags
  * @group Tag
  * @version 2
@@ -21,14 +27,14 @@ export class ListTagCommand extends CcApiSimpleCommand<ListTagCommandInput, List
     return (response as ListTagCommandOutput)?.sort() ?? [];
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
       addonId: 'ADDON_ID',
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

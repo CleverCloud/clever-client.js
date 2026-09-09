@@ -9,6 +9,10 @@ import type {
 } from './update-metabase-version-command.types.js';
 
 /**
+ * Moves an add-on to another Metabase version.
+ *
+ * The instance is rebuilt on the target version, so it is unavailable for the duration.
+ *
  * @endpoint [POST] /v4/addon-providers/addon-metabase/addons/:XXX/version/update
  * @group Metabase
  * @version 4
@@ -31,5 +35,10 @@ export class UpdateMetabaseVersionCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): UpdateMetabaseVersionCommandOutput {
     return transformMetabaseInfo(response);
+  }
+
+  // setting the version env var converges, but every call also redeploys the instance
+  isIdempotent(): boolean {
+    return false;
   }
 }

@@ -15,4 +15,9 @@ export class CreateStringKeyCommand extends RedisHttpCommand<
   toRequestParams(params: CreateStringKeyCommandInput) {
     return post(`/key/string/_create`, params);
   }
+
+  // `SET NX`, so a replay is refused rather than overwriting
+  isIdempotent(): boolean {
+    return true;
+  }
 }

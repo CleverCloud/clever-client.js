@@ -1,5 +1,6 @@
 import { sortBy } from '../../../../lib/utils.js';
 import { toArray } from '../../../../utils/environment-utils.js';
+import type { CheckKeycloakVersionCommandOutput } from './check-keycloak-version-command.types.js';
 import type { KeycloakInfo } from './keycloak.types.js';
 
 export function transformKeycloakInfo(response: any): KeycloakInfo {
@@ -14,8 +15,19 @@ export function transformKeycloakInfo(response: any): KeycloakInfo {
     accessUrl: response.accessUrl,
     availableVersions: response.availableVersions,
     resources: response.resources,
-    features: response.features,
+    features: {
+      networkGroup: response.features.networkGroup ?? undefined,
+    },
     initialCredentials: response.initialCredentials,
     environment: sortBy(toArray(response.envVars), 'name'),
+  };
+}
+
+export function transformKeycloakVersionCheck(response: any): CheckKeycloakVersionCommandOutput {
+  return {
+    installed: response.installed,
+    availableVersions: response.available,
+    latest: response.latest,
+    needUpdate: response.needUpdate,
   };
 }

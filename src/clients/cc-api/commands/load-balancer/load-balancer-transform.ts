@@ -3,11 +3,11 @@ import type { LoadBalancer } from './load-balancer.types.js';
 export function transformLoadBalancer(payload: any): LoadBalancer {
   return {
     id: payload.id,
-    zone: payload.name,
-    zoneId: payload.zoneId,
+    name: payload.name,
+    zone: payload.zoneId,
     dns: {
       cname: payload.dns.cname,
-      a: payload.dns.a,
+      aRecords: payload.dns.a,
     },
   };
 }

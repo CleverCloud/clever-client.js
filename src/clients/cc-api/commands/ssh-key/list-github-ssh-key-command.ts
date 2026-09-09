@@ -4,6 +4,10 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { ListGithubSshKeyCommandOutput } from './list-github-ssh-key-command.types.js';
 
 /**
+ * Lists the public SSH keys the current user has on their linked GitHub account.
+ *
+ * Meant to offer them for import, so a user does not have to paste a key they already published.
+ *
  * @endpoint [GET] /v2/github/keys
  * @group SshKey
  * @version 2
@@ -17,7 +21,7 @@ export class ListGithubSshKeyCommand extends CcApiSimpleCommand<void, ListGithub
     return sortBy(response as ListGithubSshKeyCommandOutput, 'name');
   }
 
-  getEmptyResponsePolicy(status: number, body: unknown): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404 && (body as { id?: number })?.id === 7301, emptyValue: [] };
+  isIdempotent(): boolean {
+    return true;
   }
 }

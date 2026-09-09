@@ -4,6 +4,7 @@ import eslint from '@eslint/js';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import { noTsImportExtension } from './tools/eslint/no-ts-import-extension.js';
 
 export default defineConfig([
   {
@@ -14,6 +15,7 @@ export default defineConfig([
     name: 'ts',
     files: ['**/*.ts'],
     extends: [eslint.configs.recommended, tseslint.configs.recommendedTypeChecked],
+    plugins: { local: { rules: { 'no-ts-import-extension': noTsImportExtension } } },
     languageOptions: {
       ecmaVersion: 2023,
       parserOptions: {
@@ -34,6 +36,8 @@ export default defineConfig([
       ],
       // Enforce the use of top-level import type qualifier when an import only has specifiers with inline type qualifiers
       '@typescript-eslint/no-import-type-side-effects': 'error',
+      // Local rule; see `tools/eslint/no-ts-import-extension.js` for the rationale. Relaxed under `tasks/`.
+      'local/no-ts-import-extension': 'error',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -77,12 +81,12 @@ export default defineConfig([
       camelcase: 'off',
     },
   },
-  // The build/test config files themselves. Unlike the isomorphic `ts` block above, these run only
-  // in Node, so they get the full `globals.node` set (process, __dirname, etc.) and the cleverCloud
-  // node rule set rather than the shared es2023 globals.
+  // The build/test config files themselves, plus the local tooling they pull in from `tools/`. Unlike
+  // the isomorphic `ts` block above, these run only in Node, so they get the full `globals.node` set
+  // (process, __dirname, etc.) and the cleverCloud node rule set rather than the shared es2023 globals.
   {
     name: 'tooling-config-files',
-    files: ['eslint.config.js', 'vitest.config.js'],
+    files: ['eslint.config.js', 'vitest.config.js', 'tools/**/*.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
@@ -113,6 +117,9 @@ export default defineConfig([
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/require-await': 'off',
+      // Node runs these straight from source with `--experimental-strip-types`, which resolves the
+      // literal file and does not remap `.js` to `.ts`. Here the real extension is the correct one.
+      'local/no-ts-import-extension': 'off',
     },
   },
 ]);

@@ -23,7 +23,7 @@ describe('zone commands', function () {
     expect(response[0].countryCode).toBeTypeOf('string');
     expect(response[0].lat).toBeTypeOf('number');
     expect(response[0].lon).toBeTypeOf('number');
-    expect(response[0].outboundIPs).toBeInstanceOf(Array);
+    expect(response[0].outboundIps).toBeInstanceOf(Array);
     expect(response[0].tags).toBeInstanceOf(Array);
   });
 
@@ -36,7 +36,7 @@ describe('zone commands', function () {
     expect(response[0].countryCode).toBeTypeOf('string');
     expect(response[0].lat).toBeTypeOf('number');
     expect(response[0].lon).toBeTypeOf('number');
-    expect(response[0].outboundIPs).toBeInstanceOf(Array);
+    expect(response[0].outboundIps).toBeInstanceOf(Array);
     expect(response[0].tags).toBeInstanceOf(Array);
   });
 
@@ -49,7 +49,7 @@ describe('zone commands', function () {
     expect(response.countryCode).toBeTypeOf('string');
     expect(response.lat).toBeTypeOf('number');
     expect(response.lon).toBeTypeOf('number');
-    expect(response.outboundIPs).toBeInstanceOf(Array);
+    expect(response.outboundIps).toBeInstanceOf(Array);
     expect(response.tags).toBeInstanceOf(Array);
   });
 
@@ -64,7 +64,7 @@ describe('zone commands', function () {
     expect(response.countryCode).toBeTypeOf('string');
     expect(response.lat).toBeTypeOf('number');
     expect(response.lon).toBeTypeOf('number');
-    expect(response.outboundIPs).toBeInstanceOf(Array);
+    expect(response.outboundIps).toBeInstanceOf(Array);
     expect(response.tags).toBeInstanceOf(Array);
   });
 });

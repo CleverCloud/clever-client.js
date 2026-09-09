@@ -13,25 +13,19 @@ import type {
 import { transformPulsarCluster, transformPulsarInfo } from './pulsar-transform.js';
 
 /**
+ * Retrieves the details of a Pulsar add-on, with the cluster it is hosted on.
+ *
+ * The add-on payload only carries the id of its cluster, so the command makes a second request to fetch the cluster
+ * and inlines it as `cluster`.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-pulsar/addons/:XXX
  * @endpoint [GET] /v4/addon-providers/addon-pulsar/clusters/:XXX
  * @group Pulsar
  * @version 4
  */
-export class GetPulsarInfoCommand extends CcApiCompositeCommand<
-  GetPulsarInfoCommandInput,
-  GetPulsarInfoCommandOutput | undefined
-> {
-  async compose(
-    params: GetPulsarInfoCommandInput,
-    composer: CcApiComposer,
-  ): Promise<GetPulsarInfoCommandOutput | undefined> {
+export class GetPulsarInfoCommand extends CcApiCompositeCommand<GetPulsarInfoCommandInput, GetPulsarInfoCommandOutput> {
+  async compose(params: GetPulsarInfoCommandInput, composer: CcApiComposer): Promise<GetPulsarInfoCommandOutput> {
     const pulsarInfo = await composer.send(new GetPulsarInfoInnerCommand(params));
-
-    if (pulsarInfo == null) {
-      return undefined;
-    }
-
     const pulsarCluster = await composer.send(new GetPulsarClusterCommand({ clusterId: pulsarInfo.clusterId }));
 
     return {
@@ -46,9 +40,16 @@ export class GetPulsarInfoCommand extends CcApiCompositeCommand<
       addonId: 'REAL_ADDON_ID',
     };
   }
+
+  // both steps only read
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Retrieves the Pulsar add-on itself: its tenant, namespace and access token.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-pulsar/addons/:XXX
  * @group Pulsar
  * @version 4
@@ -58,16 +59,19 @@ class GetPulsarInfoInnerCommand extends CcApiSimpleCommand<GetPulsarInfoCommandI
     return get(safeUrl`/v4/addon-providers/addon-pulsar/addons/${params.addonId}`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetPulsarInfoInnerCommandOutput {
     return transformPulsarInfo(response);
+  }
+
+  // the access token comes from the stored add-on row, renewing it is a separate route
+  isIdempotent(): boolean {
+    return true;
   }
 }
 
 /**
+ * Retrieves a Pulsar cluster: where it is reachable, which version it runs, and which plans it supports.
+ *
  * @endpoint [GET] /v4/addon-providers/addon-pulsar/clusters/:XXX
  * @group Pulsar
  * @version 4
@@ -82,5 +86,9 @@ class GetPulsarClusterCommand extends CcApiSimpleCommand<
 
   transformCommandOutput(response: unknown): GetPulsarClusterInnerCommandOutput {
     return transformPulsarCluster(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

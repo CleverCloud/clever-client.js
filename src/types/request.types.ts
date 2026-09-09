@@ -4,7 +4,23 @@ import type { QueryParams } from '../lib/request/query-params.js';
  * Complete request configuration combining both request parameters and configuration options.
  * This is the final request object that will be processed by the client.
  */
-export type CcRequest = CcRequestParams & CcRequestConfig;
+export type CcRequest = CcRequestParams & CcRequestConfig & CcRequestMetadata;
+
+/**
+ * What the client knows about a request beyond what it sends and how it processes it.
+ *
+ * The client fills it in from the command the request came from: it is not something a caller passes.
+ */
+export interface CcRequestMetadata {
+  /**
+   * Whether sending this request twice means it twice, as the command declared it.
+   *
+   * It is the answer to "can this be sent again" after a failure that may or may not have reached the
+   * server, and it is `false` for any endpoint nobody has checked. A request made by a composite command
+   * is only idempotent if the composite itself is: a caller can only replay the whole thing.
+   */
+  isIdempotent: boolean;
+}
 
 /**
  * Core request parameters that define what and how to send the request.
@@ -46,7 +62,7 @@ export interface CcRequestConfig {
   /**
    * Whether to enable CORS for the request
    */
-  cors: boolean;
+  isCorsEnabled: boolean;
 
   /**
    * Request timeout in milliseconds
@@ -67,7 +83,7 @@ export interface CcRequestConfig {
   /**
    * Debug configuration for request/response logging
    */
-  debug: boolean;
+  isDebugEnabled: boolean;
 }
 
 export interface CcRequestConfigPartial extends Partial<Omit<CcRequestConfig, 'cache'>> {
@@ -103,7 +119,7 @@ export interface CcResponse<CommandOutput> {
   /**
    * Whether the response was retrieved from the cache
    */
-  cacheHit: boolean;
+  hasHitCache: boolean;
 }
 
 /**

@@ -35,7 +35,7 @@ export async function requestWithCache<CommandOutput>(
   // store to cache (but never cache a 5xx response)
   if (request.cache.ttl > 0 && response.status < 500) {
     CACHE.set(cacheKey, {
-      response: { ...response, cacheHit: true },
+      response: { ...response, hasHitCache: true },
       expiresAt: Date.now() + request.cache.ttl,
     });
   }

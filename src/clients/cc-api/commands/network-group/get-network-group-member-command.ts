@@ -8,6 +8,8 @@ import type {
 import { normalizeMemberKind } from './network-group-utils.js';
 
 /**
+ * Retrieves a member of a network group.
+ *
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members/:XXX
  * @group NetworkGroup
  * @version 4
@@ -26,7 +28,7 @@ export class GetNetworkGroupMemberCommand extends CcApiSimpleCommand<
     return normalizeMemberKind(response as GetNetworkGroupMemberCommandOutput);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
+  isIdempotent(): boolean {
+    return true;
   }
 }

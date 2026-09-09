@@ -4,6 +4,11 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { InitPaypalCommandInput, InitPaypalCommandOutput } from './init-paypal-command.types.js';
 
 /**
+ * Opens a PayPal payment for an invoice and returns the URL the payer has to approve it at.
+ *
+ * The payment only settles once {@link AuthorizePaypalCommand} is called with the transaction
+ * identifier PayPal hands back.
+ *
  * @endpoint [POST] /v4/billing/organisations/:XXX/invoices/:XXX/payments/paypal
  * @group Payment
  * @version 4
@@ -11,5 +16,11 @@ import type { InitPaypalCommandInput, InitPaypalCommandOutput } from './init-pay
 export class InitPaypalCommand extends CcApiSimpleCommand<InitPaypalCommandInput, InitPaypalCommandOutput> {
   toRequestParams(params: InitPaypalCommandInput) {
     return post(safeUrl`/v4/billing/organisations/${params.ownerId}/invoices/${params.invoiceNumber}/payments/paypal`);
+  }
+
+  // the handler creates a new PayPal order and points the invoice at it, so a replay opens a second one and orphans
+  // the URL the first call returned
+  isIdempotent(): boolean {
+    return false;
   }
 }

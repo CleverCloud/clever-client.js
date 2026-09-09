@@ -6,6 +6,10 @@ import { transformAddon } from './addon-transform.js';
 import type { UpdateAddonCommandInput, UpdateAddonCommandOutput } from './update-addon-command.types.js';
 
 /**
+ * Renames an add-on.
+ *
+ * Only the display name can be changed this way: the plan is changed through a migration.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/addons/:XXX
  * @group Addon
  * @version 2
@@ -24,5 +28,9 @@ export class UpdateAddonCommand extends CcApiSimpleCommand<UpdateAddonCommandInp
       ownerId: true,
       addonId: 'ADDON_ID',
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

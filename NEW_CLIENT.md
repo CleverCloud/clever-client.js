@@ -464,7 +464,7 @@ See the [Persistent Storage for ID Resolution](#persistent-storage-for-id-resolu
 The client provides a comprehensive error system with three distinct error types. Use the utility functions for best practices:
 
 ```javascript
-import { isCcClientError, isCcRequestError, isCcHttpError } from '@clevercloud/client/utils/errors.js';
+import { isCcClientError, isCcRequestError, isCcHttpError } from '@clevercloud/client/utils/error-utils.js';
 
 try {
   const result = await client.send(command);
@@ -521,6 +521,39 @@ if (isCcClientError(error)) {
 }
 ```
 
+### Narrowing on a status or a code
+
+The error classes are not part of the public API, so `error instanceof CcHttpError` is not available to
+consumers. Rather than duck-typing on `error.statusCode` or `error.code` — which matches any object that
+happens to carry those properties, whatever its origin — use the dedicated predicates:
+
+```javascript
+import {
+  isCcHttpErrorWithStatus,
+  isCcHttpErrorWithCode,
+  isRateLimitError,
+} from '@clevercloud/client/utils/error-utils.js';
+
+try {
+  await client.send(command);
+} catch (error) {
+  if (isCcHttpErrorWithStatus(error, 404)) {
+    // The resource does not exist
+  } else if (isRateLimitError(error)) {
+    // Rate limited
+  } else if (isCcHttpErrorWithCode(error, 'clever.core.forbidden')) {
+    // The server refused the operation
+  } else {
+    throw error;
+  }
+}
+```
+
+`isCcHttpErrorWithCode()` matches the code resolved by the client: either the code parsed from the response
+body and mapped by the command (see [Command-Specific Error Codes](#command-specific-error-codes)), or one of
+the cross-cutting codes the client normalizes itself. All three predicates are TypeScript type guards, so
+`error` is narrowed to `CcHttpError` inside the branch and `error.statusCode` / `error.response.body` are typed.
+
 ### Common Error Codes
 
 | Error Code                   | Error Type     | Description                         |
@@ -530,6 +563,30 @@ if (isCcClientError(error)) {
 | `INVALID_URL`                | CcRequestError | Malformed request URL               |
 | `UNEXPECTED_ERROR`           | CcRequestError | Unexpected request processing error |
 | `CANNOT_RESOLVE_RESOURCE_ID` | CcClientError  | Resource ID resolution failed       |
+
+### Command-Specific Error Codes
+
+On top of the codes above, a command may translate the codes returned by its endpoint into named, documented
+codes. Those codes are exported as a constant next to the command class, so consumers never have to hardcode
+the string:
+
+```javascript
+import {
+  ActivateCouponCommand,
+  ACTIVATE_COUPON_ERROR_CODES,
+} from '@clevercloud/client/cc-api-commands/credits/activate-coupon-command.js';
+import { isCcHttpErrorWithCode } from '@clevercloud/client/utils/error-utils.js';
+
+try {
+  await client.send(new ActivateCouponCommand({ ownerId, couponName }));
+} catch (error) {
+  if (isCcHttpErrorWithCode(error, ACTIVATE_COUPON_ERROR_CODES.ALREADY_ACTIVATED)) {
+    // ...
+  } else {
+    throw error;
+  }
+}
+```
 
 ## Environment-Specific Usage
 

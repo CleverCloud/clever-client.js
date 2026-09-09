@@ -5,8 +5,11 @@ import type {
   GetNetworkGroupPeerCommandInput,
   GetNetworkGroupPeerCommandOutput,
 } from './get-network-group-peer-command.types.js';
+import { transformNetworkGroupPeer } from './network-group-transform.js';
 
 /**
+ * Retrieves a peer of a network group, whether it runs on the platform or is an external machine.
+ *
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX
  * @group NetworkGroup
  * @version 4
@@ -21,7 +24,11 @@ export class GetNetworkGroupPeerCommand extends CcApiSimpleCommand<
     );
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
+  transformCommandOutput(response: unknown): GetNetworkGroupPeerCommandOutput {
+    return transformNetworkGroupPeer(response);
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

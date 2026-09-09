@@ -12,4 +12,9 @@ export class CreateListKeyCommand extends RedisHttpCommand<CreateListKeyCommandI
   toRequestParams(params: CreateListKeyCommandInput) {
     return post(`/key/list/_create`, params);
   }
+
+  // `RPUSH` behind an existence check, so a replay is refused rather than appended a second time
+  isIdempotent(): boolean {
+    return true;
+  }
 }

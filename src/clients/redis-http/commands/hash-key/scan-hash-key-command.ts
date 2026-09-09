@@ -12,4 +12,9 @@ export class ScanHashKeyCommand extends RedisHttpCommand<ScanHashKeyCommandInput
   toRequestParams(params: ScanHashKeyCommandInput) {
     return post(`/key/hash/_scan`, params);
   }
+
+  // `HSCAN`, a read behind a `POST`
+  isIdempotent(): boolean {
+    return true;
+  }
 }

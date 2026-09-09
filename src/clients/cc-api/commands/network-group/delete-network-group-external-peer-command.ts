@@ -6,6 +6,10 @@ import type { DeleteNetworkGroupExternalPeerCommandInput } from './delete-networ
 import { waitForNetworkGroupPeerDeletion } from './network-group-utils.js';
 
 /**
+ * Detaches an external peer from a network group.
+ *
+ * Deletion is asynchronous: the command polls the peer until it is gone.
+ *
  * @endpoint [DELETE] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/external-peers/:XXX
  * @endpoint [GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX
  * @group NetworkGroup
@@ -20,9 +24,16 @@ export class DeleteNetworkGroupExternalPeerCommand extends CcApiCompositeCommand
     await waitForNetworkGroupPeerDeletion(composer, params.ownerId, params.networkGroupId, params.externalPeerId);
     return undefined;
   }
+
+  // the deletion removes nothing more the second time and the wait only reads
+  isIdempotent(): boolean {
+    return true;
+  }
 }
 
 /**
+ * Sends the external peer deletion request.
+ *
  * @endpoint [DELETE] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/external-peers/:XXX
  * @group NetworkGroup
  * @version 4
@@ -39,5 +50,9 @@ class DeleteNetworkGroupExternalPeerCommandInner extends CcApiSimpleCommand<
 
   transformCommandOutput(): undefined {
     return undefined;
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -1,4 +1,5 @@
 import type { OauthTokens } from '../../types/auth.types.js';
+import { oauthV1AuthorizationHeader } from '../../utils/auth-utils.js';
 import { CcAuth } from './cc-auth.js';
 
 /**
@@ -51,17 +52,6 @@ export class CcAuthOauthV1Plaintext extends CcAuth {
    * @returns The formatted OAuth Authorization header value
    */
   getAuthorization(): string {
-    const token = [
-      `oauth_consumer_key="${this.#oauthToken.consumerKey}"`,
-      `oauth_token="${this.#oauthToken.token}"`,
-      // %26 is URL escaped character "&"
-      `oauth_signature="${this.#oauthToken.consumerSecret}%26${this.#oauthToken.secret}"`,
-      // oauth_nonce is not mandatory
-      // oauth_signature_method is not mandatory, it defaults to PLAINTEXT
-      // oauth_timestamp is not mandatory
-      // oauth_version is not mandatory, it defaults to 1.0
-    ].join(', ');
-
-    return `OAuth ${token}`;
+    return oauthV1AuthorizationHeader(this.#oauthToken);
   }
 }

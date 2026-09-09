@@ -1,6 +1,7 @@
 import { events } from 'fetch-event-stream';
 import type { CcRequest, CcResponse, RequestAdapter, RequestWrapper, SseMessage } from '../../types/request.types.js';
 import { CcClientError, CcRequestError } from '../error/cc-client-errors.js';
+import { asNetworkError } from '../error/network-error.js';
 import { fetchWithTimeout } from './fetch-with-timeout.js';
 import { requestDebug } from './request-debug.js';
 import { requestWithCache } from './request-with-cache.js';
@@ -8,15 +9,6 @@ import { requestWithDedupe } from './request-with-dedupe.js';
 
 const JSON_TYPE = 'application/json';
 const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
-const NETWORK_ERROR_CODES = [
-  'EAI_AGAIN',
-  'ENOTFOUND',
-  'ECONNREFUSED',
-  'ECONNRESET',
-  'EPIPE',
-  'ETIMEDOUT',
-  'UND_ERR_SOCKET',
-];
 
 const REQUEST_WRAPPERS: Array<RequestWrapper> = [requestWithCache, requestWithDedupe, requestDebug];
 
@@ -44,7 +36,7 @@ async function doRequest<CommandOutput>(request: CcRequest): Promise<CcResponse<
       method: request.method,
       headers: request.headers,
       body,
-      mode: request.cors ? 'cors' : 'same-origin',
+      mode: request.isCorsEnabled ? 'cors' : 'same-origin',
       signal: request.signal,
     });
     const duration = new Date().getTime() - now;
@@ -54,7 +46,7 @@ async function doRequest<CommandOutput>(request: CcRequest): Promise<CcResponse<
       headers: fetchResponse.headers,
       body: (await getResponseBody(request, fetchResponse)) as CommandOutput,
       requestDuration: duration,
-      cacheHit: false,
+      hasHitCache: false,
     };
   } catch (error: unknown) {
     if (error instanceof CcRequestError) {
@@ -69,13 +61,9 @@ async function doRequest<CommandOutput>(request: CcRequest): Promise<CcResponse<
       throw new CcRequestError('The request was aborted', 'ABORTED', request, error);
     }
 
-    if (isNetworkError(error as Parameters<typeof isNetworkError>[0])) {
-      throw new CcRequestError(
-        'A network error occurred while fetching HTTP endpoint',
-        'NETWORK_ERROR',
-        request,
-        (error as { cause?: unknown }).cause ?? error,
-      );
+    const networkError = asNetworkError(error, request);
+    if (networkError != null) {
+      throw networkError;
     }
 
     throw new CcRequestError(
@@ -137,7 +125,7 @@ async function getResponseBody(request: CcRequest, fetchResponse: Response): Pro
 
   const responseContentType = getContentType(fetchResponse.headers);
   if (responseContentType === JSON_TYPE) {
-    return fetchResponse.json();
+    return getJsonResponseBody(fetchResponse);
   }
 
   if (responseContentType === EVENT_STREAM_CONTENT_TYPE) {
@@ -153,36 +141,35 @@ async function getResponseBody(request: CcRequest, fetchResponse: Response): Pro
   return fetchResponse.blob();
 }
 
+/**
+ * The body of a response announced as JSON, tolerating a malformed one when it reports an error.
+ *
+ * A backend can announce JSON and send something that isn't: billing-api builds its error bodies by
+ * interpolating the message straight into a JSON string, so a message holding a quote or a newline
+ * goes out malformed. Letting the parse failure through would replace the error the caller needs —
+ * status, code, message — with an opaque `UNEXPECTED_ERROR`, dropping the status with it, so the
+ * response never becomes the `CcHttpError` it should be and `tolerateNotFound()` and friends stop
+ * working on it. Falling back to the raw text keeps the status and reports whatever the body held.
+ *
+ * Only error responses get that tolerance. On a successful one the body *is* the result, and a
+ * command handed a string where it expects its output would fail further away, on a worse message.
+ */
+async function getJsonResponseBody(fetchResponse: Response): Promise<unknown> {
+  if (fetchResponse.status < 400) {
+    return fetchResponse.json();
+  }
+
+  const text = await fetchResponse.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
 function getContentType(headers: Headers | undefined): string | null {
   const contentType = headers?.get('content-type') ?? null;
   return contentType != null ? contentType.split(';')[0] : contentType;
-}
-
-export function isNetworkError(error: {
-  name: string;
-  message: string;
-  cause?: { code?: string };
-  code?: string;
-}): boolean {
-  const errorCode = error.cause?.code ?? error.code;
-
-  if (errorCode != null && NETWORK_ERROR_CODES.includes(errorCode)) {
-    return true;
-  }
-
-  if (error.name === 'TypeError') {
-    if (error.message === 'Failed to fetch') {
-      return true;
-    }
-    if (error.message === 'network error') {
-      return true;
-    }
-    if (error.message.startsWith('NetworkError')) {
-      return true;
-    }
-  }
-
-  return false;
 }
 
 export class SseResponseBody {

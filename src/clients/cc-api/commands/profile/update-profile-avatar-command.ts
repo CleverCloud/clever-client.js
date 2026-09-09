@@ -8,6 +8,11 @@ import type {
 } from './update-profile-avatar-command.types.js';
 
 /**
+ * Sets the avatar of the signed-in user.
+ *
+ * The image is either pulled from an external service or uploaded as raw bytes; the input decides
+ * which, and the request is shaped accordingly.
+ *
  * @endpoint [PUT] /v2/self/avatar
  * @group Profile
  * @version 2
@@ -31,5 +36,10 @@ export class UpdateProfileAvatarCommand extends CcApiSimpleCommand<
         };
       }
     }
+  }
+
+  // the image is stored under a path derived from the owner id, so a replay overwrites the same file
+  isIdempotent(): boolean {
+    return true;
   }
 }

@@ -8,6 +8,11 @@ import type {
 import { transformHeptapodPriceEstimation } from './heptapod-price-estimation-transform.js';
 
 /**
+ * Estimates what the owner's Heptapod usage will cost over the current billing period.
+ *
+ * Heptapod is billed on active users and storage, so the estimate is derived from the usage
+ * recorded so far.
+ *
  * @endpoint [GET] /v2/saas/heptapod/:XXX/heptapod.host/price-prevision
  * @group Heptapod
  * @version 2
@@ -20,11 +25,12 @@ export class GetHeptapodPriceEstimationCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/saas/heptapod/${params.ownerId}/heptapod.host/price-prevision`);
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
-  }
-
   transformCommandOutput(response: unknown): GetHeptapodPriceEstimationCommandOutput {
     return transformHeptapodPriceEstimation(response);
+  }
+
+  // the estimate is computed from the recorded usage on every call, nothing is invoiced or stored
+  isIdempotent(): boolean {
+    return true;
   }
 }

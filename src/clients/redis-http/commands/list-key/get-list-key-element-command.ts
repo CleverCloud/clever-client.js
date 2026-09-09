@@ -18,4 +18,9 @@ export class GetListKeyElementCommand extends RedisHttpCommand<
   toRequestParams(params: GetListKeyElementCommandInput) {
     return post(`/key/list/_get`, params);
   }
+
+  // `LINDEX`, a read behind a `POST`
+  isIdempotent(): boolean {
+    return true;
+  }
 }

@@ -9,6 +9,8 @@ import type {
 } from './list-addon-provider-plan-command.types.js';
 
 /**
+ * Lists the pricing plans offered by an add-on provider.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/addonproviders/:XXX/plans
  * @group AddonProvider
  * @version 2
@@ -25,13 +27,13 @@ export class ListAddonProviderPlanCommand extends CcApiSimpleCommand<
     return sortBy((response as Array<unknown>).map(transformAddonProviderPlan), 'price', 'name');
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
-  }
-
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

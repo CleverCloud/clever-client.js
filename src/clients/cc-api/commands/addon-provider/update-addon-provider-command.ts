@@ -9,6 +9,11 @@ import type {
 } from './update-addon-provider-command.types.js';
 
 /**
+ * Updates the public description of an add-on provider.
+ *
+ * Only the marketplace facing fields can be changed here. The provisioning API settings, the plans
+ * and the features have their own endpoints.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/addonproviders/:XXX
  * @group AddonProvider
  * @version 2
@@ -18,10 +23,17 @@ export class UpdateAddonProviderCommand extends CcApiSimpleCommand<
   UpdateAddonProviderCommandOutput
 > {
   toRequestParams(params: UpdateAddonProviderCommandInput) {
-    return put(
-      safeUrl`/v2/organisations/${params.ownerId}/addonproviders/${params.addonProviderId}`,
-      omit(params, 'ownerId', 'addonProviderId'),
-    );
+    const body: Record<string, unknown> = {
+      ...omit(params, 'ownerId', 'addonProviderId', 'shortDescription', 'longDescription'),
+    };
+    if (params.shortDescription != null) {
+      body.shortDesc = params.shortDescription;
+    }
+    if (params.longDescription != null) {
+      body.longDesc = params.longDescription;
+    }
+
+    return put(safeUrl`/v2/organisations/${params.ownerId}/addonproviders/${params.addonProviderId}`, body);
   }
 
   transformCommandOutput(response: unknown): UpdateAddonProviderCommandOutput {
@@ -32,5 +44,9 @@ export class UpdateAddonProviderCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

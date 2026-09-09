@@ -8,6 +8,10 @@ import type {
 } from './create-or-update-environment-variable-command.types.js';
 
 /**
+ * Sets one environment variable on an application, creating it when it does not exist yet.
+ *
+ * The change only reaches the running instances on the next deployment.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/env/:XXX
  * @group Environment
  * @version 2
@@ -30,5 +34,9 @@ export class CreateOrUpdateEnvironmentVariableCommand extends CcApiSimpleCommand
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

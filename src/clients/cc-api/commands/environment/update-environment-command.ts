@@ -9,6 +9,11 @@ import type {
 } from './update-environment-command.types.js';
 
 /**
+ * Replaces every environment variable of an application at once.
+ *
+ * Variables left out of the input are removed. The change only reaches the running instances on the
+ * next deployment.
+ *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/env
  * @group Environment
  * @version 2
@@ -32,5 +37,9 @@ export class UpdateEnvironmentCommand extends CcApiSimpleCommand<
     return {
       ownerId: true,
     };
+  }
+
+  isIdempotent(): boolean {
+    return true;
   }
 }

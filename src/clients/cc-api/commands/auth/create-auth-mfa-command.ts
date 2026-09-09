@@ -5,6 +5,12 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CreateAuthMfaCommandInput, CreateAuthMfaCommandOutput } from './create-auth-mfa-command.types.js';
 
 /**
+ * Starts enrolling the current user into a second authentication factor.
+ *
+ * The returned URL is the enrolment secret, meant to be shown as a QR code. The factor only becomes
+ * active once a code produced from it is confirmed. The account password is sent base64-encoded in
+ * the `X-Clever-Password` header.
+ *
  * @endpoint [POST] /v2/self/mfa/:XXX
  * @group Auth
  * @version 2
@@ -19,5 +25,10 @@ export class CreateAuthMfaCommand extends CcApiSimpleCommand<CreateAuthMfaComman
         .withHeader('X-Clever-Password', encodeToBase64(params.password))
         .build(),
     };
+  }
+
+  // every call mints a new secret and a new set of backup codes, replacing the enrolment being set up
+  isIdempotent(): boolean {
+    return false;
   }
 }

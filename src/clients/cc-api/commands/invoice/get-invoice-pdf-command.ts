@@ -5,6 +5,8 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { GetInvoicePdfCommandInput, GetInvoicePdfCommandOutput } from './get-invoice-pdf-command.types.js';
 
 /**
+ * Retrieves one billing document of an organisation, rendered as a PDF file.
+ *
  * @endpoint [GET] /v4/billing/organisations/:XXX/invoices/:XXX.pdf
  * @group Invoice
  * @version 4
@@ -18,7 +20,8 @@ export class GetInvoicePdfCommand extends CcApiSimpleCommand<GetInvoicePdfComman
     };
   }
 
-  getEmptyResponsePolicy(status: number) {
-    return { isEmpty: status === 404 };
+  // the PDF is rendered on the fly from the invoice and stored nowhere
+  isIdempotent(): boolean {
+    return true;
   }
 }

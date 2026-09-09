@@ -8,6 +8,8 @@ import type {
 import { transformOrganisationMember } from './organisation-transform.js';
 
 /**
+ * Lists the members of an organisation, with their role.
+ *
  * @endpoint [GET] /v2/organisations/:XXX/members
  * @group Organisation
  * @version 2
@@ -21,10 +23,10 @@ export class ListOrganisationMemberCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): ListOrganisationMemberCommandOutput {
-    return sortBy((response as Array<unknown>).map(transformOrganisationMember), 'name', 'email', 'id');
+    return sortBy((response as Array<unknown>).map(transformOrganisationMember), 'name', 'emailAddress', 'id');
   }
 
-  getEmptyResponsePolicy(status: number): { isEmpty: boolean; emptyValue?: unknown } {
-    return { isEmpty: status === 404, emptyValue: [] };
+  isIdempotent(): boolean {
+    return true;
   }
 }
