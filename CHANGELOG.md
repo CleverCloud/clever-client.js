@@ -1,5 +1,22 @@
 # Clever Client changelog
 
+## 12.6.3
+
+### Patch Changes
+
+- [#231](https://github.com/CleverCloud/clever-client.js/pull/231) [`92cbd7d`](https://github.com/CleverCloud/clever-client.js/commit/92cbd7d9bb6b7fdd4d9f28f568bf130e6ed3760a) - Send one summary request instead of one per command when resolving ids concurrently
+
+  `CcApiClient` fills in the `ownerId` a command needs, and translates between the two add-on id
+  formats, from an index it builds from the organisation summary. Sending several commands at once on
+  a cold index used to request that summary once per command. They now share a single request.
+
+- [#231](https://github.com/CleverCloud/clever-client.js/pull/231) [`e92394f`](https://github.com/CleverCloud/clever-client.js/commit/e92394f75b940c69e25464b730d87ddb0dab396b) - Add the missing commands to the new client, and align the existing ones on the same conventions
+
+  The commands under `@clevercloud/client/cc-api-commands/` now cover the endpoints that had no command
+  yet. The ones that already existed were reviewed as a whole: their names, their inputs, their outputs
+  and their error codes follow the same rules across the client. Several of them changed shape in the
+  process.
+
 ## 12.6.2
 
 ### Patch Changes
