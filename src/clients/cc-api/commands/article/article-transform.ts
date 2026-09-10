@@ -20,7 +20,16 @@ export async function parseRssFeed(xmlStr: string): Promise<Array<Article>> {
     throw new Error(`Could not parse the RSS feed: ${error.textContent}`);
   }
 
-  const items = Array.from(doc.querySelectorAll('item'));
+  // `linkedom`, the parser used in Node, reports nothing at all: it parses leniently and yields
+  // whatever it could read, so the check above never fires there. A document holding no `<channel>`
+  // is the shape a document that is not a feed takes under both parsers, and it has to raise rather
+  // than come back as a feed with no article.
+  const channel = doc.querySelector('channel');
+  if (channel == null) {
+    throw new Error('Could not parse the RSS feed: the document has no <channel> element.');
+  }
+
+  const items = Array.from(channel.querySelectorAll('item'));
 
   return Promise.all(items.map((item) => parseItem(item)));
 }
