@@ -7,6 +7,8 @@ import type {
   NotificationEventType,
   NotificationMetaEventType,
   WebhookNotification,
+  WebhookNotificationRequestFailure,
+  WebhookNotificationUrl,
 } from './notification.types.js';
 
 export function transformWebhookNotification(payload: any): WebhookNotification {
@@ -14,12 +16,29 @@ export function transformWebhookNotification(payload: any): WebhookNotification 
     id: payload.id,
     ownerId: payload.ownerId,
     name: payload.name,
-    urls: payload.urls,
-    events: payload.events,
-    scopes: payload.scope,
-    createdAt: payload.createdAt,
-    failures: payload.failures,
+    urls: payload.urls.map(transformWebhookNotificationUrl),
+    events: payload.events?.sort(),
+    scopes: payload.scope?.sort(),
+    createdAt: normalizeDate(payload.createdAt)!,
+    failures: payload.failures.map(transformWebhookNotificationRequestFailure),
     state: payload.state,
+  };
+}
+
+function transformWebhookNotificationUrl(payload: any): WebhookNotificationUrl {
+  return {
+    format: payload.format,
+    url: payload.url,
+  };
+}
+
+function transformWebhookNotificationRequestFailure(payload: any): WebhookNotificationRequestFailure {
+  return {
+    url: payload.url,
+    networkFailure: payload.networkFailure ?? undefined,
+    status: payload.status ?? undefined,
+    partialBody: payload.partialBody ?? undefined,
+    createdAt: normalizeDate(payload.createdAt)!,
   };
 }
 

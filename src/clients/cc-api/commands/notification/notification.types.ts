@@ -15,14 +15,18 @@ export interface WebhookNotification {
   name?: string;
   /** Where the events are posted, and in which format. */
   urls: Array<WebhookNotificationUrl>;
-  /** Events the webhook fires on. Absent means every event. */
+  /** Events the webhook fires on, sorted. Absent means every event. */
   events?: Array<NotificationEventType | NotificationMetaEventType>;
   /**
-   * Identifiers of the applications and add-ons the webhook is restricted to. Absent means the whole organisation.
+   * Identifiers of the applications and add-ons the webhook is restricted to, sorted. Absent means the whole
+   * organisation.
    * @renamedFrom `scope`
    */
   scopes?: Array<string>;
-  /** When the webhook was created, as an ISO date string. */
+  /**
+   * When the webhook was created.
+   * @converted to an ISO date string
+   */
   createdAt: string;
   /** The recent delivery failures, to help diagnose a webhook that stopped working. */
   failures: Array<WebhookNotificationRequestFailure>;
@@ -58,8 +62,11 @@ export interface WebhookNotificationRequestFailure {
   status?: number;
   /** Beginning of the response body, to help identify the rejection. */
   partialBody?: string;
-  /** When the attempt was made, as an ISO date string. */
-  createdAt?: string;
+  /**
+   * When the attempt was made.
+   * @converted to an ISO date string
+   */
+  createdAt: string;
 }
 
 /**
