@@ -1,5 +1,7 @@
 import { normalizeDate, unknownToClient } from '../../../../lib/utils.js';
 import type {
+  KubernetesBundledComponent,
+  KubernetesCephCsiConfig,
   KubernetesCluster,
   KubernetesClusterDeploymentFailure,
   KubernetesClusterEvent,
@@ -12,6 +14,7 @@ import type {
   KubernetesProduct,
   KubernetesQuota,
   KubernetesTaint,
+  KubernetesVmData,
 } from './kubernetes.types.js';
 
 export function transformKubernetesProduct(payload: any): KubernetesProduct {
@@ -178,44 +181,127 @@ function transformKubernetesClusterDeploymentFailure(payload: any): KubernetesCl
 }
 
 /**
- * The only wire keys the tenant-facing item data renames are the owner ones: `tenantId` on most
- * variants, `orgId` on the Materia one, both becoming `ownerId`. Every other field passes through
- * untouched, so a single generic remap covers all variants of the discriminated union — except the
- * two variants carrying a key of their own, which are normalised first.
+ * The tenant-facing view of one infrastructure resource backing a cluster. The only wire keys
+ * renamed are the owner ones: `tenantId` on most variants, `orgId` on the Materia one.
  */
 function transformKubernetesClusterItemData(payload: any): KubernetesClusterItemData {
-  const data = withNormalizedVariant(payload);
-  const ownerId = data.tenantId ?? data.orgId;
-  if (ownerId === undefined) {
-    return data;
+  switch (payload.type) {
+    case 'PublicNetworkGroupData':
+      return {
+        type: 'PublicNetworkGroupData',
+        ownerId: payload.tenantId,
+        networkGroupId: payload.networkGroupId,
+        networkGroupOrigin: payload.networkGroupOrigin,
+      };
+    case 'PublicLoadBalancerData':
+      return {
+        type: 'PublicLoadBalancerData',
+        ownerId: payload.tenantId,
+        regionId: payload.regionId,
+        lbClusterId: payload.lbClusterId,
+        domainName: payload.domainName,
+        port: payload.port,
+      };
+    case 'PublicLoadBalancerNetworkData':
+      return {
+        type: 'PublicLoadBalancerNetworkData',
+        ownerId: payload.tenantId,
+        networkId: payload.networkId,
+      };
+    case 'PublicNodeGroupData':
+      return {
+        type: 'PublicNodeGroupData',
+        id: payload.id,
+      };
+    case 'PublicMateriaLogicalDBData':
+      return {
+        type: 'PublicMateriaLogicalDBData',
+        addonId: payload.addonId,
+        ownerId: payload.orgId,
+        layerName: payload.layerName,
+        quotaBytes: payload.quotaBytes,
+      };
+    case 'PublicPluginData':
+      return {
+        type: 'PublicPluginData',
+        name: payload.name,
+        version: payload.version,
+      };
+    case 'PublicStorageData':
+      return {
+        type: 'PublicStorageData',
+        containerStorageInterface: transformKubernetesCephCsiConfig(payload.containerStorageInterface),
+      };
+    case 'PublicControlPlaneBundleData':
+      return {
+        type: 'PublicControlPlaneBundleData',
+        vmData: transformKubernetesVmData(payload.vmData),
+        components: payload.components.map(transformKubernetesBundledComponent),
+        topologyType: payload.topologyType,
+      };
+    case 'PublicOtelConfigData':
+      return {
+        type: 'PublicOtelConfigData',
+        ownerId: payload.tenantId,
+        logsEndpoint: payload.logsEndpoint,
+        tracesEndpoint: payload.tracesEndpoint,
+        metricsEndpoint: payload.metricsEndpoint,
+      };
+    default:
+      return unknownToClient('type', payload);
   }
-  const { tenantId, orgId, ...rest } = data;
-  return { ...rest, ownerId };
+}
+
+/** The CephCSI version is the one place the payload spells an acronym in the all-uppercase form. */
+function transformKubernetesCephCsiConfig(payload: any): KubernetesCephCsiConfig {
+  return {
+    clusterId: payload.clusterId,
+    cephNamespace: payload.cephNamespace,
+    cephPool: payload.cephPool,
+    kubernetesNamespace: payload.kubernetesNamespace,
+    cephCsiVersion: payload.cephCSIVersion,
+    provisionerReplicas: payload.provisionerReplicas,
+  };
+}
+
+function transformKubernetesVmData(payload: any): KubernetesVmData {
+  return {
+    id: payload.id,
+    name: payload.name,
+    resourcesSpec: {
+      cpuMillicores: payload.resourcesSpec.cpuMillicores,
+      memBytes: payload.resourcesSpec.memBytes,
+      diskBytes: payload.resourcesSpec.diskBytes,
+    },
+  };
 }
 
 /**
- * Two variants need more than the generic owner remap. An API server bound to no public port is
- * sent as `"port": null`, which the interface spells as an absent key — every other bundled
- * component carries no nullable field. And the storage variant is the one place the payload spells
- * the CephCSI version in the all-uppercase form the interface refuses.
+ * The API server is the only component carrying a field of its own besides the single node, and an
+ * API server bound to no public port is sent as `"port": null`, which the interface spells as an
+ * absent key.
  */
-function withNormalizedVariant(payload: any): any {
+function transformKubernetesBundledComponent(payload: any): KubernetesBundledComponent {
   switch (payload.type) {
-    case 'PublicControlPlaneBundleData':
+    case 'PublicApiServer':
       return {
-        ...payload,
-        components: payload.components?.map((component: any) =>
-          component.type === 'PublicApiServer' ? { ...component, port: component.port ?? undefined } : component,
-        ),
+        type: 'PublicApiServer',
+        port: payload.port ?? undefined,
       };
-    case 'PublicStorageData': {
-      const { cephCSIVersion, ...containerStorageInterface } = payload.containerStorageInterface;
+    case 'PublicControllerManager':
+      return { type: 'PublicControllerManager' };
+    case 'PublicCloudControllerManager':
+      return { type: 'PublicCloudControllerManager' };
+    case 'PublicNodeGroupOperator':
+      return { type: 'PublicNodeGroupOperator' };
+    case 'PublicScheduler':
+      return { type: 'PublicScheduler' };
+    case 'PublicSingleNode':
       return {
-        ...payload,
-        containerStorageInterface: { ...containerStorageInterface, cephCsiVersion: cephCSIVersion },
+        type: 'PublicSingleNode',
+        name: payload.name,
       };
-    }
     default:
-      return payload;
+      return unknownToClient('type', payload);
   }
 }

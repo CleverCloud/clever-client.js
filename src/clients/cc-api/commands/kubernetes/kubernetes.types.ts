@@ -535,18 +535,9 @@ export type KubernetesPluginName =
   | 'METRICS_SERVER'
   | 'KONNECTIVITY'
   | 'OTEL_COLLECTOR'
-  | 'KUBE_STATE_METRICS';
-
-/**
- * A control-plane component bundled onto a machine.
- */
-export type KubernetesControlPlaneComponentType =
-  | 'APISERVER'
-  | 'CONTROLLER_MANAGER'
-  | 'SCHEDULER'
-  | 'NODE_GROUP_OPERATOR'
-  | 'CLOUD_CONTROLLER_MANAGER'
-  | 'NODE';
+  | 'KUBE_STATE_METRICS'
+  | 'CEPH_CSI'
+  | 'KARPENTER';
 
 /**
  * How the control plane is laid out.
@@ -602,20 +593,31 @@ export interface KubernetesVmData {
 /**
  * One control-plane component running on a bundle machine, discriminated by `type`. Only the API
  * server carries a port; the single-node variant carries its node name; the rest carry nothing
- * beyond their kind.
+ * beyond their kind. A component kind this client does not know is published as
+ * {@link UnknownToClient}.
  */
 export type KubernetesBundledComponent =
-  | { type: 'PublicApiServer'; componentType: 'APISERVER'; port?: number }
-  | { type: 'PublicControllerManager'; componentType: 'CONTROLLER_MANAGER' }
-  | { type: 'PublicCloudControllerManager'; componentType: 'CLOUD_CONTROLLER_MANAGER' }
-  | { type: 'PublicNodeGroupOperator'; componentType: 'NODE_GROUP_OPERATOR' }
-  | { type: 'PublicScheduler'; componentType: 'SCHEDULER' }
-  | { type: 'PublicSingleNode'; componentType: 'NODE'; name: string };
+  | {
+      type: 'PublicApiServer';
+      /** Port the API server answers on, absent when it is bound to no public port. */
+      port?: number;
+    }
+  | { type: 'PublicControllerManager' }
+  | { type: 'PublicCloudControllerManager' }
+  | { type: 'PublicNodeGroupOperator' }
+  | { type: 'PublicScheduler' }
+  | {
+      type: 'PublicSingleNode';
+      /** Name of the node the component runs on. */
+      name: string;
+    }
+  | UnknownToClient;
 
 /**
  * The payload of a {@link KubernetesClusterItemEvent}, discriminated by `type`. Each variant is the
  * tenant-facing view of one kind of infrastructure resource, stripped of the credentials and
- * Clever-internal identifiers the backend keeps for itself.
+ * Clever-internal identifiers the backend keeps for itself. A resource kind this client does not
+ * know is published as {@link UnknownToClient}.
  */
 export type KubernetesClusterItemData =
   | {
@@ -709,7 +711,8 @@ export type KubernetesClusterItemData =
       tracesEndpoint: string;
       /** Endpoint metrics are shipped to. */
       metricsEndpoint: string;
-    };
+    }
+  | UnknownToClient;
 
 /**
  * A cluster-level status transition.
