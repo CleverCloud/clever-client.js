@@ -22,8 +22,6 @@ export function transformAddonInstance(payload: any): AddonInstance {
   return {
     id: payload.id,
     realId: payload.appId,
-    ip: payload.ip,
-    port: payload.appPort,
     state: payload.state,
     flavor: payload.flavor,
     commitId: payload.commit,
