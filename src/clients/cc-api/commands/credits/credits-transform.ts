@@ -1,5 +1,5 @@
 import { normalizeDate } from '../../../../lib/utils.js';
-import type { CouponUsage } from './credits.types.js';
+import type { CouponUsage, Credits } from './credits.types.js';
 
 export function transformCouponUsage(payload: any): CouponUsage {
   return {
@@ -8,5 +8,13 @@ export function transformCouponUsage(payload: any): CouponUsage {
     freeCreditsStartsAt: normalizeDate(payload.freeCreditsStartDate)!,
     freeCreditsEndsAt: normalizeDate(payload.freeCreditsEndDate)!,
     appliedByUserId: payload.appliedByUserId,
+  };
+}
+
+export function transformCredits(payload: any): Credits {
+  return {
+    prepaidCredit: payload.prepaidCredit,
+    freeCredit: payload.freeCredit,
+    currency: payload.currency,
   };
 }

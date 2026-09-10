@@ -26,6 +26,13 @@ export class GetKubernetesKubeconfigPresignedUrlCommand extends CcApiSimpleComma
     );
   }
 
+  transformCommandOutput(response: unknown): GetKubernetesKubeconfigPresignedUrlCommandOutput {
+    const payload = response as { url: string };
+    return {
+      url: payload.url,
+    };
+  }
+
   // the token is signed on the fly for each call and never stored, so a replay issues another URL
   // without touching the cluster or invalidating the first one
   isIdempotent(): boolean {

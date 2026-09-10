@@ -1,6 +1,7 @@
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { transformCredits } from './credits-transform.js';
 import type {
   GetCreditsSummaryCommandInput,
   GetCreditsSummaryCommandOutput,
@@ -19,6 +20,10 @@ export class GetCreditsSummaryCommand extends CcApiSimpleCommand<
 > {
   toRequestParams(params: GetCreditsSummaryCommandInput) {
     return get(safeUrl`/v4/billing/organisations/${params.ownerId}/credits/summary`);
+  }
+
+  transformCommandOutput(response: unknown): GetCreditsSummaryCommandOutput {
+    return transformCredits(response);
   }
 
   isIdempotent(): boolean {
