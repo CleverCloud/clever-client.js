@@ -1,5 +1,5 @@
 import { normalizeDate } from '../../../../lib/utils.js';
-import { transformAddonProviderPlan } from '../addon-provider/addon-provider-transform.js';
+import { transformAddonProvider, transformAddonProviderPlan } from '../addon-provider/addon-provider-transform.js';
 import type { Addon } from './addon.types.js';
 import type { GetAddonSsoCommandOutput } from './get-addon-sso-command.types.js';
 import type { AddonInstance } from './list-addon-instance-command.types.js';
@@ -11,7 +11,7 @@ export function transformAddon(payload: any): Addon {
     realId: payload.realId,
     zone: payload.region,
     zoneId: payload.zoneId,
-    provider: payload.provider,
+    provider: transformAddonProvider(payload.provider),
     plan: transformAddonProviderPlan(payload.plan),
     createdAt: normalizeDate(payload.creationDate)!,
     configKeys: payload.configKeys.sort(),

@@ -1,4 +1,4 @@
-import type { AddonProviderFull, AddonProviderPlan } from '../addon-provider/addon-provider.types.js';
+import type { AddonProvider, AddonProviderPlan } from '../addon-provider/addon-provider.types.js';
 
 /**
  * An add-on provisioned in an organisation: a managed service (database, storage, monitoring, ...)
@@ -18,8 +18,8 @@ export interface Addon {
   zone: string;
   /** Identifier of the zone the add-on is hosted in. */
   zoneId: string;
-  /** Provider that operates this add-on, with its plans and features. */
-  provider: AddonProviderFull;
+  /** Provider that operates this add-on. Its plans and features are listed separately. */
+  provider: AddonProvider;
   /** Pricing plan the add-on is currently subscribed to. */
   plan: AddonProviderPlan;
   /**
