@@ -1,4 +1,5 @@
-import { normalizeDate, sortBy } from '../../../../lib/utils.js';
+import { normalizeDate, sortBy, unknownToClient } from '../../../../lib/utils.js';
+import type { UnknownToClient } from '../../../../types/utils.types.js';
 import type { GetNotificationInfoEventsCommandOutput } from './get-notification-info-command.types.js';
 import type {
   EmailNotification,
@@ -34,7 +35,7 @@ export function transformEmailNotification(payload: any): EmailNotification {
   };
 }
 
-function transformTarget(payload: any): EmailNotificationTarget {
+function transformTarget(payload: any): EmailNotificationTarget | UnknownToClient {
   switch (payload.type) {
     case 'email':
       return {
@@ -51,7 +52,7 @@ function transformTarget(payload: any): EmailNotificationTarget {
         userId: payload.target,
       };
     default:
-      throw new Error(`Unknown notification target type: ${payload.type}`);
+      return unknownToClient('type', payload);
   }
 }
 

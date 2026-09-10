@@ -1,4 +1,4 @@
-import { normalizeDate } from '../../../../lib/utils.js';
+import { normalizeDate, unknownToClient } from '../../../../lib/utils.js';
 import type {
   KubernetesCluster,
   KubernetesClusterDeploymentFailure,
@@ -161,7 +161,7 @@ export function transformKubernetesClusterEvent(payload: any): KubernetesCluster
         failure: transformKubernetesClusterDeploymentFailure(payload.failure),
       };
     default:
-      throw new Error(`Unknown cluster event: ${payload.event}`);
+      return unknownToClient('event', payload);
   }
 }
 

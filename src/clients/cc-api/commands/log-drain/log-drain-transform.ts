@@ -1,4 +1,5 @@
-import { normalizeDate } from '../../../../lib/utils.js';
+import { normalizeDate, unknownToClient } from '../../../../lib/utils.js';
+import type { UnknownToClient } from '../../../../types/utils.types.js';
 import { normalizeDuration } from '../../../../utils/duration-utils.js';
 import type {
   ApplicationOrAddonLogDrainKind,
@@ -40,6 +41,7 @@ interface ApiLogDrainPayload {
 }
 
 interface ApiRecipientPayload {
+  /** The protocols the client knows, and whatever else the API grows. */
   type:
     | 'RAW_HTTP'
     | 'SYSLOG_TCP'
@@ -49,7 +51,8 @@ interface ApiRecipientPayload {
     | 'ELASTICSEARCH'
     | 'NEWRELIC'
     | 'BETTERSTACK'
-    | 'SPLUNK';
+    | 'SPLUNK'
+    | (string & {});
   url: string;
   username?: string;
   password?: string;
@@ -66,7 +69,7 @@ interface ApiProbeResultPayload {
   ok: boolean;
   code: string;
   message: string;
-  type?: LogDrainProbeType | null;
+  type?: LogDrainProbeType | (string & {}) | null;
   durationMs?: number | null;
   http?: ApiProbeHttpDetailPayload | null;
   tcp?: ApiProbeTcpDetailPayload | null;
@@ -207,7 +210,7 @@ export function buildLogDrainCreatePayload(
 /**
  * Transform API v4 recipient payload to client drain target format
  */
-export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainTarget {
+export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainTarget | UnknownToClient {
   switch (payload.type) {
     case 'RAW_HTTP': {
       const target: RawHttpDrainTarget = {
@@ -225,7 +228,7 @@ export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainT
     case 'SYSLOG_TCP':
     case 'SYSLOG_UDP': {
       const target: SyslogTcpDrainTarget | SyslogUdpDrainTarget = {
-        type: payload.type,
+        type: payload.type === 'SYSLOG_TCP' ? 'SYSLOG_TCP' : 'SYSLOG_UDP',
         url: payload.url,
       };
       if (payload.rfc5424StructuredDataParameters) {
@@ -297,6 +300,8 @@ export function transformLogDrainTarget(payload: ApiRecipientPayload): LogDrainT
       }
       return target;
     }
+    default:
+      return unknownToClient('type', payload);
   }
 }
 
@@ -313,6 +318,11 @@ export function transformLogDrainProbeResult(payload: ApiProbeResultPayload): Lo
     duration: normalizeDuration(payload.durationMs),
   };
 
+  // the probe reached no transport at all, which the API answers by leaving the field out
+  if (payload.type == null) {
+    return common;
+  }
+
   // the API attaches the transport and its detail block in one move, so a block is guaranteed to be there
   // whenever the transport it belongs to is the one reported
   switch (payload.type) {
@@ -327,7 +337,7 @@ export function transformLogDrainProbeResult(payload: ApiProbeResultPayload): Lo
     case 'UDP':
       return { ...common, type: 'UDP' };
     default:
-      return common;
+      return unknownToClient('type', payload);
   }
 }
 

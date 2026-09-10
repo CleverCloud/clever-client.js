@@ -1,3 +1,5 @@
+import type { UnknownToClient } from '../../../../types/utils.types.js';
+
 /**
  * Size of a control-plane component or of a worker node.
  */
@@ -774,9 +776,11 @@ export interface KubernetesNodeLifecycleEvent {
 
 /**
  * One entry of a cluster's event log, discriminated by `event`: a cluster-level status transition,
- * a change to an infrastructure resource backing the cluster, or a node-level lifecycle signal.
+ * a change to an infrastructure resource backing the cluster, or a node-level lifecycle signal. An
+ * event kind this client does not know is published as {@link UnknownToClient}.
  */
 export type KubernetesClusterEvent =
   | KubernetesClusterStatusEvent
   | KubernetesClusterItemEvent
-  | KubernetesNodeLifecycleEvent;
+  | KubernetesNodeLifecycleEvent
+  | UnknownToClient<'event'>;

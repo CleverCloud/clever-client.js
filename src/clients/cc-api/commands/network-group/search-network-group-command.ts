@@ -45,7 +45,9 @@ export class SearchNetworkGroupCommand extends CcApiSimpleCommand<
       return normalized;
     }
 
-    return normalized.filter((item) => this.params.types!.includes(item.type));
+    // a component type this client does not know matches no requested type, so it drops out here
+    const requestedTypes: Array<string> = this.params.types;
+    return normalized.filter((item) => requestedTypes.includes(item.type));
   }
 
   isIdempotent(): boolean {

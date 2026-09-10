@@ -1,3 +1,4 @@
+import { unknownToClient } from '../../../../lib/utils.js';
 import type { NetworkGroupEndpoint, NetworkGroupPeer } from './network-group.types.js';
 
 /**
@@ -5,6 +6,10 @@ import type { NetworkGroupEndpoint, NetworkGroupPeer } from './network-group.typ
  * public types spell out.
  */
 export function transformNetworkGroupPeer(payload: any): NetworkGroupPeer {
+  if (payload.type !== 'CleverPeer' && payload.type !== 'ExternalPeer') {
+    return unknownToClient('type', payload);
+  }
+
   const base = {
     id: payload.id,
     label: payload.label ?? undefined,
@@ -35,8 +40,12 @@ function transformNetworkGroupEndpoint(payload: any): NetworkGroupEndpoint {
     };
   }
 
-  return {
-    type: 'ClientEndpoint',
-    networkGroupIp: payload.ngIp,
-  };
+  if (payload.type === 'ClientEndpoint') {
+    return {
+      type: 'ClientEndpoint',
+      networkGroupIp: payload.ngIp,
+    };
+  }
+
+  return unknownToClient('type', payload);
 }

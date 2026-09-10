@@ -1,3 +1,5 @@
+import type { UnknownToClient } from '../../../../types/utils.types.js';
+
 /**
  * Any entity that can be returned by a network group search: the network group itself, one of its members, or one
  * of its peers. The `type` discriminator tells them apart.
@@ -57,9 +59,10 @@ export interface NetworkGroup {
 
 /**
  * A WireGuard peer of a network group: either a peer running on the Clever Cloud platform, or an external machine
- * joined to the network group by its owner.
+ * joined to the network group by its owner. A peer kind this client does not know is published as
+ * {@link UnknownToClient}.
  */
-export type NetworkGroupPeer = NetworkGroupPeerClever | NetworkGroupPeerExternal;
+export type NetworkGroupPeer = NetworkGroupPeerClever | NetworkGroupPeerExternal | UnknownToClient;
 
 /**
  * The properties shared by every network group peer, whatever its kind.
@@ -115,9 +118,9 @@ export interface NetworkGroupMember {
 
 /**
  * How a peer is reached over WireGuard: server peers listen on a socket, client peers only have an address inside
- * the network group.
+ * the network group. An endpoint kind this client does not know is published as {@link UnknownToClient}.
  */
-export type NetworkGroupEndpoint = NetworkGroupEndpointServer | NetworkGroupEndpointClient;
+export type NetworkGroupEndpoint = NetworkGroupEndpointServer | NetworkGroupEndpointClient | UnknownToClient;
 
 /**
  * The endpoint of a peer that accepts WireGuard connections.

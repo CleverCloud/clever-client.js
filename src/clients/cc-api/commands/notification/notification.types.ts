@@ -1,3 +1,4 @@
+import type { UnknownToClient } from '../../../../types/utils.types.js';
 import type { NotificationEventType, NotificationMetaEventType } from './notification-event-types.js';
 
 export type { NotificationEventType, NotificationMetaEventType } from './notification-event-types.js';
@@ -72,11 +73,12 @@ export interface EmailNotification {
   /** Display name of the hook. */
   name?: string;
   /**
-   * Who gets the emails. Absent means the whole organisation.
+   * Who gets the emails. Absent means the whole organisation. A target kind this client does not know is
+   * published as {@link UnknownToClient}.
    * @renamedFrom `notified`
    * @converted sorted by type
    */
-  targets?: Array<EmailNotificationTarget>;
+  targets?: Array<EmailNotificationTarget | UnknownToClient>;
   /** Events the hook fires on, sorted. Absent means every event. */
   events?: Array<NotificationEventType | NotificationMetaEventType>;
   /**

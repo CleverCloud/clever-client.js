@@ -296,7 +296,9 @@ describe('kubernetes commands', function () {
     expect(events).toBeInstanceOf(Array);
     for (const event of events) {
       expect(['CLUSTER_STATUS', 'CLUSTER_ITEM', 'NODE_LIFECYCLE']).toContain(event.event);
-      expect(event.date).toBeTypeOf('string');
+      if (event.event !== 'UNKNOWN_TO_CLIENT') {
+        expect(event.date).toBeTypeOf('string');
+      }
     }
 
     const deleted = await support.client.send(

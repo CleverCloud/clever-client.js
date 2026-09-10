@@ -1,3 +1,5 @@
+import type { UnknownToClient } from '../../../../types/utils.types.js';
+
 /**
  * What every log drain carries, whichever stream it ships and whatever it is attached to.
  */
@@ -5,10 +7,11 @@ interface LogDrainCommon {
   /** Identifier of the drain. */
   id: string;
   /**
-   * Where the drain ships the logs, and how it authenticates against it.
+   * Where the drain ships the logs, and how it authenticates against it. A protocol this client does not know is
+   * published as {@link UnknownToClient}.
    * @renamedFrom `recipient`
    */
-  target: LogDrainTarget;
+  target: LogDrainTarget | UnknownToClient;
   /**
    * When the drain's current status was set.
    * @renamedFrom `status.date`
@@ -125,7 +128,8 @@ export type LogDrainProbeResult =
   | HttpLogDrainProbeResult
   | TcpLogDrainProbeResult
   | UdpLogDrainProbeResult
-  | AbortedLogDrainProbeResult;
+  | AbortedLogDrainProbeResult
+  | UnknownToClient;
 
 /** Transport a log drain probe exercises, decided by the kind of target the drain ships to. */
 export type LogDrainProbeType = 'HTTP' | 'TCP' | 'UDP';
