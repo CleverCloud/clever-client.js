@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { ListArticleCommand } from '../../../../../src/clients/cc-api/commands/article/list-article-command.js';
+import type { ListArticleCommandInput } from '../../../../../src/clients/cc-api/commands/article/list-article-command.types.js';
 import { e2eSupport } from '../e2e-support.js';
 
 describe('article commands', function () {
@@ -24,6 +25,16 @@ describe('article commands', function () {
       expect(article.description).toBeTypeOf('string');
       expect(article.bannerUrl == null || article.bannerUrl.startsWith('https://')).toBe(true);
     });
+  });
+
+  // the fallback guards an untyped caller, so it has to reject a key inherited from `Object` too
+  it('should fall back to the default language for an unsupported one', async () => {
+    const params = { lang: 'constructor', limit: 1 } as unknown as ListArticleCommandInput;
+
+    const response = await support.client.send(new ListArticleCommand(params));
+
+    expect(response).toHaveLength(1);
+    expect(response[0].articleUrl).toMatch(/^https:\/\/www\.clever\.cloud\//);
   });
 
   // one feed page holds 10 articles, so this walks several pages
