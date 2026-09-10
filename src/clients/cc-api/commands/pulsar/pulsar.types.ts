@@ -33,7 +33,10 @@ export interface PulsarInfo {
    * @renamedFrom `available`
    */
   isAvailable: boolean;
-  /** Name of the zone the cluster is hosted in. Lowercased. */
+  /**
+   * Name of the zone the cluster is hosted in.
+   * @converted lowercased
+   */
   zone: string;
   /**
    * Whether the cluster can offload old messages to a cold storage.
