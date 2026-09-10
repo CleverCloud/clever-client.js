@@ -69,7 +69,7 @@ export interface AddonProviderPlan {
   /** Monthly price of the plan, in the provider's billing currency. */
   price: number;
   /**
-   * Identifier of the matching price in the billing system.
+   * Identifier of the matching price in the billing system, absent when the plan has none recorded.
    * @renamedFrom `price_id`
    * @converted lowercased
    */
