@@ -10,7 +10,7 @@ import type {
 export function transformAddonProviderFull(payload: any): AddonProviderFull {
   return {
     ...transformAddonProvider(payload),
-    plans: sortBy(payload.plans.map(transformAddonProviderPlan), 'price'),
+    plans: sortBy(payload.plans.map(transformAddonProviderPlan), 'price', 'name'),
     features: sortBy(payload.features.map(transformAddonProviderFeature), 'name'),
   };
 }

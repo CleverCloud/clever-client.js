@@ -3,7 +3,7 @@
  * and the features those plans are described by.
  */
 export interface AddonProviderFull extends AddonProvider {
-  /** Pricing plans offered by the provider, sorted by price. */
+  /** Pricing plans offered by the provider, sorted by price then by name. */
   plans: Array<AddonProviderPlan>;
   /** Features the provider's plans are described by, sorted by name. */
   features: Array<AddonProviderFeature>;
