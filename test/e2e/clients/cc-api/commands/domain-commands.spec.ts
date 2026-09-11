@@ -75,8 +75,8 @@ describe('domain commands', function () {
       }),
     );
 
-    expect(response?.isPrimary).toBe(true);
-    expect(response?.domain).toBe('foo.com/');
+    expect(response.isPrimary).toBe(true);
+    expect(response.domain).toBe('foo.com/');
   });
 
   it('should list domains', async () => {
