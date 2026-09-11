@@ -1,8 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'vitest';
 import {
   transformDeployment,
   transformDeploymentLegacy,
 } from '../../../../../../src/clients/cc-api/commands/deployment/deployment-transform.js';
+import type { DeploymentLegacy } from '../../../../../../src/clients/cc-api/commands/deployment/deployment.types.js';
 
 /** A payload as the ovd `DeploymentView` serialises it. */
 function getDeploymentPayload() {
@@ -88,6 +89,13 @@ describe('deployment-transform', () => {
   });
 
   describe('transformDeploymentLegacy', () => {
+    // `Omit` over a union of string literals resolves to an object type, which every string satisfies
+    it('should narrow the state to the five values the v2 API answers', () => {
+      expectTypeOf<DeploymentLegacy['state']>().toEqualTypeOf<
+        'WORK_IN_PROGRESS' | 'TASK_IN_PROGRESS' | 'FAILED' | 'CANCELLED' | 'SUCCEEDED'
+      >();
+    });
+
     it('should map the author instead of publishing the payload', () => {
       const payload = getDeploymentLegacyPayload();
 

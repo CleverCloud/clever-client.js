@@ -91,7 +91,7 @@ export interface DeploymentLegacy {
    * Current state of the deployment.
    * @converted from the legacy states (`WIP`, `FAIL`, `OK`, `TASK_RUNNING`)
    */
-  state: Omit<DeploymentState, 'QUEUED'>;
+  state: Exclude<DeploymentState, 'QUEUED'>;
   /** What the deployment does to the application. */
   action: DeploymentAction;
   /** Identifier of the git commit that was deployed. Absent when the deployment does not ship a commit. */

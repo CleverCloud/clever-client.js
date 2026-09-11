@@ -1,7 +1,7 @@
 import { normalizeDate } from '../../../../lib/utils.js';
 import type { Deployment, DeploymentLegacy, DeploymentState, DeploymentStep } from './deployment.types.js';
 
-const DEPLOYMENT_STATE_CONVERT_MAP: Record<string, Omit<DeploymentState, 'QUEUED'>> = {
+const DEPLOYMENT_STATE_CONVERT_MAP: Record<string, Exclude<DeploymentState, 'QUEUED'>> = {
   TASK_RUNNING: 'TASK_IN_PROGRESS',
   WIP: 'WORK_IN_PROGRESS',
   FAIL: 'FAILED',
