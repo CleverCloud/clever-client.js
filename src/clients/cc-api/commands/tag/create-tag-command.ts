@@ -11,7 +11,7 @@ import type { CreateTagCommandInput, CreateTagCommandOutput } from './create-tag
  * passing an `addonId` targets an add-on.
  *
  * @endpoint [PUT] /v2/organisations/:XXX/applications/:XXX/tags/:XXX
- * @endpoint [PUT] /v2/organisations/:XXX/addons/:XXX/tags
+ * @endpoint [PUT] /v2/organisations/:XXX/addons/:XXX/tags/:XXX
  * @group Tag
  * @version 2
  */
