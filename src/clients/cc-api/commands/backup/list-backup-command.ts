@@ -54,7 +54,7 @@ export class ListBackupCommand extends CcApiCompositeCommand<ListBackupCommandIn
       }));
     }
 
-    const addon = await composer.send(new GetAddonCommand({ addonId: params.addonId }));
+    const addon = await composer.send(new GetAddonCommand({ ownerId: params.ownerId, addonId: params.addonId }));
 
     if (Object.hasOwn(CUSTOM_RESTORE_COMMANDS, addon.provider.id)) {
       const addonDetails = await composer.send(
