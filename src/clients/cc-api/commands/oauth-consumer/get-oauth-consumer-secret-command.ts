@@ -22,6 +22,13 @@ export class GetOauthConsumerSecretCommand extends CcApiSimpleCommand<
     return get(safeUrl`/v2/organisations/${params.ownerId}/consumers/${params.oauthConsumerKey}/secret`);
   }
 
+  transformCommandOutput(response: unknown): GetOauthConsumerSecretCommandOutput {
+    const payload = response as { secret: string };
+    return {
+      secret: payload.secret,
+    };
+  }
+
   getIdsToResolve(): IdResolve {
     return {
       ownerId: true,

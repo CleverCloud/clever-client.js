@@ -49,7 +49,7 @@ export function transformProductRuntimeFlavor(payload: any): ProductRuntimeFlavo
     isSharedCpu: payload.microservice,
     isMachineLearning: payload.machine_learning,
     cpuPriorityOffset: payload.nice,
-    priceId: payload.price_id.toLowerCase(),
+    priceId: payload.price_id?.toLowerCase(),
     memory: {
       unit: payload.memory.unit,
       value: payload.memory.value,

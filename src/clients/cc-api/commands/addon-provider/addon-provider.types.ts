@@ -3,7 +3,7 @@
  * and the features those plans are described by.
  */
 export interface AddonProviderFull extends AddonProvider {
-  /** Pricing plans offered by the provider, sorted by price. */
+  /** Pricing plans offered by the provider, sorted by price then by name. */
   plans: Array<AddonProviderPlan>;
   /** Features the provider's plans are described by, sorted by name. */
   features: Array<AddonProviderFeature>;
@@ -69,7 +69,7 @@ export interface AddonProviderPlan {
   /** Monthly price of the plan, in the provider's billing currency. */
   price: number;
   /**
-   * Identifier of the matching price in the billing system.
+   * Identifier of the matching price in the billing system, absent when the plan has none recorded.
    * @renamedFrom `price_id`
    * @converted lowercased
    */

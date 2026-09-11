@@ -16,7 +16,7 @@ export function transformPriceSystem(payload: any): PriceSystem {
       })),
       'price',
     ),
-    countables: sortBy(payload.countable.map(transformCountable), 'dataQuantityForPrice', 'timeIntervalForPrice'),
+    countables: sortBy(payload.countable.map(transformCountable), 'service', 'id'),
   };
 }
 

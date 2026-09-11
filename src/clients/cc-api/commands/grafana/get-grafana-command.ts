@@ -17,6 +17,13 @@ export class GetGrafanaCommand extends CcApiSimpleCommand<GetGrafanaCommandInput
     return get(safeUrl`/v4/saas/grafana/${params.ownerId}`);
   }
 
+  transformCommandOutput(response: unknown): GetGrafanaCommandOutput {
+    const payload = response as { id: number };
+    return {
+      id: payload.id,
+    };
+  }
+
   isIdempotent(): boolean {
     return true;
   }

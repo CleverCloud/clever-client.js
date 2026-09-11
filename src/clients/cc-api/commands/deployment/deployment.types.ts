@@ -12,6 +12,7 @@ export interface Deployment {
   /**
    * When the deployment was queued, which is also the date of its first step.
    * @renamedFrom `startDate`
+   * @converted to an ISO date string
    */
   startsAt: string;
   /** Current state of the deployment, which is the state of its most recent step. */
@@ -32,12 +33,12 @@ export interface Deployment {
   origin: {
     /** What the deployment does to the application. */
     action: DeploymentAction;
-    /** Free-form reason recorded by whatever triggered the deployment. */
-    cause: string;
+    /** Free-form reason recorded by whatever triggered the deployment, when it recorded one. */
+    cause?: string;
     /** System the deployment was triggered from (git push, API call, ...). */
     source: string;
-    /** Identifier of the user who triggered the deployment. */
-    authorId: string;
+    /** Identifier of the user who triggered the deployment. Absent when the platform triggered it. */
+    authorId?: string;
     /** Placement constraints the orchestrator had to honour when picking hypervisors for the instances. */
     constraints: Array<string>;
     /** Scheduling priority of the deployment in the orchestrator queue. */
@@ -57,7 +58,10 @@ export type DeploymentState = 'QUEUED' | 'WORK_IN_PROGRESS' | 'TASK_IN_PROGRESS'
 export interface DeploymentStep {
   /** State the deployment entered. */
   state: DeploymentState;
-  /** When the deployment entered that state. */
+  /**
+   * When the deployment entered that state.
+   * @converted to an ISO date string
+   */
   date: string;
 }
 
@@ -87,20 +91,20 @@ export interface DeploymentLegacy {
    * Current state of the deployment.
    * @converted from the legacy states (`WIP`, `FAIL`, `OK`, `TASK_RUNNING`)
    */
-  state: Omit<DeploymentState, 'QUEUED'>;
+  state: Exclude<DeploymentState, 'QUEUED'>;
   /** What the deployment does to the application. */
   action: DeploymentAction;
-  /** Identifier of the git commit that was deployed. */
-  commit: string;
-  /** Free-form reason recorded by whatever triggered the deployment. */
-  cause: string;
+  /** Identifier of the git commit that was deployed. Absent when the deployment does not ship a commit. */
+  commit?: string;
+  /** Free-form reason recorded by whatever triggered the deployment, when it recorded one. */
+  cause?: string;
   /** Number of instances the deployment targets. Defaults to 0 when the backend does not report it. */
   instances: number;
-  /** User who triggered the deployment. */
+  /** User who triggered the deployment. Both fields are absent when the platform triggered it. */
   author: {
     /** Identifier of the user who triggered the deployment. */
-    id: string;
+    id?: string;
     /** Display name of the user who triggered the deployment. */
-    name: string;
+    name?: string;
   };
 }

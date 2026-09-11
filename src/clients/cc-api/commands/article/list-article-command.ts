@@ -39,7 +39,7 @@ const DEFAULT_CACHE_TTL = 4 * 60 * 60 * 1000;
  */
 export class ListArticleCommand extends CcApiCompositeCommand<ListArticleCommandInput, ListArticleCommandOutput> {
   async compose(params: ListArticleCommandInput, composer: CcApiComposer): Promise<ListArticleCommandOutput> {
-    const lang = params.lang != null && params.lang in FEED_URLS ? params.lang : DEFAULT_LANG;
+    const lang = params.lang != null && Object.hasOwn(FEED_URLS, params.lang) ? params.lang : DEFAULT_LANG;
     const limit = params.limit ?? DEFAULT_LIMIT;
 
     const articles: Array<Article> = [];

@@ -10,6 +10,7 @@ import type {
   EmailNotificationTarget,
   WebhookNotificationUrl,
 } from '../../../../../src/clients/cc-api/commands/notification/notification.types.js';
+import { checkDateFormat } from '../../../../lib/expect-utils.js';
 import { e2eSupport } from '../e2e-support.js';
 
 describe('notification commands', function () {
@@ -167,6 +168,9 @@ describe('notification commands', function () {
     expect(response.urls).toEqualInAnyOrder(urls);
     expect(response.events).toEqualInAnyOrder(['META_DEPLOYMENT_RESULT', 'ACCOUNT_CREATION']);
     expect(response.scopes).toEqualInAnyOrder([app1.id, app2.id]);
+    expect(response.state).toBe('ENABLED');
+    expect(response.failures).toEqual([]);
+    checkDateFormat(response.createdAt);
   });
 
   it('should list webhook notifications', async () => {

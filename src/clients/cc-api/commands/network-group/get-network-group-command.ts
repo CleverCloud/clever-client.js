@@ -2,8 +2,7 @@ import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { GetNetworkGroupCommandInput, GetNetworkGroupCommandOutput } from './get-network-group-command.types.js';
-import { transformNetworkGroupPeer } from './network-group-transform.js';
-import { normalizeMemberKind } from './network-group-utils.js';
+import { transformNetworkGroup } from './network-group-transform.js';
 
 /**
  * Retrieves a network group, with its members and its peers.
@@ -21,12 +20,7 @@ export class GetNetworkGroupCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): GetNetworkGroupCommandOutput {
-    const networkGroup = response as GetNetworkGroupCommandOutput;
-    return {
-      ...networkGroup,
-      members: networkGroup.members.map(normalizeMemberKind),
-      peers: networkGroup.peers.map(transformNetworkGroupPeer),
-    };
+    return transformNetworkGroup(response as GetNetworkGroupCommandOutput);
   }
 
   isIdempotent(): boolean {

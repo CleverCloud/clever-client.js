@@ -21,13 +21,6 @@ export interface AddonInstance {
    * @renamedFrom `appId`
    */
   realId: string;
-  /** IP address the instance can be reached at. */
-  ip: string;
-  /**
-   * Port the add-on listens on.
-   * @renamedFrom `appPort`
-   */
-  port: number;
   /** Current lifecycle state of the instance. */
   state: AddonInstanceState;
   /** Scaler flavor the instance runs on, which sets its CPU and RAM. */

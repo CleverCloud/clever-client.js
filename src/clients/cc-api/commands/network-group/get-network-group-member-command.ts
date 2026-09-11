@@ -5,7 +5,7 @@ import type {
   GetNetworkGroupMemberCommandInput,
   GetNetworkGroupMemberCommandOutput,
 } from './get-network-group-member-command.types.js';
-import { normalizeMemberKind } from './network-group-utils.js';
+import { transformNetworkGroupMember } from './network-group-transform.js';
 
 /**
  * Retrieves a member of a network group.
@@ -25,7 +25,7 @@ export class GetNetworkGroupMemberCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): GetNetworkGroupMemberCommandOutput {
-    return normalizeMemberKind(response as GetNetworkGroupMemberCommandOutput);
+    return transformNetworkGroupMember(response as GetNetworkGroupMemberCommandOutput);
   }
 
   isIdempotent(): boolean {

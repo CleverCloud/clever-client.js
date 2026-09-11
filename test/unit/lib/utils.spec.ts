@@ -12,6 +12,7 @@ import {
   safeUrl,
   sortBy,
   toArray,
+  unknownToClient,
 } from '../../../src/lib/utils.js';
 
 describe('Utils', () => {
@@ -319,6 +320,23 @@ describe('Utils', () => {
       const result = merge(props, { prop1: undefined });
 
       expect(result).toEqual({ prop1: 'prop1', prop2: 'prop2' });
+    });
+  });
+
+  describe('unknownToClient', () => {
+    it('should discriminate on type by default', () => {
+      const payload = { type: 'brandNew', value: 42 };
+      expect(unknownToClient('type', payload)).toEqual({ type: 'UNKNOWN_TO_CLIENT', payload });
+    });
+
+    it('should discriminate on the given key', () => {
+      const payload = { event: 'BRAND_NEW', date: '2026-01-01T00:00:00.000Z' };
+      expect(unknownToClient('event', payload)).toEqual({ event: 'UNKNOWN_TO_CLIENT', payload });
+    });
+
+    it('should keep the payload as it was received', () => {
+      const payload = { type: 'brandNew', nested: { deep: null } };
+      expect(unknownToClient('type', payload).payload).toBe(payload);
     });
   });
 

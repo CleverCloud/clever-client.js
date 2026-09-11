@@ -47,3 +47,45 @@ export type SelfOrPromise<T> = T | Promise<T>;
  * // Can be: string | string[]
  */
 export type OneOrMany<T> = T | Array<T>;
+
+/**
+ * The variant a discriminated union publishes for a value the client does not know, because the API
+ * gained it after the client shipped.
+ *
+ * @template Discriminant - The key the union discriminates on, `type` for most of them
+ *
+ * @example
+ * type Target = TargetEmail | TargetUser | UnknownToClient;
+ * // A target the client cannot map: { type: 'UNKNOWN_TO_CLIENT', payload: <what the API sent> }
+ *
+ * @example
+ * type Event = ClusterStatusEvent | NodeLifecycleEvent | UnknownToClient<'event'>;
+ * // An event the client cannot map: { event: 'UNKNOWN_TO_CLIENT', payload: <what the API sent> }
+ */
+export type UnknownToClient<Discriminant extends string = 'type'> = {
+  [K in Discriminant]: 'UNKNOWN_TO_CLIENT';
+} & {
+  /** The payload as the API sent it, so a caller can still read what the client could not map. */
+  payload: unknown;
+};
+
+/**
+ * The members of a discriminated union the client does know, with {@link UnknownToClient} taken out.
+ *
+ * A union that carries the unknown variant forces every caller to handle it, which is the point. A
+ * caller that has already dealt with it, or that filters it out of a list, names the rest with this.
+ *
+ * @template T - The discriminated union to narrow
+ * @template Discriminant - The key the union discriminates on, `type` for most of them
+ *
+ * @example
+ * type Target = TargetEmail | TargetUser | UnknownToClient;
+ * type KnownTarget = Known<Target>;
+ * // Result: TargetEmail | TargetUser
+ *
+ * @example
+ * type Event = ClusterStatusEvent | NodeLifecycleEvent | UnknownToClient<'event'>;
+ * type KnownEvent = Known<Event, 'event'>;
+ * // Result: ClusterStatusEvent | NodeLifecycleEvent
+ */
+export type Known<T, Discriminant extends string = 'type'> = Exclude<T, UnknownToClient<Discriminant>>;

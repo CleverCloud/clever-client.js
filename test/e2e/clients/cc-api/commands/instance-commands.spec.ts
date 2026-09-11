@@ -41,8 +41,6 @@ describe('instance commands', { timeout: 60000 }, () => {
     expect(response[0].hypervisorId).toBeTypeOf('string');
     checkDateFormat(response[0].createdAt);
     checkDateFormat(response[0].deletedAt!);
-    expect(response[0].network!.ip).toBeTypeOf('string');
-    expect(response[0].network!.port).toBeTypeOf('number');
     expect(response[0].isBuildVm).toBe(false);
   });
 
@@ -67,8 +65,6 @@ describe('instance commands', { timeout: 60000 }, () => {
     expect(response.hypervisorId).toBeTypeOf('string');
     checkDateFormat(response.createdAt);
     checkDateFormat(response.deletedAt!);
-    expect(response.network!.ip).toBeTypeOf('string');
-    expect(response.network!.port).toBeTypeOf('number');
     expect(response.isBuildVm).toBe(false);
   });
 
@@ -78,7 +74,7 @@ describe('instance commands', { timeout: 60000 }, () => {
         const result = await tolerateNotFound(
           support.client.send(new ListApplicationInstanceCommand({ applicationId })),
         );
-        if (result != null && result.length > 0 && result[0].network != null) {
+        if (result != null && result.length > 0 && result[0].hypervisorId != null) {
           return { stop: true, value: result };
         }
         return { stop: false };

@@ -1,5 +1,5 @@
 import { put } from '../../../../lib/request/request-params-builder.js';
-import { omit, safeUrl } from '../../../../lib/utils.js';
+import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { IdResolve } from '../../types/resource-id-resolver.types.js';
 import { transformAddonProvider } from './addon-provider-transform.js';
@@ -23,17 +23,17 @@ export class UpdateAddonProviderCommand extends CcApiSimpleCommand<
   UpdateAddonProviderCommandOutput
 > {
   toRequestParams(params: UpdateAddonProviderCommandInput) {
-    const body: Record<string, unknown> = {
-      ...omit(params, 'ownerId', 'addonProviderId', 'shortDescription', 'longDescription'),
-    };
-    if (params.shortDescription != null) {
-      body.shortDesc = params.shortDescription;
-    }
-    if (params.longDescription != null) {
-      body.longDesc = params.longDescription;
-    }
-
-    return put(safeUrl`/v2/organisations/${params.ownerId}/addonproviders/${params.addonProviderId}`, body);
+    return put(safeUrl`/v2/organisations/${params.ownerId}/addonproviders/${params.addonProviderId}`, {
+      name: params.name,
+      website: params.website,
+      supportEmail: params.supportEmail,
+      googlePlusName: params.googlePlusName,
+      twitterName: params.twitterName,
+      analyticsId: params.analyticsId,
+      shortDesc: params.shortDescription,
+      longDesc: params.longDescription,
+      logoUrl: params.logoUrl,
+    });
   }
 
   transformCommandOutput(response: unknown): UpdateAddonProviderCommandOutput {

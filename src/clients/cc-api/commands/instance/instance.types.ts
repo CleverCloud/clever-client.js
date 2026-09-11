@@ -33,18 +33,6 @@ export interface Instance {
    * @converted to an ISO date string
    */
   deletedAt?: string;
-  /**
-   * Where the instance can be reached. Absent until the instance has a network address assigned.
-   * @converted from the backend socket-address wire form to `{ ip, port }`. The backend serialises it as an
-   *   `"ip:port"` string (`"1.2.3.4:443"`, or `"[2001:db8::1]:443"` for IPv6); a legacy `{ ip, port }` object
-   *   form is also accepted.
-   */
-  network?: {
-    /** IP address of the instance. */
-    ip: string;
-    /** Port the application listens on. */
-    port: number;
-  };
   /** Whether this instance builds the application instead of running it. */
   isBuildVm: boolean;
 }

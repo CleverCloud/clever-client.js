@@ -4,6 +4,7 @@ import type {
   CcRequestParams,
   RequestCachePolicy,
 } from '../types/request.types.js';
+import type { UnknownToClient } from '../types/utils.types.js';
 
 /**
  * Creates a new object with the specified properties omitted.
@@ -278,6 +279,32 @@ export function pickNonNull<T>(object: T): Partial<T> {
   }
 
   return result;
+}
+
+/**
+ * The value the discriminant takes on the variant a discriminated union publishes for a value the
+ * client does not know.
+ */
+export const UNKNOWN_TO_CLIENT = 'UNKNOWN_TO_CLIENT';
+
+/**
+ * Builds the variant a discriminated union publishes for a value the client does not know.
+ *
+ * A client is always older than the API it talks to. Rather than throwing, dropping the entry or
+ * falling back to a concrete variant, a transform answers this from its `default` branch and hands
+ * the raw payload to the caller.
+ *
+ * @template D - The key the union discriminates on
+ * @param discriminant - The key the union discriminates on, `type` for most of them
+ * @param payload - The payload as the API sent it
+ * @returns The unknown variant, discriminated on the given key
+ *
+ * @example
+ * unknownToClient('event', payload);
+ * // Result: { event: 'UNKNOWN_TO_CLIENT', payload }
+ */
+export function unknownToClient<D extends string>(discriminant: D, payload: unknown): UnknownToClient<D> {
+  return { [discriminant]: UNKNOWN_TO_CLIENT, payload } as UnknownToClient<D>;
 }
 
 /**

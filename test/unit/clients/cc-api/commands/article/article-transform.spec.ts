@@ -88,6 +88,23 @@ describe('article-transform', () => {
       });
     });
 
+    // an HTML page is well formed enough for both parsers to accept it, so it reaches the same
+    // check in the browser and in Node
+    it('should throw when the document is not a feed', async () => {
+      const page = '<!DOCTYPE html><html><body><h1>Not found</h1></body></html>';
+
+      await expectPromiseThrows<Error>(parseRssFeed(page), (error) => {
+        expect(error.message).toMatch(/the document has no <channel> element/);
+      });
+    });
+
+    // browsers report a `<parsererror>` here, `linkedom` parses leniently and finds no `<channel>`
+    it('should throw when the document cannot be parsed at all', async () => {
+      await expectPromiseThrows<Error>(parseRssFeed('not xml at all'), (error) => {
+        expect(error.message).toMatch(/Could not parse the RSS feed/);
+      });
+    });
+
     it('should throw when an item misses an element', async () => {
       const feed = buildFeed([`<item><title>An article</title></item>`]);
 

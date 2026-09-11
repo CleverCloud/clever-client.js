@@ -12,7 +12,7 @@ import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
  */
 export class DeleteAllOauthTokensCommand extends CcApiSimpleCommand<void, undefined> {
   toRequestParams() {
-    return delete_(`/v2/self/tokens/`);
+    return delete_(`/v2/self/tokens`);
   }
 
   transformCommandOutput(): undefined {

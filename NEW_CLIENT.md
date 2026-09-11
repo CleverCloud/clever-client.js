@@ -155,6 +155,28 @@ await client.send(new DeleteApplicationCommand({
 }));
 ```
 
+### Values From a Newer API
+
+A client may be older than the API it talks to. When a command meets a value it does not know — a
+new cluster event, a new notification target, a new peer kind — it does not throw and does not drop
+the entry. It publishes that one entry as an unknown variant carrying the raw payload:
+
+```javascript
+const events = await client.send(new ListKubernetesClusterEventCommand({ clusterId: 'cluster_123' }));
+
+for (const event of events) {
+  switch (event.event) {
+    case 'CLUSTER_STATUS':
+      console.log(`Cluster is now ${event.status}`);
+      break;
+    case 'UNKNOWN_TO_CLIENT':
+      // This client is older than the API. `event.payload` holds what the server sent.
+      console.warn('Unknown cluster event', event.payload);
+      break;
+  }
+}
+```
+
 ### Resource ID Resolution
 
 The client automatically resolves and caches resource IDs, providing two key benefits:

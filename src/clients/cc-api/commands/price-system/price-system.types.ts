@@ -16,7 +16,7 @@ export interface PriceSystem {
    */
   runtimes: Array<RuntimePricePolicy>;
   /**
-   * Prices of the metered resources, sorted by billed quantity then by billed time interval.
+   * Prices of the metered resources, sorted by the service they are metered for.
    * @renamedFrom `countable`
    */
   countables: Array<CountablePricePolicy>;

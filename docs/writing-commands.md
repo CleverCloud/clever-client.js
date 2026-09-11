@@ -145,6 +145,65 @@ transformCommandOutput(): undefined {
 }
 ```
 
+### An unrecognised variant is published, not thrown
+
+A client may be older than the API it talks to. Every discriminated union therefore carries one
+more variant, for the values the client has not caught up with:
+
+```ts
+export type NetworkGroupPeer = NetworkGroupPeerClever | NetworkGroupPeerExternal | UnknownToClient;
+
+export type KubernetesClusterEvent =
+  | KubernetesClusterStatusEvent
+  | KubernetesNodeLifecycleEvent
+  | UnknownToClient<'event'>;
+```
+
+```ts
+default:
+  return unknownToClient('event', payload);
+```
+
+`UnknownToClient<Discriminant>` comes from `src/types/utils.types.js` and `unknownToClient()` from
+`src/lib/utils.js`. The discriminant defaults to `type`; pass the key when the union discriminates on
+something else. The variant holds the raw payload under `payload`, typed `unknown` — the one place
+the wire format leaves the client on purpose, and narrow enough that a caller cannot rely on its
+shape. A caller narrows on the discriminant like on any other variant, or reaches for the two
+predicates `isKnown()` and `isUnknown()` in `src/utils/unknown-to-client-utils.js`. That module is a
+package entry point, and it re-exports `UnknownToClient` and `Known<T, Discriminant>` so a caller can
+name what the predicates narrow to.
+
+```ts
+const peers = networkGroup.peers.filter((peer) => isKnown(peer));
+const events = clusterEvents.filter((event) => isKnown(event, 'event'));
+```
+
+Both predicates take the discriminant as a second argument, defaulting to `type`. Pass a lambda to
+`filter()` rather than the bare predicate: the array index would land on that argument.
+
+Never throw on an unrecognised value, never drop the entry from a listing, never fall back to a
+concrete variant. Throwing fails a whole listing over the one entry the client does not know,
+dropping shrinks the listing without telling the caller, and falling back invents a resource that
+does not exist.
+
+A union a command also takes as **input** is the exception: the alias stays closed, and the output
+field opens instead.
+
+```ts
+/** The output field, on the entity. */
+targets?: Array<EmailNotificationTarget | UnknownToClient>;
+
+/** The input field, on the command input. */
+targets: Array<EmailNotificationTarget>;
+```
+
+A caller has no unknown variant to hand back, so the `switch` that builds the request body stays
+exhaustive. `EmailNotificationTarget` and `LogDrainTarget` are the two unions shared this way.
+
+This covers discriminated unions. A plain enumeration field keeps its closed union: the raw value
+passes through the transform anyway, and only the declared type is narrower than what the API can
+send.
+
 ### Missing resources reject
 
 No empty-response policy: a 404 rejects. When absence is a legitimate state for the caller, wrap the

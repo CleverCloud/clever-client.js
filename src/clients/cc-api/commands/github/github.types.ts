@@ -3,14 +3,14 @@
  * application.
  */
 export interface GithubApplication {
-  /** Identifier of the repository on GitHub. */
+  /** Identifier of the repository on GitHub, as a string: the API stringifies the numeric id GitHub gives. */
   id: string;
   /** GitHub user or organisation owning the repository. */
   owner: string;
   /** Name of the repository. */
   name: string;
-  /** Description of the repository, as set on GitHub. */
-  description: string;
+  /** Description of the repository, as set on GitHub. Absent when the repository carries none. */
+  description?: string;
   /** URL to clone the repository from. */
   gitUrl: string;
   /** Branch deployed when none is specified. */

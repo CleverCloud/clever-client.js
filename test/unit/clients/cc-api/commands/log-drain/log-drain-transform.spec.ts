@@ -49,6 +49,14 @@ describe('log-drain-transform', () => {
     });
 
     // an audit log drain belongs to the organisation itself, so the payload carries a null resourceId
+    it('should publish a target kind it does not know as the unknown variant', () => {
+      const recipient = { type: 'BRAND_NEW', url: 'https://logs.example.com' };
+
+      const drain = transformLogDrain({ ...drainPayload, recipient });
+
+      expect(drain.target).toEqual({ type: 'UNKNOWN_TO_CLIENT', payload: recipient });
+    });
+
     it('should leave the resource out of an audit log drain', () => {
       const drain = transformAuditLogDrain({ ...drainPayload, kind: 'AUDITLOG', resourceId: null });
 
@@ -78,6 +86,19 @@ describe('log-drain-transform', () => {
       });
     });
 
+    it('should publish a transport it does not know as the unknown variant', () => {
+      const payload = {
+        ok: true,
+        code: 'connected',
+        message: 'QUIC connection to logs.example.com:514 succeeded',
+        type: 'QUIC',
+      };
+
+      const probe = transformLogDrainProbeResult(payload);
+
+      expect(probe).toEqual({ type: 'UNKNOWN_TO_CLIENT', payload });
+    });
+
     it('should report the probe duration as an ISO 8601 duration', () => {
       const probe = transformLogDrainProbeResult({
         ok: true,
@@ -88,7 +109,7 @@ describe('log-drain-transform', () => {
         tcp: { connected: true, host: 'logs.example.com', port: 514 },
       });
 
-      expect(probe.duration).toBe('PT1.234S');
+      expect(probe).toMatchObject({ duration: 'PT1.234S' });
     });
 
     it('should build the TCP variant with the outcome of the connection', () => {

@@ -95,11 +95,11 @@ export interface ProductRuntimeFlavor {
    */
   cpuPriorityOffset: number;
   /**
-   * Identifier of the matching price in the billing system.
+   * Identifier of the matching price in the billing system, absent when the flavor has none recorded.
    * @renamedFrom `price_id`
    * @converted lowercased
    */
-  priceId: string;
+  priceId?: string;
   /** The memory, in a form ready to be displayed. */
   memory: {
     /** Unit the value is expressed in, for example `MB`. */

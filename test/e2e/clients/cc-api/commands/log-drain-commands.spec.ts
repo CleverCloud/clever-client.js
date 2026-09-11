@@ -46,8 +46,7 @@ describe('log-drain commands', function () {
     expect(response.resourceId).toBe(application.id);
     checkDateFormat(response.updatedAt);
     expect(response.status).toBe('ENABLED');
-    expect(response.target.type).toBe('RAW_HTTP');
-    expect(response.target.url).toBe('https://example.com');
+    expect(response.target).toMatchObject({ type: 'RAW_HTTP', url: 'https://example.com' });
     if (response.target.type === 'RAW_HTTP') {
       expect(response.target.credentials).toBeTypeOf('object');
       expect(response.target.credentials!.username).toBe('username');
@@ -92,8 +91,7 @@ describe('log-drain commands', function () {
     expect(response.resourceId).toBe(application.id);
     checkDateFormat(response.updatedAt);
     expect(response.status).toBe('ENABLED');
-    expect(response.target.type).toBe('RAW_HTTP');
-    expect(response.target.url).toBe('https://example.com');
+    expect(response.target).toMatchObject({ type: 'RAW_HTTP', url: 'https://example.com' });
   });
 
   it('should list log drain', async () => {
@@ -187,8 +185,7 @@ describe('log-drain commands', function () {
     expect(response.resourceId).toBe(application.id);
     checkDateFormat(response.updatedAt);
     expect(response.status).toBe('ENABLED');
-    expect(response.target.type).toBe('RAW_HTTP');
-    expect(response.target.url).toBe('https://example.com');
+    expect(response.target).toMatchObject({ type: 'RAW_HTTP', url: 'https://example.com' });
   });
 
   it('should create log drain with OVH_TCP target', async () => {
@@ -210,8 +207,7 @@ describe('log-drain commands', function () {
     expect(response.id).toBeTypeOf('string');
     expect(response.resourceId).toBe(application.id);
     expect(response.status).toBe('ENABLED');
-    expect(response.target.type).toBe('OVH_TCP');
-    expect(response.target.url).toBe('https://example.com');
+    expect(response.target).toMatchObject({ type: 'OVH_TCP', url: 'https://example.com' });
     if (response.target.type === 'OVH_TCP') {
       expect(response.target.token).toBeTypeOf('string'); // API returns masked token
     }
@@ -236,8 +232,7 @@ describe('log-drain commands', function () {
     expect(response.id).toBeTypeOf('string');
     expect(response.resourceId).toBe(application.id);
     expect(response.status).toBe('ENABLED');
-    expect(response.target.type).toBe('BETTERSTACK');
-    expect(response.target.url).toBe('https://example.com');
+    expect(response.target).toMatchObject({ type: 'BETTERSTACK', url: 'https://example.com' });
     if (response.target.type === 'BETTERSTACK') {
       expect(response.target.sourceToken).toBeTypeOf('string'); // API returns masked source token
     }
@@ -263,8 +258,7 @@ describe('log-drain commands', function () {
     expect(response.id).toBeTypeOf('string');
     expect(response.resourceId).toBe(application.id);
     expect(response.status).toBe('ENABLED');
-    expect(response.target.type).toBe('ELASTICSEARCH');
-    expect(response.target.url).toBe('https://example.com');
+    expect(response.target).toMatchObject({ type: 'ELASTICSEARCH', url: 'https://example.com' });
     if (response.target.type === 'ELASTICSEARCH') {
       expect(response.target.indexPrefix).toBe('my-index');
       expect(response.target.tlsVerification).toBe('TRUSTFUL');
@@ -293,8 +287,7 @@ describe('log-drain commands', function () {
     expect(response.id).toBeTypeOf('string');
     expect(response.resourceId).toBe(application.id);
     expect(response.status).toBe('ENABLED');
-    expect(response.target.type).toBe('SPLUNK');
-    expect(response.target.url).toBe('https://example.com:8088/services/collector/event');
+    expect(response.target).toMatchObject({ type: 'SPLUNK', url: 'https://example.com:8088/services/collector/event' });
     if (response.target.type === 'SPLUNK') {
       expect(response.target.token).toBeTypeOf('string'); // API returns masked token
       expect(response.target.index).toBe('my-index');

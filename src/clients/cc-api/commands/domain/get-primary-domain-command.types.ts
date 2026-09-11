@@ -8,6 +8,6 @@ import type { Domain } from './domain.types.js';
 export type GetPrimaryDomainCommandInput = ApplicationId;
 
 /**
- * The primary domain, or `undefined` when the application has no domain at all.
+ * The domain explicitly marked as the primary one. The command rejects when the application has none.
  */
 export type GetPrimaryDomainCommandOutput = Domain;

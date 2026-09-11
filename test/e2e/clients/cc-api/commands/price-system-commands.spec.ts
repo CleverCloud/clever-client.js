@@ -43,6 +43,9 @@ describe('price system commands', function () {
     expect(response.countables[0].pricePlans[0].planId).toBeTypeOf('string');
     expect(response.countables[0].pricePlans[0].maxQuantity).toBeTypeOf('number');
     expect(response.countables[0].pricePlans[0].price).toBeTypeOf('number');
+
+    const services = response.countables.map((countable) => countable.service);
+    expect(services).toEqual([...services].sort());
   });
 
   it('should get the public price system when ownerId is omitted', async () => {

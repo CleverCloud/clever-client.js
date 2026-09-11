@@ -12,7 +12,7 @@ import { transformOauthConsumer, transformOauthConsumerRightsForApi } from './oa
  *
  * The returned consumer carries its key; the secret has to be fetched separately.
  *
- * @endpoint [POST] /v2/organisations/:XXX/consumers/
+ * @endpoint [POST] /v2/organisations/:XXX/consumers
  * @group OauthConsumer
  * @version 2
  */
