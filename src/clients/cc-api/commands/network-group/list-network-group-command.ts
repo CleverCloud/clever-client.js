@@ -5,8 +5,7 @@ import type {
   ListNetworkGroupCommandInput,
   ListNetworkGroupCommandOutput,
 } from './list-network-group-command.types.js';
-import { transformNetworkGroupPeer } from './network-group-transform.js';
-import { normalizeMemberKind } from './network-group-utils.js';
+import { transformNetworkGroup } from './network-group-transform.js';
 
 /**
  * Lists the network groups of an organisation, with their members and peers.
@@ -24,11 +23,7 @@ export class ListNetworkGroupCommand extends CcApiSimpleCommand<
   }
 
   transformCommandOutput(response: unknown): ListNetworkGroupCommandOutput {
-    return (response as ListNetworkGroupCommandOutput).map((networkGroup) => ({
-      ...networkGroup,
-      members: networkGroup.members.map(normalizeMemberKind),
-      peers: networkGroup.peers.map(transformNetworkGroupPeer),
-    }));
+    return (response as ListNetworkGroupCommandOutput).map(transformNetworkGroup);
   }
 
   isIdempotent(): boolean {

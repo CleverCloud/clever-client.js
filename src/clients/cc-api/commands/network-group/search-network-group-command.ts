@@ -2,8 +2,11 @@ import { QueryParams } from '../../../../lib/request/query-params.js';
 import { get } from '../../../../lib/request/request-params-builder.js';
 import { safeUrl } from '../../../../lib/utils.js';
 import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformNetworkGroupPeer } from './network-group-transform.js';
-import { normalizeMemberKind } from './network-group-utils.js';
+import {
+  transformNetworkGroup,
+  transformNetworkGroupMember,
+  transformNetworkGroupPeer,
+} from './network-group-transform.js';
 import type {
   SearchNetworkGroupCommandInput,
   SearchNetworkGroupCommandOutput,
@@ -32,8 +35,11 @@ export class SearchNetworkGroupCommand extends CcApiSimpleCommand<
   transformCommandOutput(response: unknown): SearchNetworkGroupCommandOutput {
     const components = response as SearchNetworkGroupCommandOutput;
     const normalized = components.map((item) => {
+      if (item.type === 'NetworkGroup') {
+        return transformNetworkGroup(item);
+      }
       if (item.type === 'Member') {
-        return normalizeMemberKind(item);
+        return transformNetworkGroupMember(item);
       }
       if (item.type === 'CleverPeer' || item.type === 'ExternalPeer') {
         return transformNetworkGroupPeer(item);
