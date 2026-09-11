@@ -38,7 +38,6 @@ export async function waitForKubernetesClusterActive(
   composer: Composer<CcApiType>,
   ownerId: string,
   clusterId: string,
-  timeoutMs?: number,
 ): Promise<KubernetesCluster> {
   const polling = new Polling<KubernetesCluster>(
     async () => {
@@ -48,7 +47,7 @@ export async function waitForKubernetesClusterActive(
         : { stop: false };
     },
     POLLING_INTERVAL_MS,
-    timeoutMs ?? ACTIVE_POLLING_TIMEOUT_MS,
+    ACTIVE_POLLING_TIMEOUT_MS,
   );
 
   const cluster = await polling.start();
