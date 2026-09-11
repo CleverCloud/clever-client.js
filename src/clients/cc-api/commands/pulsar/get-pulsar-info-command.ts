@@ -36,7 +36,6 @@ export class GetPulsarInfoCommand extends CcApiCompositeCommand<GetPulsarInfoCom
 
   getIdsToResolve(): IdResolve {
     return {
-      ownerId: true,
       addonId: 'REAL_ADDON_ID',
     };
   }
