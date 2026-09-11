@@ -1,5 +1,11 @@
 # Clever Client changelog
 
+## 12.6.4
+
+### Patch Changes
+
+- [`3ffd16d`](https://github.com/CleverCloud/clever-client.js/commit/3ffd16d458786579ebbad7fb0e1dde43e24369da) - Fix the defects left behind by the command sweep of [#231](https://github.com/CleverCloud/clever-client.js/issues/231)
+
 ## 12.6.3
 
 ### Patch Changes
