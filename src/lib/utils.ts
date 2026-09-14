@@ -336,7 +336,7 @@ export function unknownToClient<D extends string>(discriminant: D, payload: unkn
 export function combineWithSignal(abortController: AbortController, signal: AbortSignal): void {
   // TODO: use AbortSignal.any static method when it becomes widely available
   if (signal != null && abortController.signal !== signal) {
-    signal.addEventListener('abort', () => abortController.abort(), { once: true });
+    signal.addEventListener('abort', () => abortController.abort(signal.reason), { once: true });
   }
 }
 

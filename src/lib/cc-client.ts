@@ -154,7 +154,9 @@ export class CcClient<Api extends string> {
       const response = await sendRequest<CommandOutput>(request);
       return await this._handleResponse(response, request, command);
     } catch (e) {
-      if (this.#hooks.onError != null) {
+      // an abort is what the caller asked for, not a failure to report
+      const signal = requestConfig?.signal ?? this.#defaultRequestsConfig.signal;
+      if (this.#hooks.onError != null && signal?.aborted !== true) {
         void this.#hooks.onError(e);
       }
 

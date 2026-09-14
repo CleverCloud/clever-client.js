@@ -9,8 +9,11 @@ import type { CcRequest, CcResponse } from '../../types/request.types.js';
  * They are all raised by the request pipeline, but the vocabulary lives here so that consumers can
  * branch on it — through `isCcRequestErrorWithCode` in `utils/error-utils.js` — without importing
  * the pipeline itself.
+ *
+ * An aborted request is not among them: it is not a failure, so it rejects with the reason of its
+ * `signal`, as `fetch()` does.
  */
-export const CC_REQUEST_ERROR_CODES = ['ABORTED', 'NETWORK_ERROR', 'UNEXPECTED_ERROR', 'INVALID_URL'] as const;
+export const CC_REQUEST_ERROR_CODES = ['NETWORK_ERROR', 'UNEXPECTED_ERROR', 'INVALID_URL'] as const;
 
 export type CcRequestErrorCode = (typeof CC_REQUEST_ERROR_CODES)[number];
 
