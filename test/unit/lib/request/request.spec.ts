@@ -741,6 +741,80 @@ describe('request', () => {
       expect(result1.body).toEqual(responseBody);
       expect(result2.body).toEqual(responseBody);
     });
+
+    it('a caller aborting should not reject the other callers of the same fetch', async () => {
+      const responseBody = { data: 'test response' };
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody }, 50);
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+      const abortController = new AbortController();
+
+      const abortedPromise = sendRequest({ url: '/api/test', signal: abortController.signal });
+      const keptPromise = sendRequest({ url: '/api/test' });
+      setTimeout(() => abortController.abort(), 10);
+
+      const [aborted, kept] = await Promise.allSettled([abortedPromise, keptPromise]);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(aborted.status).toBe('rejected');
+      expect((aborted as PromiseRejectedResult).reason).toBe(abortController.signal.reason);
+      expect(kept.status).toBe('fulfilled');
+      expect((kept as PromiseFulfilledResult<CcResponse<unknown>>).value.body).toEqual(responseBody);
+    });
+
+    it('every caller aborting should abort the shared fetch', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 50);
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+      const abortController1 = new AbortController();
+      const abortController2 = new AbortController();
+
+      const promise1 = sendRequest({ url: '/api/test', signal: abortController1.signal });
+      const promise2 = sendRequest({ url: '/api/test', signal: abortController2.signal });
+      setTimeout(() => abortController1.abort(), 10);
+      setTimeout(() => abortController2.abort(), 20);
+
+      const [result1, result2] = await Promise.allSettled([promise1, promise2]);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][1]?.signal?.aborted).toBe(true);
+      expect((result1 as PromiseRejectedResult).reason).toBe(abortController1.signal.reason);
+      expect((result2 as PromiseRejectedResult).reason).toBe(abortController2.signal.reason);
+    });
+
+    it('a caller arriving once every previous caller aborted should start a new fetch', async () => {
+      const responseBody = { data: 'test response' };
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody }, 20);
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+      const abortController = new AbortController();
+
+      // what a UI does when it drops a pending request to send it again
+      const abortedPromise = sendRequest({ url: '/api/test', signal: abortController.signal });
+      abortController.abort();
+      const newPromise = sendRequest({ url: '/api/test' });
+
+      const [aborted, result] = await Promise.allSettled([abortedPromise, newPromise]);
+
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect((aborted as PromiseRejectedResult).reason).toBe(abortController.signal.reason);
+      expect(result.status).toBe('fulfilled');
+      expect((result as PromiseFulfilledResult<CcResponse<unknown>>).value.body).toEqual(responseBody);
+    });
+
+    it('concurrent event stream requests should make separate fetch calls', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 });
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+
+      await Promise.all([
+        sendRequest({ url: '/api/test', headers: new HeadersBuilder().acceptEventStream().build() }),
+        sendRequest({ url: '/api/test', headers: new HeadersBuilder().acceptEventStream().build() }),
+      ]);
+
+      // a stream body can only be read once, it cannot be shared
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
   });
 
   describe('timeout', () => {
