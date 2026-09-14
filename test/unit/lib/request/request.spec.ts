@@ -771,4 +771,56 @@ describe('request', () => {
       });
     }, 50);
   });
+
+  describe('abort', () => {
+    it('should reject with the reason of the signal', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 50);
+      const abortController = new AbortController();
+
+      const promise = sendRequest({ url: '/api/test', signal: abortController.signal });
+      setTimeout(() => abortController.abort(), 10);
+
+      await expectPromiseThrows(promise, (error: DOMException) => {
+        expect(error).toBe(abortController.signal.reason);
+        expect(error.name).toBe('AbortError');
+      });
+    });
+
+    it('should reject with the reason given to `abort()`', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 50);
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+
+      const promise = sendRequest({ url: '/api/test', signal: abortController.signal });
+      setTimeout(() => abortController.abort(reason), 10);
+
+      await expectPromiseThrows(promise, (error: Error) => {
+        expect(error).toBe(reason);
+      });
+    });
+
+    it('should reject with the reason of the signal when a timeout is also set', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 50);
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+
+      const promise = sendRequest({ url: '/api/test', signal: abortController.signal, timeout: 40 });
+      setTimeout(() => abortController.abort(reason), 10);
+
+      await expectPromiseThrows(promise, (error: Error) => {
+        expect(error).toBe(reason);
+      });
+    });
+
+    it('should reject with the reason of a signal aborted before the request is sent', async () => {
+      const reason = new Error('navigated away');
+
+      await expectPromiseThrows(
+        sendRequest({ url: '/api/test', signal: AbortSignal.abort(reason) }),
+        (error: Error) => {
+          expect(error).toBe(reason);
+        },
+      );
+    });
+  });
 });

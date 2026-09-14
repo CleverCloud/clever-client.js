@@ -341,6 +341,17 @@ describe('Utils', () => {
   });
 
   describe('combineWithSignal', () => {
+    it('should abort with the reason of the signal', () => {
+      const ac1 = new AbortController();
+      const ac2 = new AbortController();
+      const reason = new Error('navigated away');
+      combineWithSignal(ac1, ac2.signal);
+
+      ac2.abort(reason);
+
+      expect(ac1.signal.reason).toBe(reason);
+    });
+
     it('should combine', async () => {
       const ac1 = new AbortController();
       const ac2 = new AbortController();

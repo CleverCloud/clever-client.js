@@ -253,6 +253,9 @@ export class CcStream {
     } catch (error: unknown) {
       if (error instanceof CcClientError) {
         this.#onError(error);
+      } else if (this.#abortController != null && error === this.#abortController.signal.reason) {
+        // an abort is not the server closing the response: `sendRequest` rejects with the reason of the signal
+        this.#onError(error);
       } else {
         this.#onError(
           new CcClientError('Server closed the response without a END_OF_STREAM event', 'SSE_SERVER_ERROR', error),

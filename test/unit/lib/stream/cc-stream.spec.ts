@@ -447,6 +447,22 @@ describe('cc-stream', () => {
       await spiedStream.verifyCounts({ open: 1, error: 0, failure: 1 }, 50);
       expect((spiedStream.stubs.failure.mock.calls[0][0] as CcClientError).code).toBe('SSE_SERVER_ERROR');
     });
+
+    it('request signal aborting while connecting should lead to a failure with its reason', async () => {
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+      const spiedStream = createAndSpyStream({ url: '/', signal: abortController.signal });
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [MESSAGE], delayBetween: 10 }, 100);
+
+      void spiedStream.start();
+      await sleep(20);
+      abortController.abort(reason);
+
+      await spiedStream.verifyCounts({ request: 1, open: 0, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBe(reason);
+    });
   });
 
   describe('with retry', () => {
@@ -677,6 +693,23 @@ describe('cc-stream', () => {
           body: { message: '500' },
         });
       await spiedStream.verifyCounts({ open: 1, event: 2, error: 2, failure: 1 }, 60);
+    });
+
+    it('request signal aborting while connecting should lead to a failure with its reason, without retry', async () => {
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+      const spiedStream = createAndSpyStream({ url: '/', signal: abortController.signal }, { retry: RETRY });
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [MESSAGE], delayBetween: 10 }, 100);
+
+      void spiedStream.start();
+      await sleep(20);
+      abortController.abort(reason);
+
+      // an abort is what the caller asked for, reconnecting would undo it
+      await spiedStream.verifyCounts({ request: 1, open: 0, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBe(reason);
     });
   });
 });

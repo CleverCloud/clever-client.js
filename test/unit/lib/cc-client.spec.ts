@@ -5,7 +5,7 @@ import { CcAuthApiToken } from '../../../src/lib/auth/cc-auth-api-token.js';
 import type { CcAuth } from '../../../src/lib/auth/cc-auth.js';
 import { CcClient } from '../../../src/lib/cc-client.js';
 import { CompositeCommand, SimpleCommand } from '../../../src/lib/command/command.js';
-import { CcHttpError } from '../../../src/lib/error/cc-client-errors.js';
+import { type CcClientError, CcHttpError } from '../../../src/lib/error/cc-client-errors.js';
 import { GetUrl } from '../../../src/lib/get-url.js';
 import { HeadersBuilder } from '../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../src/lib/request/query-params.js';
@@ -530,6 +530,38 @@ describe('clever-client', () => {
         expect(spy.mock.calls[0][0]).toBe(err);
       });
     });
+
+    it('should reject with the reason of the signal, without calling `onError` hook, when the request is aborted', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = simpleCommand(get('/path/subPath'));
+      const abortController = new AbortController();
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' }, 50);
+
+      const promise = client.send(command, { signal: abortController.signal });
+      setTimeout(() => abortController.abort(), 10);
+
+      await expectPromiseThrows(promise, (err: DOMException) => {
+        expect(err).toBe(abortController.signal.reason);
+        expect(spy).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should call `onError` hook when the request times out', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = simpleCommand(get('/path/subPath'));
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' }, 50);
+
+      // the timeout aborts the request under the hood, it is still a failure the caller did not ask for
+      await expectPromiseThrows(client.send(command, { timeout: 10 }), (err: CcClientError) => {
+        expect(err.code).toBe('TIMEOUT_EXCEEDED');
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.mock.calls[0][0]).toBe(err);
+      });
+    });
   });
 
   describe('composite command', () => {
@@ -661,6 +693,31 @@ describe('clever-client', () => {
 
       const request = (await spy.mock.results[0].value) as CcRequest;
       expect(request.isIdempotent).toBe(true);
+    });
+
+    it('should not call `onError` hook when a request sent by the composer is aborted', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = new (class MyCommand extends TestCompositeCommand {
+        override async compose(
+          _params: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[0],
+          composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
+        ) {
+          await composer.send(simpleCommand(get('/path/subPath')));
+          return Promise.resolve('result');
+        }
+      })();
+      const abortController = new AbortController();
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' }, 50);
+
+      const promise = client.send(command, { signal: abortController.signal });
+      setTimeout(() => abortController.abort(), 10);
+
+      await expectPromiseThrows(promise, (err: DOMException) => {
+        expect(err).toBe(abortController.signal.reason);
+        expect(spy).not.toHaveBeenCalled();
+      });
     });
   });
 

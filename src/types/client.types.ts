@@ -53,6 +53,7 @@ export interface CcClientHooks {
   /**
    * Hook called when an error occurs during a request.
    * Allows custom error handling or error transformation.
+   * Not called when the request is aborted through its `signal`.
    */
   onError?: OnErrorHook;
 }
