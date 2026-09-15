@@ -91,6 +91,8 @@ export class CcClient<Api extends string> {
   #defaultStreamsConfig: CcStreamConfig;
   #hooks: CcClientHooks;
   #auth: CcAuth | undefined;
+  // held weakly, so that remembering an error does not keep it from being collected
+  #reportedErrors = new WeakSet<object>();
 
   /**
    * Creates a new CcClient instance
@@ -127,16 +129,41 @@ export class CcClient<Api extends string> {
     try {
       return await this._send(command, requestConfig, true);
     } catch (e) {
-      // reported here, not in `_send`: composers go through `_send` too, so a composite would report an
-      // inner error once per level, and even an error it recovered from.
-      // An abort is what the caller asked for, not a failure to report.
-      const signal = requestConfig?.signal ?? this.#defaultRequestsConfig.signal;
-      if (this.#hooks.onError != null && signal?.aborted !== true) {
-        void this.#hooks.onError(e);
-      }
-
+      this.#reportError(e, requestConfig);
       throw e;
     }
+  }
+
+  /**
+   * Hands the error rejecting a `send()` to the `onError` hook, unless there is nothing to report.
+   *
+   * Reported from `send()` rather than from `_send`, which composers go through too: a composite would
+   * report an inner error once per level, and even an error it recovered from.
+   *
+   * @param error - The error rejecting `send()`
+   * @param requestConfig - The request configuration `send()` was called with
+   */
+  #reportError(error: unknown, requestConfig: CcRequestConfigPartial | undefined): void {
+    if (this.#hooks.onError == null) {
+      return;
+    }
+
+    // an abort is what the caller asked for, not a failure to report
+    const signal = requestConfig?.signal ?? this.#defaultRequestsConfig.signal;
+    if (signal?.aborted === true) {
+      return;
+    }
+
+    // an error can reject several `send()` calls, and only the first reports it: nested ones, like the id
+    // resolution preparing a command, or concurrent ones sharing a fetch that failed, like the dedupe does
+    if (typeof error === 'object' && error !== null) {
+      if (this.#reportedErrors.has(error)) {
+        return;
+      }
+      this.#reportedErrors.add(error);
+    }
+
+    void this.#hooks.onError(error);
   }
 
   /**
