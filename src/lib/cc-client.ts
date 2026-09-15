@@ -18,7 +18,13 @@ import { sendRequest } from './request/request.js';
 import type { CcStream } from './stream/cc-stream.js';
 import type { CcStreamConfig, CcStreamConfigPartial, RetryConfig } from './stream/cc-stream.types.js';
 import type { StreamCommand } from './stream/stream-command.js';
-import { isAbsoluteUrl, isUrlWithinBaseUrl, mergeRequestConfig, mergeRequestConfigPartial } from './utils.js';
+import {
+  isAbsoluteUrl,
+  isUrlWithinBaseUrl,
+  mergeRequestConfig,
+  mergeRequestConfigPartial,
+  pickDefined,
+} from './utils.js';
 
 const DEFAULT_REQUEST_CONFIG: CcRequestConfig = {
   isCorsEnabled: false,
@@ -414,11 +420,12 @@ export class CcClient<Api extends string> {
 }
 
 function mergeStreamConfig(baseConfig: CcStreamConfig, config?: CcStreamConfigPartial): CcStreamConfig {
-  const overrideConfig: CcStreamConfigPartial = config ?? {};
+  // an `undefined` option counts as an absent option, like in `mergeRequestConfig`
+  const overrideConfig: CcStreamConfigPartial = pickDefined(config ?? {});
 
   return {
     ...baseConfig,
     ...overrideConfig,
-    retry: { ...baseConfig.retry, ...(overrideConfig?.retry ?? {}) } as RetryConfig,
+    retry: { ...baseConfig.retry, ...pickDefined(overrideConfig.retry ?? {}) } as RetryConfig,
   };
 }

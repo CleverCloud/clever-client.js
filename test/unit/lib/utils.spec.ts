@@ -8,6 +8,7 @@ import {
   mergeRequestConfigPartial,
   normalizeDate,
   omit,
+  pickDefined,
   randomUUID,
   safeUrl,
   sortBy,
@@ -324,6 +325,14 @@ describe('Utils', () => {
     });
   });
 
+  describe('pickDefined', () => {
+    it('should remove undefined properties and keep null ones', () => {
+      const result = pickDefined({ a: 1, b: null, c: undefined, d: 0 });
+
+      expect(result).toStrictEqual({ a: 1, b: null, d: 0 });
+    });
+  });
+
   describe('unknownToClient', () => {
     it('should discriminate on type by default', () => {
       const payload = { type: 'brandNew', value: 42 };
@@ -534,6 +543,33 @@ describe('Utils', () => {
       });
     });
 
+    it('should keep the base value of the options the config sets to `undefined`', () => {
+      const signal = new AbortController().signal;
+      const config = mergeRequestConfig(
+        {
+          isCorsEnabled: true,
+          timeout: 10,
+          cache: { ttl: 1000 },
+          signal,
+          isDebugEnabled: true,
+        },
+        {
+          isCorsEnabled: undefined,
+          timeout: undefined,
+          cache: undefined,
+          signal: undefined,
+          isDebugEnabled: undefined,
+        },
+      );
+      expect(config).toStrictEqual({
+        isCorsEnabled: true,
+        timeout: 10,
+        cache: { ttl: 1000 },
+        signal,
+        isDebugEnabled: true,
+      });
+    });
+
     describe('cache config', () => {
       it('should not merge null cache with undefined cache', () => {
         const config = mergeRequestConfig(
@@ -645,6 +681,14 @@ describe('Utils', () => {
         { isCorsEnabled: false, timeout: 10 },
       );
       expect(config).toEqual({ isCorsEnabled: false, timeout: 10, isDebugEnabled: true });
+    });
+
+    it('should keep the base value of the options the config sets to `undefined`, and drop the others', () => {
+      const config = mergeRequestConfigPartial(
+        { isCorsEnabled: true, timeout: undefined },
+        { isCorsEnabled: undefined, isDebugEnabled: undefined },
+      );
+      expect(config).toStrictEqual({ isCorsEnabled: true });
     });
 
     describe('cache config', () => {

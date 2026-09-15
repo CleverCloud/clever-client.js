@@ -313,6 +313,20 @@ describe('clever-client', () => {
       expect(spy.mock.calls[0][1].timeout).toBe(500);
     });
 
+    it('should keep the request config returned by `command.getRequestConfig()` for the options the `send()` request config sets to `undefined`', async () => {
+      const spy = vi.spyOn(client, '_handleResponse');
+      const command = simpleCommand(get('/path/subPath'));
+      vi.spyOn(command, 'getRequestConfig').mockReturnValue({ isCorsEnabled: true, timeout: 1000 });
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 200 })
+        .thenCall(() => client.send(command, { isCorsEnabled: undefined, timeout: undefined }));
+
+      expect(spy.mock.calls[0][1].isCorsEnabled).toBe(true);
+      expect(spy.mock.calls[0][1].timeout).toBe(1000);
+    });
+
     it('should not call `auth.applyOnRequestParams()` when the command targets another origin', async () => {
       const auth = new CcAuthApiToken('token');
       const spy = vi.spyOn(auth, 'applyOnRequestParams');
@@ -560,6 +574,27 @@ describe('clever-client', () => {
       await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' }, 50);
 
       const promise = client.send(command);
+      setTimeout(() => abortController.abort(), 10);
+
+      await expectPromiseThrows(promise, (err: DOMException) => {
+        expect(err).toBe(abortController.signal.reason);
+        expect(spy).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should abort the request through the default signal of the client when the `send()` request config sets `signal` to `undefined`', async () => {
+      const spy = vi.fn();
+      const abortController = new AbortController();
+      const client = createClient({
+        hooks: { onError: spy },
+        defaultRequestConfig: { signal: abortController.signal },
+      });
+      const command = simpleCommand(get('/path/subPath'));
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' }, 50);
+
+      // what `{ signal: controller?.signal }` sends without a controller
+      const promise = client.send(command, { signal: undefined });
       setTimeout(() => abortController.abort(), 10);
 
       await expectPromiseThrows(promise, (err: DOMException) => {
@@ -947,6 +982,28 @@ describe('clever-client', () => {
       expect(spy.mock.calls[0][1].isDebugEnabled).toBe(true); // command config
       expect(spy.mock.calls[0][1].healthcheckInterval).toBe(10); // client config
       expect(spy.mock.calls[0][1].heartbeatPeriod).toBe(2_500); // default config
+    });
+
+    it('should keep the client stream config for the options the caller config sets to `undefined`', async () => {
+      const client = createClient({
+        defaultStreamConfig: {
+          heartbeatPeriod: 10,
+          isDebugEnabled: true,
+          retry: { maxRetryCount: 3 },
+        },
+      });
+      const command = streamCommand({ url: '/path/subPath' });
+      const spy = vi.spyOn(command, 'createStream');
+
+      await client.stream(command, {
+        heartbeatPeriod: undefined,
+        isDebugEnabled: undefined,
+        retry: { maxRetryCount: undefined },
+      });
+
+      expect(spy.mock.calls[0][1].heartbeatPeriod).toBe(10);
+      expect(spy.mock.calls[0][1].isDebugEnabled).toBe(true);
+      expect(spy.mock.calls[0][1].retry!.maxRetryCount).toBe(3);
     });
 
     it('should apply the request config returned by `command.getRequestConfig()`, the caller config winning', async () => {
