@@ -1006,6 +1006,36 @@ describe('clever-client', () => {
       expect(spy.mock.calls[0][1].retry!.maxRetryCount).toBe(3);
     });
 
+    it('should disable retries when the caller config sets `retry` to `null`', async () => {
+      const client = createClient({ defaultStreamConfig: { retry: { maxRetryCount: 3 } } });
+      const command = streamCommand({ url: '/path/subPath' });
+      const spy = vi.spyOn(command, 'createStream');
+
+      await client.stream(command, { retry: null });
+
+      expect(spy.mock.calls[0][1].retry).toBeNull();
+    });
+
+    it('should disable retries when the client stream config sets `retry` to `null`', async () => {
+      const client = createClient({ defaultStreamConfig: { retry: null } });
+      const command = streamCommand({ url: '/path/subPath' });
+      const spy = vi.spyOn(command, 'createStream');
+
+      await client.stream(command);
+
+      expect(spy.mock.calls[0][1].retry).toBeNull();
+    });
+
+    it('should complete with the default retry config a caller `retry` re-enabling retries the client disables', async () => {
+      const client = createClient({ defaultStreamConfig: { retry: null } });
+      const command = streamCommand({ url: '/path/subPath' });
+      const spy = vi.spyOn(command, 'createStream');
+
+      await client.stream(command, { retry: { maxRetryCount: 3 } });
+
+      expect(spy.mock.calls[0][1].retry).toEqual({ backoffFactor: 1.25, initRetryTimeout: 1_000, maxRetryCount: 3 });
+    });
+
     it('should apply the request config returned by `command.getRequestConfig()`, the caller config winning', async () => {
       const client = createClient({ defaultRequestConfig: { timeout: 10 } });
       const command = streamCommand({ url: '/path/subPath' });
