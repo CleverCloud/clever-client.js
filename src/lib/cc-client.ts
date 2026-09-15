@@ -35,12 +35,13 @@ const DEFAULT_REQUEST_CONFIG: CcRequestConfig = {
 const DEFAULT_REQUEST_PARAMS: WithRequired<Partial<CcRequestParams>, 'method'> = {
   method: 'GET',
 };
+const DEFAULT_RETRY_CONFIG: RetryConfig = {
+  backoffFactor: 1.25,
+  initRetryTimeout: 1_000,
+  maxRetryCount: Infinity,
+};
 const DEFAULT_STREAM_CONFIG: CcStreamConfig = {
-  retry: {
-    backoffFactor: 1.25,
-    initRetryTimeout: 1_000,
-    maxRetryCount: Infinity,
-  },
+  retry: DEFAULT_RETRY_CONFIG,
   // The default Clever Cloud heartbeat period is 2 seconds. We add 500ms to handle potential latency.
   heartbeatPeriod: 2_000 + 500,
   healthcheckInterval: 1_000,
@@ -426,6 +427,18 @@ function mergeStreamConfig(baseConfig: CcStreamConfig, config?: CcStreamConfigPa
   return {
     ...baseConfig,
     ...overrideConfig,
-    retry: { ...baseConfig.retry, ...pickDefined(overrideConfig.retry ?? {}) } as RetryConfig,
+    retry: mergeRetry(baseConfig.retry, overrideConfig.retry),
   };
+}
+
+function mergeRetry(baseRetry: RetryConfig | null, retry: Partial<RetryConfig> | null | undefined): RetryConfig | null {
+  if (retry === undefined) {
+    return baseRetry;
+  }
+  // `null` disables retries, it does not mean "keep the base retry config"
+  if (retry === null) {
+    return null;
+  }
+  // re-enabling retries disabled by the base config starts from the default values
+  return { ...(baseRetry ?? DEFAULT_RETRY_CONFIG), ...pickDefined(retry) };
 }
