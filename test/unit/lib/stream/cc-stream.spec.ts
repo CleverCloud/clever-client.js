@@ -265,6 +265,43 @@ describe('cc-stream', () => {
     await spiedStream.verifyCounts({ open: 1 });
   });
 
+  it('streams opened at the same time on the same URL should each receive every event', async () => {
+    await newScenario()
+      .when({ method: 'GET', path: '/' })
+      .respond({ status: 200, events: [MESSAGE, MESSAGE, END_OF_STREAM], delayBetween: 10 });
+
+    const streams = [1, 2].map(() => {
+      const eventStub = vi.fn();
+      const stream = new CcStream(
+        () => ({
+          isCorsEnabled: false,
+          timeout: 0,
+          cache: null,
+          isDebugEnabled: false,
+          isIdempotent: true,
+          method: 'GET',
+          url: `${newScenario.mockClient.baseUrl}/`,
+        }),
+        { retry: null, isDebugEnabled: false, heartbeatPeriod: 20, healthcheckInterval: 10 },
+      ).on('EVENT', (evt) => {
+        eventStub(evt.data);
+      });
+      return { stream, eventStub };
+    });
+
+    try {
+      // a stream body can only be read once, so each stream needs a connection of its own
+      const closeReasons = await Promise.all(streams.map(({ stream }) => stream.start()));
+
+      expect(closeReasons).toEqual([{ type: 'UNTIL_REACHED' }, { type: 'UNTIL_REACHED' }]);
+      streams.forEach(({ eventStub }) => {
+        expect(eventStub).toHaveBeenCalledTimes(2);
+      });
+    } finally {
+      streams.forEach(({ stream }) => stream.close({ type: 'END_OF_TEST' }));
+    }
+  });
+
   it('unknown url should lead to failure with CcHttpError', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
 
