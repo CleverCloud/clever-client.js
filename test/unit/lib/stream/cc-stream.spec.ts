@@ -8,6 +8,7 @@ import { QueryParams } from '../../../../src/lib/request/query-params.js';
 import { requestWithCache } from '../../../../src/lib/request/request-with-cache.js';
 import { CcStream } from '../../../../src/lib/stream/cc-stream.js';
 import type { CcStreamConfig } from '../../../../src/lib/stream/cc-stream.types.js';
+import { Deferred } from '../../../../src/lib/utils.js';
 import type { CcRequest } from '../../../../src/types/request.types.js';
 import { sleep } from '../../../lib/timers.js';
 import type { SpiedStream, Stubs } from './cc-stream.spec.types.js';
@@ -421,6 +422,47 @@ describe('cc-stream', () => {
     await sleep(100);
 
     await spiedStream.verifyCounts({ open: 1, error: 0, event: 0, failure: 0 });
+  });
+
+  it('closing stream while forging the request should not connect', async () => {
+    const requestForged = new Deferred<void>();
+    const stream = new CcStream(
+      async () => {
+        await requestForged.promise;
+        return {
+          isCorsEnabled: false,
+          timeout: 0,
+          cache: null,
+          isDebugEnabled: false,
+          isIdempotent: true,
+          method: 'GET',
+          url: `${newScenario.mockClient.baseUrl}/`,
+        };
+      },
+      { retry: null, isDebugEnabled: false, heartbeatPeriod: 20, healthcheckInterval: 10 },
+    );
+
+    try {
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [HEARTBEAT], delayBetween: 10 })
+        .thenCall(async () => {
+          const closeReason = stream.start();
+          stream.close({ type: 'END_OF_TEST' });
+          requestForged.resolve();
+
+          expect(await closeReason).toEqual({ type: 'END_OF_TEST' });
+          // long enough for the request to reach the mock and the stream to open
+          await sleep(50);
+        })
+        .verify((calls) => {
+          expect(calls.count).toBe(0);
+        });
+
+      expect(stream.state).toBe('closed');
+    } finally {
+      stream.close({ type: 'END_OF_TEST' });
+    }
   });
 
   it('resume stream should run request with last event ID header', async () => {
