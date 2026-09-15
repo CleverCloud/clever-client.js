@@ -1,4 +1,5 @@
 import { CcClientError } from '../../../lib/error/cc-client-errors.js';
+import { waitUnlessAborted } from '../../../lib/utils.js';
 import type { CcRequestConfigPartial } from '../../../types/request.types.js';
 import type { CcApiClient } from '../cc-api-client.js';
 import { GetOrganisationSummaryCommand } from '../commands/organisation/get-organisation-summary-command.js';
@@ -456,46 +457,4 @@ export class ResourceIdResolver {
 
 function getAddonIdType(id: string): AddonIdType {
   return id.startsWith('addon_') ? 'ADDON_ID' : 'REAL_ADDON_ID';
-}
-
-/**
- * Waits for a promise shared with other callers, unless the signal of this caller aborts first.
- *
- * Aborting only stops this caller from waiting, and rejects it with the reason of its signal, as
- * `fetch()` does. The promise goes on for the other callers.
- *
- * @param promise - The shared promise to wait for
- * @param signal - The signal of this caller
- * @param onAbort - Called once this caller stopped waiting because its signal aborted
- */
-function waitUnlessAborted<T>(promise: Promise<T>, signal: AbortSignal | undefined, onAbort?: () => void): Promise<T> {
-  if (signal == null) {
-    return promise;
-  }
-
-  return new Promise((resolve, reject) => {
-    const abort = (): void => {
-      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- an abort rejects with whatever the caller aborted with, like `fetch()` does
-      reject(signal.reason);
-      onAbort?.();
-    };
-
-    if (signal.aborted) {
-      abort();
-      return;
-    }
-
-    signal.addEventListener('abort', abort, { once: true });
-    promise.then(
-      (value) => {
-        signal.removeEventListener('abort', abort);
-        resolve(value);
-      },
-      (error: unknown) => {
-        signal.removeEventListener('abort', abort);
-        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the error of the shared promise, passed on as is
-        reject(error);
-      },
-    );
-  });
 }
