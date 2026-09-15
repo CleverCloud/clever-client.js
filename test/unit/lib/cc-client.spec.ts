@@ -562,6 +562,62 @@ describe('clever-client', () => {
         expect(spy.mock.calls[0][0]).toBe(err);
       });
     });
+
+    it('should call `onError` hook once for an error rejecting nested `send()` calls', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = simpleCommand(get('/path/subPath'));
+      // what the cc-api client does when it resolves an id before preparing a command
+      vi.spyOn(client, '_transformCommandParams').mockImplementationOnce(async () => {
+        await client.send(simpleCommand(get('/path/inner')));
+        return undefined;
+      });
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/inner' })
+        .respond({ status: 500, body: 'A server error occurred' });
+
+      await expectPromiseThrows(client.send(command), (err) => {
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.mock.calls[0][0]).toBe(err);
+      });
+    });
+
+    it('should call `onError` hook once for an error rejecting concurrent `send()` calls', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      // concurrent identical GET requests share one fetch, so a network failure rejects them with one error
+      vi.spyOn(globalThis, 'fetch').mockImplementation(() => Promise.reject(new TypeError('Failed to fetch')));
+
+      const results = await Promise.allSettled([
+        client.send(simpleCommand(get('/path/subPath'))),
+        client.send(simpleCommand(get('/path/subPath'))),
+      ]);
+      const [error1, error2] = results.map((result) => (result as PromiseRejectedResult).reason as unknown);
+
+      expect(error1).toBe(error2);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toBe(error1);
+    });
+
+    it('should call `onError` hook for every `send()` failing with an error of its own', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 500, body: 'A server error occurred' });
+
+      const results = await Promise.allSettled([
+        client.send(simpleCommand(get('/path/subPath'))),
+        client.send(simpleCommand(get('/path/subPath'))),
+      ]);
+
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy.mock.calls.map(([error]) => error as unknown)).toEqual(
+        results.map((result) => (result as PromiseRejectedResult).reason as unknown),
+      );
+    });
   });
 
   describe('composite command', () => {
