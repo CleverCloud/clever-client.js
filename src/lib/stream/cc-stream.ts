@@ -210,6 +210,12 @@ export class CcStream {
       this.#debugLog(`Forging HTTP request`);
       const request = await this.#requestFactory();
 
+      // close() does not stop the request factory, and a closed stream must not connect
+      if (this.#state !== 'connecting') {
+        this.#debugLog('Request forged for a stream no longer connecting', { state: this.#state });
+        return;
+      }
+
       this.#watchRequestSignal(request.signal);
       this.#abortController = new AbortController();
       if (request.signal != null) {
