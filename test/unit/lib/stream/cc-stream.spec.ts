@@ -681,6 +681,30 @@ describe('cc-stream', () => {
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
     });
 
+    it('resuming stream while waiting to retry should connect once', async () => {
+      const spiedStream = createAndSpyStream(
+        { url: '/' },
+        // no heartbeat timeout, so that only the retry could reconnect the open stream
+        { retry: { ...RETRY, initRetryTimeout: 200 }, heartbeatPeriod: 1_000 },
+      );
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 500, body: { message: '500' } });
+
+      void spiedStream.start();
+      await spiedStream.verifyCounts({ error: 1 }, 50);
+
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [HEARTBEAT], delayBetween: 10 });
+      spiedStream.stream.resume();
+      await spiedStream.verifyCounts({ request: 2, open: 1 }, 100);
+
+      // past the retry the error scheduled
+      await sleep(250);
+      await spiedStream.verifyCounts({ request: 2, open: 1, error: 1, failure: 0 });
+    });
+
     it('[error 500 + error 500 + events] should be retried and succeed', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
       await newScenario()
