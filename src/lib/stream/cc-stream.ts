@@ -118,6 +118,8 @@ export class CcStream {
     }
 
     this.#debugLog('Resuming stream', { previousState: this.#state });
+    // a stream waiting to retry is paused too, and its retry would start a second connection
+    clearTimeout(this.#retryTimeoutId ?? undefined);
     void this.#start();
   }
 
