@@ -35,6 +35,7 @@ export class CcStream {
   #state: CcStreamState = 'init';
   #eventTarget = new EventTarget();
   #abortController: AbortController | undefined;
+  #requestSignal: AbortSignal | undefined;
   #closeDeferred: Deferred<CcStreamCloseReason> | undefined;
   #lastReceivedMessageId: string | undefined;
   #lastContact: Date | undefined;
@@ -209,6 +210,7 @@ export class CcStream {
       this.#debugLog(`Forging HTTP request`);
       const request = await this.#requestFactory();
 
+      this.#watchRequestSignal(request.signal);
       this.#abortController = new AbortController();
       if (request.signal != null) {
         combineWithSignal(this.#abortController, request.signal);
@@ -275,9 +277,36 @@ export class CcStream {
     if (clearListeners) {
       this.#eventListeners.forEach(({ type, callback }) => this.#eventTarget.removeEventListener(type, callback));
       this.#eventListeners.clear();
+      this.#requestSignal?.removeEventListener('abort', this.#onRequestSignalAbort);
     }
     this.#abortController?.abort();
   }
+
+  /**
+   * Listens to the signal of the request, which is usually the same one from an attempt to the next.
+   *
+   * @param signal - The signal of the request the current attempt sends
+   */
+  #watchRequestSignal(signal: AbortSignal | undefined): void {
+    if (signal === this.#requestSignal) {
+      return;
+    }
+    this.#requestSignal?.removeEventListener('abort', this.#onRequestSignalAbort);
+    this.#requestSignal = signal;
+    this.#requestSignal?.addEventListener('abort', this.#onRequestSignalAbort);
+  }
+
+  /**
+   * When the signal of the request aborts.
+   *
+   * While connecting or open, the signal aborts the connection, which ends in #onError. Between two connections,
+   * waiting to retry or paused, nothing else would notice it before the next attempt.
+   */
+  #onRequestSignalAbort = (): void => {
+    if (this.#state === 'paused') {
+      this.#closeWithError(this.#requestSignal!.reason);
+    }
+  };
 
   /**
    * When SSE is opened
@@ -366,6 +395,11 @@ export class CcStream {
       this.#debugLog('Close event ignored', { currentState: this.#state });
       return;
     }
+    // the body stops being read when the signal of the request aborts, which is not the server closing it
+    if (this.#abortController?.signal.aborted === true) {
+      this.#onError(this.#abortController.signal.reason);
+      return;
+    }
     this.#debugLog('Stream closed unexpectedly by server', {
       state: this.#state,
       lastMessageId: this.#lastReceivedMessageId,
@@ -385,6 +419,13 @@ export class CcStream {
     }
 
     this.#debugLog('Stream error occurred', error);
+
+    // Reconnecting would undo what the consumer asked for, whatever failed on the way. The abort may not be what
+    // failed: a request factory rejecting after it, or a signal aborting with a reason that is a CcClientError.
+    if (this.#requestSignal?.aborted === true) {
+      this.#closeWithError(this.#requestSignal.reason);
+      return;
+    }
 
     this.#cleanup();
 
@@ -420,14 +461,23 @@ export class CcStream {
         void this.#start();
       }, exponentialBackoffDelay);
     } else {
-      this.#debugLog('Stream permanently closed due to error', {
-        finalRetryCount: this.#retryCount,
-        error: wrappedError,
-      });
-      this.#state = 'closed';
-      this.#cleanup(true);
-      this.#closeDeferred?.reject(wrappedError);
+      this.#closeWithError(wrappedError);
     }
+  }
+
+  /**
+   * Closes the stream for good, rejecting the promise start() returned.
+   *
+   * @param error - The error start() rejects with
+   */
+  #closeWithError(error: unknown): void {
+    this.#debugLog('Stream permanently closed due to error', {
+      finalRetryCount: this.#retryCount,
+      error,
+    });
+    this.#state = 'closed';
+    this.#cleanup(true);
+    this.#closeDeferred?.reject(error);
   }
 
   #canRetry(error: unknown): boolean {
