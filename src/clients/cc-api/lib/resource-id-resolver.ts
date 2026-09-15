@@ -7,6 +7,15 @@ import type { ResourceId } from '../types/cc-api.types.js';
 import type { AddonIdType, ResourceIdIndex, Store } from '../types/resource-id-resolver.types.js';
 
 /**
+ * A summary fetch shared by every caller resolving an id while it is pending.
+ */
+interface PendingSummaryFetch {
+  promise: Promise<void>;
+  abortController: AbortController;
+  callerCount: number;
+}
+
+/**
  * Utility class to resolve and translate between different types of resource IDs in the Clever Cloud API.
  * Maintains a cached index of ID mappings using a configurable storage backend.
  *
@@ -49,19 +58,33 @@ export class ResourceIdResolver {
 
   /**
    * The summary fetch currently in flight, shared by every concurrent caller so a burst of
-   * unresolved ids only costs one request. Cleared once it settles.
+   * unresolved ids only costs one request. Cleared once it settles, or once every caller left it.
    */
-  #pendingFetch: Promise<void> | undefined;
+  #pendingFetch: PendingSummaryFetch | undefined;
+
+  /**
+   * Gets the signal a caller aborts with, from the request configuration it resolves an id with
+   */
+  #getRequestSignal: (requestConfig: CcRequestConfigPartial | undefined) => AbortSignal | undefined;
 
   /**
    * Creates a new ResourceIdResolver instance
    *
    * @param client - API client to use for fetching resource information
    * @param indexStore - Storage backend for caching resource mappings
+   * @param getRequestSignal - Gets the signal a caller aborts with, from its request configuration. The
+   * client passes one that falls back to its default signal. Defaults to the signal of the configuration.
    */
-  constructor(client: CcApiClient, indexStore: Store<ResourceIdIndex>) {
+  constructor(
+    client: CcApiClient,
+    indexStore: Store<ResourceIdIndex>,
+    getRequestSignal: (requestConfig: CcRequestConfigPartial | undefined) => AbortSignal | undefined = (
+      requestConfig,
+    ) => requestConfig?.signal,
+  ) {
     this.#client = client;
     this.#indexStore = indexStore;
+    this.#getRequestSignal = getRequestSignal;
   }
 
   /**
@@ -316,14 +339,64 @@ export class ResourceIdResolver {
    * The first caller's `requestConfig` applies to the shared request. That config cannot change
    * the response the others get, because this fetch always forces `cache: { mode: 'reload' }`.
    *
+   * Its signal is the exception. The shared request runs on a signal of its own, and each caller
+   * stops waiting when its own signal aborts. Once every caller left, the request is aborted, like the
+   * request dedupe does: nobody waits for its result, and its failure has nobody to be reported to.
+   *
+   * A caller aborts with the signal its own requests would carry: the signal of its configuration, or
+   * else the default signal of the client. A caller relying on that default signal leaves when it aborts.
+   *
    * @param requestConfig - Optional request configuration
    */
   async #fetchAndStore(requestConfig?: CcRequestConfigPartial): Promise<void> {
-    this.#pendingFetch ??= this.#fetchSummaryAndStore(requestConfig).finally(() => {
-      this.#pendingFetch = undefined;
-    });
+    const signal = this.#getRequestSignal(requestConfig);
 
-    return this.#pendingFetch;
+    // a caller that already gave up must not start a request nobody waits for
+    signal?.throwIfAborted();
+
+    const pendingFetch = this.#pendingFetch ?? this.#startFetch(requestConfig);
+    pendingFetch.callerCount++;
+
+    return waitUnlessAborted(pendingFetch.promise, signal, () => this.#leaveFetch(pendingFetch));
+  }
+
+  /**
+   * Starts the summary fetch every caller arriving while it is pending shares.
+   *
+   * @param requestConfig - The request configuration of the caller starting it
+   */
+  #startFetch(requestConfig?: CcRequestConfigPartial): PendingSummaryFetch {
+    // the request belongs to every caller joining it, so the signal of the first one must not abort it
+    const abortController = new AbortController();
+    const pendingFetch: PendingSummaryFetch = {
+      promise: this.#fetchSummaryAndStore({ ...requestConfig, signal: abortController.signal }).finally(() => {
+        // once every caller left, a new fetch may already have taken its place
+        if (this.#pendingFetch === pendingFetch) {
+          this.#pendingFetch = undefined;
+        }
+      }),
+      abortController,
+      callerCount: 0,
+    };
+    this.#pendingFetch = pendingFetch;
+
+    return pendingFetch;
+  }
+
+  /**
+   * Counts a caller that stopped waiting for the summary fetch, and aborts the fetch once none is left.
+   *
+   * @param pendingFetch - The fetch the caller was waiting for
+   */
+  #leaveFetch(pendingFetch: PendingSummaryFetch): void {
+    pendingFetch.callerCount--;
+    if (pendingFetch.callerCount === 0) {
+      // nobody waits for it anymore: the next caller must start a new fetch rather than join this one
+      if (this.#pendingFetch === pendingFetch) {
+        this.#pendingFetch = undefined;
+      }
+      pendingFetch.abortController.abort();
+    }
   }
 
   /**
@@ -383,4 +456,46 @@ export class ResourceIdResolver {
 
 function getAddonIdType(id: string): AddonIdType {
   return id.startsWith('addon_') ? 'ADDON_ID' : 'REAL_ADDON_ID';
+}
+
+/**
+ * Waits for a promise shared with other callers, unless the signal of this caller aborts first.
+ *
+ * Aborting only stops this caller from waiting, and rejects it with the reason of its signal, as
+ * `fetch()` does. The promise goes on for the other callers.
+ *
+ * @param promise - The shared promise to wait for
+ * @param signal - The signal of this caller
+ * @param onAbort - Called once this caller stopped waiting because its signal aborted
+ */
+function waitUnlessAborted<T>(promise: Promise<T>, signal: AbortSignal | undefined, onAbort?: () => void): Promise<T> {
+  if (signal == null) {
+    return promise;
+  }
+
+  return new Promise((resolve, reject) => {
+    const abort = (): void => {
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- an abort rejects with whatever the caller aborted with, like `fetch()` does
+      reject(signal.reason);
+      onAbort?.();
+    };
+
+    if (signal.aborted) {
+      abort();
+      return;
+    }
+
+    signal.addEventListener('abort', abort, { once: true });
+    promise.then(
+      (value) => {
+        signal.removeEventListener('abort', abort);
+        resolve(value);
+      },
+      (error: unknown) => {
+        signal.removeEventListener('abort', abort);
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the error of the shared promise, passed on as is
+        reject(error);
+      },
+    );
+  });
 }

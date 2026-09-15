@@ -548,6 +548,26 @@ describe('clever-client', () => {
       });
     });
 
+    it('should not call `onError` hook when the request is aborted through the default signal of the client', async () => {
+      const spy = vi.fn();
+      const abortController = new AbortController();
+      const client = createClient({
+        hooks: { onError: spy },
+        defaultRequestConfig: { signal: abortController.signal },
+      });
+      const command = simpleCommand(get('/path/subPath'));
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' }, 50);
+
+      const promise = client.send(command);
+      setTimeout(() => abortController.abort(), 10);
+
+      await expectPromiseThrows(promise, (err: DOMException) => {
+        expect(err).toBe(abortController.signal.reason);
+        expect(spy).not.toHaveBeenCalled();
+      });
+    });
+
     it('should call `onError` hook when the request times out', async () => {
       const spy = vi.fn();
       const client = createClient({ hooks: { onError: spy } });
