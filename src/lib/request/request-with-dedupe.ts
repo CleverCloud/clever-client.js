@@ -29,10 +29,16 @@ export async function requestWithDedupe<CommandOutput>(
     return handler<CommandOutput>(request);
   }
 
-  const cacheKey = calculateCacheKey(request);
+  const cacheKey = getDedupeKey(request);
   const pendingFetch = PENDING_FETCH_CACHE.get(cacheKey) ?? startFetch(cacheKey, request, handler);
 
   return joinFetch(cacheKey, pendingFetch, request.signal) as Promise<CcResponse<CommandOutput>>;
+}
+
+function getDedupeKey(request: CcRequest): string {
+  // a fetch failing before any response rejects every caller with the same error, built from the request
+  // of the first one: callers must agree on `isIdempotent`, which `CcNetworkError.isWorthRetrying()` reads
+  return JSON.stringify([calculateCacheKey(request), request.isIdempotent]);
 }
 
 function startFetch(cacheKey: string, request: CcRequest, handler: RequestAdapter): PendingFetch {

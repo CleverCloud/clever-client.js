@@ -1,7 +1,7 @@
 import type { NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CcClientError, CcRequestError } from '../../../../src/lib/error/cc-client-errors.js';
+import { CcClientError, CcNetworkError, CcRequestError } from '../../../../src/lib/error/cc-client-errors.js';
 import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../../src/lib/request/query-params.js';
 import { sendRequest as originalSendRequest } from '../../../../src/lib/request/request.js';
@@ -800,6 +800,35 @@ describe('request', () => {
       expect((aborted as PromiseRejectedResult).reason).toBe(abortController.signal.reason);
       expect(result.status).toBe('fulfilled');
       expect((result as PromiseFulfilledResult<CcResponse<unknown>>).value.body).toEqual(responseBody);
+    });
+
+    it('concurrent requests with different idempotence should make separate fetch calls', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 });
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+
+      await Promise.all([
+        sendRequest({ url: '/api/test', isIdempotent: true }),
+        sendRequest({ url: '/api/test', isIdempotent: false }),
+      ]);
+
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('a network error should tell each caller whether its own request is worth retrying', async () => {
+      vi.spyOn(globalThis, 'fetch').mockImplementation(() => Promise.reject(new TypeError('Failed to fetch')));
+
+      const [idempotent, notIdempotent] = await Promise.allSettled([
+        sendRequest({ url: '/api/test', isIdempotent: true }),
+        sendRequest({ url: '/api/test', isIdempotent: false }),
+      ]);
+
+      const idempotentError = (idempotent as PromiseRejectedResult).reason as CcNetworkError;
+      const notIdempotentError = (notIdempotent as PromiseRejectedResult).reason as CcNetworkError;
+      expect(idempotentError).toBeInstanceOf(CcNetworkError);
+      expect(idempotentError.isWorthRetrying()).toBe(true);
+      expect(notIdempotentError).toBeInstanceOf(CcNetworkError);
+      expect(notIdempotentError.isWorthRetrying()).toBe(false);
     });
 
     it('concurrent event stream requests should make separate fetch calls', async () => {
