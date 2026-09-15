@@ -53,6 +53,7 @@ export class CcApiClient extends CcClient<CcApiType> {
     this.#resourceIdResolver = new ResourceIdResolver(
       this,
       config?.resourceIdResolverStore ?? new MemoryStore<ResourceIdIndex>(),
+      (requestConfig) => this._getRequestSignal(requestConfig),
     );
   }
 

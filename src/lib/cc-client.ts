@@ -149,8 +149,7 @@ export class CcClient<Api extends string> {
     }
 
     // an abort is what the caller asked for, not a failure to report
-    const signal = requestConfig?.signal ?? this.#defaultRequestsConfig.signal;
-    if (signal?.aborted === true) {
+    if (this._getRequestSignal(requestConfig)?.aborted === true) {
       return;
     }
 
@@ -164,6 +163,17 @@ export class CcClient<Api extends string> {
     }
 
     void this.#hooks.onError(error);
+  }
+
+  /**
+   * Gets the signal the requests sent with the given configuration abort with: the signal of that
+   * configuration, or else the default signal of the client.
+   *
+   * @param requestConfig - The request configuration a command is sent with
+   * @returns The signal, if any
+   */
+  protected _getRequestSignal(requestConfig: CcRequestConfigPartial | undefined): AbortSignal | undefined {
+    return requestConfig?.signal ?? this.#defaultRequestsConfig.signal;
   }
 
   /**
