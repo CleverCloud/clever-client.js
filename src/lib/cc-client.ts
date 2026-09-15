@@ -124,7 +124,19 @@ export class CcClient<Api extends string> {
     command: Command<Api, CommandInput, CommandOutput>,
     requestConfig?: CcRequestConfigPartial,
   ): Promise<CommandOutput> {
-    return this._send(command, requestConfig, true);
+    try {
+      return await this._send(command, requestConfig, true);
+    } catch (e) {
+      // reported here, not in `_send`: composers go through `_send` too, so a composite would report an
+      // inner error once per level, and even an error it recovered from.
+      // An abort is what the caller asked for, not a failure to report.
+      const signal = requestConfig?.signal ?? this.#defaultRequestsConfig.signal;
+      if (this.#hooks.onError != null && signal?.aborted !== true) {
+        void this.#hooks.onError(e);
+      }
+
+      throw e;
+    }
   }
 
   /**
@@ -142,26 +154,16 @@ export class CcClient<Api extends string> {
     requestConfig: CcRequestConfigPartial | undefined,
     isIdempotentCeiling: boolean,
   ): Promise<CommandOutput> {
-    try {
-      if (command instanceof CompositeCommand) {
-        return await this._compose(command, requestConfig, isIdempotentCeiling);
-      }
-
-      const requestParams = await this._getCommandRequestParams(command, requestConfig);
-      // a caller can only replay what it sent, so a command is no more replayable than what encloses it
-      const isIdempotent = isIdempotentCeiling && command.isIdempotent();
-      const request = await this._prepareRequest(command, requestParams, requestConfig, isIdempotent);
-      const response = await sendRequest<CommandOutput>(request);
-      return await this._handleResponse(response, request, command);
-    } catch (e) {
-      // an abort is what the caller asked for, not a failure to report
-      const signal = requestConfig?.signal ?? this.#defaultRequestsConfig.signal;
-      if (this.#hooks.onError != null && signal?.aborted !== true) {
-        void this.#hooks.onError(e);
-      }
-
-      throw e;
+    if (command instanceof CompositeCommand) {
+      return this._compose(command, requestConfig, isIdempotentCeiling);
     }
+
+    const requestParams = await this._getCommandRequestParams(command, requestConfig);
+    // a caller can only replay what it sent, so a command is no more replayable than what encloses it
+    const isIdempotent = isIdempotentCeiling && command.isIdempotent();
+    const request = await this._prepareRequest(command, requestParams, requestConfig, isIdempotent);
+    const response = await sendRequest<CommandOutput>(request);
+    return this._handleResponse(response, request, command);
   }
 
   /**

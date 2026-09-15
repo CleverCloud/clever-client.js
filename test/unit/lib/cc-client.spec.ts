@@ -695,6 +695,52 @@ describe('clever-client', () => {
       expect(request.isIdempotent).toBe(true);
     });
 
+    it('should call `onError` hook once when a request sent by the composer fails', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = new (class MyCommand extends TestCompositeCommand {
+        override async compose(
+          _params: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[0],
+          composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
+        ) {
+          await composer.send(simpleCommand(get('/path/subPath')));
+          return Promise.resolve('result');
+        }
+      })();
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 500, body: 'A server error occurred' });
+
+      await expectPromiseThrows(client.send(command), (err) => {
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.mock.calls[0][0]).toBe(err);
+      });
+    });
+
+    it('should not call `onError` hook when the composer recovers from a failing request', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = new (class MyCommand extends TestCompositeCommand {
+        override async compose(
+          _params: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[0],
+          composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
+        ) {
+          try {
+            await composer.send(simpleCommand(get('/path/subPath')));
+            return 'result';
+          } catch {
+            return 'fallback';
+          }
+        }
+      })();
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 404, body: 'Not found' });
+
+      expect(await client.send(command)).toBe('fallback');
+      expect(spy).not.toHaveBeenCalled();
+    });
+
     it('should not call `onError` hook when a request sent by the composer is aborted', async () => {
       const spy = vi.fn();
       const client = createClient({ hooks: { onError: spy } });
