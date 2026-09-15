@@ -340,6 +340,64 @@ export function combineWithSignal(abortController: AbortController, signal: Abor
   }
 }
 
+/**
+ * Waits for a promise shared by several callers, until it settles or the signal of this caller aborts.
+ *
+ * Aborting only stops this caller from waiting. It rejects with the reason of its signal, as `fetch()`
+ * does, and the promise goes on for the other callers. What becomes of the shared work once nobody
+ * waits for it is up to `onAbort`.
+ *
+ * @param promise - The shared promise to wait for
+ * @param signal - The signal of this caller, if any
+ * @param onAbort - Called once this caller stopped waiting because its signal aborted, including when it
+ * was aborted already
+ * @returns A promise settling like `promise`, unless the signal aborts first
+ *
+ * @example
+ * // every caller shares the fetch, and the last one to leave aborts it
+ * callerCount++;
+ * return waitUnlessAborted(sharedFetch, signal, () => {
+ *   if (--callerCount === 0) {
+ *     sharedAbortController.abort();
+ *   }
+ * });
+ */
+export function waitUnlessAborted<T>(
+  promise: Promise<T>,
+  signal: AbortSignal | undefined,
+  onAbort?: () => void,
+): Promise<T> {
+  if (signal == null) {
+    return promise;
+  }
+
+  return new Promise((resolve, reject) => {
+    const abort = (): void => {
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- an abort rejects with whatever the caller aborted with, like `fetch()` does
+      reject(signal.reason);
+      onAbort?.();
+    };
+
+    if (signal.aborted) {
+      abort();
+      return;
+    }
+
+    signal.addEventListener('abort', abort, { once: true });
+    promise.then(
+      (value) => {
+        signal.removeEventListener('abort', abort);
+        resolve(value);
+      },
+      (error: unknown) => {
+        signal.removeEventListener('abort', abort);
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the error of the shared promise, passed on as is
+        reject(error);
+      },
+    );
+  });
+}
+
 export function mergeRequestConfig(
   baseConfig: CcRequestConfig,
   config: CcRequestConfigPartial | undefined,

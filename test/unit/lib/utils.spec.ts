@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   combineWithSignal,
   isAbsoluteUrl,
@@ -13,6 +13,7 @@ import {
   sortBy,
   toArray,
   unknownToClient,
+  waitUnlessAborted,
 } from '../../../src/lib/utils.js';
 
 describe('Utils', () => {
@@ -363,6 +364,81 @@ describe('Utils', () => {
       });
 
       expect(result).toBe('ok');
+    });
+  });
+
+  describe('waitUnlessAborted', () => {
+    /** A promise that settles only when told to. */
+    function deferred<T>(): { promise: Promise<T>; resolve: (value: T) => void } {
+      let resolve: (value: T) => void = () => undefined;
+      const promise = new Promise<T>((r) => {
+        resolve = r;
+      });
+      return { promise, resolve };
+    }
+
+    it('should resolve with the value of the promise when the signal does not abort', async () => {
+      const onAbort = vi.fn();
+
+      await expect(waitUnlessAborted(Promise.resolve('value'), new AbortController().signal, onAbort)).resolves.toBe(
+        'value',
+      );
+      expect(onAbort).not.toHaveBeenCalled();
+    });
+
+    it('should reject with the error of the promise when the signal does not abort', async () => {
+      const error = new Error('boom');
+
+      await expect(waitUnlessAborted(Promise.reject(error), new AbortController().signal)).rejects.toBe(error);
+    });
+
+    it('should settle like the promise when there is no signal', async () => {
+      await expect(waitUnlessAborted(Promise.resolve('value'), undefined)).resolves.toBe('value');
+    });
+
+    it('should reject with the reason of the signal, and call `onAbort`, when the signal aborts first', async () => {
+      const abortController = new AbortController();
+      const onAbort = vi.fn();
+      const reason = new Error('navigated away');
+
+      const promise = waitUnlessAborted(deferred<string>().promise, abortController.signal, onAbort);
+      abortController.abort(reason);
+
+      await expect(promise).rejects.toBe(reason);
+      expect(onAbort).toHaveBeenCalledTimes(1);
+    });
+
+    it('should reject with the reason of the signal, and call `onAbort`, when the signal is aborted already', async () => {
+      const onAbort = vi.fn();
+      const reason = new Error('navigated away');
+
+      await expect(waitUnlessAborted(deferred<string>().promise, AbortSignal.abort(reason), onAbort)).rejects.toBe(
+        reason,
+      );
+      expect(onAbort).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call `onAbort` when the signal aborts once the promise settled', async () => {
+      const abortController = new AbortController();
+      const onAbort = vi.fn();
+
+      await waitUnlessAborted(Promise.resolve('value'), abortController.signal, onAbort);
+      abortController.abort();
+
+      expect(onAbort).not.toHaveBeenCalled();
+    });
+
+    it('should let the promise go on for the other callers when one aborts', async () => {
+      const shared = deferred<string>();
+      const abortController = new AbortController();
+
+      const aborted = waitUnlessAborted(shared.promise, abortController.signal);
+      const kept = waitUnlessAborted(shared.promise, new AbortController().signal);
+      abortController.abort();
+      shared.resolve('value');
+
+      await expect(aborted).rejects.toBe(abortController.signal.reason);
+      await expect(kept).resolves.toBe('value');
     });
   });
 

@@ -1,5 +1,5 @@
 import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.js';
-import { calculateCacheKey } from '../utils.js';
+import { calculateCacheKey, waitUnlessAborted } from '../utils.js';
 
 const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
 
@@ -58,31 +58,7 @@ function joinFetch(
 ): Promise<CcResponse<unknown>> {
   pendingFetch.callerCount++;
 
-  return new Promise((resolve, reject) => {
-    const onAbort = (): void => {
-      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- an abort rejects with whatever the caller aborted with, like `fetch()` does
-      reject(signal?.reason);
-      leaveFetch(cacheKey, pendingFetch);
-    };
-
-    if (signal?.aborted) {
-      onAbort();
-      return;
-    }
-
-    signal?.addEventListener('abort', onAbort, { once: true });
-    pendingFetch.promise.then(
-      (response) => {
-        signal?.removeEventListener('abort', onAbort);
-        resolve(response);
-      },
-      (error: unknown) => {
-        signal?.removeEventListener('abort', onAbort);
-        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the error of the fetch, passed on as is
-        reject(error);
-      },
-    );
-  });
+  return waitUnlessAborted(pendingFetch.promise, signal, () => leaveFetch(cacheKey, pendingFetch));
 }
 
 function leaveFetch(cacheKey: string, pendingFetch: PendingFetch): void {
