@@ -264,6 +264,14 @@ class SingleTimer {
  * Error thrown when polling is manually stopped using the stop() method.
  */
 export class PollingInterruptedError extends Error {
+  static {
+    Object.defineProperty(this.prototype, 'name', {
+      value: 'PollingInterruptedError',
+      writable: true,
+      configurable: true,
+    });
+  }
+
   constructor() {
     super('Interrupted');
   }
@@ -273,6 +281,10 @@ export class PollingInterruptedError extends Error {
  * Error thrown when polling exceeds its specified timeout duration.
  */
 export class PollingTimeoutError extends Error {
+  static {
+    Object.defineProperty(this.prototype, 'name', { value: 'PollingTimeoutError', writable: true, configurable: true });
+  }
+
   constructor() {
     super('Timeout');
   }
