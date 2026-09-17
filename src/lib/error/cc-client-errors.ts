@@ -265,6 +265,12 @@ export function isNetworkErrorCode(value: unknown): value is NetworkErrorCode {
  * Extends the native Error class with an error code system.
  */
 export class CcClientError extends Error {
+  // Set on the prototype, as the native errors do, so that `name` is not an own enumerable property
+  // and stays out of `Object.keys()` and `JSON.stringify()`. The literal survives minification.
+  static {
+    Object.defineProperty(this.prototype, 'name', { value: 'CcClientError', writable: true, configurable: true });
+  }
+
   #code: string;
 
   /**
@@ -275,7 +281,8 @@ export class CcClientError extends Error {
    * @param cause - Optional underlying cause of the error
    */
   constructor(message: string, code: string, cause?: unknown) {
-    super(message, { cause });
+    // `{ cause: undefined }` would still create an own `cause` property
+    super(message, cause === undefined ? undefined : { cause });
     this.#code = code;
   }
 
@@ -294,6 +301,10 @@ export class CcClientError extends Error {
  * Extends CcClientError with request context information.
  */
 export class CcRequestError extends CcClientError {
+  static {
+    Object.defineProperty(this.prototype, 'name', { value: 'CcRequestError', writable: true, configurable: true });
+  }
+
   #request: CcRequest;
 
   /**
@@ -329,6 +340,10 @@ export class CcRequestError extends CcClientError {
  * another.
  */
 export class CcNetworkError extends CcRequestError {
+  static {
+    Object.defineProperty(this.prototype, 'name', { value: 'CcNetworkError', writable: true, configurable: true });
+  }
+
   #networkCode: NetworkErrorCode | null;
 
   /**
@@ -421,6 +436,10 @@ export class CcNetworkError extends CcRequestError {
  * from the server (non-2xx status codes).
  */
 export class CcHttpError extends CcRequestError {
+  static {
+    Object.defineProperty(this.prototype, 'name', { value: 'CcHttpError', writable: true, configurable: true });
+  }
+
   #response: CcResponse<unknown>;
 
   /**
