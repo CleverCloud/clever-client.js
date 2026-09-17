@@ -8,6 +8,7 @@ import { QueryParams } from '../../../../src/lib/request/query-params.js';
 import { requestWithCache } from '../../../../src/lib/request/request-with-cache.js';
 import { CcStream } from '../../../../src/lib/stream/cc-stream.js';
 import type { CcStreamConfig } from '../../../../src/lib/stream/cc-stream.types.js';
+import { Deferred } from '../../../../src/lib/utils.js';
 import type { CcRequest } from '../../../../src/types/request.types.js';
 import { sleep } from '../../../lib/timers.js';
 import type { SpiedStream, Stubs } from './cc-stream.spec.types.js';
@@ -265,6 +266,43 @@ describe('cc-stream', () => {
     await spiedStream.verifyCounts({ open: 1 });
   });
 
+  it('streams opened at the same time on the same URL should each receive every event', async () => {
+    await newScenario()
+      .when({ method: 'GET', path: '/' })
+      .respond({ status: 200, events: [MESSAGE, MESSAGE, END_OF_STREAM], delayBetween: 10 });
+
+    const streams = [1, 2].map(() => {
+      const eventStub = vi.fn();
+      const stream = new CcStream(
+        () => ({
+          isCorsEnabled: false,
+          timeout: 0,
+          cache: null,
+          isDebugEnabled: false,
+          isIdempotent: true,
+          method: 'GET',
+          url: `${newScenario.mockClient.baseUrl}/`,
+        }),
+        { retry: null, isDebugEnabled: false, heartbeatPeriod: 20, healthcheckInterval: 10 },
+      ).on('EVENT', (evt) => {
+        eventStub(evt.data);
+      });
+      return { stream, eventStub };
+    });
+
+    try {
+      // a stream body can only be read once, so each stream needs a connection of its own
+      const closeReasons = await Promise.all(streams.map(({ stream }) => stream.start()));
+
+      expect(closeReasons).toEqual([{ type: 'UNTIL_REACHED' }, { type: 'UNTIL_REACHED' }]);
+      streams.forEach(({ eventStub }) => {
+        expect(eventStub).toHaveBeenCalledTimes(2);
+      });
+    } finally {
+      streams.forEach(({ stream }) => stream.close({ type: 'END_OF_TEST' }));
+    }
+  });
+
   it('unknown url should lead to failure with CcHttpError', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
 
@@ -386,6 +424,47 @@ describe('cc-stream', () => {
     await spiedStream.verifyCounts({ open: 1, error: 0, event: 0, failure: 0 });
   });
 
+  it('closing stream while forging the request should not connect', async () => {
+    const requestForged = new Deferred<void>();
+    const stream = new CcStream(
+      async () => {
+        await requestForged.promise;
+        return {
+          isCorsEnabled: false,
+          timeout: 0,
+          cache: null,
+          isDebugEnabled: false,
+          isIdempotent: true,
+          method: 'GET',
+          url: `${newScenario.mockClient.baseUrl}/`,
+        };
+      },
+      { retry: null, isDebugEnabled: false, heartbeatPeriod: 20, healthcheckInterval: 10 },
+    );
+
+    try {
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [HEARTBEAT], delayBetween: 10 })
+        .thenCall(async () => {
+          const closeReason = stream.start();
+          stream.close({ type: 'END_OF_TEST' });
+          requestForged.resolve();
+
+          expect(await closeReason).toEqual({ type: 'END_OF_TEST' });
+          // long enough for the request to reach the mock and the stream to open
+          await sleep(50);
+        })
+        .verify((calls) => {
+          expect(calls.count).toBe(0);
+        });
+
+      expect(stream.state).toBe('closed');
+    } finally {
+      stream.close({ type: 'END_OF_TEST' });
+    }
+  });
+
   it('resume stream should run request with last event ID header', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
     await newScenario()
@@ -446,6 +525,68 @@ describe('cc-stream', () => {
 
       await spiedStream.verifyCounts({ open: 1, error: 0, failure: 1 }, 50);
       expect((spiedStream.stubs.failure.mock.calls[0][0] as CcClientError).code).toBe('SSE_SERVER_ERROR');
+    });
+
+    it('request signal aborting while connecting should lead to a failure with its reason', async () => {
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+      const spiedStream = createAndSpyStream({ url: '/', signal: abortController.signal });
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [MESSAGE], delayBetween: 10 }, 100);
+
+      void spiedStream.start();
+      await sleep(20);
+      abortController.abort(reason);
+
+      await spiedStream.verifyCounts({ request: 1, open: 0, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBe(reason);
+    });
+
+    it('request signal aborted before start should lead to a failure with its reason', async () => {
+      const reason = new Error('navigated away');
+      const spiedStream = createAndSpyStream({ url: '/', signal: AbortSignal.abort(reason) });
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [MESSAGE, END_OF_STREAM], delayBetween: 10 });
+
+      void spiedStream.start();
+
+      await spiedStream.verifyCounts({ open: 0, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBe(reason);
+    });
+
+    it('request signal aborting while reading should lead to a failure with its reason', async () => {
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+      const spiedStream = createAndSpyStream({ url: '/', signal: abortController.signal });
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: Array.from({ length: 20 }, () => MESSAGE), delayBetween: 10 });
+
+      void spiedStream.start();
+      await spiedStream.verifyCounts({ open: 1 }, 50);
+      abortController.abort(reason);
+
+      await spiedStream.verifyCounts({ request: 1, open: 1, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBe(reason);
+    });
+
+    it('request signal aborting while paused should lead to a failure with its reason', async () => {
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+      const spiedStream = createAndSpyStream({ url: '/', signal: abortController.signal });
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [HEARTBEAT], delayBetween: 10 });
+
+      void spiedStream.start();
+      await spiedStream.verifyCounts({ open: 1 }, 50);
+      spiedStream.stream.pause();
+      abortController.abort(reason);
+
+      await spiedStream.verifyCounts({ request: 1, open: 1, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBe(reason);
     });
   });
 
@@ -538,6 +679,30 @@ describe('cc-stream', () => {
 
       await spiedStream.verifyCounts({ open: 0, error: 2, failure: 1 }, 150);
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
+    });
+
+    it('resuming stream while waiting to retry should connect once', async () => {
+      const spiedStream = createAndSpyStream(
+        { url: '/' },
+        // no heartbeat timeout, so that only the retry could reconnect the open stream
+        { retry: { ...RETRY, initRetryTimeout: 200 }, heartbeatPeriod: 1_000 },
+      );
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 500, body: { message: '500' } });
+
+      void spiedStream.start();
+      await spiedStream.verifyCounts({ error: 1 }, 50);
+
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [HEARTBEAT], delayBetween: 10 });
+      spiedStream.stream.resume();
+      await spiedStream.verifyCounts({ request: 2, open: 1 }, 100);
+
+      // past the retry the error scheduled
+      await sleep(250);
+      await spiedStream.verifyCounts({ request: 2, open: 1, error: 1, failure: 0 });
     });
 
     it('[error 500 + error 500 + events] should be retried and succeed', async () => {
@@ -677,6 +842,101 @@ describe('cc-stream', () => {
           body: { message: '500' },
         });
       await spiedStream.verifyCounts({ open: 1, event: 2, error: 2, failure: 1 }, 60);
+    });
+
+    it('request signal aborting while connecting should lead to a failure with its reason, without retry', async () => {
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+      const spiedStream = createAndSpyStream({ url: '/', signal: abortController.signal }, { retry: RETRY });
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [MESSAGE], delayBetween: 10 }, 100);
+
+      void spiedStream.start();
+      await sleep(20);
+      abortController.abort(reason);
+
+      // an abort is what the caller asked for, reconnecting would undo it
+      await spiedStream.verifyCounts({ request: 1, open: 0, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBe(reason);
+    });
+
+    it('request signal aborting while reading should lead to a failure with its reason, without retry', async () => {
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+      const spiedStream = createAndSpyStream({ url: '/', signal: abortController.signal }, { retry: RETRY });
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: Array.from({ length: 20 }, () => MESSAGE), delayBetween: 10 });
+
+      void spiedStream.start();
+      await spiedStream.verifyCounts({ open: 1 }, 50);
+      abortController.abort(reason);
+
+      await spiedStream.verifyCounts({ request: 1, open: 1, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBe(reason);
+    });
+
+    it('request signal aborting while waiting to retry should lead to a failure with its reason, right away', async () => {
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+      const spiedStream = createAndSpyStream(
+        { url: '/', signal: abortController.signal },
+        // a wait longer than the test waits for the failure
+        { retry: { ...RETRY, initRetryTimeout: 1_000 } },
+      );
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 500, body: { message: '500' } });
+
+      void spiedStream.start();
+      await spiedStream.verifyCounts({ error: 1 }, 50);
+      abortController.abort(reason);
+
+      await spiedStream.verifyCounts({ request: 1, error: 1, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBe(reason);
+    });
+
+    it('request signal aborting while forging the request should lead to a failure with its reason, without retry', async () => {
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+      // the first attempt opens, so that the stream knows the signal when the second one fails to forge its request
+      const spiedStream = createAndSpyStream(
+        { url: '/', signal: abortController.signal },
+        { retry: RETRY },
+        (attempt) => {
+          if (attempt === 1) {
+            return undefined;
+          }
+          abortController.abort(reason);
+          return networkError('ECONNRESET', true);
+        },
+      );
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: [MESSAGE] });
+
+      void spiedStream.start();
+
+      // the heartbeat times out the open connection, then the reconnection fails after the abort
+      await spiedStream.verifyCounts({ request: 2, open: 1, error: 1, failure: 1 }, 150);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBe(reason);
+    });
+
+    it('request signal aborting with a reason that can be retried should lead to a failure with it, without retry', async () => {
+      const abortController = new AbortController();
+      const reason = new CcClientError('navigated away', 'SSE_CLIENT_ERROR');
+      const spiedStream = createAndSpyStream({ url: '/', signal: abortController.signal }, { retry: RETRY });
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, events: Array.from({ length: 20 }, () => MESSAGE), delayBetween: 10 });
+
+      void spiedStream.start();
+      await spiedStream.verifyCounts({ open: 1 }, 50);
+      abortController.abort(reason);
+
+      await spiedStream.verifyCounts({ request: 1, open: 1, error: 0, failure: 1 }, 50);
+      expect(spiedStream.stubs.failure.mock.calls[0][0]).toBe(reason);
     });
   });
 });

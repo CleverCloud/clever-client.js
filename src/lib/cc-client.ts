@@ -18,7 +18,13 @@ import { sendRequest } from './request/request.js';
 import type { CcStream } from './stream/cc-stream.js';
 import type { CcStreamConfig, CcStreamConfigPartial, RetryConfig } from './stream/cc-stream.types.js';
 import type { StreamCommand } from './stream/stream-command.js';
-import { isAbsoluteUrl, isUrlWithinBaseUrl, mergeRequestConfig, mergeRequestConfigPartial } from './utils.js';
+import {
+  isAbsoluteUrl,
+  isUrlWithinBaseUrl,
+  mergeRequestConfig,
+  mergeRequestConfigPartial,
+  pickDefined,
+} from './utils.js';
 
 const DEFAULT_REQUEST_CONFIG: CcRequestConfig = {
   isCorsEnabled: false,
@@ -29,12 +35,13 @@ const DEFAULT_REQUEST_CONFIG: CcRequestConfig = {
 const DEFAULT_REQUEST_PARAMS: WithRequired<Partial<CcRequestParams>, 'method'> = {
   method: 'GET',
 };
+const DEFAULT_RETRY_CONFIG: RetryConfig = {
+  backoffFactor: 1.25,
+  initRetryTimeout: 1_000,
+  maxRetryCount: Infinity,
+};
 const DEFAULT_STREAM_CONFIG: CcStreamConfig = {
-  retry: {
-    backoffFactor: 1.25,
-    initRetryTimeout: 1_000,
-    maxRetryCount: Infinity,
-  },
+  retry: DEFAULT_RETRY_CONFIG,
   // The default Clever Cloud heartbeat period is 2 seconds. We add 500ms to handle potential latency.
   heartbeatPeriod: 2_000 + 500,
   healthcheckInterval: 1_000,
@@ -91,6 +98,8 @@ export class CcClient<Api extends string> {
   #defaultStreamsConfig: CcStreamConfig;
   #hooks: CcClientHooks;
   #auth: CcAuth | undefined;
+  // held weakly, so that remembering an error does not keep it from being collected
+  #reportedErrors = new WeakSet<object>();
 
   /**
    * Creates a new CcClient instance
@@ -124,7 +133,54 @@ export class CcClient<Api extends string> {
     command: Command<Api, CommandInput, CommandOutput>,
     requestConfig?: CcRequestConfigPartial,
   ): Promise<CommandOutput> {
-    return this._send(command, requestConfig, true);
+    try {
+      return await this._send(command, requestConfig, true);
+    } catch (e) {
+      this.#reportError(e, requestConfig);
+      throw e;
+    }
+  }
+
+  /**
+   * Hands the error rejecting a `send()` to the `onError` hook, unless there is nothing to report.
+   *
+   * Reported from `send()` rather than from `_send`, which composers go through too: a composite would
+   * report an inner error once per level, and even an error it recovered from.
+   *
+   * @param error - The error rejecting `send()`
+   * @param requestConfig - The request configuration `send()` was called with
+   */
+  #reportError(error: unknown, requestConfig: CcRequestConfigPartial | undefined): void {
+    if (this.#hooks.onError == null) {
+      return;
+    }
+
+    // an abort is what the caller asked for, not a failure to report
+    if (this._getRequestSignal(requestConfig)?.aborted === true) {
+      return;
+    }
+
+    // an error can reject several `send()` calls, and only the first reports it: nested ones, like the id
+    // resolution preparing a command, or concurrent ones sharing a fetch that failed, like the dedupe does
+    if (typeof error === 'object' && error !== null) {
+      if (this.#reportedErrors.has(error)) {
+        return;
+      }
+      this.#reportedErrors.add(error);
+    }
+
+    void this.#hooks.onError(error);
+  }
+
+  /**
+   * Gets the signal the requests sent with the given configuration abort with: the signal of that
+   * configuration, or else the default signal of the client.
+   *
+   * @param requestConfig - The request configuration a command is sent with
+   * @returns The signal, if any
+   */
+  protected _getRequestSignal(requestConfig: CcRequestConfigPartial | undefined): AbortSignal | undefined {
+    return requestConfig?.signal ?? this.#defaultRequestsConfig.signal;
   }
 
   /**
@@ -142,24 +198,16 @@ export class CcClient<Api extends string> {
     requestConfig: CcRequestConfigPartial | undefined,
     isIdempotentCeiling: boolean,
   ): Promise<CommandOutput> {
-    try {
-      if (command instanceof CompositeCommand) {
-        return await this._compose(command, requestConfig, isIdempotentCeiling);
-      }
-
-      const requestParams = await this._getCommandRequestParams(command, requestConfig);
-      // a caller can only replay what it sent, so a command is no more replayable than what encloses it
-      const isIdempotent = isIdempotentCeiling && command.isIdempotent();
-      const request = await this._prepareRequest(command, requestParams, requestConfig, isIdempotent);
-      const response = await sendRequest<CommandOutput>(request);
-      return await this._handleResponse(response, request, command);
-    } catch (e) {
-      if (this.#hooks.onError != null) {
-        void this.#hooks.onError(e);
-      }
-
-      throw e;
+    if (command instanceof CompositeCommand) {
+      return this._compose(command, requestConfig, isIdempotentCeiling);
     }
+
+    const requestParams = await this._getCommandRequestParams(command, requestConfig);
+    // a caller can only replay what it sent, so a command is no more replayable than what encloses it
+    const isIdempotent = isIdempotentCeiling && command.isIdempotent();
+    const request = await this._prepareRequest(command, requestParams, requestConfig, isIdempotent);
+    const response = await sendRequest<CommandOutput>(request);
+    return this._handleResponse(response, request, command);
   }
 
   /**
@@ -373,11 +421,24 @@ export class CcClient<Api extends string> {
 }
 
 function mergeStreamConfig(baseConfig: CcStreamConfig, config?: CcStreamConfigPartial): CcStreamConfig {
-  const overrideConfig: CcStreamConfigPartial = config ?? {};
+  // an `undefined` option counts as an absent option, like in `mergeRequestConfig`
+  const overrideConfig: CcStreamConfigPartial = pickDefined(config ?? {});
 
   return {
     ...baseConfig,
     ...overrideConfig,
-    retry: { ...baseConfig.retry, ...(overrideConfig?.retry ?? {}) } as RetryConfig,
+    retry: mergeRetry(baseConfig.retry, overrideConfig.retry),
   };
+}
+
+function mergeRetry(baseRetry: RetryConfig | null, retry: Partial<RetryConfig> | null | undefined): RetryConfig | null {
+  if (retry === undefined) {
+    return baseRetry;
+  }
+  // `null` disables retries, it does not mean "keep the base retry config"
+  if (retry === null) {
+    return null;
+  }
+  // re-enabling retries disabled by the base config starts from the default values
+  return { ...(baseRetry ?? DEFAULT_RETRY_CONFIG), ...pickDefined(retry) };
 }

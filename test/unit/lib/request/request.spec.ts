@@ -1,7 +1,7 @@
 import type { NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CcClientError, CcRequestError } from '../../../../src/lib/error/cc-client-errors.js';
+import { CcClientError, CcNetworkError, CcRequestError } from '../../../../src/lib/error/cc-client-errors.js';
 import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../../src/lib/request/query-params.js';
 import { sendRequest as originalSendRequest } from '../../../../src/lib/request/request.js';
@@ -741,6 +741,109 @@ describe('request', () => {
       expect(result1.body).toEqual(responseBody);
       expect(result2.body).toEqual(responseBody);
     });
+
+    it('a caller aborting should not reject the other callers of the same fetch', async () => {
+      const responseBody = { data: 'test response' };
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody }, 50);
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+      const abortController = new AbortController();
+
+      const abortedPromise = sendRequest({ url: '/api/test', signal: abortController.signal });
+      const keptPromise = sendRequest({ url: '/api/test' });
+      setTimeout(() => abortController.abort(), 10);
+
+      const [aborted, kept] = await Promise.allSettled([abortedPromise, keptPromise]);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(aborted.status).toBe('rejected');
+      expect((aborted as PromiseRejectedResult).reason).toBe(abortController.signal.reason);
+      expect(kept.status).toBe('fulfilled');
+      expect((kept as PromiseFulfilledResult<CcResponse<unknown>>).value.body).toEqual(responseBody);
+    });
+
+    it('every caller aborting should abort the shared fetch', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 50);
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+      const abortController1 = new AbortController();
+      const abortController2 = new AbortController();
+
+      const promise1 = sendRequest({ url: '/api/test', signal: abortController1.signal });
+      const promise2 = sendRequest({ url: '/api/test', signal: abortController2.signal });
+      setTimeout(() => abortController1.abort(), 10);
+      setTimeout(() => abortController2.abort(), 20);
+
+      const [result1, result2] = await Promise.allSettled([promise1, promise2]);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][1]?.signal?.aborted).toBe(true);
+      expect((result1 as PromiseRejectedResult).reason).toBe(abortController1.signal.reason);
+      expect((result2 as PromiseRejectedResult).reason).toBe(abortController2.signal.reason);
+    });
+
+    it('a caller arriving once every previous caller aborted should start a new fetch', async () => {
+      const responseBody = { data: 'test response' };
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200, body: responseBody }, 20);
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+      const abortController = new AbortController();
+
+      // what a UI does when it drops a pending request to send it again
+      const abortedPromise = sendRequest({ url: '/api/test', signal: abortController.signal });
+      abortController.abort();
+      const newPromise = sendRequest({ url: '/api/test' });
+
+      const [aborted, result] = await Promise.allSettled([abortedPromise, newPromise]);
+
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect((aborted as PromiseRejectedResult).reason).toBe(abortController.signal.reason);
+      expect(result.status).toBe('fulfilled');
+      expect((result as PromiseFulfilledResult<CcResponse<unknown>>).value.body).toEqual(responseBody);
+    });
+
+    it('concurrent requests with different idempotence should make separate fetch calls', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 });
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+
+      await Promise.all([
+        sendRequest({ url: '/api/test', isIdempotent: true }),
+        sendRequest({ url: '/api/test', isIdempotent: false }),
+      ]);
+
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('a network error should tell each caller whether its own request is worth retrying', async () => {
+      vi.spyOn(globalThis, 'fetch').mockImplementation(() => Promise.reject(new TypeError('Failed to fetch')));
+
+      const [idempotent, notIdempotent] = await Promise.allSettled([
+        sendRequest({ url: '/api/test', isIdempotent: true }),
+        sendRequest({ url: '/api/test', isIdempotent: false }),
+      ]);
+
+      const idempotentError = (idempotent as PromiseRejectedResult).reason as CcNetworkError;
+      const notIdempotentError = (notIdempotent as PromiseRejectedResult).reason as CcNetworkError;
+      expect(idempotentError).toBeInstanceOf(CcNetworkError);
+      expect(idempotentError.isWorthRetrying()).toBe(true);
+      expect(notIdempotentError).toBeInstanceOf(CcNetworkError);
+      expect(notIdempotentError.isWorthRetrying()).toBe(false);
+    });
+
+    it('concurrent event stream requests should make separate fetch calls', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 });
+
+      const spy = vi.spyOn(globalThis, 'fetch');
+
+      await Promise.all([
+        sendRequest({ url: '/api/test', headers: new HeadersBuilder().acceptEventStream().build() }),
+        sendRequest({ url: '/api/test', headers: new HeadersBuilder().acceptEventStream().build() }),
+      ]);
+
+      // a stream body can only be read once, it cannot be shared
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
   });
 
   describe('timeout', () => {
@@ -770,5 +873,57 @@ describe('request', () => {
         timeout: 50,
       });
     }, 50);
+  });
+
+  describe('abort', () => {
+    it('should reject with the reason of the signal', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 50);
+      const abortController = new AbortController();
+
+      const promise = sendRequest({ url: '/api/test', signal: abortController.signal });
+      setTimeout(() => abortController.abort(), 10);
+
+      await expectPromiseThrows(promise, (error: DOMException) => {
+        expect(error).toBe(abortController.signal.reason);
+        expect(error.name).toBe('AbortError');
+      });
+    });
+
+    it('should reject with the reason given to `abort()`', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 50);
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+
+      const promise = sendRequest({ url: '/api/test', signal: abortController.signal });
+      setTimeout(() => abortController.abort(reason), 10);
+
+      await expectPromiseThrows(promise, (error: Error) => {
+        expect(error).toBe(reason);
+      });
+    });
+
+    it('should reject with the reason of the signal when a timeout is also set', async () => {
+      await newScenario().when({ method: 'GET', path: '/api/test' }).respond({ status: 200 }, 50);
+      const abortController = new AbortController();
+      const reason = new Error('navigated away');
+
+      const promise = sendRequest({ url: '/api/test', signal: abortController.signal, timeout: 40 });
+      setTimeout(() => abortController.abort(reason), 10);
+
+      await expectPromiseThrows(promise, (error: Error) => {
+        expect(error).toBe(reason);
+      });
+    });
+
+    it('should reject with the reason of a signal aborted before the request is sent', async () => {
+      const reason = new Error('navigated away');
+
+      await expectPromiseThrows(
+        sendRequest({ url: '/api/test', signal: AbortSignal.abort(reason) }),
+        (error: Error) => {
+          expect(error).toBe(reason);
+        },
+      );
+    });
   });
 });

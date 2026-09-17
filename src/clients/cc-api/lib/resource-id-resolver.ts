@@ -1,10 +1,20 @@
 import { CcClientError } from '../../../lib/error/cc-client-errors.js';
+import { waitUnlessAborted } from '../../../lib/utils.js';
 import type { CcRequestConfigPartial } from '../../../types/request.types.js';
 import type { CcApiClient } from '../cc-api-client.js';
 import { GetOrganisationSummaryCommand } from '../commands/organisation/get-organisation-summary-command.js';
 import type { GetOrganisationSummaryCommandOutput } from '../commands/organisation/get-organisation-summary-command.types.js';
 import type { ResourceId } from '../types/cc-api.types.js';
 import type { AddonIdType, ResourceIdIndex, Store } from '../types/resource-id-resolver.types.js';
+
+/**
+ * A summary fetch shared by every caller resolving an id while it is pending.
+ */
+interface PendingSummaryFetch {
+  promise: Promise<void>;
+  abortController: AbortController;
+  callerCount: number;
+}
 
 /**
  * Utility class to resolve and translate between different types of resource IDs in the Clever Cloud API.
@@ -49,19 +59,33 @@ export class ResourceIdResolver {
 
   /**
    * The summary fetch currently in flight, shared by every concurrent caller so a burst of
-   * unresolved ids only costs one request. Cleared once it settles.
+   * unresolved ids only costs one request. Cleared once it settles, or once every caller left it.
    */
-  #pendingFetch: Promise<void> | undefined;
+  #pendingFetch: PendingSummaryFetch | undefined;
+
+  /**
+   * Gets the signal a caller aborts with, from the request configuration it resolves an id with
+   */
+  #getRequestSignal: (requestConfig: CcRequestConfigPartial | undefined) => AbortSignal | undefined;
 
   /**
    * Creates a new ResourceIdResolver instance
    *
    * @param client - API client to use for fetching resource information
    * @param indexStore - Storage backend for caching resource mappings
+   * @param getRequestSignal - Gets the signal a caller aborts with, from its request configuration. The
+   * client passes one that falls back to its default signal. Defaults to the signal of the configuration.
    */
-  constructor(client: CcApiClient, indexStore: Store<ResourceIdIndex>) {
+  constructor(
+    client: CcApiClient,
+    indexStore: Store<ResourceIdIndex>,
+    getRequestSignal: (requestConfig: CcRequestConfigPartial | undefined) => AbortSignal | undefined = (
+      requestConfig,
+    ) => requestConfig?.signal,
+  ) {
     this.#client = client;
     this.#indexStore = indexStore;
+    this.#getRequestSignal = getRequestSignal;
   }
 
   /**
@@ -316,14 +340,64 @@ export class ResourceIdResolver {
    * The first caller's `requestConfig` applies to the shared request. That config cannot change
    * the response the others get, because this fetch always forces `cache: { mode: 'reload' }`.
    *
+   * Its signal is the exception. The shared request runs on a signal of its own, and each caller
+   * stops waiting when its own signal aborts. Once every caller left, the request is aborted, like the
+   * request dedupe does: nobody waits for its result, and its failure has nobody to be reported to.
+   *
+   * A caller aborts with the signal its own requests would carry: the signal of its configuration, or
+   * else the default signal of the client. A caller relying on that default signal leaves when it aborts.
+   *
    * @param requestConfig - Optional request configuration
    */
   async #fetchAndStore(requestConfig?: CcRequestConfigPartial): Promise<void> {
-    this.#pendingFetch ??= this.#fetchSummaryAndStore(requestConfig).finally(() => {
-      this.#pendingFetch = undefined;
-    });
+    const signal = this.#getRequestSignal(requestConfig);
 
-    return this.#pendingFetch;
+    // a caller that already gave up must not start a request nobody waits for
+    signal?.throwIfAborted();
+
+    const pendingFetch = this.#pendingFetch ?? this.#startFetch(requestConfig);
+    pendingFetch.callerCount++;
+
+    return waitUnlessAborted(pendingFetch.promise, signal, () => this.#leaveFetch(pendingFetch));
+  }
+
+  /**
+   * Starts the summary fetch every caller arriving while it is pending shares.
+   *
+   * @param requestConfig - The request configuration of the caller starting it
+   */
+  #startFetch(requestConfig?: CcRequestConfigPartial): PendingSummaryFetch {
+    // the request belongs to every caller joining it, so the signal of the first one must not abort it
+    const abortController = new AbortController();
+    const pendingFetch: PendingSummaryFetch = {
+      promise: this.#fetchSummaryAndStore({ ...requestConfig, signal: abortController.signal }).finally(() => {
+        // once every caller left, a new fetch may already have taken its place
+        if (this.#pendingFetch === pendingFetch) {
+          this.#pendingFetch = undefined;
+        }
+      }),
+      abortController,
+      callerCount: 0,
+    };
+    this.#pendingFetch = pendingFetch;
+
+    return pendingFetch;
+  }
+
+  /**
+   * Counts a caller that stopped waiting for the summary fetch, and aborts the fetch once none is left.
+   *
+   * @param pendingFetch - The fetch the caller was waiting for
+   */
+  #leaveFetch(pendingFetch: PendingSummaryFetch): void {
+    pendingFetch.callerCount--;
+    if (pendingFetch.callerCount === 0) {
+      // nobody waits for it anymore: the next caller must start a new fetch rather than join this one
+      if (this.#pendingFetch === pendingFetch) {
+        this.#pendingFetch = undefined;
+      }
+      pendingFetch.abortController.abort();
+    }
   }
 
   /**

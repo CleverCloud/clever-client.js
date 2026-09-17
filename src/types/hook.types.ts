@@ -28,6 +28,8 @@ export type OnResponseHook = <CommandOutput>(
 /**
  * Hook function type for handling errors that occur during request processing.
  * Can be used for error logging, error transformation, or recovery attempts.
+ * Not called for a request aborted through its `signal`.
+ * Called once per error, even when it rejects several `send()` calls, nested or concurrent.
  *
  * @param error - The error that occurred during request processing
  * @returns void (can be returned directly or as a Promise)

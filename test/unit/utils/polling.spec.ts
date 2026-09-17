@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { Polling } from '../../../src/utils/polling.js';
+import { Polling, PollingInterruptedError, PollingTimeoutError } from '../../../src/utils/polling.js';
 import { expectPromiseThrows } from '../../lib/expect-utils.js';
 
 describe('polling', () => {
@@ -63,6 +63,17 @@ describe('polling', () => {
 
     expect(spy).toHaveBeenCalledTimes(3);
   }, 1_100);
+
+  it.for([
+    ['PollingInterruptedError', () => new PollingInterruptedError()],
+    ['PollingTimeoutError', () => new PollingTimeoutError()],
+  ] as const)('should name a %s after its class, as the native errors do', ([name, create]) => {
+    const error = create();
+
+    expect(error.name).toBe(name);
+    expect(String(error)).toBe(`${name}: ${error.message}`);
+    expect(Object.hasOwn(error, 'name')).toBe(false);
+  });
 });
 
 function sleep(ms: number): Promise<void> {

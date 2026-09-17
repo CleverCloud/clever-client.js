@@ -68,14 +68,16 @@ export function guessPrimaryDomain(domains: Array<string>): string | undefined {
 }
 
 export class DomainParseError extends Error {
+  static {
+    Object.defineProperty(this.prototype, 'name', { value: 'DomainParseError', writable: true, configurable: true });
+  }
+
   code: 'empty' | 'invalid-wildcard' | 'invalid-format';
-  cause?: unknown;
 
   constructor(code: 'empty' | 'invalid-wildcard' | 'invalid-format', message: string, cause?: unknown) {
-    super(message);
+    super(message, cause === undefined ? undefined : { cause });
 
     this.code = code;
-    this.cause = cause;
   }
 }
 

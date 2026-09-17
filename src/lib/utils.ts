@@ -282,6 +282,29 @@ export function pickNonNull<T>(object: T): Partial<T> {
 }
 
 /**
+ * Creates a new object with all undefined properties removed. Null properties are kept.
+ *
+ * @param object - The source object to clean
+ * @returns A new object without undefined properties
+ *
+ * @example
+ * const obj = { a: 1, b: null, c: undefined };
+ * pickDefined(obj);
+ * // Result: { a: 1, b: null }
+ */
+export function pickDefined<T>(object: T): Partial<T> {
+  const result = { ...object };
+
+  for (const key in result) {
+    if (result[key as keyof T] === undefined) {
+      delete result[key as keyof T];
+    }
+  }
+
+  return result;
+}
+
+/**
  * The value the discriminant takes on the variant a discriminated union publishes for a value the
  * client does not know.
  */
@@ -336,15 +359,88 @@ export function unknownToClient<D extends string>(discriminant: D, payload: unkn
 export function combineWithSignal(abortController: AbortController, signal: AbortSignal): void {
   // TODO: use AbortSignal.any static method when it becomes widely available
   if (signal != null && abortController.signal !== signal) {
-    signal.addEventListener('abort', () => abortController.abort(), { once: true });
+    // a signal aborted already never dispatches its abort event again
+    if (signal.aborted) {
+      abortController.abort(signal.reason);
+    } else {
+      signal.addEventListener('abort', () => abortController.abort(signal.reason), { once: true });
+    }
   }
 }
 
+/**
+ * Waits for a promise shared by several callers, until it settles or the signal of this caller aborts.
+ *
+ * Aborting only stops this caller from waiting. It rejects with the reason of its signal, as `fetch()`
+ * does, and the promise goes on for the other callers. What becomes of the shared work once nobody
+ * waits for it is up to `onAbort`.
+ *
+ * @param promise - The shared promise to wait for
+ * @param signal - The signal of this caller, if any
+ * @param onAbort - Called once this caller stopped waiting because its signal aborted, including when it
+ * was aborted already
+ * @returns A promise settling like `promise`, unless the signal aborts first
+ *
+ * @example
+ * // every caller shares the fetch, and the last one to leave aborts it
+ * callerCount++;
+ * return waitUnlessAborted(sharedFetch, signal, () => {
+ *   if (--callerCount === 0) {
+ *     sharedAbortController.abort();
+ *   }
+ * });
+ */
+export function waitUnlessAborted<T>(
+  promise: Promise<T>,
+  signal: AbortSignal | undefined,
+  onAbort?: () => void,
+): Promise<T> {
+  if (signal == null) {
+    return promise;
+  }
+
+  return new Promise((resolve, reject) => {
+    const abort = (): void => {
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- an abort rejects with whatever the caller aborted with, like `fetch()` does
+      reject(signal.reason);
+      onAbort?.();
+    };
+
+    if (signal.aborted) {
+      abort();
+      return;
+    }
+
+    signal.addEventListener('abort', abort, { once: true });
+    promise.then(
+      (value) => {
+        signal.removeEventListener('abort', abort);
+        resolve(value);
+      },
+      (error: unknown) => {
+        signal.removeEventListener('abort', abort);
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the error of the shared promise, passed on as is
+        reject(error);
+      },
+    );
+  });
+}
+
+/**
+ * Merges a request configuration over a complete one.
+ *
+ * An `undefined` option counts as an absent option, so it keeps the base value. Only `null` resets the
+ * cache. A caller can thus pass `{ signal: controller?.signal }` without dropping the default signal.
+ *
+ * @param baseConfig - The complete configuration to merge into
+ * @param config - The configuration that overrides it
+ * @returns A new complete configuration
+ */
 export function mergeRequestConfig(
   baseConfig: CcRequestConfig,
   config: CcRequestConfigPartial | undefined,
 ): CcRequestConfig {
-  const overrideConfig: CcRequestConfigPartial = config ?? {};
+  const overrideConfig: CcRequestConfigPartial = pickDefined(config ?? {});
 
   return {
     ...baseConfig,
@@ -353,12 +449,22 @@ export function mergeRequestConfig(
   };
 }
 
+/**
+ * Merges a request configuration over another partial one.
+ *
+ * An `undefined` option counts as an absent option, as in {@link mergeRequestConfig}. The result holds
+ * no `undefined` option.
+ *
+ * @param baseConfig - The partial configuration to merge into
+ * @param config - The configuration that overrides it
+ * @returns A new partial configuration
+ */
 export function mergeRequestConfigPartial(
   baseConfig: CcRequestConfigPartial | undefined,
   config: CcRequestConfigPartial | undefined,
 ): CcRequestConfigPartial {
-  const bConfig: CcRequestConfigPartial = baseConfig ?? {};
-  const overrideConfig: CcRequestConfigPartial = config ?? {};
+  const bConfig: CcRequestConfigPartial = pickDefined(baseConfig ?? {});
+  const overrideConfig: CcRequestConfigPartial = pickDefined(config ?? {});
 
   const result: CcRequestConfigPartial = {
     ...bConfig,

@@ -57,8 +57,9 @@ async function doRequest<CommandOutput>(request: CcRequest): Promise<CcResponse<
       throw new CcClientError(`Timeout of ${request.timeout} ms exceeded`, 'TIMEOUT_EXCEEDED', request);
     }
 
+    // an abort is not a failure: reject like `fetch()` does, with what the caller aborted with
     if (request.signal?.aborted) {
-      throw new CcRequestError('The request was aborted', 'ABORTED', request, error);
+      throw request.signal.reason;
     }
 
     const networkError = asNetworkError(error, request);
