@@ -378,6 +378,10 @@ function serializeCookies(cookies: Record<string, string>): string {
 }
 
 class AuthBackendError extends Error {
+  static {
+    Object.defineProperty(this.prototype, 'name', { value: 'AuthBackendError', writable: true, configurable: true });
+  }
+
   code: string;
   statusCode: number;
   details?: string;
@@ -390,7 +394,7 @@ class AuthBackendError extends Error {
    * @param cause - The cause of the error
    */
   constructor(message: string, code: string, statusCode: number, details?: string, cause?: Error) {
-    super(message, { cause });
+    super(message, cause === undefined ? undefined : { cause });
     this.code = code;
     this.statusCode = statusCode;
     this.details = details;
@@ -398,18 +402,34 @@ class AuthBackendError extends Error {
 }
 
 class InvalidCredentialError extends AuthBackendError {
+  static {
+    Object.defineProperty(this.prototype, 'name', {
+      value: 'InvalidCredentialError',
+      writable: true,
+      configurable: true,
+    });
+  }
+
   constructor() {
     super('Invalid credential', 'invalid-credential', 401);
   }
 }
 
 export class InvalidMfaCodeError extends AuthBackendError {
+  static {
+    Object.defineProperty(this.prototype, 'name', { value: 'InvalidMfaCodeError', writable: true, configurable: true });
+  }
+
   constructor() {
     super('Invalid MFA code', 'invalid-mfa-code', 401);
   }
 }
 
 class OauthDanceError extends AuthBackendError {
+  static {
+    Object.defineProperty(this.prototype, 'name', { value: 'OauthDanceError', writable: true, configurable: true });
+  }
+
   /**
    * @param step - The OAuth step that failed
    * @param details - Details about the failure
