@@ -288,4 +288,29 @@ describe('domain-utils', () => {
       expect(sorted).toEqual([wildcard, nonWildcard]);
     });
   });
+
+  describe('DomainParseError', () => {
+    it('should be named after its class, as the native errors are', () => {
+      const error = new DomainParseError('empty', 'boom');
+
+      expect(error.name).toBe('DomainParseError');
+      expect(String(error)).toBe('DomainParseError: boom');
+      expect(Object.hasOwn(error, 'name')).toBe(false);
+    });
+
+    it('should carry its cause as a non-enumerable own property', () => {
+      const cause = new Error('root');
+
+      const error = new DomainParseError('invalid-format', 'boom', cause);
+
+      expect(error.cause).toBe(cause);
+      expect(Object.getOwnPropertyDescriptor(error, 'cause')?.enumerable).toBe(false);
+    });
+
+    it('should not create a cause property when raised without one', () => {
+      const error = new DomainParseError('empty', 'boom');
+
+      expect(Object.hasOwn(error, 'cause')).toBe(false);
+    });
+  });
 });
