@@ -23,6 +23,47 @@ function networkError(code: NetworkErrorCode, isIdempotent: boolean): CcNetworkE
   return new CcNetworkError({ isIdempotent } as CcRequest, code);
 }
 
+/**
+ * A response that opens as an event stream, sends one event, then leaves its body to `endStream`.
+ *
+ * The mock API answers whole responses, so a body that dies halfway through is played here instead, on a
+ * stubbed `fetch`. Which is also the only way to play how a given engine words that failure: neither
+ * runtime the tests run on is the one the failure below was reported from.
+ */
+function sseResponse(endStream: (controller: ReadableStreamDefaultController<Uint8Array>) => void): Response {
+  const encoder = new TextEncoder();
+  let isEventSent = false;
+  const body = new ReadableStream<Uint8Array>({
+    pull(controller) {
+      if (!isEventSent) {
+        isEventSent = true;
+        controller.enqueue(encoder.encode('event: EVENT\ndata: hello\n\n'));
+      } else {
+        endStream(controller);
+      }
+    },
+  });
+
+  return new Response(body, { status: 200, headers: { 'content-type': 'text/event-stream' } });
+}
+
+/**
+ * A body dying mid-response the way Gecko words it, which is what a redeployment of the API looks like
+ * from Firefox: the instance serving the stream goes away, and the read of the body rejects with a
+ * `TypeError` naming nothing.
+ */
+function sseResponseCutMidBody(): Response {
+  return sseResponse((controller) => controller.error(new TypeError('Error in input stream')));
+}
+
+/** A body ending the way the API ends a stream it served to the end. */
+function sseResponseEndedByServer(): Response {
+  return sseResponse((controller) => {
+    controller.enqueue(new TextEncoder().encode('event: END_OF_STREAM\ndata: {"endedBy":"UNTIL_REACHED"}\n\n'));
+    controller.close();
+  });
+}
+
 describe('cc-stream', () => {
   let newScenario: NewScenario;
 
@@ -649,6 +690,22 @@ describe('cc-stream', () => {
 
       await spiedStream.verifyCounts({ request: 2, open: 1, error: 1, failure: 1 }, 150);
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcNetworkError);
+    });
+
+    it('a connection cut while the body is being read should be retried', async () => {
+      // what a redeployment of the API does to an open stream: it was connected, events were coming, and the
+      // instance serving them goes away without an END_OF_STREAM event
+      let attempt = 0;
+      vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
+        attempt++;
+        return Promise.resolve(attempt === 1 ? sseResponseCutMidBody() : sseResponseEndedByServer());
+      });
+      const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
+
+      void spiedStream.start();
+
+      // the reconnection picks the stream back up, and it ends on the END_OF_STREAM of the second attempt
+      await spiedStream.verifyCounts({ request: 2, open: 2, error: 1, failure: 0, success: 1 }, 150);
     });
 
     it('[success + timeout + error 500 + error 500] should be retried and fail', async () => {
