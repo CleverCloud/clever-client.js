@@ -1,11 +1,17 @@
 import type { OauthTokens } from '../../../types/auth.types.js';
 import type { CcClientConfig } from '../../../types/client.types.js';
+import type { Composer } from '../../../types/command.types.js';
 import type { WithOptional } from '../../../types/utils.types.js';
 
 /**
  * Type identifier for the Clever Cloud API Bridge client.
  */
 export type CcApiBridgeType = 'cc-api-bridge';
+
+/**
+ * Function type for composing multiple API Bridge commands into a single operation.
+ */
+export type CcApiBridgeComposer = Composer<CcApiBridgeType>;
 
 /**
  * Configuration for the API Bridge client.
