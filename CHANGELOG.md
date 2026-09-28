@@ -1,5 +1,83 @@
 # Clever Client changelog
 
+## 12.6.5
+
+### Patch Changes
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`5310b93`](https://github.com/CleverCloud/clever-client.js/commit/5310b934d3bb77ea96f646093e4a9d670f6a78f2) - Reject an aborted request with the reason of its `signal`, and stop reporting it to the `onError` hook
+
+  An aborted `send()` used to reject with a `CcRequestError` carrying the `ABORTED` code. It now rejects with `signal.reason`, as `fetch()` does. That is a `DOMException` named `AbortError`, unless `abort()` was given another reason. `ABORTED` is removed from `CC_REQUEST_ERROR_CODES`.
+
+  A stream whose request `signal` aborts while it connects rejects `start()` the same way, instead of reconnecting when it has a `retry` configuration.
+
+  To detect an abort, check the signal you passed rather than the error:
+
+  ```diff
+   try {
+     await client.send(command, { signal });
+   } catch (error) {
+  -  if (isCcRequestErrorWithCode(error, 'ABORTED')) {
+  +  if (signal.aborted) {
+       return;
+     }
+     throw error;
+   }
+  ```
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`fc35d6a`](https://github.com/CleverCloud/clever-client.js/commit/fc35d6a5fe9100cb24f6a1500f2af2a48da60466) - Stop failing event streams opened at the same time on the same URL
+
+  Both streams used to fail before receiving any event, one with `SSE_SERVER_ERROR` and the other with a locked `ReadableStream` error.
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`cb1ee89`](https://github.com/CleverCloud/clever-client.js/commit/cb1ee8996895a0abf9035aab1d81f647116a720d) - Stop rejecting a request because an identical request sent at the same time was aborted
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`e6929ae`](https://github.com/CleverCloud/clever-client.js/commit/e6929ae49b037fad64bb739d347199722cf246a4) - Make `CcNetworkError.isWorthRetrying()` answer for the command of each caller when identical requests sent at the same time fail together
+
+  A caller used to get the answer computed for the first one, even when its command declared a different idempotence.
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`55c7ccb`](https://github.com/CleverCloud/clever-client.js/commit/55c7ccb444108cc25ee139b703bee457cd8153fd) - Stop setting a `cause` on the errors raised without one
+
+  `CcClientError` and its subclasses used to carry a `cause` set to `undefined`, which `util.inspect()` printed. The `cause` of a `DomainParseError` is no longer enumerable either, so `JSON.stringify()` and the spread operator leave it out, as they do for native errors.
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`55c7ccb`](https://github.com/CleverCloud/clever-client.js/commit/55c7ccb444108cc25ee139b703bee457cd8153fd) - Name the errors the client throws after their class
+
+  `CcClientError`, `CcRequestError`, `CcNetworkError`, `CcHttpError`, `DomainParseError`, `PollingInterruptedError` and `PollingTimeoutError` used to report `Error` as their `name`. Their stack traces and `String(error)` started with `Error:` too.
+
+- [#240](https://github.com/CleverCloud/clever-client.js/pull/240) [`ffc6d3b`](https://github.com/CleverCloud/clever-client.js/commit/ffc6d3b0f192e2a8a172187587cc764b9bfa805e) - Streams now reconnect in Firefox when the server cuts the connection mid-response
+
+  Firefox words that failure differently from the other engines, and the client did not recognise it as a
+  network failure. A stream hit it on every server restart, failed for good instead of retrying, and
+  rejected with a bare `TypeError` instead of a `CcNetworkError`.
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`7b2b896`](https://github.com/CleverCloud/clever-client.js/commit/7b2b8963a9eeda3401b7179d939ec13a2b0246c4) - Stop failing a command because another command resolving the same owner or add-on id at the same time was aborted
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`2122126`](https://github.com/CleverCloud/clever-client.js/commit/212212666f675e59a4a4f7f2b1b4458e8c4628e0) - Call the `onError` hook once per failed `send()`, and never for an error a composite command recovers from
+
+  A composite command used to report an inner error twice. It also reported the errors it tolerates itself, such as the 404 `ListDomainCommand` gets for an application without a primary domain, or the 404 responses polled while waiting for a network group or a Kubernetes cluster.
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`7d1febc`](https://github.com/CleverCloud/clever-client.js/commit/7d1febc364fb9bbd8e909cfb3c1e42e490e8873b) - Call the `onError` hook once per error, even when it rejects several `send()` calls
+
+  Resolving the owner or add-on id of a command used to report a failure twice. Identical `GET` requests sent at the same time share one request, and used to report a network failure or a timeout once per call. An HTTP error response is still reported once per call.
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`815a84a`](https://github.com/CleverCloud/clever-client.js/commit/815a84a0a66f060628bc286daed9b482cb43f89e) - Treat an option set to `undefined` in a request or stream configuration as an absent option
+
+  It now keeps the value it would have without it. `{ signal: controller?.signal }` without a controller used to drop the `signal` of `defaultRequestConfig`, so aborting that signal no longer aborted the request. Likewise, `timeout: undefined` made a request fail at once with `TIMEOUT_EXCEEDED`, and `isCorsEnabled: undefined` overrode the value a command needs.
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`7da0732`](https://github.com/CleverCloud/clever-client.js/commit/7da07323ef207b3bcc09c748fb76277d7b2f109f) - Keep a stream from connecting once `close()` was called
+
+  A stream closed right after `start()`, or while it reconnected, could still connect and stay open with no listeners.
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`d41c56e`](https://github.com/CleverCloud/clever-client.js/commit/d41c56e86960ac616275b8379469cc3d8b01c6da) - Disable the retries of a stream when its configuration sets `retry` to `null`
+
+  Both `client.stream(command, { retry: null })` and `defaultStreamConfig: { retry: null }` used to keep retrying with the retry configuration they were meant to override.
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`2e2b2f0`](https://github.com/CleverCloud/clever-client.js/commit/2e2b2f0dd4486feeaf1ba9e24ce220097408b9bb) - Close a stream when the `signal` of its request aborts, whenever it aborts
+
+  `start()` now rejects with `signal.reason` as soon as the signal aborts: before the stream starts, while it reads events, while it is paused, or while it waits to reconnect. The stream used to ignore a signal aborted before it started. An abort while reading failed with `SSE_SERVER_ERROR`, or reconnected with a `retry` configuration. An abort while paused or waiting to reconnect only closed the stream at the next attempt.
+
+- [#238](https://github.com/CleverCloud/clever-client.js/pull/238) [`7cb3fb2`](https://github.com/CleverCloud/clever-client.js/commit/7cb3fb2adf4c0e34a3a8c7266e7216024da51538) - Keep `resume()` from opening a second connection while a stream waits to reconnect
+
+  Both connections delivered their events, and `close()` left one of them open.
+
 ## 12.6.4
 
 ### Patch Changes
