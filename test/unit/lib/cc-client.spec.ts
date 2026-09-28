@@ -5,7 +5,7 @@ import { CcAuthApiToken } from '../../../src/lib/auth/cc-auth-api-token.js';
 import type { CcAuth } from '../../../src/lib/auth/cc-auth.js';
 import { CcClient } from '../../../src/lib/cc-client.js';
 import { CompositeCommand, SimpleCommand } from '../../../src/lib/command/command.js';
-import { CcHttpError } from '../../../src/lib/error/cc-client-errors.js';
+import { type CcClientError, CcHttpError } from '../../../src/lib/error/cc-client-errors.js';
 import { GetUrl } from '../../../src/lib/get-url.js';
 import { HeadersBuilder } from '../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../src/lib/request/query-params.js';
@@ -313,6 +313,20 @@ describe('clever-client', () => {
       expect(spy.mock.calls[0][1].timeout).toBe(500);
     });
 
+    it('should keep the request config returned by `command.getRequestConfig()` for the options the `send()` request config sets to `undefined`', async () => {
+      const spy = vi.spyOn(client, '_handleResponse');
+      const command = simpleCommand(get('/path/subPath'));
+      vi.spyOn(command, 'getRequestConfig').mockReturnValue({ isCorsEnabled: true, timeout: 1000 });
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 200 })
+        .thenCall(() => client.send(command, { isCorsEnabled: undefined, timeout: undefined }));
+
+      expect(spy.mock.calls[0][1].isCorsEnabled).toBe(true);
+      expect(spy.mock.calls[0][1].timeout).toBe(1000);
+    });
+
     it('should not call `auth.applyOnRequestParams()` when the command targets another origin', async () => {
       const auth = new CcAuthApiToken('token');
       const spy = vi.spyOn(auth, 'applyOnRequestParams');
@@ -530,6 +544,135 @@ describe('clever-client', () => {
         expect(spy.mock.calls[0][0]).toBe(err);
       });
     });
+
+    it('should reject with the reason of the signal, without calling `onError` hook, when the request is aborted', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = simpleCommand(get('/path/subPath'));
+      const abortController = new AbortController();
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' }, 50);
+
+      const promise = client.send(command, { signal: abortController.signal });
+      setTimeout(() => abortController.abort(), 10);
+
+      await expectPromiseThrows(promise, (err: DOMException) => {
+        expect(err).toBe(abortController.signal.reason);
+        expect(spy).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should not call `onError` hook when the request is aborted through the default signal of the client', async () => {
+      const spy = vi.fn();
+      const abortController = new AbortController();
+      const client = createClient({
+        hooks: { onError: spy },
+        defaultRequestConfig: { signal: abortController.signal },
+      });
+      const command = simpleCommand(get('/path/subPath'));
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' }, 50);
+
+      const promise = client.send(command);
+      setTimeout(() => abortController.abort(), 10);
+
+      await expectPromiseThrows(promise, (err: DOMException) => {
+        expect(err).toBe(abortController.signal.reason);
+        expect(spy).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should abort the request through the default signal of the client when the `send()` request config sets `signal` to `undefined`', async () => {
+      const spy = vi.fn();
+      const abortController = new AbortController();
+      const client = createClient({
+        hooks: { onError: spy },
+        defaultRequestConfig: { signal: abortController.signal },
+      });
+      const command = simpleCommand(get('/path/subPath'));
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' }, 50);
+
+      // what `{ signal: controller?.signal }` sends without a controller
+      const promise = client.send(command, { signal: undefined });
+      setTimeout(() => abortController.abort(), 10);
+
+      await expectPromiseThrows(promise, (err: DOMException) => {
+        expect(err).toBe(abortController.signal.reason);
+        expect(spy).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should call `onError` hook when the request times out', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = simpleCommand(get('/path/subPath'));
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' }, 50);
+
+      // the timeout aborts the request under the hood, it is still a failure the caller did not ask for
+      await expectPromiseThrows(client.send(command, { timeout: 10 }), (err: CcClientError) => {
+        expect(err.code).toBe('TIMEOUT_EXCEEDED');
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.mock.calls[0][0]).toBe(err);
+      });
+    });
+
+    it('should call `onError` hook once for an error rejecting nested `send()` calls', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = simpleCommand(get('/path/subPath'));
+      // what the cc-api client does when it resolves an id before preparing a command
+      vi.spyOn(client, '_transformCommandParams').mockImplementationOnce(async () => {
+        await client.send(simpleCommand(get('/path/inner')));
+        return undefined;
+      });
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/inner' })
+        .respond({ status: 500, body: 'A server error occurred' });
+
+      await expectPromiseThrows(client.send(command), (err) => {
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.mock.calls[0][0]).toBe(err);
+      });
+    });
+
+    it('should call `onError` hook once for an error rejecting concurrent `send()` calls', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      // concurrent identical GET requests share one fetch, so a network failure rejects them with one error
+      vi.spyOn(globalThis, 'fetch').mockImplementation(() => Promise.reject(new TypeError('Failed to fetch')));
+
+      const results = await Promise.allSettled([
+        client.send(simpleCommand(get('/path/subPath'))),
+        client.send(simpleCommand(get('/path/subPath'))),
+      ]);
+      const [error1, error2] = results.map((result) => (result as PromiseRejectedResult).reason as unknown);
+
+      expect(error1).toBe(error2);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0]).toBe(error1);
+    });
+
+    it('should call `onError` hook for every `send()` failing with an error of its own', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 500, body: 'A server error occurred' });
+
+      const results = await Promise.allSettled([
+        client.send(simpleCommand(get('/path/subPath'))),
+        client.send(simpleCommand(get('/path/subPath'))),
+      ]);
+
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy.mock.calls.map(([error]) => error as unknown)).toEqual(
+        results.map((result) => (result as PromiseRejectedResult).reason as unknown),
+      );
+    });
   });
 
   describe('composite command', () => {
@@ -662,6 +805,77 @@ describe('clever-client', () => {
       const request = (await spy.mock.results[0].value) as CcRequest;
       expect(request.isIdempotent).toBe(true);
     });
+
+    it('should call `onError` hook once when a request sent by the composer fails', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = new (class MyCommand extends TestCompositeCommand {
+        override async compose(
+          _params: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[0],
+          composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
+        ) {
+          await composer.send(simpleCommand(get('/path/subPath')));
+          return Promise.resolve('result');
+        }
+      })();
+
+      await newScenario()
+        .when({ method: 'GET', path: '/path/subPath' })
+        .respond({ status: 500, body: 'A server error occurred' });
+
+      await expectPromiseThrows(client.send(command), (err) => {
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.mock.calls[0][0]).toBe(err);
+      });
+    });
+
+    it('should not call `onError` hook when the composer recovers from a failing request', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = new (class MyCommand extends TestCompositeCommand {
+        override async compose(
+          _params: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[0],
+          composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
+        ) {
+          try {
+            await composer.send(simpleCommand(get('/path/subPath')));
+            return 'result';
+          } catch {
+            return 'fallback';
+          }
+        }
+      })();
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 404, body: 'Not found' });
+
+      expect(await client.send(command)).toBe('fallback');
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('should not call `onError` hook when a request sent by the composer is aborted', async () => {
+      const spy = vi.fn();
+      const client = createClient({ hooks: { onError: spy } });
+      const command = new (class MyCommand extends TestCompositeCommand {
+        override async compose(
+          _params: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[0],
+          composer: Parameters<CompositeCommand<'test', unknown, unknown>['compose']>[1],
+        ) {
+          await composer.send(simpleCommand(get('/path/subPath')));
+          return Promise.resolve('result');
+        }
+      })();
+      const abortController = new AbortController();
+
+      await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' }, 50);
+
+      const promise = client.send(command, { signal: abortController.signal });
+      setTimeout(() => abortController.abort(), 10);
+
+      await expectPromiseThrows(promise, (err: DOMException) => {
+        expect(err).toBe(abortController.signal.reason);
+        expect(spy).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe('get url', () => {
@@ -768,6 +982,58 @@ describe('clever-client', () => {
       expect(spy.mock.calls[0][1].isDebugEnabled).toBe(true); // command config
       expect(spy.mock.calls[0][1].healthcheckInterval).toBe(10); // client config
       expect(spy.mock.calls[0][1].heartbeatPeriod).toBe(2_500); // default config
+    });
+
+    it('should keep the client stream config for the options the caller config sets to `undefined`', async () => {
+      const client = createClient({
+        defaultStreamConfig: {
+          heartbeatPeriod: 10,
+          isDebugEnabled: true,
+          retry: { maxRetryCount: 3 },
+        },
+      });
+      const command = streamCommand({ url: '/path/subPath' });
+      const spy = vi.spyOn(command, 'createStream');
+
+      await client.stream(command, {
+        heartbeatPeriod: undefined,
+        isDebugEnabled: undefined,
+        retry: { maxRetryCount: undefined },
+      });
+
+      expect(spy.mock.calls[0][1].heartbeatPeriod).toBe(10);
+      expect(spy.mock.calls[0][1].isDebugEnabled).toBe(true);
+      expect(spy.mock.calls[0][1].retry!.maxRetryCount).toBe(3);
+    });
+
+    it('should disable retries when the caller config sets `retry` to `null`', async () => {
+      const client = createClient({ defaultStreamConfig: { retry: { maxRetryCount: 3 } } });
+      const command = streamCommand({ url: '/path/subPath' });
+      const spy = vi.spyOn(command, 'createStream');
+
+      await client.stream(command, { retry: null });
+
+      expect(spy.mock.calls[0][1].retry).toBeNull();
+    });
+
+    it('should disable retries when the client stream config sets `retry` to `null`', async () => {
+      const client = createClient({ defaultStreamConfig: { retry: null } });
+      const command = streamCommand({ url: '/path/subPath' });
+      const spy = vi.spyOn(command, 'createStream');
+
+      await client.stream(command);
+
+      expect(spy.mock.calls[0][1].retry).toBeNull();
+    });
+
+    it('should complete with the default retry config a caller `retry` re-enabling retries the client disables', async () => {
+      const client = createClient({ defaultStreamConfig: { retry: null } });
+      const command = streamCommand({ url: '/path/subPath' });
+      const spy = vi.spyOn(command, 'createStream');
+
+      await client.stream(command, { retry: { maxRetryCount: 3 } });
+
+      expect(spy.mock.calls[0][1].retry).toEqual({ backoffFactor: 1.25, initRetryTimeout: 1_000, maxRetryCount: 3 });
     });
 
     it('should apply the request config returned by `command.getRequestConfig()`, the caller config winning', async () => {

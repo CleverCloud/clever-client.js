@@ -27,7 +27,10 @@ const SUMMARY = {
  * caller releases it. Holding the response open is what lets a test have several resolutions in
  * flight at the same time.
  */
-function resolverWithDeferredClient(indexStore: Store<ResourceIdIndex> = new MemoryStore<ResourceIdIndex>()): {
+function resolverWithDeferredClient(
+  indexStore: Store<ResourceIdIndex> = new MemoryStore<ResourceIdIndex>(),
+  getRequestSignal?: ConstructorParameters<typeof ResourceIdResolver>[2],
+): {
   resolver: ResourceIdResolver;
   send: ReturnType<typeof vi.fn>;
   respond: () => void;
@@ -39,7 +42,7 @@ function resolverWithDeferredClient(indexStore: Store<ResourceIdIndex> = new Mem
   const client = { send } as unknown as CcApiClient;
 
   return {
-    resolver: new ResourceIdResolver(client, indexStore),
+    resolver: new ResourceIdResolver(client, indexStore, getRequestSignal),
     send,
     respond: () => pending.splice(0).forEach((resolve) => resolve()),
   };
@@ -124,5 +127,91 @@ describe('ResourceIdResolver', () => {
     respond();
 
     await second;
+  });
+
+  it('should not fail a concurrent resolution when another caller aborts', async () => {
+    const { resolver, send, respond } = resolverWithDeferredClient();
+    const abortController = new AbortController();
+
+    const abortedResolution = resolver.resolveAddonId('addon_1', 'REAL_ADDON_ID', { signal: abortController.signal });
+    const keptResolution = resolver.resolveAddonId('addon_1', 'REAL_ADDON_ID');
+    await vi.waitFor(() => expect(send).toHaveBeenCalled());
+    abortController.abort();
+    respond();
+
+    const [aborted, kept] = await Promise.allSettled([abortedResolution, keptResolution]);
+
+    expect((aborted as PromiseRejectedResult).reason).toBe(abortController.signal.reason);
+    expect(kept).toEqual({ status: 'fulfilled', value: 'real_1' });
+    expect(send).toHaveBeenCalledTimes(1);
+    // the request is shared, so the signal of the caller that started it must not reach it
+    const requestSignal = (send.mock.calls[0][1] as { signal: AbortSignal }).signal;
+    expect(requestSignal).not.toBe(abortController.signal);
+    expect(requestSignal.aborted).toBe(false);
+  });
+
+  it('should abort the shared summary request once every caller aborted', async () => {
+    const { resolver, send } = resolverWithDeferredClient();
+    const abortController1 = new AbortController();
+    const abortController2 = new AbortController();
+
+    const resolution1 = resolver.resolveAddonId('addon_1', 'REAL_ADDON_ID', { signal: abortController1.signal });
+    const resolution2 = resolver.resolveAddonId('addon_1', 'REAL_ADDON_ID', { signal: abortController2.signal });
+    await vi.waitFor(() => expect(send).toHaveBeenCalled());
+    const requestSignal = (send.mock.calls[0][1] as { signal: AbortSignal }).signal;
+
+    abortController1.abort();
+    await expect(resolution1).rejects.toBe(abortController1.signal.reason);
+    // the second caller still waits for it
+    expect(requestSignal.aborted).toBe(false);
+
+    abortController2.abort();
+    await expect(resolution2).rejects.toBe(abortController2.signal.reason);
+    expect(requestSignal.aborted).toBe(true);
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+
+  it('should send a new summary request for a caller arriving once every previous caller aborted', async () => {
+    const { resolver, send, respond } = resolverWithDeferredClient();
+    const abortController = new AbortController();
+
+    const abortedResolution = resolver.resolveAddonId('addon_1', 'REAL_ADDON_ID', { signal: abortController.signal });
+    await vi.waitFor(() => expect(send).toHaveBeenCalled());
+    abortController.abort();
+    await expect(abortedResolution).rejects.toBe(abortController.signal.reason);
+
+    // the aborted request is not joined, whatever becomes of it
+    const newResolution = resolver.resolveAddonId('addon_1', 'REAL_ADDON_ID');
+    await vi.waitFor(() => expect(send).toHaveBeenCalledTimes(2));
+    respond();
+
+    await expect(newResolution).resolves.toBe('real_1');
+  });
+
+  it('should not send the summary request for a caller that already aborted', async () => {
+    const { resolver, send } = resolverWithDeferredClient();
+    const reason = new Error('navigated away');
+
+    await expect(
+      resolver.resolveAddonId('addon_1', 'REAL_ADDON_ID', { signal: AbortSignal.abort(reason) }),
+    ).rejects.toBe(reason);
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it('should let a caller relying on a default signal leave when it aborts, and abort the shared request', async () => {
+    const defaultAbortController = new AbortController();
+    const { resolver, send } = resolverWithDeferredClient(
+      new MemoryStore<ResourceIdIndex>(),
+      (requestConfig) => requestConfig?.signal ?? defaultAbortController.signal,
+    );
+
+    const resolution = resolver.resolveAddonId('addon_1', 'REAL_ADDON_ID');
+    await vi.waitFor(() => expect(send).toHaveBeenCalled());
+    const requestSignal = (send.mock.calls[0][1] as { signal: AbortSignal }).signal;
+
+    defaultAbortController.abort();
+
+    await expect(resolution).rejects.toBe(defaultAbortController.signal.reason);
+    expect(requestSignal.aborted).toBe(true);
   });
 });
