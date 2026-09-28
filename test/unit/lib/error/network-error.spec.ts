@@ -70,6 +70,7 @@ describe('asNetworkError', () => {
       ['WebKit', 'The network connection was lost.'],
       ['WebKit', 'network error'],
       ['Gecko', 'NetworkError when attempting to fetch resource.'],
+      ['Gecko, during the response', 'Error in input stream'],
       ['Node, before the response', 'fetch failed'],
       ['Node, during the response', 'terminated'],
     ] as const)('should report the %s failure "%s" with no code', ([, message]) => {

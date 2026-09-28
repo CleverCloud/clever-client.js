@@ -25,13 +25,16 @@ const NETWORK_ERROR_MESSAGES = [
   'Load failed', // WebKit
   'The network connection was lost.', // WebKit
   'network error', // WebKit
+  'Error in input stream', // Gecko, the connection died while the response was being read
   'fetch failed', // Node, the request never got a response
   'terminated', // Node, the connection died while the response was being read
 ];
 
 /**
- * Gecko words it "NetworkError when attempting to fetch resource.", which reads like something that can
- * be reworded, hence the prefix match.
+ * Gecko words a `fetch()` that never got a response "NetworkError when attempting to fetch resource.",
+ * which reads like something that can be reworded, hence the prefix match. A connection dying later,
+ * while the response body is being read, it words "Error in input stream" — a message of its own, and the
+ * one a stream meets, since a stream spends its life reading a body.
  */
 const NETWORK_ERROR_MESSAGE_PREFIX = 'NetworkError';
 
