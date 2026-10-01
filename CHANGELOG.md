@@ -1,5 +1,27 @@
 # Clever Client changelog
 
+## 12.6.6
+
+### Patch Changes
+
+- [#242](https://github.com/CleverCloud/clever-client.js/pull/242) [`418979f`](https://github.com/CleverCloud/clever-client.js/commit/418979ffed79353b8b045cda25e5d9876e8ae6be) - `CreateApiTokenCommand` can resolve a refused credential instead of rejecting
+
+  A wrong password or MFA code rejects with a 401, which reaches the `hooks.onError` callback of
+  `CcApiBridgeClient` and can read as an expired session. Set `shouldResolveRefusedCredential: true`
+  to get it as a result instead, never reported. The output is then discriminated on `type`:
+  - `created`: the token;
+  - `invalid-credential`: the email address or the password is wrong;
+  - `invalid-mfa-code`: the MFA code is wrong, or missing on an account that has one enrolled.
+
+  Every other failure still rejects. Without the option, nothing changes.
+
+  ```js
+  const result = await client.send(new CreateApiTokenCommand({ ...input, shouldResolveRefusedCredential: true }));
+  if (result.type === 'created') {
+    store(result.apiToken);
+  }
+  ```
+
 ## 12.6.5
 
 ### Patch Changes
