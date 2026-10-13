@@ -707,6 +707,19 @@ describe('cc-stream', () => {
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcHttpError);
     });
 
+    it('invalid response content type should be retried without opening the stream', async () => {
+      const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
+      await newScenario().when({ method: 'GET', path: '/' }).respond({
+        status: 200,
+        body: 'invalid content type',
+      });
+
+      void spiedStream.start();
+
+      await spiedStream.verifyCounts({ request: 3, open: 0, error: 2, failure: 1 }, 150);
+      expect((spiedStream.stubs.failure.mock.calls[0][0] as CcClientError).code).toBe('SSE_INVALID_CONTENT_TYPE');
+    });
+
     it('429 status code should lead to failure with retry', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
       await newScenario()

@@ -249,6 +249,7 @@ export class CcStream {
         this.#onError(
           new CcClientError('Invalid response content type for an SSE', 'SSE_INVALID_CONTENT_TYPE', response),
         );
+        return;
       }
 
       this.#onOpen();
