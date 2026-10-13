@@ -109,9 +109,9 @@ describe('metrics commands', function () {
             deferred.resolve(locations);
           }
         })
-        .onError(deferred.reject);
+        .onRetry(({ error }) => deferred.reject(error));
 
-      void currentStream.start();
+      currentStream.start().catch(deferred.reject);
       const locations = await deferred.promise;
 
       expect(locations).to.be.an('array');
