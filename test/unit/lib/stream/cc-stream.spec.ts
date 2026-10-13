@@ -506,6 +506,22 @@ describe('cc-stream', () => {
     }
   });
 
+  it('pausing and resuming stream while open should reconnect once', async () => {
+    const spiedStream = createAndSpyStream({ url: '/' });
+    await newScenario()
+      .when({ method: 'GET', path: '/' })
+      .respond({ status: 200, events: [HEARTBEAT, HEARTBEAT, HEARTBEAT, HEARTBEAT, HEARTBEAT], delayBetween: 10 });
+
+    void spiedStream.start();
+    await spiedStream.verifyCounts({ open: 1 }, 50);
+    spiedStream.stream.pause();
+    spiedStream.stream.resume();
+    await sleep(30);
+
+    await spiedStream.verifyCounts({ request: 2, open: 2, error: 0, failure: 0 });
+    expect(spiedStream.stream.state).toBe('open');
+  });
+
   it('resume stream should run request with last event ID header', async () => {
     const spiedStream = createAndSpyStream({ url: '/' });
     await newScenario()

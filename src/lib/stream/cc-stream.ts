@@ -34,7 +34,7 @@ export class CcStream {
   #config: CcStreamConfig;
   #state: CcStreamState = 'init';
   #eventTarget = new EventTarget();
-  #abortController: AbortController | undefined;
+  #abandonConnectionAttempt: (() => void) | undefined;
   #requestSignal: AbortSignal | undefined;
   #closeDeferred: Deferred<CcStreamCloseReason> | undefined;
   #lastReceivedMessageId: string | undefined;
@@ -196,6 +196,14 @@ export class CcStream {
   }
 
   async #start(): Promise<void> {
+    // #cleanup abandons this attempt. Example: after pause() then resume(), this attempt may still get its response
+    // or its error while the new one runs, and must ignore them.
+    const connectionAttempt = { isAbandoned: false };
+    const requestAbortController = new AbortController();
+    this.#abandonConnectionAttempt = () => {
+      connectionAttempt.isAbandoned = true;
+      requestAbortController.abort();
+    };
     this.#connectionStartTime = new Date();
     if (this.#config.retry) {
       this.#debugLog(
@@ -212,16 +220,15 @@ export class CcStream {
       this.#debugLog(`Forging HTTP request`);
       const request = await this.#requestFactory();
 
-      // close() does not stop the request factory, and a closed stream must not connect
-      if (this.#state !== 'connecting') {
-        this.#debugLog('Request forged for a stream no longer connecting', { state: this.#state });
+      // pause() or close() was called while the request was being built
+      if (connectionAttempt.isAbandoned) {
+        this.#debugLog('Connection attempt abandoned while building the request', { state: this.#state });
         return;
       }
 
       this.#watchRequestSignal(request.signal);
-      this.#abortController = new AbortController();
       if (request.signal != null) {
-        combineWithSignal(this.#abortController, request.signal);
+        combineWithSignal(requestAbortController, request.signal);
       }
 
       const headersBuilder = new HeadersBuilder(request.headers).acceptEventStream();
@@ -234,7 +241,7 @@ export class CcStream {
         ...request,
         cache: null,
         headers: headersBuilder.build(),
-        signal: this.#abortController.signal,
+        signal: requestAbortController.signal,
       });
 
       this.#debugLog('HTTP response received', {
@@ -255,16 +262,30 @@ export class CcStream {
       this.#onOpen();
 
       await response.body.read({
-        onMessage: this.#onMessage.bind(this),
-        onClose: this.#onClose.bind(this),
-        // A socket dying mid-stream rejects raw, past the point where sendRequest could name it, so
-        // it is named here instead — otherwise it would reach consumers as an unexplained SSE error.
-        onError: (error) => this.#onError(asNetworkError(error, request) ?? error),
+        onMessage: (message) => {
+          if (!connectionAttempt.isAbandoned) {
+            this.#onMessage(message);
+          }
+        },
+        onClose: () => {
+          if (!connectionAttempt.isAbandoned) {
+            this.#onClose();
+          }
+        },
+        onError: (error) => {
+          if (!connectionAttempt.isAbandoned) {
+            // A socket dying mid-stream rejects raw, past the point where sendRequest could name it, so
+            // it is named here instead — otherwise it would reach consumers as an unexplained SSE error.
+            this.#onError(asNetworkError(error, request) ?? error);
+          }
+        },
       });
     } catch (error: unknown) {
-      if (error instanceof CcClientError) {
+      if (connectionAttempt.isAbandoned) {
+        this.#debugLog('Error ignored, the connection attempt was abandoned', { state: this.#state, error });
+      } else if (error instanceof CcClientError) {
         this.#onError(error);
-      } else if (this.#abortController != null && error === this.#abortController.signal.reason) {
+      } else if (error === requestAbortController.signal.reason) {
         // an abort is not the server closing the response: `sendRequest` rejects with the reason of the signal
         this.#onError(error);
       } else {
@@ -288,7 +309,7 @@ export class CcStream {
       this.#eventListeners.clear();
       this.#requestSignal?.removeEventListener('abort', this.#onRequestSignalAbort);
     }
-    this.#abortController?.abort();
+    this.#abandonConnectionAttempt?.();
   }
 
   /**
@@ -404,11 +425,7 @@ export class CcStream {
       this.#debugLog('Close event ignored', { currentState: this.#state });
       return;
     }
-    // the body stops being read when the signal of the request aborts, which is not the server closing it
-    if (this.#abortController?.signal.aborted === true) {
-      this.#onError(this.#abortController.signal.reason);
-      return;
-    }
+    // #onError tells this apart from the body ending because the signal of the request aborted
     this.#debugLog('Stream closed unexpectedly by server', {
       state: this.#state,
       lastMessageId: this.#lastReceivedMessageId,
