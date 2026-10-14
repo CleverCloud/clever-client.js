@@ -6,7 +6,13 @@ import { asNetworkError, isFetchNetworkError } from '../error/network-error.js';
 import { HeadersBuilder } from '../request/headers-builder.js';
 import { sendRequest, SseResponseBody } from '../request/request.js';
 import { combineWithSignal, Deferred } from '../utils.js';
-import type { CcStreamCloseReason, CcStreamConfig, CcStreamRequestFactory, CcStreamState } from './cc-stream.types.js';
+import type {
+  CcStreamCloseReason,
+  CcStreamConfig,
+  CcStreamRequestFactory,
+  CcStreamRetry,
+  CcStreamState,
+} from './cc-stream.types.js';
 
 const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
 
@@ -34,7 +40,7 @@ export class CcStream {
   #config: CcStreamConfig;
   #state: CcStreamState = 'init';
   #eventTarget = new EventTarget();
-  #abortController: AbortController | undefined;
+  #abandonConnectionAttempt: (() => void) | undefined;
   #requestSignal: AbortSignal | undefined;
   #closeDeferred: Deferred<CcStreamCloseReason> | undefined;
   #lastReceivedMessageId: string | undefined;
@@ -62,7 +68,7 @@ export class CcStream {
   /**
    * Gets the current state of the stream.
    *
-   * @returns The current stream state ('init', 'connecting', 'open', 'paused', or 'closed')
+   * @returns The current stream state ('init', 'connecting', 'open', 'retrying', 'paused', or 'closed')
    */
   get state(): CcStreamState {
     return this.#state;
@@ -98,10 +104,16 @@ export class CcStream {
   /**
    * Pauses the stream, stopping the current connection and preventing automatic retries.
    * The stream can be resumed later with the resume() method.
+   *
+   * A stream can be paused while open, while connecting (the attempt is aborted) and while retrying (the retry is
+   * cancelled).
    */
   pause(): void {
-    if (this.state !== 'open') {
-      throw new CcClientError('Cannot pause a stream that is not in the "open" state', 'SSE_INVALID_STATE_ERROR');
+    if (this.#state !== 'open' && this.#state !== 'connecting' && this.#state !== 'retrying') {
+      throw new CcClientError(
+        'Cannot pause a stream that is not open, connecting or retrying',
+        'SSE_INVALID_STATE_ERROR',
+      );
     }
 
     this.#debugLog('Pausing stream', { previousState: this.#state });
@@ -111,15 +123,21 @@ export class CcStream {
 
   /**
    * Resumes a paused stream, attempting to reconnect and continue streaming.
+   *
+   * On a retrying stream, it reconnects right away. Either way, the retry count goes on: only a stream that opens
+   * starts it over, so that resuming cannot retry past `maxRetryCount`.
    */
   resume(): void {
-    if (this.state !== 'paused') {
-      throw new CcClientError('Cannot resume a stream that is not in the "paused" state', 'SSE_INVALID_STATE_ERROR');
+    if (this.state !== 'paused' && this.state !== 'retrying') {
+      throw new CcClientError(
+        'Cannot resume a stream that is not in the "paused" or "retrying" state',
+        'SSE_INVALID_STATE_ERROR',
+      );
     }
 
     this.#debugLog('Resuming stream', { previousState: this.#state });
-    // a stream waiting to retry is paused too, and its retry would start a second connection
-    clearTimeout(this.#retryTimeoutId ?? undefined);
+    // the retry of a retrying stream would start a second connection
+    this.#cleanup();
     void this.#start();
   }
 
@@ -150,13 +168,16 @@ export class CcStream {
   }
 
   /**
-   * Registers a callback to be called when the stream encounters an error.
+   * Registers a callback to be called when the stream schedules a retry after a failed attempt.
    *
-   * @param callback - Function to call when an error occurs
+   * The stream is `retrying` when the callback runs: calling pause() from it cancels the retry. A failure that
+   * is not retried calls nothing: it closes the stream and rejects the promise start() returned.
+   *
+   * @param callback - Function to call with the retry number and when the next attempt happens
    * @returns This stream instance for method chaining
    */
-  onError(callback: (error: Error) => void): this {
-    return this.on<Error>('error', (event) => callback(event.data));
+  onRetry(callback: (retry: CcStreamRetry) => void): this {
+    return this.on<CcStreamRetry>('retry', (event) => callback(event.data));
   }
 
   /**
@@ -196,6 +217,14 @@ export class CcStream {
   }
 
   async #start(): Promise<void> {
+    // #cleanup abandons this attempt. Example: after pause() then resume(), this attempt may still get its response
+    // or its error while the new one runs, and must ignore them.
+    const connectionAttempt = { isAbandoned: false };
+    const requestAbortController = new AbortController();
+    this.#abandonConnectionAttempt = () => {
+      connectionAttempt.isAbandoned = true;
+      requestAbortController.abort();
+    };
     this.#connectionStartTime = new Date();
     if (this.#config.retry) {
       this.#debugLog(
@@ -212,16 +241,15 @@ export class CcStream {
       this.#debugLog(`Forging HTTP request`);
       const request = await this.#requestFactory();
 
-      // close() does not stop the request factory, and a closed stream must not connect
-      if (this.#state !== 'connecting') {
-        this.#debugLog('Request forged for a stream no longer connecting', { state: this.#state });
+      // pause() or close() was called while the request was being built
+      if (connectionAttempt.isAbandoned) {
+        this.#debugLog('Connection attempt abandoned while building the request', { state: this.#state });
         return;
       }
 
       this.#watchRequestSignal(request.signal);
-      this.#abortController = new AbortController();
       if (request.signal != null) {
-        combineWithSignal(this.#abortController, request.signal);
+        combineWithSignal(requestAbortController, request.signal);
       }
 
       const headersBuilder = new HeadersBuilder(request.headers).acceptEventStream();
@@ -234,8 +262,14 @@ export class CcStream {
         ...request,
         cache: null,
         headers: headersBuilder.build(),
-        signal: this.#abortController.signal,
+        signal: requestAbortController.signal,
       });
+
+      // pause() or close() was called after the response arrived, too late to abort it
+      if (connectionAttempt.isAbandoned) {
+        this.#debugLog('Connection attempt abandoned after the response arrived', { state: this.#state });
+        return;
+      }
 
       this.#debugLog('HTTP response received', {
         status: response.status,
@@ -249,21 +283,42 @@ export class CcStream {
         this.#onError(
           new CcClientError('Invalid response content type for an SSE', 'SSE_INVALID_CONTENT_TYPE', response),
         );
+        return;
       }
 
       this.#onOpen();
 
+      // a listener of the `open` event may have paused or closed the stream
+      if (connectionAttempt.isAbandoned) {
+        return;
+      }
+
+      // each callback ignores what arrives once this attempt is abandoned
       await response.body.read({
-        onMessage: this.#onMessage.bind(this),
-        onClose: this.#onClose.bind(this),
-        // A socket dying mid-stream rejects raw, past the point where sendRequest could name it, so
-        // it is named here instead — otherwise it would reach consumers as an unexplained SSE error.
-        onError: (error) => this.#onError(asNetworkError(error, request) ?? error),
+        onMessage: (message) => {
+          if (!connectionAttempt.isAbandoned) {
+            this.#onMessage(message);
+          }
+        },
+        onClose: () => {
+          if (!connectionAttempt.isAbandoned) {
+            this.#onClose();
+          }
+        },
+        onError: (error) => {
+          if (!connectionAttempt.isAbandoned) {
+            // A socket dying mid-stream rejects raw, past the point where sendRequest could name it, so
+            // it is named here instead — otherwise it would reach consumers as an unexplained SSE error.
+            this.#onError(asNetworkError(error, request) ?? error);
+          }
+        },
       });
     } catch (error: unknown) {
-      if (error instanceof CcClientError) {
+      if (connectionAttempt.isAbandoned) {
+        this.#debugLog('Error ignored, the connection attempt was abandoned', { state: this.#state, error });
+      } else if (error instanceof CcClientError) {
         this.#onError(error);
-      } else if (this.#abortController != null && error === this.#abortController.signal.reason) {
+      } else if (error === requestAbortController.signal.reason) {
         // an abort is not the server closing the response: `sendRequest` rejects with the reason of the signal
         this.#onError(error);
       } else {
@@ -287,7 +342,7 @@ export class CcStream {
       this.#eventListeners.clear();
       this.#requestSignal?.removeEventListener('abort', this.#onRequestSignalAbort);
     }
-    this.#abortController?.abort();
+    this.#abandonConnectionAttempt?.();
   }
 
   /**
@@ -308,10 +363,10 @@ export class CcStream {
    * When the signal of the request aborts.
    *
    * While connecting or open, the signal aborts the connection, which ends in #onError. Between two connections,
-   * waiting to retry or paused, nothing else would notice it before the next attempt.
+   * retrying or paused, nothing else would notice it before the next attempt.
    */
   #onRequestSignalAbort = (): void => {
-    if (this.#state === 'paused') {
+    if (this.#state === 'retrying' || this.#state === 'paused') {
       this.#closeWithError(this.#requestSignal!.reason);
     }
   };
@@ -328,7 +383,6 @@ export class CcStream {
       retryCount: this.#retryCount,
     });
 
-    this.#emit('open');
     this.#state = 'open';
     this.#lastContact = new Date();
     this.#retryCount = 0;
@@ -350,6 +404,9 @@ export class CcStream {
         );
       }
     }, this.#config.healthcheckInterval);
+
+    // last, so that what a listener does to the stream is not undone
+    this.#emit('open');
   }
 
   /**
@@ -399,15 +456,11 @@ export class CcStream {
   }
 
   #onClose(): void {
-    if (this.#state === 'closed' || this.#state === 'paused') {
+    if (this.#state === 'closed' || this.#state === 'retrying' || this.#state === 'paused') {
       this.#debugLog('Close event ignored', { currentState: this.#state });
       return;
     }
-    // the body stops being read when the signal of the request aborts, which is not the server closing it
-    if (this.#abortController?.signal.aborted === true) {
-      this.#onError(this.#abortController.signal.reason);
-      return;
-    }
+    // #onError tells this apart from the body ending because the signal of the request aborted
     this.#debugLog('Stream closed unexpectedly by server', {
       state: this.#state,
       lastMessageId: this.#lastReceivedMessageId,
@@ -421,7 +474,7 @@ export class CcStream {
    * @param error - The error that occurred
    */
   #onError(error: unknown): void {
-    if (this.#state === 'closed' || this.#state === 'paused') {
+    if (this.#state === 'closed' || this.#state === 'retrying' || this.#state === 'paused') {
       this.#debugLog('Error event ignored', { currentState: this.#state, error });
       return;
     }
@@ -453,11 +506,11 @@ export class CcStream {
 
     if (canRetry && this.#config.retry != null) {
       const retry = this.#config.retry;
-      this.#state = 'paused';
-      this.#emit('error', wrappedError);
+      this.#state = 'retrying';
 
-      this.#retryCount++;
+      // before counting this retry, so that the first one waits initRetryTimeout
       const exponentialBackoffDelay = retry.initRetryTimeout * retry.backoffFactor ** this.#retryCount;
+      this.#retryCount++;
 
       this.#debugLog('Scheduling retry', {
         retryCount: this.#retryCount,
@@ -468,6 +521,14 @@ export class CcStream {
       this.#retryTimeoutId = setTimeout(() => {
         void this.#start();
       }, exponentialBackoffDelay);
+
+      // only once the retry is scheduled, so that a listener can cancel it with pause()
+      this.#emit('retry', {
+        error: wrappedError,
+        retryCount: this.#retryCount,
+        maxRetryCount: retry.maxRetryCount,
+        retryAt: new Date(Date.now() + exponentialBackoffDelay),
+      } satisfies CcStreamRetry);
     } else {
       this.#closeWithError(wrappedError);
     }

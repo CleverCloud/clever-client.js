@@ -249,7 +249,8 @@ const stream = await client.stream(new StreamApplicationRuntimeLogCommand({
 stream
   .onOpen(() => updateUI('streaming'))
   .onLog(log => updateUI('newLog', log))
-  .onError(error => updateUI('retryableErrorOccurred', error, stream.retryCount));
+  // { error, retryCount, maxRetryCount, retryAt }: calling stream.pause() from here cancels the retry
+  .onRetry(retry => updateUI('reconnecting', retry));
 
 // Start streaming
 stream.start()
@@ -257,7 +258,7 @@ stream.start()
   .catch((error) => handleFatalError(error));
 
 // Check stream status
-console.log(stream.state); // 'init', 'connecting', 'open', 'paused' or 'closed'
+console.log(stream.state); // 'init', 'connecting', 'open', 'retrying', 'paused' or 'closed'
 
 // Gracefully stop the stream
 stream.stop();

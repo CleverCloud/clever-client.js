@@ -40,9 +40,9 @@ describe('log commands', function () {
           void fetch(`https://${STATIC_LOGS_APPLICATION.replaceAll('_', '-')}.cleverapps.io`, { method: 'HEAD' });
         })
         .onLog(deferred.resolve)
-        .onError(deferred.reject);
+        .onRetry(({ error }) => deferred.reject(error));
 
-      void currentStream.start();
+      currentStream.start().catch(deferred.reject);
 
       const log = await deferred.promise;
 
@@ -71,9 +71,9 @@ describe('log commands', function () {
           void fetch(`https://${STATIC_LOGS_APPLICATION.replaceAll('_', '-')}.cleverapps.io`, { method: 'GET' });
         })
         .onLog(deferred.resolve)
-        .onError(deferred.reject);
+        .onRetry(({ error }) => deferred.reject(error));
 
-      void currentStream.start();
+      currentStream.start().catch(deferred.reject);
       const log = await deferred.promise;
 
       expect(log.applicationId).toBe(STATIC_LOGS_APPLICATION);
