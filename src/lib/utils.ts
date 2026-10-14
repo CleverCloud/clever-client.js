@@ -363,7 +363,11 @@ export function combineWithSignal(abortController: AbortController, signal: Abor
     if (signal.aborted) {
       abortController.abort(signal.reason);
     } else {
-      signal.addEventListener('abort', () => abortController.abort(signal.reason), { once: true });
+      // removed once the controller aborts too: a long-lived signal would otherwise keep one per controller for ever
+      signal.addEventListener('abort', () => abortController.abort(signal.reason), {
+        once: true,
+        signal: abortController.signal,
+      });
     }
   }
 }
