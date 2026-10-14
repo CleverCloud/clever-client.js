@@ -907,6 +907,26 @@ describe('cc-stream', () => {
       });
     });
 
+    it('first retry should wait the initial retry timeout, the next ones backing off from it', async () => {
+      const spiedStream = createAndSpyStream(
+        { url: '/' },
+        { retry: { ...RETRY, initRetryTimeout: 20, backoffFactor: 2 } },
+      );
+      const delays: Array<number> = [];
+      spiedStream.stream.onRetry(({ retryAt }) => delays.push(retryAt.getTime() - Date.now()));
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 500, body: { message: '500' } });
+
+      void spiedStream.start();
+
+      await spiedStream.verifyCounts({ retry: 2, failure: 1 }, 300);
+      expect(delays[0]).toBeGreaterThan(15);
+      expect(delays[0]).toBeLessThanOrEqual(20);
+      expect(delays[1]).toBeGreaterThan(35);
+      expect(delays[1]).toBeLessThanOrEqual(40);
+    });
+
     it('failure without retry should not notify a retry', async () => {
       const spiedStream = createAndSpyStream({ url: '/' }, { retry: RETRY });
       await newScenario()

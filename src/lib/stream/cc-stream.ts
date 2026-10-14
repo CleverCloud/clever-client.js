@@ -509,8 +509,9 @@ export class CcStream {
       const retry = this.#config.retry;
       this.#state = 'retrying';
 
-      this.#retryCount++;
+      // before counting this retry, so that the first one waits initRetryTimeout
       const exponentialBackoffDelay = retry.initRetryTimeout * retry.backoffFactor ** this.#retryCount;
+      this.#retryCount++;
 
       this.#debugLog('Scheduling retry', {
         retryCount: this.#retryCount,
