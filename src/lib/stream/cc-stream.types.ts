@@ -1,5 +1,6 @@
 import type { CcRequest } from '../../types/request.types.js';
 import type { SelfOrPromise } from '../../types/utils.types.js';
+import type { CcClientError } from '../error/cc-client-errors.js';
 
 /** Factory function that creates HTTP requests for streaming */
 export type CcStreamRequestFactory = () => SelfOrPromise<CcRequest>;
@@ -32,8 +33,24 @@ export interface RetryConfig {
   maxRetryCount: number;
 }
 
-/** Possible states of a CcStream */
-export type CcStreamState = 'init' | 'connecting' | 'open' | 'paused' | 'closed';
+/**
+ * Possible states of a CcStream
+ *
+ * `retrying` is the wait between a failed attempt and the next one, `paused` a pause its consumer asked for.
+ */
+export type CcStreamState = 'init' | 'connecting' | 'open' | 'retrying' | 'paused' | 'closed';
+
+/** What a stream tells the listeners of its `retry` event, once its next attempt is scheduled */
+export interface CcStreamRetry {
+  /** The failure the stream retries after */
+  error: CcClientError;
+  /** The number of this retry, 1 for the first one: the value `CcStream.retryCount` holds until the next attempt */
+  retryCount: number;
+  /** The number of retries the stream makes before giving up (may be `Infinity`) */
+  maxRetryCount: number;
+  /** When the stream makes its next attempt */
+  retryAt: Date;
+}
 
 /** Information about why a stream was closed */
 export interface CcStreamCloseReason {
