@@ -1,5 +1,44 @@
 # Clever Client changelog
 
+## 12.6.7
+
+### Patch Changes
+
+- [#244](https://github.com/CleverCloud/clever-client.js/pull/244) [`cc6146a`](https://github.com/CleverCloud/clever-client.js/commit/cc6146a1d0b38ec2704ecc16ecfa32956be597c1) - Make the first reconnection of a stream wait `initRetryTimeout`, not `initRetryTimeout × backoffFactor`
+
+- [#244](https://github.com/CleverCloud/clever-client.js/pull/244) [`5963f54`](https://github.com/CleverCloud/clever-client.js/commit/5963f54fc351d01d598a84e13ca971d4d857adac) - Stop a stream with retries from reconnecting for ever when the response is not an event stream
+
+  It now fails with `SSE_INVALID_CONTENT_TYPE` once its retries are spent, without firing `onOpen()`.
+
+- [#244](https://github.com/CleverCloud/clever-client.js/pull/244) [`4c28e42`](https://github.com/CleverCloud/clever-client.js/commit/4c28e4280dcbccb694919c88b2e87cf09fdd8d1d) - Replace `onError()` and the `error` event of streams with `onRetry()`
+
+  `onError()` was only ever called when the stream was about to reconnect, never for an error ending it, which still only rejects the promise `start()` returns. `onRetry()` is called at the same time with `{ error, retryCount, maxRetryCount, retryAt }`, `retryCount` starting at 1:
+
+  ```diff
+  -stream.onError((error) => showReconnecting(error, stream.retryCount + 1));
+  -stream.on('error', (event) => showReconnecting(event.data, stream.retryCount + 1));
+  +stream.onRetry(({ error, retryCount }) => showReconnecting(error, retryCount));
+  ```
+
+- [#244](https://github.com/CleverCloud/clever-client.js/pull/244) [`4c28e42`](https://github.com/CleverCloud/clever-client.js/commit/4c28e4280dcbccb694919c88b2e87cf09fdd8d1d) - `pause()` now works while a stream is connecting or retrying, and cancels the reconnection
+
+  It can also be called from `onOpen()` and `onRetry()` listeners. It still throws on a stream not started yet, already paused or closed.
+
+- [#244](https://github.com/CleverCloud/clever-client.js/pull/244) [`6fc0102`](https://github.com/CleverCloud/clever-client.js/commit/6fc0102e07926921b44077222f547c925f06ab2b) - Keep a stream open when `pause()` and `resume()` are called in quick succession
+
+  It could close instead, usually rejecting the promise `start()` returned with an `AbortError`.
+
+- [#244](https://github.com/CleverCloud/clever-client.js/pull/244) [`4c28e42`](https://github.com/CleverCloud/clever-client.js/commit/4c28e4280dcbccb694919c88b2e87cf09fdd8d1d) - `stream.state` is now `retrying`, not `paused`, while a stream waits to reconnect
+
+  `paused` now only means the consumer paused the stream. Code reading `paused` as "reconnecting" must read `retrying`:
+
+  ```diff
+  -if (stream.state === 'paused') showReconnecting();
+  +if (stream.state === 'retrying') showReconnecting();
+  ```
+
+- [#244](https://github.com/CleverCloud/clever-client.js/pull/244) [`d4b08cd`](https://github.com/CleverCloud/clever-client.js/commit/d4b08cda21a897dee11eb849ed212fef794e3690) - Stop a stream from keeping a listener on the `signal` of its request at each reconnection
+
 ## 12.6.6
 
 ### Patch Changes
