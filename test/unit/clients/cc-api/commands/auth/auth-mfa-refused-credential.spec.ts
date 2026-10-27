@@ -9,6 +9,7 @@ import type {
   CreateAuthMfaCommandResponse,
   CreateAuthMfaResult,
 } from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.types.js';
+import { DeleteAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
 import type { CcApiCompositeCommand } from '../../../../../../src/clients/cc-api/lib/cc-api-command.js';
 import { MemoryStore } from '../../../../../../src/clients/cc-api/lib/store/memory-store.js';
 import type { ResourceIdIndex } from '../../../../../../src/clients/cc-api/types/resource-id-resolver.types.js';
@@ -45,6 +46,14 @@ const COMMANDS: Array<{
     response: { status: 200, body: { url: 'otpauth://totp/x?secret=S' } },
     output: { url: 'otpauth://totp/x?secret=S' },
     result: { type: 'created', url: 'otpauth://totp/x?secret=S' },
+  },
+  {
+    name: 'DeleteAuthMfaCommand',
+    create: (flag?: boolean) => new DeleteAuthMfaCommand({ ...AUTH, shouldResolveRefusedCredential: flag }),
+    request: { method: 'DELETE', path: '/v2/self/mfa/TOTP' },
+    response: { status: 200, body: { id: 0, message: 'ok', type: 'success' } },
+    output: undefined,
+    result: { type: 'deleted' },
   },
 ];
 
