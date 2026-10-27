@@ -1,0 +1,140 @@
+import type { NewScenario } from '@clevercloud/doublure';
+import { doublureHooks } from '@clevercloud/doublure/testing';
+import { afterAll, beforeAll, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
+import { CcApiClient } from '../../../../../../src/clients/cc-api/cc-api-client.js';
+import type { ResolveRefusedCredentialInput } from '../../../../../../src/clients/cc-api/commands/auth/auth.types.js';
+import { CreateAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
+import type {
+  CreateAuthMfaCommandInput,
+  CreateAuthMfaCommandResponse,
+  CreateAuthMfaResult,
+} from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.types.js';
+import type { CcApiCompositeCommand } from '../../../../../../src/clients/cc-api/lib/cc-api-command.js';
+import { MemoryStore } from '../../../../../../src/clients/cc-api/lib/store/memory-store.js';
+import type { ResourceIdIndex } from '../../../../../../src/clients/cc-api/types/resource-id-resolver.types.js';
+import { CcHttpError } from '../../../../../../src/lib/error/cc-client-errors.js';
+import { expectPromiseThrows } from '../../../../../lib/expect-utils.js';
+
+/** What `client.send()` resolves to for a given command, without sending anything. */
+function outputOf<CommandInput, CommandOutput>(
+  _command: CcApiCompositeCommand<CommandInput, CommandOutput>,
+): CommandOutput {
+  return undefined as CommandOutput;
+}
+
+const WRONG_PASSWORD = { status: 401, body: { id: 3029, message: 'Wrong password provided', type: 'error' } };
+
+const AUTH = { kind: 'TOTP', password: 'password' } as const;
+
+/** Any of the commands below, loose enough for `client.send()` to take each of them. */
+type AuthMfaCommand = CcApiCompositeCommand<ResolveRefusedCredentialInput, unknown>;
+
+/** Each command asking for the password again, with the request it sends and what it resolves. */
+const COMMANDS: Array<{
+  name: string;
+  create: (flag?: boolean) => AuthMfaCommand;
+  request: { method: string; path: string };
+  response: { status: number; body: unknown };
+  output: unknown;
+  result: unknown;
+}> = [
+  {
+    name: 'CreateAuthMfaCommand',
+    create: (flag?: boolean) => new CreateAuthMfaCommand({ ...AUTH, shouldResolveRefusedCredential: flag }),
+    request: { method: 'POST', path: '/v2/self/mfa/TOTP' },
+    response: { status: 200, body: { url: 'otpauth://totp/x?secret=S' } },
+    output: { url: 'otpauth://totp/x?secret=S' },
+    result: { type: 'created', url: 'otpauth://totp/x?secret=S' },
+  },
+];
+
+describe('auth MFA commands', () => {
+  let newScenario: NewScenario;
+
+  const hooks = doublureHooks();
+
+  beforeAll(async () => {
+    newScenario = await hooks.before();
+  });
+  beforeEach(hooks.beforeEach);
+  afterAll(hooks.after);
+
+  function createClient(onError: (error: unknown) => void): CcApiClient {
+    return new CcApiClient({
+      baseUrl: newScenario.mockClient.baseUrl,
+      resourceIdResolverStore: new MemoryStore<ResourceIdIndex>(),
+      hooks: { onError },
+    });
+  }
+
+  // the command is generic for this: only the input says whether a refused credential resolves
+  it('should type its output after `shouldResolveRefusedCredential`', () => {
+    expectTypeOf(outputOf(new CreateAuthMfaCommand(AUTH))).toEqualTypeOf<CreateAuthMfaCommandResponse>();
+    expectTypeOf(
+      outputOf(new CreateAuthMfaCommand({ ...AUTH, shouldResolveRefusedCredential: false })),
+    ).toEqualTypeOf<CreateAuthMfaCommandResponse>();
+    expectTypeOf(
+      outputOf(new CreateAuthMfaCommand({ ...AUTH, shouldResolveRefusedCredential: true })),
+    ).toEqualTypeOf<CreateAuthMfaResult>();
+    const input: CreateAuthMfaCommandInput = AUTH;
+    expectTypeOf(outputOf(new CreateAuthMfaCommand(input))).toEqualTypeOf<
+      CreateAuthMfaCommandResponse | CreateAuthMfaResult
+    >();
+  });
+
+  describe.each(COMMANDS)('$name', ({ create, request, response, output, result }) => {
+    describe('by default', () => {
+      it('should resolve the response', async () => {
+        await newScenario().when(request).respond(response);
+
+        expect(await createClient(vi.fn()).send(create())).toEqual(output);
+      });
+
+      it('should reject and report a refused password', async () => {
+        const onError = vi.fn();
+        await newScenario().when(request).respond(WRONG_PASSWORD);
+
+        await expectPromiseThrows(createClient(onError).send(create()), (error: CcHttpError) => {
+          expect(error).toBeInstanceOf(CcHttpError);
+          expect(error.code).toBe('clever.auth.invalid-password');
+          expect(onError).toHaveBeenCalledTimes(1);
+        });
+      });
+    });
+
+    describe('with `shouldResolveRefusedCredential`', () => {
+      it('should resolve the success', async () => {
+        await newScenario().when(request).respond(response);
+
+        expect(await createClient(vi.fn()).send(create(true))).toEqual(result);
+      });
+
+      // cc-api answers a wrong password with a 401, which an `onError` listener takes for an expired session
+      it('should resolve a refused password without reporting it', async () => {
+        const onError = vi.fn();
+        await newScenario().when(request).respond(WRONG_PASSWORD);
+
+        expect(await createClient(onError).send(create(true))).toEqual({ type: 'invalid-password' });
+        expect(onError).not.toHaveBeenCalled();
+      });
+
+      it('should reject and report any other error', async () => {
+        const onError = vi.fn();
+        await newScenario()
+          .when(request)
+          .respond({
+            status: 403,
+            body: { id: 7301, message: "You are not allowed to access this user's data", type: 'error' },
+          });
+
+        await expectPromiseThrows(createClient(onError).send(create(true)), (error: CcHttpError) => {
+          expect(error).toBeInstanceOf(CcHttpError);
+          expect(error.code).toBe('7301');
+          expect(onError).toHaveBeenCalledTimes(1);
+          expect(onError.mock.calls[0][0]).toBe(error);
+        });
+      });
+    });
+  });
+
+});
