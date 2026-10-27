@@ -3,6 +3,7 @@ import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { CcApiClient } from '../../../../../../src/clients/cc-api/cc-api-client.js';
 import { CreateAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
+import { DeleteAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
 import { MemoryStore } from '../../../../../../src/clients/cc-api/lib/store/memory-store.js';
 import type { ResourceIdIndex } from '../../../../../../src/clients/cc-api/types/resource-id-resolver.types.js';
 import type { CcHttpError } from '../../../../../../src/lib/error/cc-client-errors.js';
@@ -48,6 +49,20 @@ const CASES: Array<{
     name: 'CreateAuthMfaCommand: token not almighty',
     command: () => new CreateAuthMfaCommand(AUTH),
     request: { method: 'POST', path: '/v2/self/mfa/TOTP' },
+    response: apiError(403, 7301),
+    code: 'clever.auth.almighty-token-required',
+  },
+  {
+    name: 'DeleteAuthMfaCommand: factor not active',
+    command: () => new DeleteAuthMfaCommand(AUTH),
+    request: { method: 'DELETE', path: '/v2/self/mfa/TOTP' },
+    response: apiError(404, 3101),
+    code: 'clever.auth.mfa-not-found',
+  },
+  {
+    name: 'DeleteAuthMfaCommand: token not almighty',
+    command: () => new DeleteAuthMfaCommand(AUTH),
+    request: { method: 'DELETE', path: '/v2/self/mfa/TOTP' },
     response: apiError(403, 7301),
     code: 'clever.auth.almighty-token-required',
   },
