@@ -30,6 +30,11 @@ export interface ApiErrorInfo {
   message?: string;
   /** The HTTP status code of the response. */
   status: number;
+  /**
+   * The body of the response, parsed when it is JSON. For an endpoint reusing one code for several
+   * failures and telling them apart only in the body, like the `fields` of a cc-api validation error.
+   */
+  body: unknown;
 }
 
 /**
