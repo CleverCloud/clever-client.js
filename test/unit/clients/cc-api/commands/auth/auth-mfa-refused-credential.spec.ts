@@ -3,6 +3,8 @@ import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
 import { CcApiClient } from '../../../../../../src/clients/cc-api/cc-api-client.js';
 import type { ResolveRefusedCredentialInput } from '../../../../../../src/clients/cc-api/commands/auth/auth.types.js';
+import { ConfirmAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.js';
+import type { ConfirmAuthMfaResult } from '../../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.types.js';
 import { CreateAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
 import type {
   CreateAuthMfaCommandInput,
@@ -25,6 +27,10 @@ function outputOf<CommandInput, CommandOutput>(
 }
 
 const WRONG_PASSWORD = { status: 401, body: { id: 3029, message: 'Wrong password provided', type: 'error' } };
+const MFA_BAD_CODE = {
+  status: 400,
+  body: { id: 3103, message: 'Your code is invalid for the multi factor authentication kind', type: 'error' },
+};
 
 const AUTH = { kind: 'TOTP', password: 'password' } as const;
 
@@ -64,6 +70,15 @@ const COMMANDS: Array<{
     output: ['a', 'b'],
     result: { type: 'retrieved', backupCodes: ['a', 'b'] },
   },
+  {
+    name: 'ConfirmAuthMfaCommand',
+    create: (flag?: boolean) =>
+      new ConfirmAuthMfaCommand({ ...AUTH, code: '123456', shouldResolveRefusedCredential: flag }),
+    request: { method: 'POST', path: '/v2/self/mfa/TOTP/confirmation' },
+    response: { status: 200, body: { id: 0, message: 'ok', type: 'success' } },
+    output: undefined,
+    result: { type: 'confirmed' },
+  },
 ];
 
 describe('auth MFA commands', () => {
@@ -98,6 +113,9 @@ describe('auth MFA commands', () => {
     expectTypeOf(outputOf(new CreateAuthMfaCommand(input))).toEqualTypeOf<
       CreateAuthMfaCommandResponse | CreateAuthMfaResult
     >();
+    expectTypeOf(
+      outputOf(new ConfirmAuthMfaCommand({ ...AUTH, code: '123456', shouldResolveRefusedCredential: true })),
+    ).toEqualTypeOf<ConfirmAuthMfaResult>();
   });
 
   describe.each(COMMANDS)('$name', ({ create, request, response, output, result }) => {
@@ -155,4 +173,41 @@ describe('auth MFA commands', () => {
     });
   });
 
+  describe('ConfirmAuthMfaCommand', () => {
+    const request = { method: 'POST', path: '/v2/self/mfa/TOTP/confirmation' } as const;
+    const command = (flag?: boolean) =>
+      new ConfirmAuthMfaCommand({ ...AUTH, code: '123456', shouldResolveRefusedCredential: flag });
+
+    it('should reject and report a refused code by default', async () => {
+      const onError = vi.fn();
+      await newScenario().when(request).respond(MFA_BAD_CODE);
+
+      await expectPromiseThrows(createClient(onError).send(command()), (error: CcHttpError) => {
+        expect(error.code).toBe('clever.auth.invalid-mfa-code');
+        expect(onError).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    it('should resolve a refused code without reporting it with `shouldResolveRefusedCredential`', async () => {
+      const onError = vi.fn();
+      await newScenario().when(request).respond(MFA_BAD_CODE);
+
+      expect(await createClient(onError).send(command(true))).toEqual({ type: 'invalid-mfa-code' });
+      expect(onError).not.toHaveBeenCalled();
+    });
+
+    // the other commands meet no code, so a refused one is not theirs to resolve
+    it('should reject a refused code on a command that meets none', async () => {
+      const onError = vi.fn();
+      await newScenario().when({ method: 'POST', path: '/v2/self/mfa/TOTP' }).respond(MFA_BAD_CODE);
+
+      await expectPromiseThrows(
+        createClient(onError).send(new CreateAuthMfaCommand({ ...AUTH, shouldResolveRefusedCredential: true })),
+        (error: CcHttpError) => {
+          expect(error.code).toBe('3103');
+          expect(onError).toHaveBeenCalledTimes(1);
+        },
+      );
+    });
+  });
 });
