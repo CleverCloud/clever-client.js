@@ -2,6 +2,7 @@ import type { NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { CcApiClient } from '../../../../../../src/clients/cc-api/cc-api-client.js';
+import { ConfirmAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.js';
 import { CreateAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
 import { DeleteAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
 import { MemoryStore } from '../../../../../../src/clients/cc-api/lib/store/memory-store.js';
@@ -63,6 +64,34 @@ const CASES: Array<{
     name: 'DeleteAuthMfaCommand: token not almighty',
     command: () => new DeleteAuthMfaCommand(AUTH),
     request: { method: 'DELETE', path: '/v2/self/mfa/TOTP' },
+    response: apiError(403, 7301),
+    code: 'clever.auth.almighty-token-required',
+  },
+  {
+    name: 'ConfirmAuthMfaCommand: wrong code',
+    command: () => new ConfirmAuthMfaCommand({ ...AUTH, code: '123456' }),
+    request: { method: 'POST', path: '/v2/self/mfa/TOTP/confirmation' },
+    response: apiError(400, 3103),
+    code: 'clever.auth.invalid-mfa-code',
+  },
+  {
+    name: 'ConfirmAuthMfaCommand: factor already active',
+    command: () => new ConfirmAuthMfaCommand({ ...AUTH, code: '123456' }),
+    request: { method: 'POST', path: '/v2/self/mfa/TOTP/confirmation' },
+    response: apiError(409, 3102),
+    code: 'clever.auth.mfa-already-enabled',
+  },
+  {
+    name: 'ConfirmAuthMfaCommand: no enrolment started',
+    command: () => new ConfirmAuthMfaCommand({ ...AUTH, code: '123456' }),
+    request: { method: 'POST', path: '/v2/self/mfa/TOTP/confirmation' },
+    response: apiError(404, 3101),
+    code: 'clever.auth.mfa-enrolment-not-found',
+  },
+  {
+    name: 'ConfirmAuthMfaCommand: token not almighty',
+    command: () => new ConfirmAuthMfaCommand({ ...AUTH, code: '123456' }),
+    request: { method: 'POST', path: '/v2/self/mfa/TOTP/confirmation' },
     response: apiError(403, 7301),
     code: 'clever.auth.almighty-token-required',
   },
