@@ -6,6 +6,7 @@ import { ConfirmAuthMfaCommand } from '../../../../../../src/clients/cc-api/comm
 import { CreateAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
 import { DeleteAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
 import { GetAuthMfaBackupCodesCommand } from '../../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-backup-codes-command.js';
+import { UpdateAuthPasswordCommand } from '../../../../../../src/clients/cc-api/commands/auth/update-auth-password-command.js';
 import { MemoryStore } from '../../../../../../src/clients/cc-api/lib/store/memory-store.js';
 import type { ResourceIdIndex } from '../../../../../../src/clients/cc-api/types/resource-id-resolver.types.js';
 import type { CcHttpError } from '../../../../../../src/lib/error/cc-client-errors.js';
@@ -13,6 +14,7 @@ import type { Command } from '../../../../../../src/types/command.types.js';
 import { expectPromiseThrows } from '../../../../../lib/expect-utils.js';
 
 const AUTH = { kind: 'TOTP', password: 'password' } as const;
+const PASSWORDS = { oldPassword: 'old-password', newPassword: 'new-password' };
 
 /** An error answered by cc-api, with the id its `Errors` enum gives it. */
 function apiError(status: number, id: number, extra: object = {}) {
@@ -81,6 +83,36 @@ const CASES: Array<{
     request: { method: 'POST', path: '/v2/self/mfa/TOTP/confirmation' },
     response: apiError(404, 3101),
     code: 'clever.auth.mfa-enrolment-not-found',
+  },
+  {
+    name: 'UpdateAuthPasswordCommand: wrong current password',
+    command: () => new UpdateAuthPasswordCommand(PASSWORDS),
+    request: { method: 'PUT', path: '/v2/self/change_password' },
+    response: apiError(400, 504, { fields: { oldPassword: 'Password does not match' } }),
+    code: 'clever.auth.invalid-password',
+  },
+  {
+    name: 'UpdateAuthPasswordCommand: invalid new password',
+    command: () => new UpdateAuthPasswordCommand(PASSWORDS),
+    request: { method: 'PUT', path: '/v2/self/change_password' },
+    response: apiError(400, 504, {
+      fields: { newPassword: 'Must be between 12 characters long and 4096 characters long' },
+    }),
+    code: 'clever.auth.invalid-new-password',
+  },
+  {
+    name: 'UpdateAuthPasswordCommand: both passwords at fault',
+    command: () => new UpdateAuthPasswordCommand(PASSWORDS),
+    request: { method: 'PUT', path: '/v2/self/change_password' },
+    response: apiError(400, 504, { fields: { oldPassword: 'Password does not match', newPassword: 'Too short' } }),
+    code: 'clever.auth.invalid-password',
+  },
+  {
+    name: 'UpdateAuthPasswordCommand: validation error without fields',
+    command: () => new UpdateAuthPasswordCommand(PASSWORDS),
+    request: { method: 'PUT', path: '/v2/self/change_password' },
+    response: apiError(400, 504),
+    code: '504',
   },
 ];
 
