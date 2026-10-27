@@ -6,6 +6,7 @@ import { ConfirmAuthMfaCommand } from '../../../../../../src/clients/cc-api/comm
 import { CreateAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
 import { DeleteAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
 import { GetAuthMfaBackupCodesCommand } from '../../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-backup-codes-command.js';
+import { RequestAuthPasswordResetCommand } from '../../../../../../src/clients/cc-api/commands/auth/request-auth-password-reset-command.js';
 import { UpdateAuthPasswordCommand } from '../../../../../../src/clients/cc-api/commands/auth/update-auth-password-command.js';
 import { MemoryStore } from '../../../../../../src/clients/cc-api/lib/store/memory-store.js';
 import type { ResourceIdIndex } from '../../../../../../src/clients/cc-api/types/resource-id-resolver.types.js';
@@ -142,4 +143,12 @@ describe('auth commands error codes', () => {
     });
   });
 
+  // the mock server cannot parse the form this command posts, so its mapping is checked on its own
+  it('RequestAuthPasswordResetCommand: email not sent', () => {
+    const command = new RequestAuthPasswordResetCommand({ login: 'user@example.com' });
+
+    expect(command.transformErrorCode({ code: '2401', status: 500, body: apiError(500, 2401).body })).toBe(
+      'clever.auth.password-reset-email-failed',
+    );
+  });
 });
