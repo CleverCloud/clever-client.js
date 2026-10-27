@@ -33,7 +33,14 @@ export function handleHttpErrors(
       parsedErrorMessage == null || parsedErrorMessage.length === 0
         ? `Error ${response.status}`
         : `[${response.status}]: ${parsedErrorMessage}`;
-    const errorCode = resolveErrorCode(response, parsedErrorCode, parsedErrorMessage, fieldErrorsMessage, command);
+    const errorCode = resolveErrorCode(
+      response,
+      errorBody,
+      parsedErrorCode,
+      parsedErrorMessage,
+      fieldErrorsMessage,
+      command,
+    );
 
     // throw error
     throw new CcHttpError(errorMessage, errorCode, request, response);
@@ -169,6 +176,7 @@ function parseErrorCode(body: unknown): string | undefined {
  */
 function resolveErrorCode(
   response: CcResponse<unknown>,
+  errorBody: unknown,
   parsedErrorCode: string | undefined,
   parsedErrorMessage: string | undefined,
   fieldErrorsMessage: string | undefined,
@@ -180,7 +188,7 @@ function resolveErrorCode(
   if (isFieldErrorsResponse(response, parsedErrorCode, fieldErrorsMessage)) {
     return BAD_REQUEST_ERROR_CODE;
   }
-  return transformErrorCode(parsedErrorCode, parsedErrorMessage, response.status, command);
+  return transformErrorCode(parsedErrorCode, parsedErrorMessage, response.status, errorBody, command);
 }
 
 /**
@@ -218,10 +226,11 @@ function transformErrorCode(
   errorCode: string | undefined,
   errorMessage: string | undefined,
   status: number,
+  body: unknown,
   command?: SimpleCommand<string, unknown, unknown>,
 ): string {
   if (errorCode == null || command == null) {
     return 'unknown_error';
   }
-  return command.transformErrorCode({ code: errorCode, message: errorMessage, status });
+  return command.transformErrorCode({ code: errorCode, message: errorMessage, status, body });
 }

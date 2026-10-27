@@ -125,7 +125,7 @@ export abstract class SimpleCommand<Api extends string, CommandInput, CommandOut
   /**
    * Transforms an API error into a client-specific error code.
    *
-   * @param error - What could be parsed from the error response: its code, its message and its HTTP status
+   * @param error - What could be parsed from the error response: its code, its message, its HTTP status and its body
    * @returns The transformed error code for client use
    */
   transformErrorCode(error: ApiErrorInfo): string {
