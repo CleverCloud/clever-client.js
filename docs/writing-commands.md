@@ -436,8 +436,9 @@ transformErrorCode({ code, message }: ApiErrorInfo) {
 - `<COMMAND_NAME>_ERROR_CODES` for the object, `<CommandName>ErrorCode` for the union, values dotted
   as `clever.<domain>.<failure>`.
 - A lookup record, not an if-chain; unknown codes pass through unchanged.
-- `ApiErrorInfo` carries `code`, `message` and `status`, so an endpoint reusing one code for several
-  failures can still be told apart on the message. Matching an English message is a last resort:
+- `ApiErrorInfo` carries `code`, `message`, `status` and the parsed `body`, so an endpoint reusing one
+  code for several failures can still be told apart on the message, or on the body (the `fields` of a
+  cc-api validation error). Matching an English message is a last resort:
   mark it `FIXME` with what would let it go, and keep it here rather than in every consumer.
 - Rate limiting is normalised by the client (429 on v4, 403 with `id` 403 on v2 →
   `clever.core.too-many-requests`); commands do not handle it. Callers narrow with the predicates in
