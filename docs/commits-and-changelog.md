@@ -135,14 +135,14 @@ Same rule one level up: the scope is the folder, or the tool when there is no fo
 | `ci`           | `.github/`                                                        |
 | `deps`         | Dependency bumps                                                  |
 | `release`      | `.changeset/` configuration and the release pipeline              |
-| `data`         | `data/` — the command → source map, the endpoint dumps            |
 | `tasks`        | `tasks/`                                                          |
 | `adr`          | `adr/`                                                            |
 
 Documentation is the one thing scoped by subject rather than by folder, because `docs/` is flat and
 its files are named after what they explain: `docs(commands)` for `writing-commands.md`,
-`docs(commits)` for this file. JSDoc is not documentation in that sense — it lives inside a command
-and takes that command's scope, `docs(cc-api/get-zone)`.
+`docs(commits)` for this file, `docs(source-map)` for `command-backend-source-map.csv`. JSDoc is not
+documentation in that sense — it lives inside a command and takes that command's scope,
+`docs(cc-api/get-zone)`.
 
 ## Changelog
 
@@ -169,7 +169,7 @@ Nothing in CI enforces this: a change a consumer would notice, shipped without a
 invisibly. But most commits here are not that one, and inventing an entry for them fills the
 changelog with noise. Skip it when there is nothing a consumer could observe:
 
-- tests, CI, build configuration, `tasks/`, `data/`, the files under `docs/`;
+- tests, CI, build configuration, `tasks/`, the files under `docs/`;
 - a refactor under `src/` that leaves the public surface and the behaviour identical — the largest
   category in this log. The test is simple: if you cannot name what a consumer would see, there is
   nothing to write for them.

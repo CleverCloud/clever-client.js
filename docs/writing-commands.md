@@ -13,7 +13,7 @@ Open the route and the DTO. Read:
 
 ### The command → source map
 
-`data/command-backend-source-map.csv`, one row per command:
+`docs/command-backend-source-map.csv`, one row per command:
 
 | Column                                    | Holds                                                            |
 | ----------------------------------------- | ---------------------------------------------------------------- |
@@ -25,7 +25,7 @@ Open the route and the DTO. Read:
 
 Paths are repo-relative: where a backend is cloned is per-machine. Resolve a row as
 `<your backend checkouts dir>/<last segment of repoUrl>/<source>`. The convention is one directory
-holding every checkout, each named after its repository (`~/dev/backend/ovd`, `~/dev/backend/cc-api`);
+holding every checkout, each named after its repository (`~/dev/backend/axo`, `~/dev/backend/cc-api`);
 set `CC_BACKEND_REPOS_DIR` if yours live elsewhere. Clone with `glab repo clone <repoUrl>`.
 
 Keep the map true, or it stops being read:
@@ -93,8 +93,6 @@ A composite command's own requests are private inner commands in the same file, 
 - `@group` — the domain, PascalCase.
 - `@version` — `2` or `4`, omitted when the endpoint has none.
 - `Common error codes: see {@link XXX_ERROR_CODES}` when the command has them.
-
-Tags are parsed by `pnpm run endpoints-list` and `endpoints-analyze`.
 
 **Prose stays succinct**: one sentence on what the command does, then only what a caller cannot
 guess (a delete accepted before it completes, a fallback, a sort, a cache). Long explanations go in
@@ -381,7 +379,7 @@ idempotent, and the 404 is the caller's to read — say so in the class JSDoc wh
 to meet it.
 
 **Decide it from the backend source.** Open the route from the command's row in
-`data/command-backend-source-map.csv` and ask what state a second identical call leaves behind.
+`docs/command-backend-source-map.csv` and ask what state a second identical call leaves behind.
 
 | The handler                                        | Answer                             |
 | -------------------------------------------------- | ---------------------------------- |
