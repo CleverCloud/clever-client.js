@@ -8,7 +8,6 @@ import { HeadersBuilder } from '../request/headers-builder.js';
  *
  * This class defines the contract for:
  * - Applying authentication to request parameters
- * - Applying authentication to URLs
  * - Retrieving authentication tokens
  */
 export abstract class CcAuth {
@@ -20,16 +19,6 @@ export abstract class CcAuth {
    */
   applyOnRequestParams(requestParams: Partial<CcRequestParams>): void {
     requestParams.headers = new HeadersBuilder(requestParams.headers).authorization(this.getAuthorization()).build();
-  }
-
-  /**
-   * Applies authentication to a URL by adding an authorization query parameter.
-   * The token is base64 encoded before being added to the URL.
-   *
-   * @param url - The URL to modify with authentication
-   */
-  applyOnUrl(url: URL): void {
-    url.searchParams.append('authorization', btoa(this.getAuthorization()));
   }
 
   /**
