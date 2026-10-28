@@ -6,7 +6,6 @@ import type { CcAuth } from '../../../src/lib/auth/cc-auth.js';
 import { CcClient } from '../../../src/lib/cc-client.js';
 import { CompositeCommand, SimpleCommand } from '../../../src/lib/command/command.js';
 import { type CcClientError, CcHttpError } from '../../../src/lib/error/cc-client-errors.js';
-import { GetUrl } from '../../../src/lib/get-url.js';
 import { HeadersBuilder } from '../../../src/lib/request/headers-builder.js';
 import { QueryParams } from '../../../src/lib/request/query-params.js';
 import { get, post } from '../../../src/lib/request/request-params-builder.js';
@@ -33,12 +32,6 @@ export abstract class TestSimpleCommand extends SimpleCommand<'test', void, any>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class TestCompositeCommand extends CompositeCommand<'test', void, any> {
-  get api(): 'test' {
-    return 'test';
-  }
-}
-
-export abstract class TestGetUrl extends GetUrl<'test', void> {
   get api(): 'test' {
     return 'test';
   }
@@ -78,14 +71,6 @@ function compositeCommand(result: unknown): TestCompositeCommand {
   return new (class MyCommand extends TestCompositeCommand {
     async compose() {
       return Promise.resolve(result);
-    }
-  })();
-}
-
-function getUrl(result: string) {
-  return new (class MyGetUrl extends TestGetUrl {
-    get() {
-      return result;
     }
   })();
 }
@@ -875,58 +860,6 @@ describe('clever-client', () => {
         expect(err).toBe(abortController.signal.reason);
         expect(spy).not.toHaveBeenCalled();
       });
-    });
-  });
-
-  describe('get url', () => {
-    it('should call `get` method', () => {
-      const gu = getUrl('example');
-      const spy = vi.spyOn(gu, 'get');
-
-      client.getUrl(gu);
-
-      expect(spy).toHaveBeenCalledTimes(1);
-    });
-
-    it('should construct the right url', () => {
-      const gu = getUrl('example');
-
-      const url = client.getUrl(gu);
-
-      expect(url.toString()).toBe(`${newScenario.mockClient.baseUrl}/example`);
-    });
-
-    it('should not prepend baseUrl when the url is absolute', () => {
-      const gu = getUrl('https://example.com/example');
-
-      const url = client.getUrl(gu);
-
-      expect(url.toString()).toBe('https://example.com/example');
-    });
-
-    it('should construct the right url with auth', () => {
-      const gu = getUrl('example');
-      const auth = new CcAuthApiToken('token');
-      const spy = vi.spyOn(auth, 'applyOnUrl');
-      spy.mockImplementation((url: URL) => url.searchParams.set('auth', 'token'));
-      const client = createClient({}, auth);
-
-      const url = client.getUrl(gu);
-
-      expect(spy).toHaveBeenCalledTimes(1);
-      expect(url.toString()).toBe(`${newScenario.mockClient.baseUrl}/example?auth=token`);
-    });
-
-    it('should not apply auth when the url points outside of the baseUrl', () => {
-      const gu = getUrl('https://example.com/example');
-      const auth = new CcAuthApiToken('token');
-      const spy = vi.spyOn(auth, 'applyOnUrl');
-      const client = createClient({}, auth);
-
-      const url = client.getUrl(gu);
-
-      expect(spy).not.toHaveBeenCalled();
-      expect(url.toString()).toBe('https://example.com/example');
     });
   });
 

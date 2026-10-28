@@ -12,7 +12,6 @@ import type { CcAuth } from './auth/cc-auth.js';
 import { CompositeCommand, type SimpleCommand } from './command/command.js';
 import { CcClientError } from './error/cc-client-errors.js';
 import { handleHttpErrors } from './error/handle-http-errors.js';
-import type { GetUrl } from './get-url.js';
 import { QueryParams } from './request/query-params.js';
 import { sendRequest } from './request/request.js';
 import type { CcStream } from './stream/cc-stream.js';
@@ -208,26 +207,6 @@ export class CcClient<Api extends string> {
     const request = await this._prepareRequest(command, requestParams, requestConfig, isIdempotent);
     const response = await sendRequest<CommandOutput>(request);
     return this._handleResponse(response, request, command);
-  }
-
-  /**
-   * Constructs a complete URL for an API endpoint
-   *
-   * @param getUrl - URL generator with parameters
-   * @returns The complete URL with base URL and authentication parameters
-   */
-  getUrl(getUrl: GetUrl<Api, unknown>): URL {
-    const url = getUrl.get(getUrl.params);
-
-    const resolvedUrl = this.#resolveUrl(url);
-    const result = new URL(resolvedUrl, globalThis.location?.href);
-
-    // apply auth only if the URL does not point outside of the client base URL
-    if (isUrlWithinBaseUrl(this.#baseUrl, resolvedUrl)) {
-      this.#auth?.applyOnUrl(result);
-    }
-
-    return result;
   }
 
   /**

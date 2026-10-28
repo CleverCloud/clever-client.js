@@ -2,7 +2,6 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { GetInvoiceCommand } from '../../../../../src/clients/cc-api/commands/invoice/get-invoice-command.js';
 import { GetInvoiceHtmlCommand } from '../../../../../src/clients/cc-api/commands/invoice/get-invoice-html-command.js';
 import { GetInvoicePdfCommand } from '../../../../../src/clients/cc-api/commands/invoice/get-invoice-pdf-command.js';
-import { GetInvoiceUrl } from '../../../../../src/clients/cc-api/commands/invoice/get-invoice-url.js';
 import { ListInvoiceCommand } from '../../../../../src/clients/cc-api/commands/invoice/list-invoice-command.js';
 import { ListUnpaidInvoiceCommand } from '../../../../../src/clients/cc-api/commands/invoice/list-unpaid-invoice-command.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
@@ -62,19 +61,4 @@ describe('invoice commands', function () {
       (await import('node:fs')).writeFileSync('/tmp/test.pdf', new DataView(arrayBuffer));
     });
   }
-
-  it('should get invoice URL', () => {
-    const url = support.client.getUrl(new GetInvoiceUrl({ ownerId: support.userId, invoiceNumber, format: 'pdf' }));
-
-    expect(url.origin).toBeTypeOf('string');
-    if (support.isNode) {
-      expect(url.pathname).toBe(`/v4/billing/organisations/${support.userId}/invoices/${invoiceNumber}.pdf`);
-      expect(atob(url.searchParams.get('authorization')!)).toMatch(/^Bearer .+/);
-    } else {
-      expect(url.pathname).toMatch(
-        new RegExp(`^/[^/]+/v4/billing/organisations/${support.userId}/invoices/${invoiceNumber}.pdf$`),
-      );
-      expect(url.searchParams.get('authorization')).toBeNull();
-    }
-  });
 });
