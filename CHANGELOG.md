@@ -1,5 +1,28 @@
 # Clever Client changelog
 
+## 12.6.8
+
+### Patch Changes
+
+- [#247](https://github.com/CleverCloud/clever-client.js/pull/247) [`895de05`](https://github.com/CleverCloud/clever-client.js/commit/895de051fd4a8877d064466a9f5f7e8f48a368c6) - Remove `getUrl()` from the clients
+
+  It existed to build authenticated links, putting the credentials in the URL's query string; `GetInvoiceUrl` was its last use. Nothing replaces it: send the matching command with `client.send()`, which authenticates through the `Authorization` header.
+
+- [#247](https://github.com/CleverCloud/clever-client.js/pull/247) [`652885e`](https://github.com/CleverCloud/clever-client.js/commit/652885e49600bd0b986dcd6720cbf318a6e988e8) - Remove `GetInvoiceUrl`
+
+  The URL it built through `client.getUrl()` carried the user's credentials in its query string, where they leak into browser history, server logs and `Referer` headers. Nothing replaces it: fetch the PDF with `GetInvoicePdfCommand`, which authenticates through the `Authorization` header, or serve the document from your own backend and link to that instead.
+
+  ```diff
+  -import { GetInvoiceUrl } from '@clevercloud/client/cc-api-commands/invoice/get-invoice-url.js';
+  -const url = client.getUrl(new GetInvoiceUrl({ ownerId, invoiceNumber, format: 'pdf' }));
+  -link.href = url.toString();
+  +import { GetInvoicePdfCommand } from '@clevercloud/client/cc-api-commands/invoice/get-invoice-pdf-command.js';
+  +const pdf = await client.send(new GetInvoicePdfCommand({ ownerId, invoiceNumber }));
+  +link.href = URL.createObjectURL(pdf);
+  ```
+
+  For the HTML rendering (`format: 'html'`), use `GetInvoiceHtmlCommand`, which returns the page as a string.
+
 ## 12.6.7
 
 ### Patch Changes
