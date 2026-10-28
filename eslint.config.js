@@ -102,21 +102,10 @@ export default defineConfig([
       'import-x/extensions': ['error', 'always', { ignorePackages: true }],
     },
   },
-  // Build/codegen scripts under `tasks/` parse untyped raw payloads (OpenAPI specs fetched as JSON,
-  // Babel ASTs), so the `any` family of type-checked rules is unavoidable noise here — same rationale
-  // as the `*-transform.ts` block above. `require-await` is also relaxed: some functions stay `async`
-  // to honor a Promise-returning contract even when their body has nothing to await.
   {
     name: 'tooling-tasks',
     files: ['tasks/**/*.ts'],
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-unsafe-return': 'off',
-      '@typescript-eslint/require-await': 'off',
       // Node runs these straight from source with `--experimental-strip-types`, which resolves the
       // literal file and does not remap `.js` to `.ts`. Here the real extension is the correct one.
       'local/no-ts-import-extension': 'off',

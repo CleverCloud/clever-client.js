@@ -30,12 +30,6 @@ Browser tests require Playwright Chromium: `npx playwright install chromium`.
 - `pnpm run format:check` - Check code formatting
 - `pnpm run typecheck` - TypeScript type checking
 
-### Analysis & Generation
-- `pnpm run endpoints-generate` - Generate API endpoints from OpenAPI specs
-- `pnpm run endpoints-list` - List all available endpoints
-- `pnpm run endpoints-analyze` - Analyze endpoint usage
-- `pnpm run api-usage-analyze` - Analyze API usage across console3, clever-components, clever-tools
-
 ## Architecture Overview
 
 This is the **@clevercloud/client** package - a comprehensive JavaScript REST client for Clever Cloud's APIs. The project provides multiple client implementations and both modern command-pattern clients and legacy functional clients.
@@ -63,7 +57,7 @@ Each API operation is implemented as a Command class:
 
 **Before adding or fixing a command, read [docs/writing-commands.md](docs/writing-commands.md).** It
 is the authoritative reference for the conventions this client follows: reading the backend source
-first and keeping `data/command-backend-source-map.csv` up to date, file layout, naming, the
+first and keeping `docs/command-backend-source-map.csv` up to date, file layout, naming, the
 `undefined`-over-`null` rule, date and duration normalisation, transforms, error codes, and JSDoc.
 
 ### Committing and releasing
