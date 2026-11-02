@@ -1,5 +1,9 @@
 import { SimpleCommand } from '../../../lib/command/command.js';
+import { createBrand, hasBrand, setBrand } from '../../../lib/utils.js';
 import type { RedisHttpType } from '../types/redis-http.types.js';
+
+// A cross-version contract, see createBrand()
+const REDIS_HTTP_COMMAND_BRAND = createBrand('RedisHttpCommand');
 
 /**
  * Base class for Redis HTTP commands.
@@ -14,6 +18,10 @@ export abstract class RedisHttpCommand<CommandInput, CommandOutput> extends Simp
   CommandInput,
   CommandOutput
 > {
+  static {
+    setBrand(this.prototype, REDIS_HTTP_COMMAND_BRAND);
+  }
+
   /**
    * The API type identifier for Redis HTTP commands.
    * Used by the client to route commands to the correct API endpoint.
@@ -32,4 +40,13 @@ export abstract class RedisHttpCommand<CommandInput, CommandOutput> extends Simp
   requiresBackendUrl(): boolean {
     return true;
   }
+}
+
+/**
+ * Whether the given command is a {@link RedisHttpCommand}, whichever copy of this package created it.
+ *
+ * @param command - The command to test
+ */
+export function isRedisHttpCommand(command: unknown): command is RedisHttpCommand<unknown, unknown> {
+  return hasBrand(command, REDIS_HTTP_COMMAND_BRAND);
 }
