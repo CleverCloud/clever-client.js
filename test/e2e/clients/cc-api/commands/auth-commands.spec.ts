@@ -59,7 +59,7 @@ describe('auth commands', function () {
       }),
     );
 
-    expect(confirmResponse).toBeUndefined();
+    expect(confirmResponse.backupCodes).toHaveLength(10);
   });
 
   it('should get mfa backup codes', async () => {

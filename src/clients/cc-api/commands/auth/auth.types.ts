@@ -56,3 +56,11 @@ export interface RefusedAuthCredential<Type extends RefusedAuthCredentialType> {
 }
 
 export type RefusedAuthCredentialType = 'invalid-password' | 'invalid-mfa-code';
+
+/**
+ * A new set of backup codes. The API returns them once: no later call shows them again.
+ */
+export interface AuthMfaBackupCodes {
+  /** The backup codes, each usable once in place of a code from the authenticator app. */
+  backupCodes: Array<string>;
+}

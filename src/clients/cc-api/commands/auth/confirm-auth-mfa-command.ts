@@ -4,8 +4,13 @@ import type { ApiErrorInfo } from '../../../../types/command.types.js';
 import type { CcRequestParams } from '../../../../types/request.types.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CcApiComposer } from '../../types/cc-api.types.js';
+import { transformAuthMfaBackupCodes } from './auth-transform.js';
 import { resolveRefusedCredential } from './auth-utils.js';
-import type { ConfirmAuthMfaCommandInput, ConfirmAuthMfaCommandOutput } from './confirm-auth-mfa-command.types.js';
+import type {
+  ConfirmAuthMfaCommandInput,
+  ConfirmAuthMfaCommandOutput,
+  ConfirmAuthMfaCommandResponse,
+} from './confirm-auth-mfa-command.types.js';
 
 /**
  * The error codes this command can produce, to compare against `error.code`.
@@ -41,7 +46,8 @@ const API_ERROR_CODES: Record<string, ConfirmAuthMfaErrorCode> = {
 };
 
 /**
- * Confirms a second factor enrolment by proving the authenticator app is correctly set up.
+ * Confirms a second factor enrolment by proving the authenticator app is correctly set up, and
+ * returns the backup codes once.
  *
  * The factor only becomes active once this succeeds. The account password is sent base64-encoded in
  * the `X-Clever-Password` header.
@@ -63,14 +69,18 @@ export class ConfirmAuthMfaCommand<
     if (params.shouldResolveRefusedCredential !== true) {
       return (await composer.send(new ConfirmAuthMfaInnerCommand(params))) as ConfirmAuthMfaCommandOutput<TInput>;
     }
-    const result = await resolveRefusedCredential(async () => {
-      await composer.send(new ConfirmAuthMfaInnerCommand(params));
-      return { type: 'confirmed' as const };
-    }, ['invalid-password', 'invalid-mfa-code']);
+    const result = await resolveRefusedCredential(
+      async () => ({
+        type: 'confirmed' as const,
+        ...(await composer.send(new ConfirmAuthMfaInnerCommand(params))),
+      }),
+      ['invalid-password', 'invalid-mfa-code'],
+    );
     return result as ConfirmAuthMfaCommandOutput<TInput>;
   }
 
-  // once the factor is active, the endpoint answers with a conflict, so an enrolment is never confirmed twice
+  // once the factor is active, the endpoint answers with a conflict, so an enrolment is never confirmed twice;
+  // a replay after a lost response still loses the backup codes, which only that response carried
   isIdempotent(): boolean {
     return true;
   }
@@ -83,7 +93,7 @@ export class ConfirmAuthMfaCommand<
  * @group Auth
  * @version 2
  */
-class ConfirmAuthMfaInnerCommand extends CcApiSimpleCommand<ConfirmAuthMfaCommandInput, undefined> {
+class ConfirmAuthMfaInnerCommand extends CcApiSimpleCommand<ConfirmAuthMfaCommandInput, ConfirmAuthMfaCommandResponse> {
   toRequestParams(params: ConfirmAuthMfaCommandInput): Partial<CcRequestParams> {
     return {
       method: 'POST',
@@ -100,8 +110,8 @@ class ConfirmAuthMfaInnerCommand extends CcApiSimpleCommand<ConfirmAuthMfaComman
     };
   }
 
-  transformCommandOutput(): undefined {
-    return undefined;
+  transformCommandOutput(response: unknown): ConfirmAuthMfaCommandResponse {
+    return transformAuthMfaBackupCodes(response);
   }
 
   transformErrorCode({ code }: ApiErrorInfo) {

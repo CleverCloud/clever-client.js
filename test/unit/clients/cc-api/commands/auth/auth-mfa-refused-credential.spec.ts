@@ -66,9 +66,9 @@ const COMMANDS: Array<{
     create: (flag?: boolean) =>
       new ConfirmAuthMfaCommand({ ...AUTH, code: '123456', shouldResolveRefusedCredential: flag }),
     request: { method: 'POST', path: '/v2/self/mfa/TOTP/confirmation' },
-    response: { status: 200, body: { id: 0, message: 'ok', type: 'success' } },
-    output: undefined,
-    result: { type: 'confirmed' },
+    response: { status: 200, body: { backupCodes: ['a', 'b'] } },
+    output: { backupCodes: ['a', 'b'] },
+    result: { type: 'confirmed', backupCodes: ['a', 'b'] },
   },
 ];
 
