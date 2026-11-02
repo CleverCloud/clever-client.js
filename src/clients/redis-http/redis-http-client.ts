@@ -2,7 +2,7 @@ import { CcClient } from '../../lib/cc-client.js';
 import type { CompositeCommand } from '../../lib/command/command.js';
 import { merge } from '../../lib/utils.js';
 import type { CcRequestConfigPartial } from '../../types/request.types.js';
-import { RedisHttpCommand } from './lib/redis-http-command.js';
+import { isRedisHttpCommand, type RedisHttpCommand } from './lib/redis-http-command.js';
 import type { RedisHttpClientConfig, RedisHttpCommandInput, RedisHttpType } from './types/redis-http.types.js';
 
 /**
@@ -55,7 +55,7 @@ export class RedisHttpClient extends CcClient<RedisHttpType> {
   ): Promise<unknown> {
     if (
       this.#backendUrl != null &&
-      command instanceof RedisHttpCommand &&
+      isRedisHttpCommand(command) &&
       command.requiresBackendUrl() &&
       (command.params as RedisHttpCommandInput)?.backendUrl == null
     ) {

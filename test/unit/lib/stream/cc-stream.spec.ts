@@ -10,6 +10,7 @@ import { CcStream } from '../../../../src/lib/stream/cc-stream.js';
 import type { CcStreamConfig } from '../../../../src/lib/stream/cc-stream.types.js';
 import { Deferred } from '../../../../src/lib/utils.js';
 import type { CcRequest } from '../../../../src/types/request.types.js';
+import { ForeignCcHttpError } from '../../../lib/foreign-copy.js';
 import { sleep } from '../../../lib/timers.js';
 import type { SpiedStream, Stubs } from './cc-stream.spec.types.js';
 
@@ -1107,6 +1108,30 @@ describe('cc-stream', () => {
 
       await spiedStream.verifyCounts({ request: 1, retry: 0, failure: 1 }, 50);
       expect(spiedStream.stubs.failure.mock.calls[0][0]).toBeInstanceOf(CcNetworkError);
+    });
+
+    it('http error raised by another copy of the client should be reported as is, and retried as its status says', async () => {
+      // the request factory comes from the client, which may be another copy than the one the stream comes from
+      const httpError = (status: number) =>
+        new ForeignCcHttpError('some.code', {} as CcRequest, {
+          status,
+          headers: new Headers(),
+          body: undefined,
+          requestDuration: 0,
+          hasHitCache: false,
+        });
+
+      const error400 = httpError(400);
+      const spiedStream400 = createAndSpyStream({ url: '/' }, { retry: RETRY }, error400);
+      void spiedStream400.start();
+      await spiedStream400.verifyCounts({ request: 1, retry: 0, failure: 1 }, 50);
+      expect(spiedStream400.stubs.failure.mock.calls[0][0]).toBe(error400);
+
+      const error503 = httpError(503);
+      const spiedStream503 = createAndSpyStream({ url: '/' }, { retry: RETRY }, error503);
+      void spiedStream503.start();
+      await spiedStream503.verifyCounts({ request: 3, retry: 2, failure: 1 }, 150);
+      expect(spiedStream503.stubs.failure.mock.calls[0][0]).toBe(error503);
     });
 
     it('network failure nothing will fix should be retried once the stream has been open', async () => {

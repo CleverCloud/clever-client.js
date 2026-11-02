@@ -7,6 +7,7 @@ import { QueryParams } from '../../../../src/lib/request/query-params.js';
 import { sendRequest as originalSendRequest } from '../../../../src/lib/request/request.js';
 import type { CcRequest, CcResponse } from '../../../../src/types/request.types.js';
 import { expectPromiseThrows } from '../../../lib/expect-utils.js';
+import { ForeignCcRequestError } from '../../../lib/foreign-copy.js';
 
 describe('request', () => {
   let newScenario: NewScenario;
@@ -345,6 +346,23 @@ describe('request', () => {
           expect(error.message).toContain('Invalid URL');
         },
       );
+    });
+
+    it('should rethrow as is a request error raised by another copy of the client', async () => {
+      // the query params come from the command, which may be another copy than the one sending the request
+      const error = new ForeignCcRequestError('Invalid query', 'SOME_CODE', {} as CcRequest);
+      const queryParams = {
+        toObject() {
+          return {};
+        },
+        applyOnUrl() {
+          throw error;
+        },
+      } as unknown as QueryParams;
+
+      await expectPromiseThrows(sendRequest({ method: 'GET', url: '/api/test', queryParams }), (thrown) => {
+        expect(thrown).toBe(error);
+      });
     });
 
     it('should handle unexpected errors', async () => {

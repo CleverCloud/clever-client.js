@@ -22,6 +22,7 @@ import type {
   CcResponse,
 } from '../../../src/types/request.types.js';
 import { expectPromiseThrows } from '../../lib/expect-utils.js';
+import { brandAsForeignCopy } from '../../lib/foreign-copy.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class TestSimpleCommand extends SimpleCommand<'test', void, any> {
@@ -661,6 +662,43 @@ describe('clever-client', () => {
   });
 
   describe('composite command', () => {
+    it('should compose a composite command created by another copy of the client', async () => {
+      // what a composite command looks like when its classes come from another copy of the client
+      class ForeignCompositeCommand {
+        static {
+          brandAsForeignCopy(this.prototype, 'CompositeCommand');
+        }
+
+        readonly params = undefined;
+
+        get api() {
+          return 'test';
+        }
+
+        getRequestConfig() {
+          return undefined;
+        }
+
+        isIdempotent() {
+          return false;
+        }
+
+        compose(_params: unknown, composer: { send: (command: TestSimpleCommand) => Promise<unknown> }) {
+          return composer.send(simpleCommand(get('/')));
+        }
+      }
+      let result: unknown;
+
+      await newScenario()
+        .when({ method: 'GET', path: '/' })
+        .respond({ status: 200, body: 'sub-command result' })
+        .thenCall(async () => {
+          result = await client.send(new ForeignCompositeCommand() as unknown as TestCompositeCommand);
+        });
+
+      expect(result).toBe('sub-command result');
+    });
+
     it('should call `_compose` method with right params', async () => {
       const spy = vi.spyOn(client, '_compose');
       const command = compositeCommand('command result');

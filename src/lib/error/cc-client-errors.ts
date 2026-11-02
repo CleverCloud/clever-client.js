@@ -1,4 +1,5 @@
 import type { CcRequest, CcResponse } from '../../types/request.types.js';
+import { createBrand, setBrand } from '../utils.js';
 
 //--
 
@@ -260,6 +261,14 @@ export function isNetworkErrorCode(value: unknown): value is NetworkErrorCode {
   return typeof value === 'string' && Object.hasOwn(NETWORK_ERRORS, value);
 }
 
+// Cross-version contracts, see createBrand(). Each error carries the brand of its class and, through its
+// prototype chain, the brands of the classes it extends, so that the guards in `utils/error-utils.js`
+// answer like `instanceof` would, for errors raised by any copy of this package.
+export const CC_CLIENT_ERROR_BRAND = createBrand('CcClientError');
+export const CC_REQUEST_ERROR_BRAND = createBrand('CcRequestError');
+export const CC_NETWORK_ERROR_BRAND = createBrand('CcNetworkError');
+export const CC_HTTP_ERROR_BRAND = createBrand('CcHttpError');
+
 /**
  * Base error class for Clever Cloud client errors.
  * Extends the native Error class with an error code system.
@@ -269,6 +278,7 @@ export class CcClientError extends Error {
   // and stays out of `Object.keys()` and `JSON.stringify()`. The literal survives minification.
   static {
     Object.defineProperty(this.prototype, 'name', { value: 'CcClientError', writable: true, configurable: true });
+    setBrand(this.prototype, CC_CLIENT_ERROR_BRAND);
   }
 
   #code: string;
@@ -303,6 +313,7 @@ export class CcClientError extends Error {
 export class CcRequestError extends CcClientError {
   static {
     Object.defineProperty(this.prototype, 'name', { value: 'CcRequestError', writable: true, configurable: true });
+    setBrand(this.prototype, CC_REQUEST_ERROR_BRAND);
   }
 
   #request: CcRequest;
@@ -342,6 +353,7 @@ export class CcRequestError extends CcClientError {
 export class CcNetworkError extends CcRequestError {
   static {
     Object.defineProperty(this.prototype, 'name', { value: 'CcNetworkError', writable: true, configurable: true });
+    setBrand(this.prototype, CC_NETWORK_ERROR_BRAND);
   }
 
   #networkCode: NetworkErrorCode | null;
@@ -438,6 +450,7 @@ export class CcNetworkError extends CcRequestError {
 export class CcHttpError extends CcRequestError {
   static {
     Object.defineProperty(this.prototype, 'name', { value: 'CcHttpError', writable: true, configurable: true });
+    setBrand(this.prototype, CC_HTTP_ERROR_BRAND);
   }
 
   #response: CcResponse<unknown>;

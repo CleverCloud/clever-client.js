@@ -1,6 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
-import { Polling, PollingInterruptedError, PollingTimeoutError } from '../../../src/utils/polling.js';
+import {
+  isInterruptedError,
+  isTimeoutError,
+  Polling,
+  PollingInterruptedError,
+  PollingTimeoutError,
+} from '../../../src/utils/polling.js';
 import { expectPromiseThrows } from '../../lib/expect-utils.js';
+import { brandAsForeignCopy } from '../../lib/foreign-copy.js';
 
 describe('polling', () => {
   it('should not timeout and return the right value', async () => {
@@ -73,6 +80,32 @@ describe('polling', () => {
     expect(error.name).toBe(name);
     expect(String(error)).toBe(`${name}: ${error.message}`);
     expect(Object.hasOwn(error, 'name')).toBe(false);
+  });
+
+  it('should recognize the polling errors', () => {
+    expect(isTimeoutError(new PollingTimeoutError())).toBe(true);
+    expect(isTimeoutError(new PollingInterruptedError())).toBe(false);
+    expect(isInterruptedError(new PollingInterruptedError())).toBe(true);
+    expect(isInterruptedError(new PollingTimeoutError())).toBe(false);
+    expect(isTimeoutError(new Error('Timeout'))).toBe(false);
+  });
+
+  it('should recognize the polling errors raised by another copy of the client', () => {
+    class ForeignPollingTimeoutError extends Error {
+      static {
+        brandAsForeignCopy(this.prototype, 'PollingTimeoutError');
+      }
+    }
+    class ForeignPollingInterruptedError extends Error {
+      static {
+        brandAsForeignCopy(this.prototype, 'PollingInterruptedError');
+      }
+    }
+
+    expect(isTimeoutError(new ForeignPollingTimeoutError())).toBe(true);
+    expect(isInterruptedError(new ForeignPollingTimeoutError())).toBe(false);
+    expect(isInterruptedError(new ForeignPollingInterruptedError())).toBe(true);
+    expect(isTimeoutError(new ForeignPollingInterruptedError())).toBe(false);
   });
 });
 

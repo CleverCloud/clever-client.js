@@ -1,4 +1,9 @@
-import { Deferred } from '../lib/utils.js';
+import { createBrand, Deferred, hasBrand, setBrand } from '../lib/utils.js';
+
+// Cross-version contracts, see createBrand(). A composite command that polls lets these errors reach
+// its caller, who may test them with the predicates of another copy of this package.
+const POLLING_INTERRUPTED_ERROR_BRAND = createBrand('PollingInterruptedError');
+const POLLING_TIMEOUT_ERROR_BRAND = createBrand('PollingTimeoutError');
 
 /**
  * A robust polling implementation that handles asynchronous operations with controlled timing.
@@ -270,6 +275,7 @@ export class PollingInterruptedError extends Error {
       writable: true,
       configurable: true,
     });
+    setBrand(this.prototype, POLLING_INTERRUPTED_ERROR_BRAND);
   }
 
   constructor() {
@@ -283,6 +289,7 @@ export class PollingInterruptedError extends Error {
 export class PollingTimeoutError extends Error {
   static {
     Object.defineProperty(this.prototype, 'name', { value: 'PollingTimeoutError', writable: true, configurable: true });
+    setBrand(this.prototype, POLLING_TIMEOUT_ERROR_BRAND);
   }
 
   constructor() {
@@ -297,7 +304,7 @@ export class PollingTimeoutError extends Error {
  * @returns true if the error is a PollingTimeoutError, false otherwise
  */
 export function isTimeoutError(error: unknown): boolean {
-  return error instanceof PollingTimeoutError;
+  return hasBrand(error, POLLING_TIMEOUT_ERROR_BRAND);
 }
 
 /**
@@ -307,5 +314,5 @@ export function isTimeoutError(error: unknown): boolean {
  * @returns true if the error is a PollingInterruptedError, false otherwise
  */
 export function isInterruptedError(error: unknown): boolean {
-  return error instanceof PollingInterruptedError;
+  return hasBrand(error, POLLING_INTERRUPTED_ERROR_BRAND);
 }

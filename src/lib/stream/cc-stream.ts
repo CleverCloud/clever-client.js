@@ -1,6 +1,7 @@
 import type { SseMessage } from '../../types/request.types.js';
+import { isCcClientError, isCcHttpError, isNetworkError } from '../../utils/error-utils.js';
 import type { NetworkErrorCode } from '../error/cc-client-errors.js';
-import { CcClientError, CcHttpError, CcNetworkError } from '../error/cc-client-errors.js';
+import { CcClientError } from '../error/cc-client-errors.js';
 import { handleHttpErrors } from '../error/handle-http-errors.js';
 import { asNetworkError, isFetchNetworkError } from '../error/network-error.js';
 import { HeadersBuilder } from '../request/headers-builder.js';
@@ -317,7 +318,7 @@ export class CcStream {
     } catch (error: unknown) {
       if (connectionAttempt.isAbandoned) {
         this.#debugLog('Error ignored, the connection attempt was abandoned', { state: this.#state, error });
-      } else if (error instanceof CcClientError) {
+      } else if (isCcClientError(error)) {
         this.#onError(error);
       } else if (error === requestAbortController.signal.reason) {
         // an abort is not the server closing the response: `sendRequest` rejects with the reason of the signal
@@ -494,7 +495,7 @@ export class CcStream {
     // Errors the client raised already say what went wrong, and a CcNetworkError says which network
     // failure it was; only a raw one needs to be named here so that it can be retried at all.
     const wrappedError =
-      !(error instanceof CcClientError) && isFetchNetworkError(error)
+      !isCcClientError(error) && isFetchNetworkError(error)
         ? new CcClientError('Failed to establish/maintain the connection with the server', 'SSE_SERVER_ERROR', error)
         : error;
 
@@ -524,14 +525,13 @@ export class CcStream {
       }, exponentialBackoffDelay);
 
       // Wrap nullish failures only for the event; keep the original value for the final rejection.
-      const retryError =
-        wrappedError instanceof CcClientError
-          ? wrappedError
-          : new CcClientError(
-              'Failed to establish/maintain the connection with the server',
-              'SSE_SERVER_ERROR',
-              wrappedError,
-            );
+      const retryError = isCcClientError(wrappedError)
+        ? wrappedError
+        : new CcClientError(
+            'Failed to establish/maintain the connection with the server',
+            'SSE_SERVER_ERROR',
+            wrappedError,
+          );
 
       // only once the retry is scheduled, so that a listener can cancel it with pause()
       this.#emit('retry', {
@@ -575,18 +575,18 @@ export class CcStream {
 
     // The error knows better than this method does, and it is the same question consumers ask it. The one thing
     // this method knows that the error cannot is whether the stream ever connected, see RECONNECTABLE_NETWORK_CODES.
-    if (error instanceof CcNetworkError) {
+    if (isNetworkError(error)) {
       return (
         error.isWorthRetrying() ||
         (this.#hasBeenOpen && error.networkCode != null && RECONNECTABLE_NETWORK_CODES.has(error.networkCode))
       );
     }
 
-    if (error instanceof CcHttpError) {
+    if (isCcHttpError(error)) {
       return error.statusCode >= 500 || error.statusCode === 408 || error.statusCode === 429;
     }
 
-    return error instanceof CcClientError;
+    return isCcClientError(error);
   }
 
   /**

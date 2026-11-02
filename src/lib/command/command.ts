@@ -1,6 +1,10 @@
-import type { ApiErrorInfo, Composer } from '../../types/command.types.js';
+import type { ApiErrorInfo, Command, Composer } from '../../types/command.types.js';
 import type { CcRequestConfigPartial, CcRequestParams } from '../../types/request.types.js';
 import type { SelfOrPromise } from '../../types/utils.types.js';
+import { createBrand, hasBrand, setBrand } from '../utils.js';
+
+// A cross-version contract, see createBrand()
+const COMPOSITE_COMMAND_BRAND = createBrand('CompositeCommand');
 
 //--
 
@@ -165,6 +169,10 @@ export abstract class CompositeCommand<Api extends string, CommandInput, Command
   Api,
   CommandInput
 > {
+  static {
+    setBrand(this.prototype, COMPOSITE_COMMAND_BRAND);
+  }
+
   /**
    * Executes the composite command by orchestrating multiple sub-commands.
    * Must be implemented by a concrete class.
@@ -174,4 +182,15 @@ export abstract class CompositeCommand<Api extends string, CommandInput, Command
    * @returns The final result after all sub-commands complete
    */
   abstract compose(_params: CommandInput, _composer: Composer<Api>): Promise<CommandOutput>;
+}
+
+/**
+ * Whether the given command is a {@link CompositeCommand}, whichever copy of this package created it.
+ *
+ * @param command - The command to test
+ */
+export function isCompositeCommand<Api extends string, CommandInput, CommandOutput>(
+  command: Command<Api, CommandInput, CommandOutput>,
+): command is CompositeCommand<Api, CommandInput, CommandOutput> {
+  return hasBrand(command, COMPOSITE_COMMAND_BRAND);
 }

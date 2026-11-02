@@ -1,12 +1,25 @@
 import type { CcRequestErrorCode } from '../lib/error/cc-client-errors.js';
-import { CcClientError, CcHttpError, CcNetworkError, CcRequestError } from '../lib/error/cc-client-errors.js';
+import {
+  CC_CLIENT_ERROR_BRAND,
+  CC_HTTP_ERROR_BRAND,
+  CC_NETWORK_ERROR_BRAND,
+  CC_REQUEST_ERROR_BRAND,
+  type CcClientError,
+  type CcHttpError,
+  type CcNetworkError,
+  type CcRequestError,
+} from '../lib/error/cc-client-errors.js';
 import { TOO_MANY_REQUESTS_ERROR_CODE } from '../lib/error/handle-http-errors.js';
+import { hasBrand } from '../lib/utils.js';
 
 /**
  * The error classes are re-exported as types only: `lib/error/cc-client-errors.js` is not a package
  * entry point, so this module is the only place consumers can name what the predicates below narrow
  * to. They get the names to annotate with, and keep going through the predicates rather than through
  * `instanceof`, which is what makes the class hierarchy an implementation detail we can still move.
+ *
+ * The predicates also recognize the errors raised by another copy of this package, which `instanceof`
+ * does not: an application can end up bundling two of them (see `createBrand()` in `lib/utils.js`).
  */
 export type { CcClientError, CcHttpError, CcNetworkError, CcRequestError };
 
@@ -33,15 +46,15 @@ export {
 export { getNetworkErrorInfo } from '../lib/error/cc-client-errors.js';
 
 export function isCcClientError(error: unknown): error is CcClientError {
-  return error instanceof CcClientError;
+  return hasBrand(error, CC_CLIENT_ERROR_BRAND);
 }
 
 export function isCcRequestError(error: unknown): error is CcRequestError {
-  return error instanceof CcRequestError;
+  return hasBrand(error, CC_REQUEST_ERROR_BRAND);
 }
 
 export function isCcHttpError(error: unknown): error is CcHttpError {
-  return error instanceof CcHttpError;
+  return hasBrand(error, CC_HTTP_ERROR_BRAND);
 }
 
 /**
@@ -99,7 +112,7 @@ export function isCcRequestErrorWithCode(error: unknown, code: CcRequestErrorCod
  * @param error - The value to test
  */
 export function isNetworkError(error: unknown): error is CcNetworkError {
-  return error instanceof CcNetworkError;
+  return hasBrand(error, CC_NETWORK_ERROR_BRAND);
 }
 
 /**

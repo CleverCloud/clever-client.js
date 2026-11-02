@@ -1,13 +1,20 @@
 import type { QueryParamValue } from '../../types/request.types.js';
 import type { OneOrMany } from '../../types/utils.types.js';
-import { toArray } from '../utils.js';
+import { createBrand, hasBrand, setBrand, toArray } from '../utils.js';
+
+// A cross-version contract, see createBrand()
+const QUERY_PARAMS_BRAND = createBrand('QueryParams');
 
 export class QueryParams {
+  static {
+    setBrand(this.prototype, QUERY_PARAMS_BRAND);
+  }
+
   #queryParams = new Map<string, OneOrMany<QueryParamValue> | undefined>();
 
   constructor(params?: Record<string, OneOrMany<QueryParamValue>> | QueryParams) {
     if (params != null) {
-      if (params instanceof QueryParams) {
+      if (isQueryParams(params)) {
         this.setParams(params.toObject());
       } else {
         this.setParams(params);
@@ -78,4 +85,13 @@ export class QueryParams {
         .filter((entry) => entry != null),
     );
   }
+}
+
+/**
+ * Whether the given value is a {@link QueryParams}, whichever copy of this package created it.
+ *
+ * @param value - The value to test
+ */
+export function isQueryParams(value: unknown): value is QueryParams {
+  return hasBrand(value, QUERY_PARAMS_BRAND);
 }
