@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { QueryParams } from '../../../../src/lib/request/query-params.js';
+import { isQueryParams, QueryParams } from '../../../../src/lib/request/query-params.js';
+import { brandAsForeignCopy } from '../../../lib/foreign-copy.js';
 
 describe('QueryParams class', () => {
   describe('constructor', () => {
@@ -19,6 +20,26 @@ describe('QueryParams class', () => {
         ids: [1, 2, 3],
         flag: true,
       });
+    });
+
+    it('should copy the parameters of another instance', () => {
+      const params = new QueryParams(new QueryParams({ name: 'test', ids: [1, 2] }));
+      expect(params.toObject()).toEqual({ name: 'test', ids: [1, 2] });
+    });
+
+    it('should copy the parameters of an instance created by another copy of the client', () => {
+      class ForeignQueryParams {
+        static {
+          brandAsForeignCopy(this.prototype, 'QueryParams');
+        }
+
+        toObject() {
+          return { name: 'test', ids: [1, 2] };
+        }
+      }
+
+      const params = new QueryParams(new ForeignQueryParams() as unknown as QueryParams);
+      expect(params.toObject()).toEqual({ name: 'test', ids: [1, 2] });
     });
 
     it('should handle null or undefined initial parameters', () => {
@@ -164,6 +185,24 @@ describe('QueryParams class', () => {
         ids: [1, 2],
         active: true,
       });
+    });
+  });
+
+  describe('isQueryParams', () => {
+    it('should match an instance, and one created by another copy of the client', () => {
+      class ForeignQueryParams {
+        static {
+          brandAsForeignCopy(this.prototype, 'QueryParams');
+        }
+      }
+
+      expect(isQueryParams(new QueryParams())).toBe(true);
+      expect(isQueryParams(new ForeignQueryParams())).toBe(true);
+    });
+
+    it('should not match a plain object', () => {
+      expect(isQueryParams({ name: 'test' })).toBe(false);
+      expect(isQueryParams(null)).toBe(false);
     });
   });
 });

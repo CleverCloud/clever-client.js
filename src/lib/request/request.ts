@@ -1,5 +1,6 @@
 import { events } from 'fetch-event-stream';
 import type { CcRequest, CcResponse, RequestAdapter, RequestWrapper, SseMessage } from '../../types/request.types.js';
+import { isCcRequestError } from '../../utils/error-utils.js';
 import { CcClientError, CcRequestError } from '../error/cc-client-errors.js';
 import { asNetworkError } from '../error/network-error.js';
 import { fetchWithTimeout } from './fetch-with-timeout.js';
@@ -49,7 +50,7 @@ async function doRequest<CommandOutput>(request: CcRequest): Promise<CcResponse<
       hasHitCache: false,
     };
   } catch (error: unknown) {
-    if (error instanceof CcRequestError) {
+    if (isCcRequestError(error)) {
       throw error;
     }
 
