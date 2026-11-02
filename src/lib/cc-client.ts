@@ -9,7 +9,7 @@ import type {
 } from '../types/request.types.js';
 import type { WithRequired } from '../types/utils.types.js';
 import type { CcAuth } from './auth/cc-auth.js';
-import { CompositeCommand, type SimpleCommand } from './command/command.js';
+import { type CompositeCommand, isCompositeCommand, type SimpleCommand } from './command/command.js';
 import { CcClientError } from './error/cc-client-errors.js';
 import { handleHttpErrors } from './error/handle-http-errors.js';
 import { QueryParams } from './request/query-params.js';
@@ -197,7 +197,7 @@ export class CcClient<Api extends string> {
     requestConfig: CcRequestConfigPartial | undefined,
     isIdempotentCeiling: boolean,
   ): Promise<CommandOutput> {
-    if (command instanceof CompositeCommand) {
+    if (isCompositeCommand(command)) {
       return this._compose(command, requestConfig, isIdempotentCeiling);
     }
 
