@@ -12,6 +12,7 @@ import type {
   CreateAuthMfaResult,
 } from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.types.js';
 import { DeleteAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
+import { ResetAuthMfaBackupCodesCommand } from '../../../../../../src/clients/cc-api/commands/auth/reset-auth-mfa-backup-codes-command.js';
 import type { CcApiCompositeCommand } from '../../../../../../src/clients/cc-api/lib/cc-api-command.js';
 import { MemoryStore } from '../../../../../../src/clients/cc-api/lib/store/memory-store.js';
 import type { ResourceIdIndex } from '../../../../../../src/clients/cc-api/types/resource-id-resolver.types.js';
@@ -69,6 +70,14 @@ const COMMANDS: Array<{
     response: { status: 200, body: { backupCodes: ['a', 'b'] } },
     output: { backupCodes: ['a', 'b'] },
     result: { type: 'confirmed', backupCodes: ['a', 'b'] },
+  },
+  {
+    name: 'ResetAuthMfaBackupCodesCommand',
+    create: (flag?: boolean) => new ResetAuthMfaBackupCodesCommand({ ...AUTH, shouldResolveRefusedCredential: flag }),
+    request: { method: 'POST', path: '/v2/self/mfa/TOTP/backupcodes' },
+    response: { status: 200, body: { backupCodes: ['a', 'b'] } },
+    output: { backupCodes: ['a', 'b'] },
+    result: { type: 'reset', backupCodes: ['a', 'b'] },
   },
 ];
 

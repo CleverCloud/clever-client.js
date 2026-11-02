@@ -7,6 +7,7 @@ import { CreateAuthMfaCommand } from '../../../../../../src/clients/cc-api/comma
 import { DeleteAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
 import { GetAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-command.js';
 import { RequestAuthPasswordResetCommand } from '../../../../../../src/clients/cc-api/commands/auth/request-auth-password-reset-command.js';
+import { ResetAuthMfaBackupCodesCommand } from '../../../../../../src/clients/cc-api/commands/auth/reset-auth-mfa-backup-codes-command.js';
 import { UpdateAuthPasswordCommand } from '../../../../../../src/clients/cc-api/commands/auth/update-auth-password-command.js';
 import { MemoryStore } from '../../../../../../src/clients/cc-api/lib/store/memory-store.js';
 import type { ResourceIdIndex } from '../../../../../../src/clients/cc-api/types/resource-id-resolver.types.js';
@@ -75,6 +76,20 @@ const CASES: Array<{
     name: 'GetAuthMfaCommand: token not almighty',
     command: () => new GetAuthMfaCommand({ kind: 'TOTP' }),
     request: { method: 'GET', path: '/v2/self/mfa/TOTP' },
+    response: apiError(403, 7301),
+    code: 'clever.auth.almighty-token-required',
+  },
+  {
+    name: 'ResetAuthMfaBackupCodesCommand: factor not active',
+    command: () => new ResetAuthMfaBackupCodesCommand(AUTH),
+    request: { method: 'POST', path: '/v2/self/mfa/TOTP/backupcodes' },
+    response: apiError(404, 3101),
+    code: 'clever.auth.mfa-not-found',
+  },
+  {
+    name: 'ResetAuthMfaBackupCodesCommand: token not almighty',
+    command: () => new ResetAuthMfaBackupCodesCommand(AUTH),
+    request: { method: 'POST', path: '/v2/self/mfa/TOTP/backupcodes' },
     response: apiError(403, 7301),
     code: 'clever.auth.almighty-token-required',
   },

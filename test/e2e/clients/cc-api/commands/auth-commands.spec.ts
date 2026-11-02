@@ -6,6 +6,7 @@ import { DeleteAuthMfaCommand } from '../../../../../src/clients/cc-api/commands
 import { GetAuthMfaBackupCodesCommand } from '../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-backup-codes-command.js';
 import { GetAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-command.js';
 import { RequestAuthPasswordResetCommand } from '../../../../../src/clients/cc-api/commands/auth/request-auth-password-reset-command.js';
+import { ResetAuthMfaBackupCodesCommand } from '../../../../../src/clients/cc-api/commands/auth/reset-auth-mfa-backup-codes-command.js';
 import { UpdateAuthPasswordCommand } from '../../../../../src/clients/cc-api/commands/auth/update-auth-password-command.js';
 import { GetProfileCommand } from '../../../../../src/clients/cc-api/commands/profile/get-profile-command.js';
 import { e2eSupport } from '../e2e-support.js';
@@ -91,6 +92,17 @@ describe('auth commands', function () {
     expect(response.backupCodesState?.generatedAt).toBe(new Date(response.backupCodesState!.generatedAt).toISOString());
   });
 
+  it('should reset auth mfa backup codes', async () => {
+    const backupCodes = await createMfa();
+
+    const response = await support.client.send(
+      new ResetAuthMfaBackupCodesCommand({ kind: 'TOTP', password: support.password }),
+    );
+
+    expect(response.backupCodes).toHaveLength(10);
+    expect(response.backupCodes).not.toEqual(backupCodes);
+  });
+
   it('should update password', async () => {
     const oldPassword = support.password;
     const newPassword = support.newTemporaryPassword!;
@@ -124,12 +136,13 @@ describe('auth commands', function () {
     const mfaCode = (await TOTP.generate(new URL(response.url).searchParams.get('secret')!)).otp;
 
     // confirm MFA
-    await support.client.send(
+    const confirmResponse = await support.client.send(
       new ConfirmAuthMfaCommand({
         kind: 'TOTP',
         code: mfaCode,
         password: support.password,
       }),
     );
+    return confirmResponse.backupCodes;
   }
 });
