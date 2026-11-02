@@ -9,6 +9,7 @@ import {
   isCcHttpErrorWithCode,
   isCcHttpErrorWithStatus,
   isCcRequestError,
+  isNetworkError,
   isRateLimitError,
   NETWORK_ERROR_CODES,
   NETWORK_ERRORS,
@@ -16,6 +17,12 @@ import {
   tolerateNotFound,
   tolerateStatus,
 } from '../../../src/utils/error-utils.js';
+import {
+  ForeignCcClientError,
+  ForeignCcHttpError,
+  ForeignCcNetworkError,
+  ForeignCcRequestError,
+} from '../../lib/foreign-copy.js';
 
 const REQUEST = {} as CcRequest;
 
@@ -57,6 +64,39 @@ describe('isCcHttpError', () => {
 
   it('should not match a request error', () => {
     expect(isCcHttpError(new CcRequestError('boom', 'some.code', REQUEST))).toBe(false);
+  });
+});
+
+describe('error predicates across copies of the client', () => {
+  // the errors another copy raises are not instances of this copy's classes, only their brands tell them apart
+  const clientError = new ForeignCcClientError('boom', 'some.code');
+  const requestError = new ForeignCcRequestError('boom', 'some.code', REQUEST);
+  const networkError = new ForeignCcNetworkError(REQUEST);
+  const httpError = new ForeignCcHttpError('clever.core.too-many-requests', REQUEST, response(429));
+
+  it.for([
+    ['isCcClientError', isCcClientError, [true, true, true, true]],
+    ['isCcRequestError', isCcRequestError, [false, true, true, true]],
+    ['isNetworkError', isNetworkError, [false, false, true, false]],
+    ['isCcHttpError', isCcHttpError, [false, false, false, true]],
+  ] as const)('%s should answer for an error raised by another copy as for its own', ([, predicate, expected]) => {
+    expect([clientError, requestError, networkError, httpError].map((error) => predicate(error))).toEqual(expected);
+  });
+
+  it('should narrow an http error raised by another copy, for the predicates reading its members', () => {
+    expect(isCcHttpErrorWithStatus(httpError, 429)).toBe(true);
+    expect(isCcHttpErrorWithCode(httpError, 'clever.core.too-many-requests')).toBe(true);
+    expect(isRateLimitError(httpError)).toBe(true);
+  });
+
+  it('should tolerate the status of an http error raised by another copy', async () => {
+    await expect(tolerateStatus(Promise.reject(httpError), 429)).resolves.toBeUndefined();
+  });
+
+  it('should not match an error merely named like a client error', () => {
+    const error = Object.assign(new Error('boom'), { name: 'CcHttpError', code: 'some.code', statusCode: 404 });
+    expect(isCcClientError(error)).toBe(false);
+    expect(isCcHttpError(error)).toBe(false);
   });
 });
 
