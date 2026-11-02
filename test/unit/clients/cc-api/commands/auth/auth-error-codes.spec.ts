@@ -5,6 +5,7 @@ import { CcApiClient } from '../../../../../../src/clients/cc-api/cc-api-client.
 import { ConfirmAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.js';
 import { CreateAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
 import { DeleteAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
+import { GetAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-command.js';
 import { RequestAuthPasswordResetCommand } from '../../../../../../src/clients/cc-api/commands/auth/request-auth-password-reset-command.js';
 import { UpdateAuthPasswordCommand } from '../../../../../../src/clients/cc-api/commands/auth/update-auth-password-command.js';
 import { MemoryStore } from '../../../../../../src/clients/cc-api/lib/store/memory-store.js';
@@ -67,6 +68,13 @@ const CASES: Array<{
     name: 'DeleteAuthMfaCommand: token not almighty',
     command: () => new DeleteAuthMfaCommand(AUTH),
     request: { method: 'DELETE', path: '/v2/self/mfa/TOTP' },
+    response: apiError(403, 7301),
+    code: 'clever.auth.almighty-token-required',
+  },
+  {
+    name: 'GetAuthMfaCommand: token not almighty',
+    command: () => new GetAuthMfaCommand({ kind: 'TOTP' }),
+    request: { method: 'GET', path: '/v2/self/mfa/TOTP' },
     response: apiError(403, 7301),
     code: 'clever.auth.almighty-token-required',
   },

@@ -4,6 +4,7 @@ import { ConfirmAuthMfaCommand } from '../../../../../src/clients/cc-api/command
 import { CreateAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
 import { DeleteAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
 import { GetAuthMfaBackupCodesCommand } from '../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-backup-codes-command.js';
+import { GetAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-command.js';
 import { RequestAuthPasswordResetCommand } from '../../../../../src/clients/cc-api/commands/auth/request-auth-password-reset-command.js';
 import { UpdateAuthPasswordCommand } from '../../../../../src/clients/cc-api/commands/auth/update-auth-password-command.js';
 import { GetProfileCommand } from '../../../../../src/clients/cc-api/commands/profile/get-profile-command.js';
@@ -70,6 +71,24 @@ describe('auth commands', function () {
     );
 
     expect(response).toHaveLength(10);
+  });
+
+  it('should get auth mfa when not configured', async () => {
+    const response = await support.client.send(new GetAuthMfaCommand({ kind: 'TOTP' }));
+
+    expect(response).toEqual({ kind: 'TOTP', isConfigured: false, backupCodesState: undefined });
+  });
+
+  it('should get auth mfa when configured', async () => {
+    await createMfa();
+
+    const response = await support.client.send(new GetAuthMfaCommand({ kind: 'TOTP' }));
+
+    expect(response.kind).toBe('TOTP');
+    expect(response.isConfigured).toBe(true);
+    expect(response.backupCodesState?.remaining).toBe(10);
+    expect(response.backupCodesState?.total).toBe(10);
+    expect(response.backupCodesState?.generatedAt).toBe(new Date(response.backupCodesState!.generatedAt).toISOString());
   });
 
   it('should update password', async () => {

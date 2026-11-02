@@ -58,6 +58,36 @@ export interface RefusedAuthCredential<Type extends RefusedAuthCredentialType> {
 export type RefusedAuthCredentialType = 'invalid-password' | 'invalid-mfa-code';
 
 /**
+ * Whether a second factor of a given kind is turned on for the current user.
+ */
+export interface AuthMfa {
+  /** Kind of second factor. */
+  kind: MfaKind;
+  /**
+   * Whether the factor is active.
+   * @renamedFrom `configured`
+   */
+  isConfigured: boolean;
+  /** How many backup codes are left. Absent when the factor is not active. */
+  backupCodesState?: AuthMfaBackupCodesState;
+}
+
+/**
+ * How many backup codes of an active factor are left, without the codes themselves.
+ */
+export interface AuthMfaBackupCodesState {
+  /** Backup codes not used yet. */
+  remaining: number;
+  /** Backup codes in the set. */
+  total: number;
+  /**
+   * When the set was generated. For a set generated before the API recorded it, the date it started
+   * recording, not the real one: do not show it as the generation date of an older set.
+   */
+  generatedAt: string;
+}
+
+/**
  * A new set of backup codes. The API returns them once: no later call shows them again.
  */
 export interface AuthMfaBackupCodes {
