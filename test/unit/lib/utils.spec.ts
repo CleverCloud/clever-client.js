@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
   combineWithSignal,
+  createBrand,
+  hasBrand,
   isAbsoluteUrl,
   isUrlWithinBaseUrl,
   merge,
@@ -11,6 +13,7 @@ import {
   pickDefined,
   randomUUID,
   safeUrl,
+  setBrand,
   sortBy,
   toArray,
   unknownToClient,
@@ -732,5 +735,53 @@ describe('Utils', () => {
         expect(config.cache).toEqual({ mode: 'reload', ttl: 1000 });
       });
     });
+  });
+});
+
+describe('brands', () => {
+  const brand = createBrand('TestKind');
+
+  class Base {
+    static {
+      setBrand(this.prototype, brand);
+    }
+  }
+
+  class Sub extends Base {}
+
+  it('should namespace the brand in the global symbol registry, so that every copy of the client shares it', () => {
+    expect(brand).toBe(Symbol.for('@clevercloud/client/TestKind'));
+  });
+
+  it('should brand the instances of the class and of its subclasses', () => {
+    expect(hasBrand(new Base(), brand)).toBe(true);
+    expect(hasBrand(new Sub(), brand)).toBe(true);
+  });
+
+  it('should recognize an instance branded by another class with the same key', () => {
+    class Foreign {
+      static {
+        Object.defineProperty(this.prototype, Symbol.for('@clevercloud/client/TestKind'), { value: true });
+      }
+    }
+
+    expect(hasBrand(new Foreign(), brand)).toBe(true);
+  });
+
+  it('should keep the brand out of the own and enumerable properties', () => {
+    const instance = new Sub();
+
+    expect(Reflect.ownKeys(instance)).toEqual([]);
+    expect(JSON.stringify(instance)).toBe('{}');
+    expect(hasBrand({ ...instance }, brand)).toBe(false);
+  });
+
+  it('should not recognize anything else', () => {
+    expect(hasBrand(new (class {})(), brand)).toBe(false);
+    expect(hasBrand(new Base(), createBrand('OtherKind'))).toBe(false);
+    expect(hasBrand({ [brand]: 'yes' }, brand)).toBe(false);
+    expect(hasBrand(null, brand)).toBe(false);
+    expect(hasBrand(undefined, brand)).toBe(false);
+    expect(hasBrand('string', brand)).toBe(false);
   });
 });

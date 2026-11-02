@@ -522,6 +522,57 @@ export function calculateCacheKey(requestParams: Partial<CcRequestParams>): stri
 }
 
 /**
+ * Creates the brand of a kind of object, so that it can be recognized across copies of this package.
+ *
+ * `instanceof` only recognizes the instances of the very class it is given. An application whose
+ * dependencies resolve two versions of `@clevercloud/client` bundles two copies of every class, and an
+ * object built with one copy is not an instance of the other copy's class: a command built with one is
+ * not recognized by a client built with the other, an error raised by one escapes the guards of the
+ * other. A `Symbol.for()` key lives in the global symbol registry, which every copy shares, so the
+ * brand one copy sets is the brand the other one checks.
+ *
+ * This makes every brand a contract between versions: a version released today recognizes the
+ * objects of versions released years from now. Once released, a brand must never be renamed or
+ * removed, and the kind it names must keep the members the client relies on.
+ *
+ * The contract runs both ways for a composite command: the client hands its own composer to the
+ * foreign `compose()`, which sends its sub-commands through it. The `Composer` signature and
+ * every member the client reads on a simple command (`getRequestConfig()`, `isIdempotent()`,
+ * `toRequestParams()`, and so on) are therefore part of it too, so a change to either is a change
+ * between versions.
+ *
+ * @param kind - The name of the kind, namespaced under `@clevercloud/client/`
+ * @returns The brand, to give to {@link setBrand} and {@link hasBrand}
+ */
+export function createBrand(kind: string): symbol {
+  return Symbol.for(`@clevercloud/client/${kind}`);
+}
+
+/**
+ * Brands every instance of a class, subclasses included, as being of a given kind.
+ *
+ * Call it from a static block of the base class. The brand is set on its prototype so that every
+ * subclass inherits it, and is not enumerable so that it stays out of `Object.keys()` and
+ * `JSON.stringify()`.
+ *
+ * @param prototype - The prototype of the base class of the kind
+ * @param brand - The brand of the kind, from {@link createBrand}
+ */
+export function setBrand(prototype: object, brand: symbol): void {
+  Object.defineProperty(prototype, brand, { value: true });
+}
+
+/**
+ * Whether the given value carries the given brand, whichever copy of this package created it.
+ *
+ * @param value - The value to test
+ * @param brand - The brand of the kind, from {@link createBrand}
+ */
+export function hasBrand(value: unknown, brand: symbol): boolean {
+  return typeof value === 'object' && value !== null && (value as Record<symbol, unknown>)[brand] === true;
+}
+
+/**
  * Safely encodes a value for URL inclusion.
  * String values are URL-encoded, other types are converted to string,
  * and null/undefined become empty string.
