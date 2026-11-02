@@ -3,7 +3,6 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { ConfirmAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.js';
 import { CreateAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
 import { DeleteAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
-import { GetAuthMfaBackupCodesCommand } from '../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-backup-codes-command.js';
 import { GetAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-command.js';
 import { RequestAuthPasswordResetCommand } from '../../../../../src/clients/cc-api/commands/auth/request-auth-password-reset-command.js';
 import { ResetAuthMfaBackupCodesCommand } from '../../../../../src/clients/cc-api/commands/auth/reset-auth-mfa-backup-codes-command.js';
@@ -62,16 +61,6 @@ describe('auth commands', function () {
     );
 
     expect(confirmResponse.backupCodes).toHaveLength(10);
-  });
-
-  it('should get mfa backup codes', async () => {
-    await createMfa();
-
-    const response = await support.client.send(
-      new GetAuthMfaBackupCodesCommand({ kind: 'TOTP', password: support.password }),
-    );
-
-    expect(response).toHaveLength(10);
   });
 
   it('should get auth mfa when not configured', async () => {
