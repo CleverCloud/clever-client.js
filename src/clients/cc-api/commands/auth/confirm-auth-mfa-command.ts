@@ -18,7 +18,9 @@ import type {
  * - `INVALID_PASSWORD`: the account password is wrong
  * - `INVALID_MFA_CODE`: the code does not match the enrolment secret
  * - `MFA_ALREADY_ENABLED`: the factor is already active
- * - `ENROLMENT_NOT_FOUND`: no enrolment was started
+ * - `ENROLMENT_NOT_FOUND`: no enrolment is pending, either none was started or it was already confirmed: a
+ *   replay after a lost response meets this one. Check {@link GetAuthMfaCommand}, and if the factor is on,
+ *   get new backup codes with {@link ResetAuthMfaBackupCodesCommand}
  * - `ALMIGHTY_TOKEN_REQUIRED`: the client authenticates with a token not allowed to manage the account
  *   security settings, such as an API token or a restricted OAuth consumer
  */
@@ -79,8 +81,8 @@ export class ConfirmAuthMfaCommand<
     return result as ConfirmAuthMfaCommandOutput<TInput>;
   }
 
-  // once the factor is active, the endpoint answers with a conflict, so an enrolment is never confirmed twice;
-  // a replay after a lost response still loses the backup codes, which only that response carried
+  // the API drops the pending enrolment once confirmed, so a replay rejects with `ENROLMENT_NOT_FOUND` and an
+  // enrolment is never confirmed twice; it still loses the backup codes, which only the first response carried
   isIdempotent(): boolean {
     return true;
   }
@@ -118,7 +120,7 @@ class ConfirmAuthMfaInnerCommand extends CcApiSimpleCommand<ConfirmAuthMfaComman
     return API_ERROR_CODES[code] ?? code;
   }
 
-  // once the factor is active, the endpoint answers with a conflict, so an enrolment is never confirmed twice
+  // the API drops the pending enrolment once confirmed, so a replay rejects with `ENROLMENT_NOT_FOUND`
   isIdempotent(): boolean {
     return true;
   }
