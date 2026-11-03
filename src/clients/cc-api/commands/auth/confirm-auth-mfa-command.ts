@@ -5,7 +5,7 @@ import type { CcRequestParams } from '../../../../types/request.types.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CcApiComposer } from '../../types/cc-api.types.js';
 import { transformAuthMfaBackupCodes } from './auth-transform.js';
-import { resolveRefusedCredential } from './auth-utils.js';
+import { sendResolvingRefusedCredential } from './auth-utils.js';
 import type {
   ConfirmAuthMfaCommandInput,
   ConfirmAuthMfaCommandOutput,
@@ -67,18 +67,15 @@ export class ConfirmAuthMfaCommand<
   TInput extends ConfirmAuthMfaCommandInput = ConfirmAuthMfaCommandInput,
 > extends CcApiCompositeCommand<TInput, ConfirmAuthMfaCommandOutput<TInput>> {
   async compose(params: TInput, composer: CcApiComposer): Promise<ConfirmAuthMfaCommandOutput<TInput>> {
-    // TypeScript cannot narrow a conditional type on a runtime check, so each branch asserts it
-    if (params.shouldResolveRefusedCredential !== true) {
-      return (await composer.send(new ConfirmAuthMfaInnerCommand(params))) as ConfirmAuthMfaCommandOutput<TInput>;
-    }
-    const result = await resolveRefusedCredential(
-      async () => ({
-        type: 'confirmed' as const,
-        ...(await composer.send(new ConfirmAuthMfaInnerCommand(params))),
-      }),
-      ['invalid-password', 'invalid-mfa-code'],
+    return sendResolvingRefusedCredential<ConfirmAuthMfaCommandOutput<TInput>>(
+      params,
+      () => composer.send(new ConfirmAuthMfaInnerCommand(params)),
+      'confirmed',
+      {
+        'invalid-password': CONFIRM_AUTH_MFA_ERROR_CODES.INVALID_PASSWORD,
+        'invalid-mfa-code': CONFIRM_AUTH_MFA_ERROR_CODES.INVALID_MFA_CODE,
+      },
     );
-    return result as ConfirmAuthMfaCommandOutput<TInput>;
   }
 
   // the API drops the pending enrolment once confirmed, so a replay rejects with `ENROLMENT_NOT_FOUND` and an

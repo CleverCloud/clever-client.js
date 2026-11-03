@@ -5,7 +5,7 @@ import type { CcRequestParams } from '../../../../types/request.types.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CcApiComposer } from '../../types/cc-api.types.js';
 import { transformAuthMfaBackupCodes } from './auth-transform.js';
-import { resolveRefusedCredential } from './auth-utils.js';
+import { sendResolvingRefusedCredential } from './auth-utils.js';
 import type {
   ResetAuthMfaBackupCodesCommandInput,
   ResetAuthMfaBackupCodesCommandOutput,
@@ -57,20 +57,12 @@ export class ResetAuthMfaBackupCodesCommand<
   TInput extends ResetAuthMfaBackupCodesCommandInput = ResetAuthMfaBackupCodesCommandInput,
 > extends CcApiCompositeCommand<TInput, ResetAuthMfaBackupCodesCommandOutput<TInput>> {
   async compose(params: TInput, composer: CcApiComposer): Promise<ResetAuthMfaBackupCodesCommandOutput<TInput>> {
-    // TypeScript cannot narrow a conditional type on a runtime check, so each branch asserts it
-    if (params.shouldResolveRefusedCredential !== true) {
-      return (await composer.send(
-        new ResetAuthMfaBackupCodesInnerCommand(params),
-      )) as ResetAuthMfaBackupCodesCommandOutput<TInput>;
-    }
-    const result = await resolveRefusedCredential(
-      async () => ({
-        type: 'reset' as const,
-        ...(await composer.send(new ResetAuthMfaBackupCodesInnerCommand(params))),
-      }),
-      ['invalid-password'],
+    return sendResolvingRefusedCredential<ResetAuthMfaBackupCodesCommandOutput<TInput>>(
+      params,
+      () => composer.send(new ResetAuthMfaBackupCodesInnerCommand(params)),
+      'reset',
+      { 'invalid-password': RESET_AUTH_MFA_BACKUP_CODES_ERROR_CODES.INVALID_PASSWORD },
     );
-    return result as ResetAuthMfaBackupCodesCommandOutput<TInput>;
   }
 
   // each call invalidates the codes the previous one returned, so a replay loses the codes of the first response

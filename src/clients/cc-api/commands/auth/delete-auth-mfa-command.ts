@@ -4,7 +4,7 @@ import type { ApiErrorInfo } from '../../../../types/command.types.js';
 import type { CcRequestParams } from '../../../../types/request.types.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CcApiComposer } from '../../types/cc-api.types.js';
-import { resolveRefusedCredential } from './auth-utils.js';
+import { sendResolvingRefusedCredential } from './auth-utils.js';
 import type { DeleteAuthMfaCommandInput, DeleteAuthMfaCommandOutput } from './delete-auth-mfa-command.types.js';
 
 /**
@@ -50,15 +50,12 @@ export class DeleteAuthMfaCommand<
   TInput extends DeleteAuthMfaCommandInput = DeleteAuthMfaCommandInput,
 > extends CcApiCompositeCommand<TInput, DeleteAuthMfaCommandOutput<TInput>> {
   async compose(params: TInput, composer: CcApiComposer): Promise<DeleteAuthMfaCommandOutput<TInput>> {
-    // TypeScript cannot narrow a conditional type on a runtime check, so each branch asserts it
-    if (params.shouldResolveRefusedCredential !== true) {
-      return (await composer.send(new DeleteAuthMfaInnerCommand(params))) as DeleteAuthMfaCommandOutput<TInput>;
-    }
-    const result = await resolveRefusedCredential(async () => {
-      await composer.send(new DeleteAuthMfaInnerCommand(params));
-      return { type: 'deleted' as const };
-    }, ['invalid-password']);
-    return result as DeleteAuthMfaCommandOutput<TInput>;
+    return sendResolvingRefusedCredential<DeleteAuthMfaCommandOutput<TInput>>(
+      params,
+      () => composer.send(new DeleteAuthMfaInnerCommand(params)),
+      'deleted',
+      { 'invalid-password': DELETE_AUTH_MFA_ERROR_CODES.INVALID_PASSWORD },
+    );
   }
 
   isIdempotent(): boolean {
