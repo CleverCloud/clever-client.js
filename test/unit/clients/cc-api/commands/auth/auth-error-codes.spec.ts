@@ -140,30 +140,7 @@ const CASES: Array<{
     command: () => new UpdateAuthPasswordCommand(PASSWORDS),
     request: { method: 'PUT', path: '/v2/self/change_password' },
     response: apiError(400, 504, { fields: { oldPassword: 'Password does not match' } }),
-    code: 'clever.auth.invalid-password',
-  },
-  {
-    name: 'UpdateAuthPasswordCommand: invalid new password',
-    command: () => new UpdateAuthPasswordCommand(PASSWORDS),
-    request: { method: 'PUT', path: '/v2/self/change_password' },
-    response: apiError(400, 504, {
-      fields: { newPassword: 'Must be between 12 characters long and 4096 characters long' },
-    }),
-    code: 'clever.auth.invalid-new-password',
-  },
-  {
-    name: 'UpdateAuthPasswordCommand: both passwords at fault',
-    command: () => new UpdateAuthPasswordCommand(PASSWORDS),
-    request: { method: 'PUT', path: '/v2/self/change_password' },
-    response: apiError(400, 504, { fields: { oldPassword: 'Password does not match', newPassword: 'Too short' } }),
-    code: 'clever.auth.invalid-password',
-  },
-  {
-    name: 'UpdateAuthPasswordCommand: validation error without fields',
-    command: () => new UpdateAuthPasswordCommand(PASSWORDS),
-    request: { method: 'PUT', path: '/v2/self/change_password' },
-    response: apiError(400, 504),
-    code: '504',
+    code: 'clever.auth.password-not-set',
   },
 ];
 

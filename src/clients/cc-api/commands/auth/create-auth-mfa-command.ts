@@ -4,7 +4,7 @@ import type { ApiErrorInfo } from '../../../../types/command.types.js';
 import type { CcRequestParams } from '../../../../types/request.types.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CcApiComposer } from '../../types/cc-api.types.js';
-import { resolveRefusedCredential } from './auth-utils.js';
+import { sendResolvingRefusedCredential } from './auth-utils.js';
 import type {
   CreateAuthMfaCommandInput,
   CreateAuthMfaCommandOutput,
@@ -60,15 +60,12 @@ export class CreateAuthMfaCommand<
   TInput extends CreateAuthMfaCommandInput = CreateAuthMfaCommandInput,
 > extends CcApiCompositeCommand<TInput, CreateAuthMfaCommandOutput<TInput>> {
   async compose(params: TInput, composer: CcApiComposer): Promise<CreateAuthMfaCommandOutput<TInput>> {
-    // TypeScript cannot narrow a conditional type on a runtime check, so each branch asserts it
-    if (params.shouldResolveRefusedCredential !== true) {
-      return (await composer.send(new CreateAuthMfaInnerCommand(params))) as CreateAuthMfaCommandOutput<TInput>;
-    }
-    const result = await resolveRefusedCredential(
-      async () => ({ type: 'created' as const, ...(await composer.send(new CreateAuthMfaInnerCommand(params))) }),
-      ['invalid-password'],
+    return sendResolvingRefusedCredential<CreateAuthMfaCommandOutput<TInput>>(
+      params,
+      () => composer.send(new CreateAuthMfaInnerCommand(params)),
+      'created',
+      { 'invalid-password': CREATE_AUTH_MFA_ERROR_CODES.INVALID_PASSWORD },
     );
-    return result as CreateAuthMfaCommandOutput<TInput>;
   }
 
   // every call mints a new secret and a new set of backup codes, replacing the enrolment being set up

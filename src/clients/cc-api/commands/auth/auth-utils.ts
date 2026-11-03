@@ -1,32 +1,38 @@
 import { isCcHttpErrorWithCode } from '../../../../utils/error-utils.js';
-import type { RefusedAuthCredential, RefusedAuthCredentialType } from './auth.types.js';
-
-// the error code each refusal rejects with, once the command transformed it
-const REFUSED_CREDENTIAL_ERROR_CODES: Record<RefusedAuthCredentialType, string> = {
-  'invalid-password': 'clever.auth.invalid-password',
-  'invalid-mfa-code': 'clever.auth.invalid-mfa-code',
-};
+import type { RefusedAuthCredentialType, ResolveRefusedCredentialInput } from './auth.types.js';
 
 /**
- * Sends the requests of a composite command, resolving the given refusals instead of rejecting.
+ * Sends the request of a command taking {@link ResolveRefusedCredentialInput}, and shapes its output
+ * after `shouldResolveRefusedCredential`.
  *
- * The composite recovers from the error, so the client never reports it to `hooks.onError`. Every
- * other error still rejects.
+ * Unset or `false`, the response is returned as is and a refused credential rejects. Set, the
+ * response is tagged with the success `type`, and each refusal resolves as `{ type }` instead of
+ * rejecting: the composite recovers from the error, so the client never reports it to
+ * `hooks.onError`. Every other error still rejects.
  *
- * @param send - Sends the requests and resolves the result of the command
- * @param refusals - The refusals the command can meet
+ * @template Output - The output of the command for its input
+ * @param params - The input of the command
+ * @param send - Sends the request and resolves its response
+ * @param successType - The `type` of the result when the request succeeds
+ * @param refusals - The error code each refusal the command can meet rejects with, as the command transforms it
  */
-export async function resolveRefusedCredential<Result, Type extends RefusedAuthCredentialType>(
-  send: () => Promise<Result>,
-  refusals: ReadonlyArray<Type>,
-): Promise<Result | RefusedAuthCredential<Type>> {
+export async function sendResolvingRefusedCredential<Output>(
+  params: ResolveRefusedCredentialInput,
+  send: () => Promise<object | undefined>,
+  successType: string,
+  refusals: Partial<Record<RefusedAuthCredentialType, string>>,
+): Promise<Output> {
+  // TypeScript cannot narrow the conditional output type on a runtime check, so the result is asserted
+  if (params.shouldResolveRefusedCredential !== true) {
+    return (await send()) as Output;
+  }
   try {
-    return await send();
+    return { type: successType, ...(await send()) } as Output;
   } catch (error) {
-    const refusal = refusals.find((type) => isCcHttpErrorWithCode(error, REFUSED_CREDENTIAL_ERROR_CODES[type]));
+    const refusal = Object.entries(refusals).find(([, code]) => code != null && isCcHttpErrorWithCode(error, code));
     if (refusal == null) {
       throw error;
     }
-    return { type: refusal };
+    return { type: refusal[0] } as Output;
   }
 }

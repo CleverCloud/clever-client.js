@@ -5,7 +5,7 @@ import type { CcRequestParams } from '../../../../types/request.types.js';
 import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
 import type { CcApiComposer } from '../../types/cc-api.types.js';
 import { transformAuthMfaBackupCodes } from './auth-transform.js';
-import { resolveRefusedCredential } from './auth-utils.js';
+import { sendResolvingRefusedCredential } from './auth-utils.js';
 import type {
   ConfirmAuthMfaCommandInput,
   ConfirmAuthMfaCommandOutput,
@@ -18,7 +18,9 @@ import type {
  * - `INVALID_PASSWORD`: the account password is wrong
  * - `INVALID_MFA_CODE`: the code does not match the enrolment secret
  * - `MFA_ALREADY_ENABLED`: the factor is already active
- * - `ENROLMENT_NOT_FOUND`: no enrolment was started
+ * - `ENROLMENT_NOT_FOUND`: no enrolment is pending, either none was started or it was already confirmed: a
+ *   replay after a lost response meets this one. Check {@link GetAuthMfaCommand}, and if the factor is on,
+ *   get new backup codes with {@link ResetAuthMfaBackupCodesCommand}
  * - `ALMIGHTY_TOKEN_REQUIRED`: the client authenticates with a token not allowed to manage the account
  *   security settings, such as an API token or a restricted OAuth consumer
  */
@@ -65,22 +67,19 @@ export class ConfirmAuthMfaCommand<
   TInput extends ConfirmAuthMfaCommandInput = ConfirmAuthMfaCommandInput,
 > extends CcApiCompositeCommand<TInput, ConfirmAuthMfaCommandOutput<TInput>> {
   async compose(params: TInput, composer: CcApiComposer): Promise<ConfirmAuthMfaCommandOutput<TInput>> {
-    // TypeScript cannot narrow a conditional type on a runtime check, so each branch asserts it
-    if (params.shouldResolveRefusedCredential !== true) {
-      return (await composer.send(new ConfirmAuthMfaInnerCommand(params))) as ConfirmAuthMfaCommandOutput<TInput>;
-    }
-    const result = await resolveRefusedCredential(
-      async () => ({
-        type: 'confirmed' as const,
-        ...(await composer.send(new ConfirmAuthMfaInnerCommand(params))),
-      }),
-      ['invalid-password', 'invalid-mfa-code'],
+    return sendResolvingRefusedCredential<ConfirmAuthMfaCommandOutput<TInput>>(
+      params,
+      () => composer.send(new ConfirmAuthMfaInnerCommand(params)),
+      'confirmed',
+      {
+        'invalid-password': CONFIRM_AUTH_MFA_ERROR_CODES.INVALID_PASSWORD,
+        'invalid-mfa-code': CONFIRM_AUTH_MFA_ERROR_CODES.INVALID_MFA_CODE,
+      },
     );
-    return result as ConfirmAuthMfaCommandOutput<TInput>;
   }
 
-  // once the factor is active, the endpoint answers with a conflict, so an enrolment is never confirmed twice;
-  // a replay after a lost response still loses the backup codes, which only that response carried
+  // the API drops the pending enrolment once confirmed, so a replay rejects with `ENROLMENT_NOT_FOUND` and an
+  // enrolment is never confirmed twice; it still loses the backup codes, which only the first response carried
   isIdempotent(): boolean {
     return true;
   }
@@ -118,7 +117,7 @@ class ConfirmAuthMfaInnerCommand extends CcApiSimpleCommand<ConfirmAuthMfaComman
     return API_ERROR_CODES[code] ?? code;
   }
 
-  // once the factor is active, the endpoint answers with a conflict, so an enrolment is never confirmed twice
+  // the API drops the pending enrolment once confirmed, so a replay rejects with `ENROLMENT_NOT_FOUND`
   isIdempotent(): boolean {
     return true;
   }

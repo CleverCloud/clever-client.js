@@ -9,17 +9,17 @@ import type { UpdateAuthPasswordCommandInput } from './update-auth-password-comm
  *
  * - `INVALID_PASSWORD`: the current password is wrong
  * - `INVALID_NEW_PASSWORD`: the new password is not between 12 and 4096 characters long
+ * - `PASSWORD_NOT_SET`: the account has no password yet, such as one signed up through an OAuth provider: its
+ *   first password is set through {@link RequestAuthPasswordResetCommand}, not this command
  */
 export const UPDATE_AUTH_PASSWORD_ERROR_CODES = {
   INVALID_PASSWORD: 'clever.auth.invalid-password',
   INVALID_NEW_PASSWORD: 'clever.auth.invalid-new-password',
+  PASSWORD_NOT_SET: 'clever.auth.password-not-set',
 } as const;
 
 export type UpdateAuthPasswordErrorCode =
   (typeof UPDATE_AUTH_PASSWORD_ERROR_CODES)[keyof typeof UPDATE_AUTH_PASSWORD_ERROR_CODES];
-
-// `ValidationErrors.PASSWORD`, a 400 naming the fields at fault in `fields`, for an account without a stored password
-const PASSWORD_VALIDATION_ERROR_CODE = '504';
 
 const API_ERROR_CODES: Record<string, UpdateAuthPasswordErrorCode> = {
   // `USER_DATA_ACCESS`, a 403 for a wrong current password. The API answers the same to a token that is not
@@ -27,6 +27,9 @@ const API_ERROR_CODES: Record<string, UpdateAuthPasswordErrorCode> = {
   '7301': UPDATE_AUTH_PASSWORD_ERROR_CODES.INVALID_PASSWORD,
   // a 400 for a new password not between 12 and 4096 characters long
   '3002': UPDATE_AUTH_PASSWORD_ERROR_CODES.INVALID_NEW_PASSWORD,
+  // `ValidationErrors.PASSWORD`, a 400 only sent to an account without a stored password, with `oldPassword` in
+  // `fields`. The new password is checked before, so it never shows there
+  '504': UPDATE_AUTH_PASSWORD_ERROR_CODES.PASSWORD_NOT_SET,
 };
 
 /**
@@ -54,20 +57,8 @@ export class UpdateAuthPasswordCommand extends CcApiSimpleCommand<UpdateAuthPass
     return undefined;
   }
 
-  // both fields can be at fault at once, and the current password comes first: until it is right, the
-  // new one is not worth fixing
-  transformErrorCode({ code, body }: ApiErrorInfo) {
-    if (code !== PASSWORD_VALIDATION_ERROR_CODE) {
-      return API_ERROR_CODES[code] ?? code;
-    }
-    const fields = (body as { fields?: Record<string, string> } | undefined)?.fields ?? {};
-    if (fields.oldPassword != null) {
-      return UPDATE_AUTH_PASSWORD_ERROR_CODES.INVALID_PASSWORD;
-    }
-    if (fields.newPassword != null) {
-      return UPDATE_AUTH_PASSWORD_ERROR_CODES.INVALID_NEW_PASSWORD;
-    }
-    return code;
+  transformErrorCode({ code }: ApiErrorInfo) {
+    return API_ERROR_CODES[code] ?? code;
   }
 
   // a replay sets the very same password, and is anyway rejected because the old password no longer matches
