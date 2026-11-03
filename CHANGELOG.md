@@ -1,5 +1,115 @@
 # Clever Client changelog
 
+## 12.6.9
+
+### Patch Changes
+
+- [#252](https://github.com/CleverCloud/clever-client.js/pull/252) [`405c84b`](https://github.com/CleverCloud/clever-client.js/commit/405c84b2396f9abddb9d80e8bc661c6a18c6b8b4) - `ConfirmAuthMfaCommand` resolves the backup codes of the factor it turns on, instead of `undefined`
+
+  The API shows them only in this response: save them or show them to the user right away. With
+  `shouldResolveRefusedCredential: true`, the `confirmed` result carries them too.
+
+  ```diff
+  -await client.send(new ConfirmAuthMfaCommand({ kind: 'TOTP', code, password }));
+  +const { backupCodes } = await client.send(new ConfirmAuthMfaCommand({ kind: 'TOTP', code, password }));
+  ```
+
+- [#252](https://github.com/CleverCloud/clever-client.js/pull/252) [`0024541`](https://github.com/CleverCloud/clever-client.js/commit/00245419285fcaefe642b580b2639e896af21ec1) - `ConfirmAuthMfaCommand` rejects with named error codes, and can resolve a wrong password or code instead
+
+  It used to reject with the raw cc-api ids. It now rejects with the codes of `CONFIRM_AUTH_MFA_ERROR_CODES`:
+
+  | Before | After                                 |
+  | ------ | ------------------------------------- |
+  | `3029` | `clever.auth.invalid-password`        |
+  | `3103` | `clever.auth.invalid-mfa-code`        |
+  | `3102` | `clever.auth.mfa-already-enabled`     |
+  | `3101` | `clever.auth.mfa-enrolment-not-found` |
+  | `7301` | `clever.auth.almighty-token-required` |
+
+  Set `shouldResolveRefusedCredential: true` to get a wrong password or a wrong code from the authenticator app as
+  a result instead of an error reported to `hooks.onError`: the command then resolves `{ type: 'confirmed' }`,
+  `{ type: 'invalid-password' }` or `{ type: 'invalid-mfa-code' }`. Every other failure still rejects.
+
+- [#252](https://github.com/CleverCloud/clever-client.js/pull/252) [`3395ab1`](https://github.com/CleverCloud/clever-client.js/commit/3395ab17e7025d7d320e28a0a28eb6c52432f500) - A command can now read the parsed response body in `transformErrorCode()`, as `body` on `ApiErrorInfo`
+
+- [#252](https://github.com/CleverCloud/clever-client.js/pull/252) [`6b7a4ba`](https://github.com/CleverCloud/clever-client.js/commit/6b7a4bae67fceae1789eccabaea8fab41e1181ac) - `CreateAuthMfaCommand` rejects with named error codes, and can resolve a wrong password instead
+
+  It used to reject with the raw cc-api ids. It now rejects with the codes of `CREATE_AUTH_MFA_ERROR_CODES`:
+
+  | Before | After                                 |
+  | ------ | ------------------------------------- |
+  | `3029` | `clever.auth.invalid-password`        |
+  | `8502` | `clever.auth.email-not-validated`     |
+  | `3102` | `clever.auth.mfa-already-enabled`     |
+  | `7301` | `clever.auth.almighty-token-required` |
+
+  A wrong password rejects with a 401, which reaches the `hooks.onError` callback of `CcApiClient` and can read
+  as an expired session. Set `shouldResolveRefusedCredential: true` to get it as a result instead, never reported:
+  the command then resolves `{ type: 'created', url }` or `{ type: 'invalid-password' }`. Every other failure
+  still rejects. Without the option, nothing changes at runtime.
+
+  `CreateAuthMfaCommandOutput` now names the output depending on the option. The default output is renamed
+  `CreateAuthMfaCommandResponse`.
+
+  ```js
+  const result = await client.send(
+    new CreateAuthMfaCommand({ kind: 'TOTP', password, shouldResolveRefusedCredential: true }),
+  );
+  if (result.type === 'invalid-password') {
+    askForThePasswordAgain();
+  }
+  ```
+
+- [#252](https://github.com/CleverCloud/clever-client.js/pull/252) [`1a67ce3`](https://github.com/CleverCloud/clever-client.js/commit/1a67ce37f60df53a1fc1400ccde90c9ac47c25bf) - `DeleteAuthMfaCommand` rejects with named error codes, and can resolve a wrong password instead
+
+  It used to reject with the raw cc-api ids. It now rejects with the codes of `DELETE_AUTH_MFA_ERROR_CODES`:
+
+  | Before | After                                 |
+  | ------ | ------------------------------------- |
+  | `3029` | `clever.auth.invalid-password`        |
+  | `3101` | `clever.auth.mfa-not-found`           |
+  | `7301` | `clever.auth.almighty-token-required` |
+
+  Set `shouldResolveRefusedCredential: true` to get a wrong password as a result instead of a 401 reported to
+  `hooks.onError`: the command then resolves `{ type: 'deleted' }` or `{ type: 'invalid-password' }`. Every
+  other failure still rejects.
+
+- [#252](https://github.com/CleverCloud/clever-client.js/pull/252) [`7dc5ade`](https://github.com/CleverCloud/clever-client.js/commit/7dc5ade3119c1ea243978f7019dbfe1158cb5051) - Add `GetAuthMfaCommand`, telling whether a second factor is turned on and how many of its backup codes are left
+
+  It needs no password. It rejects with `clever.auth.almighty-token-required` (`GET_AUTH_MFA_ERROR_CODES`) when the
+  client authenticates with a token not allowed to read the account security settings.
+  `backupCodesState.generatedAt` is not the real generation date for a set of codes generated before the API
+  recorded it: avoid showing it as such.
+
+- [#252](https://github.com/CleverCloud/clever-client.js/pull/252) [`7726127`](https://github.com/CleverCloud/clever-client.js/commit/7726127fe3cc5dd3def83b125242d483a50eef20) - Remove `GetAuthMfaBackupCodesCommand`: the API no longer shows backup codes after they are issued
+
+  They are now returned once, by `ConfirmAuthMfaCommand` when the factor is turned on and by
+  `ResetAuthMfaBackupCodesCommand`, which replaces them with a new set. To show how many are left, use
+  `GetAuthMfaCommand`. `GET_AUTH_MFA_BACKUP_CODES_ERROR_CODES` and the `GetAuthMfaBackupCodes*` types are gone too.
+
+  ```diff
+  -import { GetAuthMfaBackupCodesCommand } from '@clevercloud/client/cc-api-commands/auth/get-auth-mfa-backup-codes-command.js';
+  -const backupCodes = await client.send(new GetAuthMfaBackupCodesCommand({ kind: 'TOTP', password }));
+  +import { ResetAuthMfaBackupCodesCommand } from '@clevercloud/client/cc-api-commands/auth/reset-auth-mfa-backup-codes-command.js';
+  +const { backupCodes } = await client.send(new ResetAuthMfaBackupCodesCommand({ kind: 'TOTP', password }));
+  ```
+
+  The replacement invalidates the previous codes: call it only when the user asks for a new set.
+
+- [#252](https://github.com/CleverCloud/clever-client.js/pull/252) [`3b90a6c`](https://github.com/CleverCloud/clever-client.js/commit/3b90a6c16954e966ae404c823d74e5a01c292311) - `RequestAuthPasswordResetCommand` rejects with `clever.auth.password-reset-email-failed` instead of `2401` when the reset email cannot be sent
+
+- [#252](https://github.com/CleverCloud/clever-client.js/pull/252) [`22e837d`](https://github.com/CleverCloud/clever-client.js/commit/22e837d1e8faba335bb8edcfbbf6f4ad1461aab9) - Add `ResetAuthMfaBackupCodesCommand`, replacing the backup codes with a new set returned once
+
+  The previous codes stop working. It rejects with the codes of `RESET_AUTH_MFA_BACKUP_CODES_ERROR_CODES`, and
+  takes `shouldResolveRefusedCredential` like the other commands asking for the password.
+
+- [#252](https://github.com/CleverCloud/clever-client.js/pull/252) [`2e2f9e0`](https://github.com/CleverCloud/clever-client.js/commit/2e2f9e0760b294b5a45aeb06f6a34b1a6121660f) - `UpdateAuthPasswordCommand` tells a wrong current password from an invalid new one
+
+  A wrong current password (`403`, error id `7301`) now rejects with `clever.auth.invalid-password`, and a new password
+  not between 12 and 4096 characters long (`400`, error id `3002`) with `clever.auth.invalid-new-password`, both in
+  `UPDATE_AUTH_PASSWORD_ERROR_CODES`. The `504` validation error is told apart the same way, from the fields of its
+  body: read the code instead of `error.response.body.fields`.
+
 ## 12.6.8
 
 ### Patch Changes
