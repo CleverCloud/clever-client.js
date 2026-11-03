@@ -1,5 +1,20 @@
 # Clever Client changelog
 
+## 12.6.10
+
+### Patch Changes
+
+- [#255](https://github.com/CleverCloud/clever-client.js/pull/255) [`22681e8`](https://github.com/CleverCloud/clever-client.js/commit/22681e892a7a0979bb50da751ed560eae163ec20) - Document that replaying `ConfirmAuthMfaCommand` rejects with `clever.auth.mfa-enrolment-not-found`
+
+  The factor is on by then, but the backup codes are lost with the first response: check `GetAuthMfaCommand`, then
+  get a new set with `ResetAuthMfaBackupCodesCommand`.
+
+- [#255](https://github.com/CleverCloud/clever-client.js/pull/255) [`319ec69`](https://github.com/CleverCloud/clever-client.js/commit/319ec6930825f76f33ba5642bfdfc820d4e66ea4) - `UpdateAuthPasswordCommand` rejects with `clever.auth.password-not-set` for an account that has no password yet
+
+  Such an account, signed up through an OAuth provider, used to get `clever.auth.invalid-password`, which read as a
+  wrong current password. Its first password is set through `RequestAuthPasswordResetCommand`. The code is in
+  `UPDATE_AUTH_PASSWORD_ERROR_CODES`.
+
 ## 12.6.9
 
 ### Patch Changes
