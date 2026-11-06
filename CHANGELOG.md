@@ -1,5 +1,13 @@
 # Clever Client changelog
 
+## 12.6.11
+
+### Patch Changes
+
+- [#249](https://github.com/CleverCloud/clever-client.js/pull/249) [`4d268be`](https://github.com/CleverCloud/clever-client.js/commit/4d268bead64086ed03eb37f488848933a4a18222) - Add the commands reading the notices the console shows on its pages
+
+  `ListHomeNoticeCommand`, `ListOrganisationNoticeCommand`, `ListApplicationNoticeCommand`, `ListAddonNoticeCommand`, `ListAddonCreationListNoticeCommand` (add-on provider list) and `ListAddonCreationConfigurationNoticeCommand` (once a provider is chosen), under `@clevercloud/client/cc-api-commands/notice/`. Each returns the notices already in the user's language, oldest first, and an empty array when there is nothing to show.
+
 ## 12.6.10
 
 ### Patch Changes
