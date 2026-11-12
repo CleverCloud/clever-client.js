@@ -1,7 +1,6 @@
 import { fetchWithTimeout } from './request.fetch-with-timeout.js';
-import { fillUrlSearchParams } from './utils/query-params.js';
-
 import type { RequestError, RequestParams } from './request.types.js';
+import { fillUrlSearchParams } from './utils/query-params.js';
 
 const JSON_TYPE = 'application/json';
 const FORM_TYPE = 'application/x-www-form-urlencoded';

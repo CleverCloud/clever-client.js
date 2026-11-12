@@ -1,10 +1,9 @@
-import CleverCloudSse from './clever-cloud-sse.js';
-
 import type {
   ApplicationAccessLog,
   ApplicationAccessLogsStreamParams,
   ApplicationAccessLogStreamOptions,
 } from './access-logs.types.js';
+import CleverCloudSse from './clever-cloud-sse.js';
 
 const ACCESS_LOG_EVENT_NAME = 'ACCESS_LOG';
 

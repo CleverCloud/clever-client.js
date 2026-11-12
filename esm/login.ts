@@ -1,5 +1,4 @@
 import { fetchAccessToken as doFetchAccessToken, fetchRequestToken as doFetchRequestToken } from './api/v2/oauth.js';
-
 import type { RequestParams } from './request.types.js';
 
 export function getOauthParams({

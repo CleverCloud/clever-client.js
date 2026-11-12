@@ -1,9 +1,8 @@
 import { addOauthHeader } from '../oauth.js';
-import { prefixUrl } from '../prefix-url.js';
-import { AbstractStream, AuthenticationError } from './stream.abstract.js';
-
 import type { OAuthTokens } from '../oauth.types.js';
+import { prefixUrl } from '../prefix-url.js';
 import type { WebSocketLike } from './events.types.js';
+import { AbstractStream, AuthenticationError } from './stream.abstract.js';
 
 const PONG_MESSAGE = JSON.stringify({
   type: 'heartbeat',

@@ -8,7 +8,6 @@ import { DeleteApiTokenCommand } from '../../src/clients/cc-api-bridge/commands/
 import { CcApiClient } from '../../src/clients/cc-api/cc-api-client.js';
 import { DeleteOauthTokenCommand } from '../../src/clients/cc-api/commands/oauth-token/delete-oauth-token-command.js';
 import { getAllE2eUsers } from './e2e-test-users.js';
-
 import type { E2eUser } from './e2e.types.js';
 
 const OAUTH_CONSUMER_KEY = globalThis.process?.env.OAUTH_CONSUMER_KEY;

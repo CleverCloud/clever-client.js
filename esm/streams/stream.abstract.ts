@@ -1,5 +1,4 @@
 import EventEmitter from 'component-emitter';
-
 import type { AutoRetry } from './streams.types.js';
 
 const BACKOFF_FACTOR = 1.25;

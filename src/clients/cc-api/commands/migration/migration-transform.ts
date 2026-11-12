@@ -6,15 +6,13 @@ export function transformMigration(payload: any): Migration {
   return {
     id: payload.migrationId,
     requestedAt: normalizeDate(payload.requestDate)!,
-    steps: payload.steps.map(
-      (step: any): MigrationStep => ({
-        value: step.value,
-        status: step.status,
-        message: step.message,
-        startsAt: normalizeDate(step.startDate)!,
-        endsAt: normalizeDate(step.endDate),
-      }),
-    ),
+    steps: payload.steps.map((step: any): MigrationStep => ({
+      value: step.value,
+      status: step.status,
+      message: step.message,
+      startsAt: normalizeDate(step.startDate)!,
+      endsAt: normalizeDate(step.endDate),
+    })),
     status: payload.status,
   };
 }

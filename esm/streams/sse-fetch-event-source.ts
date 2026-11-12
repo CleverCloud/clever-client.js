@@ -1,5 +1,4 @@
 import { events } from 'fetch-event-stream';
-
 import type { SseFetchEventSourceParams } from './streams.types.js';
 
 export const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';

@@ -1,12 +1,11 @@
-import { addOauthHeader } from '../oauth.js';
-import { extractQueryParamsFormUrl, fillUrlSearchParams } from '../utils/query-params.js';
-import { CustomEventTarget } from './custom-event-target.js';
-import { EVENT_STREAM_CONTENT_TYPE, fetchEventSource, JSON_CONTENT_TYPE } from './sse-fetch-event-source.js';
-
 import type { SseMessage } from '../../src/types/request.types.js';
+import { addOauthHeader } from '../oauth.js';
 import type { OAuthTokens } from '../oauth.types.js';
 import type { RequestParams } from '../request.types.js';
+import { extractQueryParamsFormUrl, fillUrlSearchParams } from '../utils/query-params.js';
 import type { QueryParams } from '../utils/query-params.types.js';
+import { CustomEventTarget } from './custom-event-target.js';
+import { EVENT_STREAM_CONTENT_TYPE, fetchEventSource, JSON_CONTENT_TYPE } from './sse-fetch-event-source.js';
 import type { RetryConfiguration, SseCloseReason } from './streams.types.js';
 
 const DEFAULT_RETRY_CONFIGURATION: RetryConfiguration = {

@@ -26,7 +26,7 @@ Browser tests require Playwright Chromium: `npx playwright install chromium`.
 ### Linting & Formatting
 - `pnpm run lint` - ESLint check
 - `pnpm run lint:fix` - ESLint auto-fix
-- `pnpm run format` - Format code with Prettier
+- `pnpm run format` - Format code with Oxfmt
 - `pnpm run format:check` - Check code formatting
 - `pnpm run typecheck` - TypeScript type checking
 
@@ -119,7 +119,8 @@ Real-time data via Server-Sent Events:
 ### Build System
 - **Rollup**: Bundling and distribution
 - **TypeScript**: Type checking (JSDoc + .d.ts files)
-- **ESLint**: Code linting with Prettier integration
+- **ESLint**: Code linting
+- **Oxfmt**: Code formatting
 - Supports both Node.js (22+) and browser environments
 
 ### Export Strategy

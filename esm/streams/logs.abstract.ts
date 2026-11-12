@@ -1,11 +1,10 @@
 import { addOauthHeader } from '../oauth.js';
+import type { OAuthTokens } from '../oauth.types.js';
 import { pickNonNull } from '../pick-non-null.js';
 import { prefixUrl } from '../prefix-url.js';
 import { fillUrlSearchParams } from '../utils/query-params.js';
-import { AbstractStream, AuthenticationError } from './stream.abstract.js';
-
-import type { OAuthTokens } from '../oauth.types.js';
 import type { SseLike } from './logs.types.js';
+import { AbstractStream, AuthenticationError } from './stream.abstract.js';
 
 const OPEN_TIMEOUT = 3000;
 
