@@ -4,6 +4,8 @@
     "target": "ES2023",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "NodeNext",
+    // The code runs in the browser and in Node.js; TypeScript 7 only loads `@types/node` when listed here
+    "types": ["node"],
     // resolve the `#dom-parser` subpath import to the TypeScript sources rather than to the built
     // `dist/` files, which do not exist when types are checked
     "customConditions": ["clever-client-source"],
