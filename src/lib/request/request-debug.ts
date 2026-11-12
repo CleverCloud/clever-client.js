@@ -10,6 +10,7 @@ export async function requestDebug<CommandOutput>(
   }
 
   const response = await handler<CommandOutput>(request);
+  // oxlint-disable-next-line no-console -- printing the request is what the debug mode is for
   console.log(
     JSON.stringify(
       {

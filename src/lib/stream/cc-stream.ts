@@ -210,9 +210,12 @@ export class CcStream {
     if (this._config.isDebugEnabled) {
       const timestamp = new Date().toISOString();
       const logMessage = `[CcStream] [${timestamp}] ${message}`;
+      // Printing the stream events is what the debug mode is for
       if (data !== undefined) {
+        // oxlint-disable-next-line no-console
         console.log(logMessage, data);
       } else {
+        // oxlint-disable-next-line no-console
         console.log(logMessage);
       }
     }

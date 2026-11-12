@@ -19,6 +19,7 @@ export default defineConfig({
   },
   ignorePatterns: ['**/dist/'],
   rules: {
+    'no-console': 'error',
     // Enforce the use of 'import from node:xxx' instead of 'import from xxx'
     'unicorn/prefer-node-protocol': 'error',
 
@@ -106,6 +107,12 @@ export default defineConfig({
     'typescript/restrict-template-expressions': 'error',
   },
   overrides: [
+    {
+      files: ['test/**'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
     // Transform functions map untyped raw API payloads field by field, so the `any` family of type-aware rules is
     // unavoidable noise there. Command files type their inputs and outputs and stay strict.
     {
