@@ -14,6 +14,7 @@ import type {
   CcStreamRetry,
   CcStreamState,
 } from './cc-stream.types.js';
+import { readSseResponseBody } from './sse-response-body-reader.js';
 
 const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
 
@@ -296,7 +297,7 @@ export class CcStream {
       }
 
       // each callback ignores what arrives once this attempt is abandoned
-      await response.body.read({
+      await readSseResponseBody(response.body, {
         onMessage: (message) => {
           if (!connectionAttempt.isAbandoned) {
             this.#onMessage(message);
