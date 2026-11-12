@@ -8,11 +8,15 @@
     "client",
     "rest"
   ],
-  "homepage": "https://github.com/CleverCloud/clever-client.js",
+  "homepage": "https://github.com/CleverCloud/clever-client.js#readme",
+  "bugs": {
+    "url": "https://github.com/CleverCloud/clever-client.js/issues"
+  },
   "license": "Apache-2.0",
+  "author": "Clever Cloud",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CleverCloud/clever-client.js"
+    "url": "git+https://github.com/CleverCloud/clever-client.js.git"
   },
   "files": [
     "dist/"
@@ -78,6 +82,9 @@
       "types": "./dist/esm/*.d.ts",
       "default": "./dist/esm/*.js"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "node --experimental-strip-types tasks/clean-dist.ts && tsc -p tsconfig.build.json",

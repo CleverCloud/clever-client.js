@@ -267,4 +267,4 @@ logsStream.resume();
 
 ## License
 
-This project is licensed under the [Apache-2.0](https://spdx.org/licenses/Apache-2.0.html).
+Apache-2.0, see [LICENSE](LICENSE).
