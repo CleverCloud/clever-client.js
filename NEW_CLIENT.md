@@ -733,6 +733,213 @@ const result = await redisClient.send(new CmdSendCommand({
 }));
 ```
 
+## Writing Your Own Client
+
+The clients above are built on a base that is published too: `@clevercloud/client/cc-client.js`. Use it to
+write a client for another HTTP API — a backend of your own, a proxy in front of a service — and get the same
+request pipeline as the Clever Cloud clients: hooks, timeouts, caching, cancellation, and the same errors.
+
+A client extends `CcClient`, and its commands extend `SimpleCommand` (one request) or `CompositeCommand`
+(several commands sent in sequence). The type parameter names the API they belong to, so a command of one
+client cannot be sent to another.
+
+```typescript
+import {
+  CcClient,
+  type CcRequestParams,
+  CompositeCommand,
+  type Composer,
+  get,
+  postJson,
+  QueryParams,
+  safeUrl,
+  SimpleCommand,
+} from '@clevercloud/client/cc-client.js';
+import { isCcHttpErrorWithStatus } from '@clevercloud/client/utils/error-utils.js';
+
+type MyApi = 'my-api';
+
+// the client: a base URL, and whatever every request needs
+export class MyApiClient extends CcClient<MyApi> {
+  constructor(options: { onUnauthorized: () => void }) {
+    super({
+      // an absolute URL, or in a browser a URL relative to the page
+      baseUrl: '/my-api',
+      hooks: {
+        onRequest: (requestParams) => {
+          requestParams.headers.set('X-Requested-By', 'my-app');
+        },
+        onError: (error) => {
+          if (isCcHttpErrorWithStatus(error, 401)) {
+            options.onUnauthorized();
+          }
+        },
+      },
+    });
+  }
+}
+
+// a base class for the commands of that API
+abstract class MyApiCommand<Input, Output> extends SimpleCommand<MyApi, Input, Output> {
+  get api(): MyApi {
+    return 'my-api';
+  }
+}
+
+interface Widget {
+  id: string;
+  name: string;
+}
+
+export class GetWidgetCommand extends MyApiCommand<{ widgetId: string; expand?: boolean }, Widget> {
+  toRequestParams(params: { widgetId: string; expand?: boolean }): Partial<CcRequestParams> {
+    // `safeUrl` encodes every interpolated value
+    return get(safeUrl`/widgets/${params.widgetId}`, new QueryParams({ expand: params.expand }));
+  }
+
+  // optional: turn the response body into the output of the command
+  override transformCommandOutput(response: unknown): Widget {
+    const payload = response as { widget_id: string; widget_name: string };
+    return { id: payload.widget_id, name: payload.widget_name };
+  }
+
+  // optional: sending it twice changes nothing, so a caller may retry it
+  override isIdempotent(): boolean {
+    return true;
+  }
+}
+
+export class CreateWidgetCommand extends MyApiCommand<{ name: string }, Widget> {
+  toRequestParams(params: { name: string }): Partial<CcRequestParams> {
+    return postJson('/widgets', { widget_name: params.name });
+  }
+
+  override transformCommandOutput(response: unknown): Widget {
+    const payload = response as { widget_id: string; widget_name: string };
+    return { id: payload.widget_id, name: payload.widget_name };
+  }
+}
+
+export class CreateAndGetWidgetCommand extends CompositeCommand<MyApi, { name: string }, Widget> {
+  get api(): MyApi {
+    return 'my-api';
+  }
+
+  async compose(params: { name: string }, composer: Composer<MyApi>): Promise<Widget> {
+    const { id } = await composer.send(new CreateWidgetCommand(params));
+    return composer.send(new GetWidgetCommand({ widgetId: id }));
+  }
+}
+
+// usage
+const client = new MyApiClient({ onUnauthorized: () => redirectToLogin() });
+const widget = await client.send(new GetWidgetCommand({ widgetId: 'w1' }), { signal: abortController.signal });
+```
+
+What the entry point exports:
+
+| Export                                                                            | Purpose                                                                          |
+|-----------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| `CcClient`                                                                        | The base client, its constructor takes a `CcClientConfig`, an optional `CcAuth` and an optional `CcClientParamsTransformer` |
+| `SimpleCommand`, `CompositeCommand`                                               | The base command classes                                                         |
+| `AbstractCommand`                                                                 | What both extend, to name any of them, or to share code between the base command classes of an API |
+| `StreamCommand`, `CcStream`, `CcStreamEvent`                                      | The base classes of a stream command and of the stream it opens, see below      |
+| `CcAuth`                                                                          | The base class for an authentication: implement `getAuthorization()`, which returns the `Authorization` header value |
+| `get`, `post`, `postJson`, `put`, `putJson`, `patch`, `patchJson`, `head`, `delete_` | Build the request params of a command                                         |
+| `QueryParams`, `safeUrl`                                                          | Build the query string, and a path with encoded values                           |
+| `HeadersBuilder`                                                                  | Build the headers of a request: `acceptJson()`, `acceptEventStream()`, `contentTypeJson()`, `authorization()`… |
+| `CcClientConfig`, `CcClientHooks`, `CcClientParamsTransformer`, `OnRequestHook`, `OnResponseHook`, `OnErrorHook` | Types of the client configuration                                              |
+| `CcRequestParams`, `CcRequestConfig`, `CcRequestConfigPartial`, `CcRequest`, `CcResponse`… | Types of requests and responses                                         |
+| `Command`, `Composer`, `ApiErrorInfo`                                             | Types of commands                                                                |
+| `CcStreamConfig`, `CcStreamConfigPartial`, `RetryConfig`, `CcStreamRequestFactory`, `CcStreamState`… | Types of streams                                             |
+| `CcClientError`, `CcRequestError`, `CcHttpError`, `CcNetworkError`                | Types of the errors, see below                                                   |
+
+The error classes are exported as types only, like everywhere else in this package: narrow an error with the
+predicates of `@clevercloud/client/utils/error-utils.js` (see [Error Handling](#error-handling)), which also
+recognise the errors raised by another copy of the package.
+
+A command can also:
+
+- override `transformErrorCode()` to map the error codes of its API to its own;
+- override `isAuthEnabled()` to return `false`, so that the client authentication is not applied to it;
+- override `getRequestConfig()` to state the request configuration its endpoint needs, which the configuration
+  given to `send()` still overrides.
+
+A client can also transform the params of every command before they become a request, for example to fill in
+a default value or to resolve an id. Pass a `CcClientParamsTransformer` as the third argument of the `CcClient`
+constructor: its `transformParams(command, requestConfig)` returns the params a simple, composite or stream
+command is sent with. Without it, the params are sent as the command holds them.
+
+```typescript
+import type { CcClientParamsTransformer } from '@clevercloud/client/cc-client.js';
+
+const paramsTransformer: CcClientParamsTransformer<MyApi> = {
+  transformParams: async (command) => ({ region: 'par', ...(command.params as object) }),
+};
+
+export class MyApiClient extends CcClient<MyApi> {
+  constructor() {
+    super({ baseUrl: '/my-api' }, undefined, paramsTransformer);
+  }
+}
+```
+
+### Streams
+
+A stream command opens a Server-Sent Events stream, with the same retries, heartbeat monitoring and
+cancellation as the streams of `CcApiClient`. It builds its request like a simple command, and creates the
+stream the client then opens:
+
+```typescript
+import {
+  CcStream,
+  type CcStreamConfig,
+  type CcStreamRequestFactory,
+  type CcRequestParams,
+  HeadersBuilder,
+  safeUrl,
+  StreamCommand,
+} from '@clevercloud/client/cc-client.js';
+
+// the stream: one method per kind of event, named after the `event` field of the SSE messages
+export class WidgetEventsStream extends CcStream {
+  onWidgetEvent(callback: (widget: Widget) => void): this {
+    return this.on<string>('WIDGET', (event) => {
+      callback(JSON.parse(event.data) as Widget);
+    });
+  }
+}
+
+export class StreamWidgetEventsCommand extends StreamCommand<MyApi, { widgetId: string }, WidgetEventsStream> {
+  get api(): MyApi {
+    return 'my-api';
+  }
+
+  toRequestParams(params: { widgetId: string }): Partial<CcRequestParams> {
+    return {
+      method: 'GET',
+      url: safeUrl`/widgets/${params.widgetId}/events`,
+      headers: new HeadersBuilder().acceptEventStream().build(),
+    };
+  }
+
+  createStream(requestFactory: CcStreamRequestFactory, config: CcStreamConfig): WidgetEventsStream {
+    return new WidgetEventsStream(requestFactory, config);
+  }
+}
+
+// usage
+const stream = await client.stream(new StreamWidgetEventsCommand({ widgetId: 'w1' }));
+stream.onWidgetEvent((widget) => console.log(widget));
+await stream.start();
+```
+
+The client handles the `HEARTBEAT` and `END_OF_STREAM` events itself. See
+[Real-time Streaming](#real-time-streaming) for the rest of the stream API.
+
+An application only ships what it imports from this entry point: one that never uses a stream does not ship
+`CcStream`.
+
 ## Support
 
 This library provides comprehensive access to Clever Cloud's platform APIs. For questions about the platform or API behaviour, refer to the [Clever Cloud documentation](https://www.clever.cloud/developers/).
