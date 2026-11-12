@@ -1,5 +1,4 @@
-import { events } from 'fetch-event-stream';
-import type { CcRequest, CcResponse, RequestAdapter, RequestWrapper, SseMessage } from '../../types/request.types.js';
+import type { CcRequest, CcResponse, RequestAdapter, RequestWrapper } from '../../types/request.types.js';
 import { isCcRequestError } from '../../utils/error-utils.js';
 import { CcClientError, CcRequestError } from '../error/cc-client-errors.js';
 import { asNetworkError } from '../error/network-error.js';
@@ -174,6 +173,12 @@ function getContentType(headers: Headers | undefined): string | null {
   return contentType != null ? contentType.split(';')[0] : contentType;
 }
 
+/**
+ * The body of a `text/event-stream` response, left unread for the stream that requested it.
+ *
+ * Reading it is the job of `readSseResponseBody()`, in `stream/`: the SSE parser it relies on is only
+ * imported by the streams, so that an application sending commands alone does not ship it.
+ */
 export class SseResponseBody {
   #response: Response;
   #signal: AbortSignal | undefined;
@@ -183,33 +188,11 @@ export class SseResponseBody {
     this.#signal = signal;
   }
 
-  async read({
-    onMessage,
-    onError,
-    onClose,
-  }: {
-    onMessage: (message: SseMessage) => void;
-    onError?: (err: unknown) => void;
-    onClose?: (reason?: unknown) => void;
-  }): Promise<void> {
-    try {
-      const stream = events(this.#response, this.#signal);
-      for await (const event of stream) {
-        onMessage({
-          data: event.data ?? '',
-          event: event.event ?? '',
-          id: event.id != null ? String(event.id) : '',
-          retry: event.retry,
-        });
-      }
-      onClose?.();
-    } catch (err: unknown) {
-      if (this.#signal?.aborted) {
-        onClose?.(this.#signal.reason);
-      } else {
-        // if we haven't aborted the request ourselves
-        onError?.(err);
-      }
-    }
+  get response(): Response {
+    return this.#response;
+  }
+
+  get signal(): AbortSignal | undefined {
+    return this.#signal;
   }
 }
