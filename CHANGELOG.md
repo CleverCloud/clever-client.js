@@ -1,5 +1,22 @@
 # Clever Client changelog
 
+## 12.6.12
+
+### Patch Changes
+
+- [#259](https://github.com/CleverCloud/clever-client.js/pull/259) [`ad8e241`](https://github.com/CleverCloud/clever-client.js/commit/ad8e2418b6e0cef2162f0e8c52760d872c496447) - Remove the `protected` `_`-prefixed methods from `CcApiClient`, `CcApiBridgeClient` and `RedisHttpClient`
+
+  `_send`, `_compose`, `_transformCommandParams`, `_transformStreamParams`, `_getCommandRequestParams`, `_prepareRequest`, `_handleResponse` and `_getRequestSignal` were internals exposed to subclasses. They are gone, with no replacement: a subclass overriding or calling one of them must stop doing so. Use the `onRequest` and `onResponse` hooks to act on requests and responses.
+
+- [#258](https://github.com/CleverCloud/clever-client.js/pull/258) [`2cbe966`](https://github.com/CleverCloud/clever-client.js/commit/2cbe9662ce202a654407080359f084b2b137a96a) - Publish `@clevercloud/client/cc-client.js`, to write a client of your own for another HTTP API
+
+  It exports `CcClient` and the base command classes `SimpleCommand`, `CompositeCommand` and
+  `StreamCommand`, see [Writing Your Own Client](https://github.com/CleverCloud/clever-client.js/blob/master/NEW_CLIENT.md#writing-your-own-client).
+
+- [#258](https://github.com/CleverCloud/clever-client.js/pull/258) [`5e64d5c`](https://github.com/CleverCloud/clever-client.js/commit/5e64d5c4d9844f69a5fa25466c8e2f8bf7634d13) - Declare the package free of side effects, so that bundlers drop the modules an application imports but does not use
+
+- [#258](https://github.com/CleverCloud/clever-client.js/pull/258) [`4852f17`](https://github.com/CleverCloud/clever-client.js/commit/4852f170d363f9271382231ec69e44605ba5d917) - An application that sends commands without opening streams no longer bundles `fetch-event-stream`
+
 ## 12.6.11
 
 ### Patch Changes
