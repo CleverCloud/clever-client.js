@@ -46,7 +46,7 @@ The rule that matters: the subject says **why**, not what. The diff already show
 
 The mechanics, which commitlint checks: imperative present tense, lowercase after the colon, no final
 period, 100 characters at most. A body is optional — write one as soon as the why does not fit in the
-subject, separated by a blank line and wrapped at 100 too. Commits are kept as they are written, so
+subject, separated by a blank line, one sentence per line and never wrapped. Commits are kept as they are written, so
 each one has to stand on its own in `git log`.
 
 Agents have a global `commit` skill covering the same ground; the taxonomy below is what it cannot
