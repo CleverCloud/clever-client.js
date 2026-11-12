@@ -29,10 +29,10 @@ export type { CcClientError, CcHttpError, CcNetworkError, CcRequestError };
  */
 export {
   CC_REQUEST_ERROR_CODES,
+  type CcRequestErrorCode,
   NETWORK_ERROR_CODES,
   NETWORK_ERRORS,
   NETWORK_RETRY_ADVICES,
-  type CcRequestErrorCode,
   type NetworkErrorCode,
   type NetworkErrorInfo,
   type NetworkRetryAdvice,

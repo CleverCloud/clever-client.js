@@ -32,7 +32,7 @@ jobs:
       - name: '[Code quality] Check commit message'
         if: github.event_name == 'pull_request'
         run: node ./node_modules/@commitlint/cli/cli.js --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
-      - name: '[Code quality] Check ESLint'
+      - name: '[Code quality] Check Oxlint'
         run: pnpm run lint
       - name: '[Code quality] Check types'
         run: pnpm run typecheck

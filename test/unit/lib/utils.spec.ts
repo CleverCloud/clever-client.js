@@ -773,6 +773,7 @@ describe('brands', () => {
 
     expect(Reflect.ownKeys(instance)).toEqual([]);
     expect(JSON.stringify(instance)).toBe('{}');
+    // oxlint-disable-next-line typescript/no-misused-spread -- dropping the prototype is what the test checks
     expect(hasBrand({ ...instance }, brand)).toBe(false);
   });
 

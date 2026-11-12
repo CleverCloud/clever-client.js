@@ -55,6 +55,6 @@ export interface CcStreamRetry {
 /** Information about why a stream was closed */
 export interface CcStreamCloseReason {
   /** The reason type for closing */
-  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- 'UNKNOWN' documents the sentinel value while allowing arbitrary reason strings
+  // oxlint-disable-next-line typescript/no-redundant-type-constituents -- 'UNKNOWN' documents the sentinel value while allowing arbitrary reason strings
   type: string | 'UNKNOWN';
 }

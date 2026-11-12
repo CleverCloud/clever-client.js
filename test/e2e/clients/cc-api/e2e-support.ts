@@ -296,14 +296,12 @@ export function e2eSupport(config?: { user?: E2eUserName; auth?: Auth; debug?: b
         new CreateAddonCommand(
           addon
             ? {
-                ...{
-                  ownerId: organisationId,
-                  name: 'test-addon',
-                  providerId: 'config-provider',
-                  planId: 'plan_5d8e9596-dd73-4b73-84d9-e165372c5324',
-                  zone: 'par',
-                  options: {},
-                },
+                ownerId: organisationId,
+                name: 'test-addon',
+                providerId: 'config-provider',
+                planId: 'plan_5d8e9596-dd73-4b73-84d9-e165372c5324',
+                zone: 'par',
+                options: {},
                 ...addon,
               }
             : {

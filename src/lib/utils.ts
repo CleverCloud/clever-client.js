@@ -420,7 +420,7 @@ export function waitUnlessAborted<T>(
 
   return new Promise((resolve, reject) => {
     const abort = (): void => {
-      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- an abort rejects with whatever the caller aborted with, like `fetch()` does
+      // oxlint-disable-next-line typescript/prefer-promise-reject-errors -- an abort rejects with whatever the caller aborted with, like `fetch()` does
       reject(signal.reason);
       onAbort?.();
     };
@@ -438,7 +438,7 @@ export function waitUnlessAborted<T>(
       },
       (error: unknown) => {
         signal.removeEventListener('abort', abort);
-        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the error of the shared promise, passed on as is
+        // oxlint-disable-next-line typescript/prefer-promise-reject-errors -- the error of the shared promise, passed on as is
         reject(error);
       },
     );
@@ -609,7 +609,7 @@ function encode(value: unknown): string {
     return encodeURIComponent(value);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-base-to-string -- interpolated values are expected to be primitives that stringify meaningfully
+  // oxlint-disable-next-line typescript/no-base-to-string -- interpolated values are expected to be primitives that stringify meaningfully
   return String(value);
 }
 
@@ -636,5 +636,5 @@ function mergeCachePartial(
   if (cache == null) {
     return null;
   }
-  return { ...(baseCache ?? {}), ...cache };
+  return { ...baseCache, ...cache };
 }

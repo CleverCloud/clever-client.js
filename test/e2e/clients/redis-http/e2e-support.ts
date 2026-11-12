@@ -14,8 +14,9 @@ const REDIS_ADDON_ID = 'addon_dc54e2c9-3114-48b4-bdfc-53c34a01935b';
 
 export function e2eSupport(config?: { debug?: boolean }) {
   const conf = {
-    ...{ user: USER.userName, debug: false },
-    ...(config ?? {}),
+    user: USER.userName,
+    debug: false,
+    ...config,
   };
   let ccApiClient: CcApiClient;
   let client: RedisHttpClient;

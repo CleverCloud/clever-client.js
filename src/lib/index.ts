@@ -8,37 +8,12 @@
 
 //-- client
 
-export { CcClient } from './cc-client.js';
-
 export type { CcClientConfig, CcClientHooks, CcClientParamsTransformer } from '../types/client.types.js';
+
+export type { ApiErrorInfo, Command, Composer } from '../types/command.types.js';
 export type { OnErrorHook, OnRequestHook, OnResponseHook } from '../types/hook.types.js';
 
 //-- commands
-
-export { AbstractCommand, CompositeCommand, SimpleCommand } from './command/command.js';
-
-export type { ApiErrorInfo, Command, Composer } from '../types/command.types.js';
-
-//-- authentication
-
-export { CcAuth } from './auth/cc-auth.js';
-
-//-- requests
-
-export { HeadersBuilder } from './request/headers-builder.js';
-export { QueryParams } from './request/query-params.js';
-export {
-  delete_,
-  get,
-  head,
-  patch,
-  patchJson,
-  post,
-  postJson,
-  put,
-  putJson,
-} from './request/request-params-builder.js';
-export { safeUrl } from './utils.js';
 
 export type {
   CcRequest,
@@ -54,11 +29,34 @@ export type {
   SseMessage,
 } from '../types/request.types.js';
 
+export { CcAuth } from './auth/cc-auth.js';
+
+//-- authentication
+
+export { CcClient } from './cc-client.js';
+
+//-- requests
+
+export { AbstractCommand, CompositeCommand, SimpleCommand } from './command/command.js';
+export type { CcClientError, CcHttpError, CcNetworkError, CcRequestError } from './error/cc-client-errors.js';
+export { HeadersBuilder } from './request/headers-builder.js';
+export { QueryParams } from './request/query-params.js';
+
+export {
+  delete_,
+  get,
+  head,
+  patch,
+  patchJson,
+  post,
+  postJson,
+  put,
+  putJson,
+} from './request/request-params-builder.js';
+
 //-- streams
 
 export { CcStream, CcStreamEvent } from './stream/cc-stream.js';
-export { StreamCommand } from './stream/stream-command.js';
-
 export type {
   CcStreamCloseReason,
   CcStreamConfig,
@@ -69,6 +67,8 @@ export type {
   RetryConfig,
 } from './stream/cc-stream.types.js';
 
+export { StreamCommand } from './stream/stream-command.js';
+
 //-- errors
 
-export type { CcClientError, CcHttpError, CcNetworkError, CcRequestError } from './error/cc-client-errors.js';
+export { safeUrl } from './utils.js';

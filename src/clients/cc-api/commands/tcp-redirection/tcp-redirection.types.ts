@@ -13,5 +13,5 @@ export interface TcpRedirection {
  * the one backing the `cleverapps.io` domains; organisations with dedicated load balancers get
  * their own named pools.
  */
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- the literals document the well-known namespaces while still allowing any string
+// oxlint-disable-next-line typescript/no-redundant-type-constituents -- the literals document the well-known namespaces while still allowing any string
 export type TcpRedirectionNamespace = 'default' | 'cleverapps' | string;

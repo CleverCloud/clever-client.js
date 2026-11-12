@@ -107,7 +107,7 @@ export function getRequestBody(request: CcRequest): BodyInit | null {
   // todo: if text/plain but got object => error?
   // todo: streamable request body?
 
-  // eslint-disable-next-line @typescript-eslint/no-base-to-string -- non-JSON bodies are expected to be strings; an object here is a caller error left as-is (see todo above)
+  // oxlint-disable-next-line typescript/no-base-to-string -- non-JSON bodies are expected to be strings; an object here is a caller error left as-is (see todo above)
   return String(request.body);
 }
 

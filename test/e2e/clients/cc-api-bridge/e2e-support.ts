@@ -10,8 +10,9 @@ const USE_LOCAL_API_BRIDGE = false;
 
 export function e2eSupport(config?: { debug?: boolean }) {
   const conf = {
-    ...{ user: USER.userName, debug: false },
-    ...(config ?? {}),
+    user: USER.userName,
+    debug: false,
+    ...config,
   };
   const clientForCreate = createApiBridgeClient('none', conf.debug);
   let client: CcApiBridgeClient;

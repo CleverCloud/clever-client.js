@@ -18,14 +18,14 @@ import type { CcRequestParams } from '../../../src/types/request.types.js';
 import { expectPromiseThrows } from '../../lib/expect-utils.js';
 import { brandAsForeignCopy } from '../../lib/foreign-copy.js';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 export abstract class TestSimpleCommand extends SimpleCommand<'test', void, any> {
   get api(): 'test' {
     return 'test';
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 export abstract class TestCompositeCommand extends CompositeCommand<'test', void, any> {
   get api(): 'test' {
     return 'test';

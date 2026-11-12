@@ -5,7 +5,7 @@ import { handleHttpErrors } from '../../../../src/lib/error/handle-http-errors.j
 import type { ApiErrorInfo } from '../../../../src/types/command.types.js';
 import type { CcRequest, CcRequestParams, CcResponse } from '../../../../src/types/request.types.js';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 abstract class TestSimpleCommand extends SimpleCommand<'test', void, any> {
   get api(): 'test' {
     return 'test';

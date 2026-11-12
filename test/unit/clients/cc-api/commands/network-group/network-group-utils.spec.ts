@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { Addon } from '../../../../../../src/clients/cc-api/commands/addon/addon.types.js';
 import {
-  NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS,
   constructNetworkGroupMember,
   isNetworkGroupAddonCandidate,
+  NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS,
 } from '../../../../../../src/clients/cc-api/commands/network-group/network-group-utils.js';
 
 function makeAddon({

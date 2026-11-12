@@ -34,5 +34,5 @@ export type OnResponseHook = <CommandOutput>(
  * @param error - The error that occurred during request processing
  * @returns void (can be returned directly or as a Promise)
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- error hooks accept any thrown value; narrowing here would over-constrain consumer callbacks
+// oxlint-disable-next-line typescript/no-explicit-any -- error hooks accept any thrown value; narrowing here would over-constrain consumer callbacks
 export type OnErrorHook = (error: any) => SelfOrPromise<void>;

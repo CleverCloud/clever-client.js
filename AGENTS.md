@@ -24,8 +24,8 @@ Tests run on Vitest. The same `*.spec.js` files run in both Node.js and a real b
 Browser tests require Playwright Chromium: `npx playwright install chromium`.
 
 ### Linting & Formatting
-- `pnpm run lint` - ESLint check
-- `pnpm run lint:fix` - ESLint auto-fix
+- `pnpm run lint` - Oxlint check
+- `pnpm run lint:fix` - Oxlint auto-fix
 - `pnpm run format` - Format code with Oxfmt
 - `pnpm run format:check` - Check code formatting
 - `pnpm run typecheck` - TypeScript type checking
@@ -119,7 +119,7 @@ Real-time data via Server-Sent Events:
 ### Build System
 - **Rollup**: Bundling and distribution
 - **TypeScript**: Type checking (JSDoc + .d.ts files)
-- **ESLint**: Code linting
+- **Oxlint**: Code linting
 - **Oxfmt**: Code formatting
 - Supports both Node.js (22+) and browser environments
 

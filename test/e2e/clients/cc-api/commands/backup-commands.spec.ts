@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ListBackupCommand } from '../../../../../src/clients/cc-api/commands/backup/list-backup-command.js';
 import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { STATIC_MYSQL_ADDON_ID, e2eSupport } from '../e2e-support.js';
+import { e2eSupport, STATIC_MYSQL_ADDON_ID } from '../e2e-support.js';
 
 describe('backup commands', function () {
   const support = e2eSupport({ user: 'test-user-without-github' });
