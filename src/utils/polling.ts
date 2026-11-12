@@ -62,37 +62,37 @@ export class Polling<T> {
   /**
    * The async function to be called on each polling tick.
    */
-  #asyncCallback: () => Promise<{ stop: true; value?: T } | { stop: false }>;
+  private _asyncCallback: () => Promise<{ stop: true; value?: T } | { stop: false }>;
 
   /**
    * The delay in milliseconds to wait after each polling operation completes.
    */
-  #delay: number;
+  private _delay: number;
 
   /**
    * Optional timeout in milliseconds after which polling will stop.
    */
-  #timeout: number | undefined;
+  private _timeout: number | undefined;
 
   /**
    * The calculated end time for polling timeout. `null` if no timeout is set.
    */
-  #endTime: number | null = null;
+  private _endTime: number | null = null;
 
   /**
    * Indicates whether the polling process is currently active.
    */
-  #running = false;
+  private _running = false;
 
   /**
    * Timer instance used to schedule the next polling tick.
    */
-  #timer = new SingleTimer();
+  private _timer = new SingleTimer();
 
   /**
    * Deferred promise that resolves when polling completes or rejects on error.
    */
-  #deferred: Deferred<T> | undefined;
+  private _deferred: Deferred<T> | undefined;
 
   /**
    * Creates a new Polling instance.
@@ -114,9 +114,9 @@ export class Polling<T> {
     delay: number,
     timeout?: number,
   ) {
-    this.#asyncCallback = asyncCallback;
-    this.#delay = delay;
-    this.#timeout = timeout;
+    this._asyncCallback = asyncCallback;
+    this._delay = delay;
+    this._timeout = timeout;
   }
 
   /**
@@ -125,7 +125,7 @@ export class Polling<T> {
    * @returns true if polling is running, false otherwise
    */
   get running(): boolean {
-    return this.#running;
+    return this._running;
   }
 
   /**
@@ -138,19 +138,19 @@ export class Polling<T> {
    */
   start(): Promise<T> {
     // force stop before starting
-    if (this.#running) {
-      this.#stop({ type: 'error', error: new PollingInterruptedError() });
+    if (this._running) {
+      this._stop({ type: 'error', error: new PollingInterruptedError() });
     }
     // calculate end time if a timeout was provided
-    this.#endTime = this.#timeout != null ? Date.now() + this.#timeout : null;
+    this._endTime = this._timeout != null ? Date.now() + this._timeout : null;
     // create deferred
-    this.#deferred = new Deferred<T>();
+    this._deferred = new Deferred<T>();
 
     // start polling
-    this.#running = true;
-    this.#tick();
+    this._running = true;
+    this._tick();
 
-    return this.#deferred.promise;
+    return this._deferred.promise;
   }
 
   /**
@@ -158,7 +158,7 @@ export class Polling<T> {
    * This will reject the promise returned by start() with a PollingInterruptedError.
    */
   stop(): void {
-    this.#stop({ type: 'error', error: new PollingInterruptedError() });
+    this._stop({ type: 'error', error: new PollingInterruptedError() });
   }
 
   /**
@@ -170,49 +170,49 @@ export class Polling<T> {
    *        - For errors: {type: 'error', error: Error}
    *        - For success: {type: 'success', value: T}
    */
-  #stop(reason: { type: 'error'; error: Error } | { type: 'success'; value?: T }): void {
-    this.#running = false;
-    this.#timer.clear();
+  private _stop(reason: { type: 'error'; error: Error } | { type: 'success'; value?: T }): void {
+    this._running = false;
+    this._timer.clear();
     if (reason.type === 'error') {
-      this.#deferred?.reject(reason.error);
+      this._deferred?.reject(reason.error);
     } else {
-      this.#deferred?.resolve(reason.value as T);
+      this._deferred?.resolve(reason.value as T);
     }
   }
 
-  #tick(): void {
+  private _tick(): void {
     // do nothing if not running
     if (!this.running) {
       return;
     }
     // stop if timeout was reached
-    if (this.#isTimedOut()) {
-      this.#stop({ type: 'error', error: new PollingTimeoutError() });
+    if (this._isTimedOut()) {
+      this._stop({ type: 'error', error: new PollingTimeoutError() });
       return;
     }
 
-    void this.#asyncCallback()
+    void this._asyncCallback()
       .then((state) => {
         if (state.stop) {
-          this.#stop({ type: 'success', value: state.value });
+          this._stop({ type: 'success', value: state.value });
         }
       })
       .finally(() => {
-        if (this.#isTimedOut()) {
+        if (this._isTimedOut()) {
           // stop if timeout was reached
-          this.#stop({ type: 'error', error: new PollingTimeoutError() });
+          this._stop({ type: 'error', error: new PollingTimeoutError() });
         } else if (this.running) {
           // program the next tick only if still running
-          this.#timer.set(() => this.#tick(), this.#delay);
+          this._timer.set(() => this._tick(), this._delay);
         }
       });
   }
 
-  #isTimedOut(): boolean {
-    if (this.#endTime == null) {
+  private _isTimedOut(): boolean {
+    if (this._endTime == null) {
       return false;
     }
-    return Date.now() >= this.#endTime;
+    return Date.now() >= this._endTime;
   }
 }
 
@@ -228,13 +228,13 @@ class SingleTimer {
   /**
    * The ID of the currently active timer, or null if no timer is running.
    */
-  #id: number | null = null;
+  private _id: number | null = null;
 
   /**
    * @returns The id of the running timer. `null` if none is running.
    */
   get id(): number | null {
-    return this.#id;
+    return this._id;
   }
 
   /**
@@ -250,17 +250,17 @@ class SingleTimer {
     // force stopping current timeout if any
     this.clear();
 
-    this.#id = setTimeout(callback, delay, args);
-    return this.#id;
+    this._id = setTimeout(callback, delay, args);
+    return this._id;
   }
 
   /**
    * Stops the current running timer.
    */
   clear(): void {
-    if (this.#id != null) {
-      clearTimeout(this.#id);
-      this.#id = null;
+    if (this._id != null) {
+      clearTimeout(this._id);
+      this._id = null;
     }
   }
 }

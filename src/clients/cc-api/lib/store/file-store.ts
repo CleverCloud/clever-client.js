@@ -17,7 +17,7 @@ export class FileStore<T> implements Store<T> {
   /**
    * Path to the JSON file where data will be stored
    */
-  #filePath: string;
+  private _filePath: string;
 
   /**
    * Creates a new file-based store
@@ -25,7 +25,7 @@ export class FileStore<T> implements Store<T> {
    * @param filePath - Absolute path to the JSON file to use for storage
    */
   constructor(filePath: string) {
-    this.#filePath = filePath;
+    this._filePath = filePath;
   }
 
   /**
@@ -35,7 +35,7 @@ export class FileStore<T> implements Store<T> {
    * @throws {Error} If writing to the file fails
    */
   write(index: T): void {
-    fs.writeFileSync(this.#filePath, JSON.stringify(index));
+    fs.writeFileSync(this._filePath, JSON.stringify(index));
   }
 
   /**
@@ -45,8 +45,8 @@ export class FileStore<T> implements Store<T> {
    * @throws {Error} If reading or parsing the file fails
    */
   read(): T | undefined {
-    if (fs.existsSync(this.#filePath)) {
-      return JSON.parse(fs.readFileSync(this.#filePath).toString()) as T;
+    if (fs.existsSync(this._filePath)) {
+      return JSON.parse(fs.readFileSync(this._filePath).toString()) as T;
     }
     return undefined;
   }
@@ -57,8 +57,8 @@ export class FileStore<T> implements Store<T> {
    * @throws {Error} If deleting the file fails
    */
   flush(): void {
-    if (fs.existsSync(this.#filePath)) {
-      fs.unlinkSync(this.#filePath);
+    if (fs.existsSync(this._filePath)) {
+      fs.unlinkSync(this._filePath);
     }
   }
 }

@@ -13,7 +13,7 @@ import type { CcStreamConfig, CcStreamRequestFactory } from './cc-stream.types.t
  * @template Stream - The type of stream this command creates
  */
 export abstract class StreamCommand<Api extends string, CommandInput, Stream extends CcStream> {
-  #params: CommandInput;
+  private _params: CommandInput;
 
   /**
    * Creates a new stream command with the given parameters.
@@ -21,7 +21,7 @@ export abstract class StreamCommand<Api extends string, CommandInput, Stream ext
    * @param params - The input parameters for the command
    */
   constructor(params: CommandInput) {
-    this.#params = params;
+    this._params = params;
   }
 
   /**
@@ -33,7 +33,7 @@ export abstract class StreamCommand<Api extends string, CommandInput, Stream ext
    * Gets the input parameters for this command.
    */
   get params(): CommandInput {
-    return this.#params;
+    return this._params;
   }
 
   /**

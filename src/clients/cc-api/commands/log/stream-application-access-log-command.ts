@@ -37,11 +37,11 @@ export class StreamApplicationAccessLogCommand extends AbstractLogsStreamCommand
     };
   }
 
-  _logTopicName(): string {
+  protected _logTopicName(): string {
     return 'ACCESS_LOG';
   }
 
-  _convertLog(payload: unknown): ApplicationAccessLog {
+  protected _convertLog(payload: unknown): ApplicationAccessLog {
     return transformApplicationAccessLog(payload)!;
   }
 

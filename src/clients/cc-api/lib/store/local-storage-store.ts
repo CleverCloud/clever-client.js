@@ -20,7 +20,7 @@ export class LocalStorageStore<T> implements Store<T> {
   /**
    * Key used to store data in localStorage
    */
-  #storageKey: string;
+  private _storageKey: string;
 
   /**
    * Creates a new localStorage-based store
@@ -33,7 +33,7 @@ export class LocalStorageStore<T> implements Store<T> {
       throw new Error('LocalStorage is not available');
     }
 
-    this.#storageKey = storageKey;
+    this._storageKey = storageKey;
   }
 
   /**
@@ -43,7 +43,7 @@ export class LocalStorageStore<T> implements Store<T> {
    * @throws {Error} If writing to localStorage fails or if data cannot be stringified
    */
   write(index: T): void {
-    localStorage.setItem(this.#storageKey, JSON.stringify(index));
+    localStorage.setItem(this._storageKey, JSON.stringify(index));
   }
 
   /**
@@ -53,7 +53,7 @@ export class LocalStorageStore<T> implements Store<T> {
    * @throws {Error} If reading from localStorage fails or if data cannot be parsed
    */
   read(): T | undefined {
-    const item = localStorage.getItem(this.#storageKey);
+    const item = localStorage.getItem(this._storageKey);
     if (item != null) {
       return JSON.parse(item) as T;
     }
@@ -66,6 +66,6 @@ export class LocalStorageStore<T> implements Store<T> {
    * @throws {Error} If removing from localStorage fails
    */
   flush(): void {
-    localStorage.removeItem(this.#storageKey);
+    localStorage.removeItem(this._storageKey);
   }
 }

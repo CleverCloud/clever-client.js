@@ -24,7 +24,7 @@ const COMPOSITE_COMMAND_BRAND = createBrand('CompositeCommand');
  * ```
  */
 export abstract class AbstractCommand<Api extends string, CommandInput> {
-  #params: CommandInput;
+  private _params: CommandInput;
 
   /**
    * Creates a new command instance with the given parameters
@@ -32,14 +32,14 @@ export abstract class AbstractCommand<Api extends string, CommandInput> {
    * @param params - The input parameters for this command
    */
   constructor(params: CommandInput) {
-    this.#params = params;
+    this._params = params;
   }
 
   /**
    * Gets the input parameters provided to this command
    */
   get params(): CommandInput {
-    return this.#params;
+    return this._params;
   }
 
   /**

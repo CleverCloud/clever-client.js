@@ -502,27 +502,27 @@ export function mergeRequestConfigPartial(
  * @template T The type of the value that the promise will resolve to
  */
 export class Deferred<T> {
-  #promise: Promise<T>;
-  #resolve!: (value: T) => void;
-  #reject!: (error: unknown) => void;
+  private _promise: Promise<T>;
+  private _resolve!: (value: T) => void;
+  private _reject!: (error: unknown) => void;
 
   constructor() {
-    this.#promise = new Promise((resolve, reject) => {
-      this.#resolve = resolve;
-      this.#reject = reject;
+    this._promise = new Promise((resolve, reject) => {
+      this._resolve = resolve;
+      this._reject = reject;
     });
   }
 
   get promise(): Promise<T> {
-    return this.#promise;
+    return this._promise;
   }
 
   get resolve(): (value: T) => void {
-    return this.#resolve;
+    return this._resolve;
   }
 
   get reject(): (error: unknown) => void {
-    return this.#reject;
+    return this._reject;
   }
 }
 

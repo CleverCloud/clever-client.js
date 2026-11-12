@@ -39,11 +39,11 @@ export class StreamApplicationRuntimeLogCommand extends AbstractLogsStreamComman
     };
   }
 
-  _logTopicName(): string {
+  protected _logTopicName(): string {
     return 'APPLICATION_LOG';
   }
 
-  _convertLog(rawLog: unknown): ApplicationRuntimeLog {
+  protected _convertLog(rawLog: unknown): ApplicationRuntimeLog {
     return transformApplicationRuntimeLog(rawLog);
   }
 

@@ -10,7 +10,7 @@ const LOOSE_TYPES_RULES = {
 } as const;
 
 export default defineConfig({
-  jsPlugins: ['eslint-plugin-perfectionist'],
+  jsPlugins: ['eslint-plugin-perfectionist', './tasks/oxlint-plugin/index.ts'],
   categories: {
     correctness: 'error',
   },
@@ -41,6 +41,9 @@ export default defineConfig({
     // Sort the specifiers inside the braces of exports, and `export ... from` declarations by module path
     'perfectionist/sort-named-exports': 'error',
     'perfectionist/sort-exports': 'error',
+
+    // Private class members use the `private` modifier and a `_` prefix, never `#`
+    'clever-client/class-member-privacy': 'error',
 
     // Part of the correctness category, listed for its options: names prefixed with `_` may stay unused
     'no-unused-vars': [

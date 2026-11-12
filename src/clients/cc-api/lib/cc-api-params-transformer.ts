@@ -13,13 +13,13 @@ export class CcApiParamsTransformer implements CcClientParamsTransformer<CcApiTy
   /**
    * Gets the resolver of the client, which only exists once the client is constructed
    */
-  readonly #getResourceIdResolver: () => ResourceIdResolver;
+  private readonly _getResourceIdResolver: () => ResourceIdResolver;
 
   /**
    * @param getResourceIdResolver - Gets the resource id resolver of the client
    */
   constructor(getResourceIdResolver: () => ResourceIdResolver) {
-    this.#getResourceIdResolver = getResourceIdResolver;
+    this._getResourceIdResolver = getResourceIdResolver;
   }
 
   /**
@@ -43,7 +43,7 @@ export class CcApiParamsTransformer implements CcClientParamsTransformer<CcApiTy
       return params;
     }
 
-    const resourceIdResolver = this.#getResourceIdResolver();
+    const resourceIdResolver = this._getResourceIdResolver();
     const resolvedIds: Record<string, string> = {};
 
     if (idsToResolve.ownerId) {

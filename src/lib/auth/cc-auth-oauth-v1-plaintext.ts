@@ -17,7 +17,7 @@ import { CcAuth } from './cc-auth.ts';
  * @see {@link https://oauth.net/core/1.0/#auth_header} OAuth 1.0 Authorization Header
  */
 export class CcAuthOauthV1Plaintext extends CcAuth {
-  #oauthToken: OauthTokens;
+  private _oauthToken: OauthTokens;
 
   /**
    * Creates a new OAuth v1 PLAINTEXT authentication instance.
@@ -30,7 +30,7 @@ export class CcAuthOauthV1Plaintext extends CcAuth {
    */
   constructor(oauthToken: OauthTokens) {
     super();
-    this.#oauthToken = oauthToken;
+    this._oauthToken = oauthToken;
   }
 
   /**
@@ -52,6 +52,6 @@ export class CcAuthOauthV1Plaintext extends CcAuth {
    * @returns The formatted OAuth Authorization header value
    */
   getAuthorization(): string {
-    return oauthV1AuthorizationHeader(this.#oauthToken);
+    return oauthV1AuthorizationHeader(this._oauthToken);
   }
 }

@@ -12,13 +12,13 @@ export class RedisHttpParamsTransformer implements CcClientParamsTransformer<Red
   /**
    * Default Redis© database URL, injected into the commands that require a backend
    */
-  readonly #backendUrl: string | undefined;
+  private readonly _backendUrl: string | undefined;
 
   /**
    * @param backendUrl - Default Redis© database URL of the client
    */
   constructor(backendUrl: string | undefined) {
-    this.#backendUrl = backendUrl;
+    this._backendUrl = backendUrl;
   }
 
   /**
@@ -33,14 +33,14 @@ export class RedisHttpParamsTransformer implements CcClientParamsTransformer<Red
     _requestConfig: CcRequestConfigPartial | undefined,
   ): Promise<unknown> {
     if (
-      this.#backendUrl != null &&
+      this._backendUrl != null &&
       isRedisHttpCommand(command) &&
       command.requiresBackendUrl() &&
       (command.params as RedisHttpCommandInput)?.backendUrl == null
     ) {
       return Promise.resolve({
         ...(command.params as Record<string, unknown>),
-        backendUrl: this.#backendUrl,
+        backendUrl: this._backendUrl,
       });
     }
     return Promise.resolve(command.params);

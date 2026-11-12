@@ -180,19 +180,19 @@ function getContentType(headers: Headers | undefined): string | null {
  * imported by the streams, so that an application sending commands alone does not ship it.
  */
 export class SseResponseBody {
-  #response: Response;
-  #signal: AbortSignal | undefined;
+  private _response: Response;
+  private _signal: AbortSignal | undefined;
 
   constructor(response: Response, signal: AbortSignal | undefined) {
-    this.#response = response;
-    this.#signal = signal;
+    this._response = response;
+    this._signal = signal;
   }
 
   get response(): Response {
-    return this.#response;
+    return this._response;
   }
 
   get signal(): AbortSignal | undefined {
-    return this.#signal;
+    return this._signal;
   }
 }

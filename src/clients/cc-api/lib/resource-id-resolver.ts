@@ -39,34 +39,34 @@ export class ResourceIdResolver {
   /**
    * API client used to fetch resource information
    */
-  #client: CcApiClient;
+  private _client: CcApiClient;
 
   /**
    * Storage backend for the resource index
    */
-  #indexStore: Store<ResourceIdIndex>;
+  private _indexStore: Store<ResourceIdIndex>;
 
   /**
    * In-memory cache of resource mappings
    */
-  #index: ResourceIdIndex | undefined;
+  private _index: ResourceIdIndex | undefined;
 
   /**
    * The store read currently in flight, shared by every concurrent caller so the index is only
    * loaded once. Cleared once it settles.
    */
-  #pendingInit: Promise<void> | undefined;
+  private _pendingInit: Promise<void> | undefined;
 
   /**
    * The summary fetch currently in flight, shared by every concurrent caller so a burst of
    * unresolved ids only costs one request. Cleared once it settles, or once every caller left it.
    */
-  #pendingFetch: PendingSummaryFetch | undefined;
+  private _pendingFetch: PendingSummaryFetch | undefined;
 
   /**
    * Gets the signal a caller aborts with, from the request configuration it resolves an id with
    */
-  #getRequestSignal: (requestConfig: CcRequestConfigPartial | undefined) => AbortSignal | undefined;
+  private _getRequestSignal: (requestConfig: CcRequestConfigPartial | undefined) => AbortSignal | undefined;
 
   /**
    * Creates a new ResourceIdResolver instance
@@ -83,9 +83,9 @@ export class ResourceIdResolver {
       requestConfig,
     ) => requestConfig?.signal,
   ) {
-    this.#client = client;
-    this.#indexStore = indexStore;
-    this.#getRequestSignal = getRequestSignal;
+    this._client = client;
+    this._indexStore = indexStore;
+    this._getRequestSignal = getRequestSignal;
   }
 
   /**
@@ -105,7 +105,7 @@ export class ResourceIdResolver {
    * const ownerId = await resolver.resolveOwnerId({ addonId: 'addon_123' });
    */
   async resolveOwnerId(resourceId: ResourceId, requestConfig?: CcRequestConfigPartial): Promise<string> {
-    const resolved = await this.#resolveOwnerId(resourceId, requestConfig);
+    const resolved = await this._resolveOwnerId(resourceId, requestConfig);
 
     if (resolved.ownerId == null) {
       throw new CcClientError(
@@ -139,7 +139,7 @@ export class ResourceIdResolver {
     requiredAddonIdType: AddonIdType,
     requestConfig?: CcRequestConfigPartial,
   ): Promise<string> {
-    const resolvedAddonId = await this.#resolveAddonId(addonId, requiredAddonIdType, requestConfig);
+    const resolvedAddonId = await this._resolveAddonId(addonId, requiredAddonIdType, requestConfig);
 
     if (resolvedAddonId == null) {
       throw new CcClientError(
@@ -159,11 +159,11 @@ export class ResourceIdResolver {
    * @returns The resource index
    * @throws {Error} If the index has not been initialized yet
    */
-  #getIndex(): ResourceIdIndex {
-    if (this.#index == null) {
+  private _getIndex(): ResourceIdIndex {
+    if (this._index == null) {
       throw new Error('Resource id index has not been initialized');
     }
-    return this.#index;
+    return this._index;
   }
 
   /**
@@ -176,7 +176,7 @@ export class ResourceIdResolver {
    * @returns Object containing the resource ID, its kind, and resolved owner ID
    * @throws {CcClientError} If the resource type is not supported
    */
-  async #resolveOwnerId(
+  private async _resolveOwnerId(
     resourceId: ResourceId,
     requestConfig?: CcRequestConfigPartial,
   ): Promise<{
@@ -196,8 +196,8 @@ export class ResourceIdResolver {
       return {
         id: resourceId.applicationId,
         kind: 'application',
-        ownerId: await this.#resolve(
-          () => this.#getIndex().ownerIdIndex.applicationIds,
+        ownerId: await this._resolve(
+          () => this._getIndex().ownerIdIndex.applicationIds,
           resourceId.applicationId,
           requestConfig,
         ),
@@ -208,8 +208,8 @@ export class ResourceIdResolver {
       return {
         id: resourceId.addonProviderId,
         kind: 'addon provider',
-        ownerId: await this.#resolve(
-          () => this.#getIndex().ownerIdIndex.addonProviderIds,
+        ownerId: await this._resolve(
+          () => this._getIndex().ownerIdIndex.addonProviderIds,
           resourceId.addonProviderId,
           requestConfig,
         ),
@@ -220,8 +220,8 @@ export class ResourceIdResolver {
       return {
         id: resourceId.oauthConsumerKey,
         kind: 'oauth consumer',
-        ownerId: await this.#resolve(
-          () => this.#getIndex().ownerIdIndex.oauthConsumerIds,
+        ownerId: await this._resolve(
+          () => this._getIndex().ownerIdIndex.oauthConsumerIds,
           resourceId.oauthConsumerKey,
           requestConfig,
         ),
@@ -234,13 +234,13 @@ export class ResourceIdResolver {
         return {
           id: addonId,
           kind: 'addon',
-          ownerId: await this.#resolve(() => this.#getIndex().ownerIdIndex.addonIds, addonId, requestConfig),
+          ownerId: await this._resolve(() => this._getIndex().ownerIdIndex.addonIds, addonId, requestConfig),
         };
       }
       return {
         id: addonId,
         kind: 'addon',
-        ownerId: await this.#resolve(() => this.#getIndex().ownerIdIndex.addonRealIds, addonId, requestConfig),
+        ownerId: await this._resolve(() => this._getIndex().ownerIdIndex.addonRealIds, addonId, requestConfig),
       };
     }
 
@@ -256,7 +256,7 @@ export class ResourceIdResolver {
    * @param requestConfig - Optional request configuration
    * @returns The resolved addon ID
    */
-  async #resolveAddonId(
+  private async _resolveAddonId(
     addonId: string,
     requiredAddonIdType: AddonIdType,
     requestConfig?: CcRequestConfigPartial,
@@ -271,10 +271,10 @@ export class ResourceIdResolver {
     }
 
     if (addonIdType === 'ADDON_ID') {
-      return await this.#resolve(() => this.#getIndex().addonsIndex.addonIds, addonId, requestConfig);
+      return await this._resolve(() => this._getIndex().addonsIndex.addonIds, addonId, requestConfig);
     }
 
-    return await this.#resolve(() => this.#getIndex().addonsIndex.addonRealIds, addonId, requestConfig);
+    return await this._resolve(() => this._getIndex().addonsIndex.addonRealIds, addonId, requestConfig);
   }
 
   /**
@@ -286,16 +286,16 @@ export class ResourceIdResolver {
    * @param requestConfig - Optional request configuration
    * @returns The resolved ID
    */
-  async #resolve(
+  private async _resolve(
     index: () => Record<string, string>,
     id: string,
     requestConfig?: CcRequestConfigPartial,
   ): Promise<string> {
-    await this.#init();
+    await this._init();
 
     let resolvedId = index()[id];
     if (resolvedId == null) {
-      await this.#fetchAndStore(requestConfig);
+      await this._fetchAndStore(requestConfig);
       resolvedId = index()[id];
     }
 
@@ -309,23 +309,23 @@ export class ResourceIdResolver {
    * Callers that arrive while the store is being read share that read instead of starting their
    * own.
    */
-  async #init(): Promise<void> {
-    if (this.#index != null) {
+  private async _init(): Promise<void> {
+    if (this._index != null) {
       return;
     }
 
-    this.#pendingInit ??= this.#readIndex().finally(() => {
-      this.#pendingInit = undefined;
+    this._pendingInit ??= this._readIndex().finally(() => {
+      this._pendingInit = undefined;
     });
 
-    return this.#pendingInit;
+    return this._pendingInit;
   }
 
   /**
    * Loads the index from storage, falling back to an empty one when the store holds nothing.
    */
-  async #readIndex(): Promise<void> {
-    this.#index = (await this.#indexStore.read()) ?? this.#createEmptyIndex();
+  private async _readIndex(): Promise<void> {
+    this._index = (await this._indexStore.read()) ?? this._createEmptyIndex();
   }
 
   /**
@@ -349,16 +349,16 @@ export class ResourceIdResolver {
    *
    * @param requestConfig - Optional request configuration
    */
-  async #fetchAndStore(requestConfig?: CcRequestConfigPartial): Promise<void> {
-    const signal = this.#getRequestSignal(requestConfig);
+  private async _fetchAndStore(requestConfig?: CcRequestConfigPartial): Promise<void> {
+    const signal = this._getRequestSignal(requestConfig);
 
     // a caller that already gave up must not start a request nobody waits for
     signal?.throwIfAborted();
 
-    const pendingFetch = this.#pendingFetch ?? this.#startFetch(requestConfig);
+    const pendingFetch = this._pendingFetch ?? this._startFetch(requestConfig);
     pendingFetch.callerCount++;
 
-    return waitUnlessAborted(pendingFetch.promise, signal, () => this.#leaveFetch(pendingFetch));
+    return waitUnlessAborted(pendingFetch.promise, signal, () => this._leaveFetch(pendingFetch));
   }
 
   /**
@@ -366,20 +366,20 @@ export class ResourceIdResolver {
    *
    * @param requestConfig - The request configuration of the caller starting it
    */
-  #startFetch(requestConfig?: CcRequestConfigPartial): PendingSummaryFetch {
+  private _startFetch(requestConfig?: CcRequestConfigPartial): PendingSummaryFetch {
     // the request belongs to every caller joining it, so the signal of the first one must not abort it
     const abortController = new AbortController();
     const pendingFetch: PendingSummaryFetch = {
-      promise: this.#fetchSummaryAndStore({ ...requestConfig, signal: abortController.signal }).finally(() => {
+      promise: this._fetchSummaryAndStore({ ...requestConfig, signal: abortController.signal }).finally(() => {
         // once every caller left, a new fetch may already have taken its place
-        if (this.#pendingFetch === pendingFetch) {
-          this.#pendingFetch = undefined;
+        if (this._pendingFetch === pendingFetch) {
+          this._pendingFetch = undefined;
         }
       }),
       abortController,
       callerCount: 0,
     };
-    this.#pendingFetch = pendingFetch;
+    this._pendingFetch = pendingFetch;
 
     return pendingFetch;
   }
@@ -389,12 +389,12 @@ export class ResourceIdResolver {
    *
    * @param pendingFetch - The fetch the caller was waiting for
    */
-  #leaveFetch(pendingFetch: PendingSummaryFetch): void {
+  private _leaveFetch(pendingFetch: PendingSummaryFetch): void {
     pendingFetch.callerCount--;
     if (pendingFetch.callerCount === 0) {
       // nobody waits for it anymore: the next caller must start a new fetch rather than join this one
-      if (this.#pendingFetch === pendingFetch) {
-        this.#pendingFetch = undefined;
+      if (this._pendingFetch === pendingFetch) {
+        this._pendingFetch = undefined;
       }
       pendingFetch.abortController.abort();
     }
@@ -405,40 +405,40 @@ export class ResourceIdResolver {
    *
    * @param requestConfig - Optional request configuration
    */
-  async #fetchSummaryAndStore(requestConfig?: CcRequestConfigPartial): Promise<void> {
-    const summary = await this.#client.send(new GetOrganisationSummaryCommand(), {
+  private async _fetchSummaryAndStore(requestConfig?: CcRequestConfigPartial): Promise<void> {
+    const summary = await this._client.send(new GetOrganisationSummaryCommand(), {
       ...requestConfig,
       cache: { mode: 'reload' },
     });
-    this.#indexSummary(summary);
-    return this.#indexStore.write(this.#getIndex());
+    this._indexSummary(summary);
+    return this._indexStore.write(this._getIndex());
   }
 
-  #indexSummary(summary: GetOrganisationSummaryCommandOutput): void {
-    this.#index = this.#createEmptyIndex();
+  private _indexSummary(summary: GetOrganisationSummaryCommandOutput): void {
+    this._index = this._createEmptyIndex();
 
     for (const organisation of summary.organisations) {
       organisation.applications?.forEach((application) => {
-        this.#getIndex().ownerIdIndex.applicationIds[application.id] = organisation.id;
+        this._getIndex().ownerIdIndex.applicationIds[application.id] = organisation.id;
       });
       organisation.addons?.forEach((addon) => {
-        this.#getIndex().ownerIdIndex.addonIds[addon.id] = organisation.id;
-        this.#getIndex().ownerIdIndex.addonRealIds[addon.realId] = organisation.id;
-        this.#getIndex().addonsIndex.addonIds[addon.id] = addon.realId;
-        this.#getIndex().addonsIndex.addonRealIds[addon.realId] = addon.id;
+        this._getIndex().ownerIdIndex.addonIds[addon.id] = organisation.id;
+        this._getIndex().ownerIdIndex.addonRealIds[addon.realId] = organisation.id;
+        this._getIndex().addonsIndex.addonIds[addon.id] = addon.realId;
+        this._getIndex().addonsIndex.addonRealIds[addon.realId] = addon.id;
       });
       if (!organisation.isPersonal) {
         organisation.providers?.forEach((provider) => {
-          this.#getIndex().ownerIdIndex.addonProviderIds[provider.id] = organisation.id;
+          this._getIndex().ownerIdIndex.addonProviderIds[provider.id] = organisation.id;
         });
       }
       organisation.consumers?.forEach((consumer) => {
-        this.#getIndex().ownerIdIndex.oauthConsumerIds[consumer.key] = organisation.id;
+        this._getIndex().ownerIdIndex.oauthConsumerIds[consumer.key] = organisation.id;
       });
     }
   }
 
-  #createEmptyIndex(): ResourceIdIndex {
+  private _createEmptyIndex(): ResourceIdIndex {
     return {
       ownerIdIndex: {
         applicationIds: {},

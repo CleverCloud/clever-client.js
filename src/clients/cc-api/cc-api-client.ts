@@ -38,7 +38,7 @@ export class CcApiClient extends CcClient<CcApiType> {
   /**
    * Resource ID resolver for translating between different ID formats
    */
-  #resourceIdResolver: ResourceIdResolver;
+  private _resourceIdResolver: ResourceIdResolver;
 
   /**
    * Creates a new Clever Cloud API client instance
@@ -51,10 +51,10 @@ export class CcApiClient extends CcClient<CcApiType> {
       getAuth(config),
       // the resolver needs the client to fetch ids, so it only exists once `super()` returned: the
       // transformer reads it when a command is sent, not before
-      new CcApiParamsTransformer(() => this.#resourceIdResolver),
+      new CcApiParamsTransformer(() => this._resourceIdResolver),
     );
 
-    this.#resourceIdResolver = new ResourceIdResolver(
+    this._resourceIdResolver = new ResourceIdResolver(
       this,
       config?.resourceIdResolverStore ?? new MemoryStore<ResourceIdIndex>(),
       (requestConfig) => getRequestSignal(requestConfig, config?.defaultRequestConfig),
@@ -66,7 +66,7 @@ export class CcApiClient extends CcClient<CcApiType> {
    * Exposes helpers to resolve owner IDs and translate between addonId and realAddonId.
    */
   get resourceIdResolver(): ResourceIdResolver {
-    return this.#resourceIdResolver;
+    return this._resourceIdResolver;
   }
 }
 

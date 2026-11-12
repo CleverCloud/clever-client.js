@@ -38,11 +38,11 @@ export class StreamAddonRuntimeLogCommand extends AbstractLogsStreamCommand<
     };
   }
 
-  _logTopicName(): string {
+  protected _logTopicName(): string {
     return 'RESOURCE_LOG';
   }
 
-  _convertLog(rawLog: unknown): AddonRuntimeLog {
+  protected _convertLog(rawLog: unknown): AddonRuntimeLog {
     return transformAddonRuntimeLog(rawLog);
   }
 

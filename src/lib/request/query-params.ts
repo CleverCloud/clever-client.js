@@ -10,7 +10,7 @@ export class QueryParams {
     setBrand(this.prototype, QUERY_PARAMS_BRAND);
   }
 
-  #queryParams = new Map<string, OneOrMany<QueryParamValue> | undefined>();
+  private _queryParams = new Map<string, OneOrMany<QueryParamValue> | undefined>();
 
   constructor(params?: Record<string, OneOrMany<QueryParamValue>> | QueryParams) {
     if (params != null) {
@@ -23,7 +23,7 @@ export class QueryParams {
   }
 
   set(param: string, value: OneOrMany<QueryParamValue> | undefined): this {
-    this.#queryParams.set(param, value);
+    this._queryParams.set(param, value);
     return this;
   }
 
@@ -35,31 +35,31 @@ export class QueryParams {
   }
 
   get(param: string): OneOrMany<QueryParamValue> | undefined {
-    return this.#queryParams.get(param);
+    return this._queryParams.get(param);
   }
 
   append(param: string, value: OneOrMany<QueryParamValue> | undefined): this {
     if (value == null) {
       return this;
     }
-    if (this.#queryParams.has(param)) {
-      this.#queryParams.set(param, [...toArray(this.#queryParams.get(param)), ...toArray(value)]);
+    if (this._queryParams.has(param)) {
+      this._queryParams.set(param, [...toArray(this._queryParams.get(param)), ...toArray(value)]);
     } else {
-      this.#queryParams.set(param, value);
+      this._queryParams.set(param, value);
     }
     return this;
   }
 
   remove(param: string): void {
-    this.#queryParams.delete(param);
+    this._queryParams.delete(param);
   }
 
   entries(): MapIterator<[string, OneOrMany<QueryParamValue> | undefined]> {
-    return this.#queryParams.entries();
+    return this._queryParams.entries();
   }
 
   applyOnUrl(url: URL): void {
-    this.#queryParams.forEach((value, param) => {
+    this._queryParams.forEach((value, param) => {
       const values = toArray(value);
       values
         .filter((value) => value != null)
@@ -71,7 +71,7 @@ export class QueryParams {
 
   toObject(): Record<string, QueryParamValue | Array<QueryParamValue>> {
     return Object.fromEntries(
-      Array.from(this.#queryParams.entries())
+      Array.from(this._queryParams.entries())
         .map(function ([key, value]): [string, QueryParamValue | Array<QueryParamValue>] | null {
           if (value == null) {
             return null;
