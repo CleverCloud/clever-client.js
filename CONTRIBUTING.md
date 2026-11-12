@@ -10,7 +10,7 @@ CI keeps a `Release` PR up to date that bumps `package.json` and compiles the pe
 
 ## How to test
 
-Tests run on [Vitest](https://vitest.dev). The same `*.spec.js` files are executed both in **Node.js** and in a **real browser** (Vitest browser mode, powered by Playwright/Chromium). This is configured as four projects in `vitest.config.js`:
+Tests run on [Vitest](https://vitest.dev). The same `*.spec.js` files are executed both in **Node.js** and in a **real browser** (Vitest browser mode, powered by Playwright/Chromium). This is configured as four projects in `vitest.config.ts`:
 
 | Project        | Kind | Runtime |
 |----------------|------|---------|
@@ -85,7 +85,7 @@ By default every Vitest command runs every project it is given, i.e. both the No
 | `node`    | Keep only the `node-*` projects.                              |
 | `browser` | Keep only the `browser-*` projects.                           |
 
-How it works (`vitest.config.js`): when `TEST_RUNTIME` is set, the project list is filtered to those whose name starts with `${TEST_RUNTIME}-`. Any other value throws an error.
+How it works (`vitest.config.ts`): when `TEST_RUNTIME` is set, the project list is filtered to those whose name starts with `${TEST_RUNTIME}-`. Any other value throws an error.
 
 Why it exists: some IDEs (e.g. WebStorm) run tests straight from the gutter with no `--project` flag, which would run every matching project — and for e2e that means logging the test users in **once per environment**. Setting `TEST_RUNTIME` lets you keep that to a single environment.
 

@@ -11,8 +11,6 @@
     "customConditions": ["clever-client-source"],
     // Relative imports use the `.ts` extension, which Node runs as is and `tsc` rewrites to `.js` in `dist/`
     "rewriteRelativeImportExtensions": true,
-    "allowJs": true,
-    "checkJs": true,
     "noEmit": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

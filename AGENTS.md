@@ -9,7 +9,7 @@ This file provides guidance to LLMs when working with code in this repository.
 - `pnpm run prepack` - Build before packing/publishing (alias of `build`; quality gates run in PR CI, not at pack time)
 
 ### Testing
-Tests run on Vitest. The same `*.spec.js` files run in both Node.js and a real browser (Vitest browser mode, Playwright/Chromium), defined as four projects in `vitest.config.js`: `node-unit`, `browser-unit`, `node-e2e`, `browser-e2e`.
+Tests run on Vitest. The same `*.spec.js` files run in both Node.js and a real browser (Vitest browser mode, Playwright/Chromium), defined as four projects in `vitest.config.ts`: `node-unit`, `browser-unit`, `node-e2e`, `browser-e2e`.
 - `pnpm run test` - Run all unit tests (browser + Node.js)
 - `pnpm run test:unit` - Same as test (unit tests only)
 - `pnpm run test:unit:browser` - Browser unit tests
@@ -110,7 +110,7 @@ Real-time data via Server-Sent Events:
 - `tasks/` - Build and analysis scripts
 
 ### Testing Environment
-- **Runner**: Vitest, with the same specs run in Node.js and a real browser (Vitest browser mode, Playwright/Chromium). Configured as four projects in `vitest.config.js`.
+- **Runner**: Vitest, with the same specs run in Node.js and a real browser (Vitest browser mode, Playwright/Chromium). Configured as four projects in `vitest.config.ts`.
 - **Assertions**: Vitest (`expect`); spies/stubs via `vitest`. A custom `toEqualInAnyOrder` matcher (order-insensitive deep equality) lives in `test/lib/deep-equal-in-any-order/` and is registered for all projects via `test/setup/vite-matchers.js`.
 - **Mock API**: Provided by the [`@clevercloud/doublure`](https://www.npmjs.com/package/@clevercloud/doublure) package; tests use its `doublureHooks` (`@clevercloud/doublure/testing`) and the browser is bridged via its Vitest plugin (`@clevercloud/doublure/vitest`).
 - **E2E**: Node uses `test/e2e/global-setup.node.js` (login/logout) with token hand-off to workers; the browser uses the proxy/login Vite plugin in `test/lib/e2e-proxy.browser.js`.
