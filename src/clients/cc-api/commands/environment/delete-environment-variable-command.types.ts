@@ -1,5 +1,5 @@
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
-import type { ApplicationId } from '../../types/cc-api.types.js';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.ts';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies the application, along with the variable to remove from it.

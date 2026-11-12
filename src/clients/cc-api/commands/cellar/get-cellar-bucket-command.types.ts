@@ -1,4 +1,4 @@
-import type { CellarBucket, CellarBucketResourceId } from './cellar.types.js';
+import type { CellarBucket, CellarBucketResourceId } from './cellar.types.ts';
 
 /**
  * Identifies the bucket to retrieve.

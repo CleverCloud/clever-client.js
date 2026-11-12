@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   ListTcpRedirectionCommandInput,
   ListTcpRedirectionCommandOutput,
-} from './list-tcp-redirection-command.types.js';
+} from './list-tcp-redirection-command.types.ts';
 
 /**
  * Lists the public TCP ports routed to an application.

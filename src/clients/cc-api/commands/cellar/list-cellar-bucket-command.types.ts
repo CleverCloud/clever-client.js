@@ -1,5 +1,5 @@
-import type { AddonId } from '../../types/cc-api.types.js';
-import type { CellarBucketList } from './cellar.types.js';
+import type { AddonId } from '../../types/cc-api.types.ts';
+import type { CellarBucketList } from './cellar.types.ts';
 
 /**
  * Identifies the Cellar add-on whose buckets are listed. The owner is resolved automatically when

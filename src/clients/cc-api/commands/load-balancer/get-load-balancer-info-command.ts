@@ -1,12 +1,12 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   GetLoadBalancerInfoCommandInput,
   GetLoadBalancerInfoCommandOutput,
-} from './get-load-balancer-info-command.types.js';
-import { transformLoadBalancer } from './load-balancer-transform.js';
+} from './get-load-balancer-info-command.types.ts';
+import { transformLoadBalancer } from './load-balancer-transform.ts';
 
 /**
  * Lists the load balancers serving an application or an add-on, with the DNS records to point a domain at them.

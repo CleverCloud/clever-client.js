@@ -1,12 +1,12 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformElasticsearchInfo } from './elasticsearch-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformElasticsearchInfo } from './elasticsearch-transform.ts';
 import type {
   GetElasticsearchInfoCommandInput,
   GetElasticsearchInfoCommandOutput,
-} from './get-elasticsearch-info-command.types.js';
+} from './get-elasticsearch-info-command.types.ts';
 
 /**
  * Retrieves the details of an Elasticsearch add-on: its plan and zone, the credentials of its Elasticsearch, Kibana

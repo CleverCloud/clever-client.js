@@ -1,7 +1,7 @@
-import type { Composer } from '../../../../types/command.types.js';
-import type { CcApiType } from '../../types/cc-api.types.js';
-import type { Application } from './application.types.js';
-import { GetApplicationBranchesCommand } from './get-application-branches-command.js';
+import type { Composer } from '../../../../types/command.types.ts';
+import type { CcApiType } from '../../types/cc-api.types.ts';
+import type { Application } from './application.types.ts';
+import { GetApplicationBranchesCommand } from './get-application-branches-command.ts';
 
 export async function consolidateApplicationWithBranches(
   application: Application,

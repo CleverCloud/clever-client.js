@@ -1,12 +1,12 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformKubernetesClusterEvent } from './kubernetes-transform.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformKubernetesClusterEvent } from './kubernetes-transform.ts';
 import type {
   ListKubernetesClusterEventCommandInput,
   ListKubernetesClusterEventCommandOutput,
-} from './list-kubernetes-cluster-event-command.types.js';
+} from './list-kubernetes-cluster-event-command.types.ts';
 
 /**
  * Lists the event log of a cluster: its cluster-level status transitions, the changes to the

@@ -1,5 +1,5 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
-import type { Instance, InstanceState } from './instance.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
+import type { Instance, InstanceState } from './instance.types.ts';
 
 /**
  * Identifies the application whose instances are listed, and how to narrow the listing down. The owner is

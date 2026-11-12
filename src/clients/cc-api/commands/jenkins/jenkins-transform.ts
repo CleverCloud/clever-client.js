@@ -1,8 +1,8 @@
-import { normalizeDate, sortBy } from '../../../../lib/utils.js';
+import { normalizeDate, sortBy } from '../../../../lib/utils.ts';
 import type {
   GetJenkinsInfoInnerCommandOutput,
   GetJenkinsUpdatesCommandOutput,
-} from './get-jenkins-info-command.types.js';
+} from './get-jenkins-info-command.types.ts';
 
 export function transformJenkinsInfo(response: any): GetJenkinsInfoInnerCommandOutput {
   return {

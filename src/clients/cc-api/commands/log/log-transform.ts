@@ -1,11 +1,11 @@
-import { normalizeDate } from '../../../../lib/utils.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
 import type {
   AddonRuntimeLog,
   ApplicationAccessLog,
   ApplicationAccessLogBase,
   ApplicationAccessLogHttpDetail,
   ApplicationRuntimeLog,
-} from './log.types.js';
+} from './log.types.ts';
 
 export function transformAddonRuntimeLog(rawLog: any): AddonRuntimeLog {
   return {

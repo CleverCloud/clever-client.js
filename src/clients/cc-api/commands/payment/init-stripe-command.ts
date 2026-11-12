@@ -1,12 +1,12 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformInvoice } from '../invoice/invoice-transform.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformInvoice } from '../invoice/invoice-transform.ts';
 import type {
   InitStripeCommandInput,
   InitStripeCommandOutput,
   InitStripePaymentMethod,
-} from './init-stripe-command.types.js';
+} from './init-stripe-command.types.ts';
 
 /**
  * Opens a Stripe payment for an invoice by charging it on the payment method of the organisation.

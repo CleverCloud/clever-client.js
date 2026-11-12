@@ -1,12 +1,12 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   ListProductRuntimeCommandInput,
   ListProductRuntimeCommandOutput,
-} from './list-product-runtime-command.types.js';
-import { transformProductRuntime } from './product-transform.js';
+} from './list-product-runtime-command.types.ts';
+import { transformProductRuntime } from './product-transform.ts';
 
 /**
  * Lists the runtimes applications can be deployed on.

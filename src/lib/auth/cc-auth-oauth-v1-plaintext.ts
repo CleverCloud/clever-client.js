@@ -1,6 +1,6 @@
-import type { OauthTokens } from '../../types/auth.types.js';
-import { oauthV1AuthorizationHeader } from '../../utils/auth-utils.js';
-import { CcAuth } from './cc-auth.js';
+import type { OauthTokens } from '../../types/auth.types.ts';
+import { oauthV1AuthorizationHeader } from '../../utils/auth-utils.ts';
+import { CcAuth } from './cc-auth.ts';
 
 /**
  * OAuth v1 PLAINTEXT authentication implementation for Clever Cloud.

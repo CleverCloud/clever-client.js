@@ -1,4 +1,4 @@
-import type { OrganisationMemberRole } from './organisation.types.js';
+import type { OrganisationMemberRole } from './organisation.types.ts';
 
 /**
  * Describes the member to add to an organisation, or the invitation to accept.

@@ -1,6 +1,6 @@
-import { CcStream } from '../../../../lib/stream/cc-stream.js';
-import type { CcStreamConfig, CcStreamRequestFactory } from '../../../../lib/stream/cc-stream.types.js';
-import { CcApiStreamCommand } from '../../lib/cc-api-command.js';
+import { CcStream } from '../../../../lib/stream/cc-stream.ts';
+import type { CcStreamConfig, CcStreamRequestFactory } from '../../../../lib/stream/cc-stream.types.ts';
+import { CcApiStreamCommand } from '../../lib/cc-api-command.ts';
 
 /**
  * Base class for the commands that open a Server-Sent Events stream of log lines.

@@ -1,8 +1,8 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformGithubApplication } from './github-transform.js';
-import type { ListGithubApplicationCommandOutput } from './list-github-application-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformGithubApplication } from './github-transform.ts';
+import type { ListGithubApplicationCommandOutput } from './list-github-application-command.types.ts';
 
 /**
  * Lists the GitHub repositories the linked account gives access to, so that one can be picked as the source of an

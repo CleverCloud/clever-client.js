@@ -1,5 +1,5 @@
-import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
-import type { LogDrainProbeResult } from './log-drain.types.js';
+import type { ApplicationOrAddonId } from '../../types/cc-api.types.ts';
+import type { LogDrainProbeResult } from './log-drain.types.ts';
 
 /**
  * Identifies the log drain to probe, through the application or add-on it is attached to. The owner is

@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { CheckVatNumberCommand } from '../../../../../src/clients/cc-api/commands/vat-number/check-vat-number-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CheckVatNumberCommand } from '../../../../../src/clients/cc-api/commands/vat-number/check-vat-number-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 // Cannot be automatised because API is not stable (sometimes we get rate limited)
 describe.skip('vat number commands', function () {

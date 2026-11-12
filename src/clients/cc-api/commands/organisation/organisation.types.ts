@@ -1,5 +1,5 @@
-import type { ApplicationState } from '../application/application.types.js';
-import type { MfaKind } from '../auth/auth.types.js';
+import type { ApplicationState } from '../application/application.types.ts';
+import type { MfaKind } from '../auth/auth.types.ts';
 
 /**
  * The signed-in user as the summary endpoint describes them: who they are and which partner they

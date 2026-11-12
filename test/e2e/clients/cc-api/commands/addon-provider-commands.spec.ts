@@ -1,16 +1,16 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CreateAddonProviderCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/create-addon-provider-command.js';
-import { CreateAddonProviderFeatureCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/create-addon-provider-feature-command.js';
-import { CreateAddonProviderPlanCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/create-addon-provider-plan-command.js';
-import { DeleteAddonProviderCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/delete-addon-provider-command.js';
-import { DeleteAddonProviderFeatureCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/delete-addon-provider-feature-command.js';
-import { DeleteAddonProviderPlanCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/delete-addon-provider-plan-command.js';
-import { GetAddonProviderCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/get-addon-provider-command.js';
-import { ListAddonProviderFeatureCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/list-addon-provider-feature-command.js';
-import { ListAddonProviderPlanCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/list-addon-provider-plan-command.js';
-import { UpdateAddonProviderCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/update-addon-provider-command.js';
-import { UpdateAddonProviderPlanCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/update-addon-provider-plan-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CreateAddonProviderCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/create-addon-provider-command.ts';
+import { CreateAddonProviderFeatureCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/create-addon-provider-feature-command.ts';
+import { CreateAddonProviderPlanCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/create-addon-provider-plan-command.ts';
+import { DeleteAddonProviderCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/delete-addon-provider-command.ts';
+import { DeleteAddonProviderFeatureCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/delete-addon-provider-feature-command.ts';
+import { DeleteAddonProviderPlanCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/delete-addon-provider-plan-command.ts';
+import { GetAddonProviderCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/get-addon-provider-command.ts';
+import { ListAddonProviderFeatureCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/list-addon-provider-feature-command.ts';
+import { ListAddonProviderPlanCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/list-addon-provider-plan-command.ts';
+import { UpdateAddonProviderCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/update-addon-provider-command.ts';
+import { UpdateAddonProviderPlanCommand } from '../../../../../src/clients/cc-api/commands/addon-provider/update-addon-provider-plan-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 // cannot be automatised because addon provider deletion doesn't work!
 // cannot be automatised because addon provider plan deletion doesn't work!

@@ -1,13 +1,13 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformCellarObjectList } from './cellar-transform.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformCellarObjectList } from './cellar-transform.ts';
 import type {
   ListCellarObjectCommandInput,
   ListCellarObjectCommandOutput,
-} from './list-cellar-object-command.types.js';
+} from './list-cellar-object-command.types.ts';
 
 /**
  * The error codes this command can produce, to compare against `error.code`.

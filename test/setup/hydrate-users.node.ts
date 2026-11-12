@@ -1,5 +1,5 @@
 import { inject } from 'vitest';
-import { hydrateE2eUsers } from '../lib/e2e-test-users.js';
+import { hydrateE2eUsers } from '../lib/e2e-test-users.ts';
 
 /**
  * Node-e2e setup file (`setupFiles`), the worker-side half of the login hand-off.

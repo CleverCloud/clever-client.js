@@ -1,4 +1,4 @@
-import type { LoadBalancer } from './load-balancer.types.js';
+import type { LoadBalancer } from './load-balancer.types.ts';
 
 export function transformLoadBalancer(payload: any): LoadBalancer {
   return {

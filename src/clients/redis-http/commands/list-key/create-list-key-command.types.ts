@@ -1,4 +1,4 @@
-import type { RedisHttpCommandInput, WithKey } from '../../types/redis-http.types.js';
+import type { RedisHttpCommandInput, WithKey } from '../../types/redis-http.types.ts';
 
 /**
  * The key and its elements to create

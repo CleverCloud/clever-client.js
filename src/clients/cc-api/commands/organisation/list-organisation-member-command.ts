@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   ListOrganisationMemberCommandInput,
   ListOrganisationMemberCommandOutput,
-} from './list-organisation-member-command.types.js';
-import { transformOrganisationMember } from './organisation-transform.js';
+} from './list-organisation-member-command.types.ts';
+import { transformOrganisationMember } from './organisation-transform.ts';
 
 /**
  * Lists the members of an organisation, with their role.

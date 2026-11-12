@@ -1,4 +1,4 @@
-import type { GrantableRights, OauthConsumer } from './oauth-consumer.types.js';
+import type { GrantableRights, OauthConsumer } from './oauth-consumer.types.ts';
 
 /**
  * Identifies the OAuth consumer to replace, along with its new definition.

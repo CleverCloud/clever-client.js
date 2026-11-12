@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { GetHeatMapCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-heat-map-command.js';
-import { GetMetricsCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-metrics-command.js';
-import { GetStatusCodeDistributionCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-status-code-distribution-command.js';
-import { StreamRequestsCommand } from '../../../../../src/clients/cc-api/commands/metrics/stream-requests-command.js';
-import type { RequestLocation } from '../../../../../src/clients/cc-api/commands/metrics/stream-requests-command.types.js';
-import type { CcStream } from '../../../../../src/lib/stream/cc-stream.js';
-import { Deferred } from '../../../../../src/lib/utils.js';
-import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { e2eSupport, STATIC_LOGS_APPLICATION, STATIC_MYSQL_ADDON_ID } from '../e2e-support.js';
+import { GetHeatMapCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-heat-map-command.ts';
+import { GetMetricsCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-metrics-command.ts';
+import { GetStatusCodeDistributionCommand } from '../../../../../src/clients/cc-api/commands/metrics/get-status-code-distribution-command.ts';
+import { StreamRequestsCommand } from '../../../../../src/clients/cc-api/commands/metrics/stream-requests-command.ts';
+import type { RequestLocation } from '../../../../../src/clients/cc-api/commands/metrics/stream-requests-command.types.ts';
+import type { CcStream } from '../../../../../src/lib/stream/cc-stream.ts';
+import { Deferred } from '../../../../../src/lib/utils.ts';
+import { checkDateFormat } from '../../../../lib/expect-utils.ts';
+import { e2eSupport, STATIC_LOGS_APPLICATION, STATIC_MYSQL_ADDON_ID } from '../e2e-support.ts';
 
 describe('metrics commands', function () {
   const support = e2eSupport({ user: 'test-user-without-github' });

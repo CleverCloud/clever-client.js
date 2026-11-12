@@ -1,8 +1,8 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CheckVatNumberCommandInput, CheckVatNumberCommandOutput } from './check-vat-number-command.types.js';
-import { transformVatNumber } from './vat-number-transform.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CheckVatNumberCommandInput, CheckVatNumberCommandOutput } from './check-vat-number-command.types.ts';
+import { transformVatNumber } from './vat-number-transform.ts';
 
 /**
  * Checks a VAT number against the European VIES registry.

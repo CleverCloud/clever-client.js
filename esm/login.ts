@@ -1,5 +1,5 @@
-import { fetchAccessToken as doFetchAccessToken, fetchRequestToken as doFetchRequestToken } from './api/v2/oauth.js';
-import type { RequestParams } from './request.types.js';
+import { fetchAccessToken as doFetchAccessToken, fetchRequestToken as doFetchRequestToken } from './api/v2/oauth.ts';
+import type { RequestParams } from './request.types.ts';
 
 export function getOauthParams({
   consumerKey,

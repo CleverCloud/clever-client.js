@@ -1,4 +1,4 @@
-import type { WebhookNotification } from './notification.types.js';
+import type { WebhookNotification } from './notification.types.ts';
 
 /**
  * Identifies the owner whose webhooks are listed.

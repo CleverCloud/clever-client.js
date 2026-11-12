@@ -1,9 +1,9 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { DeleteKubernetesClusterCommandInput } from './delete-kubernetes-cluster-command.types.js';
-import { waitForKubernetesClusterDeletion } from './kubernetes-utils.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { DeleteKubernetesClusterCommandInput } from './delete-kubernetes-cluster-command.types.ts';
+import { waitForKubernetesClusterDeletion } from './kubernetes-utils.ts';
 
 /**
  * Deletes a Kubernetes cluster, tearing down its control plane and every node it runs.

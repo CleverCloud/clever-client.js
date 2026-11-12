@@ -1,4 +1,4 @@
-import type { OauthTokens } from '../../src/types/auth.types.js';
+import type { OauthTokens } from '../../src/types/auth.types.ts';
 
 export type E2eUserName = 'test-user-without-github' | 'test-user-with-github';
 

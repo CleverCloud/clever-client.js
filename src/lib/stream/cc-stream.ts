@@ -1,20 +1,20 @@
-import type { SseMessage } from '../../types/request.types.js';
-import { isCcClientError, isCcHttpError, isNetworkError } from '../../utils/error-utils.js';
-import type { NetworkErrorCode } from '../error/cc-client-errors.js';
-import { CcClientError } from '../error/cc-client-errors.js';
-import { handleHttpErrors } from '../error/handle-http-errors.js';
-import { asNetworkError, isFetchNetworkError } from '../error/network-error.js';
-import { HeadersBuilder } from '../request/headers-builder.js';
-import { sendRequest, SseResponseBody } from '../request/request.js';
-import { combineWithSignal, Deferred } from '../utils.js';
+import type { SseMessage } from '../../types/request.types.ts';
+import { isCcClientError, isCcHttpError, isNetworkError } from '../../utils/error-utils.ts';
+import type { NetworkErrorCode } from '../error/cc-client-errors.ts';
+import { CcClientError } from '../error/cc-client-errors.ts';
+import { handleHttpErrors } from '../error/handle-http-errors.ts';
+import { asNetworkError, isFetchNetworkError } from '../error/network-error.ts';
+import { HeadersBuilder } from '../request/headers-builder.ts';
+import { sendRequest, SseResponseBody } from '../request/request.ts';
+import { combineWithSignal, Deferred } from '../utils.ts';
 import type {
   CcStreamCloseReason,
   CcStreamConfig,
   CcStreamRequestFactory,
   CcStreamRetry,
   CcStreamState,
-} from './cc-stream.types.js';
-import { readSseResponseBody } from './sse-response-body-reader.js';
+} from './cc-stream.types.ts';
+import { readSseResponseBody } from './sse-response-body-reader.ts';
 
 const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
 

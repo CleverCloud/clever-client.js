@@ -1,19 +1,19 @@
 import type { NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CcApiClient } from '../../../../src/clients/cc-api/cc-api-client.js';
+import { CcApiClient } from '../../../../src/clients/cc-api/cc-api-client.ts';
 import {
   GetApplicationCommand,
   GetApplicationInnerCommand,
-} from '../../../../src/clients/cc-api/commands/application/get-application-command.js';
-import type { GetApplicationCommandOutput } from '../../../../src/clients/cc-api/commands/application/get-application-command.types.js';
-import { GetOrganisationSummaryCommand } from '../../../../src/clients/cc-api/commands/organisation/get-organisation-summary-command.js';
-import type { GetOrganisationSummaryCommandOutput } from '../../../../src/clients/cc-api/commands/organisation/get-organisation-summary-command.types.js';
-import { MemoryStore } from '../../../../src/clients/cc-api/lib/store/memory-store.js';
-import type { ResourceIdIndex } from '../../../../src/clients/cc-api/types/resource-id-resolver.types.js';
-import type { CcRequestConfigPartial } from '../../../../src/types/request.types.js';
-import { expectPromiseThrows } from '../../../lib/expect-utils.js';
-import { sleep } from '../../../lib/timers.js';
+} from '../../../../src/clients/cc-api/commands/application/get-application-command.ts';
+import type { GetApplicationCommandOutput } from '../../../../src/clients/cc-api/commands/application/get-application-command.types.ts';
+import { GetOrganisationSummaryCommand } from '../../../../src/clients/cc-api/commands/organisation/get-organisation-summary-command.ts';
+import type { GetOrganisationSummaryCommandOutput } from '../../../../src/clients/cc-api/commands/organisation/get-organisation-summary-command.types.ts';
+import { MemoryStore } from '../../../../src/clients/cc-api/lib/store/memory-store.ts';
+import type { ResourceIdIndex } from '../../../../src/clients/cc-api/types/resource-id-resolver.types.ts';
+import type { CcRequestConfigPartial } from '../../../../src/types/request.types.ts';
+import { expectPromiseThrows } from '../../../lib/expect-utils.ts';
+import { sleep } from '../../../lib/timers.ts';
 
 /**
  * A summary holding a single organisation with one application. Only the fields the resolver indexes

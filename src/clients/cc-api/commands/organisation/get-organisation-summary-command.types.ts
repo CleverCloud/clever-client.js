@@ -1,4 +1,4 @@
-import type { OrganisationSummary, UserSummary } from './organisation.types.js';
+import type { OrganisationSummary, UserSummary } from './organisation.types.ts';
 
 /**
  * The signed-in user and every organisation they have access to, with the products each one holds.

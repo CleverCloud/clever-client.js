@@ -1,7 +1,7 @@
 // Typed payload handed from `test/e2e/global-setup.js` to the workers via `provide`/`inject`.
 declare module 'vitest' {
   interface ProvidedContext {
-    e2eUsers: Record<string, Partial<import('./lib/e2e.types.js').E2eUser>>;
+    e2eUsers: Record<string, Partial<import('./lib/e2e.types.ts').E2eUser>>;
   }
 }
 
@@ -13,7 +13,7 @@ declare module 'http' {
     e2eRoute?: {
       prefix: string;
       target: string;
-      user?: import('./lib/e2e.types.js').E2eUser;
+      user?: import('./lib/e2e.types.ts').E2eUser;
       authorizationHeader?: () => string;
     };
   }

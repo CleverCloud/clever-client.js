@@ -1,5 +1,5 @@
-import type { AddonId, ApplicationId } from '../../types/cc-api.types.js';
-import type { Link } from './link.types.js';
+import type { AddonId, ApplicationId } from '../../types/cc-api.types.ts';
+import type { Link } from './link.types.ts';
 
 /**
  * Whose links to list: an application's dependencies, or the applications an add-on is linked to.

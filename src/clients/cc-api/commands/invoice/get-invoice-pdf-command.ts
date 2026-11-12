@@ -1,8 +1,8 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetInvoicePdfCommandInput, GetInvoicePdfCommandOutput } from './get-invoice-pdf-command.types.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetInvoicePdfCommandInput, GetInvoicePdfCommandOutput } from './get-invoice-pdf-command.types.ts';
 
 /**
  * Retrieves one billing document of an organisation, rendered as a PDF file.

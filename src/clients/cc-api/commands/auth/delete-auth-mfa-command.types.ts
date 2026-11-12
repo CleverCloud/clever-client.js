@@ -3,7 +3,7 @@ import type {
   RefusedAuthCredential,
   RefusedCredentialCommandOutput,
   ResolveRefusedCredentialInput,
-} from './auth.types.js';
+} from './auth.types.ts';
 
 /**
  * Which factor to turn off, and the password proving the caller owns the account.

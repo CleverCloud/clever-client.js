@@ -1,18 +1,18 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
 import type {
   CreateNetworkGroupCommandInnerInput,
   CreateNetworkGroupCommandInput,
   CreateNetworkGroupCommandOutput,
-} from './create-network-group-command.types.js';
+} from './create-network-group-command.types.ts';
 import {
   constructNetworkGroupMember,
   generateNetworkGroupId,
   waitForNetworkGroupCreation,
-} from './network-group-utils.js';
-import type { NetworkGroupMember } from './network-group.types.js';
+} from './network-group-utils.ts';
+import type { NetworkGroupMember } from './network-group.types.ts';
 
 /**
  * Creates a network group in an organisation, optionally with a first set of members.

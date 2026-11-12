@@ -1,5 +1,5 @@
-import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.js';
-import { calculateCacheKey, waitUnlessAborted } from '../utils.js';
+import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.ts';
+import { calculateCacheKey, waitUnlessAborted } from '../utils.ts';
 
 const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
 

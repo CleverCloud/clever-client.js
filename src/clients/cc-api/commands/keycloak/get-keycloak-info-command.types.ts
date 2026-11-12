@@ -1,4 +1,4 @@
-import type { KeycloakInfo } from './keycloak.types.js';
+import type { KeycloakInfo } from './keycloak.types.ts';
 
 /**
  * Identifies the add-on to retrieve.

@@ -1,4 +1,4 @@
-import type { CellarObjectResourceId } from './cellar.types.js';
+import type { CellarObjectResourceId } from './cellar.types.ts';
 
 /**
  * Identifies the object to remove.

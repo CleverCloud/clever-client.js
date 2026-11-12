@@ -1,4 +1,4 @@
-import type { MaybeWithOwnerId } from '../../types/cc-api.types.js';
+import type { MaybeWithOwnerId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies whose requests the heat map covers, and over which time range. The owner is resolved

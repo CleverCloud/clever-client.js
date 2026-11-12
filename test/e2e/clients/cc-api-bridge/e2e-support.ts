@@ -1,6 +1,6 @@
-import { CcApiBridgeClient } from '../../../../src/clients/cc-api-bridge/cc-api-bridge-client.js';
-import type { OauthTokens } from '../../../../src/types/auth.types.js';
-import { getE2eUser } from '../../../lib/e2e-test-users.js';
+import { CcApiBridgeClient } from '../../../../src/clients/cc-api-bridge/cc-api-bridge-client.ts';
+import type { OauthTokens } from '../../../../src/types/auth.types.ts';
+import { getE2eUser } from '../../../lib/e2e-test-users.ts';
 
 type Auth = 'none' | 'oauth-v1';
 

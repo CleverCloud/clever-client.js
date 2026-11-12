@@ -1,4 +1,4 @@
-import { pickNonNull } from '../../pick-non-null.js';
+import { pickNonNull } from '../../pick-non-null.ts';
 
 /**
  * POST /oauth/access_token

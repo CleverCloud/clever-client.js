@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { ActivateCouponCommand } from '../../../../../src/clients/cc-api/commands/credits/activate-coupon-command.js';
-import { GetCreditsSummaryCommand } from '../../../../../src/clients/cc-api/commands/credits/get-credits-summary-command.js';
-import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+import { ActivateCouponCommand } from '../../../../../src/clients/cc-api/commands/credits/activate-coupon-command.ts';
+import { GetCreditsSummaryCommand } from '../../../../../src/clients/cc-api/commands/credits/get-credits-summary-command.ts';
+import { checkDateFormat } from '../../../../lib/expect-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('credits commands', function () {
   const support = e2eSupport();

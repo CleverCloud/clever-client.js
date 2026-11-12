@@ -1,11 +1,11 @@
-import { CcClientError } from '../../../lib/error/cc-client-errors.js';
-import { waitUnlessAborted } from '../../../lib/utils.js';
-import type { CcRequestConfigPartial } from '../../../types/request.types.js';
-import type { CcApiClient } from '../cc-api-client.js';
-import { GetOrganisationSummaryCommand } from '../commands/organisation/get-organisation-summary-command.js';
-import type { GetOrganisationSummaryCommandOutput } from '../commands/organisation/get-organisation-summary-command.types.js';
-import type { ResourceId } from '../types/cc-api.types.js';
-import type { AddonIdType, ResourceIdIndex, Store } from '../types/resource-id-resolver.types.js';
+import { CcClientError } from '../../../lib/error/cc-client-errors.ts';
+import { waitUnlessAborted } from '../../../lib/utils.ts';
+import type { CcRequestConfigPartial } from '../../../types/request.types.ts';
+import type { CcApiClient } from '../cc-api-client.ts';
+import { GetOrganisationSummaryCommand } from '../commands/organisation/get-organisation-summary-command.ts';
+import type { GetOrganisationSummaryCommandOutput } from '../commands/organisation/get-organisation-summary-command.types.ts';
+import type { ResourceId } from '../types/cc-api.types.ts';
+import type { AddonIdType, ResourceIdIndex, Store } from '../types/resource-id-resolver.types.ts';
 
 /**
  * A summary fetch shared by every caller resolving an id while it is pending.

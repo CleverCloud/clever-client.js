@@ -1,7 +1,7 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { DeleteTokenCommandInput } from './delete-oauth-token-command.types.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { DeleteTokenCommandInput } from './delete-oauth-token-command.types.ts';
 
 /**
  * Deletes an Oauth token.

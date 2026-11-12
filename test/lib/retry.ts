@@ -1,5 +1,5 @@
-import { Polling } from '../../src/utils/polling.js';
-import { sleep } from './timers.js';
+import { Polling } from '../../src/utils/polling.ts';
+import { sleep } from './timers.ts';
 
 /**
  * Retries a function until it returns a non-null value or timeout is reached, or max retries is reached.

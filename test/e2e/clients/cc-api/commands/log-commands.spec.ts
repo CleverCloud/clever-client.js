@@ -2,13 +2,13 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import type {
   ApplicationAccessLog,
   ApplicationRuntimeLog,
-} from '../../../../../src/clients/cc-api/commands/log/log.types.js';
-import { StreamApplicationAccessLogCommand } from '../../../../../src/clients/cc-api/commands/log/stream-application-access-log-command.js';
-import { StreamApplicationRuntimeLogCommand } from '../../../../../src/clients/cc-api/commands/log/stream-application-runtime-log-command.js';
-import type { CcStream } from '../../../../../src/lib/stream/cc-stream.js';
-import { Deferred } from '../../../../../src/lib/utils.js';
-import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { e2eSupport, STATIC_LOGS_APPLICATION } from '../e2e-support.js';
+} from '../../../../../src/clients/cc-api/commands/log/log.types.ts';
+import { StreamApplicationAccessLogCommand } from '../../../../../src/clients/cc-api/commands/log/stream-application-access-log-command.ts';
+import { StreamApplicationRuntimeLogCommand } from '../../../../../src/clients/cc-api/commands/log/stream-application-runtime-log-command.ts';
+import type { CcStream } from '../../../../../src/lib/stream/cc-stream.ts';
+import { Deferred } from '../../../../../src/lib/utils.ts';
+import { checkDateFormat } from '../../../../lib/expect-utils.ts';
+import { e2eSupport, STATIC_LOGS_APPLICATION } from '../e2e-support.ts';
 
 describe('log commands', function () {
   describe('log stream', function () {

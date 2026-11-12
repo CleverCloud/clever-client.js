@@ -22,6 +22,19 @@ export default defineConfig({
     // Enforce the use of 'import from node:xxx' instead of 'import from xxx'
     'unicorn/prefer-node-protocol': 'error',
 
+    // Relative imports use the `.ts` extension, which Node runs as is and `tsc` rewrites to `.js` in `dist/`
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            regex: '^\\.{1,2}/.*\\.[cm]?js$',
+            message: 'Use the `.ts` extension in relative imports.',
+          },
+        ],
+      },
+    ],
+
     // Import declarations are sorted by Oxfmt (`sortImports`), by module path. This rule only sorts the specifiers
     // inside the braces: its own declaration sort uses the first imported name and would conflict with Oxfmt.
     'sort-imports': ['error', { ignoreCase: true, ignoreDeclarationSort: true }],

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { parseRssFeed } from '../../../../../../src/clients/cc-api/commands/article/article-transform.js';
-import { expectPromiseThrows } from '../../../../../lib/expect-utils.js';
+import { parseRssFeed } from '../../../../../../src/clients/cc-api/commands/article/article-transform.ts';
+import { expectPromiseThrows } from '../../../../../lib/expect-utils.ts';
 
 /**
  * Mirrors the shape of the Clever Cloud blog feed: items carry an HTML `<description>` starting with

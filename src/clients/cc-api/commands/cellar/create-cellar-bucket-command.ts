@@ -1,11 +1,11 @@
-import { postJson } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { postJson } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   CreateCellarBucketCommandInput,
   CreateCellarBucketCommandOutput,
-} from './create-cellar-bucket-command.types.js';
+} from './create-cellar-bucket-command.types.ts';
 
 /**
  * The error codes this command can produce, to compare against `error.code`.

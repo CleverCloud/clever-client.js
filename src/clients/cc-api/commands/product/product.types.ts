@@ -1,4 +1,4 @@
-import type { AddonProviderFull } from '../addon-provider/addon-provider.types.js';
+import type { AddonProviderFull } from '../addon-provider/addon-provider.types.ts';
 
 /**
  * A runtime applications can be deployed on, as published in the product catalogue: what it is,

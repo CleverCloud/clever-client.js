@@ -1,7 +1,7 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetCurrentOauthTokenInfoCommandOutput } from './get-current-oauth-token-info-command.types.js';
-import { transformOauthToken } from './oauth-token-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetCurrentOauthTokenInfoCommandOutput } from './get-current-oauth-token-info-command.types.ts';
+import { transformOauthToken } from './oauth-token-transform.ts';
 
 /**
  * Gets info about the Oauth token used to authenticate the current request.

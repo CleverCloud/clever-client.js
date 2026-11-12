@@ -1,4 +1,4 @@
-import type { Zone } from './zone.types.js';
+import type { Zone } from './zone.types.ts';
 
 /**
  * Identifies the zone to retrieve.

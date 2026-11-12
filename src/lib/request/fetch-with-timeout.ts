@@ -1,4 +1,4 @@
-import { combineWithSignal } from '../utils.js';
+import { combineWithSignal } from '../utils.ts';
 
 // TODO: replace this by using AbortSignal.timeout() static method when it becomes widely available
 

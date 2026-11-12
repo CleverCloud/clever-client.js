@@ -18,7 +18,7 @@ import {
   toArray,
   unknownToClient,
   waitUnlessAborted,
-} from '../../../src/lib/utils.js';
+} from '../../../src/lib/utils.ts';
 
 describe('Utils', () => {
   describe('omit', () => {

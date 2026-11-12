@@ -1,13 +1,13 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { tolerateNotFound } from '../../../../utils/error-utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformDomain } from './domain-transform.js';
-import type { Domain } from './domain.types.js';
-import { GetPrimaryDomainCommand } from './get-primary-domain-command.js';
-import type { ListDomainCommandInput, ListDomainCommandOutput } from './list-domain-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { tolerateNotFound } from '../../../../utils/error-utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformDomain } from './domain-transform.ts';
+import type { Domain } from './domain.types.ts';
+import { GetPrimaryDomainCommand } from './get-primary-domain-command.ts';
+import type { ListDomainCommandInput, ListDomainCommandOutput } from './list-domain-command.types.ts';
 
 /**
  * Lists the domains an application answers on, with the primary one flagged.

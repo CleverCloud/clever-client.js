@@ -1,4 +1,4 @@
-import type { CellarBucketResourceId, CellarObjectList } from './cellar.types.js';
+import type { CellarBucketResourceId, CellarObjectList } from './cellar.types.ts';
 
 /**
  * Identifies the bucket to list, which part of it, and how much of each entry to fetch.

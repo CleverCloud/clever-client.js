@@ -1,11 +1,11 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { AbstractLogsStreamCommand } from './abstract-logs-stream-command.js';
-import { transformApplicationRuntimeLog } from './log-transform.js';
-import type { ApplicationRuntimeLog } from './log.types.js';
-import type { StreamApplicationRuntimeLogCommandInput } from './stream-application-runtime-log-command.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { normalizeDate, safeUrl } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { AbstractLogsStreamCommand } from './abstract-logs-stream-command.ts';
+import { transformApplicationRuntimeLog } from './log-transform.ts';
+import type { ApplicationRuntimeLog } from './log.types.ts';
+import type { StreamApplicationRuntimeLogCommandInput } from './stream-application-runtime-log-command.types.ts';
 
 /**
  * Opens a Server-Sent Events stream of the runtime logs of an application.

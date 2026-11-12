@@ -1,4 +1,4 @@
-import type { InvoiceSummary } from './invoice.types.js';
+import type { InvoiceSummary } from './invoice.types.ts';
 
 /**
  * Narrows down which billing documents of an organisation are listed.

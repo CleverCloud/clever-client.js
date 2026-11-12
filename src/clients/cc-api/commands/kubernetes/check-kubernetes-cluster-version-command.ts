@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   CheckKubernetesClusterVersionCommandInput,
   CheckKubernetesClusterVersionCommandOutput,
-} from './check-kubernetes-cluster-version-command.types.js';
-import { transformKubernetesClusterVersionCheck } from './kubernetes-transform.js';
+} from './check-kubernetes-cluster-version-command.types.ts';
+import { transformKubernetesClusterVersionCheck } from './kubernetes-transform.ts';
 
 /**
  * Tells whether a cluster runs the latest Kubernetes version, and which versions it can move to.

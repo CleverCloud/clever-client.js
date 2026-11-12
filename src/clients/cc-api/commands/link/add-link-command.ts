@@ -1,13 +1,13 @@
-import { postJson, put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { postJson, put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   AddApplicationToAddonLinkCommandInput,
   AddApplicationToApplicationLinkCommandInput,
   AddLinkCommandInput,
-} from './add-link-command.types.js';
+} from './add-link-command.types.ts';
 
 /**
  * Links an application to another application or to an add-on.

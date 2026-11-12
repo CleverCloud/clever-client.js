@@ -1,5 +1,5 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
-import type { Domain } from './domain.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
+import type { Domain } from './domain.types.ts';
 
 /**
  * Identifies the application whose domains are listed. The owner is resolved automatically when

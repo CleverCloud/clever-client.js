@@ -1,4 +1,4 @@
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.ts';
 
 /**
  * A Metabase add-on: the managed business intelligence dashboard, with how to reach it and the

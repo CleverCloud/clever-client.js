@@ -1,11 +1,11 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   CreateWebhookNotificationCommandInput,
   CreateWebhookNotificationCommandOutput,
-} from './create-webhook-notification-command.types.js';
-import { transformWebhookNotification } from './notification-transform.js';
+} from './create-webhook-notification-command.types.ts';
+import { transformWebhookNotification } from './notification-transform.ts';
 
 /**
  * Creates a webhook, which posts platform events to one or more URLs as they happen.

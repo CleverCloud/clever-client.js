@@ -1,5 +1,5 @@
-import type { CcRequest, CcResponse } from '../../types/request.types.js';
-import { createBrand, setBrand } from '../utils.js';
+import type { CcRequest, CcResponse } from '../../types/request.types.ts';
+import { createBrand, setBrand } from '../utils.ts';
 
 //--
 

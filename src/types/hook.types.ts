@@ -1,5 +1,5 @@
-import type { CcRequest, CcRequestParams, CcResponse } from './request.types.js';
-import type { SelfOrPromise, WithRequired } from './utils.types.js';
+import type { CcRequest, CcRequestParams, CcResponse } from './request.types.ts';
+import type { SelfOrPromise, WithRequired } from './utils.types.ts';
 
 /**
  * Hook function type for modifying request parameters before a request is sent.

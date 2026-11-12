@@ -1,4 +1,4 @@
-import type { UnknownToClient } from '../../../../types/utils.types.js';
+import type { UnknownToClient } from '../../../../types/utils.types.ts';
 
 /**
  * Size of a control-plane component or of a worker node.

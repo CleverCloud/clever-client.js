@@ -1,9 +1,9 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { RedisHttpCommand } from '../../lib/redis-http-command.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { RedisHttpCommand } from '../../lib/redis-http-command.ts';
 import type {
   AddListKeyElementCommandInput,
   AddListKeyElementCommandOutput,
-} from './add-list-key-element-command.types.js';
+} from './add-list-key-element-command.types.ts';
 
 /**
  * Add a new element to a `list` key

@@ -1,4 +1,4 @@
-import type { DomParserLike } from './dom-parser.types.js';
+import type { DomParserLike } from './dom-parser.types.ts';
 
 /**
  * Loads the DOM parser a browser exposes as a global.

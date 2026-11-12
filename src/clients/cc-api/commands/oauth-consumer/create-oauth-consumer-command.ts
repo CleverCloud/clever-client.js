@@ -1,11 +1,11 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   CreateOauthConsumerCommandInput,
   CreateOauthConsumerCommandOutput,
-} from './create-oauth-consumer-command.types.js';
-import { transformOauthConsumer, transformOauthConsumerRightsForApi } from './oauth-consumer-transform.js';
+} from './create-oauth-consumer-command.types.ts';
+import { transformOauthConsumer, transformOauthConsumerRightsForApi } from './oauth-consumer-transform.ts';
 
 /**
  * Registers a new OAuth consumer owned by an organisation.

@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   GetProductAddonVersionsCommandInput,
   GetProductAddonVersionsCommandOutput,
-} from './get-product-addon-versions-command.types.js';
-import { transformProductAddonVersions } from './product-transform.js';
+} from './get-product-addon-versions-command.types.ts';
+import { transformProductAddonVersions } from './product-transform.ts';
 
 /**
  * Retrieves the versions an add-on provider offers, on its shared clusters and on dedicated

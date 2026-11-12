@@ -1,4 +1,4 @@
-import type { ProductRuntime } from './product.types.js';
+import type { ProductRuntime } from './product.types.ts';
 
 /**
  * Which catalogue to read: pass nothing for the public one, or an owner to get it as that

@@ -1,4 +1,4 @@
-import type { NetworkGroupPeerExternal } from './network-group.types.js';
+import type { NetworkGroupPeerExternal } from './network-group.types.ts';
 
 /**
  * Describes the external peer to attach to a network group member.

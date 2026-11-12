@@ -1,4 +1,4 @@
-import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
+import type { ApplicationOrAddonId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies the application or add-on to tag, along with the tag to add.

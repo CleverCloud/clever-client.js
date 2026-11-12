@@ -1,4 +1,4 @@
-import type { Organisation } from './organisation.types.js';
+import type { Organisation } from './organisation.types.ts';
 
 /**
  * Narrows down which organisations of the current user are listed.

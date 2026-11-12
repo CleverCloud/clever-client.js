@@ -1,9 +1,9 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { AddLinkCommand } from '../../../../../src/clients/cc-api/commands/link/add-link-command.js';
-import type { LinkToAddon, LinkToApplication } from '../../../../../src/clients/cc-api/commands/link/link.types.js';
-import { ListLinkCommand } from '../../../../../src/clients/cc-api/commands/link/list-link-command.js';
-import { RemoveLinkCommand } from '../../../../../src/clients/cc-api/commands/link/remove-link-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { AddLinkCommand } from '../../../../../src/clients/cc-api/commands/link/add-link-command.ts';
+import type { LinkToAddon, LinkToApplication } from '../../../../../src/clients/cc-api/commands/link/link.types.ts';
+import { ListLinkCommand } from '../../../../../src/clients/cc-api/commands/link/list-link-command.ts';
+import { RemoveLinkCommand } from '../../../../../src/clients/cc-api/commands/link/remove-link-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('link commands', function () {
   const support = e2eSupport();

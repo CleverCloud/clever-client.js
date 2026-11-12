@@ -1,5 +1,5 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
-import type { DeploymentAction, DeploymentLegacy } from './deployment.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
+import type { DeploymentAction, DeploymentLegacy } from './deployment.types.ts';
 
 /**
  * Scope of the listing: a single application, or every application of an organisation.

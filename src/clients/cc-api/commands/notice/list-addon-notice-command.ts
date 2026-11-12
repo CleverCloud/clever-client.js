@@ -1,9 +1,9 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { ListAddonNoticeCommandInput, ListAddonNoticeCommandOutput } from './list-addon-notice-command.types.js';
-import { transformNotice } from './notice-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { ListAddonNoticeCommandInput, ListAddonNoticeCommandOutput } from './list-addon-notice-command.types.ts';
+import { transformNotice } from './notice-transform.ts';
 
 /**
  * Lists the notices to show on an add-on overview, oldest first, in the user's language.

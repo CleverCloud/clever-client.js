@@ -1,7 +1,7 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { CcApiBridgeCommand } from '../../lib/cc-api-bridge-command.js';
-import { transformApiToken } from './api-token-transform.js';
-import type { ListApiTokenCommandOutput } from './list-api-token-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiBridgeCommand } from '../../lib/cc-api-bridge-command.ts';
+import { transformApiToken } from './api-token-transform.ts';
+import type { ListApiTokenCommandOutput } from './list-api-token-command.types.ts';
 
 /**
  * Lists the API tokens of the current user, without their values.

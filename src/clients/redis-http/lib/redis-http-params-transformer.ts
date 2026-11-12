@@ -1,8 +1,8 @@
-import type { CompositeCommand } from '../../../lib/command/command.js';
-import type { CcClientParamsTransformer } from '../../../types/client.types.js';
-import type { CcRequestConfigPartial } from '../../../types/request.types.js';
-import type { RedisHttpCommandInput, RedisHttpType } from '../types/redis-http.types.js';
-import { isRedisHttpCommand, type RedisHttpCommand } from './redis-http-command.js';
+import type { CompositeCommand } from '../../../lib/command/command.ts';
+import type { CcClientParamsTransformer } from '../../../types/client.types.ts';
+import type { CcRequestConfigPartial } from '../../../types/request.types.ts';
+import type { RedisHttpCommandInput, RedisHttpType } from '../types/redis-http.types.ts';
+import { isRedisHttpCommand, type RedisHttpCommand } from './redis-http-command.ts';
 
 /**
  * Injects the default Redis© backend URL of the client into the commands that require one and do not

@@ -52,7 +52,7 @@ A domain lives in `src/clients/{client}/commands/{domain}/`:
 | `{domain}-transform.ts`              | Payload → entity transforms                                  |
 | `{domain}-utils.ts`                  | Helpers shared by several commands (polling waiters, …)      |
 
-File names are kebab-case and match the class they export. Imports carry the `.js` extension; type
+File names are kebab-case and match the class they export. Relative imports carry the `.ts` extension; type
 imports use `import type`. Nothing to register: the wildcard subpath export
 `@clevercloud/client/cc-api-commands/{domain}/{file}.js` picks the files up.
 

@@ -1,9 +1,9 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import type { CcRequestConfigPartial, CcRequestParams } from '../../../../types/request.types.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import { GetCellarObjectUploadUrlCommand } from './get-cellar-object-upload-url-command.js';
-import type { UploadCellarObjectCommandInput } from './upload-cellar-object-command.types.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import type { CcRequestConfigPartial, CcRequestParams } from '../../../../types/request.types.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import { GetCellarObjectUploadUrlCommand } from './get-cellar-object-upload-url-command.ts';
+import type { UploadCellarObjectCommandInput } from './upload-cellar-object-command.types.ts';
 
 const DEFAULT_CONTENT_TYPE = 'application/octet-stream';
 

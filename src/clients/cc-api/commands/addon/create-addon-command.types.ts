@@ -1,4 +1,4 @@
-import type { Addon } from './addon.types.js';
+import type { Addon } from './addon.types.ts';
 
 /**
  * Description of the add-on to provision.

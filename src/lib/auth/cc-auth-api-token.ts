@@ -1,5 +1,5 @@
-import { bearerAuthorizationHeader } from '../../utils/auth-utils.js';
-import { CcAuth } from './cc-auth.js';
+import { bearerAuthorizationHeader } from '../../utils/auth-utils.ts';
+import { CcAuth } from './cc-auth.ts';
 
 /**
  * Authentication implementation using Clever Cloud API tokens.

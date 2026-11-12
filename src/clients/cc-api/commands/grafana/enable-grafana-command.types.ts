@@ -1,4 +1,4 @@
-import type { GetGrafanaCommandOutput } from './get-grafana-command.types.js';
+import type { GetGrafanaCommandOutput } from './get-grafana-command.types.ts';
 
 /**
  * Identifies the owner Grafana is turned on for.

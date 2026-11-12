@@ -1,11 +1,11 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import { encodeToBase64, safeUrl } from '../../../../lib/utils.js';
-import type { ApiErrorInfo } from '../../../../types/command.types.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import { sendResolvingRefusedCredential } from './auth-utils.js';
-import type { DeleteAuthMfaCommandInput, DeleteAuthMfaCommandOutput } from './delete-auth-mfa-command.types.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import { encodeToBase64, safeUrl } from '../../../../lib/utils.ts';
+import type { ApiErrorInfo } from '../../../../types/command.types.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import { sendResolvingRefusedCredential } from './auth-utils.ts';
+import type { DeleteAuthMfaCommandInput, DeleteAuthMfaCommandOutput } from './delete-auth-mfa-command.types.ts';
 
 /**
  * The error codes this command can produce, to compare against `error.code`.

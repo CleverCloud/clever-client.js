@@ -1,11 +1,11 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   CreatePaymentMethodCommandInput,
   CreatePaymentMethodCommandOutput,
-} from './create-payment-method-command.types.js';
-import { transformPaymentMethod } from './payment-method-transform.js';
+} from './create-payment-method-command.types.ts';
+import { transformPaymentMethod } from './payment-method-transform.ts';
 
 /**
  * Attaches a payment method to an organisation.

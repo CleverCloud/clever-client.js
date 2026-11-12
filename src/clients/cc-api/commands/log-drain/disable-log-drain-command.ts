@@ -1,10 +1,10 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { DisableLogDrainCommandInput, DisableLogDrainCommandOutput } from './disable-log-drain-command.types.js';
-import { waitForLogDrainDisabled } from './log-drain-utils.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { DisableLogDrainCommandInput, DisableLogDrainCommandOutput } from './disable-log-drain-command.types.ts';
+import { waitForLogDrainDisabled } from './log-drain-utils.ts';
 
 /**
  * Stops a log drain from shipping logs, without deleting it, and waits until it has actually stopped.

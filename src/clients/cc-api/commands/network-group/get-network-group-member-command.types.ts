@@ -1,4 +1,4 @@
-import type { NetworkGroupMember } from './network-group.types.js';
+import type { NetworkGroupMember } from './network-group.types.ts';
 
 /**
  * Identifies the network group member to retrieve.

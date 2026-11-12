@@ -1,4 +1,4 @@
-import type { GithubApplication } from './github.types.js';
+import type { GithubApplication } from './github.types.ts';
 
 export function transformGithubApplication(payload: any): GithubApplication {
   return {

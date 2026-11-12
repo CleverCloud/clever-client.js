@@ -1,4 +1,4 @@
-import { normalizeDate, unknownToClient } from '../../../../lib/utils.js';
+import { normalizeDate, unknownToClient } from '../../../../lib/utils.ts';
 import type {
   KubernetesBundledComponent,
   KubernetesCephCsiConfig,
@@ -15,7 +15,7 @@ import type {
   KubernetesQuota,
   KubernetesTaint,
   KubernetesVmData,
-} from './kubernetes.types.js';
+} from './kubernetes.types.ts';
 
 export function transformKubernetesProduct(payload: any): KubernetesProduct {
   return {

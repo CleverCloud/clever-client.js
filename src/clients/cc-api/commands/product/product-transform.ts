@@ -1,4 +1,4 @@
-import { sortBy } from '../../../../lib/utils.js';
+import { sortBy } from '../../../../lib/utils.ts';
 import type {
   ElasticsearchServiceInfo,
   ProductAddonClusterVersion,
@@ -7,7 +7,7 @@ import type {
   ProductRuntime,
   ProductRuntimeFlavor,
   ProductRuntimeVariant,
-} from './product.types.js';
+} from './product.types.ts';
 
 export function transformProductRuntime(payload: any): ProductRuntime {
   return {

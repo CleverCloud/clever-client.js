@@ -1,6 +1,6 @@
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
-import type { Domain } from '../domain/domain.types.js';
-import type { ProductRuntimeFlavor, ProductRuntimeVariant } from '../product/product.types.js';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.ts';
+import type { Domain } from '../domain/domain.types.ts';
+import type { ProductRuntimeFlavor, ProductRuntimeVariant } from '../product/product.types.ts';
 
 /**
  * An application deployed on Clever Cloud: the code, the runtime it is built and run on, the

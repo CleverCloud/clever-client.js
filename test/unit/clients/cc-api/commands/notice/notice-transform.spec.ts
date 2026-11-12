@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   transformNotice,
   transformProviderNotice,
-} from '../../../../../../src/clients/cc-api/commands/notice/notice-transform.js';
+} from '../../../../../../src/clients/cc-api/commands/notice/notice-transform.ts';
 
 const PAYLOAD = {
   id: '6f1c2a90-1b3e-4c2d-9a51-0e7d2f3b8c11',

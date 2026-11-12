@@ -1,7 +1,7 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { ResetGrafanaCommandInput } from './reset-grafana-command.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { ResetGrafanaCommandInput } from './reset-grafana-command.types.ts';
 
 /**
  * Puts the Clever Cloud dashboards back to the state they ship in, discarding local edits.

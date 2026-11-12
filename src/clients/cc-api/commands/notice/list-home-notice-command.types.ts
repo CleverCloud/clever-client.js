@@ -1,4 +1,4 @@
-import type { Notice } from './notice.types.js';
+import type { Notice } from './notice.types.ts';
 
 /**
  * Takes no parameter: the home page notices are the same for every organisation.

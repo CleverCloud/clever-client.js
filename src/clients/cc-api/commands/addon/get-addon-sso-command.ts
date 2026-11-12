@@ -1,9 +1,9 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformAddonSso } from './addon-transform.js';
-import type { GetAddonSsoCommandInput, GetAddonSsoCommandOutput } from './get-addon-sso-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformAddonSso } from './addon-transform.ts';
+import type { GetAddonSsoCommandInput, GetAddonSsoCommandOutput } from './get-addon-sso-command.types.ts';
 
 /**
  * Retrieves the single sign-on payload that logs the current user into the provider's own console.

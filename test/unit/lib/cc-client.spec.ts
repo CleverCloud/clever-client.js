@@ -1,22 +1,22 @@
 import type { NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CcAuthApiToken } from '../../../src/lib/auth/cc-auth-api-token.js';
-import type { CcAuth } from '../../../src/lib/auth/cc-auth.js';
-import { CcClient } from '../../../src/lib/cc-client.js';
-import { CompositeCommand, SimpleCommand } from '../../../src/lib/command/command.js';
-import { type CcClientError, CcHttpError } from '../../../src/lib/error/cc-client-errors.js';
-import { HeadersBuilder } from '../../../src/lib/request/headers-builder.js';
-import { QueryParams } from '../../../src/lib/request/query-params.js';
-import { get, post } from '../../../src/lib/request/request-params-builder.js';
-import { CcStream } from '../../../src/lib/stream/cc-stream.js';
-import type { CcStreamConfig, CcStreamRequestFactory } from '../../../src/lib/stream/cc-stream.types.js';
-import { StreamCommand } from '../../../src/lib/stream/stream-command.js';
-import type { CcClientConfig, CcClientParamsTransformer } from '../../../src/types/client.types.js';
-import type { OnRequestHook, OnResponseHook } from '../../../src/types/hook.types.js';
-import type { CcRequestParams } from '../../../src/types/request.types.js';
-import { expectPromiseThrows } from '../../lib/expect-utils.js';
-import { brandAsForeignCopy } from '../../lib/foreign-copy.js';
+import { CcAuthApiToken } from '../../../src/lib/auth/cc-auth-api-token.ts';
+import type { CcAuth } from '../../../src/lib/auth/cc-auth.ts';
+import { CcClient } from '../../../src/lib/cc-client.ts';
+import { CompositeCommand, SimpleCommand } from '../../../src/lib/command/command.ts';
+import { type CcClientError, CcHttpError } from '../../../src/lib/error/cc-client-errors.ts';
+import { HeadersBuilder } from '../../../src/lib/request/headers-builder.ts';
+import { QueryParams } from '../../../src/lib/request/query-params.ts';
+import { get, post } from '../../../src/lib/request/request-params-builder.ts';
+import { CcStream } from '../../../src/lib/stream/cc-stream.ts';
+import type { CcStreamConfig, CcStreamRequestFactory } from '../../../src/lib/stream/cc-stream.types.ts';
+import { StreamCommand } from '../../../src/lib/stream/stream-command.ts';
+import type { CcClientConfig, CcClientParamsTransformer } from '../../../src/types/client.types.ts';
+import type { OnRequestHook, OnResponseHook } from '../../../src/types/hook.types.ts';
+import type { CcRequestParams } from '../../../src/types/request.types.ts';
+import { expectPromiseThrows } from '../../lib/expect-utils.ts';
+import { brandAsForeignCopy } from '../../lib/foreign-copy.ts';
 
 // oxlint-disable-next-line typescript/no-explicit-any
 export abstract class TestSimpleCommand extends SimpleCommand<'test', void, any> {

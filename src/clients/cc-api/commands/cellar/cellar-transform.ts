@@ -1,5 +1,5 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import type { CellarInfo, CellarObjectList } from './cellar.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import type { CellarInfo, CellarObjectList } from './cellar.types.ts';
 
 export function transformCellarObjectList(payload: any): CellarObjectList {
   return {

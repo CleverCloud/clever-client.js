@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformInvoiceSummary } from './invoice-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformInvoiceSummary } from './invoice-transform.ts';
 import type {
   ListUnpaidInvoiceCommandInput,
   ListUnpaidInvoiceCommandOutput,
-} from './list-unpaid-invoice-command.types.js';
+} from './list-unpaid-invoice-command.types.ts';
 
 /**
  * Lists the invoices of an organisation that are still waiting to be paid.

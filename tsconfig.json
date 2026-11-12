@@ -9,7 +9,8 @@
     // resolve the `#dom-parser` subpath import to the TypeScript sources rather than to the built
     // `dist/` files, which do not exist when types are checked
     "customConditions": ["clever-client-source"],
-    "allowImportingTsExtensions": true,
+    // Relative imports use the `.ts` extension, which Node runs as is and `tsc` rewrites to `.js` in `dist/`
+    "rewriteRelativeImportExtensions": true,
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,

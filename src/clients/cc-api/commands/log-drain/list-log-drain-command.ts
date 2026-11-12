@@ -1,14 +1,14 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   ListLogDrainCommandInput,
   ListLogDrainCommandInputOwner,
   ListLogDrainCommandOutput,
-} from './list-log-drain-command.types.js';
-import { transformAuditLogDrain, transformLogDrain } from './log-drain-transform.js';
+} from './list-log-drain-command.types.ts';
+import { transformAuditLogDrain, transformLogDrain } from './log-drain-transform.ts';
 
 /**
  * Lists log drains, most recently updated first.

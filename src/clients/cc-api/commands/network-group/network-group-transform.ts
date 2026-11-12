@@ -1,10 +1,10 @@
-import { unknownToClient } from '../../../../lib/utils.js';
+import { unknownToClient } from '../../../../lib/utils.ts';
 import type {
   NetworkGroup,
   NetworkGroupEndpoint,
   NetworkGroupMember,
   NetworkGroupPeer,
-} from './network-group.types.js';
+} from './network-group.types.ts';
 
 /**
  * A network group carries its members and its peers, and both need the same normalisation wherever

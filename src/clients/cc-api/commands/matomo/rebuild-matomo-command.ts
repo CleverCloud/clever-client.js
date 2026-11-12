@@ -1,8 +1,8 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { RebuildMatomoCommandInput } from './rebuild-matomo-command.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { RebuildMatomoCommandInput } from './rebuild-matomo-command.types.ts';
 
 /**
  * Rebuilds the Matomo instance backing an add-on from scratch, keeping its data.

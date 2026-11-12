@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { NO_CACHE, withCache } from '../../../esm/with-cache.js';
+import { NO_CACHE, withCache } from '../../../esm/with-cache.ts';
 
 describe('withCache()', () => {
   it('does not cache a rejected promise: the next call retries', async () => {

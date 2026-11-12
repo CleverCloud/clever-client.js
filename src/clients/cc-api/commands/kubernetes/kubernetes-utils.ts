@@ -1,9 +1,9 @@
-import type { Composer } from '../../../../types/command.types.js';
-import { tolerateNotFound } from '../../../../utils/error-utils.js';
-import { Polling } from '../../../../utils/polling.js';
-import type { CcApiType } from '../../types/cc-api.types.js';
-import { GetKubernetesClusterCommand } from './get-kubernetes-cluster-command.js';
-import type { KubernetesCluster } from './kubernetes.types.js';
+import type { Composer } from '../../../../types/command.types.ts';
+import { tolerateNotFound } from '../../../../utils/error-utils.ts';
+import { Polling } from '../../../../utils/polling.ts';
+import type { CcApiType } from '../../types/cc-api.types.ts';
+import { GetKubernetesClusterCommand } from './get-kubernetes-cluster-command.ts';
+import type { KubernetesCluster } from './kubernetes.types.ts';
 
 // Cluster deletion/creation boot or tear down real VMs (see kubernetes-commands.spec.ts), so they need much
 // longer timeouts than the lightweight resources (network groups, log drains) other wait helpers poll for.

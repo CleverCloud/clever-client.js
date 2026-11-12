@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { DeleteUserSettingCommand } from '../../../../../src/clients/cc-api/commands/user-setting/delete-user-setting-command.js';
-import { GetUserSettingCommand } from '../../../../../src/clients/cc-api/commands/user-setting/get-user-setting-command.js';
-import { SetUserSettingCommand } from '../../../../../src/clients/cc-api/commands/user-setting/set-user-setting-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { DeleteUserSettingCommand } from '../../../../../src/clients/cc-api/commands/user-setting/delete-user-setting-command.ts';
+import { GetUserSettingCommand } from '../../../../../src/clients/cc-api/commands/user-setting/get-user-setting-command.ts';
+import { SetUserSettingCommand } from '../../../../../src/clients/cc-api/commands/user-setting/set-user-setting-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('user setting commands', function () {
   const support = e2eSupport();

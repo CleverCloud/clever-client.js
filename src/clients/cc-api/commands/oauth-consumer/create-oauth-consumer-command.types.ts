@@ -1,4 +1,4 @@
-import type { GrantableRights, OauthConsumer } from './oauth-consumer.types.js';
+import type { GrantableRights, OauthConsumer } from './oauth-consumer.types.ts';
 
 /**
  * Description of the OAuth consumer to register.

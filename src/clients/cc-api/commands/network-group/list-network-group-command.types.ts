@@ -1,4 +1,4 @@
-import type { NetworkGroup } from './network-group.types.js';
+import type { NetworkGroup } from './network-group.types.ts';
 
 /**
  * Identifies the organisation whose network groups are listed.

@@ -1,4 +1,4 @@
-import type { Credits } from './credits.types.js';
+import type { Credits } from './credits.types.ts';
 
 /**
  * Identifies the organisation whose credit balance is read.

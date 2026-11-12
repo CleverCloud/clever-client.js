@@ -1,4 +1,4 @@
-import type { Organisation } from './organisation.types.js';
+import type { Organisation } from './organisation.types.ts';
 
 /**
  * Identifies the organisation to retrieve.

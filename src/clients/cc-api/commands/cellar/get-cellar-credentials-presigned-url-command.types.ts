@@ -1,5 +1,5 @@
-import type { AddonId } from '../../types/cc-api.types.js';
-import type { CellarUrl } from './cellar.types.js';
+import type { AddonId } from '../../types/cc-api.types.ts';
+import type { CellarUrl } from './cellar.types.ts';
 
 /**
  * Identifies the Cellar add-on. The owner is resolved automatically when omitted.

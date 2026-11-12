@@ -3,8 +3,8 @@ import {
   ERROR_TYPES,
   getAllOrgaPaymentMethodsErrors,
   getOrgaPaymentMethodsError,
-} from '../../../../esm/utils/payment.js';
-import type { Orga, PaymentMethod } from '../../../../esm/utils/payments.types.js';
+} from '../../../../esm/utils/payment.ts';
+import type { Orga, PaymentMethod } from '../../../../esm/utils/payments.types.ts';
 
 const simpleOrga: Orga = {
   id: 'orga_???',

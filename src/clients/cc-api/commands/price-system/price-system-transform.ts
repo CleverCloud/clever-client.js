@@ -1,5 +1,5 @@
-import { sortBy } from '../../../../lib/utils.js';
-import type { CountablePricePolicy, PriceSystem } from './price-system.types.js';
+import { sortBy } from '../../../../lib/utils.ts';
+import type { CountablePricePolicy, PriceSystem } from './price-system.types.ts';
 
 export function transformPriceSystem(payload: any): PriceSystem {
   return {

@@ -1,9 +1,9 @@
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { AddSetKeyElementCommand } from '../../../../../src/clients/redis-http/commands/set-key/add-set-key-element-command.js';
-import { CreateSetKeyCommand } from '../../../../../src/clients/redis-http/commands/set-key/create-set-key-command.js';
-import { DeleteSetKeyElementCommand } from '../../../../../src/clients/redis-http/commands/set-key/delete-set-key-element-command.js';
-import { ScanSetKeyCommand } from '../../../../../src/clients/redis-http/commands/set-key/scan-set-key-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { AddSetKeyElementCommand } from '../../../../../src/clients/redis-http/commands/set-key/add-set-key-element-command.ts';
+import { CreateSetKeyCommand } from '../../../../../src/clients/redis-http/commands/set-key/create-set-key-command.ts';
+import { DeleteSetKeyElementCommand } from '../../../../../src/clients/redis-http/commands/set-key/delete-set-key-element-command.ts';
+import { ScanSetKeyCommand } from '../../../../../src/clients/redis-http/commands/set-key/scan-set-key-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('set-key commands', function () {
   const support = e2eSupport();

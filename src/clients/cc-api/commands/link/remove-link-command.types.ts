@@ -1,4 +1,4 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
 
 /**
  * Which application to remove a link from, and which link to remove.

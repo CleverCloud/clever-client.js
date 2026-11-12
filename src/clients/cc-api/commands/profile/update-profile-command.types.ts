@@ -1,4 +1,4 @@
-import type { Profile } from './profile.types.js';
+import type { Profile } from './profile.types.ts';
 
 /**
  * The account fields to change. Every field is optional: those left out keep their current value.

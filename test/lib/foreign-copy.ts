@@ -1,4 +1,4 @@
-import type { CcRequest, CcResponse } from '../../src/types/request.types.js';
+import type { CcRequest, CcResponse } from '../../src/types/request.types.ts';
 
 /**
  * Brands a class the way another copy of `@clevercloud/client` brands its own: with the same

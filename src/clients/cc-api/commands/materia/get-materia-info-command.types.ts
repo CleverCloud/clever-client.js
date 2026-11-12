@@ -1,5 +1,5 @@
-import type { AddonId } from '../../types/cc-api.types.js';
-import type { MateriaInfo } from './materia.types.js';
+import type { AddonId } from '../../types/cc-api.types.ts';
+import type { MateriaInfo } from './materia.types.ts';
 
 /**
  * Identifies the Materia KV add-on to retrieve the details of. The owner is resolved automatically when omitted.

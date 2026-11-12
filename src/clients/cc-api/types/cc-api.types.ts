@@ -1,9 +1,9 @@
-import type { CompositeCommand, SimpleCommand } from '../../../lib/command/command.js';
-import type { OauthTokens } from '../../../types/auth.types.js';
-import type { CcClientConfig } from '../../../types/client.types.js';
-import type { Composer } from '../../../types/command.types.js';
-import type { WithOptional } from '../../../types/utils.types.js';
-import type { ResourceIdIndex, Store } from './resource-id-resolver.types.js';
+import type { CompositeCommand, SimpleCommand } from '../../../lib/command/command.ts';
+import type { OauthTokens } from '../../../types/auth.types.ts';
+import type { CcClientConfig } from '../../../types/client.types.ts';
+import type { Composer } from '../../../types/command.types.ts';
+import type { WithOptional } from '../../../types/utils.types.ts';
+import type { ResourceIdIndex, Store } from './resource-id-resolver.types.ts';
 
 /**
  * Type identifier for the Clever Cloud API client.

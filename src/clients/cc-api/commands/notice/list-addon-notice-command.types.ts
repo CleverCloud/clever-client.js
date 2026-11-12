@@ -1,4 +1,4 @@
-import type { Notice } from './notice.types.js';
+import type { Notice } from './notice.types.ts';
 
 /**
  * Identifies the add-on whose overview notices are listed.

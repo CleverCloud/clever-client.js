@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   ListOrganisationNoticeCommandInput,
   ListOrganisationNoticeCommandOutput,
-} from './list-organisation-notice-command.types.js';
-import { transformNotice } from './notice-transform.js';
+} from './list-organisation-notice-command.types.ts';
+import { transformNotice } from './notice-transform.ts';
 
 /**
  * Lists the notices to show on an organisation overview, oldest first, in the user's language.

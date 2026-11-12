@@ -1,4 +1,4 @@
-import { ApplicationLogStream } from '../../esm/streams/application-logs.js';
+import { ApplicationLogStream } from '../../esm/streams/application-logs.ts';
 
 const ownerId = process.env.OWNER_ID;
 const appId = process.env.APP_ID;

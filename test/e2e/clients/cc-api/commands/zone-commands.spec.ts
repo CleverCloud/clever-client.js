@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { GetZoneCommand } from '../../../../../src/clients/cc-api/commands/zone/get-zone-command.js';
-import { ListZoneCommand } from '../../../../../src/clients/cc-api/commands/zone/list-zone-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { GetZoneCommand } from '../../../../../src/clients/cc-api/commands/zone/get-zone-command.ts';
+import { ListZoneCommand } from '../../../../../src/clients/cc-api/commands/zone/list-zone-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('zone commands', function () {
   const support = e2eSupport();

@@ -1,5 +1,5 @@
-import { sortBy } from '../../../../lib/utils.js';
-import type { GetOrganisationSummaryCommandOutput } from './get-organisation-summary-command.types.js';
+import { sortBy } from '../../../../lib/utils.ts';
+import type { GetOrganisationSummaryCommandOutput } from './get-organisation-summary-command.types.ts';
 import type {
   AddonSummary,
   ApplicationSummary,
@@ -11,7 +11,7 @@ import type {
   ProviderSummary,
   StandardOrganisationSummary,
   UserSummary,
-} from './organisation.types.js';
+} from './organisation.types.ts';
 
 export function transformOrganisation(payload: any): Organisation {
   return {

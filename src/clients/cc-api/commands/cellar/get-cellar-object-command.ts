@@ -1,8 +1,8 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { GetCellarObjectCommandInput, GetCellarObjectCommandOutput } from './get-cellar-object-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { GetCellarObjectCommandInput, GetCellarObjectCommandOutput } from './get-cellar-object-command.types.ts';
 
 /**
  * The error codes this command can produce, to compare against `error.code`.

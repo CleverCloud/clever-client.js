@@ -1,12 +1,12 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { toNameValueObject } from '../../../../utils/environment-utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { toNameValueObject } from '../../../../utils/environment-utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   UpdateEnvironmentCommandInput,
   UpdateEnvironmentCommandOutput,
-} from './update-environment-command.types.js';
+} from './update-environment-command.types.ts';
 
 /**
  * Replaces every environment variable of an application at once.

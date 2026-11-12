@@ -1,7 +1,7 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { DeleteKubernetesNodeGroupCommandInput } from './delete-kubernetes-node-group-command.types.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { DeleteKubernetesNodeGroupCommandInput } from './delete-kubernetes-node-group-command.types.ts';
 
 /**
  * Deletes a node group of a cluster, draining and tearing down every node it runs.

@@ -1,9 +1,9 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import { pickNonNull } from '../../../../lib/utils.js';
-import type { ApiErrorInfo } from '../../../../types/command.types.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { RequestAuthPasswordResetCommandInput } from './request-auth-password-reset-command.types.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import { pickNonNull } from '../../../../lib/utils.ts';
+import type { ApiErrorInfo } from '../../../../types/command.types.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { RequestAuthPasswordResetCommandInput } from './request-auth-password-reset-command.types.ts';
 
 /**
  * The error codes this command can produce, to compare against `error.code`.

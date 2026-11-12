@@ -1,9 +1,9 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import type { ApiErrorInfo } from '../../../../types/command.types.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { ActivateCouponCommandInput, ActivateCouponCommandOutput } from './activate-coupon-command.types.js';
-import { transformCouponUsage } from './credits-transform.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import type { ApiErrorInfo } from '../../../../types/command.types.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { ActivateCouponCommandInput, ActivateCouponCommandOutput } from './activate-coupon-command.types.ts';
+import { transformCouponUsage } from './credits-transform.ts';
 
 /**
  * The error codes this command can produce, to compare against `error.code`.

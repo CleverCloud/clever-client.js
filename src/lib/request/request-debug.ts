@@ -1,5 +1,5 @@
-import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.js';
-import { QueryParams } from './query-params.js';
+import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.ts';
+import { QueryParams } from './query-params.ts';
 
 export async function requestDebug<CommandOutput>(
   request: CcRequest,

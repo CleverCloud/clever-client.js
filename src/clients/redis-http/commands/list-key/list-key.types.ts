@@ -1,4 +1,4 @@
-import type { WithKey } from '../../types/redis-http.types.js';
+import type { WithKey } from '../../types/redis-http.types.ts';
 
 /**
  * The `list` key with a list of elements

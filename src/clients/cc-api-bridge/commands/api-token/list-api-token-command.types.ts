@@ -1,4 +1,4 @@
-import type { ApiToken } from './api-token.types.js';
+import type { ApiToken } from './api-token.types.ts';
 
 /**
  * The API tokens of the current user, in the order the API returned them. Token values are never

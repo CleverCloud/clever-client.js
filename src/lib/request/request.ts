@@ -1,11 +1,11 @@
-import type { CcRequest, CcResponse, RequestAdapter, RequestWrapper } from '../../types/request.types.js';
-import { isCcRequestError } from '../../utils/error-utils.js';
-import { CcClientError, CcRequestError } from '../error/cc-client-errors.js';
-import { asNetworkError } from '../error/network-error.js';
-import { fetchWithTimeout } from './fetch-with-timeout.js';
-import { requestDebug } from './request-debug.js';
-import { requestWithCache } from './request-with-cache.js';
-import { requestWithDedupe } from './request-with-dedupe.js';
+import type { CcRequest, CcResponse, RequestAdapter, RequestWrapper } from '../../types/request.types.ts';
+import { isCcRequestError } from '../../utils/error-utils.ts';
+import { CcClientError, CcRequestError } from '../error/cc-client-errors.ts';
+import { asNetworkError } from '../error/network-error.ts';
+import { fetchWithTimeout } from './fetch-with-timeout.ts';
+import { requestDebug } from './request-debug.ts';
+import { requestWithCache } from './request-with-cache.ts';
+import { requestWithDedupe } from './request-with-dedupe.ts';
 
 const JSON_TYPE = 'application/json';
 const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';

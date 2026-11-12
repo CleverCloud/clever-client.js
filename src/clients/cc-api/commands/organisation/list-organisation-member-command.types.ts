@@ -1,4 +1,4 @@
-import type { OrganisationMember } from './organisation.types.js';
+import type { OrganisationMember } from './organisation.types.ts';
 
 /**
  * Identifies the organisation whose members are listed.

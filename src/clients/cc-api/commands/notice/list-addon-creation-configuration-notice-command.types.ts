@@ -1,4 +1,4 @@
-import type { Notice } from './notice.types.js';
+import type { Notice } from './notice.types.ts';
 
 /**
  * Identifies the organisation the add-on is being created in and the add-on provider the user picked.

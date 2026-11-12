@@ -1,9 +1,9 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { RedisHttpCommand } from '../../lib/redis-http-command.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { RedisHttpCommand } from '../../lib/redis-http-command.ts';
 import type {
   DeleteHashKeyElementCommandInput,
   DeleteHashKeyElementCommandOutput,
-} from './delete-hash-key-element-command.types.js';
+} from './delete-hash-key-element-command.types.ts';
 
 /**
  * Delete a field of a `hash` key

@@ -2,8 +2,8 @@ import type {
   ApplicationLog,
   ApplicationLogsStreamParams,
   ApplicationLogStreamOptions,
-} from './application-logs.types.js';
-import CleverCloudSse from './clever-cloud-sse.js';
+} from './application-logs.types.ts';
+import CleverCloudSse from './clever-cloud-sse.ts';
 
 const APPLICATION_LOG_EVENT_NAME = 'APPLICATION_LOG';
 

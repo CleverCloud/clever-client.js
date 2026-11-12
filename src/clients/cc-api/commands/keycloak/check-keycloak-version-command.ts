@@ -1,12 +1,12 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   CheckKeycloakVersionCommandInput,
   CheckKeycloakVersionCommandOutput,
-} from './check-keycloak-version-command.types.js';
-import { transformKeycloakVersionCheck } from './keycloak-transform.js';
+} from './check-keycloak-version-command.types.ts';
+import { transformKeycloakVersionCheck } from './keycloak-transform.ts';
 
 /**
  * Checks which Keycloak versions an add-on can be moved to, and whether it is behind.

@@ -1,13 +1,13 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { UpdateConfigProviderCommand } from '../../../../../src/clients/cc-api/commands/config-provider/update-config-provider-command.js';
-import { CreateOrUpdateEnvironmentVariableCommand } from '../../../../../src/clients/cc-api/commands/environment/create-or-update-environment-variable-command.js';
-import { DeleteEnvironmentVariableCommand } from '../../../../../src/clients/cc-api/commands/environment/delete-environment-variable-command.js';
-import { GetEnvironmentCommand } from '../../../../../src/clients/cc-api/commands/environment/get-environment-command.js';
-import { GetExposedEnvironmentCommand } from '../../../../../src/clients/cc-api/commands/environment/get-exposed-environment-command.js';
-import { UpdateEnvironmentCommand } from '../../../../../src/clients/cc-api/commands/environment/update-environment-command.js';
-import { UpdateExposedEnvironmentCommand } from '../../../../../src/clients/cc-api/commands/environment/update-exposed-environment-command.js';
-import { AddLinkCommand } from '../../../../../src/clients/cc-api/commands/link/add-link-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { UpdateConfigProviderCommand } from '../../../../../src/clients/cc-api/commands/config-provider/update-config-provider-command.ts';
+import { CreateOrUpdateEnvironmentVariableCommand } from '../../../../../src/clients/cc-api/commands/environment/create-or-update-environment-variable-command.ts';
+import { DeleteEnvironmentVariableCommand } from '../../../../../src/clients/cc-api/commands/environment/delete-environment-variable-command.ts';
+import { GetEnvironmentCommand } from '../../../../../src/clients/cc-api/commands/environment/get-environment-command.ts';
+import { GetExposedEnvironmentCommand } from '../../../../../src/clients/cc-api/commands/environment/get-exposed-environment-command.ts';
+import { UpdateEnvironmentCommand } from '../../../../../src/clients/cc-api/commands/environment/update-environment-command.ts';
+import { UpdateExposedEnvironmentCommand } from '../../../../../src/clients/cc-api/commands/environment/update-exposed-environment-command.ts';
+import { AddLinkCommand } from '../../../../../src/clients/cc-api/commands/link/add-link-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('environment commands', function () {
   const support = e2eSupport();

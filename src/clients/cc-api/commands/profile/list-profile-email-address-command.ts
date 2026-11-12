@@ -1,8 +1,8 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import { GetProfileCommand } from './get-profile-command.js';
-import type { ListProfileEmailAddressCommandOutput } from './list-profile-email-address-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import { GetProfileCommand } from './get-profile-command.ts';
+import type { ListProfileEmailAddressCommandOutput } from './list-profile-email-address-command.types.ts';
 
 /**
  * Lists every email address of the signed-in user, primary one included.

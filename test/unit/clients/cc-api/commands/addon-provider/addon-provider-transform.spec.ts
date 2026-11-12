@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { transformAddonProviderFull } from '../../../../../../src/clients/cc-api/commands/addon-provider/addon-provider-transform.js';
-import { ListAddonProviderPlanCommand } from '../../../../../../src/clients/cc-api/commands/addon-provider/list-addon-provider-plan-command.js';
+import { transformAddonProviderFull } from '../../../../../../src/clients/cc-api/commands/addon-provider/addon-provider-transform.ts';
+import { ListAddonProviderPlanCommand } from '../../../../../../src/clients/cc-api/commands/addon-provider/list-addon-provider-plan-command.ts';
 
 /** Two plans sharing a price, in neither of the two orders the sort can produce. */
 function getPlanPayloads() {

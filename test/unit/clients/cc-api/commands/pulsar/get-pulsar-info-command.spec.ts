@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { GetPulsarInfoCommand } from '../../../../../../src/clients/cc-api/commands/pulsar/get-pulsar-info-command.js';
+import { GetPulsarInfoCommand } from '../../../../../../src/clients/cc-api/commands/pulsar/get-pulsar-info-command.ts';
 
 describe('GetPulsarInfoCommand', () => {
   // neither route takes an owner, and resolving one costs an organisation summary fetch

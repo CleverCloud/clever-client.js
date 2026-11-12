@@ -1,7 +1,7 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetProfileCommandOutput } from './get-profile-command.types.js';
-import { transformProfile } from './profile-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetProfileCommandOutput } from './get-profile-command.types.ts';
+import { transformProfile } from './profile-transform.ts';
 
 /**
  * Retrieves the account of the signed-in user.

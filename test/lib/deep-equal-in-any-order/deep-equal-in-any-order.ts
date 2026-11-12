@@ -1,6 +1,6 @@
 // Vitest custom matcher port of https://github.com/oprogramador/deep-equal-in-any-order without lodash.
 import type { ExpectationResult, MatcherState } from '@vitest/expect';
-import { sortAny } from './sort-any.js';
+import { sortAny } from './sort-any.ts';
 
 function sortDeep(object: unknown): unknown {
   if (object instanceof Map) {

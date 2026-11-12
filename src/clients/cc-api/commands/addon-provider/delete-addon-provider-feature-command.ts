@@ -1,8 +1,8 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { encodeToBase64, safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { DeleteAddonProviderFeatureCommandInput } from './delete-addon-provider-feature-command.types.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { encodeToBase64, safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { DeleteAddonProviderFeatureCommandInput } from './delete-addon-provider-feature-command.types.ts';
 
 /**
  * Removes a feature from an add-on provider's catalogue.

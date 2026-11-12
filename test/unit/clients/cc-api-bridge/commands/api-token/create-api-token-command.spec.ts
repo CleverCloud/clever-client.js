@@ -1,16 +1,16 @@
 import type { NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
-import { CcApiBridgeClient } from '../../../../../../src/clients/cc-api-bridge/cc-api-bridge-client.js';
-import { CreateApiTokenCommand } from '../../../../../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.js';
+import { CcApiBridgeClient } from '../../../../../../src/clients/cc-api-bridge/cc-api-bridge-client.ts';
+import { CreateApiTokenCommand } from '../../../../../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.ts';
 import type {
   CreateApiTokenCommandInput,
   CreateApiTokenCommandResponse,
   CreateApiTokenResult,
-} from '../../../../../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.types.js';
-import type { CcApiBridgeCompositeCommand } from '../../../../../../src/clients/cc-api-bridge/lib/cc-api-bridge-command.js';
-import { CcHttpError } from '../../../../../../src/lib/error/cc-client-errors.js';
-import { expectPromiseThrows } from '../../../../../lib/expect-utils.js';
+} from '../../../../../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.types.ts';
+import type { CcApiBridgeCompositeCommand } from '../../../../../../src/clients/cc-api-bridge/lib/cc-api-bridge-command.ts';
+import { CcHttpError } from '../../../../../../src/lib/error/cc-client-errors.ts';
+import { expectPromiseThrows } from '../../../../../lib/expect-utils.ts';
 
 /** What `client.send()` resolves to for a given command, without sending anything. */
 function outputOf<CommandInput, CommandOutput>(

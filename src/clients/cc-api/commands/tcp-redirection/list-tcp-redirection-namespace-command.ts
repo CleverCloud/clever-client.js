@@ -1,10 +1,10 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   ListTcpRedirectionNamespaceCommandInput,
   ListTcpRedirectionNamespaceCommandOutput,
-} from './list-tcp-redirection-namespace-command.types.js';
+} from './list-tcp-redirection-namespace-command.types.ts';
 
 /**
  * Lists the load balancer pools an organisation may open TCP ports in.

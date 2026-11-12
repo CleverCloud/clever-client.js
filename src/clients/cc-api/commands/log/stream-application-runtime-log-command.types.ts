@@ -1,4 +1,4 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies the application whose runtime logs are streamed, and how to narrow the stream down. The owner is

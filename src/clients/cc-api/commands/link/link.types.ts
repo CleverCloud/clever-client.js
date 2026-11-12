@@ -1,5 +1,5 @@
-import type { Addon } from '../addon/addon.types.js';
-import type { Application } from '../application/application.types.js';
+import type { Addon } from '../addon/addon.types.ts';
+import type { Application } from '../application/application.types.ts';
 
 /**
  * A dependency of an application: another application or an add-on whose configuration is injected

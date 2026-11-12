@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { toMicroIsoString, toMicroTimestamp } from '../../../../esm/utils/date.js';
+import { toMicroIsoString, toMicroTimestamp } from '../../../../esm/utils/date.ts';
 
 describe('date#toMicroIsoString()', () => {
   it('from timestamp without microseconds precision', () => {

@@ -1,5 +1,5 @@
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
-import type { ApplicationId } from '../../types/cc-api.types.js';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.ts';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies the application whose exposed configuration is read. The owner is resolved

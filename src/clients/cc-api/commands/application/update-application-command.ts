@@ -1,16 +1,16 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { omit, safeUrl } from '../../../../lib/utils.js';
-import { toNameValueObject } from '../../../../utils/environment-utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformApplication } from './application-transform.js';
-import { consolidateApplicationWithBranches } from './application-utils.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { omit, safeUrl } from '../../../../lib/utils.ts';
+import { toNameValueObject } from '../../../../utils/environment-utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformApplication } from './application-transform.ts';
+import { consolidateApplicationWithBranches } from './application-utils.ts';
 import type {
   UpdateApplicationBranchCommandInput,
   UpdateApplicationCommandInput,
   UpdateApplicationCommandOutput,
-} from './update-application-command.types.js';
+} from './update-application-command.types.ts';
 
 /**
  * Updates an application.

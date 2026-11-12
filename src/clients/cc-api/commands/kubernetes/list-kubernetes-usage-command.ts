@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformKubernetesClusterUsageItem } from './kubernetes-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformKubernetesClusterUsageItem } from './kubernetes-transform.ts';
 import type {
   ListKubernetesUsageCommandInput,
   ListKubernetesUsageCommandOutput,
-} from './list-kubernetes-usage-command.types.js';
+} from './list-kubernetes-usage-command.types.ts';
 
 /**
  * Lists the billable Kubernetes resources an owner held, past and present.

@@ -1,17 +1,17 @@
-import { CcClientError } from '../../../../lib/error/cc-client-errors.js';
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { toNameValueObject } from '../../../../utils/environment-utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import { ListProductRuntimeCommand } from '../product/list-product-runtime-command.js';
-import { transformApplication } from './application-transform.js';
-import { consolidateApplicationWithBranches } from './application-utils.js';
+import { CcClientError } from '../../../../lib/error/cc-client-errors.ts';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { toNameValueObject } from '../../../../utils/environment-utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import { ListProductRuntimeCommand } from '../product/list-product-runtime-command.ts';
+import { transformApplication } from './application-transform.ts';
+import { consolidateApplicationWithBranches } from './application-utils.ts';
 import type {
   CreateApplicationCommandInput,
   CreateApplicationCommandOutput,
   CreateApplicationInnerCommandInput,
-} from './create-application-command.types.js';
+} from './create-application-command.types.ts';
 
 /**
  * Creates an application in an organisation.

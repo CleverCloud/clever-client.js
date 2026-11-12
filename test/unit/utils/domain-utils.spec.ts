@@ -9,7 +9,7 @@ import {
   isTestDomainWithSubdomain,
   parseDomain,
   sortDomains,
-} from '../../../src/utils/domain-utils.js';
+} from '../../../src/utils/domain-utils.ts';
 
 describe('domain-utils', () => {
   describe('parseDomain()', () => {

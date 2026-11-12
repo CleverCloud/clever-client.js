@@ -1,11 +1,11 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformPaymentMethod } from './payment-method-transform.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformPaymentMethod } from './payment-method-transform.ts';
 import type {
   SetPrimaryPaymentMethodCommandInput,
   SetPrimaryPaymentMethodCommandOutput,
-} from './set-primary-payment-method-command.types.js';
+} from './set-primary-payment-method-command.types.ts';
 
 /**
  * Makes a payment method the one the invoices of an organisation are charged on.

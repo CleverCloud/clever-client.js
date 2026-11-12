@@ -1,4 +1,4 @@
-import type { ProductAddon } from './product.types.js';
+import type { ProductAddon } from './product.types.ts';
 
 /**
  * Identifies the add-on provider to retrieve, and how much of it to fetch.

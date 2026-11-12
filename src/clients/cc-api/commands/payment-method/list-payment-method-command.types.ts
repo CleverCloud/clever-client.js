@@ -1,4 +1,4 @@
-import type { PaymentMethod } from './payment-method.types.js';
+import type { PaymentMethod } from './payment-method.types.ts';
 
 /**
  * Identifies the organisation whose payment methods are listed.

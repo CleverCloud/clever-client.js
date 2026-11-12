@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { transformJenkinsUpdates } from '../../../../../../src/clients/cc-api/commands/jenkins/jenkins-transform.js';
+import { transformJenkinsUpdates } from '../../../../../../src/clients/cc-api/commands/jenkins/jenkins-transform.ts';
 
 describe('jenkins-transform', () => {
   describe('transformJenkinsUpdates', () => {

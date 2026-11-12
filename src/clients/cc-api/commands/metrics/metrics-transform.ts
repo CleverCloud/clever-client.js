@@ -1,9 +1,9 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import type { GetHeatMapCommandOutput } from './get-heat-map-command.types.js';
-import type { GetMetricsCommandOutput } from './get-metrics-command.types.js';
-import type { GetStatusCodeDistributionCommandOutput } from './get-status-code-distribution-command.types.js';
-import type { MetricData, MetricKind } from './metrics.types.js';
-import type { RequestLocation } from './stream-requests-command.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import type { GetHeatMapCommandOutput } from './get-heat-map-command.types.ts';
+import type { GetMetricsCommandOutput } from './get-metrics-command.types.ts';
+import type { GetStatusCodeDistributionCommandOutput } from './get-status-code-distribution-command.types.ts';
+import type { MetricData, MetricKind } from './metrics.types.ts';
+import type { RequestLocation } from './stream-requests-command.types.ts';
 
 const MICROSECONDS_PER_MILLISECOND = 1000;
 

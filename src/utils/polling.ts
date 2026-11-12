@@ -1,4 +1,4 @@
-import { createBrand, Deferred, hasBrand, setBrand } from '../lib/utils.js';
+import { createBrand, Deferred, hasBrand, setBrand } from '../lib/utils.ts';
 
 // Cross-version contracts, see createBrand(). A composite command that polls lets these errors reach
 // its caller, who may test them with the predicates of another copy of this package.

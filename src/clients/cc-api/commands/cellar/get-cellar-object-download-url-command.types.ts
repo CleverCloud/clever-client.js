@@ -1,4 +1,4 @@
-import type { CellarBucketResourceId, CellarSignedUrl } from './cellar.types.js';
+import type { CellarBucketResourceId, CellarSignedUrl } from './cellar.types.ts';
 
 /**
  * Identifies the object to mint a download URL for, and how long that URL should live.

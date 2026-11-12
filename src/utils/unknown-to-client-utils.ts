@@ -1,5 +1,5 @@
-import { UNKNOWN_TO_CLIENT } from '../lib/utils.js';
-import type { Known, UnknownToClient } from '../types/utils.types.js';
+import { UNKNOWN_TO_CLIENT } from '../lib/utils.ts';
+import type { Known, UnknownToClient } from '../types/utils.types.ts';
 
 /**
  * The two types the predicates below narrow with, re-exported: `types/utils.types.js` is not a

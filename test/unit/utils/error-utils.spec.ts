@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { CcClientError, CcHttpError, CcNetworkError, CcRequestError } from '../../../src/lib/error/cc-client-errors.js';
-import type { CcRequest, CcResponse } from '../../../src/types/request.types.js';
-import type { NetworkErrorCode } from '../../../src/utils/error-utils.js';
+import { CcClientError, CcHttpError, CcNetworkError, CcRequestError } from '../../../src/lib/error/cc-client-errors.ts';
+import type { CcRequest, CcResponse } from '../../../src/types/request.types.ts';
+import type { NetworkErrorCode } from '../../../src/utils/error-utils.ts';
 import {
   getNetworkErrorInfo,
   isCcClientError,
@@ -16,13 +16,13 @@ import {
   NETWORK_RETRY_ADVICES,
   tolerateNotFound,
   tolerateStatus,
-} from '../../../src/utils/error-utils.js';
+} from '../../../src/utils/error-utils.ts';
 import {
   ForeignCcClientError,
   ForeignCcHttpError,
   ForeignCcNetworkError,
   ForeignCcRequestError,
-} from '../../lib/foreign-copy.js';
+} from '../../lib/foreign-copy.ts';
 
 const REQUEST = {} as CcRequest;
 

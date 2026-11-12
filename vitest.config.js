@@ -6,10 +6,7 @@ import { vitestPlugin as mockApiPlugin } from '@clevercloud/doublure/vitest';
 import { playwright } from '@vitest/browser-playwright';
 import { defaultClientConditions, defaultServerConditions } from 'vite';
 import { defaultExclude, defineConfig } from 'vitest/config';
-// NB: this `import` keeps the `.js` specifier (NodeNext maps it to the `.ts` source when this
-// config is loaded in Node). The `setupFiles` / `globalSetup` paths below, by contrast, must use
-// `.ts` — they are served to the browser as literal URLs and browser mode does not remap `.js`→`.ts`.
-import { e2eProxyPlugin } from './test/setup/e2e-proxy.browser.js';
+import { e2eProxyPlugin } from './test/setup/e2e-proxy.browser.ts';
 
 /**
  * The same `*.spec.js` files run in both Node and the browser. `*.node.spec.js` and

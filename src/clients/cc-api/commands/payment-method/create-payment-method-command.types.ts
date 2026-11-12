@@ -1,4 +1,4 @@
-import type { PaymentMethod } from './payment-method.types.js';
+import type { PaymentMethod } from './payment-method.types.ts';
 
 /**
  * Identifies the payment method created on the Stripe side to attach to an organisation.

@@ -1,12 +1,12 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   CreateOtoroshiNetworkGroupCommandInput,
   CreateOtoroshiNetworkGroupCommandOutput,
-} from './create-otoroshi-network-group-command.types.js';
-import { transformOtoroshiInfo } from './otoroshi-transform.js';
+} from './create-otoroshi-network-group-command.types.ts';
+import { transformOtoroshiInfo } from './otoroshi-transform.ts';
 
 /**
  * Puts a Otoroshi add-on behind a network group, so it is only reachable from the peers of that

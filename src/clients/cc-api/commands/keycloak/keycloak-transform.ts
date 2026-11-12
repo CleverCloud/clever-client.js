@@ -1,7 +1,7 @@
-import { sortBy } from '../../../../lib/utils.js';
-import { toArray } from '../../../../utils/environment-utils.js';
-import type { CheckKeycloakVersionCommandOutput } from './check-keycloak-version-command.types.js';
-import type { KeycloakInfo } from './keycloak.types.js';
+import { sortBy } from '../../../../lib/utils.ts';
+import { toArray } from '../../../../utils/environment-utils.ts';
+import type { CheckKeycloakVersionCommandOutput } from './check-keycloak-version-command.types.ts';
+import type { KeycloakInfo } from './keycloak.types.ts';
 
 export function transformKeycloakInfo(response: any): KeycloakInfo {
   return {

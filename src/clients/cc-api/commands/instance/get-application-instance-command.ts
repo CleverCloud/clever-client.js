@@ -1,12 +1,12 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   GetApplicationInstanceCommandInput,
   GetApplicationInstanceCommandOutput,
-} from './get-application-instance-command.types.js';
-import { transformApplicationInstance } from './instance-transform.js';
+} from './get-application-instance-command.types.ts';
+import { transformApplicationInstance } from './instance-transform.ts';
 
 /**
  * Retrieves one instance of an application.

@@ -1,5 +1,5 @@
-import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
-import type { ApplicationOrAddonLogDrainKind, LogDrain, LogDrainTarget } from './log-drain.types.js';
+import type { ApplicationOrAddonId } from '../../types/cc-api.types.ts';
+import type { ApplicationOrAddonLogDrainKind, LogDrain, LogDrainTarget } from './log-drain.types.ts';
 
 /**
  * Identifies the application or add-on the drain is created on, and describes the drain to create. The owner

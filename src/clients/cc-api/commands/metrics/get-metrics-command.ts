@@ -1,11 +1,11 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
-import { normalizeDuration } from '../../../../utils/duration-utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { GetMetricsCommandInput, GetMetricsCommandOutput } from './get-metrics-command.types.js';
-import { transformMetrics } from './metrics-transform.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { normalizeDate, safeUrl } from '../../../../lib/utils.ts';
+import { normalizeDuration } from '../../../../utils/duration-utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { GetMetricsCommandInput, GetMetricsCommandOutput } from './get-metrics-command.types.ts';
+import { transformMetrics } from './metrics-transform.ts';
 
 /**
  * Gets the resource usage time series of an application or an add-on over a time window.

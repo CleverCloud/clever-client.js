@@ -1,5 +1,5 @@
-import type { RedisHttpCommandInput, WithKey } from '../../types/redis-http.types.js';
-import type { SetKeyElement } from './set-key.types.js';
+import type { RedisHttpCommandInput, WithKey } from '../../types/redis-http.types.ts';
+import type { SetKeyElement } from './set-key.types.ts';
 
 /**
  * The key and member to delete

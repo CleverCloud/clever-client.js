@@ -1,12 +1,12 @@
-import { patch } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformLogDrain } from './log-drain-transform.js';
+import { patch } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformLogDrain } from './log-drain-transform.ts';
 import type {
   ResetLogDrainCursorCommandInput,
   ResetLogDrainCursorCommandOutput,
-} from './reset-log-drain-cursor-command.types.js';
+} from './reset-log-drain-cursor-command.types.ts';
 
 /**
  * Resets the shipping cursor of a log drain to now, so it stops trying to catch up on its backlog and only

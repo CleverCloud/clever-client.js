@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeDuration, parseDuration } from '../../../src/utils/duration-utils.js';
+import { normalizeDuration, parseDuration } from '../../../src/utils/duration-utils.ts';
 
 describe('Duration utils', () => {
   describe('parseDuration', () => {

@@ -1,11 +1,11 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CreateDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/create-domain-command.js';
-import { DeleteDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/delete-domain-command.js';
-import { GetPrimaryDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/get-primary-domain-command.js';
-import { ListDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/list-domain-command.js';
-import { SetPrimaryDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/set-primary-domain-command.js';
-import { UnsetPrimaryDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/unset-primary-domain-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CreateDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/create-domain-command.ts';
+import { DeleteDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/delete-domain-command.ts';
+import { GetPrimaryDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/get-primary-domain-command.ts';
+import { ListDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/list-domain-command.ts';
+import { SetPrimaryDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/set-primary-domain-command.ts';
+import { UnsetPrimaryDomainCommand } from '../../../../../src/clients/cc-api/commands/domain/unset-primary-domain-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('domain commands', function () {
   const support = e2eSupport();

@@ -1,9 +1,9 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetUserSettingCommandInput, GetUserSettingCommandOutput } from './get-user-setting-command.types.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetUserSettingCommandInput, GetUserSettingCommandOutput } from './get-user-setting-command.types.ts';
 
 /**
  * Reads one Console preference of the current user.

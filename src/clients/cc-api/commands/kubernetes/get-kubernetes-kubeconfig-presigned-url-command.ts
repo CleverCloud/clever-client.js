@@ -1,10 +1,10 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   GetKubernetesKubeconfigPresignedUrlCommandInput,
   GetKubernetesKubeconfigPresignedUrlCommandOutput,
-} from './get-kubernetes-kubeconfig-presigned-url-command.types.js';
+} from './get-kubernetes-kubeconfig-presigned-url-command.types.ts';
 
 /**
  * Retrieves a self-authenticated URL from which the cluster's kubeconfig can be downloaded.

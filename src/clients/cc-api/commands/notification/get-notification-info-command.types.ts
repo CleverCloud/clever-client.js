@@ -2,7 +2,7 @@ import type {
   NotificationEventType,
   NotificationMetaEventType,
   WebhookNotificationFormat,
-} from './notification.types.js';
+} from './notification.types.ts';
 
 /**
  * Everything a notification can be built from.

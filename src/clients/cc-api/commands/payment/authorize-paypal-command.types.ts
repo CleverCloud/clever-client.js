@@ -1,4 +1,4 @@
-import type { Invoice } from '../invoice/invoice.types.js';
+import type { Invoice } from '../invoice/invoice.types.ts';
 
 /**
  * Identifies the PayPal transaction to capture, and the invoice it pays.

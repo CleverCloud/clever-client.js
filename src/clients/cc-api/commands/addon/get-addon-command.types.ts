@@ -1,5 +1,5 @@
-import type { AddonId } from '../../types/cc-api.types.js';
-import type { Addon } from './addon.types.js';
+import type { AddonId } from '../../types/cc-api.types.ts';
+import type { Addon } from './addon.types.ts';
 
 /**
  * Identifies the add-on to retrieve. The owner is resolved automatically when omitted.

@@ -1,13 +1,13 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   ListMigrationPreorderCommandInput,
   ListMigrationPreorderCommandOutput,
-} from './list-migration-preorder-command.types.js';
-import { transformMigrationPreorder } from './migration-transform.js';
+} from './list-migration-preorder-command.types.ts';
+import { transformMigrationPreorder } from './migration-transform.ts';
 
 /**
  * Simulates the invoice of a plan change, so that the price difference can be shown before the migration is started.

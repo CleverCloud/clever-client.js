@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { transformGithubApplication } from '../../../../../../src/clients/cc-api/commands/github/github-transform.js';
+import { transformGithubApplication } from '../../../../../../src/clients/cc-api/commands/github/github-transform.ts';
 
 /** A payload as `OAuthApplicationView` serialises it, built from the GitHub repository. */
 function getGithubApplicationPayload() {

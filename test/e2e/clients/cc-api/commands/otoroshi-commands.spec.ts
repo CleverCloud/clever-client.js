@@ -1,13 +1,13 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CheckOtoroshiVersionCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/check-otoroshi-version-command.js';
-import { CreateOtoroshiNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/create-otoroshi-network-group-command.js';
-import { DeleteOtoroshiNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/delete-otoroshi-network-group-command.js';
-import { GetOtoroshiConfigCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/get-otoroshi-config-command.js';
-import { GetOtoroshiInfoCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/get-otoroshi-info-command.js';
-import { RebootOtoroshiCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/reboot-otoroshi-command.js';
-import { RebuildOtoroshiCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/rebuild-otoroshi-command.js';
-import { UpdateOtoroshiVersionCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/update-otoroshi-version-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CheckOtoroshiVersionCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/check-otoroshi-version-command.ts';
+import { CreateOtoroshiNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/create-otoroshi-network-group-command.ts';
+import { DeleteOtoroshiNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/delete-otoroshi-network-group-command.ts';
+import { GetOtoroshiConfigCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/get-otoroshi-config-command.ts';
+import { GetOtoroshiInfoCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/get-otoroshi-info-command.ts';
+import { RebootOtoroshiCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/reboot-otoroshi-command.ts';
+import { RebuildOtoroshiCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/rebuild-otoroshi-command.ts';
+import { UpdateOtoroshiVersionCommand } from '../../../../../src/clients/cc-api/commands/otoroshi/update-otoroshi-version-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('otoroshi commands', function () {
   const support = e2eSupport();

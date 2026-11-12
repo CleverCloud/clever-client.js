@@ -1,4 +1,4 @@
-import type { Store } from '../../types/resource-id-resolver.types.js';
+import type { Store } from '../../types/resource-id-resolver.types.ts';
 
 //--
 

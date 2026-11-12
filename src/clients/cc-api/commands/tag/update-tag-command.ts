@@ -1,8 +1,8 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { UpdateTagCommandInput, UpdateTagCommandOutput } from './update-tag-command.types.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { UpdateTagCommandInput, UpdateTagCommandOutput } from './update-tag-command.types.ts';
 
 /**
  * Replaces every tag of an application or an add-on at once.

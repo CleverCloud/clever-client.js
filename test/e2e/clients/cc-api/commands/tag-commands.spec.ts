@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { CreateTagCommand } from '../../../../../src/clients/cc-api/commands/tag/create-tag-command.js';
-import { DeleteTagCommand } from '../../../../../src/clients/cc-api/commands/tag/delete-tag-command.js';
-import { ListTagCommand } from '../../../../../src/clients/cc-api/commands/tag/list-tag-command.js';
-import { UpdateTagCommand } from '../../../../../src/clients/cc-api/commands/tag/update-tag-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CreateTagCommand } from '../../../../../src/clients/cc-api/commands/tag/create-tag-command.ts';
+import { DeleteTagCommand } from '../../../../../src/clients/cc-api/commands/tag/delete-tag-command.ts';
+import { ListTagCommand } from '../../../../../src/clients/cc-api/commands/tag/list-tag-command.ts';
+import { UpdateTagCommand } from '../../../../../src/clients/cc-api/commands/tag/update-tag-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('tag commands', function () {
   const support = e2eSupport();

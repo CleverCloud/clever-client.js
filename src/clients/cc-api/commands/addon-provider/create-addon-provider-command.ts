@@ -1,11 +1,11 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformAddonProviderFull } from './addon-provider-transform.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformAddonProviderFull } from './addon-provider-transform.ts';
 import type {
   CreateAddonProviderCommandInput,
   CreateAddonProviderCommandOutput,
-} from './create-addon-provider-command.types.js';
+} from './create-addon-provider-command.types.ts';
 
 /**
  * Registers a new add-on provider owned by an organisation.

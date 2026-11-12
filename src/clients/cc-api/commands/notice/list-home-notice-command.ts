@@ -1,7 +1,7 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { ListHomeNoticeCommandInput, ListHomeNoticeCommandOutput } from './list-home-notice-command.types.js';
-import { transformNotice } from './notice-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { ListHomeNoticeCommandInput, ListHomeNoticeCommandOutput } from './list-home-notice-command.types.ts';
+import { transformNotice } from './notice-transform.ts';
 
 /**
  * Lists the notices to show on the console home page, oldest first, in the user's language.

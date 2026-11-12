@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   GetHeptapodPriceEstimationCommandInput,
   GetHeptapodPriceEstimationCommandOutput,
-} from './get-heptapod-price-estimation-command.types.js';
-import { transformHeptapodPriceEstimation } from './heptapod-price-estimation-transform.js';
+} from './get-heptapod-price-estimation-command.types.ts';
+import { transformHeptapodPriceEstimation } from './heptapod-price-estimation-transform.ts';
 
 /**
  * Estimates what the owner's Heptapod usage will cost over the current billing period.

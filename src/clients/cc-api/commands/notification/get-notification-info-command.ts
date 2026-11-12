@@ -1,13 +1,13 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
 import type {
   GetNotificationInfoCommandOutput,
   GetNotificationInfoEventsCommandOutput,
-} from './get-notification-info-command.types.js';
-import { transformNotificationInfoEvents } from './notification-transform.js';
-import type { WebhookNotificationFormat } from './notification.types.js';
+} from './get-notification-info-command.types.ts';
+import { transformNotificationInfoEvents } from './notification-transform.ts';
+import type { WebhookNotificationFormat } from './notification.types.ts';
 
 /**
  * Lists what notifications can be built from: the events that can be watched, the meta events

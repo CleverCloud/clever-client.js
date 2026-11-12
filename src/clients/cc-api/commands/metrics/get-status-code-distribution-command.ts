@@ -1,13 +1,13 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { normalizeDate, safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   GetStatusCodeDistributionCommandInput,
   GetStatusCodeDistributionCommandOutput,
-} from './get-status-code-distribution-command.types.js';
-import { transformStatusCodeDistribution } from './metrics-transform.js';
+} from './get-status-code-distribution-command.types.ts';
+import { transformStatusCodeDistribution } from './metrics-transform.ts';
 
 /**
  * Gets the distribution of HTTP status codes over time for an owner, optionally restricted to a single application.

@@ -1,5 +1,5 @@
 import { events } from 'fetch-event-stream';
-import type { SseFetchEventSourceParams } from './streams.types.js';
+import type { SseFetchEventSourceParams } from './streams.types.ts';
 
 export const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
 export const JSON_CONTENT_TYPE = 'application/json';

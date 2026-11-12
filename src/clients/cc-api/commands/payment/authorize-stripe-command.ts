@@ -1,8 +1,8 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformInvoice } from '../invoice/invoice-transform.js';
-import type { AuthorizeStripeCommandInput, AuthorizeStripeCommandOutput } from './authorize-stripe-command.types.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformInvoice } from '../invoice/invoice-transform.ts';
+import type { AuthorizeStripeCommandInput, AuthorizeStripeCommandOutput } from './authorize-stripe-command.types.ts';
 
 /**
  * Verifies the Stripe payment intent against Stripe, and settles the invoice with it.

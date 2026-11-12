@@ -1,4 +1,4 @@
-import type { NetworkGroupComponent, NetworkGroupComponentType } from './network-group.types.js';
+import type { NetworkGroupComponent, NetworkGroupComponentType } from './network-group.types.ts';
 
 /**
  * Describes the network group search to run.

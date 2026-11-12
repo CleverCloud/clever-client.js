@@ -1,15 +1,15 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { AddOrganisationMemberCommand } from '../../../../../src/clients/cc-api/commands/organisation/add-organisation-member-command.js';
-import { DeleteOrganisationCommand } from '../../../../../src/clients/cc-api/commands/organisation/delete-organisation-command.js';
-import { GetOrganisationCommand } from '../../../../../src/clients/cc-api/commands/organisation/get-organisation-command.js';
-import { GetOrganisationSummaryCommand } from '../../../../../src/clients/cc-api/commands/organisation/get-organisation-summary-command.js';
-import { ListOrganisationCommand } from '../../../../../src/clients/cc-api/commands/organisation/list-organisation-command.js';
-import { ListOrganisationMemberCommand } from '../../../../../src/clients/cc-api/commands/organisation/list-organisation-member-command.js';
-import { UpdateOrganisationAvatarCommand } from '../../../../../src/clients/cc-api/commands/organisation/update-organisation-avatar-command.js';
-import { UpdateOrganisationCommand } from '../../../../../src/clients/cc-api/commands/organisation/update-organisation-command.js';
-import { UpdateOrganisationMemberCommand } from '../../../../../src/clients/cc-api/commands/organisation/update-organisation-member-command.js';
-import { omit } from '../../../../../src/lib/utils.js';
-import { e2eSupport } from '../e2e-support.js';
+import { AddOrganisationMemberCommand } from '../../../../../src/clients/cc-api/commands/organisation/add-organisation-member-command.ts';
+import { DeleteOrganisationCommand } from '../../../../../src/clients/cc-api/commands/organisation/delete-organisation-command.ts';
+import { GetOrganisationCommand } from '../../../../../src/clients/cc-api/commands/organisation/get-organisation-command.ts';
+import { GetOrganisationSummaryCommand } from '../../../../../src/clients/cc-api/commands/organisation/get-organisation-summary-command.ts';
+import { ListOrganisationCommand } from '../../../../../src/clients/cc-api/commands/organisation/list-organisation-command.ts';
+import { ListOrganisationMemberCommand } from '../../../../../src/clients/cc-api/commands/organisation/list-organisation-member-command.ts';
+import { UpdateOrganisationAvatarCommand } from '../../../../../src/clients/cc-api/commands/organisation/update-organisation-avatar-command.ts';
+import { UpdateOrganisationCommand } from '../../../../../src/clients/cc-api/commands/organisation/update-organisation-command.ts';
+import { UpdateOrganisationMemberCommand } from '../../../../../src/clients/cc-api/commands/organisation/update-organisation-member-command.ts';
+import { omit } from '../../../../../src/lib/utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('organisation commands', function () {
   const support = e2eSupport();

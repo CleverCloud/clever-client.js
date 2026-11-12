@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import type { Addon } from '../../../../../../src/clients/cc-api/commands/addon/addon.types.js';
+import type { Addon } from '../../../../../../src/clients/cc-api/commands/addon/addon.types.ts';
 import {
   constructNetworkGroupMember,
   isNetworkGroupAddonCandidate,
   NETWORK_GROUP_SUPPORTED_ADDON_PROVIDERS,
-} from '../../../../../../src/clients/cc-api/commands/network-group/network-group-utils.js';
+} from '../../../../../../src/clients/cc-api/commands/network-group/network-group-utils.ts';
 
 function makeAddon({
   providerId = 'postgresql-addon',

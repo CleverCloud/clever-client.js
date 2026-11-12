@@ -1,6 +1,6 @@
-import type { CcRequest } from '../../types/request.types.js';
-import type { SelfOrPromise } from '../../types/utils.types.js';
-import type { CcClientError } from '../error/cc-client-errors.js';
+import type { CcRequest } from '../../types/request.types.ts';
+import type { SelfOrPromise } from '../../types/utils.types.ts';
+import type { CcClientError } from '../error/cc-client-errors.ts';
 
 /** Factory function that creates HTTP requests for streaming */
 export type CcStreamRequestFactory = () => SelfOrPromise<CcRequest>;

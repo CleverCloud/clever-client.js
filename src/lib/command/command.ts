@@ -1,7 +1,7 @@
-import type { ApiErrorInfo, Command, Composer } from '../../types/command.types.js';
-import type { CcRequestConfigPartial, CcRequestParams } from '../../types/request.types.js';
-import type { SelfOrPromise } from '../../types/utils.types.js';
-import { createBrand, hasBrand, setBrand } from '../utils.js';
+import type { ApiErrorInfo, Command, Composer } from '../../types/command.types.ts';
+import type { CcRequestConfigPartial, CcRequestParams } from '../../types/request.types.ts';
+import type { SelfOrPromise } from '../../types/utils.types.ts';
+import { createBrand, hasBrand, setBrand } from '../utils.ts';
 
 // A cross-version contract, see createBrand()
 const COMPOSITE_COMMAND_BRAND = createBrand('CompositeCommand');

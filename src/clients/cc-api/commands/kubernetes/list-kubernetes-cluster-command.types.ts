@@ -1,4 +1,4 @@
-import type { KubernetesCluster, KubernetesClusterStatus } from './kubernetes.types.js';
+import type { KubernetesCluster, KubernetesClusterStatus } from './kubernetes.types.ts';
 
 /**
  * Identifies the organisation whose clusters are listed, and which of them to keep.

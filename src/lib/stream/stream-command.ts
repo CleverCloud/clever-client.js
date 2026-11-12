@@ -1,7 +1,7 @@
-import type { CcRequestConfigPartial, CcRequestParams } from '../../types/request.types.js';
-import type { SelfOrPromise } from '../../types/utils.types.js';
-import type { CcStream } from './cc-stream.js';
-import type { CcStreamConfig, CcStreamRequestFactory } from './cc-stream.types.js';
+import type { CcRequestConfigPartial, CcRequestParams } from '../../types/request.types.ts';
+import type { SelfOrPromise } from '../../types/utils.types.ts';
+import type { CcStream } from './cc-stream.ts';
+import type { CcStreamConfig, CcStreamRequestFactory } from './cc-stream.types.ts';
 
 /**
  * Abstract base class for stream commands that define how to create and configure streams.

@@ -1,13 +1,13 @@
-import { randomUUID } from '../../../../lib/utils.js';
-import type { Composer } from '../../../../types/command.types.js';
-import { tolerateNotFound } from '../../../../utils/error-utils.js';
-import { isTimeoutError, Polling } from '../../../../utils/polling.js';
-import type { CcApiCommand, CcApiType } from '../../types/cc-api.types.js';
-import type { Addon } from '../addon/addon.types.js';
-import { GetNetworkGroupCommand } from './get-network-group-command.js';
-import { GetNetworkGroupMemberCommand } from './get-network-group-member-command.js';
-import { GetNetworkGroupPeerCommand } from './get-network-group-peer-command.js';
-import type { NetworkGroup, NetworkGroupMember, NetworkGroupPeer } from './network-group.types.js';
+import { randomUUID } from '../../../../lib/utils.ts';
+import type { Composer } from '../../../../types/command.types.ts';
+import { tolerateNotFound } from '../../../../utils/error-utils.ts';
+import { isTimeoutError, Polling } from '../../../../utils/polling.ts';
+import type { CcApiCommand, CcApiType } from '../../types/cc-api.types.ts';
+import type { Addon } from '../addon/addon.types.ts';
+import { GetNetworkGroupCommand } from './get-network-group-command.ts';
+import { GetNetworkGroupMemberCommand } from './get-network-group-member-command.ts';
+import { GetNetworkGroupPeerCommand } from './get-network-group-peer-command.ts';
+import type { NetworkGroup, NetworkGroupMember, NetworkGroupPeer } from './network-group.types.ts';
 
 const POLLING_TIMEOUT_MS = 30_000;
 const POLLING_INTERVAL_MS = 1000;

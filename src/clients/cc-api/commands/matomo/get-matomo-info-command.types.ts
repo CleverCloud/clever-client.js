@@ -1,4 +1,4 @@
-import type { MatomoInfo } from './matomo.types.js';
+import type { MatomoInfo } from './matomo.types.ts';
 
 /**
  * Identifies the add-on to retrieve.

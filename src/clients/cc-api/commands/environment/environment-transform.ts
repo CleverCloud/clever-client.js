@@ -1,4 +1,4 @@
-import type { LinkedAddonEnvironment, LinkedApplicationEnvironment } from './environment.types.js';
+import type { LinkedAddonEnvironment, LinkedApplicationEnvironment } from './environment.types.ts';
 
 export function transformLinkedApplicationsEnvironment(response: any): Array<LinkedApplicationEnvironment> {
   return response.map((element: any) => ({

@@ -1,4 +1,4 @@
-import type { SelfOrPromise } from '../../../types/utils.types.js';
+import type { SelfOrPromise } from '../../../types/utils.types.ts';
 
 /**
  * The cache the client keeps so it can fill in a resource's owner, and translate between the two

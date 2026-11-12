@@ -1,11 +1,11 @@
-import { patchJson } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { serializeKubernetesClusterFeatures, transformKubernetesCluster } from './kubernetes-transform.js';
+import { patchJson } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { serializeKubernetesClusterFeatures, transformKubernetesCluster } from './kubernetes-transform.ts';
 import type {
   UpdateKubernetesClusterCommandInput,
   UpdateKubernetesClusterCommandOutput,
-} from './update-kubernetes-cluster-command.types.js';
+} from './update-kubernetes-cluster-command.types.ts';
 
 /**
  * Updates the metadata and the optional capabilities of a Kubernetes cluster.

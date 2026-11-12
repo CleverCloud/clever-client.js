@@ -1,5 +1,5 @@
-import type { AddonId } from '../../types/cc-api.types.js';
-import type { CellarCredentials } from './cellar.types.js';
+import type { AddonId } from '../../types/cc-api.types.ts';
+import type { CellarCredentials } from './cellar.types.ts';
 
 /**
  * Identifies the Cellar add-on whose credentials are rotated. The owner is resolved automatically

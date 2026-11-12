@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { unknownToClient } from '../../../src/lib/utils.js';
-import type { Known } from '../../../src/utils/unknown-to-client-utils.js';
-import { isKnown, isUnknown } from '../../../src/utils/unknown-to-client-utils.js';
+import { unknownToClient } from '../../../src/lib/utils.ts';
+import type { Known } from '../../../src/utils/unknown-to-client-utils.ts';
+import { isKnown, isUnknown } from '../../../src/utils/unknown-to-client-utils.ts';
 
 interface Email {
   type: 'EMAIL';

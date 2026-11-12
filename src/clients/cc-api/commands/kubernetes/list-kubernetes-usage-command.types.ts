@@ -1,4 +1,4 @@
-import type { KubernetesClusterUsageItem } from './kubernetes.types.js';
+import type { KubernetesClusterUsageItem } from './kubernetes.types.ts';
 
 /**
  * Identifies the owner whose usage is listed.

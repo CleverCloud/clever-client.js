@@ -1,17 +1,17 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CreateEmailNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/create-email-notification-command.js';
-import { CreateWebhookNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/create-webhook-notification-command.js';
-import { DeleteEmailNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/delete-email-notification-command.js';
-import { DeleteWebhookNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/delete-webhook-notification-command.js';
-import { GetNotificationInfoCommand } from '../../../../../src/clients/cc-api/commands/notification/get-notification-info-command.js';
-import { ListEmailNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/list-email-notification-command.js';
-import { ListWebhookNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/list-webhook-notification-command.js';
+import { CreateEmailNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/create-email-notification-command.ts';
+import { CreateWebhookNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/create-webhook-notification-command.ts';
+import { DeleteEmailNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/delete-email-notification-command.ts';
+import { DeleteWebhookNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/delete-webhook-notification-command.ts';
+import { GetNotificationInfoCommand } from '../../../../../src/clients/cc-api/commands/notification/get-notification-info-command.ts';
+import { ListEmailNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/list-email-notification-command.ts';
+import { ListWebhookNotificationCommand } from '../../../../../src/clients/cc-api/commands/notification/list-webhook-notification-command.ts';
 import type {
   EmailNotificationTarget,
   WebhookNotificationUrl,
-} from '../../../../../src/clients/cc-api/commands/notification/notification.types.js';
-import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+} from '../../../../../src/clients/cc-api/commands/notification/notification.types.ts';
+import { checkDateFormat } from '../../../../lib/expect-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('notification commands', function () {
   const support = e2eSupport();

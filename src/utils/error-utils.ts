@@ -1,4 +1,4 @@
-import type { CcRequestErrorCode } from '../lib/error/cc-client-errors.js';
+import type { CcRequestErrorCode } from '../lib/error/cc-client-errors.ts';
 import {
   CC_CLIENT_ERROR_BRAND,
   CC_HTTP_ERROR_BRAND,
@@ -8,9 +8,9 @@ import {
   type CcHttpError,
   type CcNetworkError,
   type CcRequestError,
-} from '../lib/error/cc-client-errors.js';
-import { TOO_MANY_REQUESTS_ERROR_CODE } from '../lib/error/handle-http-errors.js';
-import { hasBrand } from '../lib/utils.js';
+} from '../lib/error/cc-client-errors.ts';
+import { TOO_MANY_REQUESTS_ERROR_CODE } from '../lib/error/handle-http-errors.ts';
+import { hasBrand } from '../lib/utils.ts';
 
 /**
  * The error classes are re-exported as types only: `lib/error/cc-client-errors.js` is not a package
@@ -36,14 +36,14 @@ export {
   type NetworkErrorCode,
   type NetworkErrorInfo,
   type NetworkRetryAdvice,
-} from '../lib/error/cc-client-errors.js';
+} from '../lib/error/cc-client-errors.ts';
 
 /**
  * The code-only form of what `error.explanation` and `error.isWorthRetrying()` answer, for a caller
  * holding a `networkCode` away from the request it came with. With the error in hand, prefer those — the
  * error knows the request method too, and that is half of the retry answer.
  */
-export { getNetworkErrorInfo } from '../lib/error/cc-client-errors.js';
+export { getNetworkErrorInfo } from '../lib/error/cc-client-errors.ts';
 
 export function isCcClientError(error: unknown): error is CcClientError {
   return hasBrand(error, CC_CLIENT_ERROR_BRAND);

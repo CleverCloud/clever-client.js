@@ -1,6 +1,6 @@
-import type { QueryParamValue } from '../../types/request.types.js';
-import type { OneOrMany } from '../../types/utils.types.js';
-import { createBrand, hasBrand, setBrand, toArray } from '../utils.js';
+import type { QueryParamValue } from '../../types/request.types.ts';
+import type { OneOrMany } from '../../types/utils.types.ts';
+import { createBrand, hasBrand, setBrand, toArray } from '../utils.ts';
 
 // A cross-version contract, see createBrand()
 const QUERY_PARAMS_BRAND = createBrand('QueryParams');

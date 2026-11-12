@@ -1,4 +1,4 @@
-import type { ApiToken } from './api-token.types.js';
+import type { ApiToken } from './api-token.types.ts';
 
 /**
  * Identifies the API token to retrieve.

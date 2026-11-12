@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   GetKubernetesQuotaCommandInput,
   GetKubernetesQuotaCommandOutput,
-} from './get-kubernetes-quota-command.types.js';
-import { transformKubernetesQuota } from './kubernetes-transform.js';
+} from './get-kubernetes-quota-command.types.ts';
+import { transformKubernetesQuota } from './kubernetes-transform.ts';
 
 /**
  * Retrieves the limits applied to an owner's Kubernetes usage.

@@ -1,4 +1,4 @@
-import type { OrganisationMemberRole } from './organisation.types.js';
+import type { OrganisationMemberRole } from './organisation.types.ts';
 
 /**
  * Describes which member of an organisation to update, and with what.

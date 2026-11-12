@@ -1,22 +1,22 @@
-import type { CcClientConfig, CcClientHooks, CcClientParamsTransformer } from '../types/client.types.js';
-import type { Command } from '../types/command.types.js';
+import type { CcClientConfig, CcClientHooks, CcClientParamsTransformer } from '../types/client.types.ts';
+import type { Command } from '../types/command.types.ts';
 import type {
   CcRequest,
   CcRequestConfig,
   CcRequestConfigPartial,
   CcRequestParams,
   CcResponse,
-} from '../types/request.types.js';
-import type { WithRequired } from '../types/utils.types.js';
-import type { CcAuth } from './auth/cc-auth.js';
-import { type CompositeCommand, isCompositeCommand, type SimpleCommand } from './command/command.js';
-import { CcClientError } from './error/cc-client-errors.js';
-import { handleHttpErrors } from './error/handle-http-errors.js';
-import { QueryParams } from './request/query-params.js';
-import { sendRequest } from './request/request.js';
-import type { CcStream } from './stream/cc-stream.js';
-import type { CcStreamConfig, CcStreamConfigPartial, RetryConfig } from './stream/cc-stream.types.js';
-import type { StreamCommand } from './stream/stream-command.js';
+} from '../types/request.types.ts';
+import type { WithRequired } from '../types/utils.types.ts';
+import type { CcAuth } from './auth/cc-auth.ts';
+import { type CompositeCommand, isCompositeCommand, type SimpleCommand } from './command/command.ts';
+import { CcClientError } from './error/cc-client-errors.ts';
+import { handleHttpErrors } from './error/handle-http-errors.ts';
+import { QueryParams } from './request/query-params.ts';
+import { sendRequest } from './request/request.ts';
+import type { CcStream } from './stream/cc-stream.ts';
+import type { CcStreamConfig, CcStreamConfigPartial, RetryConfig } from './stream/cc-stream.types.ts';
+import type { StreamCommand } from './stream/stream-command.ts';
 import {
   getRequestSignal,
   isAbsoluteUrl,
@@ -24,7 +24,7 @@ import {
   mergeRequestConfig,
   mergeRequestConfigPartial,
   pickDefined,
-} from './utils.js';
+} from './utils.ts';
 
 const DEFAULT_REQUEST_CONFIG: CcRequestConfig = {
   isCorsEnabled: false,

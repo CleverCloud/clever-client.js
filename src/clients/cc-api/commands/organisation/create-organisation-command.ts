@@ -1,11 +1,11 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { omit } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { omit } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   CreateOrganisationCommandInput,
   CreateOrganisationCommandOutput,
-} from './create-organisation-command.types.js';
-import { transformOrganisation } from './organisation-transform.js';
+} from './create-organisation-command.types.ts';
+import { transformOrganisation } from './organisation-transform.ts';
 
 /**
  * Creates an organisation owned by the current user.

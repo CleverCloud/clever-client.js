@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   transformNotificationInfoEvents,
   transformWebhookNotification,
-} from '../../../../../../src/clients/cc-api/commands/notification/notification-transform.js';
+} from '../../../../../../src/clients/cc-api/commands/notification/notification-transform.ts';
 
 /**
  * Mirrors the shape of `GET /v2/notifications/info/events`: `meta_events` is an array of

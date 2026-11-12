@@ -1,4 +1,4 @@
-import type { CellarObjectResourceId, CellarUrl } from './cellar.types.js';
+import type { CellarObjectResourceId, CellarUrl } from './cellar.types.ts';
 
 /**
  * Identifies the object key to mint an upload URL for.

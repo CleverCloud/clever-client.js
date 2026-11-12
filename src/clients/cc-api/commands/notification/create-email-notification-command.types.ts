@@ -3,7 +3,7 @@ import type {
   EmailNotificationTarget,
   NotificationEventType,
   NotificationMetaEventType,
-} from './notification.types.js';
+} from './notification.types.ts';
 
 /**
  * Description of the email hook to create.

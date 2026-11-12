@@ -1,7 +1,7 @@
-import type { OauthTokens } from '../../../types/auth.types.js';
-import type { CcClientConfig } from '../../../types/client.types.js';
-import type { Composer } from '../../../types/command.types.js';
-import type { WithOptional } from '../../../types/utils.types.js';
+import type { OauthTokens } from '../../../types/auth.types.ts';
+import type { CcClientConfig } from '../../../types/client.types.ts';
+import type { Composer } from '../../../types/command.types.ts';
+import type { WithOptional } from '../../../types/utils.types.ts';
 
 /**
  * Type identifier for the Clever Cloud API Bridge client.

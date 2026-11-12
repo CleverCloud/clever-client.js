@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { GetInvoiceCommand } from '../../../../../src/clients/cc-api/commands/invoice/get-invoice-command.js';
-import { GetInvoiceHtmlCommand } from '../../../../../src/clients/cc-api/commands/invoice/get-invoice-html-command.js';
-import { GetInvoicePdfCommand } from '../../../../../src/clients/cc-api/commands/invoice/get-invoice-pdf-command.js';
-import { ListInvoiceCommand } from '../../../../../src/clients/cc-api/commands/invoice/list-invoice-command.js';
-import { ListUnpaidInvoiceCommand } from '../../../../../src/clients/cc-api/commands/invoice/list-unpaid-invoice-command.js';
-import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { e2eSupport, STATIC_INVOICE_ID } from '../e2e-support.js';
+import { GetInvoiceCommand } from '../../../../../src/clients/cc-api/commands/invoice/get-invoice-command.ts';
+import { GetInvoiceHtmlCommand } from '../../../../../src/clients/cc-api/commands/invoice/get-invoice-html-command.ts';
+import { GetInvoicePdfCommand } from '../../../../../src/clients/cc-api/commands/invoice/get-invoice-pdf-command.ts';
+import { ListInvoiceCommand } from '../../../../../src/clients/cc-api/commands/invoice/list-invoice-command.ts';
+import { ListUnpaidInvoiceCommand } from '../../../../../src/clients/cc-api/commands/invoice/list-unpaid-invoice-command.ts';
+import { checkDateFormat } from '../../../../lib/expect-utils.ts';
+import { e2eSupport, STATIC_INVOICE_ID } from '../e2e-support.ts';
 
 describe('invoice commands', function () {
   const support = e2eSupport({ user: 'test-user-without-github' });

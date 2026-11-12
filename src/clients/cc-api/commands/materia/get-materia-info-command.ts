@@ -1,8 +1,8 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { GetMateriaInfoCommandInput, GetMateriaInfoCommandOutput } from './get-materia-info-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { GetMateriaInfoCommandInput, GetMateriaInfoCommandOutput } from './get-materia-info-command.types.ts';
 
 /**
  * Retrieves the details of a Materia KV add-on: where its database is reachable and the token to authenticate against

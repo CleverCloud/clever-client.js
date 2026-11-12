@@ -8,10 +8,10 @@
 
 //-- client
 
-export type { CcClientConfig, CcClientHooks, CcClientParamsTransformer } from '../types/client.types.js';
+export type { CcClientConfig, CcClientHooks, CcClientParamsTransformer } from '../types/client.types.ts';
 
-export type { ApiErrorInfo, Command, Composer } from '../types/command.types.js';
-export type { OnErrorHook, OnRequestHook, OnResponseHook } from '../types/hook.types.js';
+export type { ApiErrorInfo, Command, Composer } from '../types/command.types.ts';
+export type { OnErrorHook, OnRequestHook, OnResponseHook } from '../types/hook.types.ts';
 
 //-- commands
 
@@ -27,20 +27,20 @@ export type {
   RequestBody,
   RequestCachePolicy,
   SseMessage,
-} from '../types/request.types.js';
+} from '../types/request.types.ts';
 
-export { CcAuth } from './auth/cc-auth.js';
+export { CcAuth } from './auth/cc-auth.ts';
 
 //-- authentication
 
-export { CcClient } from './cc-client.js';
+export { CcClient } from './cc-client.ts';
 
 //-- requests
 
-export { AbstractCommand, CompositeCommand, SimpleCommand } from './command/command.js';
-export type { CcClientError, CcHttpError, CcNetworkError, CcRequestError } from './error/cc-client-errors.js';
-export { HeadersBuilder } from './request/headers-builder.js';
-export { QueryParams } from './request/query-params.js';
+export { AbstractCommand, CompositeCommand, SimpleCommand } from './command/command.ts';
+export type { CcClientError, CcHttpError, CcNetworkError, CcRequestError } from './error/cc-client-errors.ts';
+export { HeadersBuilder } from './request/headers-builder.ts';
+export { QueryParams } from './request/query-params.ts';
 
 export {
   delete_,
@@ -52,11 +52,11 @@ export {
   postJson,
   put,
   putJson,
-} from './request/request-params-builder.js';
+} from './request/request-params-builder.ts';
 
 //-- streams
 
-export { CcStream, CcStreamEvent } from './stream/cc-stream.js';
+export { CcStream, CcStreamEvent } from './stream/cc-stream.ts';
 export type {
   CcStreamCloseReason,
   CcStreamConfig,
@@ -65,10 +65,10 @@ export type {
   CcStreamRetry,
   CcStreamState,
   RetryConfig,
-} from './stream/cc-stream.types.js';
+} from './stream/cc-stream.types.ts';
 
-export { StreamCommand } from './stream/stream-command.js';
+export { StreamCommand } from './stream/stream-command.ts';
 
 //-- errors
 
-export { safeUrl } from './utils.js';
+export { safeUrl } from './utils.ts';

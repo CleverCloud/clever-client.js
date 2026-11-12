@@ -1,6 +1,6 @@
-import { transformAddon } from '../addon/addon-transform.js';
-import { transformApplication } from '../application/application-transform.js';
-import type { LinkToAddon, LinkToApplication } from './link.types.js';
+import { transformAddon } from '../addon/addon-transform.ts';
+import { transformApplication } from '../application/application-transform.ts';
+import type { LinkToAddon, LinkToApplication } from './link.types.ts';
 
 export function transformLinkToApplication(payload: any): LinkToApplication {
   return {

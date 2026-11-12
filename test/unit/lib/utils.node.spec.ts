@@ -1,6 +1,6 @@
 import { getEventListeners } from 'node:events';
 import { describe, expect, it } from 'vitest';
-import { combineWithSignal } from '../../../src/lib/utils.js';
+import { combineWithSignal } from '../../../src/lib/utils.ts';
 
 // listeners of a signal can only be counted in Node
 describe('combineWithSignal', () => {

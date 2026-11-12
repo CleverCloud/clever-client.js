@@ -1,4 +1,4 @@
-import type { AddonId } from '../../types/cc-api.types.js';
+import type { AddonId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies the add-on to sign into. The owner is resolved automatically when omitted.

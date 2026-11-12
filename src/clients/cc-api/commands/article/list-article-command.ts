@@ -1,13 +1,13 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { sortBy } from '../../../../lib/utils.js';
-import type { CcRequestConfigPartial, CcRequestParams } from '../../../../types/request.types.js';
-import { isCcHttpError } from '../../../../utils/error-utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import { parseRssFeed } from './article-transform.js';
-import type { Article } from './article.types.js';
-import type { ListArticleCommandInput, ListArticleCommandOutput } from './list-article-command.types.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { sortBy } from '../../../../lib/utils.ts';
+import type { CcRequestConfigPartial, CcRequestParams } from '../../../../types/request.types.ts';
+import { isCcHttpError } from '../../../../utils/error-utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import { parseRssFeed } from './article-transform.ts';
+import type { Article } from './article.types.ts';
+import type { ListArticleCommandInput, ListArticleCommandOutput } from './list-article-command.types.ts';
 
 const FEED_URLS = {
   en: 'https://www.clever.cloud/feed/',

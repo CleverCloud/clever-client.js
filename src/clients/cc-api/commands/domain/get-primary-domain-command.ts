@@ -1,14 +1,14 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { ApplicationId } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformDomain } from './domain-transform.js';
-import type { Domain } from './domain.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformDomain } from './domain-transform.ts';
+import type { Domain } from './domain.types.ts';
 import type {
   GetPrimaryDomainCommandInput,
   GetPrimaryDomainCommandOutput,
-} from './get-primary-domain-command.types.js';
+} from './get-primary-domain-command.types.ts';
 
 /**
  * Reads the favourite domain explicitly set on an application. Answers `404` when there is none.

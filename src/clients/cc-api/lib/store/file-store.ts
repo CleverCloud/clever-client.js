@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import type { Store } from '../../types/resource-id-resolver.types.js';
+import type { Store } from '../../types/resource-id-resolver.types.ts';
 
 /**
  * File-based implementation of the Store interface.

@@ -1,4 +1,4 @@
-import type { WithKey } from '../../types/redis-http.types.js';
+import type { WithKey } from '../../types/redis-http.types.ts';
 
 /**
  * The `hash` key with a list of fields

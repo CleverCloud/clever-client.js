@@ -1,7 +1,7 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetProductElasticsearchInfoCommandOutput } from './get-product-elasticsearch-info-command.types.js';
-import { transformProductElasticsearchInfo } from './product-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetProductElasticsearchInfoCommandOutput } from './get-product-elasticsearch-info-command.types.ts';
+import { transformProductElasticsearchInfo } from './product-transform.ts';
 
 /**
  * Retrieves the scaler sizes the services shipped alongside an Elasticsearch add-on run on.

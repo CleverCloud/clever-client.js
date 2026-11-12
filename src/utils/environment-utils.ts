@@ -15,7 +15,7 @@
  * - Comprehensive error reporting with line/column information
  */
 
-import type { EnvironmentVariable, EnvVarParsingError, EnvVarValidationMode } from './environment.types.js';
+import type { EnvironmentVariable, EnvVarParsingError, EnvVarValidationMode } from './environment.types.ts';
 
 /**
  * https://stackoverflow.com/questions/2821043/allowed-characters-in-linux-environment-variable-names

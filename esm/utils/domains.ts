@@ -1,4 +1,4 @@
-import type { DomainInfo } from './diag-domain-config.types.js';
+import type { DomainInfo } from './diag-domain-config.types.ts';
 
 /**
  * Extracts `hostname`, `pathname`, `isWildcard` from a given `domain`

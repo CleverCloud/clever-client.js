@@ -1,5 +1,5 @@
-import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.js';
-import { calculateCacheKey } from '../utils.js';
+import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.ts';
+import { calculateCacheKey } from '../utils.ts';
 
 interface CacheEntry<T> {
   response: CcResponse<T>;

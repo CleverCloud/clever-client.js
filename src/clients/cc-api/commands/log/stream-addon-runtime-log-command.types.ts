@@ -1,4 +1,4 @@
-import type { AddonId } from '../../types/cc-api.types.js';
+import type { AddonId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies the add-on whose runtime logs are streamed, and how to narrow the stream down. The owner is

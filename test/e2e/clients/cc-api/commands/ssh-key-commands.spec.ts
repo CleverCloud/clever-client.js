@@ -1,9 +1,9 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CreatePersonalSshKeyCommand } from '../../../../../src/clients/cc-api/commands/ssh-key/create-personal-ssh-key-command.js';
-import { DeletePersonalSshKeyCommand } from '../../../../../src/clients/cc-api/commands/ssh-key/delete-personal-ssh-key-command.js';
-import { ListGithubSshKeyCommand } from '../../../../../src/clients/cc-api/commands/ssh-key/list-github-ssh-key-command.js';
-import { ListPersonalSshKeyCommand } from '../../../../../src/clients/cc-api/commands/ssh-key/list-personal-ssh-key-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CreatePersonalSshKeyCommand } from '../../../../../src/clients/cc-api/commands/ssh-key/create-personal-ssh-key-command.ts';
+import { DeletePersonalSshKeyCommand } from '../../../../../src/clients/cc-api/commands/ssh-key/delete-personal-ssh-key-command.ts';
+import { ListGithubSshKeyCommand } from '../../../../../src/clients/cc-api/commands/ssh-key/list-github-ssh-key-command.ts';
+import { ListPersonalSshKeyCommand } from '../../../../../src/clients/cc-api/commands/ssh-key/list-personal-ssh-key-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 const SSH_KEY = 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFKttpn0/QsZEPeH+MsCNvWPakMx1ZJyylMXCyyOheGO';
 

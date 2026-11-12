@@ -1,11 +1,11 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   UpdateConfigProviderCommandInput,
   UpdateConfigProviderCommandOutput,
-} from './update-config-provider-command.types.js';
+} from './update-config-provider-command.types.ts';
 
 /**
  * Replaces the configuration a Config Provider add-on hands to the applications linked to it.

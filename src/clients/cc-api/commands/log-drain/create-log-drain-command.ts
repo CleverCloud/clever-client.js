@@ -1,12 +1,12 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { CreateLogDrainCommandInput, CreateLogDrainCommandOutput } from './create-log-drain-command.types.js';
-import { buildLogDrainCreatePayload } from './log-drain-transform.js';
-import { waitForLogDrainEnabled } from './log-drain-utils.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { CreateLogDrainCommandInput, CreateLogDrainCommandOutput } from './create-log-drain-command.types.ts';
+import { buildLogDrainCreatePayload } from './log-drain-transform.ts';
+import { waitForLogDrainEnabled } from './log-drain-utils.ts';
 
 /**
  * Creates a log drain on an application or an add-on, and waits until it starts shipping.

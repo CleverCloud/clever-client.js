@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { transformAuthMfa } from '../../../../../../src/clients/cc-api/commands/auth/auth-transform.js';
+import { transformAuthMfa } from '../../../../../../src/clients/cc-api/commands/auth/auth-transform.ts';
 
 describe('transformAuthMfa', () => {
   it('should publish the backup codes state of an active factor', () => {

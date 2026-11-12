@@ -1,4 +1,4 @@
-import type { CellarBucketResourceId } from './cellar.types.js';
+import type { CellarBucketResourceId } from './cellar.types.ts';
 
 /**
  * Identifies the bucket to remove, and what to do with the objects it still holds.

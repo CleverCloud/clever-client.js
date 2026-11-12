@@ -1,4 +1,4 @@
-import type { RequestParams } from './request.types.js';
+import type { RequestParams } from './request.types.ts';
 
 export function prefixUrl(prefix: string): (requestParams: RequestParams) => RequestParams {
   return function (requestParams) {

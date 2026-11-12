@@ -25,9 +25,9 @@ import {
   safeUrl,
   SimpleCommand,
   StreamCommand,
-} from '../../../src/lib/index.js';
-import { isCcHttpError, isCcHttpErrorWithStatus } from '../../../src/utils/error-utils.js';
-import { expectPromiseThrows } from '../../lib/expect-utils.js';
+} from '../../../src/lib/index.ts';
+import { isCcHttpError, isCcHttpErrorWithStatus } from '../../../src/utils/error-utils.ts';
+import { expectPromiseThrows } from '../../lib/expect-utils.ts';
 
 //-- the client and its commands, as an application would write them
 

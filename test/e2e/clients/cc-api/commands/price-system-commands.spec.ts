@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { GetPriceSystemCommand } from '../../../../../src/clients/cc-api/commands/price-system/get-price-system-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { GetPriceSystemCommand } from '../../../../../src/clients/cc-api/commands/price-system/get-price-system-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('price system commands', function () {
   const support = e2eSupport();

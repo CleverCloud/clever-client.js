@@ -1,4 +1,4 @@
-import type { EmailNotification } from './notification.types.js';
+import type { EmailNotification } from './notification.types.ts';
 
 /**
  * Identifies the owner whose email hooks are listed.

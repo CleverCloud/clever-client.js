@@ -1,8 +1,8 @@
-import { CompositeCommand, SimpleCommand } from '../../../lib/command/command.js';
-import type { CcStream } from '../../../lib/stream/cc-stream.js';
-import { StreamCommand } from '../../../lib/stream/stream-command.js';
-import type { CcApiType } from '../types/cc-api.types.js';
-import type { IdResolve } from '../types/resource-id-resolver.types.js';
+import { CompositeCommand, SimpleCommand } from '../../../lib/command/command.ts';
+import type { CcStream } from '../../../lib/stream/cc-stream.ts';
+import { StreamCommand } from '../../../lib/stream/stream-command.ts';
+import type { CcApiType } from '../types/cc-api.types.ts';
+import type { IdResolve } from '../types/resource-id-resolver.types.ts';
 
 /**
  * @template CommandInput

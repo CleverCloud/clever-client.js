@@ -1,16 +1,16 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import {
   transformNetworkGroup,
   transformNetworkGroupMember,
   transformNetworkGroupPeer,
-} from './network-group-transform.js';
+} from './network-group-transform.ts';
 import type {
   SearchNetworkGroupCommandInput,
   SearchNetworkGroupCommandOutput,
-} from './search-network-group-command.types.js';
+} from './search-network-group-command.types.ts';
 
 /**
  * Searches the network groups of an organisation, and their members and peers, by id or by label.

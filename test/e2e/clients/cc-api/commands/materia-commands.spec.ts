@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { GetMateriaInfoCommand } from '../../../../../src/clients/cc-api/commands/materia/get-materia-info-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { GetMateriaInfoCommand } from '../../../../../src/clients/cc-api/commands/materia/get-materia-info-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 // cannot be automatised because addon deletion just after creation is not supported by the platform
 // todo: find a way to wait for addon to be ready for deletion

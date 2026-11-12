@@ -1,11 +1,11 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import { put } from '../../../../lib/request/request-params-builder.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   UpdateProfileAvatarCommandInput,
   UpdateProfileAvatarCommandOutput,
-} from './update-profile-avatar-command.types.js';
+} from './update-profile-avatar-command.types.ts';
 
 /**
  * Sets the avatar of the signed-in user.

@@ -1,13 +1,13 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import type { SelfOrPromise } from '../../../../types/utils.types.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import type { SelfOrPromise } from '../../../../types/utils.types.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   GetOtoroshiConfigCommandInput,
   GetOtoroshiConfigCommandOutput,
-} from './get-otoroshi-config-command.types.js';
+} from './get-otoroshi-config-command.types.ts';
 
 /**
  * Downloads the YAML configuration of an Otoroshi add-on.

@@ -1,8 +1,8 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { DeleteLogDrainCommandInput } from './delete-log-drain-command.types.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { DeleteLogDrainCommandInput } from './delete-log-drain-command.types.ts';
 
 /**
  * Deletes a log drain of an application or an add-on, stopping the shipping for good.

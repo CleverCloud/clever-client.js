@@ -1,6 +1,6 @@
 import type { ProvidedContext } from 'vitest';
-import { getE2eUsersLoginState } from '../lib/e2e-test-users.js';
-import { login, logout } from '../lib/login.js';
+import { getE2eUsersLoginState } from '../lib/e2e-test-users.ts';
+import { login, logout } from '../lib/login.ts';
 
 /**
  * Vitest global setup for node e2e tests. Replaces the former Mocha root hook

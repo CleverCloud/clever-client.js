@@ -1,5 +1,5 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
-import type { Instance } from './instance.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
+import type { Instance } from './instance.types.ts';
 
 /**
  * Identifies the instance to retrieve. The owner is resolved automatically when omitted.

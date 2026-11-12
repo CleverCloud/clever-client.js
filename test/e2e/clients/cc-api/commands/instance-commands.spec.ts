@@ -1,12 +1,12 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { DeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/deploy-application-command.js';
-import { GetApplicationInstanceCommand } from '../../../../../src/clients/cc-api/commands/instance/get-application-instance-command.js';
-import type { Instance } from '../../../../../src/clients/cc-api/commands/instance/instance.types.js';
-import { ListApplicationInstanceCommand } from '../../../../../src/clients/cc-api/commands/instance/list-application-instance-command.js';
-import { tolerateNotFound } from '../../../../../src/utils/error-utils.js';
-import { Polling } from '../../../../../src/utils/polling.js';
-import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+import { DeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/deploy-application-command.ts';
+import { GetApplicationInstanceCommand } from '../../../../../src/clients/cc-api/commands/instance/get-application-instance-command.ts';
+import type { Instance } from '../../../../../src/clients/cc-api/commands/instance/instance.types.ts';
+import { ListApplicationInstanceCommand } from '../../../../../src/clients/cc-api/commands/instance/list-application-instance-command.ts';
+import { tolerateNotFound } from '../../../../../src/utils/error-utils.ts';
+import { Polling } from '../../../../../src/utils/polling.ts';
+import { checkDateFormat } from '../../../../lib/expect-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('instance commands', { timeout: 60000 }, () => {
   const support = e2eSupport();

@@ -1,4 +1,4 @@
-import type { AddonProvider, AddonProviderPlan } from '../addon-provider/addon-provider.types.js';
+import type { AddonProvider, AddonProviderPlan } from '../addon-provider/addon-provider.types.ts';
 
 /**
  * An add-on provisioned in an organisation: a managed service (database, storage, monitoring, ...)

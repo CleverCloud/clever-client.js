@@ -1,12 +1,12 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformOauthConsumer, transformOauthConsumerRightsForApi } from './oauth-consumer-transform.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformOauthConsumer, transformOauthConsumerRightsForApi } from './oauth-consumer-transform.ts';
 import type {
   UpdateOauthConsumerCommandInput,
   UpdateOauthConsumerCommandOutput,
-} from './update-oauth-consumer-command.types.js';
+} from './update-oauth-consumer-command.types.ts';
 
 /**
  * Replaces the description and the rights of an OAuth consumer.

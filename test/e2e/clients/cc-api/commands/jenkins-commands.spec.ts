@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { GetJenkinsInfoCommand } from '../../../../../src/clients/cc-api/commands/jenkins/get-jenkins-info-command.js';
-import { checkDateFormat, expectToBeDefined } from '../../../../lib/expect-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+import { GetJenkinsInfoCommand } from '../../../../../src/clients/cc-api/commands/jenkins/get-jenkins-info-command.ts';
+import { checkDateFormat, expectToBeDefined } from '../../../../lib/expect-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 // cannot be automatised because addon deletion just after creation is not supported by the platform
 // todo: find a way to wait for addon to be ready for deletion

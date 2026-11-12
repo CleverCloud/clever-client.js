@@ -1,5 +1,5 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import type { GetWarpTokenCommandOutput } from './get-warp-token-command.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import type { GetWarpTokenCommandOutput } from './get-warp-token-command.types.ts';
 
 export function transformWarpToken(response: any): GetWarpTokenCommandOutput {
   return {

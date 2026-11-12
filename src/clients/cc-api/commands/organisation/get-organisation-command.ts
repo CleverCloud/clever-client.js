@@ -1,8 +1,8 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetOrganisationCommandInput, GetOrganisationCommandOutput } from './get-organisation-command.types.js';
-import { transformOrganisation } from './organisation-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetOrganisationCommandInput, GetOrganisationCommandOutput } from './get-organisation-command.types.ts';
+import { transformOrganisation } from './organisation-transform.ts';
 
 /**
  * Retrieves an organisation.

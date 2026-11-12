@@ -1,5 +1,5 @@
-import type { AddonProviderId } from '../../types/cc-api.types.js';
-import type { AddonProviderFeatureType, AddonProviderPlan } from './addon-provider.types.js';
+import type { AddonProviderId } from '../../types/cc-api.types.ts';
+import type { AddonProviderFeatureType, AddonProviderPlan } from './addon-provider.types.ts';
 
 /**
  * Identifies the provider to add a plan to, along with the plan to create.

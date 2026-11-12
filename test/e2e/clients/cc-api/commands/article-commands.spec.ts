@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { ListArticleCommand } from '../../../../../src/clients/cc-api/commands/article/list-article-command.js';
-import type { ListArticleCommandInput } from '../../../../../src/clients/cc-api/commands/article/list-article-command.types.js';
-import { e2eSupport } from '../e2e-support.js';
+import { ListArticleCommand } from '../../../../../src/clients/cc-api/commands/article/list-article-command.ts';
+import type { ListArticleCommandInput } from '../../../../../src/clients/cc-api/commands/article/list-article-command.types.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('article commands', function () {
   const support = e2eSupport();

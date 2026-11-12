@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, it } from 'vitest';
-import { DeleteOauthTokenCommand } from '../../../../../src/clients/cc-api/commands/oauth-token/delete-oauth-token-command.js';
-import { GetCurrentOauthTokenInfoCommand } from '../../../../../src/clients/cc-api/commands/oauth-token/get-current-oauth-token-info-command.js';
-import { ListOauthTokenCommand } from '../../../../../src/clients/cc-api/commands/oauth-token/list-oauth-token-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { DeleteOauthTokenCommand } from '../../../../../src/clients/cc-api/commands/oauth-token/delete-oauth-token-command.ts';
+import { GetCurrentOauthTokenInfoCommand } from '../../../../../src/clients/cc-api/commands/oauth-token/get-current-oauth-token-info-command.ts';
+import { ListOauthTokenCommand } from '../../../../../src/clients/cc-api/commands/oauth-token/list-oauth-token-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 // creating oauth token is not easy (we could reuse the OAuthDance class in cc-api-bridge code).
 // for now, we skip this test suite

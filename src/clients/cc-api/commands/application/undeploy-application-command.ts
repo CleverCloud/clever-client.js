@@ -1,8 +1,8 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { UndeployApplicationCommandInput } from './undeploy-application-command.types.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { UndeployApplicationCommandInput } from './undeploy-application-command.types.ts';
 
 /**
  * Stops an application by tearing down all of its running instances.

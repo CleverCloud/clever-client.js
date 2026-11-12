@@ -1,6 +1,6 @@
 import { events } from 'fetch-event-stream';
-import type { SseMessage } from '../../types/request.types.js';
-import type { SseResponseBody } from '../request/request.js';
+import type { SseMessage } from '../../types/request.types.ts';
+import type { SseResponseBody } from '../request/request.ts';
 
 /**
  * Reads the messages of an event stream response until it ends.

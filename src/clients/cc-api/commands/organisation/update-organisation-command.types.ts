@@ -1,4 +1,4 @@
-import type { Organisation } from './organisation.types.js';
+import type { Organisation } from './organisation.types.ts';
 
 /**
  * Describes the new state of the organisation. A company is identified by its legal name and its

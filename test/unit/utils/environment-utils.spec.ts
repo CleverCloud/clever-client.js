@@ -7,7 +7,7 @@ import {
   toNameEqualsValueString,
   toNameValueObject,
   validateName,
-} from '../../../src/utils/environment-utils.js';
+} from '../../../src/utils/environment-utils.ts';
 
 describe('environment-utils', () => {
   describe('validateName()', () => {

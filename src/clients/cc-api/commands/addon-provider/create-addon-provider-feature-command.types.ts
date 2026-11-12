@@ -1,5 +1,5 @@
-import type { AddonProviderId } from '../../types/cc-api.types.js';
-import type { AddonProviderFeature, AddonProviderFeatureType } from './addon-provider.types.js';
+import type { AddonProviderId } from '../../types/cc-api.types.ts';
+import type { AddonProviderFeature, AddonProviderFeatureType } from './addon-provider.types.ts';
 
 /**
  * Identifies the provider to add a feature to, along with the feature to declare.

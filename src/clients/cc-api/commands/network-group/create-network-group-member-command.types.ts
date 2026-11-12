@@ -1,4 +1,4 @@
-import type { NetworkGroupMember } from './network-group.types.js';
+import type { NetworkGroupMember } from './network-group.types.ts';
 
 /**
  * Describes the member to add to a network group.

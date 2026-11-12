@@ -1,4 +1,4 @@
-import type { TcpRedirectionNamespace } from './tcp-redirection.types.js';
+import type { TcpRedirectionNamespace } from './tcp-redirection.types.ts';
 
 /**
  * Identifies the organisation whose load balancer pools are listed.

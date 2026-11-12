@@ -1,11 +1,11 @@
-import { sortBy } from '../../../../lib/utils.js';
+import { sortBy } from '../../../../lib/utils.ts';
 import type {
   AddonProvider,
   AddonProviderFeature,
   AddonProviderFull,
   AddonProviderPlan,
   AddonProviderPlanFeature,
-} from './addon-provider.types.js';
+} from './addon-provider.types.ts';
 
 export function transformAddonProviderFull(payload: any): AddonProviderFull {
   return {

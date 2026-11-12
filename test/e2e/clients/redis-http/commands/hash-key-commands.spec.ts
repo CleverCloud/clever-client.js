@@ -1,9 +1,9 @@
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CreateHashKeyCommand } from '../../../../../src/clients/redis-http/commands/hash-key/create-hash-key-command.js';
-import { DeleteHashKeyElementCommand } from '../../../../../src/clients/redis-http/commands/hash-key/delete-hash-key-element-command.js';
-import { ScanHashKeyCommand } from '../../../../../src/clients/redis-http/commands/hash-key/scan-hash-key-command.js';
-import { SetHashKeyElementCommand } from '../../../../../src/clients/redis-http/commands/hash-key/set-hash-key-element-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CreateHashKeyCommand } from '../../../../../src/clients/redis-http/commands/hash-key/create-hash-key-command.ts';
+import { DeleteHashKeyElementCommand } from '../../../../../src/clients/redis-http/commands/hash-key/delete-hash-key-element-command.ts';
+import { ScanHashKeyCommand } from '../../../../../src/clients/redis-http/commands/hash-key/scan-hash-key-command.ts';
+import { SetHashKeyElementCommand } from '../../../../../src/clients/redis-http/commands/hash-key/set-hash-key-element-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('hash-key commands', function () {
   const support = e2eSupport();

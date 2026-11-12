@@ -1,13 +1,13 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import { transformKubernetesCluster } from './kubernetes-transform.js';
-import { waitForKubernetesClusterActive } from './kubernetes-utils.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import { transformKubernetesCluster } from './kubernetes-transform.ts';
+import { waitForKubernetesClusterActive } from './kubernetes-utils.ts';
 import type {
   ResumeKubernetesClusterCommandInput,
   ResumeKubernetesClusterCommandOutput,
-} from './resume-kubernetes-cluster-command.types.js';
+} from './resume-kubernetes-cluster-command.types.ts';
 
 /**
  * Resumes a cluster stuck in the `FAILED` status, re-running the operation that failed.

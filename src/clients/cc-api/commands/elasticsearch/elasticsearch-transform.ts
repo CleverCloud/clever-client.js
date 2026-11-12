@@ -1,5 +1,5 @@
-import { sortBy } from '../../../../lib/utils.js';
-import type { ElasticsearchInfo } from './elasticsearch.types.js';
+import { sortBy } from '../../../../lib/utils.ts';
+import type { ElasticsearchInfo } from './elasticsearch.types.ts';
 
 export function transformElasticsearchInfo(response: any): ElasticsearchInfo {
   return {

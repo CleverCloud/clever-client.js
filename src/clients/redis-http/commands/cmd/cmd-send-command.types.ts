@@ -1,4 +1,4 @@
-import type { RedisHttpCommandInput } from '../../types/redis-http.types.js';
+import type { RedisHttpCommandInput } from '../../types/redis-http.types.ts';
 
 /**
  * The command to run and the arguments to pass to it

@@ -1,4 +1,4 @@
-import type { KubernetesClusterVersionCheck } from './kubernetes.types.js';
+import type { KubernetesClusterVersionCheck } from './kubernetes.types.ts';
 
 /**
  * Identifies the cluster whose version is checked.

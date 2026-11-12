@@ -1,14 +1,14 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { DeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/deploy-application-command.js';
-import { CancelDeploymentCommand } from '../../../../../src/clients/cc-api/commands/deployment/cancel-deployment-command.js';
+import { DeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/deploy-application-command.ts';
+import { CancelDeploymentCommand } from '../../../../../src/clients/cc-api/commands/deployment/cancel-deployment-command.ts';
 import {
   GetDeploymentCommand,
   GetDeploymentCommandLegacy,
-} from '../../../../../src/clients/cc-api/commands/deployment/get-deployment-command.js';
-import { ListDeploymentCommand } from '../../../../../src/clients/cc-api/commands/deployment/list-deployment-command.js';
-import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { retry } from '../../../../lib/retry.js';
-import { e2eSupport } from '../e2e-support.js';
+} from '../../../../../src/clients/cc-api/commands/deployment/get-deployment-command.ts';
+import { ListDeploymentCommand } from '../../../../../src/clients/cc-api/commands/deployment/list-deployment-command.ts';
+import { checkDateFormat } from '../../../../lib/expect-utils.ts';
+import { retry } from '../../../../lib/retry.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('deployment commands', function () {
   const support = e2eSupport();

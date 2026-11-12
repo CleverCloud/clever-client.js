@@ -1,11 +1,11 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   RenewCellarCredentialsCommandInput,
   RenewCellarCredentialsCommandOutput,
-} from './renew-cellar-credentials-command.types.js';
+} from './renew-cellar-credentials-command.types.ts';
 
 /**
  * The error codes this command can produce, to compare against `error.code`.

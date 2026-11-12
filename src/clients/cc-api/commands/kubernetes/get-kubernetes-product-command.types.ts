@@ -1,4 +1,4 @@
-import type { KubernetesProduct } from './kubernetes.types.js';
+import type { KubernetesProduct } from './kubernetes.types.ts';
 
 /**
  * The Kubernetes catalogue.

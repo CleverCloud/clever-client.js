@@ -1,12 +1,12 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { CcStream } from '../../../../lib/stream/cc-stream.js';
-import type { CcStreamConfig, CcStreamRequestFactory } from '../../../../lib/stream/cc-stream.types.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import { CcApiStreamCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformRequestLocations } from './metrics-transform.js';
-import type { RequestLocation, StreamRequestsCommandInput } from './stream-requests-command.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { CcStream } from '../../../../lib/stream/cc-stream.ts';
+import type { CcStreamConfig, CcStreamRequestFactory } from '../../../../lib/stream/cc-stream.types.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import { CcApiStreamCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformRequestLocations } from './metrics-transform.ts';
+import type { RequestLocation, StreamRequestsCommandInput } from './stream-requests-command.types.ts';
 
 /**
  * Streams live request locations for an owner, optionally restricted to a single application.

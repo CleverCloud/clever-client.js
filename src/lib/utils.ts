@@ -3,8 +3,8 @@ import type {
   CcRequestConfigPartial,
   CcRequestParams,
   RequestCachePolicy,
-} from '../types/request.types.js';
-import type { UnknownToClient } from '../types/utils.types.js';
+} from '../types/request.types.ts';
+import type { UnknownToClient } from '../types/utils.types.ts';
 
 /**
  * Creates a new object with the specified properties omitted.

@@ -1,14 +1,14 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { normalizeDuration } from '../../../../utils/duration-utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { normalizeDuration } from '../../../../utils/duration-utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   GetWarpTokenCommandInput,
   GetWarpTokenCommandOutput,
   WarpTokenApplication,
-} from './get-warp-token-command.types.js';
-import { transformWarpToken } from './warp-token-transform.js';
+} from './get-warp-token-command.types.ts';
+import { transformWarpToken } from './warp-token-transform.ts';
 
 /**
  * Issues a Warp10 read token, used to query the metrics and access logs time series.

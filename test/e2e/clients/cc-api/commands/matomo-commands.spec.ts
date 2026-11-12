@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { GetMatomoInfoCommand } from '../../../../../src/clients/cc-api/commands/matomo/get-matomo-info-command.js';
-import { RebootMatomoCommand } from '../../../../../src/clients/cc-api/commands/matomo/reboot-matomo-command.js';
-import { RebuildMatomoCommand } from '../../../../../src/clients/cc-api/commands/matomo/rebuild-matomo-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { GetMatomoInfoCommand } from '../../../../../src/clients/cc-api/commands/matomo/get-matomo-info-command.ts';
+import { RebootMatomoCommand } from '../../../../../src/clients/cc-api/commands/matomo/reboot-matomo-command.ts';
+import { RebuildMatomoCommand } from '../../../../../src/clients/cc-api/commands/matomo/rebuild-matomo-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('matomo commands', function () {
   const support = e2eSupport();
