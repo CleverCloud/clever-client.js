@@ -2,15 +2,19 @@
 
 ## Commits and changelog
 
-A change ships two texts: a commit message, written for whoever works on this repository next, and a changelog entry, written for whoever consumes `@clevercloud/client`. Both follow precise rules — commit messages are [conventional commits](https://www.conventionalcommits.org) with a scope taken from a fixed taxonomy, and `CHANGELOG.md` is written through [Changesets](https://github.com/changesets/changesets).
+A change ships two texts: a commit message, written for whoever works on this repository next, and a changelog entry, written for whoever consumes `@clevercloud/client`.
+Both follow precise rules — commit messages are [conventional commits](https://www.conventionalcommits.org) with a scope taken from a fixed taxonomy, and `CHANGELOG.md` is written through [Changesets](https://github.com/changesets/changesets).
 
-**Read [docs/commits-and-changelog.md](docs/commits-and-changelog.md) before your first commit.** It is the reference for both: how to install the commit hook, which type and scope to pick, when a change needs a changelog entry, and how to write one.
+**Read [docs/commits-and-changelog.md](docs/commits-and-changelog.md) before your first commit.**
+It is the reference for both: how to install the commit hook, which type and scope to pick, when a change needs a changelog entry, and how to write one.
 
 CI keeps a `Release` PR up to date that bumps `package.json` and compiles the pending entries into `CHANGELOG.md`; merging it tags and publishes the release.
 
 ## How to test
 
-Tests run on [Vitest](https://vitest.dev). The same `*.spec.ts` files are executed both in **Node.js** and in a **real browser** (Vitest browser mode, powered by Playwright/Chromium). This is configured as four projects in `vitest.config.ts`:
+Tests run on [Vitest](https://vitest.dev).
+The same `*.spec.ts` files are executed both in **Node.js** and in a **real browser** (Vitest browser mode, powered by Playwright/Chromium).
+This is configured as four projects in `vitest.config.ts`:
 
 | Project        | Kind | Runtime |
 |----------------|------|---------|
@@ -21,8 +25,11 @@ Tests run on [Vitest](https://vitest.dev). The same `*.spec.ts` files are execut
 
 There are two kinds of tests:
 
-* **Unit tests** (`test/unit/`) hit a mock API (provided by [`@clevercloud/doublure`](https://www.npmjs.com/package/@clevercloud/doublure)). They need no credentials and are what `pnpm test` runs.
-* **End-to-end tests** (`test/e2e/`) hit the **real** Clever Cloud API. They log real test users in, exercise the API, then log them out. They require credentials (see below).
+* **Unit tests** (`test/unit/`) hit a mock API (provided by [`@clevercloud/doublure`](https://www.npmjs.com/package/@clevercloud/doublure)).
+  They need no credentials and are what `pnpm test` runs.
+* **End-to-end tests** (`test/e2e/`) hit the **real** Clever Cloud API.
+  They log real test users in, exercise the API, then log them out.
+  They require credentials (see below).
 
 The most common commands:
 
@@ -45,16 +52,21 @@ Specs that must run in a single environment use the `*.node.spec.ts` / `*.browse
 
 ### Mandatory environment variables (e2e)
 
-End-to-end tests authenticate against the real API, so they need credentials. These are **not** required for unit tests.
+End-to-end tests authenticate against the real API, so they need credentials.
+These are **not** required for unit tests.
 
-Provide them however you like. Locally, the simplest way is a `.env` file at the repo root: it is loaded automatically by `mise` (see `mise.local.toml`, which points `_.file` at `.env`). You can also export them in your shell or, on CI, inject them from the secrets store. The full list:
+Provide them however you like.
+Locally, the simplest way is a `.env` file at the repo root: it is loaded automatically by `mise` (see `mise.local.toml`, which points `_.file` at `.env`).
+You can also export them in your shell or, on CI, inject them from the secrets store.
+The full list:
 
 | Variable                | Purpose                                                   |
 |-------------------------|-----------------------------------------------------------|
 | `OAUTH_CONSUMER_KEY`    | OAuth consumer key used to drive the login (OAuth) dance. |
 | `OAUTH_CONSUMER_SECRET` | OAuth consumer secret matching the key above.             |
 
-Two test users must also be defined. They are declared in `test/lib/e2e-test-users.ts`, and each field is read from the environment:
+Two test users must also be defined.
+They are declared in `test/lib/e2e-test-users.ts`, and each field is read from the environment:
 
 **`test-user-without-github`** — a user with no GitHub account linked:
 
@@ -73,11 +85,13 @@ Two test users must also be defined. They are declared in `test/lib/e2e-test-use
 
 To add a new test user, declare it in `test/lib/e2e-test-users.ts` and wire its fields to new environment variables the same way.
 
-> **Note:** for the Node e2e run, users are logged in **once** in `test/setup/global-setup.node.ts`, then their tokens are handed to the test workers via Vitest's `provide`/`inject` (see `test/setup/hydrate-users.node.ts`). The browser e2e run logs in through the proxy Vite plugin in `test/setup/e2e-proxy.browser.ts`.
+> **Note:** for the Node e2e run, users are logged in **once** in `test/setup/global-setup.node.ts`, then their tokens are handed to the test workers via Vitest's `provide`/`inject` (see `test/setup/hydrate-users.node.ts`).
+> The browser e2e run logs in through the proxy Vite plugin in `test/setup/e2e-proxy.browser.ts`.
 
 ### The `TEST_RUNTIME` env var
 
-By default every Vitest command runs every project it is given, i.e. both the Node and the browser variant. `TEST_RUNTIME` is a **local-only escape hatch** to restrict a run to a single runtime:
+By default every Vitest command runs every project it is given, i.e. both the Node and the browser variant.
+`TEST_RUNTIME` is a **local-only escape hatch** to restrict a run to a single runtime:
 
 | Value     | Effect                                                        |
 |-----------|---------------------------------------------------------------|
@@ -85,8 +99,10 @@ By default every Vitest command runs every project it is given, i.e. both the No
 | `node`    | Keep only the `node-*` projects.                              |
 | `browser` | Keep only the `browser-*` projects.                           |
 
-How it works (`vitest.config.ts`): when `TEST_RUNTIME` is set, the project list is filtered to those whose name starts with `${TEST_RUNTIME}-`. Any other value throws an error.
+How it works (`vitest.config.ts`): when `TEST_RUNTIME` is set, the project list is filtered to those whose name starts with `${TEST_RUNTIME}-`.
+Any other value throws an error.
 
-Why it exists: some IDEs (e.g. WebStorm) run tests straight from the gutter with no `--project` flag, which would run every matching project — and for e2e that means logging the test users in **once per environment**. Setting `TEST_RUNTIME` lets you keep that to a single environment.
+Why it exists: some IDEs (e.g. WebStorm) run tests straight from the gutter with no `--project` flag, which would run every matching project — and for e2e that means logging the test users in **once per environment**.
+Setting `TEST_RUNTIME` lets you keep that to a single environment.
 
 Because the `pnpm test:*` scripts already pass explicit `--project` flags and CI sets its own projects, `TEST_RUNTIME` only matters for those flagless local runs and leaves CI and the npm scripts unaffected.

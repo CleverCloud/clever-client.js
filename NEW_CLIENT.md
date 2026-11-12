@@ -3,7 +3,8 @@
 🚧 **Beta Version - Work in Progress** 🚧
 
 This is a beta version of the new Clever Cloud client library.
-The API is subject to change, and some features may not be stable. Use with caution in production environments.
+The API is subject to change, and some features may not be stable.
+Use with caution in production environments.
 
 ---
 
@@ -157,9 +158,9 @@ await client.send(new DeleteApplicationCommand({
 
 ### Values From a Newer API
 
-A client may be older than the API it talks to. When a command meets a value it does not know — a
-new cluster event, a new notification target, a new peer kind — it does not throw and does not drop
-the entry. It publishes that one entry as an unknown variant carrying the raw payload:
+A client may be older than the API it talks to.
+When a command meets a value it does not know — a new cluster event, a new notification target, a new peer kind — it does not throw and does not drop the entry.
+It publishes that one entry as an unknown variant carrying the raw payload:
 
 ```javascript
 const events = await client.send(new ListKubernetesClusterEventCommand({ clusterId: 'cluster_123' }));
@@ -208,7 +209,8 @@ If the resource cannot be found, these methods throw a `CcClientError` with code
 
 ### Persistent Storage for ID Resolution
 
-By default, resource ID caching is stored in memory. You can configure persistent storage for ID caching:
+By default, resource ID caching is stored in memory.
+You can configure persistent storage for ID caching:
 
 ```javascript
 // Browser environment
@@ -484,7 +486,8 @@ See the [Persistent Storage for ID Resolution](#persistent-storage-for-id-resolu
 
 ## Error Handling
 
-The client provides a comprehensive error system with three distinct error types. Use the utility functions for best practices:
+The client provides a comprehensive error system with three distinct error types.
+Use the utility functions for best practices:
 
 ```javascript
 import { isCcClientError, isCcRequestError, isCcHttpError } from '@clevercloud/client/utils/error-utils.js';
@@ -546,9 +549,8 @@ if (isCcClientError(error)) {
 
 ### Narrowing on a status or a code
 
-The error classes are not part of the public API, so `error instanceof CcHttpError` is not available to
-consumers. Rather than duck-typing on `error.statusCode` or `error.code` — which matches any object that
-happens to carry those properties, whatever its origin — use the dedicated predicates:
+The error classes are not part of the public API, so `error instanceof CcHttpError` is not available to consumers.
+Rather than duck-typing on `error.statusCode` or `error.code` — which matches any object that happens to carry those properties, whatever its origin — use the dedicated predicates:
 
 ```javascript
 import {
@@ -572,10 +574,8 @@ try {
 }
 ```
 
-`isCcHttpErrorWithCode()` matches the code resolved by the client: either the code parsed from the response
-body and mapped by the command (see [Command-Specific Error Codes](#command-specific-error-codes)), or one of
-the cross-cutting codes the client normalizes itself. All three predicates are TypeScript type guards, so
-`error` is narrowed to `CcHttpError` inside the branch and `error.statusCode` / `error.response.body` are typed.
+`isCcHttpErrorWithCode()` matches the code resolved by the client: either the code parsed from the response body and mapped by the command (see [Command-Specific Error Codes](#command-specific-error-codes)), or one of the cross-cutting codes the client normalizes itself.
+All three predicates are TypeScript type guards, so `error` is narrowed to `CcHttpError` inside the branch and `error.statusCode` / `error.response.body` are typed.
 
 ### Common Error Codes
 
@@ -589,9 +589,8 @@ the cross-cutting codes the client normalizes itself. All three predicates are T
 
 ### Command-Specific Error Codes
 
-On top of the codes above, a command may translate the codes returned by its endpoint into named, documented
-codes. Those codes are exported as a constant next to the command class, so consumers never have to hardcode
-the string:
+On top of the codes above, a command may translate the codes returned by its endpoint into named, documented codes.
+Those codes are exported as a constant next to the command class, so consumers never have to hardcode the string:
 
 ```javascript
 import {
@@ -613,7 +612,8 @@ try {
 
 ## Environment-Specific Usage
 
-The client works identically in both Node.js and browser environments. The only difference is the optional `resourceIdResolverStore` configuration for persistent ID caching:
+The client works identically in both Node.js and browser environments.
+The only difference is the optional `resourceIdResolverStore` configuration for persistent ID caching:
 
 ### Browser Environment
 
@@ -735,13 +735,11 @@ const result = await redisClient.send(new CmdSendCommand({
 
 ## Writing Your Own Client
 
-The clients above are built on a base that is published too: `@clevercloud/client/cc-client.js`. Use it to
-write a client for another HTTP API — a backend of your own, a proxy in front of a service — and get the same
-request pipeline as the Clever Cloud clients: hooks, timeouts, caching, cancellation, and the same errors.
+The clients above are built on a base that is published too: `@clevercloud/client/cc-client.js`.
+Use it to write a client for another HTTP API — a backend of your own, a proxy in front of a service — and get the same request pipeline as the Clever Cloud clients: hooks, timeouts, caching, cancellation, and the same errors.
 
-A client extends `CcClient`, and its commands extend `SimpleCommand` (one request) or `CompositeCommand`
-(several commands sent in sequence). The type parameter names the API they belong to, so a command of one
-client cannot be sent to another.
+A client extends `CcClient`, and its commands extend `SimpleCommand` (one request) or `CompositeCommand` (several commands sent in sequence).
+The type parameter names the API they belong to, so a command of one client cannot be sent to another.
 
 ```typescript
 import {
@@ -854,21 +852,17 @@ What the entry point exports:
 | `CcStreamConfig`, `CcStreamConfigPartial`, `RetryConfig`, `CcStreamRequestFactory`, `CcStreamState`… | Types of streams                                             |
 | `CcClientError`, `CcRequestError`, `CcHttpError`, `CcNetworkError`                | Types of the errors, see below                                                   |
 
-The error classes are exported as types only, like everywhere else in this package: narrow an error with the
-predicates of `@clevercloud/client/utils/error-utils.js` (see [Error Handling](#error-handling)), which also
-recognise the errors raised by another copy of the package.
+The error classes are exported as types only, like everywhere else in this package: narrow an error with the predicates of `@clevercloud/client/utils/error-utils.js` (see [Error Handling](#error-handling)), which also recognise the errors raised by another copy of the package.
 
 A command can also:
 
 - override `transformErrorCode()` to map the error codes of its API to its own;
 - override `isAuthEnabled()` to return `false`, so that the client authentication is not applied to it;
-- override `getRequestConfig()` to state the request configuration its endpoint needs, which the configuration
-  given to `send()` still overrides.
+- override `getRequestConfig()` to state the request configuration its endpoint needs, which the configuration given to `send()` still overrides.
 
-A client can also transform the params of every command before they become a request, for example to fill in
-a default value or to resolve an id. Pass a `CcClientParamsTransformer` as the third argument of the `CcClient`
-constructor: its `transformParams(command, requestConfig)` returns the params a simple, composite or stream
-command is sent with. Without it, the params are sent as the command holds them.
+A client can also transform the params of every command before they become a request, for example to fill in a default value or to resolve an id.
+Pass a `CcClientParamsTransformer` as the third argument of the `CcClient` constructor: its `transformParams(command, requestConfig)` returns the params a simple, composite or stream command is sent with.
+Without it, the params are sent as the command holds them.
 
 ```typescript
 import type { CcClientParamsTransformer } from '@clevercloud/client/cc-client.js';
@@ -886,9 +880,8 @@ export class MyApiClient extends CcClient<MyApi> {
 
 ### Streams
 
-A stream command opens a Server-Sent Events stream, with the same retries, heartbeat monitoring and
-cancellation as the streams of `CcApiClient`. It builds its request like a simple command, and creates the
-stream the client then opens:
+A stream command opens a Server-Sent Events stream, with the same retries, heartbeat monitoring and cancellation as the streams of `CcApiClient`.
+It builds its request like a simple command, and creates the stream the client then opens:
 
 ```typescript
 import {
@@ -934,18 +927,19 @@ stream.onWidgetEvent((widget) => console.log(widget));
 await stream.start();
 ```
 
-The client handles the `HEARTBEAT` and `END_OF_STREAM` events itself. See
-[Real-time Streaming](#real-time-streaming) for the rest of the stream API.
+The client handles the `HEARTBEAT` and `END_OF_STREAM` events itself.
+See [Real-time Streaming](#real-time-streaming) for the rest of the stream API.
 
-An application only ships what it imports from this entry point: one that never uses a stream does not ship
-`CcStream`.
+An application only ships what it imports from this entry point: one that never uses a stream does not ship `CcStream`.
 
 ## Support
 
-This library provides comprehensive access to Clever Cloud's platform APIs. For questions about the platform or API behaviour, refer to the [Clever Cloud documentation](https://www.clever.cloud/developers/).
+This library provides comprehensive access to Clever Cloud's platform APIs.
+For questions about the platform or API behaviour, refer to the [Clever Cloud documentation](https://www.clever.cloud/developers/).
 
 For issues with this client library, please file bug reports on the [GitHub repository](https://github.com/CleverCloud/clever-client.js).
 
 ---
 
-**⚠️ Beta Notice**: This documentation covers the new command-pattern client. APIs and interfaces may change in future versions.
+**⚠️ Beta Notice**: This documentation covers the new command-pattern client.
+APIs and interfaces may change in future versions.

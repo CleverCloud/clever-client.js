@@ -20,7 +20,7 @@ This file is the instruction set for AI coding agents.
 
 ## Writing
 
-These rules apply to new Markdown files, commit messages and changesets.
+These rules apply to Markdown files (except `CHANGELOG.md`), commit messages and changesets.
 
 - One sentence per line, never hard-wrapped.
 - Short sentences, no long prose.

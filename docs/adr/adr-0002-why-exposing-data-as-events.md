@@ -24,7 +24,8 @@ const closeStreamFn = logsStream.openResilientStream({
 
 This model is not fundamentally bad but it has limitations:
 
-* It's "too custom". It does not follow any standard (or de-facto standard) and was designed without really thinking about the overall reactive stream landscape.
+* It's "too custom".
+  It does not follow any standard (or de-facto standard) and was designed without really thinking about the overall reactive stream landscape.
   * We need to make sure our users can easily wire the clever-client in their existing contexts.
 * With 1 single object of the class `LogsStream`, if you call `openResilientStream()` 3 times, you have 3 streams.
   * This mismatch between number of objects and number of open streams is confusing.
@@ -72,22 +73,23 @@ Important fact:
 _It's worth noting that you can build either approach on top of the other in a pinch:_
 
 * _To build push on top of pull, constantly be pulling from the pull API, and then push out the chunks to any consumers._
-* _To build pull on top of push, subscribe to the push API immediately, create a buffer that accumulates all results, and when someone pulls, grab it from that buffer. (Or wait until the buffer becomes non-empty, if your consumer is pulling faster than the wrapped push API is pushing.)_
+* _To build pull on top of push, subscribe to the push API immediately, create a buffer that accumulates all results, and when someone pulls, grab it from that buffer.
+  (Or wait until the buffer becomes non-empty, if your consumer is pulling faster than the wrapped push API is pushing.)_
 
 _The latter is generally much more code to write than the former._
 
 #### hot vs. cold
 
-When you look at observables, it's also important to know if you want to expose hot or cold observables. 
+When you look at observables, it's also important to know if you want to expose hot or cold observables.
 
-* [This article](https://www.davesexton.com/blog/post/Hot-and-Cold-Observables.aspx) by Dave Sexton is a really nice explanation of this concept. 
+* [This article](https://www.davesexton.com/blog/post/Hot-and-Cold-Observables.aspx) by Dave Sexton is a really nice explanation of this concept.
 * In his two articles on why they created xstreams, André Staltz also talks about hot vs. cold Observables:
   * [Why we actually built xstream](https://staltz.com/why-we-built-xstream.html)
-  * [Why we built xstream](https://staltz.com/why-we-actually-built-xstream.html) 
+  * [Why we built xstream](https://staltz.com/why-we-actually-built-xstream.html)
 
 Quoting Dave Sexton:
 
-_In summary, common sense tells us that:_ 
+_In summary, common sense tells us that:_
 
 * _Hot observables are always running and they broadcast notifications to all observers._
 * _Cold observables generate notifications for each observer._
@@ -117,7 +119,7 @@ Now that we talked briefly about concepts, we'll dig into the four different kin
 Node.js and browsers share a very similar events API, it consists of an object on which you can add/remove event listeners.
 
 * Node.js calls them [`EventEmitter`](https://nodejs.org/api/events.html#events_class_eventemitter) and uses them in lots of its APIs.
-  * Ex: if you create a TCP server with `net.createServer()`, you get a [`net.Server`](https://nodejs.org/api/net.html#net_class_net_server) object which extends `EventEmitter`. 
+  * Ex: if you create a TCP server with `net.createServer()`, you get a [`net.Server`](https://nodejs.org/api/net.html#net_class_net_server) object which extends `EventEmitter`.
   * Calls can be chained
   * `addListener()`/`on()` to add a listener
   * `removeListener()`/`off()` to remove a listener
@@ -125,7 +127,8 @@ Node.js and browsers share a very similar events API, it consists of an object o
   * `once()` to add a one time listener (returns a promise)
   * `removeAllListeners()`
 * The browser DOM calls them [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) and uses them in lots of its APIs.
-  * Ex: any element in the DOM extends `EventTarget`. Other examples include [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) for SSE, [`WebSocket`](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket) or even [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest).
+  * Ex: any element in the DOM extends `EventTarget`.
+    Other examples include [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) for SSE, [`WebSocket`](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket) or even [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest).
   * Calls cannot be chained
   * `addEventListener()` to add a listener
   * `removeEventListener()` to remove a listener
@@ -152,7 +155,9 @@ NOTES:
 * _Their primary innovation is that the subscription itself is represented by a first-class object, the Observable, which you can then apply combinators (such as filter, map, etc.) over._
 * _They also make the choice to bundle together three signals (conventionally named next, complete, and error) into one, and give these signals special semantics so that the combinators respect them._
   * This limitation to three signals has pros and cons.
-* _Another nice feature of observables over events is that generally only the creator of the observable can cause it to generate those next/error/complete signals. Whereas on EventTarget, anyone can call dispatchEvent(). This separation of responsibilities makes for better code, in my experience._
+* _Another nice feature of observables over events is that generally only the creator of the observable can cause it to generate those next/error/complete signals.
+  Whereas on EventTarget, anyone can call dispatchEvent().
+  This separation of responsibilities makes for better code, in my experience._
 * It's very easy to create an Observable from an `EventEmitter`/`EventTarget`.
 
 #### Streams
@@ -163,7 +168,8 @@ Look at this [FAQ](https://github.com/whatwg/streams/blob/master/FAQ.md#what-are
 NOTES:
 
 * This is a pull based API (see exception for Node.js).
-* All Node.js streams are instances of `EventEmitter` which can be confusing. It comes from the "two reading modes":
+* All Node.js streams are instances of `EventEmitter` which can be confusing.
+  It comes from the "two reading modes":
   * In flowing mode, data is read from the underlying system automatically and provided to an application as quickly as possible using events via the EventEmitter interface.
   * In paused mode, the stream.read() method must be called explicitly to read chunks of data from the stream.
 * As described in the [WHATWG streams FAQ](https://github.com/whatwg/streams/blob/master/FAQ.md#how-do-readable-streams-relate-to-async-iterables):
@@ -204,12 +210,17 @@ Between Events, Streams, Observables or Async iterators, we chose to expose thos
 Here are the reasons:
 
 * Our data come from push based sources (SSE and WS) => events or observables are a better choice than streams or async iterators.
-* Most libraries are compatible with the proposed Observables draft. They could be considered as a de-facto standard because of this compatibility but the draft seems stale and lacks operators or backpressure support. It doesn't give strong future proof feelings.
-* Most libraries are compatible with events. They are implemented by runtimes like Node.js and browsers (`EventEmitter`/`EventTarget`) and have been used for a long time. We don't expect this model to drastically change in the future.
+* Most libraries are compatible with the proposed Observables draft.
+  They could be considered as a de-facto standard because of this compatibility but the draft seems stale and lacks operators or backpressure support.
+  It doesn't give strong future proof feelings.
+* Most libraries are compatible with events.
+  They are implemented by runtimes like Node.js and browsers (`EventEmitter`/`EventTarget`) and have been used for a long time.
+  We don't expect this model to drastically change in the future.
 * Events can expose more than just three signals compared to Observables, it allows us to emit events for `ping` received by the source or emit `open`/`close` events when auto retry are attempted in case of network failures.
 * It's simple to create an Observable from events.
-  * NOTE: Most libraries have functions to do that in one call. You can also do it by hand, it allows for more control and is still quiet simple to write.
-* If you want to expose an Observable, you have to respect an API which means bundling more code than what's needed for `EventEmitter`/`EventTarget` in the clever-client. 
+  * NOTE: Most libraries have functions to do that in one call.
+    You can also do it by hand, it allows for more control and is still quiet simple to write.
+* If you want to expose an Observable, you have to respect an API which means bundling more code than what's needed for `EventEmitter`/`EventTarget` in the clever-client.
 
 ### We're using a lib called `component/emitter`
 
@@ -250,12 +261,14 @@ As we already explained in "push vs. pull", this `EventEmitter`/`EventTarget` AP
 If we need to expose data from a pull based API, we would consider two solutions:
 
 1. Expose data with this API, pushing events to the user and hiding the implementation detail of pulling from the source (without backpressure support).
-2. Expose data with async iterators. They are low level, directly available in the language and widely available in Node.js and modern browsers. They would be a better choice for us than streams.
+2. Expose data with async iterators.
+   They are low level, directly available in the language and widely available in Node.js and modern browsers.
+   They would be a better choice for us than streams.
 
 This would highly depend on whether the data is "infinite" or not.
 
 * Infinite example: In the console app overview live map, we poll Warp10 with HTTP calls to retrieve live access logs.
-* Finite example: In the clever-tools `accesslogs` command, without `-f` option, we need to retrieve access for the last 24 hours, so we chose to query Warp10 in batch of one hour. 
+* Finite example: In the clever-tools `accesslogs` command, without `-f` option, we need to retrieve access for the last 24 hours, so we chose to query Warp10 in batch of one hour.
 
 NOTES:
 
