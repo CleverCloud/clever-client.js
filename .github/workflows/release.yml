@@ -24,10 +24,9 @@ jobs:
       - name: '[Prepare] Setup'
         uses: ./.github/actions/ci-setup
       - name: '[Release] Version or publish packages'
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          publish: pnpm release
-          commit: 'chore: release'
-          title: 'Release'
-        env:
-          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+          publish-script: pnpm release
+          commit-message: 'chore: release'
+          pr-title: 'Release'
+          github-token: ${{ secrets.CI_TOKEN }}
