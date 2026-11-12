@@ -15,6 +15,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "strict": true,
+    "isolatedModules": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
     "useUnknownInCatchVariables": false
   }
 }
