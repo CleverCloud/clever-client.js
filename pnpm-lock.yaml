@@ -39,6 +39,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^20.0.0
         version: 20.5.3
+      '@commitlint/types':
+        specifier: ^20.5.0
+        version: 20.5.0
       '@types/component-emitter':
         specifier: ^1.2.14
         version: 1.2.14

@@ -36,7 +36,7 @@ does.
 ## Commit messages
 
 [Conventional Commits](https://www.conventionalcommits.org), enforced by commitlint
-(`.commitlintrc`, `@commitlint/config-conventional`). Install the hook once:
+(`commitlint.config.ts`, `@commitlint/config-conventional`). Install the hook once:
 
 ```shell
 git config core.hooksPath '.githooks'
