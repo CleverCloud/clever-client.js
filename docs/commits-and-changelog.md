@@ -62,7 +62,7 @@ and `revert`. Four of them account for most of the log, and three choices come u
   intent behind the change was.
 - **`fix` vs `feat`.** `fix` restores what the command already promised, in its types or its
   documentation. `feat` adds surface: a command, an export, an option, a field, an error code.
-- **`build` vs `ci` vs `chore`.** `build` is what produces the package — Rollup, tsconfig,
+- **`build` vs `ci` vs `chore`.** `build` is what produces the package — tsc, tsconfig,
   `package.json`, the publish pipeline. `ci` is what GitHub Actions runs. `chore` is what affects
   neither.
 
@@ -131,7 +131,7 @@ Same rule one level up: the scope is the folder, or the tool when there is no fo
 |----------------|-------------------------------------------------------------------|
 | `legacy`       | The legacy functional client, `esm/`                              |
 | `test` / `e2e` | `test/unit/` and `test/e2e/`, and their setup                     |
-| `build`        | What produces the package: Rollup, tsconfig, `package.json`       |
+| `build`        | What produces the package: tsc, tsconfig, `package.json`           |
 | `ci`           | `.github/`                                                        |
 | `deps`         | Dependency bumps                                                  |
 | `release`      | `.changeset/` configuration and the release pipeline              |

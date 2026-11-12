@@ -10,7 +10,7 @@ CI keeps a `Release` PR up to date that bumps `package.json` and compiles the pe
 
 ## How to test
 
-Tests run on [Vitest](https://vitest.dev). The same `*.spec.js` files are executed both in **Node.js** and in a **real browser** (Vitest browser mode, powered by Playwright/Chromium). This is configured as four projects in `vitest.config.ts`:
+Tests run on [Vitest](https://vitest.dev). The same `*.spec.ts` files are executed both in **Node.js** and in a **real browser** (Vitest browser mode, powered by Playwright/Chromium). This is configured as four projects in `vitest.config.ts`:
 
 | Project        | Kind | Runtime |
 |----------------|------|---------|
@@ -21,16 +21,16 @@ Tests run on [Vitest](https://vitest.dev). The same `*.spec.js` files are execut
 
 There are two kinds of tests:
 
-* **Unit tests** (`test/unit/`) hit a mock API (provided by [`@clevercloud/doublure`](https://www.npmjs.com/package/@clevercloud/doublure)). They need no credentials and are what `npm run test` runs.
+* **Unit tests** (`test/unit/`) hit a mock API (provided by [`@clevercloud/doublure`](https://www.npmjs.com/package/@clevercloud/doublure)). They need no credentials and are what `pnpm test` runs.
 * **End-to-end tests** (`test/e2e/`) hit the **real** Clever Cloud API. They log real test users in, exercise the API, then log them out. They require credentials (see below).
 
 The most common commands:
 
 ```shell
-npm run test           # all unit tests (Node + browser)
-npm run test:unit:node # unit tests, Node only
-npm run test:e2e       # e2e tests, Node + browser (needs the env vars below)
-npm run test:e2e:node  # e2e tests, Node only
+pnpm test           # all unit tests (Node + browser)
+pnpm test:unit:node # unit tests, Node only
+pnpm test:e2e       # e2e tests, Node + browser (needs the env vars below)
+pnpm test:e2e:node  # e2e tests, Node only
 ```
 
 See `package.json` for the full list of `test:*` scripts (per-runtime and watch variants).
@@ -38,10 +38,10 @@ See `package.json` for the full list of `test:*` scripts (per-runtime and watch 
 Browser projects need Playwright's Chromium installed once:
 
 ```shell
-npx playwright install chromium
+pnpm exec playwright install chromium
 ```
 
-Specs that must run in a single environment use the `*.node.spec.js` / `*.browser.spec.js` naming convention.
+Specs that must run in a single environment use the `*.node.spec.ts` / `*.browser.spec.ts` naming convention.
 
 ### Mandatory environment variables (e2e)
 
@@ -54,7 +54,7 @@ Provide them however you like. Locally, the simplest way is a `.env` file at the
 | `OAUTH_CONSUMER_KEY`    | OAuth consumer key used to drive the login (OAuth) dance. |
 | `OAUTH_CONSUMER_SECRET` | OAuth consumer secret matching the key above.             |
 
-Two test users must also be defined. They are declared in `test/lib/e2e-test-users.js`, and each field is read from the environment:
+Two test users must also be defined. They are declared in `test/lib/e2e-test-users.ts`, and each field is read from the environment:
 
 **`test-user-without-github`** — a user with no GitHub account linked:
 
@@ -71,9 +71,9 @@ Two test users must also be defined. They are declared in `test/lib/e2e-test-use
 | `TEST_USER_WITH_GITHUB_EMAIL`    | Login email.    |
 | `TEST_USER_WITH_GITHUB_PASSWORD` | Login password. |
 
-To add a new test user, declare it in `test/lib/e2e-test-users.js` and wire its fields to new environment variables the same way.
+To add a new test user, declare it in `test/lib/e2e-test-users.ts` and wire its fields to new environment variables the same way.
 
-> **Note:** for the Node e2e run, users are logged in **once** in `test/setup/global-setup.node.js`, then their tokens are handed to the test workers via Vitest's `provide`/`inject` (see `test/setup/hydrate-users.node.js`). The browser e2e run logs in through the proxy Vite plugin in `test/setup/e2e-proxy.browser.js`.
+> **Note:** for the Node e2e run, users are logged in **once** in `test/setup/global-setup.node.ts`, then their tokens are handed to the test workers via Vitest's `provide`/`inject` (see `test/setup/hydrate-users.node.ts`). The browser e2e run logs in through the proxy Vite plugin in `test/setup/e2e-proxy.browser.ts`.
 
 ### The `TEST_RUNTIME` env var
 
@@ -89,4 +89,4 @@ How it works (`vitest.config.ts`): when `TEST_RUNTIME` is set, the project list 
 
 Why it exists: some IDEs (e.g. WebStorm) run tests straight from the gutter with no `--project` flag, which would run every matching project — and for e2e that means logging the test users in **once per environment**. Setting `TEST_RUNTIME` lets you keep that to a single environment.
 
-Because the `npm run test:*` scripts already pass explicit `--project` flags and CI sets its own projects, `TEST_RUNTIME` only matters for those flagless local runs and leaves CI and the npm scripts unaffected.
+Because the `pnpm test:*` scripts already pass explicit `--project` flags and CI sets its own projects, `TEST_RUNTIME` only matters for those flagless local runs and leaves CI and the npm scripts unaffected.
