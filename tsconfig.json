@@ -1,4 +1,6 @@
 {
+  // Every source, test and config file, and the Claude Code hooks, which a wildcard skips as they sit in a dot directory
+  "include": ["**/*", ".claude/hooks/*.ts"],
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "target": "ES2023",
