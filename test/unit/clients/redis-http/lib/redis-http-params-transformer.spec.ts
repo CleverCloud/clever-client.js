@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { CmdSendCommand } from '../../../../src/clients/redis-http/commands/cmd/cmd-send-command.js';
+import { CmdSendCommand } from '../../../../../src/clients/redis-http/commands/cmd/cmd-send-command.js';
 import {
   isRedisHttpCommand,
   type RedisHttpCommand,
-} from '../../../../src/clients/redis-http/lib/redis-http-command.js';
-import { RedisHttpClient } from '../../../../src/clients/redis-http/redis-http-client.js';
-import { brandAsForeignCopy } from '../../../lib/foreign-copy.js';
+} from '../../../../../src/clients/redis-http/lib/redis-http-command.js';
+import { RedisHttpParamsTransformer } from '../../../../../src/clients/redis-http/lib/redis-http-params-transformer.js';
+import { brandAsForeignCopy } from '../../../../lib/foreign-copy.js';
 
 const BACKEND_URL = 'redis://my-redis-db:6379';
 
@@ -27,10 +27,10 @@ class ForeignRedisHttpCommand {
 }
 
 function transformCommandParams(command: RedisHttpCommand<unknown, unknown>): Promise<unknown> {
-  return new RedisHttpClient({ backendUrl: BACKEND_URL })['_transformCommandParams'](command);
+  return new RedisHttpParamsTransformer(BACKEND_URL).transformParams(command, undefined);
 }
 
-describe('RedisHttpClient', () => {
+describe('RedisHttpParamsTransformer', () => {
   it('should inject the backend URL of the client into a command requiring one', async () => {
     const command = new CmdSendCommand({ command: 'GET', args: ['my-key'] });
 

@@ -1,4 +1,4 @@
-import type { CcClientConfig, CcClientHooks } from '../types/client.types.js';
+import type { CcClientConfig, CcClientHooks, CcClientParamsTransformer } from '../types/client.types.js';
 import type { Command } from '../types/command.types.js';
 import type {
   CcRequest,
@@ -18,6 +18,7 @@ import type { CcStream } from './stream/cc-stream.js';
 import type { CcStreamConfig, CcStreamConfigPartial, RetryConfig } from './stream/cc-stream.types.js';
 import type { StreamCommand } from './stream/stream-command.js';
 import {
+  getRequestSignal,
   isAbsoluteUrl,
   isUrlWithinBaseUrl,
   mergeRequestConfig,
@@ -97,6 +98,7 @@ export class CcClient<Api extends string> {
   #defaultStreamsConfig: CcStreamConfig;
   #hooks: CcClientHooks;
   #auth: CcAuth | undefined;
+  #paramsTransformer: CcClientParamsTransformer<Api> | undefined;
   // held weakly, so that remembering an error does not keep it from being collected
   #reportedErrors = new WeakSet<object>();
 
@@ -105,8 +107,10 @@ export class CcClient<Api extends string> {
    *
    * @param config - Client configuration including baseUrl and default request settings
    * @param auth - Optional authentication handler
+   * @param paramsTransformer - Optional transformation of the command params, for the clients built on
+   * top of this one. Without it, the params are sent as the command holds them.
    */
-  constructor(config: CcClientConfig, auth?: CcAuth) {
+  constructor(config: CcClientConfig, auth?: CcAuth, paramsTransformer?: CcClientParamsTransformer<Api>) {
     try {
       new URL(config.baseUrl, globalThis.location?.href);
     } catch (e) {
@@ -117,6 +121,7 @@ export class CcClient<Api extends string> {
     this.#defaultStreamsConfig = mergeStreamConfig(DEFAULT_STREAM_CONFIG, config.defaultStreamConfig);
     this.#hooks = config.hooks ?? {};
     this.#auth = auth;
+    this.#paramsTransformer = paramsTransformer;
   }
 
   /**
@@ -133,7 +138,7 @@ export class CcClient<Api extends string> {
     requestConfig?: CcRequestConfigPartial,
   ): Promise<CommandOutput> {
     try {
-      return await this._send(command, requestConfig, true);
+      return await this.#send(command, requestConfig, true);
     } catch (e) {
       this.#reportError(e, requestConfig);
       throw e;
@@ -143,7 +148,7 @@ export class CcClient<Api extends string> {
   /**
    * Hands the error rejecting a `send()` to the `onError` hook, unless there is nothing to report.
    *
-   * Reported from `send()` rather than from `_send`, which composers go through too: a composite would
+   * Reported from `send()` rather than from `#send`, which composers go through too: a composite would
    * report an inner error once per level, and even an error it recovered from.
    *
    * @param error - The error rejecting `send()`
@@ -155,7 +160,7 @@ export class CcClient<Api extends string> {
     }
 
     // an abort is what the caller asked for, not a failure to report
-    if (this._getRequestSignal(requestConfig)?.aborted === true) {
+    if (getRequestSignal(requestConfig, this.#defaultRequestsConfig)?.aborted === true) {
       return;
     }
 
@@ -172,17 +177,6 @@ export class CcClient<Api extends string> {
   }
 
   /**
-   * Gets the signal the requests sent with the given configuration abort with: the signal of that
-   * configuration, or else the default signal of the client.
-   *
-   * @param requestConfig - The request configuration a command is sent with
-   * @returns The signal, if any
-   */
-  protected _getRequestSignal(requestConfig: CcRequestConfigPartial | undefined): AbortSignal | undefined {
-    return requestConfig?.signal ?? this.#defaultRequestsConfig.signal;
-  }
-
-  /**
    * Sends a command, under the idempotency ceiling of whatever encloses it.
    *
    * Every command goes through here, including the ones a composite command sends through its composer.
@@ -192,21 +186,21 @@ export class CcClient<Api extends string> {
    * @param isIdempotentCeiling - Whether what encloses this command can be replayed at all
    * @returns The processed command response
    */
-  protected async _send<CommandInput, CommandOutput>(
+  async #send<CommandInput, CommandOutput>(
     command: Command<Api, CommandInput, CommandOutput>,
     requestConfig: CcRequestConfigPartial | undefined,
     isIdempotentCeiling: boolean,
   ): Promise<CommandOutput> {
     if (isCompositeCommand(command)) {
-      return this._compose(command, requestConfig, isIdempotentCeiling);
+      return this.#compose(command, requestConfig, isIdempotentCeiling);
     }
 
-    const requestParams = await this._getCommandRequestParams(command, requestConfig);
+    const requestParams = await this.#getCommandRequestParams(command, requestConfig);
     // a caller can only replay what it sent, so a command is no more replayable than what encloses it
     const isIdempotent = isIdempotentCeiling && command.isIdempotent();
-    const request = await this._prepareRequest(command, requestParams, requestConfig, isIdempotent);
+    const request = await this.#prepareRequest(command, requestParams, requestConfig, isIdempotent);
     const response = await sendRequest<CommandOutput>(request);
-    return this._handleResponse(response, request, command);
+    return this.#handleResponse(response, request, command);
   }
 
   /**
@@ -220,41 +214,31 @@ export class CcClient<Api extends string> {
     command: StreamCommand<Api, CommandInput, Stream>,
     requestAndStreamConfig?: CcStreamConfigPartial & CcRequestConfigPartial,
   ): Promise<Stream> {
-    const transformedParams = (await this._transformStreamParams(command, requestAndStreamConfig)) as CommandInput;
+    const transformedParams = (await this.#transformParams(command, requestAndStreamConfig)) as CommandInput;
 
     const streamConfigWithDefaults = mergeStreamConfig(this.#defaultStreamsConfig, requestAndStreamConfig);
     return command.createStream(async () => {
       const preparedRequestParams = await command.toRequestParams(transformedParams);
-      return this._prepareRequest(command, preparedRequestParams, requestAndStreamConfig, true);
+      return this.#prepareRequest(command, preparedRequestParams, requestAndStreamConfig, true);
     }, streamConfigWithDefaults);
   }
 
   /**
-   * Transforms command parameters before sending the request
+   * Transforms the params of a command, simple, composite or stream, with the params transformer of the
+   * client, if any.
    *
-   * @param command - The command whose parameters need transformation
-   * @param _requestConfig - Optional request configuration
-   * @returns The transformed parameters
+   * @param command - The command whose params need transformation
+   * @param requestConfig - The request configuration the command is sent with
+   * @returns The transformed params
    */
-  protected _transformCommandParams(
-    command: Command<Api, unknown, unknown>,
-    _requestConfig?: CcRequestConfigPartial,
+  #transformParams(
+    command: Command<Api, unknown, unknown> | StreamCommand<Api, unknown, CcStream>,
+    requestConfig: CcRequestConfigPartial | undefined,
   ): Promise<unknown> {
-    return Promise.resolve(command.params);
-  }
-
-  /**
-   * Transforms stream command parameters before creating the stream
-   *
-   * @param command - The stream command whose parameters need transformation
-   * @param _requestConfig - Optional request configuration
-   * @returns The transformed parameters
-   */
-  protected _transformStreamParams(
-    command: StreamCommand<Api, unknown, CcStream>,
-    _requestConfig?: CcRequestConfigPartial,
-  ): Promise<unknown> {
-    return Promise.resolve(command.params);
+    if (this.#paramsTransformer == null) {
+      return Promise.resolve(command.params);
+    }
+    return this.#paramsTransformer.transformParams(command, requestConfig);
   }
 
   /**
@@ -265,12 +249,12 @@ export class CcClient<Api extends string> {
    * @param isIdempotentCeiling - Whether what encloses this composite command can be replayed at all
    * @returns The result of executing all sub-commands
    */
-  protected async _compose<CommandOutput>(
+  async #compose<CommandOutput>(
     command: CompositeCommand<Api, unknown, CommandOutput>,
     requestConfig: CcRequestConfigPartial | undefined,
     isIdempotentCeiling: boolean,
   ): Promise<CommandOutput> {
-    const transformedParams = await this._transformCommandParams(command, requestConfig);
+    const transformedParams = await this.#transformParams(command, requestConfig);
 
     // the composite command states the configuration its sub-commands need, the caller configuration still wins over it
     const composedRequestConfig = mergeRequestConfigPartial(command.getRequestConfig(), requestConfig);
@@ -280,7 +264,7 @@ export class CcClient<Api extends string> {
 
     return command.compose(transformedParams, {
       send: (command, commandRequestConfig) =>
-        this._send(
+        this.#send(
           command,
           mergeRequestConfigPartial(composedRequestConfig, commandRequestConfig),
           composedIsIdempotent,
@@ -292,14 +276,14 @@ export class CcClient<Api extends string> {
    * Prepares request parameters for a simple command
    *
    * @param command - The command to prepare parameters for
-   * @param requestConfig - Optional request configuration
+   * @param requestConfig - Request configuration that overrides the default
    * @returns The prepared request parameters
    */
-  protected async _getCommandRequestParams(
+  async #getCommandRequestParams(
     command: SimpleCommand<Api, unknown, unknown>,
-    requestConfig?: CcRequestConfigPartial,
+    requestConfig: CcRequestConfigPartial | undefined,
   ): Promise<Partial<CcRequestParams>> {
-    const transformedParams = await this._transformCommandParams(command, requestConfig);
+    const transformedParams = await this.#transformParams(command, requestConfig);
     return command.toRequestParams(transformedParams);
   }
 
@@ -312,7 +296,7 @@ export class CcClient<Api extends string> {
    * @param isIdempotent - Whether sending the prepared request twice means it twice
    * @returns The prepared request
    */
-  protected async _prepareRequest(
+  async #prepareRequest(
     command: SimpleCommand<Api, unknown, unknown> | StreamCommand<Api, unknown, CcStream>,
     requestParams: Partial<CcRequestParams>,
     requestConfig: CcRequestConfigPartial | undefined,
@@ -363,7 +347,7 @@ export class CcClient<Api extends string> {
    * @throws {CcClientError} When there's a client-side error processing the response
    * @throws {CcHttpError} When the server returns an error response
    */
-  protected async _handleResponse<CommandOutput>(
+  async #handleResponse<CommandOutput>(
     response: CcResponse<CommandOutput>,
     request: CcRequest,
     command: SimpleCommand<Api, unknown, CommandOutput>,

@@ -2,14 +2,12 @@ import { CcAuthApiToken } from '../../lib/auth/cc-auth-api-token.js';
 import { CcAuthOauthV1Plaintext } from '../../lib/auth/cc-auth-oauth-v1-plaintext.js';
 import type { CcAuth } from '../../lib/auth/cc-auth.js';
 import { CcClient } from '../../lib/cc-client.js';
-import type { CcStream } from '../../lib/stream/cc-stream.js';
-import { merge } from '../../lib/utils.js';
-import type { CcRequestConfigPartial } from '../../types/request.types.js';
-import type { CcApiCompositeCommand, CcApiSimpleCommand, CcApiStreamCommand } from './lib/cc-api-command.js';
+import { getRequestSignal, merge } from '../../lib/utils.js';
+import { CcApiParamsTransformer } from './lib/cc-api-params-transformer.js';
 import { ResourceIdResolver } from './lib/resource-id-resolver.js';
 import { MemoryStore } from './lib/store/memory-store.js';
-import type { CcApiClientConfig, CcApiType, ResourceId } from './types/cc-api.types.js';
-import type { AddonIdResolve, IdResolve, ResourceIdIndex } from './types/resource-id-resolver.types.js';
+import type { CcApiClientConfig, CcApiType } from './types/cc-api.types.js';
+import type { ResourceIdIndex } from './types/resource-id-resolver.types.js';
 
 /**
  * Clever Cloud API client implementation.
@@ -48,12 +46,18 @@ export class CcApiClient extends CcClient<CcApiType> {
    * @param config - Client configuration including auth method and optional settings
    */
   constructor(config?: CcApiClientConfig) {
-    super(merge({ baseUrl: getBaseUrl(config) }, config), getAuth(config));
+    super(
+      merge({ baseUrl: getBaseUrl(config) }, config),
+      getAuth(config),
+      // the resolver needs the client to fetch ids, so it only exists once `super()` returned: the
+      // transformer reads it when a command is sent, not before
+      new CcApiParamsTransformer(() => this.#resourceIdResolver),
+    );
 
     this.#resourceIdResolver = new ResourceIdResolver(
       this,
       config?.resourceIdResolverStore ?? new MemoryStore<ResourceIdIndex>(),
-      (requestConfig) => this._getRequestSignal(requestConfig),
+      (requestConfig) => getRequestSignal(requestConfig, config?.defaultRequestConfig),
     );
   }
 
@@ -63,75 +67,6 @@ export class CcApiClient extends CcClient<CcApiType> {
    */
   get resourceIdResolver(): ResourceIdResolver {
     return this.#resourceIdResolver;
-  }
-
-  /**
-   * Transforms command parameters by resolving resource IDs.
-   * This method is called before sending a command to resolve any resource IDs
-   * (owner IDs, addon IDs) to their proper format.
-   *
-   * @param command - The command being sent
-   * @param requestConfig - Optional request configuration
-   * @returns The transformed command parameters
-   */
-  protected _transformCommandParams(
-    command: CcApiSimpleCommand<unknown, unknown> | CcApiCompositeCommand<unknown, unknown>,
-    requestConfig?: CcRequestConfigPartial,
-  ): Promise<unknown> {
-    return this.#transformParams(command.params, command.getIdsToResolve(), requestConfig);
-  }
-
-  /**
-   * Transforms command parameters by resolving resource IDs.
-   * This method is called before sending a stream command to resolve any resource IDs
-   * (owner IDs, addon IDs) to their proper format.
-   *
-   * @param command - The command being sent
-   * @param requestConfig - Optional request configuration
-   * @returns The transformed command parameters
-   */
-  protected _transformStreamParams(
-    command: CcApiStreamCommand<unknown, CcStream>,
-    requestConfig?: CcRequestConfigPartial,
-  ): Promise<unknown> {
-    return this.#transformParams(command.params, command.getIdsToResolve(), requestConfig);
-  }
-
-  async #transformParams(
-    params: unknown,
-    idsToResolve: IdResolve | null,
-    requestConfig?: CcRequestConfigPartial,
-  ): Promise<unknown> {
-    if (idsToResolve == null) {
-      return params;
-    }
-
-    const resolvedIds: Record<string, string> = {};
-
-    if (idsToResolve.ownerId) {
-      resolvedIds.ownerId = await this.#resourceIdResolver.resolveOwnerId(params as ResourceId, requestConfig);
-    }
-
-    if (idsToResolve.addonId != null) {
-      const addonIdResolve: AddonIdResolve =
-        typeof idsToResolve.addonId === 'string'
-          ? {
-              property: 'addonId',
-              type: idsToResolve.addonId,
-            }
-          : idsToResolve.addonId;
-
-      const rawAddonId = (params as Record<string, string>)[addonIdResolve.property];
-      if (rawAddonId != null) {
-        resolvedIds[addonIdResolve.property] = await this.#resourceIdResolver.resolveAddonId(
-          rawAddonId,
-          addonIdResolve.type,
-          requestConfig,
-        );
-      }
-    }
-
-    return { ...(params as Record<string, unknown>), ...resolvedIds };
   }
 }
 

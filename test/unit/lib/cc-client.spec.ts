@@ -12,15 +12,9 @@ import { get, post } from '../../../src/lib/request/request-params-builder.js';
 import { CcStream } from '../../../src/lib/stream/cc-stream.js';
 import type { CcStreamConfig, CcStreamRequestFactory } from '../../../src/lib/stream/cc-stream.types.js';
 import { StreamCommand } from '../../../src/lib/stream/stream-command.js';
-import type { CcClientConfig } from '../../../src/types/client.types.js';
-import type { Command } from '../../../src/types/command.types.js';
+import type { CcClientConfig, CcClientParamsTransformer } from '../../../src/types/client.types.js';
 import type { OnRequestHook, OnResponseHook } from '../../../src/types/hook.types.js';
-import type {
-  CcRequest,
-  CcRequestConfigPartial,
-  CcRequestParams,
-  CcResponse,
-} from '../../../src/types/request.types.js';
+import type { CcRequestParams } from '../../../src/types/request.types.js';
 import { expectPromiseThrows } from '../../lib/expect-utils.js';
 import { brandAsForeignCopy } from '../../lib/foreign-copy.js';
 
@@ -85,71 +79,21 @@ function streamCommand(requestsParams: Partial<CcRequestParams>): TestStreamComm
 }
 
 /**
- * This client is here just to make all protected methods public so that vitest can mock or spy those methods.
+ * The params transformer of every client of these tests, so that vitest can spy on it or mock it.
  */
-class SpiedClient extends CcClient<'test'> {
-  override async _transformCommandParams(
-    command: Parameters<CcClient<'test'>['_transformCommandParams']>[0],
-    _requestConfig: Parameters<CcClient<'test'>['_transformCommandParams']>[1],
-  ): ReturnType<CcClient<'test'>['_transformCommandParams']> {
-    return super._transformCommandParams(command, _requestConfig);
-  }
-  override async _transformStreamParams(
-    command: Parameters<CcClient<'test'>['_transformStreamParams']>[0],
-    _requestConfig: Parameters<CcClient<'test'>['_transformStreamParams']>[1],
-  ): ReturnType<CcClient<'test'>['_transformStreamParams']> {
-    return super._transformStreamParams(command, _requestConfig);
-  }
-  override async _send<CommandInput, CommandOutput>(
-    command: Parameters<CcClient<'test'>['_send']>[0],
-    requestConfig: Parameters<CcClient<'test'>['_send']>[1],
-    isIdempotentCeiling: Parameters<CcClient<'test'>['_send']>[2],
-  ): Promise<CommandOutput> {
-    return super._send<CommandInput, CommandOutput>(
-      command as Command<'test', CommandInput, CommandOutput>,
-      requestConfig,
-      isIdempotentCeiling,
-    );
-  }
-  override async _compose<CommandOutput>(
-    command: CompositeCommand<'test', unknown, CommandOutput>,
-    requestConfig: CcRequestConfigPartial | undefined,
-    isIdempotentCeiling: boolean,
-  ): Promise<CommandOutput> {
-    return super._compose(command, requestConfig, isIdempotentCeiling);
-  }
-  override async _getCommandRequestParams(
-    command: Parameters<CcClient<'test'>['_getCommandRequestParams']>[0],
-    requestConfig: Parameters<CcClient<'test'>['_getCommandRequestParams']>[1],
-  ): ReturnType<CcClient<'test'>['_getCommandRequestParams']> {
-    return super._getCommandRequestParams(command, requestConfig);
-  }
-  override async _prepareRequest(
-    command: Parameters<CcClient<'test'>['_prepareRequest']>[0],
-    requestParams: Parameters<CcClient<'test'>['_prepareRequest']>[1],
-    requestConfig: Parameters<CcClient<'test'>['_prepareRequest']>[2],
-    isIdempotent: Parameters<CcClient<'test'>['_prepareRequest']>[3],
-  ): ReturnType<CcClient<'test'>['_prepareRequest']> {
-    return super._prepareRequest(command, requestParams, requestConfig, isIdempotent);
-  }
-  override async _handleResponse<CommandOutput>(
-    response: CcResponse<CommandOutput>,
-    request: CcRequest,
-    command: SimpleCommand<'test', unknown, CommandOutput>,
-  ): Promise<CommandOutput> {
-    return super._handleResponse(response, request, command);
-  }
-}
+const paramsTransformer: CcClientParamsTransformer<'test'> = {
+  transformParams: (command) => Promise.resolve(command.params),
+};
 
 describe('clever-client', () => {
-  let client: SpiedClient;
+  let client: CcClient<'test'>;
   let newScenario: NewScenario;
   let closeStream: (() => void) | undefined;
 
   const hooks = doublureHooks();
 
-  function createClient(config?: Omit<CcClientConfig, 'baseUrl'>, auth?: CcAuth): SpiedClient {
-    return new SpiedClient({ ...config, baseUrl: newScenario.mockClient.baseUrl }, auth);
+  function createClient(config?: Omit<CcClientConfig, 'baseUrl'>, auth?: CcAuth): CcClient<'test'> {
+    return new CcClient({ ...config, baseUrl: newScenario.mockClient.baseUrl }, auth, paramsTransformer);
   }
 
   function startStream(stream: CcStream) {
@@ -172,8 +116,8 @@ describe('clever-client', () => {
   afterAll(hooks.after);
 
   describe('simple command', () => {
-    it('should call `_transformCommandParams` method with right params', async () => {
-      const spy = vi.spyOn(client, '_transformCommandParams');
+    it('should call `paramsTransformer.transformParams` method with right params', async () => {
+      const spy = vi.spyOn(paramsTransformer, 'transformParams');
       const command = simpleCommand(get('/path/subPath'));
 
       const requestConfig = {};
@@ -188,44 +132,27 @@ describe('clever-client', () => {
       expect(spy.mock.calls[0][1]).toBe(requestConfig);
     });
 
-    it('should call `_getCommandRequestParams` method with right params', async () => {
-      const spy = vi.spyOn(client, '_getCommandRequestParams');
+    it('should send the request built from `command.toRequestParams()`', async () => {
+      const spy = vi.fn<OnResponseHook>();
+      const client = createClient({ hooks: { onResponse: spy } });
       const command = simpleCommand(get('/path/subPath'));
-
-      const requestConfig = {};
 
       await newScenario()
         .when({ method: 'GET', path: '/path/subPath' })
         .respond({ status: 200 })
-        .thenCall(() => client.send(command, requestConfig));
+        .thenCall(() => client.send(command, {}));
 
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy.mock.calls[0][0]).toBe(command);
-      expect(spy.mock.calls[0][1]).toBe(requestConfig);
-    });
-
-    it('should call `_prepareRequest` method with right params', async () => {
-      const spy = vi.spyOn(client, '_prepareRequest');
-      const command = simpleCommand(get('/path/subPath'));
-      const requestConfig = {};
-
-      await newScenario()
-        .when({ method: 'GET', path: '/path/subPath' })
-        .respond({ status: 200 })
-        .thenCall(() => client.send(command, requestConfig));
-
-      expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy.mock.calls[0][0]).toBe(command);
-      expect(spy.mock.calls[0][1].method).toBe('GET');
-      expect(spy.mock.calls[0][1].url).toBe('/path/subPath');
-      expect(spy.mock.calls[0][2]).toBe(requestConfig);
+      const request = spy.mock.calls[0][1];
+      expect(request.method).toBe('GET');
+      expect(request.url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
       // the command declares nothing, so it is not replayable
-      expect(spy.mock.calls[0][3]).toBe(false);
+      expect(request.isIdempotent).toBe(false);
     });
 
     it('should call `command.toRequestParams` method with the transformed params', async () => {
       const transformedParams = { transformed: 'params' };
-      vi.spyOn(client, '_transformCommandParams').mockReturnValue(Promise.resolve(transformedParams));
+      vi.spyOn(paramsTransformer, 'transformParams').mockReturnValue(Promise.resolve(transformedParams));
 
       const command = simpleCommand(get('/path/subPath'));
       const spy = vi.spyOn(command, 'toRequestParams');
@@ -271,8 +198,8 @@ describe('clever-client', () => {
     });
 
     it('should apply the request config returned by `command.getRequestConfig()` over the client config', async () => {
-      const client = createClient({ defaultRequestConfig: { timeout: 10 } });
-      const spy = vi.spyOn(client, '_handleResponse');
+      const spy = vi.fn<OnResponseHook>();
+      const client = createClient({ defaultRequestConfig: { timeout: 10 }, hooks: { onResponse: spy } });
       const command = simpleCommand(get('/path/subPath'));
       vi.spyOn(command, 'getRequestConfig').mockReturnValue({ isCorsEnabled: true, timeout: 1000 });
 
@@ -286,7 +213,8 @@ describe('clever-client', () => {
     });
 
     it('should apply the `send()` request config over the one returned by `command.getRequestConfig()`', async () => {
-      const spy = vi.spyOn(client, '_handleResponse');
+      const spy = vi.fn<OnResponseHook>();
+      const client = createClient({ hooks: { onResponse: spy } });
       const command = simpleCommand(get('/path/subPath'));
       vi.spyOn(command, 'getRequestConfig').mockReturnValue({ isCorsEnabled: true, timeout: 1000 });
 
@@ -300,7 +228,8 @@ describe('clever-client', () => {
     });
 
     it('should keep the request config returned by `command.getRequestConfig()` for the options the `send()` request config sets to `undefined`', async () => {
-      const spy = vi.spyOn(client, '_handleResponse');
+      const spy = vi.fn<OnResponseHook>();
+      const client = createClient({ hooks: { onResponse: spy } });
       const command = simpleCommand(get('/path/subPath'));
       vi.spyOn(command, 'getRequestConfig').mockReturnValue({ isCorsEnabled: true, timeout: 1000 });
 
@@ -327,7 +256,7 @@ describe('clever-client', () => {
     it('should not call `auth.applyOnRequestParams()` when the command targets a sibling path of the baseUrl', async () => {
       const auth = new CcAuthApiToken('token');
       const spy = vi.spyOn(auth, 'applyOnRequestParams');
-      const client = new SpiedClient({ baseUrl: `${newScenario.mockClient.baseUrl}/api` }, auth);
+      const client = new CcClient<'test'>({ baseUrl: `${newScenario.mockClient.baseUrl}/api` }, auth);
       const command = simpleCommand(get(`${newScenario.mockClient.baseUrl}/api2/subPath`));
 
       await newScenario()
@@ -341,7 +270,7 @@ describe('clever-client', () => {
     it('should call `auth.applyOnRequestParams()` when the command targets a sub path of the baseUrl', async () => {
       const auth = new CcAuthApiToken('token');
       const spy = vi.spyOn(auth, 'applyOnRequestParams');
-      const client = new SpiedClient({ baseUrl: `${newScenario.mockClient.baseUrl}/api` }, auth);
+      const client = new CcClient<'test'>({ baseUrl: `${newScenario.mockClient.baseUrl}/api` }, auth);
       const command = simpleCommand(get(`${newScenario.mockClient.baseUrl}/api/subPath`));
 
       await newScenario()
@@ -380,8 +309,8 @@ describe('clever-client', () => {
         request.queryParams.set('hook', 'hook');
       };
 
-      const client = createClient({ hooks: { onRequest } });
-      const spy = vi.spyOn(client, '_prepareRequest');
+      const spy = vi.fn<OnResponseHook>();
+      const client = createClient({ hooks: { onRequest, onResponse: spy } });
       const command = simpleCommand(get('/path/subPath'));
 
       await newScenario()
@@ -390,13 +319,14 @@ describe('clever-client', () => {
         .thenCall(() => client.send(command));
 
       expect(spy).toHaveBeenCalledTimes(1);
-      const result = (await spy.mock.results[0].value) as CcRequest;
+      const result = spy.mock.calls[0][1];
 
       expect(result.queryParams!.get('hook')).toBe('hook');
     });
 
     it('should prepend url with baseUrl', async () => {
-      const spy = vi.spyOn(client, '_prepareRequest');
+      const spy = vi.fn<OnResponseHook>();
+      const client = createClient({ hooks: { onResponse: spy } });
       const command = simpleCommand(get('/path/subPath'));
 
       await newScenario()
@@ -405,12 +335,13 @@ describe('clever-client', () => {
         .thenCall(() => client.send(command));
 
       expect(spy).toHaveBeenCalledTimes(1);
-      const result = (await spy.mock.results[0].value) as CcRequest;
+      const result = spy.mock.calls[0][1];
       expect(result.url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
     });
 
     it('should not prepend url with baseUrl when the command url is absolute', async () => {
-      const spy = vi.spyOn(client, '_prepareRequest');
+      const spy = vi.fn<OnResponseHook>();
+      const client = createClient({ hooks: { onResponse: spy } });
       const absoluteUrl = `${newScenario.mockClient.baseUrl}/path/subPath`;
       const command = simpleCommand(get(absoluteUrl));
 
@@ -420,13 +351,16 @@ describe('clever-client', () => {
         .thenCall(() => client.send(command));
 
       expect(spy).toHaveBeenCalledTimes(1);
-      const result = (await spy.mock.results[0].value) as CcRequest;
+      const result = spy.mock.calls[0][1];
       expect(result.url).toBe(absoluteUrl);
     });
 
     it('should not duplicate the slash between baseUrl and a relative url', async () => {
-      const client = new SpiedClient({ baseUrl: `${newScenario.mockClient.baseUrl}/` });
-      const spy = vi.spyOn(client, '_prepareRequest');
+      const spy = vi.fn<OnResponseHook>();
+      const client = new CcClient<'test'>({
+        baseUrl: `${newScenario.mockClient.baseUrl}/`,
+        hooks: { onResponse: spy },
+      });
       const command = simpleCommand(get('/path/subPath'));
 
       await newScenario()
@@ -435,26 +369,8 @@ describe('clever-client', () => {
         .thenCall(() => client.send(command));
 
       expect(spy).toHaveBeenCalledTimes(1);
-      const result = (await spy.mock.results[0].value) as CcRequest;
+      const result = spy.mock.calls[0][1];
       expect(result.url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
-    });
-
-    it('should call `_handleResponse` with right parameters', async () => {
-      const spy = vi.spyOn(client, '_handleResponse');
-      const command = simpleCommand(get('/path/subPath'));
-
-      await newScenario()
-        .when({ method: 'GET', path: '/path/subPath' })
-        .respond({ status: 200, body: 'body' })
-        .thenCall(() => client.send(command));
-
-      expect(spy).toHaveBeenCalledTimes(1);
-      const [response, request, calledCommand] = spy.mock.calls[0];
-      expect(response.body).toBe('body');
-      expect(response.status).toBe(200);
-      expect(request.method).toBe('GET');
-      expect(request.url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
-      expect(calledCommand).toBe(command);
     });
 
     it('should call `onResponse` hook with right parameters', async () => {
@@ -609,7 +525,7 @@ describe('clever-client', () => {
       const client = createClient({ hooks: { onError: spy } });
       const command = simpleCommand(get('/path/subPath'));
       // what the cc-api client does when it resolves an id before preparing a command
-      vi.spyOn(client, '_transformCommandParams').mockImplementationOnce(async () => {
+      vi.spyOn(paramsTransformer, 'transformParams').mockImplementationOnce(async () => {
         await client.send(simpleCommand(get('/path/inner')));
         return undefined;
       });
@@ -699,21 +615,8 @@ describe('clever-client', () => {
       expect(result).toBe('sub-command result');
     });
 
-    it('should call `_compose` method with right params', async () => {
-      const spy = vi.spyOn(client, '_compose');
-      const command = compositeCommand('command result');
-      const requestConfig = {};
-
-      await client.send(command, requestConfig);
-
-      expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy.mock.calls[0][0]).toBe(command);
-      expect(spy.mock.calls[0][1]).toBe(requestConfig);
-      expect(spy.mock.calls[0][2]).toBe(true);
-    });
-
-    it('should call `_transformCommandParams` method with right params', async () => {
-      const spy = vi.spyOn(client, '_transformCommandParams');
+    it('should call `paramsTransformer.transformParams` method with right params', async () => {
+      const spy = vi.spyOn(paramsTransformer, 'transformParams');
       const command = compositeCommand('command result');
       const requestConfig = {};
 
@@ -726,7 +629,7 @@ describe('clever-client', () => {
 
     it('should call `command.compose` method with right params', async () => {
       const transformedParams = { transformed: 'params' };
-      vi.spyOn(client, '_transformCommandParams').mockReturnValue(Promise.resolve(transformedParams));
+      vi.spyOn(paramsTransformer, 'transformParams').mockReturnValue(Promise.resolve(transformedParams));
       const command = compositeCommand('command result');
       const spy = vi.spyOn(command, 'compose');
 
@@ -750,7 +653,7 @@ describe('clever-client', () => {
           return Promise.resolve('result');
         }
       })();
-      const spy = vi.spyOn(client, '_send');
+      const spy = vi.spyOn(paramsTransformer, 'transformParams');
       await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
 
       await client.send(command, { isCorsEnabled: false, cache: { mode: 'reload', ttl: 500 }, isDebugEnabled: true });
@@ -778,7 +681,7 @@ describe('clever-client', () => {
           return { isCorsEnabled: true, timeout: 1000 };
         }
       })();
-      const spy = vi.spyOn(client, '_send');
+      const spy = vi.spyOn(paramsTransformer, 'transformParams');
       await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
 
       await client.send(command, { timeout: 500 });
@@ -796,13 +699,14 @@ describe('clever-client', () => {
           return Promise.resolve('result');
         }
       })();
-      const spy = vi.spyOn(client, '_prepareRequest');
+      const spy = vi.fn<OnResponseHook>();
+      const client = createClient({ hooks: { onResponse: spy } });
       await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
 
       await client.send(command);
 
       // the inner command says it can be replayed, the composite around it never said so
-      const request = (await spy.mock.results[0].value) as CcRequest;
+      const request = spy.mock.calls[0][1];
       expect(request.isIdempotent).toBe(false);
     });
 
@@ -820,12 +724,13 @@ describe('clever-client', () => {
           return true;
         }
       })();
-      const spy = vi.spyOn(client, '_prepareRequest');
+      const spy = vi.fn<OnResponseHook>();
+      const client = createClient({ hooks: { onResponse: spy } });
       await newScenario().when({ method: 'GET', path: '/path/subPath' }).respond({ status: 200, body: 'body' });
 
       await client.send(command);
 
-      const request = (await spy.mock.results[0].value) as CcRequest;
+      const request = spy.mock.calls[0][1];
       expect(request.isIdempotent).toBe(true);
     });
 
@@ -902,14 +807,14 @@ describe('clever-client', () => {
   });
 
   describe('stream', () => {
-    it('should call `_transformStreamParams` method with right params', async () => {
+    it('should call `paramsTransformer.transformParams` method with right params', async () => {
       client = createClient({
         defaultRequestConfig: {
           isCorsEnabled: false,
           timeout: 10,
         },
       });
-      const spy = vi.spyOn(client, '_transformStreamParams');
+      const spy = vi.spyOn(paramsTransformer, 'transformParams');
       const command = streamCommand({ url: '/path/subPath' });
 
       await client.stream(command, {
@@ -1021,7 +926,7 @@ describe('clever-client', () => {
     });
 
     it('should call `command.toRequestParams` method with right params', async () => {
-      vi.spyOn(client, '_transformStreamParams').mockReturnValue(Promise.resolve({ param: 'param' }));
+      vi.spyOn(paramsTransformer, 'transformParams').mockReturnValue(Promise.resolve({ param: 'param' }));
       const command = streamCommand({ url: '/path/subPath' });
       const spy = vi.spyOn(command, 'toRequestParams');
 
@@ -1040,32 +945,22 @@ describe('clever-client', () => {
       expect(spy.mock.calls[0][0]).toEqual({ param: 'param' });
     });
 
-    it('should call `_prepareRequest` method with right params', async () => {
+    it('should give the stream a factory of the request built from `command.toRequestParams()`', async () => {
       const command = streamCommand({ url: '/path/subPath' });
-      const spy = vi.spyOn(client, '_prepareRequest');
+      const spy = vi.spyOn(command, 'createStream');
 
-      const stream = await client.stream(command, {
+      await client.stream(command, {
         isDebugEnabled: true,
         isCorsEnabled: false,
       });
+      const request = await spy.mock.calls[0][0]();
 
-      await newScenario()
-        .when({ method: 'GET', path: '/path/subPath' })
-        .respond({
-          status: 200,
-          events: [{ type: 'message', event: 'END_OF_STREAM', data: '{"endedBy": "UNTIL_REACHED"}' }],
-        })
-        .thenCall(() => startStream(stream));
-
-      expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy.mock.calls[0][0]).toBe(command);
-      expect(spy.mock.calls[0][1]).toEqual({
-        url: '/path/subPath',
-      });
-      expect(spy.mock.calls[0][2]).toEqual({
-        isDebugEnabled: true,
-        isCorsEnabled: false,
-      });
+      expect(request.method).toBe('GET');
+      expect(request.url).toBe(`${newScenario.mockClient.baseUrl}/path/subPath`);
+      expect(request.isDebugEnabled).toBe(true);
+      expect(request.isCorsEnabled).toBe(false);
+      // a stream reconnects on its own, so its request is replayable
+      expect(request.isIdempotent).toBe(true);
     });
 
     it('should call `auth.applyOnRequestParams()`', async () => {
