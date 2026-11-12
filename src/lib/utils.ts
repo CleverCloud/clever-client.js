@@ -282,6 +282,21 @@ export function pickNonNull<T>(object: T): Partial<T> {
 }
 
 /**
+ * Gets the signal the requests sent with the given configuration abort with: the signal of that
+ * configuration, or else the default signal of the client.
+ *
+ * @param requestConfig - The request configuration a command is sent with
+ * @param defaultRequestConfig - The default request configuration of the client
+ * @returns The signal, if any
+ */
+export function getRequestSignal(
+  requestConfig: CcRequestConfigPartial | undefined,
+  defaultRequestConfig: CcRequestConfigPartial | undefined,
+): AbortSignal | undefined {
+  return requestConfig?.signal ?? defaultRequestConfig?.signal;
+}
+
+/**
  * Creates a new object with all undefined properties removed. Null properties are kept.
  *
  * @param object - The source object to clean

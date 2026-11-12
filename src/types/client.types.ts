@@ -1,4 +1,7 @@
+import type { CcStream } from '../lib/stream/cc-stream.js';
 import type { CcStreamConfigPartial } from '../lib/stream/cc-stream.types.js';
+import type { StreamCommand } from '../lib/stream/stream-command.js';
+import type { Command } from './command.types.js';
 import type { OnErrorHook, OnRequestHook, OnResponseHook } from './hook.types.js';
 import type { CcRequestConfigPartial } from './request.types.js';
 
@@ -57,4 +60,24 @@ export interface CcClientHooks {
    * Called once per error, even when it rejects several `send()` calls, nested or concurrent.
    */
   onError?: OnErrorHook;
+}
+
+/**
+ * Transforms the params of a command before the client turns them into a request: what a client
+ * built on top of `CcClient` plugs in to adapt the commands of its API, like resolving ids.
+ *
+ * @template Api - The API type the client targets
+ */
+export interface CcClientParamsTransformer<Api extends string> {
+  /**
+   * Transforms the params of a command, simple, composite or stream.
+   *
+   * @param command - The command whose params are transformed
+   * @param requestConfig - The request configuration the command is sent with
+   * @returns The transformed params
+   */
+  transformParams(
+    command: Command<Api, unknown, unknown> | StreamCommand<Api, unknown, CcStream>,
+    requestConfig: CcRequestConfigPartial | undefined,
+  ): Promise<unknown>;
 }
