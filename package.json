@@ -1,6 +1,6 @@
 {
   "name": "@clevercloud/client",
-  "version": "12.6.12",
+  "version": "12.6.13",
   "description": "JavaScript REST client and utils for Clever Cloud's API",
   "keywords": [
     "api",
