@@ -1,5 +1,19 @@
 # Clever Client changelog
 
+## 12.6.13
+
+### Patch Changes
+
+- [#261](https://github.com/CleverCloud/clever-client.js/pull/261) [`21678a4`](https://github.com/CleverCloud/clever-client.js/commit/21678a452690ce44cb6f4d7b8c06b0d4f9038ab7) - The type declarations now require TypeScript 5.0 or later
+  
+  They import each other with the `.ts` extension, which TypeScript resolves to the `.d.ts` files since 5.0.
+  With an older TypeScript, the imports of `@clevercloud/client` fail to resolve with `TS2691`, or lose their types with `skipLibCheck`.
+
+- [#261](https://github.com/CleverCloud/clever-client.js/pull/261) [`086cb93`](https://github.com/CleverCloud/clever-client.js/commit/086cb93463de68f7be53098519351ad122675091) - Private state of the classes is now held in `_`-prefixed properties instead of native `#` private fields
+  
+  Instances of the clients, commands, streams and errors now show these properties when inspected, listed with `Object.keys()` or serialized with `JSON.stringify()`.
+  They are not part of the public API: read the public getters instead.
+
 ## 12.6.12
 
 ### Patch Changes
