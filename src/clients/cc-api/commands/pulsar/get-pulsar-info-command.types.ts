@@ -1,4 +1,4 @@
-import type { PulsarInfo, PulsarPlan } from './pulsar.types.js';
+import type { PulsarInfo, PulsarPlan } from './pulsar.types.ts';
 
 /**
  * Identifies the Pulsar add-on to retrieve the details of.

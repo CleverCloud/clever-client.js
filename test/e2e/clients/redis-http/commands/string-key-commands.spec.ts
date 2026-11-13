@@ -1,8 +1,8 @@
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CreateStringKeyCommand } from '../../../../../src/clients/redis-http/commands/string-key/create-string-key-command.js';
-import { GetStringKeyCommand } from '../../../../../src/clients/redis-http/commands/string-key/get-string-key-command.js';
-import { UpdateStringKeyCommand } from '../../../../../src/clients/redis-http/commands/string-key/update-string-key-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CreateStringKeyCommand } from '../../../../../src/clients/redis-http/commands/string-key/create-string-key-command.ts';
+import { GetStringKeyCommand } from '../../../../../src/clients/redis-http/commands/string-key/get-string-key-command.ts';
+import { UpdateStringKeyCommand } from '../../../../../src/clients/redis-http/commands/string-key/update-string-key-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('string-key commands', function () {
   const support = e2eSupport();

@@ -1,5 +1,5 @@
-import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
-import type { MetricKind, Metrics } from './metrics.types.js';
+import type { ApplicationOrAddonId } from '../../types/cc-api.types.ts';
+import type { MetricKind, Metrics } from './metrics.types.ts';
 
 /**
  * Identifies the application or add-on the metrics are read from, and describes the window to read them over.

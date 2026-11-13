@@ -1,12 +1,12 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CreateLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/create-log-drain-command.js';
-import { DeleteLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/delete-log-drain-command.js';
-import { DisableLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/disable-log-drain-command.js';
-import { EnableLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/enable-log-drain-command.js';
-import { GetLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/get-log-drain-command.js';
-import { ListLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/list-log-drain-command.js';
-import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CreateLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/create-log-drain-command.ts';
+import { DeleteLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/delete-log-drain-command.ts';
+import { DisableLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/disable-log-drain-command.ts';
+import { EnableLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/enable-log-drain-command.ts';
+import { GetLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/get-log-drain-command.ts';
+import { ListLogDrainCommand } from '../../../../../src/clients/cc-api/commands/log-drain/list-log-drain-command.ts';
+import { checkDateFormat } from '../../../../lib/expect-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('log-drain commands', function () {
   const support = e2eSupport();

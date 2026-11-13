@@ -1,5 +1,5 @@
-import type { AddonId } from '../../types/cc-api.types.js';
-import type { Backup, BackupBase } from './backup.types.js';
+import type { AddonId } from '../../types/cc-api.types.ts';
+import type { Backup, BackupBase } from './backup.types.ts';
 
 /**
  * Identifies the add-on whose backups are listed. The owner is resolved automatically when omitted.

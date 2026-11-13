@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   GetKubernetesClusterCommandInput,
   GetKubernetesClusterCommandOutput,
-} from './get-kubernetes-cluster-command.types.js';
-import { transformKubernetesCluster } from './kubernetes-transform.js';
+} from './get-kubernetes-cluster-command.types.ts';
+import { transformKubernetesCluster } from './kubernetes-transform.ts';
 
 /**
  * Retrieves one Kubernetes cluster, with its node groups and load balancers.

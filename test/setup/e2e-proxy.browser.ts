@@ -2,12 +2,12 @@ import httpProxy from 'http-proxy-3';
 import type { ClientRequest, IncomingMessage, ServerResponse } from 'node:http';
 import { TOTP } from 'totp-generator';
 import type { Plugin } from 'vite';
-import { CcAuthApiToken } from '../../src/lib/auth/cc-auth-api-token.js';
-import { CcAuthOauthV1Plaintext } from '../../src/lib/auth/cc-auth-oauth-v1-plaintext.js';
-import { encodeToBase64 } from '../../src/lib/utils.js';
-import { getAllE2eUsers, getE2eUser } from '../lib/e2e-test-users.js';
-import type { E2eUser, E2eUserName } from '../lib/e2e.types.js';
-import { login, logout } from '../lib/login.js';
+import { CcAuthApiToken } from '../../src/lib/auth/cc-auth-api-token.ts';
+import { CcAuthOauthV1Plaintext } from '../../src/lib/auth/cc-auth-oauth-v1-plaintext.ts';
+import { encodeToBase64 } from '../../src/lib/utils.ts';
+import { getAllE2eUsers, getE2eUser } from '../lib/e2e-test-users.ts';
+import type { E2eUser, E2eUserName } from '../lib/e2e.types.ts';
+import { login, logout } from '../lib/login.ts';
 
 /**
  * One proxy route: a URL prefix forwarded to a target host, optionally carrying a user's

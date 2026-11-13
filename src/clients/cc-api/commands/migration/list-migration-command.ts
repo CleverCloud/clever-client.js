@@ -1,9 +1,9 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { ListMigrationCommandInput, ListMigrationCommandOutput } from './list-migration-command.types.js';
-import { transformMigration } from './migration-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { ListMigrationCommandInput, ListMigrationCommandOutput } from './list-migration-command.types.ts';
+import { transformMigration } from './migration-transform.ts';
 
 /**
  * Lists the migrations an add-on went through, past and running.

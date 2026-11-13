@@ -1,11 +1,11 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   GetNetworkGroupWireguardConfigurationCommandInput,
   GetNetworkGroupWireguardConfigurationCommandOutput,
-} from './get-network-group-wireguard-configuration-command.types.js';
+} from './get-network-group-wireguard-configuration-command.types.ts';
 
 /**
  * Retrieves the WireGuard configuration file of a peer, as plain text.

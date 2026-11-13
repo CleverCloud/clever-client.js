@@ -17,11 +17,11 @@ The old client has a few limitations:
   * This means Web apps have to bundle lots of crazy polyfills
 * The universal packaging is weird with (`typeof require == "function" && require("lodash") ? require("lodash") : _,`)
 * The `querystring` is used while we now have a native alternative like `URLSearchParams`
-* Strongly coupled to how the auth works (oAuth v1 signature) 
+* Strongly coupled to how the auth works (oAuth v1 signature)
 * oAuth v1 signature is partly done by hand
 * Impossible to tree-shake (we need to be able to create tiny Web Components with the minimum amount of client code)
 * Hard to hook a 401 trap on errors
-* Some code is calling `localStorage` in a `if (isBrowser)` 
+* Some code is calling `localStorage` in a `if (isBrowser)`
 
 The new client solves most of those problems:
 

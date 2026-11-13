@@ -1,4 +1,4 @@
-import type { Store } from '../../types/resource-id-resolver.types.js';
+import type { Store } from '../../types/resource-id-resolver.types.ts';
 
 //--
 
@@ -19,7 +19,7 @@ export class MemoryStore<T> implements Store<T> {
   /**
    * The stored data
    */
-  #index: T | undefined;
+  private _index: T | undefined;
 
   /**
    * Stores data in memory
@@ -27,7 +27,7 @@ export class MemoryStore<T> implements Store<T> {
    * @param index - Data to store
    */
   write(index: T): void {
-    this.#index = index;
+    this._index = index;
   }
 
   /**
@@ -36,13 +36,13 @@ export class MemoryStore<T> implements Store<T> {
    * @returns The stored data, or null if no data has been stored
    */
   read(): T | undefined {
-    return this.#index;
+    return this._index;
   }
 
   /**
    * Clears the stored data from memory
    */
   flush(): void {
-    this.#index = undefined;
+    this._index = undefined;
   }
 }

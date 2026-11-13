@@ -1,4 +1,4 @@
-import type { ProductElasticsearchInfo } from './product.types.js';
+import type { ProductElasticsearchInfo } from './product.types.ts';
 
 /**
  * The sizing of the Elasticsearch companion services.

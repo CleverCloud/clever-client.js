@@ -1,4 +1,4 @@
-import type { CcRequest, CcResponse } from '../../src/types/request.types.js';
+import type { CcRequest, CcResponse } from '../../src/types/request.types.ts';
 
 /**
  * Brands a class the way another copy of `@clevercloud/client` brands its own: with the same
@@ -23,11 +23,11 @@ export class ForeignCcClientError extends Error {
     brandAsForeignCopy(this.prototype, 'CcClientError');
   }
 
-  constructor(
-    message: string,
-    readonly code: string,
-  ) {
+  readonly code: string;
+
+  constructor(message: string, code: string) {
     super(message);
+    this.code = code;
   }
 }
 
@@ -37,12 +37,11 @@ export class ForeignCcRequestError extends ForeignCcClientError {
     brandAsForeignCopy(this.prototype, 'CcRequestError');
   }
 
-  constructor(
-    message: string,
-    code: string,
-    readonly request: CcRequest,
-  ) {
+  readonly request: CcRequest;
+
+  constructor(message: string, code: string, request: CcRequest) {
     super(message, code);
+    this.request = request;
   }
 }
 
@@ -63,12 +62,11 @@ export class ForeignCcHttpError extends ForeignCcRequestError {
     brandAsForeignCopy(this.prototype, 'CcHttpError');
   }
 
-  constructor(
-    code: string,
-    request: CcRequest,
-    readonly response: CcResponse<unknown>,
-  ) {
+  readonly response: CcResponse<unknown>;
+
+  constructor(code: string, request: CcRequest, response: CcResponse<unknown>) {
     super(`Error ${response.status}`, code, request);
+    this.response = response;
   }
 
   get statusCode(): number {

@@ -1,7 +1,7 @@
-import type { ApiErrorInfo, Command, Composer } from '../../types/command.types.js';
-import type { CcRequestConfigPartial, CcRequestParams } from '../../types/request.types.js';
-import type { SelfOrPromise } from '../../types/utils.types.js';
-import { createBrand, hasBrand, setBrand } from '../utils.js';
+import type { ApiErrorInfo, Command, Composer } from '../../types/command.types.ts';
+import type { CcRequestConfigPartial, CcRequestParams } from '../../types/request.types.ts';
+import type { SelfOrPromise } from '../../types/utils.types.ts';
+import { createBrand, hasBrand, setBrand } from '../utils.ts';
 
 // A cross-version contract, see createBrand()
 const COMPOSITE_COMMAND_BRAND = createBrand('CompositeCommand');
@@ -24,7 +24,7 @@ const COMPOSITE_COMMAND_BRAND = createBrand('CompositeCommand');
  * ```
  */
 export abstract class AbstractCommand<Api extends string, CommandInput> {
-  #params: CommandInput;
+  private _params: CommandInput;
 
   /**
    * Creates a new command instance with the given parameters
@@ -32,14 +32,14 @@ export abstract class AbstractCommand<Api extends string, CommandInput> {
    * @param params - The input parameters for this command
    */
   constructor(params: CommandInput) {
-    this.#params = params;
+    this._params = params;
   }
 
   /**
    * Gets the input parameters provided to this command
    */
   get params(): CommandInput {
-    return this.#params;
+    return this._params;
   }
 
   /**

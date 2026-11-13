@@ -1,4 +1,4 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies the deployment to cancel. The owner is resolved automatically when omitted.

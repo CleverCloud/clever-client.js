@@ -1,11 +1,11 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { omit, safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformOrganisation } from './organisation-transform.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { omit, safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformOrganisation } from './organisation-transform.ts';
 import type {
   UpdateOrganisationCommandInput,
   UpdateOrganisationCommandOutput,
-} from './update-organisation-command.types.js';
+} from './update-organisation-command.types.ts';
 
 /**
  * Updates the display and billing identity of an organisation.

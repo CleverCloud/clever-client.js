@@ -1,5 +1,5 @@
-import { bearerAuthorizationHeader } from '../../utils/auth-utils.js';
-import { CcAuth } from './cc-auth.js';
+import { bearerAuthorizationHeader } from '../../utils/auth-utils.ts';
+import { CcAuth } from './cc-auth.ts';
 
 /**
  * Authentication implementation using Clever Cloud API tokens.
@@ -9,7 +9,7 @@ import { CcAuth } from './cc-auth.js';
  * and can be used in both HTTP headers and URL parameters.
  */
 export class CcAuthApiToken extends CcAuth {
-  #apiToken: string;
+  private _apiToken: string;
 
   /**
    * Creates a new API token authentication instance.
@@ -18,7 +18,7 @@ export class CcAuthApiToken extends CcAuth {
    */
   constructor(apiToken: string) {
     super();
-    this.#apiToken = apiToken;
+    this._apiToken = apiToken;
   }
 
   /**
@@ -27,6 +27,6 @@ export class CcAuthApiToken extends CcAuth {
    * @returns The token in the format 'Bearer <api-token>'
    */
   getAuthorization(): string {
-    return bearerAuthorizationHeader(this.#apiToken);
+    return bearerAuthorizationHeader(this._apiToken);
   }
 }

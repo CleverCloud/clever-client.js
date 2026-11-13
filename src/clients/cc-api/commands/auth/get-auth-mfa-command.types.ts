@@ -1,4 +1,4 @@
-import type { AuthMfa, MfaKind } from './auth.types.js';
+import type { AuthMfa, MfaKind } from './auth.types.ts';
 
 /**
  * The factor to look up.

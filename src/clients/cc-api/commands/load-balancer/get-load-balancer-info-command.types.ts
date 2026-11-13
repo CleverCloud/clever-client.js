@@ -1,5 +1,5 @@
-import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
-import type { LoadBalancer } from './load-balancer.types.js';
+import type { ApplicationOrAddonId } from '../../types/cc-api.types.ts';
+import type { LoadBalancer } from './load-balancer.types.ts';
 
 /**
  * Identifies the application or add-on whose load balancers are requested. The owner is resolved automatically when

@@ -1,5 +1,5 @@
-import type { AddonProviderId } from '../../types/cc-api.types.js';
-import type { AddonProvider } from './addon-provider.types.js';
+import type { AddonProviderId } from '../../types/cc-api.types.ts';
+import type { AddonProvider } from './addon-provider.types.ts';
 
 /**
  * Identifies the provider to update, along with the fields to change. Every field is optional:

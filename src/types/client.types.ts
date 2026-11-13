@@ -1,9 +1,9 @@
-import type { CcStream } from '../lib/stream/cc-stream.js';
-import type { CcStreamConfigPartial } from '../lib/stream/cc-stream.types.js';
-import type { StreamCommand } from '../lib/stream/stream-command.js';
-import type { Command } from './command.types.js';
-import type { OnErrorHook, OnRequestHook, OnResponseHook } from './hook.types.js';
-import type { CcRequestConfigPartial } from './request.types.js';
+import type { CcStream } from '../lib/stream/cc-stream.ts';
+import type { CcStreamConfigPartial } from '../lib/stream/cc-stream.types.ts';
+import type { StreamCommand } from '../lib/stream/stream-command.ts';
+import type { Command } from './command.types.ts';
+import type { OnErrorHook, OnRequestHook, OnResponseHook } from './hook.types.ts';
+import type { CcRequestConfigPartial } from './request.types.ts';
 
 /**
  * Configuration options for initialising a Clever Cloud API client.

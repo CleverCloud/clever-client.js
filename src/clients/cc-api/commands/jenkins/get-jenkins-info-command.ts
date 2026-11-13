@@ -1,15 +1,15 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   GetJenkinsInfoCommandInput,
   GetJenkinsInfoCommandOutput,
   GetJenkinsInfoInnerCommandOutput,
   GetJenkinsUpdatesCommandOutput,
-} from './get-jenkins-info-command.types.js';
-import { transformJenkinsInfo, transformJenkinsUpdates } from './jenkins-transform.js';
+} from './get-jenkins-info-command.types.ts';
+import { transformJenkinsInfo, transformJenkinsUpdates } from './jenkins-transform.ts';
 
 /**
  * Retrieves a Jenkins add-on, with the credentials to reach it and its update state.

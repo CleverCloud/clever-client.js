@@ -5,9 +5,9 @@ import {
   Polling,
   PollingInterruptedError,
   PollingTimeoutError,
-} from '../../../src/utils/polling.js';
-import { expectPromiseThrows } from '../../lib/expect-utils.js';
-import { brandAsForeignCopy } from '../../lib/foreign-copy.js';
+} from '../../../src/utils/polling.ts';
+import { expectPromiseThrows } from '../../lib/expect-utils.ts';
+import { brandAsForeignCopy } from '../../lib/foreign-copy.ts';
 
 describe('polling', () => {
   it('should not timeout and return the right value', async () => {

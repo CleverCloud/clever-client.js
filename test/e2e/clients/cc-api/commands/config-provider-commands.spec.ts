@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { GetConfigProviderCommand } from '../../../../../src/clients/cc-api/commands/config-provider/get-config-provider-command.js';
-import { UpdateConfigProviderCommand } from '../../../../../src/clients/cc-api/commands/config-provider/update-config-provider-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { GetConfigProviderCommand } from '../../../../../src/clients/cc-api/commands/config-provider/get-config-provider-command.ts';
+import { UpdateConfigProviderCommand } from '../../../../../src/clients/cc-api/commands/config-provider/update-config-provider-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('config-provider commands', function () {
   const support = e2eSupport();

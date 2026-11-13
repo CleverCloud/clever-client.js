@@ -1,4 +1,4 @@
-import type { UnknownToClient } from '../../../../types/utils.types.js';
+import type { UnknownToClient } from '../../../../types/utils.types.ts';
 
 /**
  * Any entity that can be returned by a network group search: the network group itself, one of its members, or one

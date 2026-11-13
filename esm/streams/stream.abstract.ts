@@ -1,6 +1,5 @@
 import EventEmitter from 'component-emitter';
-
-import type { AutoRetry } from './streams.types.js';
+import type { AutoRetry } from './streams.types.ts';
 
 const BACKOFF_FACTOR = 1.25;
 const INIT_RETRY_TIMEOUT = 1500;

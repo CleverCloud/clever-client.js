@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   GetCellarCredentialsPresignedUrlCommandInput,
   GetCellarCredentialsPresignedUrlCommandOutput,
-} from './get-cellar-credentials-presigned-url-command.types.js';
+} from './get-cellar-credentials-presigned-url-command.types.ts';
 
 /**
  * Retrieves a presigned URL that reveals the Cellar credentials without going through the API again.

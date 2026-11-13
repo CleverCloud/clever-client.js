@@ -1,4 +1,4 @@
-import type { QueryParams } from '../lib/request/query-params.js';
+import type { QueryParams } from '../lib/request/query-params.ts';
 
 /**
  * Complete request configuration combining both request parameters and configuration options.

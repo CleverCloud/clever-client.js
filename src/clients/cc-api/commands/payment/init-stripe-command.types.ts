@@ -1,4 +1,4 @@
-import type { Invoice } from '../invoice/invoice.types.js';
+import type { Invoice } from '../invoice/invoice.types.ts';
 
 /**
  * Identifies the invoice a Stripe payment is opened for, and the payment method the charge is

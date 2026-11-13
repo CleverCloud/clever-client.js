@@ -1,6 +1,6 @@
-import { normalizeDate, unknownToClient } from '../../../../lib/utils.js';
-import type { UnknownToClient } from '../../../../types/utils.types.js';
-import { normalizeDuration } from '../../../../utils/duration-utils.js';
+import { normalizeDate, unknownToClient } from '../../../../lib/utils.ts';
+import type { UnknownToClient } from '../../../../types/utils.types.ts';
+import { normalizeDuration } from '../../../../utils/duration-utils.ts';
 import type {
   ApplicationOrAddonLogDrainKind,
   AuditLogDrain,
@@ -19,7 +19,7 @@ import type {
   SplunkDrainTarget,
   SyslogTcpDrainTarget,
   SyslogUdpDrainTarget,
-} from './log-drain.types.js';
+} from './log-drain.types.ts';
 
 interface ApiLogDrainPayload {
   id: string;

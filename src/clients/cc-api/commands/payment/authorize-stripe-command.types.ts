@@ -1,4 +1,4 @@
-import type { Invoice } from '../invoice/invoice.types.js';
+import type { Invoice } from '../invoice/invoice.types.ts';
 
 /**
  * Identifies the Stripe payment intent to confirm, and the invoice it pays.

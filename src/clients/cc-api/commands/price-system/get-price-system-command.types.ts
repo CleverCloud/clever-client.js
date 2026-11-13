@@ -1,4 +1,4 @@
-import type { PriceSystem } from './price-system.types.js';
+import type { PriceSystem } from './price-system.types.ts';
 
 /**
  * Which price system to read: an organisation's, or the public one.

@@ -1,4 +1,4 @@
-import type { CouponUsage } from './credits.types.js';
+import type { CouponUsage } from './credits.types.ts';
 
 /**
  * Which coupon to redeem, and for which organisation.

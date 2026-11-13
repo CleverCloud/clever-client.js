@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { UpdateAddonProviderCommand } from '../../../../../../src/clients/cc-api/commands/addon-provider/update-addon-provider-command.js';
-import type { UpdateAddonProviderCommandInput } from '../../../../../../src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.js';
+import { UpdateAddonProviderCommand } from '../../../../../../src/clients/cc-api/commands/addon-provider/update-addon-provider-command.ts';
+import type { UpdateAddonProviderCommandInput } from '../../../../../../src/clients/cc-api/commands/addon-provider/update-addon-provider-command.types.ts';
 
 /** The body as `getRequestBody()` serialises it, so an `undefined` field disappears. */
 function bodySentFor(params: UpdateAddonProviderCommandInput): unknown {

@@ -1,7 +1,7 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { SetProfilePrimaryEmailAddressCommandInput } from './set-profile-primary-email-address-command.types.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { SetProfilePrimaryEmailAddressCommandInput } from './set-profile-primary-email-address-command.types.ts';
 
 /**
  * Promotes one of the user's email addresses to be the primary one.

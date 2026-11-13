@@ -1,4 +1,4 @@
-import type { NetworkGroupPeer } from './network-group.types.js';
+import type { NetworkGroupPeer } from './network-group.types.ts';
 
 /**
  * Identifies the network group peer to retrieve.

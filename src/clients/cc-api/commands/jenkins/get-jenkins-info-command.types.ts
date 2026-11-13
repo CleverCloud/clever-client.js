@@ -1,4 +1,4 @@
-import type { JenkinsInfo, JenkinsUpdates } from './jenkins.types.js';
+import type { JenkinsInfo, JenkinsUpdates } from './jenkins.types.ts';
 
 /**
  * Identifies the Jenkins add-on to read.

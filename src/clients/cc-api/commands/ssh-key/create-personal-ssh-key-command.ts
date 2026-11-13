@@ -1,13 +1,13 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
 import type {
   CreatePersonalSshKeyCommandInput,
   CreatePersonalSshKeyCommandOutput,
-} from './create-personal-ssh-key-command.types.js';
-import { ListPersonalSshKeyCommand } from './list-personal-ssh-key-command.js';
+} from './create-personal-ssh-key-command.types.ts';
+import { ListPersonalSshKeyCommand } from './list-personal-ssh-key-command.ts';
 
 /**
  * Registers a public SSH key on the current user's account.

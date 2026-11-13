@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { InitStripeCommand } from '../../../../../src/clients/cc-api/commands/payment/init-stripe-command.js';
-import { e2eSupport, STATIC_INVOICE_ID } from '../e2e-support.js';
+import { InitStripeCommand } from '../../../../../src/clients/cc-api/commands/payment/init-stripe-command.ts';
+import { e2eSupport, STATIC_INVOICE_ID } from '../e2e-support.ts';
 
 // Cannot be automatised. Even like that tests are failing because... I don't know
 // todo: find a way to add a payement method

@@ -1,12 +1,12 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformKubernetesCluster } from './kubernetes-transform.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformKubernetesCluster } from './kubernetes-transform.ts';
 import type {
   ListKubernetesClusterCommandInput,
   ListKubernetesClusterCommandOutput,
-} from './list-kubernetes-cluster-command.types.js';
+} from './list-kubernetes-cluster-command.types.ts';
 
 /**
  * Lists the Kubernetes clusters of an organisation, optionally filtered by status.

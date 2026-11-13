@@ -1,15 +1,15 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   GetOauthConsumerCommandInput,
   GetOauthConsumerCommandOutput,
-} from './get-oauth-consumer-command.types.js';
-import { GetOauthConsumerSecretCommand } from './get-oauth-consumer-secret-command.js';
-import { transformOauthConsumer } from './oauth-consumer-transform.js';
-import type { OauthConsumer } from './oauth-consumer.types.js';
+} from './get-oauth-consumer-command.types.ts';
+import { GetOauthConsumerSecretCommand } from './get-oauth-consumer-secret-command.ts';
+import { transformOauthConsumer } from './oauth-consumer-transform.ts';
+import type { OauthConsumer } from './oauth-consumer.types.ts';
 
 /**
  * Retrieves an OAuth consumer, optionally with its secret.

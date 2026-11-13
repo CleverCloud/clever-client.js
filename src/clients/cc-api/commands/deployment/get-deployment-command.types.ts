@@ -1,5 +1,5 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
-import type { Deployment, DeploymentLegacy } from './deployment.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
+import type { Deployment, DeploymentLegacy } from './deployment.types.ts';
 
 /**
  * Identifies the deployment to retrieve. The owner is resolved automatically when omitted.

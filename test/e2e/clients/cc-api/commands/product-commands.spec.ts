@@ -1,18 +1,18 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { GetProductAddonCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-addon-command.js';
-import { GetProductAddonVersionsCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-addon-versions-command.js';
-import { GetProductElasticsearchInfoCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-elasticsearch-info-command.js';
-import { GetProductRuntimeCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-runtime-command.js';
-import { ListProductAddonCommand } from '../../../../../src/clients/cc-api/commands/product/list-product-addon-command.js';
-import { ListProductRuntimeCommand } from '../../../../../src/clients/cc-api/commands/product/list-product-runtime-command.js';
+import { GetProductAddonCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-addon-command.ts';
+import { GetProductAddonVersionsCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-addon-versions-command.ts';
+import { GetProductElasticsearchInfoCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-elasticsearch-info-command.ts';
+import { GetProductRuntimeCommand } from '../../../../../src/clients/cc-api/commands/product/get-product-runtime-command.ts';
+import { ListProductAddonCommand } from '../../../../../src/clients/cc-api/commands/product/list-product-addon-command.ts';
+import { ListProductRuntimeCommand } from '../../../../../src/clients/cc-api/commands/product/list-product-runtime-command.ts';
 import type {
   ElasticsearchServiceInfo,
   ProductAddon,
   ProductRuntime,
   ProductRuntimeFlavor,
-} from '../../../../../src/clients/cc-api/commands/product/product.types.js';
-import { expectToBeDefined } from '../../../../lib/expect-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+} from '../../../../../src/clients/cc-api/commands/product/product.types.ts';
+import { expectToBeDefined } from '../../../../lib/expect-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('product commands', function () {
   const support = e2eSupport();

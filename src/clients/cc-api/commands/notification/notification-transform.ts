@@ -1,6 +1,6 @@
-import { normalizeDate, sortBy, unknownToClient } from '../../../../lib/utils.js';
-import type { UnknownToClient } from '../../../../types/utils.types.js';
-import type { GetNotificationInfoEventsCommandOutput } from './get-notification-info-command.types.js';
+import { normalizeDate, sortBy, unknownToClient } from '../../../../lib/utils.ts';
+import type { UnknownToClient } from '../../../../types/utils.types.ts';
+import type { GetNotificationInfoEventsCommandOutput } from './get-notification-info-command.types.ts';
 import type {
   EmailNotification,
   EmailNotificationTarget,
@@ -9,7 +9,7 @@ import type {
   WebhookNotification,
   WebhookNotificationRequestFailure,
   WebhookNotificationUrl,
-} from './notification.types.js';
+} from './notification.types.ts';
 
 export function transformWebhookNotification(payload: any): WebhookNotification {
   return {

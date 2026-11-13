@@ -1,7 +1,6 @@
-import { fetchWithTimeout } from './request.fetch-with-timeout.js';
-import { fillUrlSearchParams } from './utils/query-params.js';
-
-import type { Warp10RequestParams } from './request-warp10.types.js';
+import type { Warp10RequestParams } from './request-warp10.types.ts';
+import { fetchWithTimeout } from './request.fetch-with-timeout.ts';
+import { fillUrlSearchParams } from './utils/query-params.ts';
 
 export async function execWarpscript(requestParams: Warp10RequestParams): Promise<Response> {
   const url = new URL(requestParams.url);

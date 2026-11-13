@@ -1,4 +1,4 @@
-import type { QueryParams } from './query-params.types.js';
+import type { QueryParams } from './query-params.types.ts';
 
 export function fillUrlSearchParams<T>(
   url: URL,

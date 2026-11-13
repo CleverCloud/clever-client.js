@@ -1,7 +1,7 @@
-import { CcClient } from '../../lib/cc-client.js';
-import { merge } from '../../lib/utils.js';
-import { RedisHttpParamsTransformer } from './lib/redis-http-params-transformer.js';
-import type { RedisHttpClientConfig, RedisHttpType } from './types/redis-http.types.js';
+import { CcClient } from '../../lib/cc-client.ts';
+import { merge } from '../../lib/utils.ts';
+import { RedisHttpParamsTransformer } from './lib/redis-http-params-transformer.ts';
+import type { RedisHttpClientConfig, RedisHttpType } from './types/redis-http.types.ts';
 
 /**
  * Client for the Redis© HTTP proxy service.

@@ -1,5 +1,5 @@
-import type { CcRequest, CcResponse } from '../../types/request.types.js';
-import { createBrand, setBrand } from '../utils.js';
+import type { CcRequest, CcResponse } from '../../types/request.types.ts';
+import { createBrand, setBrand } from '../utils.ts';
 
 //--
 
@@ -281,7 +281,7 @@ export class CcClientError extends Error {
     setBrand(this.prototype, CC_CLIENT_ERROR_BRAND);
   }
 
-  #code: string;
+  private _code: string;
 
   /**
    * Creates a new client error.
@@ -293,7 +293,7 @@ export class CcClientError extends Error {
   constructor(message: string, code: string, cause?: unknown) {
     // `{ cause: undefined }` would still create an own `cause` property
     super(message, cause === undefined ? undefined : { cause });
-    this.#code = code;
+    this._code = code;
   }
 
   /**
@@ -302,7 +302,7 @@ export class CcClientError extends Error {
    * @returns The machine-readable error code
    */
   get code(): string {
-    return this.#code;
+    return this._code;
   }
 }
 
@@ -316,7 +316,7 @@ export class CcRequestError extends CcClientError {
     setBrand(this.prototype, CC_REQUEST_ERROR_BRAND);
   }
 
-  #request: CcRequest;
+  private _request: CcRequest;
 
   /**
    * Creates a new request error.
@@ -328,7 +328,7 @@ export class CcRequestError extends CcClientError {
    */
   constructor(message: string, code: string, request: CcRequest, cause?: unknown) {
     super(message, code, cause);
-    this.#request = request;
+    this._request = request;
   }
 
   /**
@@ -337,7 +337,7 @@ export class CcRequestError extends CcClientError {
    * @returns The request that caused the error
    */
   get request(): CcRequest {
-    return this.#request;
+    return this._request;
   }
 }
 
@@ -356,7 +356,7 @@ export class CcNetworkError extends CcRequestError {
     setBrand(this.prototype, CC_NETWORK_ERROR_BRAND);
   }
 
-  #networkCode: NetworkErrorCode | null;
+  private _networkCode: NetworkErrorCode | null;
 
   /**
    * Creates a new network error.
@@ -367,7 +367,7 @@ export class CcNetworkError extends CcRequestError {
    */
   constructor(request: CcRequest, networkCode: NetworkErrorCode | null, cause?: unknown) {
     super('A network error occurred while fetching HTTP endpoint', 'NETWORK_ERROR', request, cause);
-    this.#networkCode = networkCode;
+    this._networkCode = networkCode;
   }
 
   /**
@@ -377,7 +377,7 @@ export class CcNetworkError extends CcRequestError {
    * is what browsers do, they raise an opaque `TypeError` instead
    */
   get networkCode(): NetworkErrorCode | null {
-    return this.#networkCode;
+    return this._networkCode;
   }
 
   /**
@@ -391,7 +391,7 @@ export class CcNetworkError extends CcRequestError {
    * @returns A sentence describing the failure, never empty
    */
   get explanation(): string {
-    return getNetworkErrorInfo(this.#networkCode).explanation;
+    return getNetworkErrorInfo(this._networkCode).explanation;
   }
 
   /**
@@ -406,7 +406,7 @@ export class CcNetworkError extends CcRequestError {
    * @returns One of {@link NETWORK_RETRY_ADVICES}, see it for what each one licenses
    */
   get retryAdvice(): NetworkRetryAdvice {
-    return getNetworkErrorInfo(this.#networkCode).retryAdvice;
+    return getNetworkErrorInfo(this._networkCode).retryAdvice;
   }
 
   /**
@@ -453,7 +453,7 @@ export class CcHttpError extends CcRequestError {
     setBrand(this.prototype, CC_HTTP_ERROR_BRAND);
   }
 
-  #response: CcResponse<unknown>;
+  private _response: CcResponse<unknown>;
 
   /**
    * Creates a new HTTP error.
@@ -465,7 +465,7 @@ export class CcHttpError extends CcRequestError {
    */
   constructor(message: string, code: string, request: CcRequest, response: CcResponse<unknown>) {
     super(message, code, request);
-    this.#response = response;
+    this._response = response;
   }
 
   /**
@@ -474,7 +474,7 @@ export class CcHttpError extends CcRequestError {
    * @returns The HTTP status code
    */
   get statusCode(): number {
-    return this.#response.status;
+    return this._response.status;
   }
 
   /**
@@ -483,6 +483,6 @@ export class CcHttpError extends CcRequestError {
    * @returns The HTTP response that caused the error
    */
   get response(): CcResponse<unknown> {
-    return this.#response;
+    return this._response;
   }
 }

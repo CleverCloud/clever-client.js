@@ -1,14 +1,14 @@
 import { TOTP } from 'totp-generator';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { ConfirmAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.js';
-import { CreateAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
-import { DeleteAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
-import { GetAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-command.js';
-import { RequestAuthPasswordResetCommand } from '../../../../../src/clients/cc-api/commands/auth/request-auth-password-reset-command.js';
-import { ResetAuthMfaBackupCodesCommand } from '../../../../../src/clients/cc-api/commands/auth/reset-auth-mfa-backup-codes-command.js';
-import { UpdateAuthPasswordCommand } from '../../../../../src/clients/cc-api/commands/auth/update-auth-password-command.js';
-import { GetProfileCommand } from '../../../../../src/clients/cc-api/commands/profile/get-profile-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { ConfirmAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.ts';
+import { CreateAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.ts';
+import { DeleteAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.ts';
+import { GetAuthMfaCommand } from '../../../../../src/clients/cc-api/commands/auth/get-auth-mfa-command.ts';
+import { RequestAuthPasswordResetCommand } from '../../../../../src/clients/cc-api/commands/auth/request-auth-password-reset-command.ts';
+import { ResetAuthMfaBackupCodesCommand } from '../../../../../src/clients/cc-api/commands/auth/reset-auth-mfa-backup-codes-command.ts';
+import { UpdateAuthPasswordCommand } from '../../../../../src/clients/cc-api/commands/auth/update-auth-password-command.ts';
+import { GetProfileCommand } from '../../../../../src/clients/cc-api/commands/profile/get-profile-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('auth commands', function () {
   const support = e2eSupport({ auth: 'oauth-v1' });

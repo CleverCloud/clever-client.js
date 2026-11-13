@@ -4,8 +4,8 @@ import {
   CcHttpError,
   CcNetworkError,
   CcRequestError,
-} from '../../../../src/lib/error/cc-client-errors.js';
-import type { CcRequest, CcResponse } from '../../../../src/types/request.types.js';
+} from '../../../../src/lib/error/cc-client-errors.ts';
+import type { CcRequest, CcResponse } from '../../../../src/types/request.types.ts';
 
 const REQUEST = {} as CcRequest;
 const RESPONSE = { status: 500 } as CcResponse<unknown>;

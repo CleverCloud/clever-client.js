@@ -1,23 +1,23 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformLinkedAddonsEnvironment, transformLinkedApplicationsEnvironment } from './environment-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformLinkedAddonsEnvironment, transformLinkedApplicationsEnvironment } from './environment-transform.ts';
 import type {
   GetEnvironmentCommandOutput,
   LinkedAddonEnvironment,
   LinkedApplicationEnvironment,
-} from './environment.types.js';
+} from './environment.types.ts';
 import type {
   GetAddonEnvironmentCommandInput,
   GetApplicationEnvironmentCommandInput,
   GetEnvironmentCommandInput,
   GetLinkedAddonEnvironmentCommandInput,
   GetLinkedApplicationEnvironmentCommandInput,
-} from './get-environment-command.types.js';
+} from './get-environment-command.types.ts';
 
 /**
  * Reads the environment of an application or an add-on.

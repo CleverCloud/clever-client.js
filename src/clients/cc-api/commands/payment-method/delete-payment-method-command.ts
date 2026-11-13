@@ -1,7 +1,7 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { DeletePaymentMethodCommandInput } from './delete-payment-method-command.types.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { DeletePaymentMethodCommandInput } from './delete-payment-method-command.types.ts';
 
 /**
  * Detaches a payment method from an organisation.

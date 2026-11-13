@@ -1,7 +1,7 @@
-import { sortBy } from '../../../../lib/utils.js';
-import { toArray } from '../../../../utils/environment-utils.js';
-import type { CheckMetabaseVersionCommandOutput } from './check-metabase-version-command.types.js';
-import type { MetabaseInfo } from './metabase.types.js';
+import { sortBy } from '../../../../lib/utils.ts';
+import { toArray } from '../../../../utils/environment-utils.ts';
+import type { CheckMetabaseVersionCommandOutput } from './check-metabase-version-command.types.ts';
+import type { MetabaseInfo } from './metabase.types.ts';
 
 export function transformMetabaseInfo(response: any): MetabaseInfo {
   return {

@@ -1,5 +1,5 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 
 /**
  * Deletes all Oauth tokens.

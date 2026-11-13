@@ -1,4 +1,4 @@
-import type { MaybeWithOwnerId } from '../../types/cc-api.types.js';
+import type { MaybeWithOwnerId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies whose live requests are streamed. The owner is resolved automatically when omitted.

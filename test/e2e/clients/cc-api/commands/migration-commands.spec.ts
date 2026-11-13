@@ -1,10 +1,10 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CancelMigrationCommand } from '../../../../../src/clients/cc-api/commands/migration/cancel-migration-command.js';
-import { GetMigrationCommand } from '../../../../../src/clients/cc-api/commands/migration/get-migration-command.js';
-import { ListMigrationCommand } from '../../../../../src/clients/cc-api/commands/migration/list-migration-command.js';
-import { ListMigrationPreorderCommand } from '../../../../../src/clients/cc-api/commands/migration/list-migration-preorder-command.js';
-import { StartMigrationCommand } from '../../../../../src/clients/cc-api/commands/migration/start-migration-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CancelMigrationCommand } from '../../../../../src/clients/cc-api/commands/migration/cancel-migration-command.ts';
+import { GetMigrationCommand } from '../../../../../src/clients/cc-api/commands/migration/get-migration-command.ts';
+import { ListMigrationCommand } from '../../../../../src/clients/cc-api/commands/migration/list-migration-command.ts';
+import { ListMigrationPreorderCommand } from '../../../../../src/clients/cc-api/commands/migration/list-migration-preorder-command.ts';
+import { StartMigrationCommand } from '../../../../../src/clients/cc-api/commands/migration/start-migration-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 // cannot be automatised because addon deletion just after creation is not supported by the platform
 describe.skip('migration commands', function () {

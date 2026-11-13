@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { ListAddonCreationConfigurationNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-addon-creation-configuration-notice-command.js';
-import { ListAddonCreationListNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-addon-creation-list-notice-command.js';
-import { ListAddonNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-addon-notice-command.js';
-import { ListApplicationNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-application-notice-command.js';
-import { ListHomeNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-home-notice-command.js';
-import { ListOrganisationNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-organisation-notice-command.js';
-import type { Notice } from '../../../../../src/clients/cc-api/commands/notice/notice.types.js';
-import { e2eSupport } from '../e2e-support.js';
+import { ListAddonCreationConfigurationNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-addon-creation-configuration-notice-command.ts';
+import { ListAddonCreationListNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-addon-creation-list-notice-command.ts';
+import { ListAddonNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-addon-notice-command.ts';
+import { ListApplicationNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-application-notice-command.ts';
+import { ListHomeNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-home-notice-command.ts';
+import { ListOrganisationNoticeCommand } from '../../../../../src/clients/cc-api/commands/notice/list-organisation-notice-command.ts';
+import type { Notice } from '../../../../../src/clients/cc-api/commands/notice/notice.types.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 // The notices shown depend on what operators published, so an empty array is as valid as a full one:
 // these tests check the shape of whatever comes back.

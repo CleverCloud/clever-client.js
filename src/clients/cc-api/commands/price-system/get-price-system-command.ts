@@ -1,9 +1,9 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetPriceSystemCommandInput, GetPriceSystemCommandOutput } from './get-price-system-command.types.js';
-import { transformPriceSystem } from './price-system-transform.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetPriceSystemCommandInput, GetPriceSystemCommandOutput } from './get-price-system-command.types.ts';
+import { transformPriceSystem } from './price-system-transform.ts';
 
 /**
  * Gets the price system for the given organisation, or the public price system when `ownerId` is

@@ -1,11 +1,11 @@
-import type { CcRequest, CcResponse, RequestAdapter, RequestWrapper } from '../../types/request.types.js';
-import { isCcRequestError } from '../../utils/error-utils.js';
-import { CcClientError, CcRequestError } from '../error/cc-client-errors.js';
-import { asNetworkError } from '../error/network-error.js';
-import { fetchWithTimeout } from './fetch-with-timeout.js';
-import { requestDebug } from './request-debug.js';
-import { requestWithCache } from './request-with-cache.js';
-import { requestWithDedupe } from './request-with-dedupe.js';
+import type { CcRequest, CcResponse, RequestAdapter, RequestWrapper } from '../../types/request.types.ts';
+import { isCcRequestError } from '../../utils/error-utils.ts';
+import { CcClientError, CcRequestError } from '../error/cc-client-errors.ts';
+import { asNetworkError } from '../error/network-error.ts';
+import { fetchWithTimeout } from './fetch-with-timeout.ts';
+import { requestDebug } from './request-debug.ts';
+import { requestWithCache } from './request-with-cache.ts';
+import { requestWithDedupe } from './request-with-dedupe.ts';
 
 const JSON_TYPE = 'application/json';
 const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
@@ -107,7 +107,7 @@ export function getRequestBody(request: CcRequest): BodyInit | null {
   // todo: if text/plain but got object => error?
   // todo: streamable request body?
 
-  // eslint-disable-next-line @typescript-eslint/no-base-to-string -- non-JSON bodies are expected to be strings; an object here is a caller error left as-is (see todo above)
+  // oxlint-disable-next-line typescript/no-base-to-string -- non-JSON bodies are expected to be strings; an object here is a caller error left as-is (see todo above)
   return String(request.body);
 }
 
@@ -180,19 +180,19 @@ function getContentType(headers: Headers | undefined): string | null {
  * imported by the streams, so that an application sending commands alone does not ship it.
  */
 export class SseResponseBody {
-  #response: Response;
-  #signal: AbortSignal | undefined;
+  private _response: Response;
+  private _signal: AbortSignal | undefined;
 
   constructor(response: Response, signal: AbortSignal | undefined) {
-    this.#response = response;
-    this.#signal = signal;
+    this._response = response;
+    this._signal = signal;
   }
 
   get response(): Response {
-    return this.#response;
+    return this._response;
   }
 
   get signal(): AbortSignal | undefined {
-    return this.#signal;
+    return this._signal;
   }
 }

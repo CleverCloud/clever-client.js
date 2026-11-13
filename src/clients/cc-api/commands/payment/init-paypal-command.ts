@@ -1,7 +1,7 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { InitPaypalCommandInput, InitPaypalCommandOutput } from './init-paypal-command.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { InitPaypalCommandInput, InitPaypalCommandOutput } from './init-paypal-command.types.ts';
 
 /**
  * Opens a PayPal payment for an invoice and returns the URL the payer has to approve it at.

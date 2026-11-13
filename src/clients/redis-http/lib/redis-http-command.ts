@@ -1,6 +1,6 @@
-import { SimpleCommand } from '../../../lib/command/command.js';
-import { createBrand, hasBrand, setBrand } from '../../../lib/utils.js';
-import type { RedisHttpType } from '../types/redis-http.types.js';
+import { SimpleCommand } from '../../../lib/command/command.ts';
+import { createBrand, hasBrand, setBrand } from '../../../lib/utils.ts';
+import type { RedisHttpType } from '../types/redis-http.types.ts';
 
 // A cross-version contract, see createBrand()
 const REDIS_HTTP_COMMAND_BRAND = createBrand('RedisHttpCommand');

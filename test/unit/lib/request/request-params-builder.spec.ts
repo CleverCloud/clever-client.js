@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
-import { QueryParams } from '../../../../src/lib/request/query-params.js';
+import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.ts';
+import { QueryParams } from '../../../../src/lib/request/query-params.ts';
 import {
   delete_,
   get,
@@ -9,8 +9,8 @@ import {
   patchJson,
   post,
   postJson,
-} from '../../../../src/lib/request/request-params-builder.js';
-import type { CcRequestParams } from '../../../../src/types/request.types.js';
+} from '../../../../src/lib/request/request-params-builder.ts';
+import type { CcRequestParams } from '../../../../src/types/request.types.ts';
 
 describe('RequestParamsBuilder', () => {
   describe('get', () => {

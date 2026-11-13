@@ -1,11 +1,11 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   GetCellarObjectUploadUrlCommandInput,
   GetCellarObjectUploadUrlCommandOutput,
-} from './get-cellar-object-upload-url-command.types.js';
+} from './get-cellar-object-upload-url-command.types.ts';
 
 /**
  * Mints a presigned URL that uploads one object without credentials.

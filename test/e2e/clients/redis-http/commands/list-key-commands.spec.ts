@@ -1,10 +1,10 @@
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { AddListKeyElementCommand } from '../../../../../src/clients/redis-http/commands/list-key/add-list-key-element-command.js';
-import { CreateListKeyCommand } from '../../../../../src/clients/redis-http/commands/list-key/create-list-key-command.js';
-import { GetListKeyElementCommand } from '../../../../../src/clients/redis-http/commands/list-key/get-list-key-element-command.js';
-import { ScanListKeyCommand } from '../../../../../src/clients/redis-http/commands/list-key/scan-list-key-command.js';
-import { UpdateListKeyElementCommand } from '../../../../../src/clients/redis-http/commands/list-key/update-list-key-element-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { AddListKeyElementCommand } from '../../../../../src/clients/redis-http/commands/list-key/add-list-key-element-command.ts';
+import { CreateListKeyCommand } from '../../../../../src/clients/redis-http/commands/list-key/create-list-key-command.ts';
+import { GetListKeyElementCommand } from '../../../../../src/clients/redis-http/commands/list-key/get-list-key-element-command.ts';
+import { ScanListKeyCommand } from '../../../../../src/clients/redis-http/commands/list-key/scan-list-key-command.ts';
+import { UpdateListKeyElementCommand } from '../../../../../src/clients/redis-http/commands/list-key/update-list-key-element-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('hash-key commands', function () {
   const support = e2eSupport();

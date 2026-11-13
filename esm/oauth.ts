@@ -1,6 +1,6 @@
-import { oauthV1AuthorizationHeader } from '../src/utils/auth-utils.js';
-import type { OAuthTokens } from './oauth.types.js';
-import type { RequestParams } from './request.types.js';
+import { oauthV1AuthorizationHeader } from '../src/utils/auth-utils.ts';
+import type { OAuthTokens } from './oauth.types.ts';
+import type { RequestParams } from './request.types.ts';
 
 export function addOauthHeader(tokens: OAuthTokens): (requestParams: RequestParams) => Promise<RequestParams> {
   return function (requestParams) {

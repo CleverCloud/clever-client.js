@@ -1,4 +1,4 @@
-import type { ProductAddonVersions } from './product.types.js';
+import type { ProductAddonVersions } from './product.types.ts';
 
 /**
  * Identifies the add-on provider whose versions are read.

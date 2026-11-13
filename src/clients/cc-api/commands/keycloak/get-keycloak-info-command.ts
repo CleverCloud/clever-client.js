@@ -1,9 +1,9 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { GetKeycloakInfoCommandInput, GetKeycloakInfoCommandOutput } from './get-keycloak-info-command.types.js';
-import { transformKeycloakInfo } from './keycloak-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { GetKeycloakInfoCommandInput, GetKeycloakInfoCommandOutput } from './get-keycloak-info-command.types.ts';
+import { transformKeycloakInfo } from './keycloak-transform.ts';
 
 /**
  * Retrieves a Keycloak add-on, with the URL to reach it, its initial credentials and the resources it is built on.

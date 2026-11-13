@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { GetWarpTokenCommand } from '../../../../../src/clients/cc-api/commands/warp-token/get-warp-token-command.js';
-import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+import { GetWarpTokenCommand } from '../../../../../src/clients/cc-api/commands/warp-token/get-warp-token-command.ts';
+import { checkDateFormat } from '../../../../lib/expect-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('warp token commands', function () {
   const support = e2eSupport();

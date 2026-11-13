@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { GetLoadBalancerInfoCommand } from '../../../../../src/clients/cc-api/commands/load-balancer/get-load-balancer-info-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { GetLoadBalancerInfoCommand } from '../../../../../src/clients/cc-api/commands/load-balancer/get-load-balancer-info-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('load-balancer commands', function () {
   const support = e2eSupport();

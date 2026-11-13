@@ -1,6 +1,5 @@
-import CleverCloudSse from './clever-cloud-sse.js';
-
-import type { ResourceLog, ResourceLogsStreamParams, ResourceLogStreamOptions } from './resource-logs.types.js';
+import CleverCloudSse from './clever-cloud-sse.ts';
+import type { ResourceLog, ResourceLogsStreamParams, ResourceLogStreamOptions } from './resource-logs.types.ts';
 
 const RESOURCE_LOG_EVENT_NAME = 'RESOURCE_LOG';
 

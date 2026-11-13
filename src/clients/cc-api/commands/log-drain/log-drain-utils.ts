@@ -1,9 +1,9 @@
-import type { Composer } from '../../../../types/command.types.js';
-import { tolerateNotFound } from '../../../../utils/error-utils.js';
-import { isTimeoutError, Polling } from '../../../../utils/polling.js';
-import type { ApplicationOrAddonId, CcApiType } from '../../types/cc-api.types.js';
-import { GetLogDrainCommand } from './get-log-drain-command.js';
-import type { LogDrain, LogDrainStatus } from './log-drain.types.js';
+import type { Composer } from '../../../../types/command.types.ts';
+import { tolerateNotFound } from '../../../../utils/error-utils.ts';
+import { isTimeoutError, Polling } from '../../../../utils/polling.ts';
+import type { ApplicationOrAddonId, CcApiType } from '../../types/cc-api.types.ts';
+import { GetLogDrainCommand } from './get-log-drain-command.ts';
+import type { LogDrain, LogDrainStatus } from './log-drain.types.ts';
 
 const POLLING_TIMEOUT_MS = 30_000;
 const POLLING_INTERVAL_MS = 1000;

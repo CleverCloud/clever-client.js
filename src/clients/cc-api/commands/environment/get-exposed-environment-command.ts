@@ -1,12 +1,12 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { toArray } from '../../../../utils/environment-utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { toArray } from '../../../../utils/environment-utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   GetExposedEnvironmentCommandInput,
   GetExposedEnvironmentCommandOutput,
-} from './get-exposed-environment-command.types.js';
+} from './get-exposed-environment-command.types.ts';
 
 /**
  * Reads the configuration an application exposes to the applications linked to it.

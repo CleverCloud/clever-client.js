@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { transformKubernetesClusterEvent } from '../../../../../../src/clients/cc-api/commands/kubernetes/kubernetes-transform.js';
+import { transformKubernetesClusterEvent } from '../../../../../../src/clients/cc-api/commands/kubernetes/kubernetes-transform.ts';
 
 /**
  * Mirrors one entry of `GET /v4/kubernetes/organisations/:id/clusters/:id/events`: a `CLUSTER_ITEM`

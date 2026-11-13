@@ -2,8 +2,8 @@ import { describe, expect, expectTypeOf, it } from 'vitest';
 import {
   transformDeployment,
   transformDeploymentLegacy,
-} from '../../../../../../src/clients/cc-api/commands/deployment/deployment-transform.js';
-import type { DeploymentLegacy } from '../../../../../../src/clients/cc-api/commands/deployment/deployment.types.js';
+} from '../../../../../../src/clients/cc-api/commands/deployment/deployment-transform.ts';
+import type { DeploymentLegacy } from '../../../../../../src/clients/cc-api/commands/deployment/deployment.types.ts';
 
 /** A payload as the ovd `DeploymentView` serialises it. */
 function getDeploymentPayload() {

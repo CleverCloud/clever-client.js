@@ -1,5 +1,5 @@
-import type { RedisHttpCommandInput, WithKey } from '../../types/redis-http.types.js';
-import type { HashKeyElement } from './hash-key.types.js';
+import type { RedisHttpCommandInput, WithKey } from '../../types/redis-http.types.ts';
+import type { HashKeyElement } from './hash-key.types.ts';
 
 /**
  * The key, field and value to add or update

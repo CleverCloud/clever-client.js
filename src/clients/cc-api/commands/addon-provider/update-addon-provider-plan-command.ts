@@ -1,12 +1,12 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformAddonProviderPlan } from './addon-provider-transform.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformAddonProviderPlan } from './addon-provider-transform.ts';
 import type {
   UpdateAddonProviderPlanCommandInput,
   UpdateAddonProviderPlanCommandOutput,
-} from './update-addon-provider-plan-command.types.js';
+} from './update-addon-provider-plan-command.types.ts';
 
 /**
  * Updates a pricing plan of an add-on provider.

@@ -1,12 +1,12 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   ListAddonCreationConfigurationNoticeCommandInput,
   ListAddonCreationConfigurationNoticeCommandOutput,
-} from './list-addon-creation-configuration-notice-command.types.js';
-import { transformNotice } from './notice-transform.js';
+} from './list-addon-creation-configuration-notice-command.types.ts';
+import { transformNotice } from './notice-transform.ts';
 
 /**
  * Lists the notices to show in the add-on creation flow once a provider is chosen, while the user

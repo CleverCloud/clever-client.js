@@ -1,12 +1,12 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformKubernetesNodeGroup } from './kubernetes-transform.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformKubernetesNodeGroup } from './kubernetes-transform.ts';
 import type {
   ListKubernetesNodeGroupCommandInput,
   ListKubernetesNodeGroupCommandOutput,
-} from './list-kubernetes-node-group-command.types.js';
+} from './list-kubernetes-node-group-command.types.ts';
 
 /**
  * Lists the node groups of a Kubernetes cluster, optionally filtered by status.

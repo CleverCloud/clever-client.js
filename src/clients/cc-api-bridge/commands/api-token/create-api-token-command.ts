@@ -1,15 +1,15 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { normalizeDate, pickNonNull } from '../../../../lib/utils.js';
-import { isCcHttpErrorWithCode } from '../../../../utils/error-utils.js';
-import { CcApiBridgeCommand, CcApiBridgeCompositeCommand } from '../../lib/cc-api-bridge-command.js';
-import type { CcApiBridgeComposer } from '../../types/cc-api-bridge.types.js';
-import { transformCreatedApiToken } from './api-token-transform.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { normalizeDate, pickNonNull } from '../../../../lib/utils.ts';
+import { isCcHttpErrorWithCode } from '../../../../utils/error-utils.ts';
+import { CcApiBridgeCommand, CcApiBridgeCompositeCommand } from '../../lib/cc-api-bridge-command.ts';
+import type { CcApiBridgeComposer } from '../../types/cc-api-bridge.types.ts';
+import { transformCreatedApiToken } from './api-token-transform.ts';
 import type {
   CreateApiTokenCommandInput,
   CreateApiTokenCommandOutput,
   CreateApiTokenCommandResponse,
   CreateApiTokenResult,
-} from './create-api-token-command.types.js';
+} from './create-api-token-command.types.ts';
 
 const REFUSED_CREDENTIAL_CODES = ['invalid-credential', 'invalid-mfa-code'] as const;
 

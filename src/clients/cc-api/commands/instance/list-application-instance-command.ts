@@ -1,13 +1,13 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { normalizeDate, safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformApplicationInstance } from './instance-transform.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { normalizeDate, safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformApplicationInstance } from './instance-transform.ts';
 import type {
   ListApplicationInstanceCommandInput,
   ListApplicationInstanceCommandOutput,
-} from './list-application-instance-command.types.js';
+} from './list-application-instance-command.types.ts';
 
 /**
  * Lists the instances of an application, live and destroyed alike.

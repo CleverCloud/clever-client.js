@@ -1,4 +1,4 @@
-import type { GetHeptapodPriceEstimationCommandOutput } from './get-heptapod-price-estimation-command.types.js';
+import type { GetHeptapodPriceEstimationCommandOutput } from './get-heptapod-price-estimation-command.types.ts';
 
 export function transformHeptapodPriceEstimation(payload: any): GetHeptapodPriceEstimationCommandOutput {
   return {

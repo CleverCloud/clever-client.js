@@ -1,4 +1,4 @@
-import type { OtoroshiInfo } from './otoroshi.types.js';
+import type { OtoroshiInfo } from './otoroshi.types.ts';
 
 /**
  * Identifies the add-on to move, and the version to move it to.

@@ -3,8 +3,8 @@ import type {
   CcRequestConfigPartial,
   CcRequestParams,
   RequestCachePolicy,
-} from '../types/request.types.js';
-import type { UnknownToClient } from '../types/utils.types.js';
+} from '../types/request.types.ts';
+import type { UnknownToClient } from '../types/utils.types.ts';
 
 /**
  * Creates a new object with the specified properties omitted.
@@ -420,7 +420,7 @@ export function waitUnlessAborted<T>(
 
   return new Promise((resolve, reject) => {
     const abort = (): void => {
-      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- an abort rejects with whatever the caller aborted with, like `fetch()` does
+      // oxlint-disable-next-line typescript/prefer-promise-reject-errors -- an abort rejects with whatever the caller aborted with, like `fetch()` does
       reject(signal.reason);
       onAbort?.();
     };
@@ -438,7 +438,7 @@ export function waitUnlessAborted<T>(
       },
       (error: unknown) => {
         signal.removeEventListener('abort', abort);
-        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the error of the shared promise, passed on as is
+        // oxlint-disable-next-line typescript/prefer-promise-reject-errors -- the error of the shared promise, passed on as is
         reject(error);
       },
     );
@@ -502,27 +502,27 @@ export function mergeRequestConfigPartial(
  * @template T The type of the value that the promise will resolve to
  */
 export class Deferred<T> {
-  #promise: Promise<T>;
-  #resolve!: (value: T) => void;
-  #reject!: (error: unknown) => void;
+  private _promise: Promise<T>;
+  private _resolve!: (value: T) => void;
+  private _reject!: (error: unknown) => void;
 
   constructor() {
-    this.#promise = new Promise((resolve, reject) => {
-      this.#resolve = resolve;
-      this.#reject = reject;
+    this._promise = new Promise((resolve, reject) => {
+      this._resolve = resolve;
+      this._reject = reject;
     });
   }
 
   get promise(): Promise<T> {
-    return this.#promise;
+    return this._promise;
   }
 
   get resolve(): (value: T) => void {
-    return this.#resolve;
+    return this._resolve;
   }
 
   get reject(): (error: unknown) => void {
-    return this.#reject;
+    return this._reject;
   }
 }
 
@@ -609,7 +609,7 @@ function encode(value: unknown): string {
     return encodeURIComponent(value);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-base-to-string -- interpolated values are expected to be primitives that stringify meaningfully
+  // oxlint-disable-next-line typescript/no-base-to-string -- interpolated values are expected to be primitives that stringify meaningfully
   return String(value);
 }
 
@@ -636,5 +636,5 @@ function mergeCachePartial(
   if (cache == null) {
     return null;
   }
-  return { ...(baseCache ?? {}), ...cache };
+  return { ...baseCache, ...cache };
 }

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { GetAddonCommand } from '../../../../../../src/clients/cc-api/commands/addon/get-addon-command.js';
-import { ListBackupCommand } from '../../../../../../src/clients/cc-api/commands/backup/list-backup-command.js';
-import type { ListBackupCommandInput } from '../../../../../../src/clients/cc-api/commands/backup/list-backup-command.types.js';
-import type { CcApiComposer } from '../../../../../../src/clients/cc-api/types/cc-api.types.js';
+import { GetAddonCommand } from '../../../../../../src/clients/cc-api/commands/addon/get-addon-command.ts';
+import { ListBackupCommand } from '../../../../../../src/clients/cc-api/commands/backup/list-backup-command.ts';
+import type { ListBackupCommandInput } from '../../../../../../src/clients/cc-api/commands/backup/list-backup-command.types.ts';
+import type { CcApiComposer } from '../../../../../../src/clients/cc-api/types/cc-api.types.ts';
 
 const BACKUP = {
   backupId: 'backup_x',

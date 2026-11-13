@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { LoadBalancerDnsConfig, ResolveDnsResult } from '../../../src/utils/domain-diag.js';
-import { diagDomain } from '../../../src/utils/domain-diag.js';
+import type { LoadBalancerDnsConfig, ResolveDnsResult } from '../../../src/utils/domain-diag.ts';
+import { diagDomain } from '../../../src/utils/domain-diag.ts';
 
 const HOSTNAME_EXAMPLE = 'example.com';
 const HOSTNAME_TESTONLY = 'app-f6ed4d4f-9668-4a03-a6fd-b297c15fc825.cleverapps.io';

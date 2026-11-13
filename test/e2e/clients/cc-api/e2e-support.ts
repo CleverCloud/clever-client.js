@@ -1,30 +1,30 @@
-import { CcApiClient } from '../../../../src/clients/cc-api/cc-api-client.js';
-import type { Addon } from '../../../../src/clients/cc-api/commands/addon/addon.types.js';
-import { CreateAddonCommand } from '../../../../src/clients/cc-api/commands/addon/create-addon-command.js';
-import type { CreateAddonCommandInput } from '../../../../src/clients/cc-api/commands/addon/create-addon-command.types.js';
-import { DeleteAddonCommand } from '../../../../src/clients/cc-api/commands/addon/delete-addon-command.js';
-import { GetAddonCommand } from '../../../../src/clients/cc-api/commands/addon/get-addon-command.js';
-import { CreateApplicationCommand } from '../../../../src/clients/cc-api/commands/application/create-application-command.js';
-import { DeleteApplicationCommand } from '../../../../src/clients/cc-api/commands/application/delete-application-command.js';
-import { GetApplicationCommand } from '../../../../src/clients/cc-api/commands/application/get-application-command.js';
-import { DeleteLogDrainCommand } from '../../../../src/clients/cc-api/commands/log-drain/delete-log-drain-command.js';
-import { ListLogDrainCommand } from '../../../../src/clients/cc-api/commands/log-drain/list-log-drain-command.js';
-import { CreateNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/create-network-group-command.js';
-import { DeleteNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/delete-network-group-command.js';
-import { GetNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/get-network-group-command.js';
-import { CreateOauthConsumerCommand } from '../../../../src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.js';
-import { DeleteOauthConsumerCommand } from '../../../../src/clients/cc-api/commands/oauth-consumer/delete-oauth-consumer-command.js';
-import { GetOauthConsumerCommand } from '../../../../src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.js';
-import { CreateOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/create-organisation-command.js';
-import type { CreateOrganisationCommandInput } from '../../../../src/clients/cc-api/commands/organisation/create-organisation-command.types.js';
-import { DeleteOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/delete-organisation-command.js';
-import { GetOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/get-organisation-command.js';
-import type { Organisation } from '../../../../src/clients/cc-api/commands/organisation/organisation.types.js';
-import { GetProfileCommand } from '../../../../src/clients/cc-api/commands/profile/get-profile-command.js';
-import type { CcApiAuth } from '../../../../src/clients/cc-api/types/cc-api.types.js';
-import { merge } from '../../../../src/lib/utils.js';
-import { getE2eUser } from '../../../lib/e2e-test-users.js';
-import type { E2eUser, E2eUserName } from '../../../lib/e2e.types.js';
+import { CcApiClient } from '../../../../src/clients/cc-api/cc-api-client.ts';
+import type { Addon } from '../../../../src/clients/cc-api/commands/addon/addon.types.ts';
+import { CreateAddonCommand } from '../../../../src/clients/cc-api/commands/addon/create-addon-command.ts';
+import type { CreateAddonCommandInput } from '../../../../src/clients/cc-api/commands/addon/create-addon-command.types.ts';
+import { DeleteAddonCommand } from '../../../../src/clients/cc-api/commands/addon/delete-addon-command.ts';
+import { GetAddonCommand } from '../../../../src/clients/cc-api/commands/addon/get-addon-command.ts';
+import { CreateApplicationCommand } from '../../../../src/clients/cc-api/commands/application/create-application-command.ts';
+import { DeleteApplicationCommand } from '../../../../src/clients/cc-api/commands/application/delete-application-command.ts';
+import { GetApplicationCommand } from '../../../../src/clients/cc-api/commands/application/get-application-command.ts';
+import { DeleteLogDrainCommand } from '../../../../src/clients/cc-api/commands/log-drain/delete-log-drain-command.ts';
+import { ListLogDrainCommand } from '../../../../src/clients/cc-api/commands/log-drain/list-log-drain-command.ts';
+import { CreateNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/create-network-group-command.ts';
+import { DeleteNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/delete-network-group-command.ts';
+import { GetNetworkGroupCommand } from '../../../../src/clients/cc-api/commands/network-group/get-network-group-command.ts';
+import { CreateOauthConsumerCommand } from '../../../../src/clients/cc-api/commands/oauth-consumer/create-oauth-consumer-command.ts';
+import { DeleteOauthConsumerCommand } from '../../../../src/clients/cc-api/commands/oauth-consumer/delete-oauth-consumer-command.ts';
+import { GetOauthConsumerCommand } from '../../../../src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.ts';
+import { CreateOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/create-organisation-command.ts';
+import type { CreateOrganisationCommandInput } from '../../../../src/clients/cc-api/commands/organisation/create-organisation-command.types.ts';
+import { DeleteOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/delete-organisation-command.ts';
+import { GetOrganisationCommand } from '../../../../src/clients/cc-api/commands/organisation/get-organisation-command.ts';
+import type { Organisation } from '../../../../src/clients/cc-api/commands/organisation/organisation.types.ts';
+import { GetProfileCommand } from '../../../../src/clients/cc-api/commands/profile/get-profile-command.ts';
+import type { CcApiAuth } from '../../../../src/clients/cc-api/types/cc-api.types.ts';
+import { merge } from '../../../../src/lib/utils.ts';
+import { getE2eUser } from '../../../lib/e2e-test-users.ts';
+import type { E2eUser, E2eUserName } from '../../../lib/e2e.types.ts';
 
 type Auth = 'api-token' | 'oauth-v1';
 
@@ -296,14 +296,12 @@ export function e2eSupport(config?: { user?: E2eUserName; auth?: Auth; debug?: b
         new CreateAddonCommand(
           addon
             ? {
-                ...{
-                  ownerId: organisationId,
-                  name: 'test-addon',
-                  providerId: 'config-provider',
-                  planId: 'plan_5d8e9596-dd73-4b73-84d9-e165372c5324',
-                  zone: 'par',
-                  options: {},
-                },
+                ownerId: organisationId,
+                name: 'test-addon',
+                providerId: 'config-provider',
+                planId: 'plan_5d8e9596-dd73-4b73-84d9-e165372c5324',
+                zone: 'par',
+                options: {},
                 ...addon,
               }
             : {

@@ -1,7 +1,7 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiBridgeCommand } from '../../lib/cc-api-bridge-command.js';
-import type { UpdateApiTokenCommandInput } from './update-api-token-command.types.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiBridgeCommand } from '../../lib/cc-api-bridge-command.ts';
+import type { UpdateApiTokenCommandInput } from './update-api-token-command.types.ts';
 
 /**
  * Renames an API token, or changes the note attached to it.

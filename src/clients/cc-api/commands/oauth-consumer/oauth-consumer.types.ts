@@ -1,6 +1,6 @@
-import type { OauthConsumerRights } from './oauth-consumer-rights.js';
+import type { OauthConsumerRights } from './oauth-consumer-rights.ts';
 
-export type { AccessRights, GrantableRights, ManageRights, OauthConsumerRights } from './oauth-consumer-rights.js';
+export type { AccessRights, GrantableRights, ManageRights, OauthConsumerRights } from './oauth-consumer-rights.ts';
 
 /**
  * A third party application allowed to act on Clever Cloud on a user's behalf through OAuth, along

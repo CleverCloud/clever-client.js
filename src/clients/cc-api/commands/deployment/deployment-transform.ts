@@ -1,5 +1,5 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import type { Deployment, DeploymentLegacy, DeploymentState, DeploymentStep } from './deployment.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import type { Deployment, DeploymentLegacy, DeploymentState, DeploymentStep } from './deployment.types.ts';
 
 const DEPLOYMENT_STATE_CONVERT_MAP: Record<string, Exclude<DeploymentState, 'QUEUED'>> = {
   TASK_RUNNING: 'TASK_IN_PROGRESS',

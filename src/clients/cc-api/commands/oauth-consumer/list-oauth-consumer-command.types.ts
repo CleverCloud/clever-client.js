@@ -1,4 +1,4 @@
-import type { OauthConsumer } from './oauth-consumer.types.js';
+import type { OauthConsumer } from './oauth-consumer.types.ts';
 
 /**
  * Identifies the organisation whose OAuth consumers are listed, and how much of each to fetch.

@@ -1,13 +1,13 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import { GetOauthConsumerSecretCommand } from './get-oauth-consumer-secret-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import { GetOauthConsumerSecretCommand } from './get-oauth-consumer-secret-command.ts';
 import type {
   ListOauthConsumerCommandInput,
   ListOauthConsumerCommandOutput,
-} from './list-oauth-consumer-command.types.js';
-import { transformOauthConsumer } from './oauth-consumer-transform.js';
+} from './list-oauth-consumer-command.types.ts';
+import { transformOauthConsumer } from './oauth-consumer-transform.ts';
 
 /**
  * Lists the OAuth consumers owned by an organisation, optionally with their secrets.

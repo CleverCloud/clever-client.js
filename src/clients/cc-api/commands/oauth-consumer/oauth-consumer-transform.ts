@@ -1,4 +1,4 @@
-import type { GrantableRights, OauthConsumer, OauthConsumerRights } from './oauth-consumer.types.js';
+import type { GrantableRights, OauthConsumer, OauthConsumerRights } from './oauth-consumer.types.ts';
 
 export function transformOauthConsumer(payload: any): OauthConsumer {
   return {

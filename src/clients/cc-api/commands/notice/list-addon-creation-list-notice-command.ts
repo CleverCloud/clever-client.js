@@ -1,11 +1,11 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   ListAddonCreationListNoticeCommandInput,
   ListAddonCreationListNoticeCommandOutput,
-} from './list-addon-creation-list-notice-command.types.js';
-import { transformProviderNotice } from './notice-transform.js';
+} from './list-addon-creation-list-notice-command.types.ts';
+import { transformProviderNotice } from './notice-transform.ts';
 
 /**
  * Lists the notices to show on the add-on provider list of the creation flow, oldest first, in the

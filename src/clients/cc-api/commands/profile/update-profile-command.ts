@@ -1,7 +1,7 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformProfile } from './profile-transform.js';
-import type { UpdateProfileCommandInput, UpdateProfileCommandOutput } from './update-profile-command.types.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformProfile } from './profile-transform.ts';
+import type { UpdateProfileCommandInput, UpdateProfileCommandOutput } from './update-profile-command.types.ts';
 
 /**
  * Updates the account of the signed-in user.

@@ -1,9 +1,9 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { GetMetabaseInfoCommandInput, GetMetabaseInfoCommandOutput } from './get-metabase-info-command.types.js';
-import { transformMetabaseInfo } from './metabase-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { GetMetabaseInfoCommandInput, GetMetabaseInfoCommandOutput } from './get-metabase-info-command.types.ts';
+import { transformMetabaseInfo } from './metabase-transform.ts';
 
 /**
  * Retrieves a Metabase add-on, with the URL to reach it and the resources it is built on.

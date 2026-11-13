@@ -1,8 +1,8 @@
-import { normalizeDate } from '../../../../lib/utils.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
 import type {
   GetPulsarClusterInnerCommandOutput,
   GetPulsarInfoInnerCommandOutput,
-} from './get-pulsar-info-command.types.js';
+} from './get-pulsar-info-command.types.ts';
 
 export function transformPulsarInfo(payload: any): GetPulsarInfoInnerCommandOutput {
   return {

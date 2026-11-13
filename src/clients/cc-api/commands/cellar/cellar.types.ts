@@ -1,4 +1,4 @@
-import type { AddonId } from '../../types/cc-api.types.js';
+import type { AddonId } from '../../types/cc-api.types.ts';
 
 /**
  * Where a Cellar add-on stands in its lifecycle.

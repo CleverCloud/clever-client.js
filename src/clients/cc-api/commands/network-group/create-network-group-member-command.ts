@@ -1,12 +1,12 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
 import type {
   CreateNetworkGroupMemberCommandInput,
   CreateNetworkGroupMemberCommandOutput,
-} from './create-network-group-member-command.types.js';
-import { constructNetworkGroupMember, waitForNetworkGroupMemberCreation } from './network-group-utils.js';
+} from './create-network-group-member-command.types.ts';
+import { constructNetworkGroupMember, waitForNetworkGroupMemberCreation } from './network-group-utils.ts';
 
 /**
  * Adds a member, an application or an add-on, to a network group.

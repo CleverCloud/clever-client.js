@@ -1,8 +1,8 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetStripeIntentCommandInput, GetStripeIntentCommandOutput } from './get-stripe-intent-command.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetStripeIntentCommandInput, GetStripeIntentCommandOutput } from './get-stripe-intent-command.types.ts';
 
 /**
  * Opens a Stripe setup intent so that a new payment method can be collected in the browser.

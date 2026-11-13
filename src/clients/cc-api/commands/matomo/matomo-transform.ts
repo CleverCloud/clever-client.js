@@ -1,6 +1,6 @@
-import { sortBy } from '../../../../lib/utils.js';
-import { toArray } from '../../../../utils/environment-utils.js';
-import type { MatomoInfo } from './matomo.types.js';
+import { sortBy } from '../../../../lib/utils.ts';
+import { toArray } from '../../../../utils/environment-utils.ts';
+import type { MatomoInfo } from './matomo.types.ts';
 
 export function transformMatomoInfo(payload: any): MatomoInfo {
   return {

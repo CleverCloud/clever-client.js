@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
+import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.ts';
 
 describe('HeadersBuilder', () => {
   describe('constructor', () => {

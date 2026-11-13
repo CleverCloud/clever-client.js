@@ -1,9 +1,9 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformMigration } from './migration-transform.js';
-import type { StartMigrationCommandInput, StartMigrationCommandOutput } from './start-migration-command.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformMigration } from './migration-transform.ts';
+import type { StartMigrationCommandInput, StartMigrationCommandOutput } from './start-migration-command.types.ts';
 
 /**
  * Starts the migration of an add-on to another plan, zone or version.

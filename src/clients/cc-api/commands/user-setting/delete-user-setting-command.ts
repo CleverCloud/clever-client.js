@@ -1,8 +1,8 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { DeleteUserSettingCommandInput } from './delete-user-setting-command.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { DeleteUserSettingCommandInput } from './delete-user-setting-command.types.ts';
 
 /**
  * Removes one Console preference of the current user, which falls back to its default.

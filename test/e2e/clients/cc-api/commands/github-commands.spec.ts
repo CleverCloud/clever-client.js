@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { GetGithubLinkTransactionIdCommand } from '../../../../../src/clients/cc-api/commands/github/get-github-link-transaction-id-command.js';
-import { GetGithubUsernameCommand } from '../../../../../src/clients/cc-api/commands/github/get-github-username-command.js';
-import { ListGithubApplicationCommand } from '../../../../../src/clients/cc-api/commands/github/list-github-application-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { GetGithubLinkTransactionIdCommand } from '../../../../../src/clients/cc-api/commands/github/get-github-link-transaction-id-command.ts';
+import { GetGithubUsernameCommand } from '../../../../../src/clients/cc-api/commands/github/get-github-username-command.ts';
+import { ListGithubApplicationCommand } from '../../../../../src/clients/cc-api/commands/github/list-github-application-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('github commands', function () {
   const support = e2eSupport();

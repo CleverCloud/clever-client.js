@@ -1,7 +1,7 @@
-import { normalizeDate, sortBy } from '../../../../lib/utils.js';
-import { toArray } from '../../../../utils/environment-utils.js';
-import { transformProductRuntimeFlavor, transformProductRuntimeVariant } from '../product/product-transform.js';
-import type { Application } from './application.types.js';
+import { normalizeDate, sortBy } from '../../../../lib/utils.ts';
+import { toArray } from '../../../../utils/environment-utils.ts';
+import { transformProductRuntimeFlavor, transformProductRuntimeVariant } from '../product/product-transform.ts';
+import type { Application } from './application.types.ts';
 
 export function transformApplication(payload: any): Application {
   const application: Application = {

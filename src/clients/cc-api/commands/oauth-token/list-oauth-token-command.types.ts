@@ -1,4 +1,4 @@
-import type { OauthConsumer, OauthConsumerRights } from '../oauth-consumer/oauth-consumer.types.js';
+import type { OauthConsumer, OauthConsumerRights } from '../oauth-consumer/oauth-consumer.types.ts';
 
 /**
  * The user's OAuth tokens, sorted by creation date, most recent first.

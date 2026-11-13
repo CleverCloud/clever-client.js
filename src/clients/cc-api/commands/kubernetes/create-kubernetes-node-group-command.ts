@@ -1,11 +1,11 @@
-import { postJson } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { postJson } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   CreateKubernetesNodeGroupCommandInput,
   CreateKubernetesNodeGroupCommandOutput,
-} from './create-kubernetes-node-group-command.types.js';
-import { transformKubernetesNodeGroup } from './kubernetes-transform.js';
+} from './create-kubernetes-node-group-command.types.ts';
+import { transformKubernetesNodeGroup } from './kubernetes-transform.ts';
 
 /**
  * Adds a node group to an existing Kubernetes cluster.

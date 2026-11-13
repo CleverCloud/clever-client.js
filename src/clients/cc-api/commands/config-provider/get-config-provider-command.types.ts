@@ -1,4 +1,4 @@
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.ts';
 
 /**
  * Identifies the Config Provider add-on to read.

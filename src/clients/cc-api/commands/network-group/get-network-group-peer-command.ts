@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   GetNetworkGroupPeerCommandInput,
   GetNetworkGroupPeerCommandOutput,
-} from './get-network-group-peer-command.types.js';
-import { transformNetworkGroupPeer } from './network-group-transform.js';
+} from './get-network-group-peer-command.types.ts';
+import { transformNetworkGroupPeer } from './network-group-transform.ts';
 
 /**
  * Retrieves a peer of a network group, whether it runs on the platform or is an external machine.

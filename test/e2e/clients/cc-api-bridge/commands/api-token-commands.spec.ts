@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import type { ApiToken } from '../../../../../src/clients/cc-api-bridge/commands/api-token/api-token.types.js';
-import { CreateApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.js';
-import { DeleteApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/delete-api-token-command.js';
-import { GetApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/get-api-token-command.js';
-import { ListApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/list-api-token-command.js';
-import { UpdateApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/update-api-token-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import type { ApiToken } from '../../../../../src/clients/cc-api-bridge/commands/api-token/api-token.types.ts';
+import { CreateApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.ts';
+import { DeleteApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/delete-api-token-command.ts';
+import { GetApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/get-api-token-command.ts';
+import { ListApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/list-api-token-command.ts';
+import { UpdateApiTokenCommand } from '../../../../../src/clients/cc-api-bridge/commands/api-token/update-api-token-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('api-token commands', function () {
   const support = e2eSupport();

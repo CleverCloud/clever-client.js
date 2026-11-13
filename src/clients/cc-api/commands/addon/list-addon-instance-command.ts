@@ -1,12 +1,12 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformAddonInstance } from './addon-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformAddonInstance } from './addon-transform.ts';
 import type {
   ListAddonInstanceCommandInput,
   ListAddonInstanceCommandOutput,
-} from './list-addon-instance-command.types.js';
+} from './list-addon-instance-command.types.ts';
 
 /**
  * Lists the virtual machines currently backing an add-on.

@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   GetKubernetesNodeGroupCommandInput,
   GetKubernetesNodeGroupCommandOutput,
-} from './get-kubernetes-node-group-command.types.js';
-import { transformKubernetesNodeGroup } from './kubernetes-transform.js';
+} from './get-kubernetes-node-group-command.types.ts';
+import { transformKubernetesNodeGroup } from './kubernetes-transform.ts';
 
 /**
  * Retrieves one node group of a cluster.

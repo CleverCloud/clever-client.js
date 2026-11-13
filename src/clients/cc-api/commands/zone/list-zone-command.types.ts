@@ -1,4 +1,4 @@
-import type { Zone } from './zone.types.js';
+import type { Zone } from './zone.types.ts';
 
 /**
  * Which zones to list: pass nothing for the public zones, or an owner to get the ones that

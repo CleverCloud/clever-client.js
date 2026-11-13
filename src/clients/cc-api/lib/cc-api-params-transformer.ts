@@ -1,10 +1,10 @@
-import type { CcStream } from '../../../lib/stream/cc-stream.js';
-import type { CcClientParamsTransformer } from '../../../types/client.types.js';
-import type { CcRequestConfigPartial } from '../../../types/request.types.js';
-import type { CcApiType, ResourceId } from '../types/cc-api.types.js';
-import type { AddonIdResolve } from '../types/resource-id-resolver.types.js';
-import type { CcApiCompositeCommand, CcApiSimpleCommand, CcApiStreamCommand } from './cc-api-command.js';
-import type { ResourceIdResolver } from './resource-id-resolver.js';
+import type { CcStream } from '../../../lib/stream/cc-stream.ts';
+import type { CcClientParamsTransformer } from '../../../types/client.types.ts';
+import type { CcRequestConfigPartial } from '../../../types/request.types.ts';
+import type { CcApiType, ResourceId } from '../types/cc-api.types.ts';
+import type { AddonIdResolve } from '../types/resource-id-resolver.types.ts';
+import type { CcApiCompositeCommand, CcApiSimpleCommand, CcApiStreamCommand } from './cc-api-command.ts';
+import type { ResourceIdResolver } from './resource-id-resolver.ts';
 
 /**
  * Resolves the resource ids a command declares (owner ids, addon ids) to the format its endpoint expects.
@@ -13,13 +13,13 @@ export class CcApiParamsTransformer implements CcClientParamsTransformer<CcApiTy
   /**
    * Gets the resolver of the client, which only exists once the client is constructed
    */
-  readonly #getResourceIdResolver: () => ResourceIdResolver;
+  private readonly _getResourceIdResolver: () => ResourceIdResolver;
 
   /**
    * @param getResourceIdResolver - Gets the resource id resolver of the client
    */
   constructor(getResourceIdResolver: () => ResourceIdResolver) {
-    this.#getResourceIdResolver = getResourceIdResolver;
+    this._getResourceIdResolver = getResourceIdResolver;
   }
 
   /**
@@ -43,7 +43,7 @@ export class CcApiParamsTransformer implements CcClientParamsTransformer<CcApiTy
       return params;
     }
 
-    const resourceIdResolver = this.#getResourceIdResolver();
+    const resourceIdResolver = this._getResourceIdResolver();
     const resolvedIds: Record<string, string> = {};
 
     if (idsToResolve.ownerId) {

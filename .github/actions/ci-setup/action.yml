@@ -5,7 +5,7 @@ runs:
   using: composite
   steps:
     - name: 🛠️ Setup mise
-      uses: jdx/mise-action@v4
+      uses: jdx/mise-action@v5
 
     - name: 🗂️ Resolve pnpm store path
       shell: bash

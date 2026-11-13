@@ -1,9 +1,9 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { normalizeDate, safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformInvoiceSummary } from './invoice-transform.js';
-import type { ListInvoiceCommandInput, ListInvoiceCommandOutput } from './list-invoice-command.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { normalizeDate, safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformInvoiceSummary } from './invoice-transform.ts';
+import type { ListInvoiceCommandInput, ListInvoiceCommandOutput } from './list-invoice-command.types.ts';
 
 /**
  * Lists the billing documents an organisation was issued over a period.

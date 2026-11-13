@@ -1,4 +1,4 @@
-import type { AddonProviderId } from '../../types/cc-api.types.js';
+import type { AddonProviderId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies the provider to remove. The owner is resolved automatically when omitted.

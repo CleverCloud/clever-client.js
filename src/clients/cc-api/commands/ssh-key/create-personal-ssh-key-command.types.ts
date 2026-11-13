@@ -1,4 +1,4 @@
-import type { SshKey } from './ssh-key.types.js';
+import type { SshKey } from './ssh-key.types.ts';
 
 /**
  * The key to register, and the name to file it under.

@@ -1,5 +1,5 @@
-import type { CcRequestParams } from '../../types/request.types.js';
-import { HeadersBuilder } from '../request/headers-builder.js';
+import type { CcRequestParams } from '../../types/request.types.ts';
+import { HeadersBuilder } from '../request/headers-builder.ts';
 
 /**
  * Abstract base class for Clever Cloud authentication mechanisms.

@@ -1,12 +1,12 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformAddonProviderFeature } from './addon-provider-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformAddonProviderFeature } from './addon-provider-transform.ts';
 import type {
   ListAddonProviderFeatureCommandInput,
   ListAddonProviderFeatureCommandOutput,
-} from './list-addon-provider-feature-command.types.js';
+} from './list-addon-provider-feature-command.types.ts';
 
 /**
  * Lists the features declared by an add-on provider.

@@ -1,20 +1,18 @@
-import { normalizeDate, sortBy } from '../../../../lib/utils.js';
-import type { ListMigrationPreorderCommandOutput } from './list-migration-preorder-command.types.js';
-import type { Migration, MigrationStep } from './migration.types.js';
+import { normalizeDate, sortBy } from '../../../../lib/utils.ts';
+import type { ListMigrationPreorderCommandOutput } from './list-migration-preorder-command.types.ts';
+import type { Migration, MigrationStep } from './migration.types.ts';
 
 export function transformMigration(payload: any): Migration {
   return {
     id: payload.migrationId,
     requestedAt: normalizeDate(payload.requestDate)!,
-    steps: payload.steps.map(
-      (step: any): MigrationStep => ({
-        value: step.value,
-        status: step.status,
-        message: step.message,
-        startsAt: normalizeDate(step.startDate)!,
-        endsAt: normalizeDate(step.endDate),
-      }),
-    ),
+    steps: payload.steps.map((step: any): MigrationStep => ({
+      value: step.value,
+      status: step.status,
+      message: step.message,
+      startsAt: normalizeDate(step.startDate)!,
+      endsAt: normalizeDate(step.endDate),
+    })),
     status: payload.status,
   };
 }

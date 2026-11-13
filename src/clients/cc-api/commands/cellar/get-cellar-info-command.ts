@@ -1,9 +1,9 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformCellarInfo } from './cellar-transform.js';
-import type { GetCellarInfoCommandInput, GetCellarInfoCommandOutput } from './get-cellar-info-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformCellarInfo } from './cellar-transform.ts';
+import type { GetCellarInfoCommandInput, GetCellarInfoCommandOutput } from './get-cellar-info-command.types.ts';
 
 /**
  * Retrieves a Cellar add-on, with how much storage and traffic it is using.

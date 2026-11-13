@@ -7,13 +7,13 @@ const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
  * Helper to build headers
  */
 export class HeadersBuilder {
-  #headers: Headers;
+  private _headers: Headers;
 
   constructor(headers?: Headers | Record<string, string> | null) {
     if (headers == null) {
-      this.#headers = new Headers();
+      this._headers = new Headers();
     } else {
-      this.#headers = new Headers(headers);
+      this._headers = new Headers(headers);
     }
   }
 
@@ -54,11 +54,11 @@ export class HeadersBuilder {
   }
 
   withHeader(header: string, value: string): HeadersBuilder {
-    this.#headers.set(header, value);
+    this._headers.set(header, value);
     return this;
   }
 
   build(): Headers {
-    return this.#headers;
+    return this._headers;
   }
 }

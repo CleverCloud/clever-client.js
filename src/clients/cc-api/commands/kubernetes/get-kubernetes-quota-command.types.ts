@@ -1,4 +1,4 @@
-import type { KubernetesQuota } from './kubernetes.types.js';
+import type { KubernetesQuota } from './kubernetes.types.ts';
 
 /**
  * Identifies the owner whose quota is read.

@@ -1,9 +1,9 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { DeleteAddonCommand } from '../../../../../src/clients/cc-api/commands/addon/delete-addon-command.js';
-import { GetAddonCommand } from '../../../../../src/clients/cc-api/commands/addon/get-addon-command.js';
-import { GetAddonSsoCommand } from '../../../../../src/clients/cc-api/commands/addon/get-addon-sso-command.js';
-import { checkDateFormat } from '../../../../lib/expect-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+import { DeleteAddonCommand } from '../../../../../src/clients/cc-api/commands/addon/delete-addon-command.ts';
+import { GetAddonCommand } from '../../../../../src/clients/cc-api/commands/addon/get-addon-command.ts';
+import { GetAddonSsoCommand } from '../../../../../src/clients/cc-api/commands/addon/get-addon-sso-command.ts';
+import { checkDateFormat } from '../../../../lib/expect-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('addon commands', function () {
   const support = e2eSupport();

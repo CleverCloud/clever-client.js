@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { GetHeptapodPriceEstimationCommand } from '../../../../../src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.js';
-import { e2eSupport, STATIC_ORGANISATION_ID } from '../e2e-support.js';
+import { GetHeptapodPriceEstimationCommand } from '../../../../../src/clients/cc-api/commands/heptapod/get-heptapod-price-estimation-command.ts';
+import { e2eSupport, STATIC_ORGANISATION_ID } from '../e2e-support.ts';
 
 describe('heptapod commands', function () {
   const support = e2eSupport({ user: 'test-user-without-github' });

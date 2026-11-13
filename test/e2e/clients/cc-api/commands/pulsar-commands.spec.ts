@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { GetPulsarInfoCommand } from '../../../../../src/clients/cc-api/commands/pulsar/get-pulsar-info-command.js';
-import { expectToBeDefined } from '../../../../lib/expect-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+import { GetPulsarInfoCommand } from '../../../../../src/clients/cc-api/commands/pulsar/get-pulsar-info-command.ts';
+import { expectToBeDefined } from '../../../../lib/expect-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 // cannot be automatised because addon deletion just after creation is not supported by the platform
 describe.skip('pulsar commands', function () {

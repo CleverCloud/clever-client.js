@@ -1,5 +1,5 @@
 import { loadDomParser } from '#dom-parser';
-import type { DomParserLike } from './dom-parser.types.js';
+import type { DomParserLike } from './dom-parser.types.ts';
 
 let cachedDomParser: DomParserLike | null = null;
 

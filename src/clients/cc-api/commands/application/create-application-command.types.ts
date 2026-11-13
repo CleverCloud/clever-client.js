@@ -1,5 +1,5 @@
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
-import type { Application, ApplicationLifetime } from './application.types.js';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.ts';
+import type { Application, ApplicationLifetime } from './application.types.ts';
 
 /**
  * Description of the application to create. Only the owner, the name, the runtime and the smallest

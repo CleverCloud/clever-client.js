@@ -1,11 +1,11 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { AbstractLogsStreamCommand } from './abstract-logs-stream-command.js';
-import { transformApplicationAccessLog } from './log-transform.js';
-import type { ApplicationAccessLog } from './log.types.js';
-import type { StreamApplicationAccessLogCommandInput } from './stream-application-access-log-command.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { normalizeDate, safeUrl } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { AbstractLogsStreamCommand } from './abstract-logs-stream-command.ts';
+import { transformApplicationAccessLog } from './log-transform.ts';
+import type { ApplicationAccessLog } from './log.types.ts';
+import type { StreamApplicationAccessLogCommandInput } from './stream-application-access-log-command.types.ts';
 
 /**
  * Opens a Server-Sent Events stream of the access logs of an application: one entry per request the platform's
@@ -37,11 +37,11 @@ export class StreamApplicationAccessLogCommand extends AbstractLogsStreamCommand
     };
   }
 
-  _logTopicName(): string {
+  protected _logTopicName(): string {
     return 'ACCESS_LOG';
   }
 
-  _convertLog(payload: unknown): ApplicationAccessLog {
+  protected _convertLog(payload: unknown): ApplicationAccessLog {
     return transformApplicationAccessLog(payload)!;
   }
 

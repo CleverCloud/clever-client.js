@@ -1,5 +1,5 @@
-import type { CcClient } from '../lib/cc-client.js';
-import type { CompositeCommand, SimpleCommand } from '../lib/command/command.js';
+import type { CcClient } from '../lib/cc-client.ts';
+import type { CompositeCommand, SimpleCommand } from '../lib/command/command.ts';
 
 /**
  * Represents a command that can be executed by the Clever Cloud API client.

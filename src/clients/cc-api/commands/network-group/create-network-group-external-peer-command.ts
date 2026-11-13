@@ -1,14 +1,14 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
 import type {
   CreateNetworkGroupExternalPeerCommandInnerOutput,
   CreateNetworkGroupExternalPeerCommandInput,
   CreateNetworkGroupExternalPeerCommandOutput,
-} from './create-network-group-external-peer-command.types.js';
-import { waitForNetworkGroupPeerCreation } from './network-group-utils.js';
-import type { NetworkGroupPeerExternal } from './network-group.types.js';
+} from './create-network-group-external-peer-command.types.ts';
+import { waitForNetworkGroupPeerCreation } from './network-group-utils.ts';
+import type { NetworkGroupPeerExternal } from './network-group.types.ts';
 
 /**
  * Attaches an external WireGuard peer, a machine outside the Clever Cloud platform, to a member of a network group.

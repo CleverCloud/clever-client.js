@@ -1,4 +1,4 @@
-import type { Zone } from './zone.types.js';
+import type { Zone } from './zone.types.ts';
 
 export function transformZone(payload: any): Zone {
   return {

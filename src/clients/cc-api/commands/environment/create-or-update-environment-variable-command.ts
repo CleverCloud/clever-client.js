@@ -1,11 +1,11 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   CreateOrUpdateEnvironmentVariableCommandInput,
   CreateOrUpdateEnvironmentVariableCommandOutput,
-} from './create-or-update-environment-variable-command.types.js';
+} from './create-or-update-environment-variable-command.types.ts';
 
 /**
  * Sets one environment variable on an application, creating it when it does not exist yet.

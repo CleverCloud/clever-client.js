@@ -1,4 +1,4 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies the application to attach a domain to, along with the domain itself.

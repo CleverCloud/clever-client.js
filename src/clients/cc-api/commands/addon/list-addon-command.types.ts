@@ -1,4 +1,4 @@
-import type { Addon } from './addon.types.js';
+import type { Addon } from './addon.types.ts';
 
 /**
  * Identifies the organisation whose add-ons are listed.

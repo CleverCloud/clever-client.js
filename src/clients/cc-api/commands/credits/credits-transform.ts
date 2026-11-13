@@ -1,5 +1,5 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import type { CouponUsage, Credits } from './credits.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import type { CouponUsage, Credits } from './credits.types.ts';
 
 export function transformCouponUsage(payload: any): CouponUsage {
   return {

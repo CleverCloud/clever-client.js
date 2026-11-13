@@ -1,10 +1,10 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CheckMetabaseVersionCommand } from '../../../../../src/clients/cc-api/commands/metabase/check-metabase-version-command.js';
-import { GetMetabaseInfoCommand } from '../../../../../src/clients/cc-api/commands/metabase/get-metabase-info-command.js';
-import { RebootMetabaseCommand } from '../../../../../src/clients/cc-api/commands/metabase/reboot-metabase-command.js';
-import { RebuildMetabaseCommand } from '../../../../../src/clients/cc-api/commands/metabase/rebuild-metabase-command.js';
-import { UpdateMetabaseVersionCommand } from '../../../../../src/clients/cc-api/commands/metabase/update-metabase-version-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CheckMetabaseVersionCommand } from '../../../../../src/clients/cc-api/commands/metabase/check-metabase-version-command.ts';
+import { GetMetabaseInfoCommand } from '../../../../../src/clients/cc-api/commands/metabase/get-metabase-info-command.ts';
+import { RebootMetabaseCommand } from '../../../../../src/clients/cc-api/commands/metabase/reboot-metabase-command.ts';
+import { RebuildMetabaseCommand } from '../../../../../src/clients/cc-api/commands/metabase/rebuild-metabase-command.ts';
+import { UpdateMetabaseVersionCommand } from '../../../../../src/clients/cc-api/commands/metabase/update-metabase-version-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('metabase commands', function () {
   const support = e2eSupport();

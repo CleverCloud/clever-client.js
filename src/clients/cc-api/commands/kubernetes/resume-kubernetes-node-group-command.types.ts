@@ -1,4 +1,4 @@
-import type { KubernetesNodeGroup } from './kubernetes.types.js';
+import type { KubernetesNodeGroup } from './kubernetes.types.ts';
 
 /**
  * Identifies the node group to resume.

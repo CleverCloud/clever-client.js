@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { CmdCliSendCommand } from '../../../../../src/clients/redis-http/commands/cmd/cmd-cli-send-command.js';
-import { CmdSendCommand } from '../../../../../src/clients/redis-http/commands/cmd/cmd-send-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CmdCliSendCommand } from '../../../../../src/clients/redis-http/commands/cmd/cmd-cli-send-command.ts';
+import { CmdSendCommand } from '../../../../../src/clients/redis-http/commands/cmd/cmd-send-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('cmd commands', function () {
   const support = e2eSupport();

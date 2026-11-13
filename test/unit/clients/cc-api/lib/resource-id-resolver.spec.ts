@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { CcApiClient } from '../../../../../src/clients/cc-api/cc-api-client.js';
-import type { GetOrganisationSummaryCommandOutput } from '../../../../../src/clients/cc-api/commands/organisation/get-organisation-summary-command.types.js';
-import { ResourceIdResolver } from '../../../../../src/clients/cc-api/lib/resource-id-resolver.js';
-import { MemoryStore } from '../../../../../src/clients/cc-api/lib/store/memory-store.js';
-import type { ResourceIdIndex, Store } from '../../../../../src/clients/cc-api/types/resource-id-resolver.types.js';
+import type { CcApiClient } from '../../../../../src/clients/cc-api/cc-api-client.ts';
+import type { GetOrganisationSummaryCommandOutput } from '../../../../../src/clients/cc-api/commands/organisation/get-organisation-summary-command.types.ts';
+import { ResourceIdResolver } from '../../../../../src/clients/cc-api/lib/resource-id-resolver.ts';
+import { MemoryStore } from '../../../../../src/clients/cc-api/lib/store/memory-store.ts';
+import type { ResourceIdIndex, Store } from '../../../../../src/clients/cc-api/types/resource-id-resolver.types.ts';
 
 /**
  * A summary holding a single organisation with one application and one add-on. Only the fields the

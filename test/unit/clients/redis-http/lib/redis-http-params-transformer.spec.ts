@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { CmdSendCommand } from '../../../../../src/clients/redis-http/commands/cmd/cmd-send-command.js';
+import { CmdSendCommand } from '../../../../../src/clients/redis-http/commands/cmd/cmd-send-command.ts';
 import {
   isRedisHttpCommand,
   type RedisHttpCommand,
-} from '../../../../../src/clients/redis-http/lib/redis-http-command.js';
-import { RedisHttpParamsTransformer } from '../../../../../src/clients/redis-http/lib/redis-http-params-transformer.js';
-import { brandAsForeignCopy } from '../../../../lib/foreign-copy.js';
+} from '../../../../../src/clients/redis-http/lib/redis-http-command.ts';
+import { RedisHttpParamsTransformer } from '../../../../../src/clients/redis-http/lib/redis-http-params-transformer.ts';
+import { brandAsForeignCopy } from '../../../../lib/foreign-copy.ts';
 
 const BACKEND_URL = 'redis://my-redis-db:6379';
 

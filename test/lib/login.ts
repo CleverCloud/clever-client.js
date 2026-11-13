@@ -2,14 +2,13 @@ import * as cheerio from 'cheerio';
 import cookie from 'cookie';
 import timers from 'node:timers/promises';
 import { TOTP } from 'totp-generator';
-import { CcApiBridgeClient } from '../../src/clients/cc-api-bridge/cc-api-bridge-client.js';
-import { CreateApiTokenCommand } from '../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.js';
-import { DeleteApiTokenCommand } from '../../src/clients/cc-api-bridge/commands/api-token/delete-api-token-command.js';
-import { CcApiClient } from '../../src/clients/cc-api/cc-api-client.js';
-import { DeleteOauthTokenCommand } from '../../src/clients/cc-api/commands/oauth-token/delete-oauth-token-command.js';
-import { getAllE2eUsers } from './e2e-test-users.js';
-
-import type { E2eUser } from './e2e.types.js';
+import { CcApiBridgeClient } from '../../src/clients/cc-api-bridge/cc-api-bridge-client.ts';
+import { CreateApiTokenCommand } from '../../src/clients/cc-api-bridge/commands/api-token/create-api-token-command.ts';
+import { DeleteApiTokenCommand } from '../../src/clients/cc-api-bridge/commands/api-token/delete-api-token-command.ts';
+import { CcApiClient } from '../../src/clients/cc-api/cc-api-client.ts';
+import { DeleteOauthTokenCommand } from '../../src/clients/cc-api/commands/oauth-token/delete-oauth-token-command.ts';
+import { getAllE2eUsers } from './e2e-test-users.ts';
+import type { E2eUser } from './e2e.types.ts';
 
 const OAUTH_CONSUMER_KEY = globalThis.process?.env.OAUTH_CONSUMER_KEY;
 const OAUTH_CONSUMER_SECRET = globalThis.process?.env.OAUTH_CONSUMER_SECRET;
@@ -100,10 +99,10 @@ async function logoutUser(user: E2eUser): Promise<void> {
  * 4) postOauthAccessToken()
  */
 class OauthDance {
-  #API_HOST: string;
-  #OAUTH_CONSUMER_KEY: string;
-  #OAUTH_CONSUMER_SECRET: string;
-  #OAUTH_CONSUMER_CALLBACK_URL: string;
+  private _API_HOST: string;
+  private _OAUTH_CONSUMER_KEY: string;
+  private _OAUTH_CONSUMER_SECRET: string;
+  private _OAUTH_CONSUMER_CALLBACK_URL: string;
 
   constructor({
     API_HOST,
@@ -120,25 +119,25 @@ class OauthDance {
     /** OAuth callback URL */
     OAUTH_CONSUMER_CALLBACK_URL: string;
   }) {
-    this.#API_HOST = API_HOST;
-    this.#OAUTH_CONSUMER_KEY = OAUTH_CONSUMER_KEY;
-    this.#OAUTH_CONSUMER_SECRET = OAUTH_CONSUMER_SECRET;
-    this.#OAUTH_CONSUMER_CALLBACK_URL = OAUTH_CONSUMER_CALLBACK_URL;
+    this._API_HOST = API_HOST;
+    this._OAUTH_CONSUMER_KEY = OAUTH_CONSUMER_KEY;
+    this._OAUTH_CONSUMER_SECRET = OAUTH_CONSUMER_SECRET;
+    this._OAUTH_CONSUMER_CALLBACK_URL = OAUTH_CONSUMER_CALLBACK_URL;
   }
 
   //#region [1] get request token
 
-  #oauthToken!: string | null;
-  #oauthTokenSecret!: string | null;
+  private _oauthToken!: string | null;
+  private _oauthTokenSecret!: string | null;
 
   /**
    * @throws {OauthDanceError}
    */
   async postOauthRequestToken(): Promise<void> {
-    const response = await this.#postForm('/v2/oauth/request_token', {
-      oauth_consumer_key: this.#OAUTH_CONSUMER_KEY,
-      oauth_signature: this.#OAUTH_CONSUMER_SECRET + '&',
-      oauth_callback: this.#OAUTH_CONSUMER_CALLBACK_URL,
+    const response = await this._postForm('/v2/oauth/request_token', {
+      oauth_consumer_key: this._OAUTH_CONSUMER_KEY,
+      oauth_signature: this._OAUTH_CONSUMER_SECRET + '&',
+      oauth_callback: this._OAUTH_CONSUMER_CALLBACK_URL,
     });
 
     if (!response.ok) {
@@ -149,17 +148,17 @@ class OauthDance {
     const encodedSearchParams = await response.text();
     const searchParams = new URLSearchParams(encodedSearchParams);
 
-    this.#oauthToken = searchParams.get('oauth_token');
-    this.#oauthTokenSecret = searchParams.get('oauth_token_secret');
+    this._oauthToken = searchParams.get('oauth_token');
+    this._oauthTokenSecret = searchParams.get('oauth_token_secret');
   }
 
   //#endregion
 
   //#region [2] submit login form / submit MFA form
 
-  #email!: string | null;
-  #mfaFormHtml!: string | null;
-  #ccid!: string | null;
+  private _email!: string | null;
+  private _mfaFormHtml!: string | null;
+  private _ccid!: string | null;
 
   /**
    * @param email - User email
@@ -168,7 +167,7 @@ class OauthDance {
    * @throws {InvalidCredentialError | OauthDanceError}
    */
   async postSessionsLogin(email: string, password: string): Promise<boolean> {
-    const response = await this.#postForm('/v2/sessions/login', {
+    const response = await this._postForm('/v2/sessions/login', {
       email,
       pass: password,
       from_authorize: 'true',
@@ -179,14 +178,14 @@ class OauthDance {
     }
 
     if (response.status === 200) {
-      this.#email = email;
-      this.#mfaFormHtml = await response.text();
+      this._email = email;
+      this._mfaFormHtml = await response.text();
       return true;
     }
 
     if (response.status === 303) {
       const cookies = cookie.parse(response.headers.get('set-cookie') || '');
-      this.#ccid = cookies.ccid ?? null;
+      this._ccid = cookies.ccid ?? null;
       return false;
     }
 
@@ -199,7 +198,7 @@ class OauthDance {
    * @throws {InvalidMfaCodeError | OauthDanceError}
    */
   async postSessionsMfaLogin(mfaCode: string): Promise<void> {
-    const $ = cheerio.load(this.#mfaFormHtml || '');
+    const $ = cheerio.load(this._mfaFormHtml || '');
 
     const form = $('form[action="/v2/sessions/mfa_login"]');
     if (form.length !== 1) {
@@ -207,11 +206,11 @@ class OauthDance {
     }
     const mfaAuthId = $(form).find('input[type="hidden"][name="auth_id"]').attr('value');
 
-    const response = await this.#postForm('/v2/sessions/mfa_login', {
+    const response = await this._postForm('/v2/sessions/mfa_login', {
       mfa_attempt: mfaCode,
       mfa_kind: 'TOTP',
       auth_id: mfaAuthId!,
-      email: this.#email!,
+      email: this._email!,
     });
 
     if (response.status === 401) {
@@ -220,7 +219,7 @@ class OauthDance {
 
     if (response.status === 303) {
       const cookies = cookie.parse(response.headers.get('set-cookie') || '');
-      this.#ccid = cookies.ccid ?? null;
+      this._ccid = cookies.ccid ?? null;
       return;
     }
 
@@ -232,35 +231,35 @@ class OauthDance {
 
   //#region [3] authorize / submit oauth rights form
 
-  #oauthRightsHtml!: string | null;
-  #oauthVerifier!: string | null;
-  #userId!: string | null;
+  private _oauthRightsHtml!: string | null;
+  private _oauthVerifier!: string | null;
+  private _userId!: string | null;
 
   /**
    * @returns Returns true if rights form needs to be submitted
    * @throws {OauthDanceError}
    */
   async getOauthAuthorize(): Promise<boolean> {
-    const response = await fetch(`${this.#API_HOST}/v2/oauth/authorize`, {
+    const response = await fetch(`${this._API_HOST}/v2/oauth/authorize`, {
       redirect: 'manual',
       credentials: 'include',
       headers: {
         cookie: serializeCookies({
-          cctk: this.#oauthToken!,
-          ccid: this.#ccid!,
+          cctk: this._oauthToken!,
+          ccid: this._ccid!,
         }),
       },
     });
 
     if (response.status === 200) {
-      this.#oauthRightsHtml = await response.text();
+      this._oauthRightsHtml = await response.text();
       return true;
     }
 
     if (response.status === 303) {
       const locationUrl = new URL(response.headers.get('location') || '');
-      this.#oauthVerifier = locationUrl.searchParams.get('oauth_verifier');
-      this.#userId = locationUrl.searchParams.get('user');
+      this._oauthVerifier = locationUrl.searchParams.get('oauth_verifier');
+      this._userId = locationUrl.searchParams.get('user');
       return false;
     }
 
@@ -272,7 +271,7 @@ class OauthDance {
    * @throws {OauthDanceError}
    */
   async postOauthAuthorize(): Promise<void> {
-    const $ = cheerio.load(this.#oauthRightsHtml || '');
+    const $ = cheerio.load(this._oauthRightsHtml || '');
 
     const form = $('form[action="/v2/oauth/authorize"]');
     if (form.length !== 1) {
@@ -294,15 +293,15 @@ class OauthDance {
       throw new OauthDanceError('3bis', `OAuth rights page does not have the expected HTML checkboxes`);
     }
 
-    const response = await this.#postForm('/v2/oauth/authorize', oauthRights, {
-      cctk: this.#oauthToken!,
-      ccid: this.#ccid!,
+    const response = await this._postForm('/v2/oauth/authorize', oauthRights, {
+      cctk: this._oauthToken!,
+      ccid: this._ccid!,
     });
 
     if (response.status === 303) {
       const locationUrl = new URL(response.headers.get('location') || '');
-      this.#oauthVerifier = locationUrl.searchParams.get('oauth_verifier');
-      this.#userId = locationUrl.searchParams.get('user');
+      this._oauthVerifier = locationUrl.searchParams.get('oauth_verifier');
+      this._userId = locationUrl.searchParams.get('user');
       return;
     }
 
@@ -321,18 +320,18 @@ class OauthDance {
    * @throws {OauthDanceError}
    */
   async postOauthAccessToken(): Promise<{ userId: string; oauthUserToken: string; oauthUserSecret: string }> {
-    const response = await this.#postForm('/v2/oauth/access_token', {
-      oauth_consumer_key: this.#OAUTH_CONSUMER_KEY,
-      oauth_signature: this.#OAUTH_CONSUMER_SECRET + '&' + this.#oauthTokenSecret,
-      oauth_token: this.#oauthToken!,
-      oauth_verifier: this.#oauthVerifier!,
+    const response = await this._postForm('/v2/oauth/access_token', {
+      oauth_consumer_key: this._OAUTH_CONSUMER_KEY,
+      oauth_signature: this._OAUTH_CONSUMER_SECRET + '&' + this._oauthTokenSecret,
+      oauth_token: this._oauthToken!,
+      oauth_verifier: this._oauthVerifier!,
     });
 
     if (response.status === 200) {
       const encodedSearchParams = await response.text();
       const searchParams = new URLSearchParams(encodedSearchParams);
       return {
-        userId: this.#userId!,
+        userId: this._userId!,
         oauthUserToken: searchParams.get('oauth_token')!,
         oauthUserSecret: searchParams.get('oauth_token_secret')!,
       };
@@ -349,7 +348,7 @@ class OauthDance {
    * @param data - Form data
    * @param cookies - Optional cookies to include
    */
-  #postForm(path: string, data: Record<string, string>, cookies?: Record<string, string>): Promise<Response> {
+  private _postForm(path: string, data: Record<string, string>, cookies?: Record<string, string>): Promise<Response> {
     const headers: Record<string, string> = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
     if (cookies != null) {
@@ -358,7 +357,7 @@ class OauthDance {
 
     const body = new URLSearchParams(data).toString();
 
-    return fetch(`${this.#API_HOST}${path}`, {
+    return fetch(`${this._API_HOST}${path}`, {
       method: 'POST',
       headers,
       redirect: 'manual',

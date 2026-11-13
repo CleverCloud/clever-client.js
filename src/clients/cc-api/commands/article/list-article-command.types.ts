@@ -1,4 +1,4 @@
-import type { Article } from './article.types.js';
+import type { Article } from './article.types.ts';
 
 /**
  * Which blog feed to read, and how many articles to pull out of it.

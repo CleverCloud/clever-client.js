@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { GetNetworkGroupCommand } from '../../../../../../src/clients/cc-api/commands/network-group/get-network-group-command.js';
-import { SearchNetworkGroupCommand } from '../../../../../../src/clients/cc-api/commands/network-group/search-network-group-command.js';
+import { GetNetworkGroupCommand } from '../../../../../../src/clients/cc-api/commands/network-group/get-network-group-command.ts';
+import { SearchNetworkGroupCommand } from '../../../../../../src/clients/cc-api/commands/network-group/search-network-group-command.ts';
 
 /** A network group as the search route serialises it, with the `type` discriminator on top. */
 function getNetworkGroupComponent() {

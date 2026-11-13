@@ -1,13 +1,13 @@
-import { postJson } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
+import { postJson } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
 import type {
   CreateKubernetesClusterCommandInput,
   CreateKubernetesClusterCommandOutput,
-} from './create-kubernetes-cluster-command.types.js';
-import { serializeKubernetesClusterFeatures, transformKubernetesCluster } from './kubernetes-transform.js';
-import { waitForKubernetesClusterActive } from './kubernetes-utils.js';
+} from './create-kubernetes-cluster-command.types.ts';
+import { serializeKubernetesClusterFeatures, transformKubernetesCluster } from './kubernetes-transform.ts';
+import { waitForKubernetesClusterActive } from './kubernetes-utils.ts';
 
 /**
  * Creates a Kubernetes cluster, optionally with its first node groups.

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { asNetworkError } from '../../../../src/lib/error/network-error.js';
-import type { CcRequest } from '../../../../src/types/request.types.js';
-import { expectToBeDefined } from '../../../lib/expect-utils.js';
+import { asNetworkError } from '../../../../src/lib/error/network-error.ts';
+import type { CcRequest } from '../../../../src/types/request.types.ts';
+import { expectToBeDefined } from '../../../lib/expect-utils.ts';
 
 describe('asNetworkError', () => {
   const REQUEST = {} as CcRequest;

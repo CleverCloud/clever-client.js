@@ -1,4 +1,4 @@
-import type { KubernetesNodeGroup, KubernetesNodeGroupCreationPayload } from './kubernetes.types.js';
+import type { KubernetesNodeGroup, KubernetesNodeGroupCreationPayload } from './kubernetes.types.ts';
 
 /**
  * Description of the node group to create, and the cluster it is added to.

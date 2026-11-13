@@ -3,7 +3,7 @@ import type {
   KubernetesClusterFeaturesPayload,
   KubernetesNodeGroupCreationPayload,
   KubernetesTopologyConfig,
-} from './kubernetes.types.js';
+} from './kubernetes.types.ts';
 
 /**
  * Description of the Kubernetes cluster to create.

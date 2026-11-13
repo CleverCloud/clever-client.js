@@ -1,9 +1,9 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import type { ApiErrorInfo } from '../../../../types/command.types.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { AddOrganisationMemberCommandInput } from './add-organisation-member-command.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import type { ApiErrorInfo } from '../../../../types/command.types.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { AddOrganisationMemberCommandInput } from './add-organisation-member-command.types.ts';
 
 /**
  * The error codes this command can produce, to compare against `error.code`.

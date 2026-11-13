@@ -1,9 +1,9 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import type { ApiErrorInfo } from '../../../../types/command.types.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformAuthMfa } from './auth-transform.js';
-import type { GetAuthMfaCommandInput, GetAuthMfaCommandOutput } from './get-auth-mfa-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import type { ApiErrorInfo } from '../../../../types/command.types.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformAuthMfa } from './auth-transform.ts';
+import type { GetAuthMfaCommandInput, GetAuthMfaCommandOutput } from './get-auth-mfa-command.types.ts';
 
 /**
  * The error codes this command can produce, to compare against `error.code`.

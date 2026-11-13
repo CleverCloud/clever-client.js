@@ -1,4 +1,4 @@
-import type { Profile } from './profile.types.js';
+import type { Profile } from './profile.types.ts';
 
 /**
  * The account of the signed-in user.

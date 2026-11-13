@@ -1,5 +1,5 @@
-import type { MfaKind } from '../auth/auth.types.js';
-import type { ContextFlag } from '../organisation/organisation.types.js';
+import type { MfaKind } from '../auth/auth.types.ts';
+import type { ContextFlag } from '../organisation/organisation.types.ts';
 
 /**
  * The account of the signed-in user: who they are, how they are billed, and how they sign in.

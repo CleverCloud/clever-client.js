@@ -1,4 +1,4 @@
-import type { Application } from './application.types.js';
+import type { Application } from './application.types.ts';
 
 /**
  * Identifies the organisation whose applications are listed.

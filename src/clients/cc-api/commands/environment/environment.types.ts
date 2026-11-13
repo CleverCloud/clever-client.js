@@ -1,4 +1,4 @@
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.ts';
 
 /**
  * Everything a resource ends up seeing in its environment: its own variables, plus the ones the

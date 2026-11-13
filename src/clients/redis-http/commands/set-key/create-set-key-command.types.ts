@@ -1,5 +1,5 @@
-import type { RedisHttpCommandInput } from '../../types/redis-http.types.js';
-import type { SetKey } from './set-key.types.js';
+import type { RedisHttpCommandInput } from '../../types/redis-http.types.ts';
+import type { SetKey } from './set-key.types.ts';
 
 /**
  * The key and its members to create

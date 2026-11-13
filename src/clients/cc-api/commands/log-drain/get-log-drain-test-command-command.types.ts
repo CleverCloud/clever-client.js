@@ -1,4 +1,4 @@
-import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
+import type { ApplicationOrAddonId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies the log drain to build a test command for, through the application or add-on it is attached to.

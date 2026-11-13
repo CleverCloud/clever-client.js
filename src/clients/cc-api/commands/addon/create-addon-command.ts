@@ -1,8 +1,8 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformAddon } from './addon-transform.js';
-import type { CreateAddonCommandInput, CreateAddonCommandOutput } from './create-addon-command.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformAddon } from './addon-transform.ts';
+import type { CreateAddonCommandInput, CreateAddonCommandOutput } from './create-addon-command.types.ts';
 
 /**
  * Provisions a new add-on in an organisation.

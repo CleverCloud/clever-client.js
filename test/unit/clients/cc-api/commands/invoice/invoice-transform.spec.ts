@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { transformInvoiceSummary } from '../../../../../../src/clients/cc-api/commands/invoice/invoice-transform.js';
+import { transformInvoiceSummary } from '../../../../../../src/clients/cc-api/commands/invoice/invoice-transform.ts';
 
 /**
  * A payload as `InvoiceSummary` serialises it. The `Money` codec writes four keys, of which the

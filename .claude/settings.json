@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "deny": ["Read(**/.env)", "Edit(**/.env)"],
+    "ask": [
+      "Bash(pnpm release*)",
+      "Bash(pnpm changeset version*)",
+      "Bash(pnpm changeset publish*)",
+      "Bash(npm publish*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/lint-format.ts\"",
+            "statusMessage": "Linting and formatting"
+          }
+        ]
+      }
+    ]
+  }
+}

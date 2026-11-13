@@ -1,4 +1,4 @@
-import type { Notice, ProviderNotice } from './notice.types.js';
+import type { Notice, ProviderNotice } from './notice.types.ts';
 
 export function transformNotice(payload: any): Notice {
   return {

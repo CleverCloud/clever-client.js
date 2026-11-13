@@ -1,7 +1,7 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { ListPersonalSshKeyCommandOutput } from './list-personal-ssh-key-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { ListPersonalSshKeyCommandOutput } from './list-personal-ssh-key-command.types.ts';
 
 /**
  * Lists the public SSH keys registered on the current user's account.

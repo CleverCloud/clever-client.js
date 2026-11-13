@@ -1,5 +1,5 @@
-import type { RedisHttpCommandInput } from '../../types/redis-http.types.js';
-import type { Key } from './key.types.js';
+import type { RedisHttpCommandInput } from '../../types/redis-http.types.ts';
+import type { Key } from './key.types.ts';
 
 /**
  * The key scan options

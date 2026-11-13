@@ -1,13 +1,13 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   RemoveApplicationToAddonLinkCommandInput,
   RemoveApplicationToApplicationLinkCommandInput,
   RemoveLinkCommandInput,
-} from './remove-link-command.types.js';
+} from './remove-link-command.types.ts';
 
 /**
  * Unlinks an application from another application or from an add-on.

@@ -1,11 +1,11 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   AddKubernetesPersistentStorageCommandInput,
   AddKubernetesPersistentStorageCommandOutput,
-} from './add-kubernetes-persistent-storage-command.types.js';
-import { transformKubernetesCluster } from './kubernetes-transform.js';
+} from './add-kubernetes-persistent-storage-command.types.ts';
+import { transformKubernetesCluster } from './kubernetes-transform.ts';
 
 /**
  * Installs the Ceph CSI driver on a cluster, so its pods can claim persistent volumes.

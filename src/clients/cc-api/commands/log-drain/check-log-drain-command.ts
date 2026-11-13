@@ -1,9 +1,9 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import type { CheckLogDrainCommandInput, CheckLogDrainCommandOutput } from './check-log-drain-command.types.js';
-import { transformLogDrainProbeResult } from './log-drain-transform.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import type { CheckLogDrainCommandInput, CheckLogDrainCommandOutput } from './check-log-drain-command.types.ts';
+import { transformLogDrainProbeResult } from './log-drain-transform.ts';
 
 /**
  * Probes the recipient of a log drain server-side, to check whether it can be reached.

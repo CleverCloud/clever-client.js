@@ -1,4 +1,4 @@
-import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
+import type { ApplicationOrAddonId } from '../../types/cc-api.types.ts';
 
 /**
  * Identifies the application or add-on to retag, along with the full set of tags it should end up with.

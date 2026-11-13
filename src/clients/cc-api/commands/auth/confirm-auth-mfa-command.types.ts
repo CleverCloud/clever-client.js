@@ -4,7 +4,7 @@ import type {
   RefusedAuthCredential,
   RefusedCredentialCommandOutput,
   ResolveRefusedCredentialInput,
-} from './auth.types.js';
+} from './auth.types.ts';
 
 /**
  * The enrolment to confirm, and the proof that it works.

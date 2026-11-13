@@ -1,11 +1,11 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import { transformAddonProviderFull } from '../addon-provider/addon-provider-transform.js';
-import type { GetProductAddonCommandInput, GetProductAddonCommandOutput } from './get-product-addon-command.types.js';
-import { GetProductAddonVersionsCommand } from './get-product-addon-versions-command.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import { transformAddonProviderFull } from '../addon-provider/addon-provider-transform.ts';
+import type { GetProductAddonCommandInput, GetProductAddonCommandOutput } from './get-product-addon-command.types.ts';
+import { GetProductAddonVersionsCommand } from './get-product-addon-versions-command.ts';
 
 /**
  * Retrieves one add-on provider from the product catalogue, optionally with the versions it offers.

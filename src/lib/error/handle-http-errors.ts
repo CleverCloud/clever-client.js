@@ -1,6 +1,6 @@
-import type { CcRequest, CcResponse } from '../../types/request.types.js';
-import type { SimpleCommand } from '../command/command.js';
-import { CcHttpError } from './cc-client-errors.js';
+import type { CcRequest, CcResponse } from '../../types/request.types.ts';
+import type { SimpleCommand } from '../command/command.ts';
+import { CcHttpError } from './cc-client-errors.ts';
 
 /**
  * Error code reported for any rate-limited request, regardless of which backend produced it.

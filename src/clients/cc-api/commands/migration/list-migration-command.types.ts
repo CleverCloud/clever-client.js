@@ -1,5 +1,5 @@
-import type { AddonId } from '../../types/cc-api.types.js';
-import type { Migration } from './migration.types.js';
+import type { AddonId } from '../../types/cc-api.types.ts';
+import type { Migration } from './migration.types.ts';
 
 /**
  * Identifies the add-on whose migrations are listed. The owner is resolved automatically when omitted.

@@ -1,6 +1,6 @@
-import type { CcRequestParams, RequestBody } from '../../types/request.types.js';
-import { HeadersBuilder } from './headers-builder.js';
-import type { QueryParams } from './query-params.js';
+import type { CcRequestParams, RequestBody } from '../../types/request.types.ts';
+import { HeadersBuilder } from './headers-builder.ts';
+import type { QueryParams } from './query-params.ts';
 
 export function get(url: string, queryParams?: QueryParams): Partial<CcRequestParams> {
   return {

@@ -1,7 +1,7 @@
-import { CcAuthOauthV1Plaintext } from '../../lib/auth/cc-auth-oauth-v1-plaintext.js';
-import { CcClient } from '../../lib/cc-client.js';
-import { merge } from '../../lib/utils.js';
-import type { CcApiBridgeClientConfig, CcApiBridgeType } from './types/cc-api-bridge.types.js';
+import { CcAuthOauthV1Plaintext } from '../../lib/auth/cc-auth-oauth-v1-plaintext.ts';
+import { CcClient } from '../../lib/cc-client.ts';
+import { merge } from '../../lib/utils.ts';
+import type { CcApiBridgeClientConfig, CcApiBridgeType } from './types/cc-api-bridge.types.ts';
 
 /**
  * Client for the Clever Cloud API Bridge.

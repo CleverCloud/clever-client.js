@@ -1,16 +1,16 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CreateNetworkGroupExternalPeerCommand } from '../../../../../src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.js';
-import { CreateNetworkGroupMemberCommand } from '../../../../../src/clients/cc-api/commands/network-group/create-network-group-member-command.js';
-import { DeleteNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/delete-network-group-command.js';
-import { DeleteNetworkGroupExternalPeerCommand } from '../../../../../src/clients/cc-api/commands/network-group/delete-network-group-external-peer-command.js';
-import { DeleteNetworkGroupMemberCommand } from '../../../../../src/clients/cc-api/commands/network-group/delete-network-group-member-command.js';
-import { GetNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/get-network-group-command.js';
-import { GetNetworkGroupWireguardConfigurationCommand } from '../../../../../src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.js';
-import { GetNetworkGroupWireguardConfigurationUrlCommand } from '../../../../../src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-url-command.js';
-import { ListNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/list-network-group-command.js';
-import { generateExternalMemberId } from '../../../../../src/clients/cc-api/commands/network-group/network-group-utils.js';
-import { SearchNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/search-network-group-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CreateNetworkGroupExternalPeerCommand } from '../../../../../src/clients/cc-api/commands/network-group/create-network-group-external-peer-command.ts';
+import { CreateNetworkGroupMemberCommand } from '../../../../../src/clients/cc-api/commands/network-group/create-network-group-member-command.ts';
+import { DeleteNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/delete-network-group-command.ts';
+import { DeleteNetworkGroupExternalPeerCommand } from '../../../../../src/clients/cc-api/commands/network-group/delete-network-group-external-peer-command.ts';
+import { DeleteNetworkGroupMemberCommand } from '../../../../../src/clients/cc-api/commands/network-group/delete-network-group-member-command.ts';
+import { GetNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/get-network-group-command.ts';
+import { GetNetworkGroupWireguardConfigurationCommand } from '../../../../../src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-command.ts';
+import { GetNetworkGroupWireguardConfigurationUrlCommand } from '../../../../../src/clients/cc-api/commands/network-group/get-network-group-wireguard-configuration-url-command.ts';
+import { ListNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/list-network-group-command.ts';
+import { generateExternalMemberId } from '../../../../../src/clients/cc-api/commands/network-group/network-group-utils.ts';
+import { SearchNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/network-group/search-network-group-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('network-group commands', function () {
   const support = e2eSupport();

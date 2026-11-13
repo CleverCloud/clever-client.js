@@ -1,14 +1,14 @@
 /**
- * @import { EmailNotificationTarget, WebhookNotificationUrl } from '../../../../../src/clients/cc-api/commands/notification/notification.types.js'
+ * @import { EmailNotificationTarget, WebhookNotificationUrl } from '../../../../../src/clients/cc-api/commands/notification/notification.types.ts'
  */
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { DeleteOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/delete-oauth-consumer-command.js';
-import { GetOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.js';
-import { ListOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/list-oauth-consumer-command.js';
-import { UpdateOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.js';
-import { omit } from '../../../../../src/lib/utils.js';
-import { expectToBeDefined } from '../../../../lib/expect-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+import { DeleteOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/delete-oauth-consumer-command.ts';
+import { GetOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/get-oauth-consumer-command.ts';
+import { ListOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/list-oauth-consumer-command.ts';
+import { UpdateOauthConsumerCommand } from '../../../../../src/clients/cc-api/commands/oauth-consumer/update-oauth-consumer-command.ts';
+import { omit } from '../../../../../src/lib/utils.ts';
+import { expectToBeDefined } from '../../../../lib/expect-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('oauth consumers commands', function () {
   const support = e2eSupport();

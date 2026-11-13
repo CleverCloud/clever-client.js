@@ -1,7 +1,7 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { DeletePersonalSshKeyCommandInput } from './delete-personal-ssh-key-command.types.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { DeletePersonalSshKeyCommandInput } from './delete-personal-ssh-key-command.types.ts';
 
 /**
  * Removes a public SSH key from the current user's account.

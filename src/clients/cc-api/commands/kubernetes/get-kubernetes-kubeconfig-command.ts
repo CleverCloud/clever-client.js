@@ -1,13 +1,13 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import type { SelfOrPromise } from '../../../../types/utils.types.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import type { SelfOrPromise } from '../../../../types/utils.types.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   GetKubernetesKubeconfigCommandInput,
   GetKubernetesKubeconfigCommandOutput,
-} from './get-kubernetes-kubeconfig-command.types.js';
+} from './get-kubernetes-kubeconfig-command.types.ts';
 
 /**
  * Retrieves the kubeconfig of a cluster, as a YAML document.

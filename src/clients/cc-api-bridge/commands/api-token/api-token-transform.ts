@@ -1,6 +1,6 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import type { ApiToken } from './api-token.types.js';
-import type { CreateApiTokenCommandResponse } from './create-api-token-command.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import type { ApiToken } from './api-token.types.ts';
+import type { CreateApiTokenCommandResponse } from './create-api-token-command.types.ts';
 
 export function transformCreatedApiToken(payload: any): CreateApiTokenCommandResponse {
   return {

@@ -1,17 +1,17 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformDeploymentLegacy } from './deployment-transform.js';
-import type { DeploymentLegacy } from './deployment.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformDeploymentLegacy } from './deployment-transform.ts';
+import type { DeploymentLegacy } from './deployment.types.ts';
 import type {
   ListApplicationDeploymentCommandInput,
   ListDeploymentCommandInput,
   ListDeploymentCommandOutput,
   ListOrganisationDeploymentCommandInput,
-} from './list-deployment-command.types.js';
+} from './list-deployment-command.types.ts';
 
 /**
  * Lists the deployments of an application, or of every application of an organisation.

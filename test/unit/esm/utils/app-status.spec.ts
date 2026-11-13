@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getStatus } from '../../../../esm/utils/app-status.js';
+import { getStatus } from '../../../../esm/utils/app-status.ts';
 
 describe('app-status#getStatus()', () => {
   it('stopped', () => {

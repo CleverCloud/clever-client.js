@@ -1,11 +1,11 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   CreateEmailNotificationCommandInput,
   CreateEmailNotificationCommandOutput,
-} from './create-email-notification-command.types.js';
-import { transformEmailNotification } from './notification-transform.js';
+} from './create-email-notification-command.types.ts';
+import { transformEmailNotification } from './notification-transform.ts';
 
 /**
  * Creates an email hook, which mails platform events to a set of recipients as they happen.

@@ -1,5 +1,5 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
-import type { TcpRedirection, TcpRedirectionNamespace } from './tcp-redirection.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
+import type { TcpRedirection, TcpRedirectionNamespace } from './tcp-redirection.types.ts';
 
 /**
  * Identifies the application to open a port on, and the pool to take it from.

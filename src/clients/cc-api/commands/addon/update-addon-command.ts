@@ -1,9 +1,9 @@
-import { put } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { transformAddon } from './addon-transform.js';
-import type { UpdateAddonCommandInput, UpdateAddonCommandOutput } from './update-addon-command.types.js';
+import { put } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { transformAddon } from './addon-transform.ts';
+import type { UpdateAddonCommandInput, UpdateAddonCommandOutput } from './update-addon-command.types.ts';
 
 /**
  * Renames an add-on.

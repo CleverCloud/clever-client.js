@@ -1,16 +1,8 @@
-/**
- * @import {TestProjectConfiguration} from 'vitest/config'
- */
-
 import { vitestPlugin as mockApiPlugin } from '@clevercloud/doublure/vitest';
 import { playwright } from '@vitest/browser-playwright';
 import { defaultClientConditions, defaultServerConditions } from 'vite';
-import { defaultExclude, defineConfig } from 'vitest/config';
-// NB: this `import` keeps the `.js` specifier (NodeNext maps it to the `.ts` source when this
-// config is loaded in Node). The `setupFiles` / `globalSetup` paths below, by contrast, must use
-// `.ts` — they are served to the browser as literal URLs and browser mode does not remap `.js`→`.ts`.
-// eslint-disable-next-line n/no-missing-import,import-x/no-unresolved
-import { e2eProxyPlugin } from './test/setup/e2e-proxy.browser.js';
+import { defaultExclude, defineConfig, type TestProjectConfiguration } from 'vitest/config';
+import { e2eProxyPlugin } from './test/setup/e2e-proxy.browser.ts';
 
 /**
  * The same `*.spec.js` files run in both Node and the browser. `*.node.spec.js` and
@@ -24,12 +16,12 @@ const excludeForBrowser = [...defaultExclude, '**/*.node.spec.{js,ts}'];
  * gutter where Vitest runs every matching project with no `--project` flag — logging the e2e
  * users in once per environment. Unset => all projects, so CI and the `npm run test:*` scripts
  * (which pass explicit `--project` flags) are unaffected.
- *
- * @type {'browser' | 'node' | undefined}
  */
-const TEST_RUNTIME = /** @type {'browser' | 'node' | undefined} */ (process.env.TEST_RUNTIME);
+const TEST_RUNTIME = process.env.TEST_RUNTIME as 'browser' | 'node' | undefined;
 if (TEST_RUNTIME != null && TEST_RUNTIME !== 'node' && TEST_RUNTIME !== 'browser') {
-  throw new Error(`Invalid env TEST_RUNTIME="${TEST_RUNTIME}": expected "node" or "browser" (or unset to run both).`);
+  throw new Error(
+    `Invalid env TEST_RUNTIME="${process.env.TEST_RUNTIME}": expected "node" or "browser" (or unset to run both).`,
+  );
 }
 
 /**
@@ -42,8 +34,7 @@ const RESOLVE_FROM_SOURCES = {
   ssr: { resolve: { conditions: ['clever-client-source', ...defaultServerConditions] } },
 };
 
-/** @type {TestProjectConfiguration[]} */
-const allProjects = [
+const allProjects: Array<TestProjectConfiguration> = [
   // ---------- UNIT ----------
   {
     ...RESOLVE_FROM_SOURCES,

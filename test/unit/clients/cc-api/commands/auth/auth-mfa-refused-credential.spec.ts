@@ -1,23 +1,23 @@
 import type { NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
-import { CcApiClient } from '../../../../../../src/clients/cc-api/cc-api-client.js';
-import type { ResolveRefusedCredentialInput } from '../../../../../../src/clients/cc-api/commands/auth/auth.types.js';
-import { ConfirmAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.js';
-import type { ConfirmAuthMfaResult } from '../../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.types.js';
-import { CreateAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.js';
+import { CcApiClient } from '../../../../../../src/clients/cc-api/cc-api-client.ts';
+import type { ResolveRefusedCredentialInput } from '../../../../../../src/clients/cc-api/commands/auth/auth.types.ts';
+import { ConfirmAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.ts';
+import type { ConfirmAuthMfaResult } from '../../../../../../src/clients/cc-api/commands/auth/confirm-auth-mfa-command.types.ts';
+import { CreateAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.ts';
 import type {
   CreateAuthMfaCommandInput,
   CreateAuthMfaCommandResponse,
   CreateAuthMfaResult,
-} from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.types.js';
-import { DeleteAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.js';
-import { ResetAuthMfaBackupCodesCommand } from '../../../../../../src/clients/cc-api/commands/auth/reset-auth-mfa-backup-codes-command.js';
-import type { CcApiCompositeCommand } from '../../../../../../src/clients/cc-api/lib/cc-api-command.js';
-import { MemoryStore } from '../../../../../../src/clients/cc-api/lib/store/memory-store.js';
-import type { ResourceIdIndex } from '../../../../../../src/clients/cc-api/types/resource-id-resolver.types.js';
-import { CcHttpError } from '../../../../../../src/lib/error/cc-client-errors.js';
-import { expectPromiseThrows } from '../../../../../lib/expect-utils.js';
+} from '../../../../../../src/clients/cc-api/commands/auth/create-auth-mfa-command.types.ts';
+import { DeleteAuthMfaCommand } from '../../../../../../src/clients/cc-api/commands/auth/delete-auth-mfa-command.ts';
+import { ResetAuthMfaBackupCodesCommand } from '../../../../../../src/clients/cc-api/commands/auth/reset-auth-mfa-backup-codes-command.ts';
+import type { CcApiCompositeCommand } from '../../../../../../src/clients/cc-api/lib/cc-api-command.ts';
+import { MemoryStore } from '../../../../../../src/clients/cc-api/lib/store/memory-store.ts';
+import type { ResourceIdIndex } from '../../../../../../src/clients/cc-api/types/resource-id-resolver.types.ts';
+import { CcHttpError } from '../../../../../../src/lib/error/cc-client-errors.ts';
+import { expectPromiseThrows } from '../../../../../lib/expect-utils.ts';
 
 /** What `client.send()` resolves to for a given command, without sending anything. */
 function outputOf<CommandInput, CommandOutput>(

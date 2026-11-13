@@ -5,7 +5,7 @@ import {
   getOrgaPaymentMethodsError,
   type Orga,
   type PaymentMethod,
-} from '../../../src/utils/payment-utils.js';
+} from '../../../src/utils/payment-utils.ts';
 
 const simpleOrga: Orga = {
   id: 'orga_???',

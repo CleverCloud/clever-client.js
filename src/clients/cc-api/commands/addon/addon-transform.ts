@@ -1,8 +1,8 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import { transformAddonProvider, transformAddonProviderPlan } from '../addon-provider/addon-provider-transform.js';
-import type { Addon } from './addon.types.js';
-import type { GetAddonSsoCommandOutput } from './get-addon-sso-command.types.js';
-import type { AddonInstance } from './list-addon-instance-command.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import { transformAddonProvider, transformAddonProviderPlan } from '../addon-provider/addon-provider-transform.ts';
+import type { Addon } from './addon.types.ts';
+import type { GetAddonSsoCommandOutput } from './get-addon-sso-command.types.ts';
+import type { AddonInstance } from './list-addon-instance-command.types.ts';
 
 export function transformAddon(payload: any): Addon {
   return {

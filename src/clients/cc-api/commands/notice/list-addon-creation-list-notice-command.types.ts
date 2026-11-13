@@ -1,4 +1,4 @@
-import type { ProviderNotice } from './notice.types.js';
+import type { ProviderNotice } from './notice.types.ts';
 
 /**
  * Identifies the organisation the add-on is being created in.

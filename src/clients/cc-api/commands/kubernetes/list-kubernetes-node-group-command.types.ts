@@ -1,4 +1,4 @@
-import type { KubernetesNodeGroup, KubernetesNodeGroupStatus } from './kubernetes.types.js';
+import type { KubernetesNodeGroup, KubernetesNodeGroupStatus } from './kubernetes.types.ts';
 
 /**
  * Identifies the cluster whose node groups are listed, and which of them to keep.

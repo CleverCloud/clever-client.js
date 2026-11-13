@@ -1,4 +1,4 @@
-import type { MetabaseInfo } from './metabase.types.js';
+import type { MetabaseInfo } from './metabase.types.ts';
 
 /**
  * Identifies the add-on to move, and the version to move it to.

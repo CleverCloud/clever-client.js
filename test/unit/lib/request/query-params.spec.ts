@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { isQueryParams, QueryParams } from '../../../../src/lib/request/query-params.js';
-import { brandAsForeignCopy } from '../../../lib/foreign-copy.js';
+import { isQueryParams, QueryParams } from '../../../../src/lib/request/query-params.ts';
+import { brandAsForeignCopy } from '../../../lib/foreign-copy.ts';
 
 describe('QueryParams class', () => {
   describe('constructor', () => {

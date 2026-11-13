@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   ListWebhookNotificationCommandInput,
   ListWebhookNotificationCommandOutput,
-} from './list-webhook-notification-command.types.js';
-import { transformWebhookNotification } from './notification-transform.js';
+} from './list-webhook-notification-command.types.ts';
+import { transformWebhookNotification } from './notification-transform.ts';
 
 /**
  * Lists the webhooks watching an owner.

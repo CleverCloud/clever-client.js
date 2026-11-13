@@ -3,7 +3,7 @@ import type {
   NotificationMetaEventType,
   WebhookNotification,
   WebhookNotificationUrl,
-} from './notification.types.js';
+} from './notification.types.ts';
 
 /**
  * Description of the webhook to create.

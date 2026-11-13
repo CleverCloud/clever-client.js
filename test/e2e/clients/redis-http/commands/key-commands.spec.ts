@@ -1,11 +1,11 @@
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CreateHashKeyCommand } from '../../../../../src/clients/redis-http/commands/hash-key/create-hash-key-command.js';
-import { DeleteKeyCommand } from '../../../../../src/clients/redis-http/commands/key/delete-key-command.js';
-import { ScanKeyCommand } from '../../../../../src/clients/redis-http/commands/key/scan-key-command.js';
-import { CreateListKeyCommand } from '../../../../../src/clients/redis-http/commands/list-key/create-list-key-command.js';
-import { CreateSetKeyCommand } from '../../../../../src/clients/redis-http/commands/set-key/create-set-key-command.js';
-import { CreateStringKeyCommand } from '../../../../../src/clients/redis-http/commands/string-key/create-string-key-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CreateHashKeyCommand } from '../../../../../src/clients/redis-http/commands/hash-key/create-hash-key-command.ts';
+import { DeleteKeyCommand } from '../../../../../src/clients/redis-http/commands/key/delete-key-command.ts';
+import { ScanKeyCommand } from '../../../../../src/clients/redis-http/commands/key/scan-key-command.ts';
+import { CreateListKeyCommand } from '../../../../../src/clients/redis-http/commands/list-key/create-list-key-command.ts';
+import { CreateSetKeyCommand } from '../../../../../src/clients/redis-http/commands/set-key/create-set-key-command.ts';
+import { CreateStringKeyCommand } from '../../../../../src/clients/redis-http/commands/string-key/create-string-key-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('key commands', function () {
   const support = e2eSupport();

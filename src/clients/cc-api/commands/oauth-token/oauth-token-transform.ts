@@ -1,6 +1,6 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import { transformOauthConsumer, transformOauthConsumerRights } from '../oauth-consumer/oauth-consumer-transform.js';
-import type { OauthToken } from './list-oauth-token-command.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import { transformOauthConsumer, transformOauthConsumerRights } from '../oauth-consumer/oauth-consumer-transform.ts';
+import type { OauthToken } from './list-oauth-token-command.types.ts';
 
 export function transformOauthToken(payload: any): OauthToken {
   return {

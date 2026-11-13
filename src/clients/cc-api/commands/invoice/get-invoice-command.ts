@@ -1,8 +1,8 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetInvoiceCommandInput, GetInvoiceCommandOutput } from './get-invoice-command.types.js';
-import { transformInvoice } from './invoice-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetInvoiceCommandInput, GetInvoiceCommandOutput } from './get-invoice-command.types.ts';
+import { transformInvoice } from './invoice-transform.ts';
 
 /**
  * Retrieves one billing document of an organisation, with all of its detailed lines.

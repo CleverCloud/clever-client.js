@@ -1,4 +1,4 @@
-import type { CellarObjectDetails, CellarObjectResourceId } from './cellar.types.js';
+import type { CellarObjectDetails, CellarObjectResourceId } from './cellar.types.ts';
 
 /**
  * Identifies the object to read.

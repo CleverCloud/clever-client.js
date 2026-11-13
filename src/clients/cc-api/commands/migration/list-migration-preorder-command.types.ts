@@ -1,4 +1,4 @@
-import type { AddonId } from '../../types/cc-api.types.js';
+import type { AddonId } from '../../types/cc-api.types.ts';
 
 /**
  * Describes the plan change to simulate. The owner is resolved automatically when omitted.

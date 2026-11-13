@@ -1,7 +1,7 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetGrafanaCommandInput, GetGrafanaCommandOutput } from './get-grafana-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetGrafanaCommandInput, GetGrafanaCommandOutput } from './get-grafana-command.types.ts';
 
 /**
  * Retrieves the Grafana organisation backing an owner's metrics dashboards.

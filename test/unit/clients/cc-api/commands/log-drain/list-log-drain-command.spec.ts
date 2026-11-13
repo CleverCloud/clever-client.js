@@ -1,10 +1,10 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import { ListLogDrainCommand } from '../../../../../../src/clients/cc-api/commands/log-drain/list-log-drain-command.js';
+import { ListLogDrainCommand } from '../../../../../../src/clients/cc-api/commands/log-drain/list-log-drain-command.ts';
 import type {
   AuditLogDrain,
   LogDrain,
-} from '../../../../../../src/clients/cc-api/commands/log-drain/log-drain.types.js';
-import type { CcApiSimpleCommand } from '../../../../../../src/clients/cc-api/lib/cc-api-command.js';
+} from '../../../../../../src/clients/cc-api/commands/log-drain/log-drain.types.ts';
+import type { CcApiSimpleCommand } from '../../../../../../src/clients/cc-api/lib/cc-api-command.ts';
 
 /** What `client.send()` resolves to for a given command, without sending anything. */
 function outputOf<CommandInput, CommandOutput>(

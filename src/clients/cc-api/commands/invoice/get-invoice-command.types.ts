@@ -1,4 +1,4 @@
-import type { Invoice } from './invoice.types.js';
+import type { Invoice } from './invoice.types.ts';
 
 /**
  * Identifies the billing document to retrieve.

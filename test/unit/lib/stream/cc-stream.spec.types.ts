@@ -1,6 +1,6 @@
 import type { Mock } from 'vitest';
-import type { CcStream } from '../../../../src/lib/stream/cc-stream.js';
-import type { CcStreamCloseReason, CcStreamRetry } from '../../../../src/lib/stream/cc-stream.types.js';
+import type { CcStream } from '../../../../src/lib/stream/cc-stream.ts';
+import type { CcStreamCloseReason, CcStreamRetry } from '../../../../src/lib/stream/cc-stream.types.ts';
 
 export interface Stubs {
   request: Mock<() => void>;

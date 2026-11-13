@@ -1,16 +1,16 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { omit, safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { omit, safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
 import type {
   GetPulsarClusterInnerCommandInput,
   GetPulsarClusterInnerCommandOutput,
   GetPulsarInfoCommandInput,
   GetPulsarInfoCommandOutput,
   GetPulsarInfoInnerCommandOutput,
-} from './get-pulsar-info-command.types.js';
-import { transformPulsarCluster, transformPulsarInfo } from './pulsar-transform.js';
+} from './get-pulsar-info-command.types.ts';
+import { transformPulsarCluster, transformPulsarInfo } from './pulsar-transform.ts';
 
 /**
  * Retrieves the details of a Pulsar add-on, with the cluster it is hosted on.

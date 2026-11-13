@@ -1,4 +1,4 @@
-import type { ProductAddon } from './product.types.js';
+import type { ProductAddon } from './product.types.ts';
 
 /**
  * How much of the add-on catalogue to fetch.

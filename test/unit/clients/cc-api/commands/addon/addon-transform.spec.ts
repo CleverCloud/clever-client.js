@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { transformAddon } from '../../../../../../src/clients/cc-api/commands/addon/addon-transform.js';
+import { transformAddon } from '../../../../../../src/clients/cc-api/commands/addon/addon-transform.ts';
 
 /** A payload as `AddonView` serialises it, with the plain provider view `Addon.toView()` builds. */
 function getAddonPayload() {

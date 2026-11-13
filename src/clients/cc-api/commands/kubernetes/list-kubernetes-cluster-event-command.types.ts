@@ -1,4 +1,4 @@
-import type { KubernetesClusterEvent } from './kubernetes.types.js';
+import type { KubernetesClusterEvent } from './kubernetes.types.ts';
 
 /**
  * Identifies the cluster whose events are listed, and how many of them to return.

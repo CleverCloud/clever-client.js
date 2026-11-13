@@ -1,6 +1,6 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { RedisHttpCommand } from '../../lib/redis-http-command.js';
-import type { CreateListKeyCommandInput, CreateListKeyCommandOutput } from './create-list-key-command.types.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { RedisHttpCommand } from '../../lib/redis-http-command.ts';
+import type { CreateListKeyCommandInput, CreateListKeyCommandOutput } from './create-list-key-command.types.ts';
 
 /**
  * Create a new `list` key

@@ -1,7 +1,7 @@
-import type { UnknownToClient } from '../../../../types/utils.types.js';
-import type { NotificationEventType, NotificationMetaEventType } from './notification-event-types.js';
+import type { UnknownToClient } from '../../../../types/utils.types.ts';
+import type { NotificationEventType, NotificationMetaEventType } from './notification-event-types.ts';
 
-export type { NotificationEventType, NotificationMetaEventType } from './notification-event-types.js';
+export type { NotificationEventType, NotificationMetaEventType } from './notification-event-types.ts';
 
 /**
  * A webhook that posts platform events to one or more URLs as they happen.

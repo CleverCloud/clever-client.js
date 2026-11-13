@@ -2,25 +2,36 @@
   "name": "@clevercloud/client",
   "version": "12.6.12",
   "description": "JavaScript REST client and utils for Clever Cloud's API",
-  "homepage": "https://github.com/CleverCloud/clever-client.js",
+  "keywords": [
+    "api",
+    "clever-cloud",
+    "client",
+    "rest"
+  ],
+  "homepage": "https://github.com/CleverCloud/clever-client.js#readme",
+  "bugs": {
+    "url": "https://github.com/CleverCloud/clever-client.js/issues"
+  },
   "license": "Apache-2.0",
-  "type": "module",
+  "author": "Clever Cloud",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CleverCloud/clever-client.js"
+    "url": "git+https://github.com/CleverCloud/clever-client.js.git"
   },
-  "keywords": [
-    "clever-cloud",
-    "api",
-    "rest",
-    "client"
-  ],
   "files": [
     "dist/"
   ],
+  "type": "module",
   "sideEffects": false,
-  "engines": {
-    "node": ">=22"
+  "imports": {
+    "#dom-parser": {
+      "clever-client-source": {
+        "node": "./src/lib/xml/dom-parser.node.ts",
+        "default": "./src/lib/xml/dom-parser.browser.ts"
+      },
+      "node": "./dist/src/lib/xml/dom-parser.node.js",
+      "default": "./dist/src/lib/xml/dom-parser.browser.js"
+    }
   },
   "exports": {
     "./cc-client.js": {
@@ -72,23 +83,16 @@
       "default": "./dist/esm/*.js"
     }
   },
-  "imports": {
-    "#dom-parser": {
-      "clever-client-source": {
-        "node": "./src/lib/xml/dom-parser.node.ts",
-        "default": "./src/lib/xml/dom-parser.browser.ts"
-      },
-      "node": "./dist/src/lib/xml/dom-parser.node.js",
-      "default": "./dist/src/lib/xml/dom-parser.browser.js"
-    }
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
-    "build": "node --experimental-strip-types tasks/clean-dist.ts && tsgo -p tsconfig.build.json",
+    "build": "node --experimental-strip-types tasks/clean-dist.ts && tsc -p tsconfig.build.json",
     "changeset": "changeset",
-    "format": "prettier . --write",
-    "format:check": "prettier . --check",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "prepack": "pnpm run build",
     "release": "changeset publish",
     "test": "pnpm run test:unit",
@@ -101,11 +105,41 @@
     "test:unit:node": "vitest run --project node-unit",
     "test:unit:node:watch": "vitest --project node-unit",
     "test:unit:watch": "vitest --project node-unit --project browser-unit",
-    "typecheck": "tsgo -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "check": "pnpm lint && pnpm format && pnpm typecheck && pnpm test"
   },
   "dependencies": {
     "component-emitter": "^1.3.0",
     "fetch-event-stream": "^0.1.6"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^3.0.3",
+    "@clevercloud/doublure": "^0.0.5",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@commitlint/types": "^21.2.3",
+    "@types/component-emitter": "^1.2.14",
+    "@types/eventsource": "^1.1.15",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.19.19",
+    "@vitest/browser": "^5.1.0",
+    "@vitest/browser-playwright": "^5.1.0",
+    "@vitest/expect": "^5.1.0",
+    "cheerio": "^1.1.2",
+    "cookie": "^1.0.2",
+    "eslint-plugin-perfectionist": "^5.13.0",
+    "fs-extra": "^11.3.2",
+    "http-proxy-3": "^1.23.3",
+    "linkedom": "catalog:",
+    "oxfmt": "^0.76.0",
+    "oxlint": "^1.91.0",
+    "oxlint-tsgolint": "^7.0.2006",
+    "playwright": "^1.64.1",
+    "totp-generator": "^2.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6",
+    "vitest": "^5.1.0"
   },
   "peerDependencies": {
     "eventsource": "^4.0.0",
@@ -116,36 +150,7 @@
       "optional": true
     }
   },
-  "devDependencies": {
-    "@changesets/changelog-github": "^0.7.0",
-    "@changesets/cli": "^2.31.0",
-    "@clevercloud/doublure": "^0.0.5",
-    "@clevercloud/eslint-config": "^1.1.0",
-    "@commitlint/cli": "^20.1.0",
-    "@commitlint/config-conventional": "^20.0.0",
-    "@eslint/js": "^9.39.4",
-    "@types/component-emitter": "^1.2.14",
-    "@types/eventsource": "^1.1.15",
-    "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.19.19",
-    "@typescript/native-preview": "latest",
-    "@vitest/browser": "^4.1.8",
-    "@vitest/browser-playwright": "^4.1.8",
-    "@vitest/expect": "^4.1.8",
-    "cheerio": "^1.1.2",
-    "cookie": "^1.0.2",
-    "eslint": "^9.39.3",
-    "eslint-plugin-import-x": "^4.16.1",
-    "fs-extra": "^11.3.2",
-    "globals": "^16.5.0",
-    "http-proxy-3": "^1.23.3",
-    "linkedom": "catalog:",
-    "playwright": "^1.60.0",
-    "prettier": "^3.6.2",
-    "prettier-plugin-organize-imports": "^4.3.0",
-    "totp-generator": "^2.0.0",
-    "typescript-eslint": "^8.60.1",
-    "vite": "^8.0.16",
-    "vitest": "^4.1.8"
+  "engines": {
+    "node": ">=22"
   }
 }

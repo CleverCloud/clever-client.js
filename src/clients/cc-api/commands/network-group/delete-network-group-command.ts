@@ -1,9 +1,9 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { DeleteNetworkGroupCommandInput } from './delete-network-group-command.types.js';
-import { waitForNetworkGroupDeletion } from './network-group-utils.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { DeleteNetworkGroupCommandInput } from './delete-network-group-command.types.ts';
+import { waitForNetworkGroupDeletion } from './network-group-utils.ts';
 
 /**
  * Deletes a network group, together with all its members and peers.

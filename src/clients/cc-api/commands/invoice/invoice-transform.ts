@@ -1,4 +1,4 @@
-import { normalizeDate } from '../../../../lib/utils.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
 import type {
   Invoice,
   InvoiceAddress,
@@ -12,7 +12,7 @@ import type {
   InvoiceUptime,
   InvoiceUptimeDetail,
   InvoiceVendorConsumption,
-} from './invoice.types.js';
+} from './invoice.types.ts';
 
 export function transformInvoice(payload: any): Invoice {
   return {

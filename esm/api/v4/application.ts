@@ -1,4 +1,4 @@
-import { pickNonNull } from '../../pick-non-null.js';
+import { pickNonNull } from '../../pick-non-null.ts';
 
 /**
  * GET /logs/organisations/{ownerId}/applications/{applicationId}/accesslogs

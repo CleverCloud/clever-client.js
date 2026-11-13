@@ -1,7 +1,7 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetOrganisationSummaryCommandOutput } from './get-organisation-summary-command.types.js';
-import { transformOrganisationSummary } from './organisation-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetOrganisationSummaryCommandOutput } from './get-organisation-summary-command.types.ts';
+import { transformOrganisationSummary } from './organisation-transform.ts';
 
 /**
  * Retrieves the signed-in user and the summary of every organisation they have access to, with the

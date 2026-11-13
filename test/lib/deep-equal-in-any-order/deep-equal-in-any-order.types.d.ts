@@ -1,7 +1,7 @@
 export {};
 
 declare module 'vitest' {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   interface Matchers<T = any> {
     /**
      * Works like `toEqual` but doesn't check array order (at any level of nested objects and arrays).

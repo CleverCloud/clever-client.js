@@ -1,4 +1,4 @@
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.ts';
 
 /**
  * A Keycloak add-on: the managed identity and access management server, with how to reach it and

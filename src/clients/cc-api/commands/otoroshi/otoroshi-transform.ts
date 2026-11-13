@@ -1,5 +1,5 @@
-import type { CheckOtoroshiVersionCommandOutput } from './check-otoroshi-version-command.types.js';
-import type { OtoroshiInfo } from './otoroshi.types.js';
+import type { CheckOtoroshiVersionCommandOutput } from './check-otoroshi-version-command.types.ts';
+import type { OtoroshiInfo } from './otoroshi.types.ts';
 
 export function transformOtoroshiInfo(response: any): OtoroshiInfo {
   return {

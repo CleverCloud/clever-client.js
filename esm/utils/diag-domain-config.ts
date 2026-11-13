@@ -6,8 +6,8 @@ import type {
   Record,
   RecordDiag,
   ResolveDnsResult,
-} from './diag-domain-config.types.js';
-import { isTestDomain } from './domains.js';
+} from './diag-domain-config.types.ts';
+import { isTestDomain } from './domains.ts';
 
 export function diagDomainConfig(
   domainInfo: DomainDiagInfo,

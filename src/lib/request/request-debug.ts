@@ -1,5 +1,5 @@
-import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.js';
-import { QueryParams } from './query-params.js';
+import type { CcRequest, CcResponse, RequestAdapter } from '../../types/request.types.ts';
+import { QueryParams } from './query-params.ts';
 
 export async function requestDebug<CommandOutput>(
   request: CcRequest,
@@ -10,6 +10,7 @@ export async function requestDebug<CommandOutput>(
   }
 
   const response = await handler<CommandOutput>(request);
+  // oxlint-disable-next-line no-console -- printing the request is what the debug mode is for
   console.log(
     JSON.stringify(
       {

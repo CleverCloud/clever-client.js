@@ -1,4 +1,4 @@
-import type { ProductRuntime } from './product.types.js';
+import type { ProductRuntime } from './product.types.ts';
 
 /**
  * Identifies the runtime to retrieve.

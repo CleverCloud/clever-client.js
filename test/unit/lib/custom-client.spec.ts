@@ -11,7 +11,12 @@ import packageJson from '../../../package.json' with { type: 'json' };
 import {
   CcAuth,
   CcClient,
+  type CcClientHooks,
+  type CcRequestParams,
   CcStream,
+  type CcStreamConfig,
+  type CcStreamRequestFactory,
+  type Composer,
   CompositeCommand,
   get,
   HeadersBuilder,
@@ -20,14 +25,9 @@ import {
   safeUrl,
   SimpleCommand,
   StreamCommand,
-  type CcClientHooks,
-  type CcRequestParams,
-  type CcStreamConfig,
-  type CcStreamRequestFactory,
-  type Composer,
-} from '../../../src/lib/index.js';
-import { isCcHttpError, isCcHttpErrorWithStatus } from '../../../src/utils/error-utils.js';
-import { expectPromiseThrows } from '../../lib/expect-utils.js';
+} from '../../../src/lib/index.ts';
+import { isCcHttpError, isCcHttpErrorWithStatus } from '../../../src/utils/error-utils.ts';
+import { expectPromiseThrows } from '../../lib/expect-utils.ts';
 
 //-- the client and its commands, as an application would write them
 

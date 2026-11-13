@@ -1,13 +1,12 @@
-import { addOauthHeader } from '../oauth.js';
-import { extractQueryParamsFormUrl, fillUrlSearchParams } from '../utils/query-params.js';
-import { CustomEventTarget } from './custom-event-target.js';
-import { EVENT_STREAM_CONTENT_TYPE, fetchEventSource, JSON_CONTENT_TYPE } from './sse-fetch-event-source.js';
-
-import type { SseMessage } from '../../src/types/request.types.js';
-import type { OAuthTokens } from '../oauth.types.js';
-import type { RequestParams } from '../request.types.js';
-import type { QueryParams } from '../utils/query-params.types.js';
-import type { RetryConfiguration, SseCloseReason } from './streams.types.js';
+import type { SseMessage } from '../../src/types/request.types.ts';
+import { addOauthHeader } from '../oauth.ts';
+import type { OAuthTokens } from '../oauth.types.ts';
+import type { RequestParams } from '../request.types.ts';
+import { extractQueryParamsFormUrl, fillUrlSearchParams } from '../utils/query-params.ts';
+import type { QueryParams } from '../utils/query-params.types.ts';
+import { CustomEventTarget } from './custom-event-target.ts';
+import { EVENT_STREAM_CONTENT_TYPE, fetchEventSource, JSON_CONTENT_TYPE } from './sse-fetch-event-source.ts';
+import type { RetryConfiguration, SseCloseReason } from './streams.types.ts';
 
 const DEFAULT_RETRY_CONFIGURATION: RetryConfiguration = {
   enabled: false,

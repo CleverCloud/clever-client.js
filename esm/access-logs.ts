@@ -1,4 +1,4 @@
-import type { Warp10RequestParams } from './request-warp10.types.js';
+import type { Warp10RequestParams } from './request-warp10.types.ts';
 
 export function getStatusCodesFromWarp10({
   warpToken,

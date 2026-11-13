@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   ListPaymentMethodCommandInput,
   ListPaymentMethodCommandOutput,
-} from './list-payment-method-command.types.js';
-import { transformPaymentMethod } from './payment-method-transform.js';
+} from './list-payment-method-command.types.ts';
+import { transformPaymentMethod } from './payment-method-transform.ts';
 
 /**
  * Lists the payment methods registered on an organisation.

@@ -1,6 +1,6 @@
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
-import type { ApplicationId } from '../../types/cc-api.types.js';
-import type { Application, ApplicationLifetime } from './application.types.js';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.ts';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
+import type { Application, ApplicationLifetime } from './application.types.ts';
 
 /**
  * Identifies the application to update, along with the fields to change. Every field is optional:

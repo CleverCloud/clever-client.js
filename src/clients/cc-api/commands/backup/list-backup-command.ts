@@ -1,17 +1,17 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { omit, safeUrl, sortBy } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { GetAddonCommand } from '../addon/get-addon-command.js';
-import { transformAddonDetails, transformBackup } from './backup-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { omit, safeUrl, sortBy } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { GetAddonCommand } from '../addon/get-addon-command.ts';
+import { transformAddonDetails, transformBackup } from './backup-transform.ts';
 import type {
   GetAddonDetailsInnerCommandInput,
   GetAddonDetailsInnerCommandOutput,
   ListBackupCommandInput,
   ListBackupCommandOutput,
   ListBackupInnerCommandOutput,
-} from './list-backup-command.types.js';
+} from './list-backup-command.types.ts';
 
 const CUSTOM_RESTORE_COMMANDS: { [key: string]: (addonDetails: GetAddonDetailsInnerCommandOutput) => string } = {
   'postgresql-addon': (addonDetails) =>

@@ -1,4 +1,4 @@
-import type { AddonId, ApplicationId } from '../../types/cc-api.types.js';
+import type { AddonId, ApplicationId } from '../../types/cc-api.types.ts';
 
 /**
  * Which resource's environment to read: an application, which may also pull in what it is linked

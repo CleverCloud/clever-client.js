@@ -1,4 +1,4 @@
-import type { ElasticsearchInfo } from './elasticsearch.types.js';
+import type { ElasticsearchInfo } from './elasticsearch.types.ts';
 
 /**
  * Identifies the Elasticsearch add-on to retrieve the details of.

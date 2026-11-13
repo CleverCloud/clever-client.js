@@ -1,5 +1,5 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import type { AuthMfa, AuthMfaBackupCodes } from './auth.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import type { AuthMfa, AuthMfaBackupCodes } from './auth.types.ts';
 
 export function transformAuthMfa(payload: any): AuthMfa {
   const state = payload.backupCodesState;

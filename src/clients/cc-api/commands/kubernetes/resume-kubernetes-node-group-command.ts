@@ -1,11 +1,11 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformKubernetesNodeGroup } from './kubernetes-transform.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformKubernetesNodeGroup } from './kubernetes-transform.ts';
 import type {
   ResumeKubernetesNodeGroupCommandInput,
   ResumeKubernetesNodeGroupCommandOutput,
-} from './resume-kubernetes-node-group-command.types.js';
+} from './resume-kubernetes-node-group-command.types.ts';
 
 /**
  * Resumes a node group stuck in the `FAILED` status, re-running the operation that failed.

@@ -1,9 +1,9 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetZoneCommandInput, GetZoneCommandOutput } from './get-zone-command.types.js';
-import { transformZone } from './zone-transform.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetZoneCommandInput, GetZoneCommandOutput } from './get-zone-command.types.ts';
+import { transformZone } from './zone-transform.ts';
 
 /**
  * Retrieves one zone by name.

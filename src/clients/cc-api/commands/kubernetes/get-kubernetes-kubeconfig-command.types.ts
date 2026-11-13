@@ -1,4 +1,4 @@
-import type { KubernetesKubeConfigType } from './kubernetes.types.js';
+import type { KubernetesKubeConfigType } from './kubernetes.types.ts';
 
 /**
  * Identifies the cluster whose kubeconfig is retrieved, and how it should reach the API server.

@@ -1,4 +1,4 @@
-import type { KubernetesNodeGroup } from './kubernetes.types.js';
+import type { KubernetesNodeGroup } from './kubernetes.types.ts';
 
 /**
  * Despite being a PATCH, `name` and `targetNodeCount` are required by the API on every call — this is not

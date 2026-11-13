@@ -1,6 +1,6 @@
-import type { CcRequest } from '../../types/request.types.js';
-import type { SelfOrPromise } from '../../types/utils.types.js';
-import type { CcClientError } from '../error/cc-client-errors.js';
+import type { CcRequest } from '../../types/request.types.ts';
+import type { SelfOrPromise } from '../../types/utils.types.ts';
+import type { CcClientError } from '../error/cc-client-errors.ts';
 
 /** Factory function that creates HTTP requests for streaming */
 export type CcStreamRequestFactory = () => SelfOrPromise<CcRequest>;
@@ -55,6 +55,6 @@ export interface CcStreamRetry {
 /** Information about why a stream was closed */
 export interface CcStreamCloseReason {
   /** The reason type for closing */
-  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- 'UNKNOWN' documents the sentinel value while allowing arbitrary reason strings
+  // oxlint-disable-next-line typescript/no-redundant-type-constituents -- 'UNKNOWN' documents the sentinel value while allowing arbitrary reason strings
   type: string | 'UNKNOWN';
 }

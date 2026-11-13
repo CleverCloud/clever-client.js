@@ -8,7 +8,7 @@ import {
   isTestDomainWithSubdomain,
   parseDomain,
   sortDomains,
-} from '../../../../esm/utils/domains.js';
+} from '../../../../esm/utils/domains.ts';
 
 describe('domains', () => {
   describe('parseDomain()', () => {

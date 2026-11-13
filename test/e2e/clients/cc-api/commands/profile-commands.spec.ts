@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { CreateProfileEmailAddressCommand } from '../../../../../src/clients/cc-api/commands/profile/create-profile-email-address-command.js';
-import { DeleteProfileEmailAddressCommand } from '../../../../../src/clients/cc-api/commands/profile/delete-profile-email-address-command.js';
-import { GetProfileCommand } from '../../../../../src/clients/cc-api/commands/profile/get-profile-command.js';
-import { ListProfileEmailAddressCommand } from '../../../../../src/clients/cc-api/commands/profile/list-profile-email-address-command.js';
-import { SetProfilePrimaryEmailAddressCommand } from '../../../../../src/clients/cc-api/commands/profile/set-profile-primary-email-address-command.js';
-import { UpdateProfileAvatarCommand } from '../../../../../src/clients/cc-api/commands/profile/update-profile-avatar-command.js';
-import { UpdateProfileCommand } from '../../../../../src/clients/cc-api/commands/profile/update-profile-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CreateProfileEmailAddressCommand } from '../../../../../src/clients/cc-api/commands/profile/create-profile-email-address-command.ts';
+import { DeleteProfileEmailAddressCommand } from '../../../../../src/clients/cc-api/commands/profile/delete-profile-email-address-command.ts';
+import { GetProfileCommand } from '../../../../../src/clients/cc-api/commands/profile/get-profile-command.ts';
+import { ListProfileEmailAddressCommand } from '../../../../../src/clients/cc-api/commands/profile/list-profile-email-address-command.ts';
+import { SetProfilePrimaryEmailAddressCommand } from '../../../../../src/clients/cc-api/commands/profile/set-profile-primary-email-address-command.ts';
+import { UpdateProfileAvatarCommand } from '../../../../../src/clients/cc-api/commands/profile/update-profile-avatar-command.ts';
+import { UpdateProfileCommand } from '../../../../../src/clients/cc-api/commands/profile/update-profile-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('profile commands', function () {
   const support = e2eSupport();

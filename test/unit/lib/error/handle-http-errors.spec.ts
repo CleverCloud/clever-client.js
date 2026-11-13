@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { SimpleCommand } from '../../../../src/lib/command/command.js';
-import { CcHttpError } from '../../../../src/lib/error/cc-client-errors.js';
-import { handleHttpErrors } from '../../../../src/lib/error/handle-http-errors.js';
-import type { ApiErrorInfo } from '../../../../src/types/command.types.js';
-import type { CcRequest, CcRequestParams, CcResponse } from '../../../../src/types/request.types.js';
+import { SimpleCommand } from '../../../../src/lib/command/command.ts';
+import { CcHttpError } from '../../../../src/lib/error/cc-client-errors.ts';
+import { handleHttpErrors } from '../../../../src/lib/error/handle-http-errors.ts';
+import type { ApiErrorInfo } from '../../../../src/types/command.types.ts';
+import type { CcRequest, CcRequestParams, CcResponse } from '../../../../src/types/request.types.ts';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 abstract class TestSimpleCommand extends SimpleCommand<'test', void, any> {
   get api(): 'test' {
     return 'test';

@@ -1,12 +1,12 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { DeleteApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/delete-application-command.js';
-import { DeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/deploy-application-command.js';
-import { GetApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/get-application-command.js';
-import { ListApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/list-application-command.js';
-import { UndeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/undeploy-application-command.js';
-import { UpdateApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/update-application-command.js';
-import { expectToBeDefined } from '../../../../lib/expect-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+import { DeleteApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/delete-application-command.ts';
+import { DeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/deploy-application-command.ts';
+import { GetApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/get-application-command.ts';
+import { ListApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/list-application-command.ts';
+import { UndeployApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/undeploy-application-command.ts';
+import { UpdateApplicationCommand } from '../../../../../src/clients/cc-api/commands/application/update-application-command.ts';
+import { expectToBeDefined } from '../../../../lib/expect-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('application commands', function () {
   const support = e2eSupport();

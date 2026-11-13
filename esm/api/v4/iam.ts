@@ -1,4 +1,4 @@
-import { pickNonNull } from '../../pick-non-null.js';
+import { pickNonNull } from '../../pick-non-null.ts';
 
 /**
  * POST /iam/organisations/{ownerId}/iam/materia-db-kv/{KVId}/tokens

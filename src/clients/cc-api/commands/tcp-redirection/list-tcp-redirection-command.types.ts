@@ -1,5 +1,5 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
-import type { TcpRedirection } from './tcp-redirection.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
+import type { TcpRedirection } from './tcp-redirection.types.ts';
 
 /**
  * Identifies the application whose redirections are listed. The owner is resolved automatically

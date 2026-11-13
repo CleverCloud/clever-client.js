@@ -1,4 +1,4 @@
-import type { KubernetesCluster, KubernetesClusterFeaturesPayload } from './kubernetes.types.js';
+import type { KubernetesCluster, KubernetesClusterFeaturesPayload } from './kubernetes.types.ts';
 
 /**
  * Identifies the cluster to update, and what to change on it.

@@ -1,4 +1,4 @@
-import type { UnknownToClient } from '../../../../types/utils.types.js';
+import type { UnknownToClient } from '../../../../types/utils.types.ts';
 
 /**
  * What every log drain carries, whichever stream it ships and whatever it is attached to.

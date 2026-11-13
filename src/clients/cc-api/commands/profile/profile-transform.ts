@@ -1,5 +1,5 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import type { Profile } from './profile.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import type { Profile } from './profile.types.ts';
 
 export function transformProfile(payload: any): Profile {
   return {

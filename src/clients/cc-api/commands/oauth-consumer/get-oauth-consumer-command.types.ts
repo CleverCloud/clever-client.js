@@ -1,4 +1,4 @@
-import type { OauthConsumer } from './oauth-consumer.types.js';
+import type { OauthConsumer } from './oauth-consumer.types.ts';
 
 /**
  * Identifies the OAuth consumer to retrieve, and how much of it to fetch.

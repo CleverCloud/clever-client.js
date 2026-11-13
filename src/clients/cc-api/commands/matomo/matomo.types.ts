@@ -1,4 +1,4 @@
-import type { EnvironmentVariable } from '../../../../utils/environment.types.js';
+import type { EnvironmentVariable } from '../../../../utils/environment.types.ts';
 
 /**
  * A Matomo add-on: the managed web analytics platform, with how to reach it and the platform

@@ -1,6 +1,6 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { GetGithubLinkTransactionIdCommandOutput } from './get-github-link-transaction-id-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { GetGithubLinkTransactionIdCommandOutput } from './get-github-link-transaction-id-command.types.ts';
 
 /**
  * Opens a GitHub linking flow and returns where to send the user to authorise it.

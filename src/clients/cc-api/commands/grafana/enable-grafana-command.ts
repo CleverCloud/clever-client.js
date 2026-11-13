@@ -1,9 +1,9 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { EnableGrafanaCommandInput, EnableGrafanaCommandOutput } from './enable-grafana-command.types.js';
-import { GetGrafanaCommand } from './get-grafana-command.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { EnableGrafanaCommandInput, EnableGrafanaCommandOutput } from './enable-grafana-command.types.ts';
+import { GetGrafanaCommand } from './get-grafana-command.ts';
 
 /**
  * Turns Grafana on for an owner, creating the Grafana organisation and its Clever Cloud dashboards.

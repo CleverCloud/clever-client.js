@@ -1,9 +1,9 @@
-import { post } from '../../../../lib/request/request-params-builder.js';
-import { RedisHttpCommand } from '../../lib/redis-http-command.js';
+import { post } from '../../../../lib/request/request-params-builder.ts';
+import { RedisHttpCommand } from '../../lib/redis-http-command.ts';
 import type {
   DeleteSetKeyElementCommandInput,
   DeleteSetKeyElementCommandOutput,
-} from './delete-set-key-element-command.types.js';
+} from './delete-set-key-element-command.types.ts';
 
 /**
  * Deletes a member from a `set` key

@@ -1,6 +1,6 @@
-import type { CcRequest } from '../../types/request.types.js';
-import type { NetworkErrorCode } from './cc-client-errors.js';
-import { CcNetworkError, isNetworkErrorCode } from './cc-client-errors.js';
+import type { CcRequest } from '../../types/request.types.ts';
+import type { NetworkErrorCode } from './cc-client-errors.ts';
+import { CcNetworkError, isNetworkErrorCode } from './cc-client-errors.ts';
 
 /**
  * What can be read off a `fetch()` rejection, which is untyped: runtimes disagree on where they

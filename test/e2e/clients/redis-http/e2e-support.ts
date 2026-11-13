@@ -1,10 +1,10 @@
-import { CcApiClient } from '../../../../src/clients/cc-api/cc-api-client.js';
-import { GetEnvironmentCommand } from '../../../../src/clients/cc-api/commands/environment/get-environment-command.js';
-import { CmdSendCommand } from '../../../../src/clients/redis-http/commands/cmd/cmd-send-command.js';
-import { RedisHttpClient } from '../../../../src/clients/redis-http/redis-http-client.js';
-import { isCcClientError } from '../../../../src/utils/error-utils.js';
-import { Polling } from '../../../../src/utils/polling.js';
-import { getE2eUser } from '../../../lib/e2e-test-users.js';
+import { CcApiClient } from '../../../../src/clients/cc-api/cc-api-client.ts';
+import { GetEnvironmentCommand } from '../../../../src/clients/cc-api/commands/environment/get-environment-command.ts';
+import { CmdSendCommand } from '../../../../src/clients/redis-http/commands/cmd/cmd-send-command.ts';
+import { RedisHttpClient } from '../../../../src/clients/redis-http/redis-http-client.ts';
+import { isCcClientError } from '../../../../src/utils/error-utils.ts';
+import { Polling } from '../../../../src/utils/polling.ts';
+import { getE2eUser } from '../../../lib/e2e-test-users.ts';
 
 const IS_NODE = globalThis.process != null;
 const USER = getE2eUser('test-user-without-github');
@@ -14,8 +14,9 @@ const REDIS_ADDON_ID = 'addon_dc54e2c9-3114-48b4-bdfc-53c34a01935b';
 
 export function e2eSupport(config?: { debug?: boolean }) {
   const conf = {
-    ...{ user: USER.userName, debug: false },
-    ...(config ?? {}),
+    user: USER.userName,
+    debug: false,
+    ...config,
   };
   let ccApiClient: CcApiClient;
   let client: RedisHttpClient;

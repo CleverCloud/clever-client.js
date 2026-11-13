@@ -1,4 +1,4 @@
-import type { E2eUser, E2eUserName } from './e2e.types.js';
+import type { E2eUser, E2eUserName } from './e2e.types.ts';
 
 const env: Record<string, string | undefined> = globalThis.process?.env ?? {};
 

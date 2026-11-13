@@ -1,20 +1,20 @@
-import type { SseMessage } from '../../types/request.types.js';
-import { isCcClientError, isCcHttpError, isNetworkError } from '../../utils/error-utils.js';
-import type { NetworkErrorCode } from '../error/cc-client-errors.js';
-import { CcClientError } from '../error/cc-client-errors.js';
-import { handleHttpErrors } from '../error/handle-http-errors.js';
-import { asNetworkError, isFetchNetworkError } from '../error/network-error.js';
-import { HeadersBuilder } from '../request/headers-builder.js';
-import { sendRequest, SseResponseBody } from '../request/request.js';
-import { combineWithSignal, Deferred } from '../utils.js';
+import type { SseMessage } from '../../types/request.types.ts';
+import { isCcClientError, isCcHttpError, isNetworkError } from '../../utils/error-utils.ts';
+import type { NetworkErrorCode } from '../error/cc-client-errors.ts';
+import { CcClientError } from '../error/cc-client-errors.ts';
+import { handleHttpErrors } from '../error/handle-http-errors.ts';
+import { asNetworkError, isFetchNetworkError } from '../error/network-error.ts';
+import { HeadersBuilder } from '../request/headers-builder.ts';
+import { sendRequest, SseResponseBody } from '../request/request.ts';
+import { combineWithSignal, Deferred } from '../utils.ts';
 import type {
   CcStreamCloseReason,
   CcStreamConfig,
   CcStreamRequestFactory,
   CcStreamRetry,
   CcStreamState,
-} from './cc-stream.types.js';
-import { readSseResponseBody } from './sse-response-body-reader.js';
+} from './cc-stream.types.ts';
+import { readSseResponseBody } from './sse-response-body-reader.ts';
 
 const LAST_EVENT_ID_HEADER = 'Last-Event-ID';
 
@@ -38,21 +38,21 @@ const RECONNECTABLE_NETWORK_CODES = new Set<NetworkErrorCode>(['ENOTFOUND', 'EAD
  * for real-time data from the Clever Cloud API.
  */
 export class CcStream {
-  #requestFactory: CcStreamRequestFactory;
-  #config: CcStreamConfig;
-  #state: CcStreamState = 'init';
-  #eventTarget = new EventTarget();
-  #abandonConnectionAttempt: (() => void) | undefined;
-  #requestSignal: AbortSignal | undefined;
-  #closeDeferred: Deferred<CcStreamCloseReason> | undefined;
-  #lastReceivedMessageId: string | undefined;
-  #lastContact: Date | undefined;
-  #retryCount = 0;
-  #hasBeenOpen = false;
-  #retryTimeoutId: ReturnType<typeof setTimeout> | null = null;
-  #heartbeatIntervalId: ReturnType<typeof setInterval> | null = null;
-  #connectionStartTime: Date | null = null;
-  #eventListeners = new Set<{ type: string; callback: EventListenerOrEventListenerObject }>();
+  private _requestFactory: CcStreamRequestFactory;
+  private _config: CcStreamConfig;
+  private _state: CcStreamState = 'init';
+  private _eventTarget = new EventTarget();
+  private _abandonConnectionAttempt: (() => void) | undefined;
+  private _requestSignal: AbortSignal | undefined;
+  private _closeDeferred: Deferred<CcStreamCloseReason> | undefined;
+  private _lastReceivedMessageId: string | undefined;
+  private _lastContact: Date | undefined;
+  private _retryCount = 0;
+  private _hasBeenOpen = false;
+  private _retryTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private _heartbeatIntervalId: ReturnType<typeof setInterval> | null = null;
+  private _connectionStartTime: Date | null = null;
+  private _eventListeners = new Set<{ type: string; callback: EventListenerOrEventListenerObject }>();
 
   /**
    * Creates a new CcStream instance.
@@ -61,8 +61,8 @@ export class CcStream {
    * @param config - Configuration options for the stream including retry settings and heartbeat
    */
   constructor(requestFactory: CcStreamRequestFactory, config: CcStreamConfig) {
-    this.#requestFactory = requestFactory;
-    this.#config = config;
+    this._requestFactory = requestFactory;
+    this._config = config;
   }
 
   // -- public methods ---
@@ -73,7 +73,7 @@ export class CcStream {
    * @returns The current stream state ('init', 'connecting', 'open', 'retrying', 'paused', or 'closed')
    */
   get state(): CcStreamState {
-    return this.#state;
+    return this._state;
   }
 
   /**
@@ -82,7 +82,7 @@ export class CcStream {
    * @returns The number of retry attempts made
    */
   get retryCount(): number {
-    return this.#retryCount;
+    return this._retryCount;
   }
 
   /**
@@ -95,12 +95,12 @@ export class CcStream {
       throw new CcClientError('Cannot start a stream that is not in the "init" state', 'SSE_INVALID_STATE_ERROR');
     }
 
-    if (this.#closeDeferred == null) {
-      this.#closeDeferred = new Deferred<CcStreamCloseReason>();
-      void this.#start();
+    if (this._closeDeferred == null) {
+      this._closeDeferred = new Deferred<CcStreamCloseReason>();
+      void this._start();
     }
 
-    return this.#closeDeferred.promise;
+    return this._closeDeferred.promise;
   }
 
   /**
@@ -111,16 +111,16 @@ export class CcStream {
    * cancelled).
    */
   pause(): void {
-    if (this.#state !== 'open' && this.#state !== 'connecting' && this.#state !== 'retrying') {
+    if (this._state !== 'open' && this._state !== 'connecting' && this._state !== 'retrying') {
       throw new CcClientError(
         'Cannot pause a stream that is not open, connecting or retrying',
         'SSE_INVALID_STATE_ERROR',
       );
     }
 
-    this.#debugLog('Pausing stream', { previousState: this.#state });
-    this.#state = 'paused';
-    this.#cleanup();
+    this._debugLog('Pausing stream', { previousState: this._state });
+    this._state = 'paused';
+    this._cleanup();
   }
 
   /**
@@ -137,10 +137,10 @@ export class CcStream {
       );
     }
 
-    this.#debugLog('Resuming stream', { previousState: this.#state });
+    this._debugLog('Resuming stream', { previousState: this._state });
     // the retry of a retrying stream would start a second connection
-    this.#cleanup();
-    void this.#start();
+    this._cleanup();
+    void this._start();
   }
 
   /**
@@ -153,10 +153,10 @@ export class CcStream {
     if (this.state === 'closed') {
       return;
     }
-    this.#debugLog('Manually closing stream', { reason, previousState: this.#state });
-    this.#state = 'closed';
-    this.#cleanup(true);
-    this.#closeDeferred!.resolve(reason);
+    this._debugLog('Manually closing stream', { reason, previousState: this._state });
+    this._state = 'closed';
+    this._cleanup(true);
+    this._closeDeferred!.resolve(reason);
   }
 
   /**
@@ -194,8 +194,8 @@ export class CcStream {
    * @template T Type of the event data
    */
   on<T>(type: string, callback: (event: CcStreamEvent<T>) => void, options?: AddEventListenerOptions | boolean): this {
-    this.#eventTarget.addEventListener(type, callback as EventListener, options);
-    this.#eventListeners.add({ type, callback: callback as EventListener });
+    this._eventTarget.addEventListener(type, callback as EventListener, options);
+    this._eventListeners.add({ type, callback: callback as EventListener });
     return this;
   }
 
@@ -206,58 +206,61 @@ export class CcStream {
    * @param message - The debug message
    * @param data - Optional data to include in the log
    */
-  #debugLog(message: string, data?: unknown): void {
-    if (this.#config.isDebugEnabled) {
+  private _debugLog(message: string, data?: unknown): void {
+    if (this._config.isDebugEnabled) {
       const timestamp = new Date().toISOString();
       const logMessage = `[CcStream] [${timestamp}] ${message}`;
+      // Printing the stream events is what the debug mode is for
       if (data !== undefined) {
+        // oxlint-disable-next-line no-console
         console.log(logMessage, data);
       } else {
+        // oxlint-disable-next-line no-console
         console.log(logMessage);
       }
     }
   }
 
-  async #start(): Promise<void> {
+  private async _start(): Promise<void> {
     // #cleanup abandons this attempt. Example: after pause() then resume(), this attempt may still get its response
     // or its error while the new one runs, and must ignore them.
     const connectionAttempt = { isAbandoned: false };
     const requestAbortController = new AbortController();
-    this.#abandonConnectionAttempt = () => {
+    this._abandonConnectionAttempt = () => {
       connectionAttempt.isAbandoned = true;
       requestAbortController.abort();
     };
-    this.#connectionStartTime = new Date();
-    if (this.#config.retry) {
-      this.#debugLog(
-        `Starting stream connection (attempt ${this.#retryCount + 1}/${this.#config.retry.maxRetryCount + 1})`,
+    this._connectionStartTime = new Date();
+    if (this._config.retry) {
+      this._debugLog(
+        `Starting stream connection (attempt ${this._retryCount + 1}/${this._config.retry.maxRetryCount + 1})`,
       );
     } else {
-      this.#debugLog(`Starting stream connection`);
+      this._debugLog(`Starting stream connection`);
     }
 
     try {
-      this.#state = 'connecting';
-      this.#debugLog('State changed to connecting', { state: this.#state, retryCount: this.#retryCount });
+      this._state = 'connecting';
+      this._debugLog('State changed to connecting', { state: this._state, retryCount: this._retryCount });
 
-      this.#debugLog(`Forging HTTP request`);
-      const request = await this.#requestFactory();
+      this._debugLog(`Forging HTTP request`);
+      const request = await this._requestFactory();
 
       // pause() or close() was called while the request was being built
       if (connectionAttempt.isAbandoned) {
-        this.#debugLog('Connection attempt abandoned while building the request', { state: this.#state });
+        this._debugLog('Connection attempt abandoned while building the request', { state: this._state });
         return;
       }
 
-      this.#watchRequestSignal(request.signal);
+      this._watchRequestSignal(request.signal);
       if (request.signal != null) {
         combineWithSignal(requestAbortController, request.signal);
       }
 
       const headersBuilder = new HeadersBuilder(request.headers).acceptEventStream();
-      if (this.#lastReceivedMessageId != null) {
-        headersBuilder.withHeader(LAST_EVENT_ID_HEADER, this.#lastReceivedMessageId);
-        this.#debugLog('Resuming from last event ID', { lastEventId: this.#lastReceivedMessageId });
+      if (this._lastReceivedMessageId != null) {
+        headersBuilder.withHeader(LAST_EVENT_ID_HEADER, this._lastReceivedMessageId);
+        this._debugLog('Resuming from last event ID', { lastEventId: this._lastReceivedMessageId });
       }
 
       const response = await sendRequest<SseResponseBody>({
@@ -269,11 +272,11 @@ export class CcStream {
 
       // pause() or close() was called after the response arrived, too late to abort it
       if (connectionAttempt.isAbandoned) {
-        this.#debugLog('Connection attempt abandoned after the response arrived', { state: this.#state });
+        this._debugLog('Connection attempt abandoned after the response arrived', { state: this._state });
         return;
       }
 
-      this.#debugLog('HTTP response received', {
+      this._debugLog('HTTP response received', {
         status: response.status,
         contentType: response.headers.get('content-type'),
       });
@@ -281,18 +284,18 @@ export class CcStream {
       handleHttpErrors(request, response);
 
       if (!(response.body instanceof SseResponseBody)) {
-        this.#debugLog('Invalid response body type', { bodyType: typeof response.body });
-        this.#onError(
+        this._debugLog('Invalid response body type', { bodyType: typeof response.body });
+        this._onError(
           new CcClientError('Invalid response content type for an SSE', 'SSE_INVALID_CONTENT_TYPE', response),
         );
         return;
       }
 
-      this.#onOpen();
+      this._onOpen();
 
       // a listener of the `open` event may have paused or closed the stream
       if (connectionAttempt.isAbandoned) {
-        this.#debugLog('Connection attempt abandoned by an open listener', { state: this.#state });
+        this._debugLog('Connection attempt abandoned by an open listener', { state: this._state });
         return;
       }
 
@@ -300,32 +303,32 @@ export class CcStream {
       await readSseResponseBody(response.body, {
         onMessage: (message) => {
           if (!connectionAttempt.isAbandoned) {
-            this.#onMessage(message);
+            this._onMessage(message);
           }
         },
         onClose: () => {
           if (!connectionAttempt.isAbandoned) {
-            this.#onClose();
+            this._onClose();
           }
         },
         onError: (error) => {
           if (!connectionAttempt.isAbandoned) {
             // A socket dying mid-stream rejects raw, past the point where sendRequest could name it, so
             // it is named here instead — otherwise it would reach consumers as an unexplained SSE error.
-            this.#onError(asNetworkError(error, request) ?? error);
+            this._onError(asNetworkError(error, request) ?? error);
           }
         },
       });
     } catch (error: unknown) {
       if (connectionAttempt.isAbandoned) {
-        this.#debugLog('Error ignored, the connection attempt was abandoned', { state: this.#state, error });
+        this._debugLog('Error ignored, the connection attempt was abandoned', { state: this._state, error });
       } else if (isCcClientError(error)) {
-        this.#onError(error);
+        this._onError(error);
       } else if (error === requestAbortController.signal.reason) {
         // an abort is not the server closing the response: `sendRequest` rejects with the reason of the signal
-        this.#onError(error);
+        this._onError(error);
       } else {
-        this.#onError(
+        this._onError(
           new CcClientError('Server closed the response without a END_OF_STREAM event', 'SSE_SERVER_ERROR', error),
         );
       }
@@ -336,16 +339,16 @@ export class CcStream {
    * Clears any active timeouts and intervals to prevent memory leaks.
    * @param clearListeners - Whether to also clear event listeners
    */
-  #cleanup(clearListeners = false): void {
-    this.#debugLog('Cleaning up stream resources');
-    clearTimeout(this.#retryTimeoutId ?? undefined);
-    clearInterval(this.#heartbeatIntervalId ?? undefined);
+  private _cleanup(clearListeners = false): void {
+    this._debugLog('Cleaning up stream resources');
+    clearTimeout(this._retryTimeoutId ?? undefined);
+    clearInterval(this._heartbeatIntervalId ?? undefined);
     if (clearListeners) {
-      this.#eventListeners.forEach(({ type, callback }) => this.#eventTarget.removeEventListener(type, callback));
-      this.#eventListeners.clear();
-      this.#requestSignal?.removeEventListener('abort', this.#onRequestSignalAbort);
+      this._eventListeners.forEach(({ type, callback }) => this._eventTarget.removeEventListener(type, callback));
+      this._eventListeners.clear();
+      this._requestSignal?.removeEventListener('abort', this._onRequestSignalAbort);
     }
-    this.#abandonConnectionAttempt?.();
+    this._abandonConnectionAttempt?.();
   }
 
   /**
@@ -353,13 +356,13 @@ export class CcStream {
    *
    * @param signal - The signal of the request the current attempt sends
    */
-  #watchRequestSignal(signal: AbortSignal | undefined): void {
-    if (signal === this.#requestSignal) {
+  private _watchRequestSignal(signal: AbortSignal | undefined): void {
+    if (signal === this._requestSignal) {
       return;
     }
-    this.#requestSignal?.removeEventListener('abort', this.#onRequestSignalAbort);
-    this.#requestSignal = signal;
-    this.#requestSignal?.addEventListener('abort', this.#onRequestSignalAbort);
+    this._requestSignal?.removeEventListener('abort', this._onRequestSignalAbort);
+    this._requestSignal = signal;
+    this._requestSignal?.addEventListener('abort', this._onRequestSignalAbort);
   }
 
   /**
@@ -368,48 +371,48 @@ export class CcStream {
    * While connecting or open, the signal aborts the connection, which ends in #onError. Between two connections,
    * retrying or paused, nothing else would notice it before the next attempt.
    */
-  #onRequestSignalAbort = (): void => {
-    if (this.#state === 'retrying' || this.#state === 'paused') {
-      this.#closeWithError(this.#requestSignal!.reason);
+  private _onRequestSignalAbort = (): void => {
+    if (this._state === 'retrying' || this._state === 'paused') {
+      this._closeWithError(this._requestSignal!.reason);
     }
   };
 
   /**
    * When SSE is opened
    */
-  #onOpen(): void {
-    const connectionTime = this.#connectionStartTime
-      ? new Date().getTime() - this.#connectionStartTime.getTime()
+  private _onOpen(): void {
+    const connectionTime = this._connectionStartTime
+      ? new Date().getTime() - this._connectionStartTime.getTime()
       : null;
-    this.#debugLog('Stream opened successfully', {
+    this._debugLog('Stream opened successfully', {
       connectionTimeMs: connectionTime,
-      retryCount: this.#retryCount,
+      retryCount: this._retryCount,
     });
 
-    this.#state = 'open';
-    this.#lastContact = new Date();
-    this.#retryCount = 0;
-    this.#hasBeenOpen = true;
+    this._state = 'open';
+    this._lastContact = new Date();
+    this._retryCount = 0;
+    this._hasBeenOpen = true;
 
-    this.#heartbeatIntervalId = setInterval(() => {
+    this._heartbeatIntervalId = setInterval(() => {
       const now = new Date();
-      const diff = now.getTime() - (this.#lastContact?.getTime() ?? now.getTime());
-      if (diff > this.#config.heartbeatPeriod) {
-        this.#debugLog('Heartbeat timeout detected', {
+      const diff = now.getTime() - (this._lastContact?.getTime() ?? now.getTime());
+      if (diff > this._config.heartbeatPeriod) {
+        this._debugLog('Heartbeat timeout detected', {
           timeSinceLastContact: diff,
-          heartbeatPeriod: this.#config.heartbeatPeriod,
+          heartbeatPeriod: this._config.heartbeatPeriod,
         });
-        this.#onError(
+        this._onError(
           new CcClientError(
-            `Failed to receive heartbeat within ${this.#config.heartbeatPeriod}ms period`,
+            `Failed to receive heartbeat within ${this._config.heartbeatPeriod}ms period`,
             'SSE_HEALTH_ERROR',
           ),
         );
       }
-    }, this.#config.healthcheckInterval);
+    }, this._config.healthcheckInterval);
 
     // last, so that what a listener does to the stream is not undone
-    this.#emit('open');
+    this._emit('open');
   }
 
   /**
@@ -417,31 +420,31 @@ export class CcStream {
    *
    * @param message - The received SSE message
    */
-  #onMessage(message: SseMessage): void {
-    this.#lastContact = new Date();
+  private _onMessage(message: SseMessage): void {
+    this._lastContact = new Date();
 
-    this.#debugLog('SSE message received', {
+    this._debugLog('SSE message received', {
       event: message.event,
       id: message.id,
       dataLength: message.data ? message.data.length : 0,
-      timestamp: this.#lastContact.toISOString(),
+      timestamp: this._lastContact.toISOString(),
     });
 
     switch (message.event) {
       case 'HEARTBEAT':
-        this.#debugLog('Heartbeat received');
+        this._debugLog('Heartbeat received');
         return;
       case 'END_OF_STREAM': {
         try {
           const reason = JSON.parse(message.data) as { endedBy?: string };
-          this.#debugLog('End of stream received', { reason });
+          this._debugLog('End of stream received', { reason });
           this.close({ type: reason.endedBy ?? 'UNKNOWN' });
         } catch (e: unknown) {
-          this.#debugLog('Failed to parse END_OF_STREAM data', {
+          this._debugLog('Failed to parse END_OF_STREAM data', {
             data: message.data,
             error: e,
           });
-          this.#onError(
+          this._onError(
             new CcClientError(`Expect JSON for END_OF_STREAM event but got "${message.data}"`, 'SSE_SERVER_ERROR', e),
           );
         }
@@ -449,49 +452,49 @@ export class CcStream {
       }
       default: {
         if (message.id?.length > 0) {
-          this.#lastReceivedMessageId = message.id;
+          this._lastReceivedMessageId = message.id;
         }
 
-        this.#debugLog('Emitting custom event', { event: message.event, hasData: !!message.data });
-        this.#emit(message.event, message.data);
+        this._debugLog('Emitting custom event', { event: message.event, hasData: !!message.data });
+        this._emit(message.event, message.data);
       }
     }
   }
 
-  #onClose(): void {
-    if (this.#state === 'closed' || this.#state === 'retrying' || this.#state === 'paused') {
-      this.#debugLog('Close event ignored', { currentState: this.#state });
+  private _onClose(): void {
+    if (this._state === 'closed' || this._state === 'retrying' || this._state === 'paused') {
+      this._debugLog('Close event ignored', { currentState: this._state });
       return;
     }
     // #onError tells this apart from the body ending because the signal of the request aborted
-    this.#debugLog('Stream closed unexpectedly by server', {
-      state: this.#state,
-      lastMessageId: this.#lastReceivedMessageId,
-      retryCount: this.#retryCount,
+    this._debugLog('Stream closed unexpectedly by server', {
+      state: this._state,
+      lastMessageId: this._lastReceivedMessageId,
+      retryCount: this._retryCount,
     });
-    this.#onError(new CcClientError('Server closed the response without a END_OF_STREAM event', 'SSE_SERVER_ERROR'));
+    this._onError(new CcClientError('Server closed the response without a END_OF_STREAM event', 'SSE_SERVER_ERROR'));
   }
 
   /**
    * when the SSE has an error
    * @param error - The error that occurred
    */
-  #onError(error: unknown): void {
-    if (this.#state === 'closed' || this.#state === 'retrying' || this.#state === 'paused') {
-      this.#debugLog('Error event ignored', { currentState: this.#state, error });
+  private _onError(error: unknown): void {
+    if (this._state === 'closed' || this._state === 'retrying' || this._state === 'paused') {
+      this._debugLog('Error event ignored', { currentState: this._state, error });
       return;
     }
 
-    this.#debugLog('Stream error occurred', error);
+    this._debugLog('Stream error occurred', error);
 
     // Reconnecting would undo what the consumer asked for, whatever failed on the way. The abort may not be what
     // failed: a request factory rejecting after it, or a signal aborting with a reason that is a CcClientError.
-    if (this.#requestSignal?.aborted === true) {
-      this.#closeWithError(this.#requestSignal.reason);
+    if (this._requestSignal?.aborted === true) {
+      this._closeWithError(this._requestSignal.reason);
       return;
     }
 
-    this.#cleanup();
+    this._cleanup();
 
     // Errors the client raised already say what went wrong, and a CcNetworkError says which network
     // failure it was; only a raw one needs to be named here so that it can be retried at all.
@@ -500,29 +503,29 @@ export class CcStream {
         ? new CcClientError('Failed to establish/maintain the connection with the server', 'SSE_SERVER_ERROR', error)
         : error;
 
-    const canRetry = this.#canRetry(wrappedError);
-    this.#debugLog('Retry decision', {
+    const canRetry = this._canRetry(wrappedError);
+    this._debugLog('Retry decision', {
       canRetry,
-      retryCount: this.#retryCount,
-      maxRetry: this.#config.retry?.maxRetryCount,
+      retryCount: this._retryCount,
+      maxRetry: this._config.retry?.maxRetryCount,
     });
 
-    if (canRetry && this.#config.retry != null) {
-      const retry = this.#config.retry;
-      this.#state = 'retrying';
+    if (canRetry && this._config.retry != null) {
+      const retry = this._config.retry;
+      this._state = 'retrying';
 
       // before counting this retry, so that the first one waits initRetryTimeout
-      const exponentialBackoffDelay = retry.initRetryTimeout * retry.backoffFactor ** this.#retryCount;
-      this.#retryCount++;
+      const exponentialBackoffDelay = retry.initRetryTimeout * retry.backoffFactor ** this._retryCount;
+      this._retryCount++;
 
-      this.#debugLog('Scheduling retry', {
-        retryCount: this.#retryCount,
+      this._debugLog('Scheduling retry', {
+        retryCount: this._retryCount,
         delayMs: exponentialBackoffDelay,
         backoffFactor: retry.backoffFactor,
       });
 
-      this.#retryTimeoutId = setTimeout(() => {
-        void this.#start();
+      this._retryTimeoutId = setTimeout(() => {
+        void this._start();
       }, exponentialBackoffDelay);
 
       // Wrap nullish failures only for the event; keep the original value for the final rejection.
@@ -535,14 +538,14 @@ export class CcStream {
           );
 
       // only once the retry is scheduled, so that a listener can cancel it with pause()
-      this.#emit('retry', {
+      this._emit('retry', {
         error: retryError,
-        retryCount: this.#retryCount,
+        retryCount: this._retryCount,
         maxRetryCount: retry.maxRetryCount,
         retryAt: new Date(Date.now() + exponentialBackoffDelay),
       } satisfies CcStreamRetry);
     } else {
-      this.#closeWithError(wrappedError);
+      this._closeWithError(wrappedError);
     }
   }
 
@@ -551,22 +554,22 @@ export class CcStream {
    *
    * @param error - The error start() rejects with
    */
-  #closeWithError(error: unknown): void {
-    this.#debugLog('Stream permanently closed due to error', {
-      finalRetryCount: this.#retryCount,
+  private _closeWithError(error: unknown): void {
+    this._debugLog('Stream permanently closed due to error', {
+      finalRetryCount: this._retryCount,
       error,
     });
-    this.#state = 'closed';
-    this.#cleanup(true);
-    this.#closeDeferred?.reject(error);
+    this._state = 'closed';
+    this._cleanup(true);
+    this._closeDeferred?.reject(error);
   }
 
-  #canRetry(error: unknown): boolean {
-    if (this.#config.retry == null) {
+  private _canRetry(error: unknown): boolean {
+    if (this._config.retry == null) {
       return false;
     }
 
-    if (this.#retryCount >= this.#config.retry.maxRetryCount) {
+    if (this._retryCount >= this._config.retry.maxRetryCount) {
       return false;
     }
 
@@ -579,7 +582,7 @@ export class CcStream {
     if (isNetworkError(error)) {
       return (
         error.isWorthRetrying() ||
-        (this.#hasBeenOpen && error.networkCode != null && RECONNECTABLE_NETWORK_CODES.has(error.networkCode))
+        (this._hasBeenOpen && error.networkCode != null && RECONNECTABLE_NETWORK_CODES.has(error.networkCode))
       );
     }
 
@@ -596,12 +599,12 @@ export class CcStream {
    * @param type - The event type
    * @param data - The event data payload
    */
-  #emit(type: string, data?: unknown): void {
+  private _emit(type: string, data?: unknown): void {
     try {
-      this.#eventTarget.dispatchEvent(new CcStreamEvent(type, data));
+      this._eventTarget.dispatchEvent(new CcStreamEvent(type, data));
     } catch (e: unknown) {
       // we catch errors in case one of the listeners throws an error
-      this.#onError(new CcClientError(`An error occurred while emitting ${type} event`, 'SSE_CLIENT_ERROR', e));
+      this._onError(new CcClientError(`An error occurred while emitting ${type} event`, 'SSE_CLIENT_ERROR', e));
     }
   }
 }
@@ -613,7 +616,7 @@ export class CcStream {
  * @template T Type of the event data
  */
 export class CcStreamEvent<T> extends Event {
-  #data: T;
+  private _data: T;
 
   /**
    * Creates a new CcStreamEvent with the specified type and data.
@@ -623,7 +626,7 @@ export class CcStreamEvent<T> extends Event {
    */
   constructor(type: string, data: T) {
     super(type);
-    this.#data = data;
+    this._data = data;
   }
 
   /**
@@ -632,6 +635,6 @@ export class CcStreamEvent<T> extends Event {
    * @returns The event data
    */
   get data(): T {
-    return this.#data;
+    return this._data;
   }
 }

@@ -1,12 +1,12 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   GetProductRuntimeCommandInput,
   GetProductRuntimeCommandOutput,
-} from './get-product-runtime-command.types.js';
-import { transformProductRuntime } from './product-transform.js';
+} from './get-product-runtime-command.types.ts';
+import { transformProductRuntime } from './product-transform.ts';
 
 /**
  * Retrieves one runtime from the product catalogue.

@@ -1,8 +1,8 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiBridgeCommand } from '../../lib/cc-api-bridge-command.js';
-import { transformApiToken } from './api-token-transform.js';
-import type { GetApiTokenCommandInput, GetApiTokenCommandOutput } from './get-api-token-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiBridgeCommand } from '../../lib/cc-api-bridge-command.ts';
+import { transformApiToken } from './api-token-transform.ts';
+import type { GetApiTokenCommandInput, GetApiTokenCommandOutput } from './get-api-token-command.types.ts';
 
 /**
  * Retrieves one API token of the current user, without its value.

@@ -1,6 +1,6 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import { parseHtmlString, parseXmlString } from '../../../../lib/xml/xml-parser.js';
-import type { Article } from './article.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import { parseHtmlString, parseXmlString } from '../../../../lib/xml/xml-parser.ts';
+import type { Article } from './article.types.ts';
 
 /**
  * Parses an RSS feed document into a list of articles.

@@ -1,5 +1,5 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import type { GetAddonDetailsInnerCommandOutput, InnerBackup } from './list-backup-command.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import type { GetAddonDetailsInnerCommandOutput, InnerBackup } from './list-backup-command.types.ts';
 
 export function transformBackup(payload: any): InnerBackup {
   return {

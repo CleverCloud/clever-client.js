@@ -1,5 +1,5 @@
-import type { KeyScan, KeyScanResult, RedisHttpCommandInput } from '../../types/redis-http.types.js';
-import type { ListKeyElement } from './list-key.types.js';
+import type { KeyScan, KeyScanResult, RedisHttpCommandInput } from '../../types/redis-http.types.ts';
+import type { ListKeyElement } from './list-key.types.ts';
 
 /**
  * The key to scan and some scan options

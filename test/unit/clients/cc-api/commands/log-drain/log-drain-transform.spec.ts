@@ -3,7 +3,7 @@ import {
   transformAuditLogDrain,
   transformLogDrain,
   transformLogDrainProbeResult,
-} from '../../../../../../src/clients/cc-api/commands/log-drain/log-drain-transform.js';
+} from '../../../../../../src/clients/cc-api/commands/log-drain/log-drain-transform.ts';
 
 describe('log-drain-transform', () => {
   describe('transformLogDrain', () => {

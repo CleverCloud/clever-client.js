@@ -1,10 +1,10 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import { transformApplication } from './application-transform.js';
-import { consolidateApplicationWithBranches } from './application-utils.js';
-import type { ListApplicationCommandInput, ListApplicationCommandOutput } from './list-application-command.types.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import { transformApplication } from './application-transform.ts';
+import { consolidateApplicationWithBranches } from './application-utils.ts';
+import type { ListApplicationCommandInput, ListApplicationCommandOutput } from './list-application-command.types.ts';
 
 /**
  * Lists every application of an organisation, optionally completed with the branches of their

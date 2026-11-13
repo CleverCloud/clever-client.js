@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { DisableGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/disable-grafana-command.js';
-import { EnableGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/enable-grafana-command.js';
-import { GetGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/get-grafana-command.js';
-import { ResetGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/reset-grafana-command.js';
-import { tolerateNotFound } from '../../../../../src/utils/error-utils.js';
-import { e2eSupport } from '../e2e-support.js';
+import { DisableGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/disable-grafana-command.ts';
+import { EnableGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/enable-grafana-command.ts';
+import { GetGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/get-grafana-command.ts';
+import { ResetGrafanaCommand } from '../../../../../src/clients/cc-api/commands/grafana/reset-grafana-command.ts';
+import { tolerateNotFound } from '../../../../../src/utils/error-utils.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('grafana commands', function () {
   const support = e2eSupport();

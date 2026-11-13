@@ -1,4 +1,4 @@
-import { combineWithSignal } from '../utils.js';
+import { combineWithSignal } from '../utils.ts';
 
 // TODO: replace this by using AbortSignal.timeout() static method when it becomes widely available
 
@@ -28,7 +28,7 @@ export function fetchWithTimeout(
   const timeoutPromise = new Promise<Response>((_resolve, reject) => {
     const timeoutId = setTimeout(() => {
       ac.abort();
-      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- 'TIMEOUT' is a sentinel matched by `error === 'TIMEOUT'` in doRequest
+      // oxlint-disable-next-line typescript/prefer-promise-reject-errors -- 'TIMEOUT' is a sentinel matched by `error === 'TIMEOUT'` in doRequest
       reject('TIMEOUT');
     }, timeout);
     clear = () => clearTimeout(timeoutId);

@@ -1,4 +1,4 @@
-import type { AddonProviderFull } from './addon-provider.types.js';
+import type { AddonProviderFull } from './addon-provider.types.ts';
 
 /**
  * Description of the add-on provider to register.

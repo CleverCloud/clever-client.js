@@ -1,13 +1,13 @@
 import type { NewScenario } from '@clevercloud/doublure';
 import { doublureHooks } from '@clevercloud/doublure/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CcClientError, CcNetworkError, CcRequestError } from '../../../../src/lib/error/cc-client-errors.js';
-import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.js';
-import { QueryParams } from '../../../../src/lib/request/query-params.js';
-import { sendRequest as originalSendRequest } from '../../../../src/lib/request/request.js';
-import type { CcRequest, CcResponse } from '../../../../src/types/request.types.js';
-import { expectPromiseThrows } from '../../../lib/expect-utils.js';
-import { ForeignCcRequestError } from '../../../lib/foreign-copy.js';
+import { CcClientError, CcNetworkError, CcRequestError } from '../../../../src/lib/error/cc-client-errors.ts';
+import { HeadersBuilder } from '../../../../src/lib/request/headers-builder.ts';
+import { QueryParams } from '../../../../src/lib/request/query-params.ts';
+import { sendRequest as originalSendRequest } from '../../../../src/lib/request/request.ts';
+import type { CcRequest, CcResponse } from '../../../../src/types/request.types.ts';
+import { expectPromiseThrows } from '../../../lib/expect-utils.ts';
+import { ForeignCcRequestError } from '../../../lib/foreign-copy.ts';
 
 describe('request', () => {
   let newScenario: NewScenario;

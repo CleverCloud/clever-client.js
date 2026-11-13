@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import { transformCredits } from './credits-transform.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import { transformCredits } from './credits-transform.ts';
 import type {
   GetCreditsSummaryCommandInput,
   GetCreditsSummaryCommandOutput,
-} from './get-credits-summary-command.types.js';
+} from './get-credits-summary-command.types.ts';
 
 /**
  * Retrieves how much prepaid and free credit an organisation has left.

@@ -1,4 +1,4 @@
-import type { KubernetesCluster } from './kubernetes.types.js';
+import type { KubernetesCluster } from './kubernetes.types.ts';
 
 /**
  * Identifies the cluster to upgrade, the version to move it to, and whether to wait.

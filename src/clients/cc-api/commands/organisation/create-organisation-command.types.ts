@@ -1,4 +1,4 @@
-import type { Organisation } from './organisation.types.js';
+import type { Organisation } from './organisation.types.ts';
 
 /**
  * Describes the organisation to create. A company is identified by its legal name and its VAT

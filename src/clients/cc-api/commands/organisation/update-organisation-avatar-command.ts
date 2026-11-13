@@ -1,11 +1,11 @@
-import { HeadersBuilder } from '../../../../lib/request/headers-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { HeadersBuilder } from '../../../../lib/request/headers-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   UpdateOrganisationAvatarCommandInput,
   UpdateOrganisationAvatarCommandOutput,
-} from './update-organisation-avatar-command.types.js';
+} from './update-organisation-avatar-command.types.ts';
 
 /**
  * Replaces the avatar of an organisation with the given image.

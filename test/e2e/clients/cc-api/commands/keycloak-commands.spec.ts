@@ -1,12 +1,12 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { CheckKeycloakVersionCommand } from '../../../../../src/clients/cc-api/commands/keycloak/check-keycloak-version-command.js';
-import { CreateKeycloakNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/keycloak/create-keycloak-network-group-command.js';
-import { DeleteKeycloakNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/keycloak/delete-keycloak-network-group-command.js';
-import { GetKeycloakInfoCommand } from '../../../../../src/clients/cc-api/commands/keycloak/get-keycloak-info-command.js';
-import { RebootKeycloakCommand } from '../../../../../src/clients/cc-api/commands/keycloak/reboot-keycloak-command.js';
-import { RebuildKeycloakCommand } from '../../../../../src/clients/cc-api/commands/keycloak/rebuild-keycloak-command.js';
-import { UpdateKeycloakVersionCommand } from '../../../../../src/clients/cc-api/commands/keycloak/update-keycloak-version-command.js';
-import { e2eSupport } from '../e2e-support.js';
+import { CheckKeycloakVersionCommand } from '../../../../../src/clients/cc-api/commands/keycloak/check-keycloak-version-command.ts';
+import { CreateKeycloakNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/keycloak/create-keycloak-network-group-command.ts';
+import { DeleteKeycloakNetworkGroupCommand } from '../../../../../src/clients/cc-api/commands/keycloak/delete-keycloak-network-group-command.ts';
+import { GetKeycloakInfoCommand } from '../../../../../src/clients/cc-api/commands/keycloak/get-keycloak-info-command.ts';
+import { RebootKeycloakCommand } from '../../../../../src/clients/cc-api/commands/keycloak/reboot-keycloak-command.ts';
+import { RebuildKeycloakCommand } from '../../../../../src/clients/cc-api/commands/keycloak/rebuild-keycloak-command.ts';
+import { UpdateKeycloakVersionCommand } from '../../../../../src/clients/cc-api/commands/keycloak/update-keycloak-version-command.ts';
+import { e2eSupport } from '../e2e-support.ts';
 
 describe('keycloak commands', function () {
   const support = e2eSupport();

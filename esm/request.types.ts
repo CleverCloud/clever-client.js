@@ -1,4 +1,4 @@
-import type { QueryParams } from './utils/query-params.types.js';
+import type { QueryParams } from './utils/query-params.types.ts';
 
 export interface RequestParams extends Omit<RequestInit, 'headers' | 'body'> {
   url: string;

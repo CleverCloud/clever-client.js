@@ -1,19 +1,25 @@
 {
+  // Every source, test and config file, and the Claude Code hooks, which a wildcard skips as they sit in a dot directory
+  "include": ["**/*", ".claude/hooks/*.ts"],
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "target": "ES2023",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "NodeNext",
+    // The code runs in the browser and in Node.js; TypeScript 7 only loads `@types/node` when listed here
+    "types": ["node"],
     // resolve the `#dom-parser` subpath import to the TypeScript sources rather than to the built
     // `dist/` files, which do not exist when types are checked
     "customConditions": ["clever-client-source"],
-    "allowImportingTsExtensions": true,
-    "allowJs": true,
-    "checkJs": true,
+    // Relative imports use the `.ts` extension, which Node runs as is and `tsc` rewrites to `.js` in `dist/`
+    "rewriteRelativeImportExtensions": true,
     "noEmit": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "strict": true,
+    "isolatedModules": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
     "useUnknownInCatchVariables": false
   }
 }

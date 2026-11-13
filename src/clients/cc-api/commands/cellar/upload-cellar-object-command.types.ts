@@ -1,4 +1,4 @@
-import type { CellarObjectResourceId } from './cellar.types.js';
+import type { CellarObjectResourceId } from './cellar.types.ts';
 
 /**
  * Identifies where the object goes, and what to store in it.

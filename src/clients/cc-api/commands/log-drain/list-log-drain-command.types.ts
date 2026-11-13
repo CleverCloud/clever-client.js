@@ -1,5 +1,5 @@
-import type { ApplicationOrAddonId } from '../../types/cc-api.types.js';
-import type { AuditLogDrain, LogDrain, LogDrainExecutionStatus, LogDrainStatus } from './log-drain.types.js';
+import type { ApplicationOrAddonId } from '../../types/cc-api.types.ts';
+import type { AuditLogDrain, LogDrain, LogDrainExecutionStatus, LogDrainStatus } from './log-drain.types.ts';
 
 /**
  * What to list the drains of: one application or add-on, or a whole organisation.

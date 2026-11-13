@@ -1,5 +1,5 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import type { Instance } from './instance.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import type { Instance } from './instance.types.ts';
 
 export function transformApplicationInstance(payload: any): Instance {
   return {

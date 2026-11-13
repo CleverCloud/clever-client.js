@@ -1,4 +1,4 @@
-import type { KubernetesCluster } from './kubernetes.types.js';
+import type { KubernetesCluster } from './kubernetes.types.ts';
 
 /**
  * Identifies the cluster to retrieve.

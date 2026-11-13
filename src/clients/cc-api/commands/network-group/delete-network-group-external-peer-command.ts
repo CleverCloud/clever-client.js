@@ -1,9 +1,9 @@
-import { delete_ } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.js';
-import type { CcApiComposer } from '../../types/cc-api.types.js';
-import type { DeleteNetworkGroupExternalPeerCommandInput } from './delete-network-group-external-peer-command.types.js';
-import { waitForNetworkGroupPeerDeletion } from './network-group-utils.js';
+import { delete_ } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiCompositeCommand, CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
+import type { CcApiComposer } from '../../types/cc-api.types.ts';
+import type { DeleteNetworkGroupExternalPeerCommandInput } from './delete-network-group-external-peer-command.types.ts';
+import { waitForNetworkGroupPeerDeletion } from './network-group-utils.ts';
 
 /**
  * Detaches an external peer from a network group.

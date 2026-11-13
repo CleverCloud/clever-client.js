@@ -1,5 +1,5 @@
-import { isCcHttpErrorWithCode } from '../../../../utils/error-utils.js';
-import type { RefusedAuthCredentialType, ResolveRefusedCredentialInput } from './auth.types.js';
+import { isCcHttpErrorWithCode } from '../../../../utils/error-utils.ts';
+import type { RefusedAuthCredentialType, ResolveRefusedCredentialInput } from './auth.types.ts';
 
 /**
  * Sends the request of a command taking {@link ResolveRefusedCredentialInput}, and shapes its output

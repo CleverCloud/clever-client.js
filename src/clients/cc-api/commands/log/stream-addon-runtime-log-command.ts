@@ -1,11 +1,11 @@
-import { QueryParams } from '../../../../lib/request/query-params.js';
-import { normalizeDate, safeUrl } from '../../../../lib/utils.js';
-import type { CcRequestParams } from '../../../../types/request.types.js';
-import type { IdResolve } from '../../types/resource-id-resolver.types.js';
-import { AbstractLogsStreamCommand } from './abstract-logs-stream-command.js';
-import { transformAddonRuntimeLog } from './log-transform.js';
-import type { AddonRuntimeLog } from './log.types.js';
-import type { StreamAddonRuntimeLogCommandInput } from './stream-addon-runtime-log-command.types.js';
+import { QueryParams } from '../../../../lib/request/query-params.ts';
+import { normalizeDate, safeUrl } from '../../../../lib/utils.ts';
+import type { CcRequestParams } from '../../../../types/request.types.ts';
+import type { IdResolve } from '../../types/resource-id-resolver.types.ts';
+import { AbstractLogsStreamCommand } from './abstract-logs-stream-command.ts';
+import { transformAddonRuntimeLog } from './log-transform.ts';
+import type { AddonRuntimeLog } from './log.types.ts';
+import type { StreamAddonRuntimeLogCommandInput } from './stream-addon-runtime-log-command.types.ts';
 
 /**
  * Opens a Server-Sent Events stream of the runtime logs of an add-on.
@@ -38,11 +38,11 @@ export class StreamAddonRuntimeLogCommand extends AbstractLogsStreamCommand<
     };
   }
 
-  _logTopicName(): string {
+  protected _logTopicName(): string {
     return 'RESOURCE_LOG';
   }
 
-  _convertLog(rawLog: unknown): AddonRuntimeLog {
+  protected _convertLog(rawLog: unknown): AddonRuntimeLog {
     return transformAddonRuntimeLog(rawLog);
   }
 

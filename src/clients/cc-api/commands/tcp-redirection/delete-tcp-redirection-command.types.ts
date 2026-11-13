@@ -1,5 +1,5 @@
-import type { ApplicationId } from '../../types/cc-api.types.js';
-import type { TcpRedirectionNamespace } from './tcp-redirection.types.js';
+import type { ApplicationId } from '../../types/cc-api.types.ts';
+import type { TcpRedirectionNamespace } from './tcp-redirection.types.ts';
 
 /**
  * Identifies the application and the redirection to close on it.

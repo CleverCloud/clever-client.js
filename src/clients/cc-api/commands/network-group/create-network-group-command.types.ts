@@ -1,4 +1,4 @@
-import type { NetworkGroup } from './network-group.types.js';
+import type { NetworkGroup } from './network-group.types.ts';
 
 /**
  * Describes the network group to create.

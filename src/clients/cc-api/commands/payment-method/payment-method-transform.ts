@@ -1,5 +1,5 @@
-import { normalizeDate } from '../../../../lib/utils.js';
-import type { PaymentMethod } from './payment-method.types.js';
+import { normalizeDate } from '../../../../lib/utils.ts';
+import type { PaymentMethod } from './payment-method.types.ts';
 
 export function transformPaymentMethod(payload: any): PaymentMethod {
   const common = {

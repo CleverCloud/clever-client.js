@@ -1,11 +1,11 @@
-import { get } from '../../../../lib/request/request-params-builder.js';
-import { safeUrl } from '../../../../lib/utils.js';
-import { CcApiSimpleCommand } from '../../lib/cc-api-command.js';
+import { get } from '../../../../lib/request/request-params-builder.ts';
+import { safeUrl } from '../../../../lib/utils.ts';
+import { CcApiSimpleCommand } from '../../lib/cc-api-command.ts';
 import type {
   GetNetworkGroupMemberCommandInput,
   GetNetworkGroupMemberCommandOutput,
-} from './get-network-group-member-command.types.js';
-import { transformNetworkGroupMember } from './network-group-transform.js';
+} from './get-network-group-member-command.types.ts';
+import { transformNetworkGroupMember } from './network-group-transform.ts';
 
 /**
  * Retrieves a member of a network group.
