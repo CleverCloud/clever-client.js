@@ -20,6 +20,7 @@ export function transformKeycloakInfo(response: any): KeycloakInfo {
     },
     initialCredentials: response.initialCredentials,
     environment: sortBy(toArray(response.envVars), 'name'),
+    monthlyActiveUsers: response.monthlyActiveUsers ?? undefined,
   };
 }
 
