@@ -56,4 +56,9 @@ export interface KeycloakInfo {
    * @converted from a `Record<string, string>` to an array sorted by name
    */
   environment: Array<EnvironmentVariable>;
+  /**
+   * Number of monthly active users, the figure Managed Keycloak is billed on: distinct users with any session activity since midnight UTC on the first day of the current month.
+   * Absent when the count cannot be read.
+   */
+  monthlyActiveUsers?: number;
 }
